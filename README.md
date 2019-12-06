@@ -6,11 +6,11 @@ sports-themed events.  Notably, this application was inspired to be used in a
 ComedySportz[^1] match format.
 
 [^1]: This application is not endorsed by, nor sponsored by CSz worldwide or
-my employer.  All work is my own or other contributers to this codebase and I
+my employer.  All work is my own or other contributors to this codebase and I
 hope it proves useful to anyone who would like to use it.
 
 ## Vision
-There are planty of free scoreboards which already exist, but they are often
+There are plenty of free scoreboards which already exist, but they are often
 designed for strict time-keeping or don't have the support features which a
 comedy venue might like, such as the ability to display random memes on screen
 at any given time.  Other alternatives, such as Janis or the ComedySportz San
@@ -70,7 +70,7 @@ possible I've noted which ones are considered gating for a 1.0 release.
 * A saved image library with support for tags and filtering.
 * Hotkey support for queueing up pre-set images or text.
 * Hotkey support for increasing scores rapidly.
-* A countodown timer.
+* A countdown timer.
 * Slide-show functionality for pre-show slides.
 * Transition animation support.
 * Video playback, with audio.
