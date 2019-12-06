@@ -21,6 +21,7 @@ limitations under the License.
 #include <wx/display.h>
 #include <wx/wx.h>
 #include <vector>
+#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 
@@ -42,8 +43,9 @@ class DisplayConfig {
  public:
   static DisplayConfig *getInstance();
   void detectDisplays();
-  int numberOfDisplays();
   DisplayInfo displayDetails(int index);
+  int displayForSide(ScreenSide side);
+  int numberOfDisplays();
   int primaryDisplay();
 };
 }  // namespace cszb_scoreboard
