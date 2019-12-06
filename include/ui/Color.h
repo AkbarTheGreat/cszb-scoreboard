@@ -1,6 +1,6 @@
 /*
-ui/Color.h: A lightweight wrapper around wxColour which gives convenience
-methods for red, green, and blue values
+ui/Color.h: A wrapper around wxColour which gives convenience methods for
+manipulating colors
 
 Copyright 2019 Tracy Beck
 
@@ -34,6 +34,8 @@ class Color : public wxColour {
   inline unsigned char red() { return GetRGB() & 0xFF; }
   inline unsigned char green() { return (GetRGB() >> 8) & 0xFF; }
   inline unsigned char blue() { return (GetRGB() >> 16) & 0xFF; }
+  // Returns a good contrasting color for text over this background
+  Color contrastColor();
 };
 
 }  // namespace cszb_scoreboard

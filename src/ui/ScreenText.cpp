@@ -25,8 +25,6 @@ BEGIN_EVENT_TABLE(ScreenText, wxPanel)
 EVT_PAINT(ScreenText::paintEvent)
 END_EVENT_TABLE()
 
-Color ContrastColor(Color fontColor);
-
 ScreenText* ScreenText::getPreview(wxWindow* parent,
                                    const wxString& initial_text,
                                    ScreenSide side) {
@@ -47,12 +45,10 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
   switch (side) {
     case SIDE_SINGLE:  // TODO: Build single screen functionality here
     case SIDE_LEFT:
-      image = BackgroundImage(size, Color("Blue"));
-      font_color = ContrastColor(Color("Blue"));
+      initializeForColor(size, Color("Blue"));
       break;
     case SIDE_RIGHT:
-      image = BackgroundImage(size, Color("Red"));
-      font_color = ContrastColor(Color("Red"));
+      initializeForColor(size, Color("Red"));
       break;
     case SIDE_NONE:
     default:
@@ -60,6 +56,11 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
       font_color = Color(Color("Black"));
       break;
   }
+}
+
+void ScreenText::initializeForColor(wxSize size, Color color) {
+  image = BackgroundImage(size, color);
+  font_color = color.contrastColor();
 }
 
 void renderBackground(wxDC& dc, wxImage image) {
@@ -83,25 +84,4 @@ void ScreenText::paintEvent(wxPaintEvent& evt) {
   renderText(dc, text, font_color, this->GetSize());
 }
 
-// Taken from
-// https://stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
-// as a way to calculate font color to contrast effectively against an arbitrary
-// background.
-Color ContrastColor(Color backgroundColor) {
-  int d = 0;
-
-  int rgb = backgroundColor.GetRGB();
-  int blue = (rgb >> 16) & 0xFF;
-  int green = (rgb >> 8) & 0xFF;
-  int red = rgb & 0xFF;
-  // Counting the perceptive luminance - human eye favors green color...
-  double luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
-
-  if (luminance > 0.5)
-    d = 0;  // bright colors - black font
-  else
-    d = 255;  // dark colors - white font
-
-  return Color(d, d, d);
-}
 }  // namespace cszb_scoreboard
