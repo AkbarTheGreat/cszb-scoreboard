@@ -28,27 +28,27 @@ const int BORDER_WIDTH = 10;
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
-  wxMenu* menuFile = new wxMenu;
-  menuFile->Append(FILE_BLACK_OUT, "&Black Out...\tCtrl-B",
+  wxMenu* menu_file = new wxMenu;
+  menu_file->Append(FILE_BLACK_OUT, "&Black Out...\tCtrl-B",
                    "Black out both screens");
-  menuFile->AppendSeparator();
-  menuFile->Append(wxID_EXIT);
-  wxMenu* menuHelp = new wxMenu;
-  menuHelp->Append(wxID_ABOUT);
-  wxMenuBar* menuBar = new wxMenuBar;
-  menuBar->Append(menuFile, "&File");
-  menuBar->Append(menuHelp, "&Help");
-  SetMenuBar(menuBar);
+  menu_file->AppendSeparator();
+  menu_file->Append(wxID_EXIT);
+  wxMenu* menu_help = new wxMenu;
+  menu_help->Append(wxID_ABOUT);
+  wxMenuBar* menu_bar = new wxMenuBar;
+  menu_bar->Append(menu_file, "&File");
+  menu_bar->Append(menu_help, "&Help");
+  SetMenuBar(menu_bar);
   CreateStatusBar();
-  wxString statusText = "Welcome to ComedySportz Scoreboard, ";
-  char* numBuffer = new char[16];
-  statusText +=
-      _itoa(DisplayConfig::getInstance()->NumberOfDisplays(), numBuffer, 10);
-  delete[] numBuffer;
-  statusText += " displays found.";
-  SetStatusText(statusText);
+  wxString status_text = "Welcome to ComedySportz Scoreboard, ";
+  char* num_buffer = new char[16];
+  status_text +=
+      _itoa(DisplayConfig::getInstance()->numberOfDisplays(), num_buffer, 10);
+  delete[] num_buffer;
+  status_text += " displays found.";
+  SetStatusText(status_text);
 
-  switch (DisplayConfig::getInstance()->NumberOfDisplays()) {
+  switch (DisplayConfig::getInstance()->numberOfDisplays()) {
     default:
     case 0:
       // This feels like an impossible scenario, since you shouldn't be flat-out
@@ -81,18 +81,18 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   }
   SetSizerAndFit(sizer);
 }
-void MainView::OnExit(wxCommandEvent& event) { Close(true); }
-void MainView::OnAbout(wxCommandEvent& event) {
+void MainView::onExit(wxCommandEvent& event) { Close(true); }
+void MainView::onAbout(wxCommandEvent& event) {
   wxMessageBox(
       "cszb-scoreboard: The ComedySportz Scoreboard.  Copyright (c) Tracy "
       "Beck, Licensed via the Apache License.",
       "About Scoreboard", wxOK | wxICON_INFORMATION);
 }
-void MainView::Blackout(wxCommandEvent& event) {
+void MainView::blackout(wxCommandEvent& event) {
   // TODO: Blackout screens here
 }
 
-void MainView::OnClose(wxCloseEvent& event) {
+void MainView::onClose(wxCloseEvent& event) {
   wxLogDebug(wxT("Running On Close"));
   FrameList::getInstance()->exitFrames();
   Destroy();
@@ -103,10 +103,10 @@ void MainView::OnClose(wxCloseEvent& event) {
 */
 // clang-format off
 wxBEGIN_EVENT_TABLE(MainView, wxFrame)
-EVT_MENU(FILE_BLACK_OUT, MainView::Blackout)
-EVT_MENU(wxID_EXIT, MainView::OnExit)
-EVT_MENU(wxID_ABOUT, MainView::OnAbout)
-EVT_CLOSE(MainView::OnClose)
+EVT_MENU(FILE_BLACK_OUT, MainView::blackout)
+EVT_MENU(wxID_EXIT, MainView::onExit)
+EVT_MENU(wxID_ABOUT, MainView::onAbout)
+EVT_CLOSE(MainView::onClose)
 wxEND_EVENT_TABLE()
 // clang-format on
 

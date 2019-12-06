@@ -30,17 +30,17 @@ ScreenPreview::ScreenPreview(wxWindow* parent, ScreenSide side) {
   ScreenText* screen_text = nullptr;
   switch (side) {
     case SIDE_NONE:
-      screen_text = ScreenText::GetPreview(parent, ERROR_MESSAGE, side);
+      screen_text = ScreenText::getPreview(parent, ERROR_MESSAGE, side);
       break;
     default:
-      screen_text = ScreenText::GetPreview(parent, WELCOME_MESSAGE, side);
+      screen_text = ScreenText::getPreview(parent, WELCOME_MESSAGE, side);
       presenter = new ScreenPresenter(
           0, side,
           screen_text);  // TODO: Pass along screen number that's expected
   }
-  this->currentWidget = screen_text;
+  this->current_widget = screen_text;
 }
 
-wxWindow* ScreenPreview::widget() { return currentWidget; }
+wxWindow* ScreenPreview::widget() { return current_widget; }
 
 }  // namespace cszb_scoreboard

@@ -27,6 +27,6 @@ class Scoreboard : public wxApp {
   virtual bool OnInit();
 
  private:
-  MainView *mainWindow;
+  MainView *main_window;
 };
 }  // namespace cszb_scoreboard

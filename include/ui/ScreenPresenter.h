@@ -25,12 +25,12 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenPresenter : public wxFrame {
  public:
-  ScreenPresenter(int monitorNumber, ScreenSide side, ScreenText *widget);
+  ScreenPresenter(int monitor_number, ScreenSide side, ScreenText *widget);
 
  private:
-  int monitorNumber;
+  int monitor_number;
   ScreenSide side;
-  wxPanel *currentWidget;
+  wxPanel *current_widget;
 };
 
 }  // namespace cszb_scoreboard

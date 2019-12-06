@@ -27,62 +27,60 @@ END_EVENT_TABLE()
 
 Color ContrastColor(Color fontColor);
 
-ScreenText* ScreenText::GetPreview(wxWindow* parent,
-                                   const wxString& initialText,
+ScreenText* ScreenText::getPreview(wxWindow* parent,
+                                   const wxString& initial_text,
                                    ScreenSide side) {
-  return new ScreenText(parent, initialText, side, wxSize(640, 480));
+  return new ScreenText(parent, initial_text, side, wxSize(640, 480));
 }
 
-ScreenText* ScreenText::GetPresenter(wxWindow* parent, ScreenText* preview,
+ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
                                      wxSize size) {
   return new ScreenText(parent, preview->text, preview->side, size);
 }
 
-ScreenText::ScreenText(wxWindow* parent, const wxString& initialText,
+ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
                        ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  this->text = initialText;
+  this->text = initial_text;
   this->side = side;
 
   switch (side) {
-    case SIDE_SINGLE: // TODO: Build single screen functionality here
+    case SIDE_SINGLE:  // TODO: Build single screen functionality here
     case SIDE_LEFT:
       image = BackgroundImage(size, Color("Blue"));
-      fontColor = ContrastColor(Color("Blue"));
+      font_color = ContrastColor(Color("Blue"));
       break;
     case SIDE_RIGHT:
       image = BackgroundImage(size, Color("Red"));
-      fontColor = ContrastColor(Color("Red"));
+      font_color = ContrastColor(Color("Red"));
       break;
     case SIDE_NONE:
     default:
-      image = BackgroundImage::ErrorImage(size);
-      fontColor = Color(Color("Black"));
+      image = BackgroundImage::errorImage(size);
+      font_color = Color(Color("Black"));
       break;
   }
 }
 
 void renderBackground(wxDC& dc, wxImage image) {
-  wxBitmap bmp(image, 32);
-  dc.DrawBitmap(bmp, 0, 0, false);
+  dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
 }
 
-void renderText(wxDC& dc, wxString text, Color fontColor,
-                wxSize widgetSize) {
-  wxFont screenFont(wxFontInfo(64).FaceName("Impact").Bold().AntiAliased());
-  dc.SetFont(screenFont);
-  dc.SetTextForeground(fontColor);
+void renderText(wxDC& dc, wxString text, Color font_color, wxSize widget_size) {
+  wxFont screen_font(wxFontInfo(64).FaceName("Impact").Bold().AntiAliased());
+  dc.SetFont(screen_font);
+  dc.SetTextForeground(font_color);
   int width, height;
   dc.GetTextExtent(text, &width, &height);
-  int x = (widgetSize.GetWidth() - width) / 2;
-  int y = (widgetSize.GetHeight() - height) / 2;
+  int x = (widget_size.GetWidth() - width) / 2;
+  int y = (widget_size.GetHeight() - height) / 2;
   dc.DrawText(text, x, y);
 }
 
 void ScreenText::paintEvent(wxPaintEvent& evt) {
   wxPaintDC dc(this);
   renderBackground(dc, image);
-  renderText(dc, text, fontColor, this->GetSize());
+  renderText(dc, text, font_color, this->GetSize());
 }
 
 // Taken from

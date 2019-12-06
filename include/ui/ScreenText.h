@@ -28,18 +28,18 @@ class ScreenText : public wxPanel {
   wxImage image;
   wxString text;
   ScreenSide side;
-  Color fontColor;
-  ScreenText(wxWindow* parent, const wxString& initialText, ScreenSide side,
+  Color font_color;
+  ScreenText(wxWindow* parent, const wxString& initial_text, ScreenSide side,
              wxSize size);
 
  public:
-  static ScreenText* GetPreview(wxWindow* parent, const wxString& initialText,
+  static ScreenText* getPreview(wxWindow* parent, const wxString& initial_text,
                                 ScreenSide side);
 
-  static ScreenText* GetPresenter(wxWindow* parent, ScreenText* preview,
+  static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
                                   wxSize size);
 
-  void paintEvent(wxPaintEvent& evt);
+  void paintEvent(wxPaintEvent& event);
   inline void setImage(const wxImage& image) { this->image = image; };
   inline void setText(const wxString& text) { this->text = text; };
   DECLARE_EVENT_TABLE()

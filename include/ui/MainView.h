@@ -30,10 +30,10 @@ class MainView : public wxFrame {
 
  private:
   std::vector<ScreenPreview*> screens;
-  void Blackout(wxCommandEvent& event);
-  void OnExit(wxCommandEvent& event);
-  void OnAbout(wxCommandEvent& event);
-  void OnClose(wxCloseEvent& event);
+  void blackout(wxCommandEvent& event);
+  void onExit(wxCommandEvent& event);
+  void onAbout(wxCommandEvent& event);
+  void onClose(wxCloseEvent& event);
   wxDECLARE_EVENT_TABLE();
 };
 enum { FILE_BLACK_OUT = 1 };

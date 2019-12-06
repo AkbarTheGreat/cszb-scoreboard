@@ -22,32 +22,31 @@ limitations under the License.
 #include "ui/FrameList.h"
 
 namespace cszb_scoreboard {
-ScreenPresenter::ScreenPresenter(int monitorNumber, ScreenSide side,
+ScreenPresenter::ScreenPresenter(int monitor_number, ScreenSide side,
                                  ScreenText* widget)
     : wxFrame(NULL, wxID_ANY, "Scoreboard", wxDefaultPosition, wxDefaultSize) {
-  this->monitorNumber = monitorNumber;
+  this->monitor_number = monitor_number;
   this->side = side;
-  long styleflag = GetWindowStyle();
-  #ifndef WXDEBUG
+#ifndef WXDEBUG
   // Set external monitors to be always on top, unless we're debugging, since
   // sometimes we use one monitor to debug
-  SetWindowStyle(styleflag | wxSTAY_ON_TOP);
-  #endif
+  SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
+#endif
   ShowFullScreen(true);
   DisplayInfo display =
-      DisplayConfig::getInstance()->DisplayDetails(monitorNumber);
+      DisplayConfig::getInstance()->displayDetails(monitor_number);
   wxRect screen = display.getDimensions();
-  currentWidget = ScreenText::GetPresenter(this, widget, screen.GetSize());
+  current_widget = ScreenText::getPresenter(this, widget, screen.GetSize());
   SetPosition(screen.GetPosition());
-  currentWidget->SetSize(screen.GetSize());
-  wxLogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitorNumber, screen.x,
+  current_widget->SetSize(screen.GetSize());
+  wxLogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
              screen.y, screen.width, screen.height);
   FrameList::getInstance()->addFrame(this);
 
   wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  sizer->Add(currentWidget, 1, wxEXPAND | wxALL, 0);
+  sizer->Add(current_widget, 1, wxEXPAND | wxALL, 0);
   SetSizerAndFit(sizer);
   this->SetSize(screen.GetSize());
 }

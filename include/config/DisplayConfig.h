@@ -41,9 +41,9 @@ class DisplayConfig {
 
  public:
   static DisplayConfig *getInstance();
-  void DetectDisplays();
-  int NumberOfDisplays();
-  DisplayInfo DisplayDetails(int index);
+  void detectDisplays();
+  int numberOfDisplays();
+  DisplayInfo displayDetails(int index);
 };
 }  // namespace cszb_scoreboard
 

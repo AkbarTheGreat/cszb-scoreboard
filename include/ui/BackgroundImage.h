@@ -25,7 +25,7 @@ namespace cszb_scoreboard {
 class BackgroundImage : public wxImage {
  public:
   BackgroundImage(wxSize size, Color color);
-  static BackgroundImage ErrorImage(wxSize size);
+  static BackgroundImage errorImage(wxSize size);
 };
 
 }  // namespace cszb_scoreboard

@@ -22,24 +22,22 @@ namespace cszb_scoreboard {
 
 DisplayConfig* DisplayConfig::singleton_instance = new DisplayConfig();
 
-DisplayConfig::DisplayConfig() { DetectDisplays(); }
+DisplayConfig::DisplayConfig() { detectDisplays(); }
 
-DisplayConfig* DisplayConfig::getInstance() {
-  return singleton_instance;
-}
+DisplayConfig* DisplayConfig::getInstance() { return singleton_instance; }
 
-void DisplayConfig::DetectDisplays() {
+void DisplayConfig::detectDisplays() {
   int numscreens = wxDisplay::GetCount();
   for (int i = 0; i < numscreens; i++) {
     wxDisplay display(i);
-    DisplayInfo displayInfo(display.GetGeometry());
-    displays.push_back(displayInfo);
+    DisplayInfo display_info(display.GetGeometry());
+    displays.push_back(display_info);
   }
 }
 
-int DisplayConfig::NumberOfDisplays() { return displays.size(); }
+int DisplayConfig::numberOfDisplays() { return displays.size(); }
 
-DisplayInfo DisplayConfig::DisplayDetails(int index) {
+DisplayInfo DisplayConfig::displayDetails(int index) {
   assert(index < displays.size());
   assert(index >= 0);
   return displays[index];

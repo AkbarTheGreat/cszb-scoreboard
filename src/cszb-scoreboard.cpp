@@ -24,9 +24,10 @@ wxIMPLEMENT_APP(Scoreboard);
 
 bool Scoreboard::OnInit() {
   wxInitAllImageHandlers(); 
-  mainWindow = new MainView("ComedySportz Scoreboard", wxPoint(50, 50),
+  wxLogDebug(wxT("Starting stuff"));
+  main_window = new MainView("ComedySportz Scoreboard", wxPoint(50, 50),
                                  wxSize(700, 500));
-  mainWindow->Show(true);
+  main_window->Show(true);
   return true;
 }
 }  // namespace cszb_scoreboard

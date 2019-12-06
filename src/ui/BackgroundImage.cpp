@@ -27,7 +27,7 @@ BackgroundImage::BackgroundImage(wxSize size, Color color)
   SetRGB(fullMask, color.red(), color.green(), color.blue());
 }
 
-BackgroundImage BackgroundImage::ErrorImage(wxSize size) {
+BackgroundImage BackgroundImage::errorImage(wxSize size) {
   BackgroundImage error(size, Color("White"));
   return error;
 }

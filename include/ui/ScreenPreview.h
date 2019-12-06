@@ -31,7 +31,7 @@ class ScreenPreview {
 
  private:
   wxString label;
-  wxPanel* currentWidget;
+  wxPanel* current_widget;
   const wxWindow* parent;
   ScreenPresenter* presenter;
 };
