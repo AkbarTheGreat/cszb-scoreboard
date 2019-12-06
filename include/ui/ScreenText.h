@@ -19,6 +19,7 @@ limitations under the License.
 
 #include <wx/wx.h>
 #include "ui/ScreenSide.h"
+#include "ui/Color.h"
 
 namespace cszb_scoreboard {
 
@@ -27,8 +28,7 @@ class ScreenText : public wxPanel {
   wxImage image;
   wxString text;
   ScreenSide side;
-  wxColour fontColor;
-  void setColors(wxColour backgroundColor);
+  Color fontColor;
   ScreenText(wxWindow* parent, const wxString& initialText, ScreenSide side,
              wxSize size);
 

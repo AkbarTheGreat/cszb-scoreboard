@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include "ui/ScreenText.h"
 #include <wx/image.h>
+#include "ui/BackgroundImage.h"
 
 namespace cszb_scoreboard {
 
@@ -24,21 +25,7 @@ BEGIN_EVENT_TABLE(ScreenText, wxPanel)
 EVT_PAINT(ScreenText::paintEvent)
 END_EVENT_TABLE()
 
-const wxString ERROR_IMAGE(
-    "C:\\Users\\akbar\\Documents\\Code\\Vs_ws\\cszb-"
-    "scoreboard\\resources\\error.png");
-
-wxColour ContrastColor(wxColour fontColor);
-
-void ScreenText::setColors(wxColour backgroundColor) {
-  int rgb = backgroundColor.GetRGB();
-  int blue = (rgb >> 16) & 0xFF;
-  int green = (rgb >> 8) & 0xFF;
-  int red = rgb & 0xFF;
-  wxRect fullMask(0, 0, image.GetWidth(), image.GetHeight());
-  image.SetRGB(fullMask, red, green, blue);
-  fontColor = ContrastColor(backgroundColor);
-}
+Color ContrastColor(Color fontColor);
 
 ScreenText* ScreenText::GetPreview(wxWindow* parent,
                                    const wxString& initialText,
@@ -46,7 +33,8 @@ ScreenText* ScreenText::GetPreview(wxWindow* parent,
   return new ScreenText(parent, initialText, side, wxSize(640, 480));
 }
 
-ScreenText* ScreenText::GetPresenter(wxWindow* parent, ScreenText *preview, wxSize size) {
+ScreenText* ScreenText::GetPresenter(wxWindow* parent, ScreenText* preview,
+                                     wxSize size) {
   return new ScreenText(parent, preview->text, preview->side, size);
 }
 
@@ -56,18 +44,20 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initialText,
   this->text = initialText;
   this->side = side;
 
-  image.LoadFile(ERROR_IMAGE, wxBITMAP_TYPE_PNG);
   switch (side) {
+    case SIDE_SINGLE: // TODO: Build single screen functionality here
     case SIDE_LEFT:
-      setColors(wxColour("Blue"));
+      image = BackgroundImage(size, Color("Blue"));
+      fontColor = ContrastColor(Color("Blue"));
       break;
     case SIDE_RIGHT:
-      setColors(wxColour("Red"));
+      image = BackgroundImage(size, Color("Red"));
+      fontColor = ContrastColor(Color("Red"));
       break;
     case SIDE_NONE:
     default:
-      image.LoadFile(ERROR_IMAGE, wxBITMAP_TYPE_PNG);
-      fontColor = wxColour("Black");
+      image = BackgroundImage::ErrorImage(size);
+      fontColor = Color(Color("Black"));
       break;
   }
 }
@@ -77,7 +67,8 @@ void renderBackground(wxDC& dc, wxImage image) {
   dc.DrawBitmap(bmp, 0, 0, false);
 }
 
-void renderText(wxDC& dc, wxString text, wxColour fontColor, wxSize widgetSize) {
+void renderText(wxDC& dc, wxString text, Color fontColor,
+                wxSize widgetSize) {
   wxFont screenFont(wxFontInfo(64).FaceName("Impact").Bold().AntiAliased());
   dc.SetFont(screenFont);
   dc.SetTextForeground(fontColor);
@@ -98,7 +89,7 @@ void ScreenText::paintEvent(wxPaintEvent& evt) {
 // https://stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
 // as a way to calculate font color to contrast effectively against an arbitrary
 // background.
-wxColour ContrastColor(wxColour backgroundColor) {
+Color ContrastColor(Color backgroundColor) {
   int d = 0;
 
   int rgb = backgroundColor.GetRGB();
@@ -113,6 +104,6 @@ wxColour ContrastColor(wxColour backgroundColor) {
   else
     d = 255;  // dark colors - white font
 
-  return wxColour(d, d, d);
+  return Color(d, d, d);
 }
 }  // namespace cszb_scoreboard

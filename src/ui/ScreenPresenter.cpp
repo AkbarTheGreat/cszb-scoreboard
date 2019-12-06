@@ -28,12 +28,17 @@ ScreenPresenter::ScreenPresenter(int monitorNumber, ScreenSide side,
   this->monitorNumber = monitorNumber;
   this->side = side;
   long styleflag = GetWindowStyle();
-  // SetWindowStyle(styleflag | wxSTAY_ON_TOP);
+  #ifndef WXDEBUG
+  // Set external monitors to be always on top, unless we're debugging, since
+  // sometimes we use one monitor to debug
+  SetWindowStyle(styleflag | wxSTAY_ON_TOP);
+  #endif
   ShowFullScreen(true);
   DisplayInfo display =
       DisplayConfig::getInstance()->DisplayDetails(monitorNumber);
   wxRect screen = display.getDimensions();
   currentWidget = ScreenText::GetPresenter(this, widget, screen.GetSize());
+  SetPosition(screen.GetPosition());
   currentWidget->SetSize(screen.GetSize());
   wxLogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitorNumber, screen.x,
              screen.y, screen.width, screen.height);
