@@ -28,6 +28,7 @@ const int BORDER_WIDTH = 10;
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
+  FrameList::getInstance()->setMainView(this);
   wxMenu* menu_file = new wxMenu;
   menu_file->Append(FILE_BLACK_OUT, "&Black Out...\tCtrl-B",
                    "Black out both screens");

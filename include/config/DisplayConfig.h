@@ -1,4 +1,4 @@
-/* 
+/*
 config/DisplayConfig.h: This class is a configuration singleton which
 represents the current known state of the displays attached to this computer.
 
@@ -44,6 +44,6 @@ class DisplayConfig {
   void detectDisplays();
   int numberOfDisplays();
   DisplayInfo displayDetails(int index);
+  int primaryDisplay();
 };
 }  // namespace cszb_scoreboard
-

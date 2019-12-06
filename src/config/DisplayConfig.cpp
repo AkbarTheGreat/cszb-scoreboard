@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "config/DisplayConfig.h"
+#include "ui/FrameList.h"
 
 namespace cszb_scoreboard {
 
@@ -44,4 +45,15 @@ DisplayInfo DisplayConfig::displayDetails(int index) {
 }
 
 DisplayInfo::DisplayInfo(wxRect dimensions) { this->dimensions = dimensions; }
+
+// Determines which display currently houses the main control window.
+int DisplayConfig::primaryDisplay() {
+  wxPoint main_size = FrameList::getInstance()->getMainView()->GetPosition();
+  for (int i = 0; i < displays.size(); ++i) {
+    if (displays[i].getDimensions().Contains(main_size)) {
+      return i;
+    }
+  }
+}
+
 }  // namespace cszb_scoreboard

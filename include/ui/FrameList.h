@@ -1,4 +1,4 @@
-/* 
+/*
 ui/FrameList.h: This class is a singleton which holds a list to all active
 frames (or windows) in the current application.  This is primarily to manage
 destroying all frames when the application is shut down.
@@ -26,12 +26,15 @@ namespace cszb_scoreboard {
 
 class FrameList {
  private:
-  std::set<wxFrame*> frames;
+  wxFrame *main_view = nullptr;
+  std::set<wxFrame *> frames;
   static FrameList *singleton_instance;
   FrameList(){};
 
  public:
   static FrameList *getInstance();
+  inline void setMainView(wxFrame *frame) { main_view = frame; }
+  inline wxFrame *getMainView() { return main_view; }
   inline void addFrame(wxFrame *frame) { frames.insert(frame); }
   inline void delFrame(wxFrame *frame) { frames.erase(frame); }
   void exitFrames();
