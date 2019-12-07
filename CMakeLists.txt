@@ -16,16 +16,29 @@
 
 cmake_minimum_required(VERSION 3.9.0)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${protobuf_INCLUDE_DIR})
+
+find_package(protobuf CONFIG REQUIRED)
 
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
-#set(LINKING_TYPE "static")
-set(LINKING_TYPE "dynamic")
+set(LINKING_TYPE "static")
+
+if(MSVC AND protobuf_MSVC_STATIC_RUNTIME)
+  foreach(flag_var
+      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+    if(${flag_var} MATCHES "/MD")
+      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+    endif(${flag_var} MATCHES "/MD")
+  endforeach()
+endif()
+
 
 initialize_vcpkg_code()
 
@@ -36,11 +49,18 @@ file(GLOB SCOREBOARD_SRC
     "include/*/*.h"
     "src/*.cpp"
     "src/*/*.cpp"
+    "proto/*.proto"
 )
 
+# Is this WIN32 bad for cross-platform?  Maybe?  It's untested
 add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC})
 
-target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES} protobuf::libprotobuf)
+target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} protobuf::libprotobuf)
+#target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+
+#protobuf_generate(TARGET ${PROJECT_NAME})
 
 finalize_vcpkg_code(${PROJECT_NAME})
 # TODO: Add tests and install targets if needed.

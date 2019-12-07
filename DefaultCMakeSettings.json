@@ -1,4 +1,6 @@
-﻿{
+﻿// Saving a good starting point Cmakesettings.json here for a quicker setup in
+//  msvc, but it's just a suggestion.  The file itself is in .gitignore.
+{
   "configurations": [
     {
       "name": "x64-Debug",

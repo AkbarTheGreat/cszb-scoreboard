@@ -1,0 +1,7 @@
+syntax = "proto3";
+package cszb_scoreboard;
+
+message Displays {
+  int32 id = 1;
+  repeated string name = 2;
+}
