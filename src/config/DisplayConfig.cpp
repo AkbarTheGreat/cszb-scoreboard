@@ -16,8 +16,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 #include "config/DisplayConfig.h"
+
 #include "ui/FrameList.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -31,17 +34,18 @@ void DisplayConfig::detectDisplays() {
   int numscreens = wxDisplay::GetCount();
   for (int i = 0; i < numscreens; i++) {
     wxDisplay display(i);
-    DisplayInfo display_info(display.GetGeometry());
-    displays.push_back(display_info);
+    proto::DisplayInfo* display_info = displays.add_displays();
+    ProtoUtil::protoRct(display.GetGeometry(),
+                        display_info->mutable_dimensions());
   }
 }
 
-int DisplayConfig::numberOfDisplays() { return displays.size(); }
+int DisplayConfig::numberOfDisplays() { return displays.displays_size(); }
 
-DisplayInfo DisplayConfig::displayDetails(int index) {
-  assert(index < displays.size());
+proto::DisplayInfo DisplayConfig::displayDetails(int index) {
+  assert(index < displays.displays_size());
   assert(index >= 0);
-  return displays[index];
+  return displays.displays(index);
 }
 
 DisplayInfo::DisplayInfo(wxRect dimensions) { this->dimensions = dimensions; }
@@ -49,8 +53,9 @@ DisplayInfo::DisplayInfo(wxRect dimensions) { this->dimensions = dimensions; }
 // Determines which display currently houses the main control window.
 int DisplayConfig::primaryDisplay() {
   wxPoint main_size = FrameList::getInstance()->getMainView()->GetPosition();
-  for (int i = 0; i < displays.size(); ++i) {
-    if (displays[i].getDimensions().Contains(main_size)) {
+  for (int i = 0; i < displays.displays_size(); ++i) {
+    if (ProtoUtil::wxRct(displays.displays(i).dimensions())
+            .Contains(main_size)) {
       return i;
     }
   }

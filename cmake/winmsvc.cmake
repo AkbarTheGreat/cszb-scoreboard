@@ -1,5 +1,8 @@
 # Sourced from https://github.com/asjadenet/wxhellovcpkg/blob/master/winmsvc.cmake on 23-11-2019.
 # Licensed via the MIT license, Copyright (c) 2018 Tiit Ülejõe
+
+# Modifications made later by Tracy Beck for cszb-scoreboard, under the Apache license.
+
 if(NOT LINKING_TYPE)
     message(FATAL_ERROR "Please specify -DLINKING_TYPE=static or -DLINKING_TYPE=dynamic")
     return()
@@ -69,6 +72,8 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 		set(protobuf_LIBRARIES
 			${protobuf_LIB_DIR}/lib/libprotobufd.lib
 		)
+		file(COPY ${protobuf_LIB_DIR}/bin/libprotobufd.dll
+		     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313ud_net_vc_x64_custom.dll
@@ -103,6 +108,8 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 		set(protobuf_LIBRARIES
 			${protobuf_LIB_DIR}/lib/libprotobuf.lib
 		)
+		file(COPY ${protobuf_LIB_DIR}/bin/libprotobuf.dll
+		     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313u_net_vc_x64_custom.dll

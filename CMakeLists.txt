@@ -18,29 +18,30 @@ cmake_minimum_required(VERSION 3.9.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${protobuf_INCLUDE_DIR})
 
-find_package(protobuf CONFIG REQUIRED)
-
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set (protobuf_BUILD_SHARED_LIBS OFF)
+set (protobuf_MSVC_STATIC_RUNTIME ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
 set(LINKING_TYPE "static")
 
-if(MSVC AND protobuf_MSVC_STATIC_RUNTIME)
-  foreach(flag_var
-      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-    if(${flag_var} MATCHES "/MD")
-      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-    endif(${flag_var} MATCHES "/MD")
-  endforeach()
-endif()
-
+find_package(protobuf REQUIRED)
 
 initialize_vcpkg_code()
+
+#if(MSVC AND protobuf_MSVC_STATIC_RUNTIME)
+#  foreach(flag_var
+#      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+#      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+#    if(${flag_var} MATCHES "/MD")
+#      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+#    endif(${flag_var} MATCHES "/MD")
+#  endforeach()
+#endif()
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
 

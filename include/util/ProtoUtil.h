@@ -1,6 +1,6 @@
 /*
-config/DisplayConfig.h: This class is a configuration singleton which
-represents the current known state of the displays attached to this computer.
+util/ProtoUtil.h: Convenience methods for converting between proto values and
+wxWidgets values.
 
 Copyright 2019 Tracy Beck
 
@@ -18,35 +18,26 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/display.h>
 #include <wx/wx.h>
 
 #include "proto/config.pb.h"
-#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 
-class DisplayInfo {
- private:
-  wxRect dimensions;
-
+class ProtoUtil {
  public:
-  DisplayInfo(wxRect dimensions);
-  inline wxRect getDimensions() { return dimensions; }
+  static inline proto::Rectangle *protoRct(wxRect input,
+                                           proto::Rectangle *output) {
+    output->set_x(input.GetX());
+    output->set_y(input.GetY());
+    output->set_width(input.GetWidth());
+    output->set_height(input.GetHeight());
+    return output;
+  }
+  static inline wxRect wxRct(proto::Rectangle input) {
+    wxRect rect(input.x(), input.y(), input.width(), input.height());
+    return rect;
+  }
 };
 
-class DisplayConfig {
- private:
-  static DisplayConfig *singleton_instance;
-  proto::DisplayConfig displays;
-  DisplayConfig();
-
- public:
-  static DisplayConfig *getInstance();
-  void detectDisplays();
-  proto::DisplayInfo displayDetails(int index);
-  int displayForSide(ScreenSide side);
-  int numberOfDisplays();
-  int primaryDisplay();
-};
 }  // namespace cszb_scoreboard

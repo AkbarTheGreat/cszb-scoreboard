@@ -1,7 +1,18 @@
 syntax = "proto3";
-package cszb_scoreboard;
+package cszb_scoreboard.proto;
 
-message Displays {
-  int32 id = 1;
-  repeated string name = 2;
+message Rectangle {
+    int32 x = 1;
+	int32 y = 2;
+	int32 width = 3;
+	int32 height = 4;
+}
+
+message DisplayInfo {
+	int32 id = 1;
+	Rectangle dimensions = 2;
+}
+
+message DisplayConfig {
+	repeated DisplayInfo displays = 1;
 }

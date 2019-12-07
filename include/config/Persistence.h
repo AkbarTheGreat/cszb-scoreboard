@@ -1,6 +1,6 @@
 /*
-config/DisplayConfig.h: This class is a configuration singleton which
-represents the current known state of the displays attached to this computer.
+config/Persistence.h: This class manages serializing/deserializing
+our configuration proto to/from disk
 
 Copyright 2019 Tracy Beck
 
@@ -18,35 +18,18 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/display.h>
+#include <google/protobuf/util/time_util.h>
 #include <wx/wx.h>
-
+#include <fstream>
+#include <iostream>
 #include "proto/config.pb.h"
-#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 
-class DisplayInfo {
- private:
-  wxRect dimensions;
-
+class Persistence {
  public:
-  DisplayInfo(wxRect dimensions);
-  inline wxRect getDimensions() { return dimensions; }
+  proto::DisplayConfig loadDisplays();
+  void saveDisplays(proto::DisplayConfig display_config);
 };
 
-class DisplayConfig {
- private:
-  static DisplayConfig *singleton_instance;
-  proto::DisplayConfig displays;
-  DisplayConfig();
-
- public:
-  static DisplayConfig *getInstance();
-  void detectDisplays();
-  proto::DisplayInfo displayDetails(int index);
-  int displayForSide(ScreenSide side);
-  int numberOfDisplays();
-  int primaryDisplay();
-};
 }  // namespace cszb_scoreboard

@@ -20,6 +20,7 @@ limitations under the License.
 
 #include <wx/display.h>
 #include <wx/wx.h>
+#include <vector>
 
 #include "proto/config.pb.h"
 #include "ui/ScreenSide.h"
@@ -38,15 +39,16 @@ class DisplayInfo {
 class DisplayConfig {
  private:
   static DisplayConfig *singleton_instance;
-  proto::DisplayConfig displays;
+  std::vector<proto::DisplayInfo> displays;
   DisplayConfig();
 
  public:
   static DisplayConfig *getInstance();
   void detectDisplays();
-  proto::DisplayInfo displayDetails(int index);
+  DisplayInfo displayDetails(int index);
   int displayForSide(ScreenSide side);
   int numberOfDisplays();
   int primaryDisplay();
 };
+
 }  // namespace cszb_scoreboard

@@ -3,9 +3,10 @@
 # while not sacrificing other platform compatability.
 # This WxWidget/Vcpkg functionality work was taken from
 # https://github.com/asjadenet/wxhellovcpkg as a baseline, and converted
-# into macros here, with the absolute minimal changes on my part.  Originally
+# into macros here, with the minimal changes on my part.  Originally
 # licensed under the MIT license, and separated into this file to give proper
-# credit where credit is due.
+# credit where credit is due.  Additional changes made after initial commit are
+# mine.
 
 set(default_build_type "Release")
 

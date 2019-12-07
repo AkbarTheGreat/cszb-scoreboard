@@ -4,16 +4,32 @@
   "configurations": [
     {
       "name": "x64-Debug",
-      "generator": "Ninja",
+      "generator": "Visual Studio 16 2019 Win64",
       "configurationType": "Debug",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
+      "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "cmakeToolchain": "C:/Users/akbar/Software/vcpkg/scripts/buildsystems/vcpkg.cmake",
-      "variables": []
+      "cmakeToolchain": "<path to vcpkg.cmake>",
+      "variables": [
+        {
+          "name": "protobuf_DIR",
+          "value": "<Path to Protobuf vcpkg .cmake files>"
+          "type": "PATH"
+        },
+        {
+          "name": "VCPKG_TARGET_TRIPLET",
+          "value": "x64-windows-static",
+          "type": "STRING"
+        },
+        {
+          "name": "CMAKE_BUILD_TYPE",
+          "value": "Debug",
+          "type": "STRING"
+        }
+      ]
     },
     {
       "name": "x64-Release",
@@ -24,7 +40,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "cmakeToolchain": "C:/Users/akbar/Software/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "cmakeToolchain": "<path to vcpkg.cmake>",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "variables": []
     }

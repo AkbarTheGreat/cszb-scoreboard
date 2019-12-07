@@ -18,8 +18,10 @@ limitations under the License.
 */
 
 #include "ui/ScreenPresenter.h"
+
 #include "config/DisplayConfig.h"
 #include "ui/FrameList.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 ScreenPresenter::ScreenPresenter(int monitor_number, ScreenSide side,
@@ -33,9 +35,13 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenSide side,
   SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
 #endif
   ShowFullScreen(true);
-  DisplayInfo display =
+  proto::DisplayInfo display =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
-  wxRect screen = display.getDimensions();
+  wxRect screen = ProtoUtil::wxRct(display.dimensions());
+  wxLogDebug("Going to screen %d with %s", monitor_number,
+             display.dimensions().DebugString());
+  wxLogDebug("Post Conversion %d %d %d %d", screen.GetX(), screen.GetY(),
+             screen.GetWidth(), screen.GetHeight());
   current_widget = ScreenText::getPresenter(this, widget, screen.GetSize());
   SetPosition(screen.GetPosition());
   current_widget->SetSize(screen.GetSize());
