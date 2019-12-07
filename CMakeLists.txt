@@ -55,12 +55,9 @@ file(GLOB SCOREBOARD_SRC
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
 add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC})
 
-#target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES} protobuf::libprotobuf)
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES})
-#target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} protobuf::libprotobuf)
-#target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
 
-#protobuf_generate(TARGET ${PROJECT_NAME})
+protobuf_generate(TARGET ${PROJECT_NAME})
 
 finalize_vcpkg_code(${PROJECT_NAME})
 # TODO: Add tests and install targets if needed.
