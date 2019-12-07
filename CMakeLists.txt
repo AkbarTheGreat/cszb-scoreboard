@@ -45,20 +45,61 @@ initialize_vcpkg_code()
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
+file(GLOB SCOREBOARD_PROTO "proto/*.proto")
+
 file(GLOB SCOREBOARD_SRC
     "include/*.h"
     "include/*/*.h"
     "src/*.cpp"
     "src/*/*.cpp"
-    "proto/*.proto"
 )
 
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
-add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC})
+add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO})
 
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES})
 
 protobuf_generate(TARGET ${PROJECT_NAME})
 
 finalize_vcpkg_code(${PROJECT_NAME})
-# TODO: Add tests and install targets if needed.
+
+# Testing specific code follows
+
+include(FetchContent)
+
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG        release-1.10.0
+  GIT_PROGRESS   TRUE
+)
+
+FetchContent_GetProperties(googletest)
+if(NOT googletest_POPULATED)
+  FetchContent_Populate(googletest)
+  add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+endif()
+
+find_package(GTest)
+
+# Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
+macro(package_add_test TESTNAME)
+    # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
+    add_executable(${TESTNAME} ${SCOREBOARD_PROTO} ${ARGN})
+    # link the Google test infrastructure, mocking library, and a default main fuction to
+    # the test executable.  Remove g_test_main if writing your own main function.
+    target_link_libraries(${TESTNAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES} gtest gmock gtest_main)
+    protobuf_generate(TARGET ${TESTNAME})
+    # gtest_discover_tests replaces gtest_add_tests,
+    # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
+    gtest_discover_tests(${TESTNAME}
+        # set a working directory so your project root so that you can find test data via paths relative to the project root
+        WORKING_DIRECTORY ${PROJECT_DIR}
+        PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
+    )
+    set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
+endmacro()
+
+enable_testing()
+
+package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp)
