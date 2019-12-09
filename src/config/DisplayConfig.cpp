@@ -43,12 +43,9 @@ void DisplayConfig::detectDisplays() {
 int DisplayConfig::numberOfDisplays() { return displays.displays_size(); }
 
 proto::DisplayInfo DisplayConfig::displayDetails(int index) {
-  assert(index < displays.displays_size());
-  assert(index >= 0);
+  assert(index < displays.displays_size() && index >= 0);
   return displays.displays(index);
 }
-
-DisplayInfo::DisplayInfo(wxRect dimensions) { this->dimensions = dimensions; }
 
 // Determines which display currently houses the main control window.
 int DisplayConfig::primaryDisplay() {

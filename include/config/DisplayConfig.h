@@ -26,15 +26,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class DisplayInfo {
- private:
-  wxRect dimensions;
-
- public:
-  DisplayInfo(wxRect dimensions);
-  inline wxRect getDimensions() { return dimensions; }
-};
-
 class DisplayConfig {
  private:
   static DisplayConfig *singleton_instance;
