@@ -19,6 +19,7 @@ limitations under the License.
 #include "test/GuiTest.h"
 
 namespace cszb_scoreboard {
+namespace test {
 
 TEST_F(GuiTest, InitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
@@ -28,4 +29,6 @@ TEST_F(GuiTest, InitializationTest) {
   preview_dc.GetPixel(0, 0, &origin_color);
   ASSERT_EQ(wxColor("Red"), origin_color);
 }
+
+}  // namespace test
 }  // namespace cszb_scoreboard

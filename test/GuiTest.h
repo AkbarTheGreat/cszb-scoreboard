@@ -28,6 +28,7 @@ limitations under the License.
 #include "ui/MainView.h"
 
 namespace cszb_scoreboard {
+namespace test {
 
 /* Performs an action against the wxWidgets UI, and yields to allow it to
  * execute */
@@ -63,7 +64,10 @@ class GuiTest : public testing::Test {
   }
 
   /* Convenience method to get the main window, for testing purposes. */
-  MainView *mainView() { return (MainView*)FrameList::getInstance()->getMainView(); }
+  MainView *mainView() {
+    return (MainView *)FrameList::getInstance()->getMainView();
+  }
 };
 
+}  // namespace test
 }  // namespace cszb_scoreboard

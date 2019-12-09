@@ -21,6 +21,7 @@ limitations under the License.
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
+namespace test {
 
 TEST(ProtoUtilTest, ConvertsARectangleCorrectly) {
   proto::Rectangle known;
@@ -45,4 +46,5 @@ TEST(ProtoUtilTest, ConvertsAWxRectCorrectly) {
   EXPECT_EQ(converted.height(), 20);
 }
 
+}  // namespace test
 }  // namespace cszb_scoreboard
