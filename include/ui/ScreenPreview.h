@@ -27,10 +27,9 @@ namespace cszb_scoreboard {
 class ScreenPreview {
  public:
   ScreenPreview(wxWindow* parent, ScreenSide side);
-  wxWindow* widget();
+  wxPanel* widget();
 
  private:
-  wxString label;
   wxPanel* current_widget;
   const wxWindow* parent;
   ScreenPresenter* presenter;

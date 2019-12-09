@@ -19,7 +19,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+
 #include <vector>
+
 #include "ui/ScreenPreview.h"
 
 namespace cszb_scoreboard {
@@ -27,6 +29,11 @@ namespace cszb_scoreboard {
 class MainView : public wxFrame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
+  inline int numPreviews() { return screens.size(); }
+  inline ScreenPreview* preview(int index) {
+    assert(index >= 0 && index < screens.size());
+    return screens[index];
+  }
 
  private:
   std::vector<ScreenPreview*> screens;

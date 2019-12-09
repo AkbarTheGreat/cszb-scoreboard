@@ -41,6 +41,6 @@ ScreenPreview::ScreenPreview(wxWindow* parent, ScreenSide side) {
   this->current_widget = screen_text;
 }
 
-wxWindow* ScreenPreview::widget() { return current_widget; }
+wxPanel* ScreenPreview::widget() { return current_widget; }
 
 }  // namespace cszb_scoreboard
