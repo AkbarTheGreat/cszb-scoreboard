@@ -100,6 +100,13 @@ macro(package_add_test TESTNAME)
     set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
 endmacro()
 
+macro(package_add_ui_test TESTNAME)
+    package_add_test(${TESTNAME} ${ARGN} test/GuiTest.h ${SCOREBOARD_SRC})
+endmacro()
+
+
 enable_testing()
 
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp)
+package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
+
