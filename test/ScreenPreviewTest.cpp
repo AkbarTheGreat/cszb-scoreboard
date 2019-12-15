@@ -21,13 +21,18 @@ limitations under the License.
 namespace cszb_scoreboard {
 namespace test {
 
-TEST_F(GuiTest, InitializationTest) {
+TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
   WX_A(mainView()->SetFocus());
-  wxClientDC preview_dc(mainView()->preview(0)->widget());
-  wxColour origin_color;
-  preview_dc.GetPixel(0, 0, &origin_color);
-  ASSERT_EQ(wxColor("Red"), origin_color);
+  ImageAnalysis analysis(mainView()->preview(0)->widget());
+  std::vector<int> color_list = analysis.colorList();
+  int list_size = color_list.size();
+  // The error image on pane 0 is ~50% white, ~50% red with black text over part
+  // of it.  This test will fail if run on a machine with multiple monitors.  If
+  // that comes up, fix this test, I guess.
+  ASSERT_GT(analysis.colorPercentage(wxColour("Red")), 40);
+  ASSERT_GT(analysis.colorPercentage(wxColour("White")), 40);
+  ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
 }
 
 }  // namespace test

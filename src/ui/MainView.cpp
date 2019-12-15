@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "ui/MainView.h"
+
 #include "config/DisplayConfig.h"
 #include "ui/FrameList.h"
 #include "ui/ScreenSide.h"
@@ -31,7 +32,7 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   FrameList::getInstance()->setMainView(this);
   wxMenu* menu_file = new wxMenu;
   menu_file->Append(FILE_BLACK_OUT, "&Black Out...\tCtrl-B",
-                   "Black out both screens");
+                    "Black out both screens");
   menu_file->AppendSeparator();
   menu_file->Append(wxID_EXIT);
   wxMenu* menu_help = new wxMenu;
@@ -59,10 +60,10 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
       // Only the main window, this is a deprecated case, and probably a
       // mistake.
       screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_NONE));
-	  #ifdef WXDEBUG
-	  // Run fullscreen behind our control window in debugging circumstances
+#ifdef WXDEBUG
+      // Run fullscreen behind our control window in debugging circumstances
       screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_SINGLE));
-	  #endif
+#endif
       break;
     case 2:
       // Single scoreboard display, split-screen
@@ -74,21 +75,28 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
       screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_RIGHT));
       break;
   }
+
+  text_entry = new TextEntry(this);
+
   wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   for (auto screen : screens) {
     sizer->Add(screen->widget(), 1, wxEXPAND | wxALL, BORDER_WIDTH);
   }
+  sizer->Add(text_entry, 1, wxEXPAND | wxALL, BORDER_WIDTH);
   SetSizerAndFit(sizer);
 }
+
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
+
 void MainView::onAbout(wxCommandEvent& event) {
   wxMessageBox(
       "cszb-scoreboard: The ComedySportz Scoreboard.  Copyright (c) Tracy "
       "Beck, Licensed via the Apache License.",
       "About Scoreboard", wxOK | wxICON_INFORMATION);
 }
+
 void MainView::blackout(wxCommandEvent& event) {
   // TODO: Blackout screens here
 }

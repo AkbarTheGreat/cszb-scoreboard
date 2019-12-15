@@ -1,6 +1,6 @@
 /*
-ui/MainView.h: This class represents the main control window for the
-application.
+ui/TextEntry.h: This class is responsible for generating text which can go to
+one or all of the scoreboard screens.
 
 Copyright 2019 Tracy Beck
 
@@ -20,10 +20,8 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-#include <vector>
-
-#include "ui/ScreenPreview.h"
-#include "ui/TextEntry.h"
+#include "ui/MainView.h"
+#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 
@@ -31,27 +29,23 @@ namespace cszb_scoreboard {
 // inherent in having a member with a constructor which takes a parent pointer.
 // Use caution when working with these variables to ensure that overloads are
 // handled correctly.
-class TextEntry;
+class MainView;
 
-class MainView : public wxFrame {
+class TextEntry : public wxPanel {
  public:
-  MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
-  inline int numPreviews() { return screens.size(); }
-  inline ScreenPreview* preview(int index) {
-    assert(index >= 0 && index < screens.size());
-    return screens[index];
-  }
-  TextEntry* textEntry() { return this->text_entry; }
+  TextEntry(MainView *parent);
+  wxButton *updateButton();
+  wxTextCtrl *textField();
 
  private:
-  std::vector<ScreenPreview*> screens;
-  TextEntry* text_entry;
-  void blackout(wxCommandEvent& event);
-  void onExit(wxCommandEvent& event);
-  void onAbout(wxCommandEvent& event);
-  void onClose(wxCloseEvent& event);
-  wxDECLARE_EVENT_TABLE();
+  void textUpdated(wxKeyEvent &event);
+  void updateClicked(wxCommandEvent &event);
+  void screenChanged(wxCommandEvent &event);
+  MainView *parent;
+  wxButton *update_screens;
+  wxRadioBox *screen_selection;
+  wxString screen_choices[3] = {wxT("Left"), wxT("Right"), wxT("All")};
+  wxTextCtrl *text_entry;
 };
-enum { FILE_BLACK_OUT = 1 };
 
 }  // namespace cszb_scoreboard

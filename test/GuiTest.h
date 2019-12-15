@@ -1,8 +1,8 @@
 /*
 test/GuiTest.h: A test utility for unit testing wxWidget functionality.  The
 idea for this methodology for testing wxWidgets via GoogleTest originally found
-at http://www.remy.org.uk/tech.php?tech=1407951209, rewritten here with several
-improvements and modernizations.
+at http://www.remy.org.uk/tech.php?tech=1407951209 and rewritten here with
+several improvements and modernizations.
 
 Copyright 2019 Tracy Beck
 
@@ -19,9 +19,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#pragma once
+
 #include <gtest/gtest.h>
 #include <wx/uiaction.h>
 #include <wx/wx.h>
+
+#include <map>
+#include <vector>
 
 #include "cszb-scoreboard.h"
 #include "ui/FrameList.h"
@@ -38,35 +43,27 @@ namespace test {
     wxYield();       \
   }
 
-const int TEST_ARGC = 1;
-const char *TEST_BIN_NAME = "scoreboardUnitTest.exe";
-const char *TEST_ARGV[TEST_ARGC] = {TEST_BIN_NAME};
+/* Checking if images are correct or not is tricky, so we have this to help */
+class ImageAnalysis {
+ public:
+  ImageAnalysis(wxWindow *widget);
+  float colorPercentage(wxColour color);
+  float colorAmount(wxColour color);
+  std::vector<int> colorList();
+ private:
+  std::map<unsigned int, int> color_counts;
+  std::map<unsigned int, float> color_percentages;
+};
 
 class GuiTest : public testing::Test {
  protected:
   Scoreboard *app;
   wxUIActionSimulator act;
 
-  virtual void SetUp() override {
-    app = new Scoreboard();
-    wxApp::SetInstance(app);
-    // Argument to wxEntryStart cannot be const, so copy to a non-const before
-    // calling
-    int argc = TEST_ARGC;
-    wxEntryStart(argc, (char **)TEST_ARGV);
-    app->OnInit();
-    mainView()->Update();
-  }
-
-  virtual void TearDown() override {
-    app->OnExit();
-    wxEntryCleanup();
-  }
-
+  virtual void SetUp() override;
+  virtual void TearDown() override;
   /* Convenience method to get the main window, for testing purposes. */
-  MainView *mainView() {
-    return (MainView *)FrameList::getInstance()->getMainView();
-  }
+  MainView *mainView();
 };
 
 }  // namespace test

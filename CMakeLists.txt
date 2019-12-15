@@ -33,17 +33,12 @@ find_package(protobuf REQUIRED)
 
 initialize_vcpkg_code()
 
-#if(MSVC AND protobuf_MSVC_STATIC_RUNTIME)
-#  foreach(flag_var
-#      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-#      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-#    if(${flag_var} MATCHES "/MD")
-#      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-#    endif(${flag_var} MATCHES "/MD")
-#  endforeach()
-#endif()
+if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
+    add_definitions(-DwxDEBUG_LEVEL=0)
+endif()
 
-include_directories("${CMAKE_SOURCE_DIR}/include")
+
+include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
 file(GLOB SCOREBOARD_PROTO "proto/*.proto")
 
@@ -82,6 +77,11 @@ endif()
 
 find_package(GTest)
 
+list(APPEND TEST_ONLY_SRC
+    "test/GuiTest.cpp"
+    "test/GuiTest.h"
+)
+
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
 macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
@@ -101,7 +101,7 @@ macro(package_add_test TESTNAME)
 endmacro()
 
 macro(package_add_ui_test TESTNAME)
-    package_add_test(${TESTNAME} ${ARGN} test/GuiTest.h ${SCOREBOARD_SRC})
+    package_add_test(${TESTNAME} ${ARGN} ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
 endmacro()
 
 
@@ -109,4 +109,5 @@ enable_testing()
 
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp)
 package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
+package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
 

@@ -109,7 +109,7 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 			${protobuf_LIB_DIR}/lib/libprotobuf.lib
 		)
 		file(COPY ${protobuf_LIB_DIR}/bin/libprotobuf.dll
-		     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
+		     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313u_net_vc_x64_custom.dll

@@ -56,6 +56,7 @@ int DisplayConfig::primaryDisplay() {
       return i;
     }
   }
+  return 0;
 }
 
 // Makes a best guess at which side should have which screen.  This should be
