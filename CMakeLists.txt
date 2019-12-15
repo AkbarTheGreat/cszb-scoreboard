@@ -109,5 +109,6 @@ enable_testing()
 
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp)
 package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
-package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
+# Disabling this test because http://trac.wxwidgets.org/ticket/17400 seems to indicate that wxUiActionSimulator doesn't work right in all cases.  We can revisit if that bug gets closed.
+# package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
 
