@@ -22,25 +22,57 @@ limitations under the License.
 namespace cszb_scoreboard {
 namespace test {
 
-TEST_F(GuiTest, TextEntryTypingTest) {
-  TextEntry *entry = mainView()->textEntry();
-  WX_A(entry->textField()->SetFocus());
-  WX_A(act.Text("."));
-  // Always assume we're dealing with the left view, which is 1 in debug,
-  // but we also assume that our tests only run on single-monitor.  So likely
-  // this fails in non-debug at the moment.
-  int preview_number = 0;
-#ifdef WXDEBUG
-  preview_number = 1;
+class TextEntryTest : public GuiTest {
+ protected:
+  void enterTextIndirect(const char *text) {
+    TextEntry *entry = mainView()->textEntry();
+    WX_A(entry->textField()->SetFocus());
+    WX_A(entry->textField()->Clear());
+    WX_A(entry->textField()->WriteText(text));
+    WX_A(entry->textUpdated(wxKeyEvent()));
+  }
+
+  void enterTextDirect(const char *text) {
+    TextEntry *entry = mainView()->textEntry();
+    WX_A(entry->textField()->SetFocus());
+    WX_A(entry->textField()->Clear());
+    WX_A(act.Text(text));
+  }
+
+  void enterText(const char *text) {
+    // wxUIActionSimulator has problems described at
+    // http://trac.wxwidgets.org/ticket/17400 which implies that there are
+    // issues in some unkown circumstances? Maybe we're better off avoiding it
+    // anyway, but we can revisit if that bug gets closed.
+#ifdef UIACTIONSIMULATOR_TESTING
+    enterTextDirect(text);
+#else
+    enterTextIndirect(text);
 #endif
-  ImageAnalysis analysis(mainView()->preview(preview_number)->widget());
+  }
+
+  ImageAnalysis getAnalysis() {
+    // Always assume we're dealing with the left view, which is 1 in debug,
+    // but we also assume that our tests only run on single-monitor.  So likely
+    // this fails in non-debug at the moment.
+    int preview_number = 0;
+#ifdef WXDEBUG
+    preview_number = 1;
+#endif
+    return ImageAnalysis(mainView()->preview(preview_number)->widget());
+  }
+};
+
+TEST_F(TextEntryTest, TypingTest) {
+  enterText(".");
+  ImageAnalysis analysis = getAnalysis();
   float initial_text_ratio = analysis.colorPercentage(wxColour("White"));
-  WX_A(act.Text("Longer Text"));
-  analysis = ImageAnalysis(mainView()->preview(preview_number)->widget());
+  enterText("Longer Text");
+  analysis = getAnalysis();
   float new_text_ratio = analysis.colorPercentage(wxColour("White"));
   // TODO: This test is broken, as the above act.Text() actions don't appear to
   // be firing correctly, or the SetFocus isn't working, one of the two.
-  // ASSERT_LT(initial_text_ratio, new_text_ratio);
+  ASSERT_LT(initial_text_ratio, new_text_ratio);
 }
 
 }  // namespace test

@@ -36,9 +36,9 @@ class TextEntry : public wxPanel {
   TextEntry(MainView *parent);
   wxButton *updateButton();
   wxTextCtrl *textField();
+  void textUpdated(wxKeyEvent &event);
 
  private:
-  void textUpdated(wxKeyEvent &event);
   void updateClicked(wxCommandEvent &event);
   void screenChanged(wxCommandEvent &event);
   MainView *parent;

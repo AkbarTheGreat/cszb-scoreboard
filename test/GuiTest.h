@@ -37,10 +37,11 @@ namespace test {
 
 /* Performs an action against the wxWidgets UI, and yields to allow it to
  * execute */
-#define WX_A(action) \
-  {                  \
-    action;          \
-    wxYield();       \
+#define WX_A(action)      \
+  {                       \
+    action;               \
+    wxYield();            \
+    mainView()->Update(); \
   }
 
 /* Checking if images are correct or not is tricky, so we have this to help */
