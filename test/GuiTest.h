@@ -35,6 +35,15 @@ limitations under the License.
 namespace cszb_scoreboard {
 namespace test {
 
+// Ultimately, I want to tune these so that they can be sped up.  But it doesn't
+// work well yet, so call this a weirdly worded TODO.
+#define FULL_TEST
+#ifdef FULL_TEST
+const int DEFAULT_IMAGE_ANALYSIS_PRECISION = 100;
+#else
+const int DEFAULT_IMAGE_ANALYSIS_PRECISION = 50;
+#endif
+
 /* Performs an action against the wxWidgets UI, and yields to allow it to
  * execute */
 #define WX_A(action)      \
@@ -47,10 +56,15 @@ namespace test {
 /* Checking if images are correct or not is tricky, so we have this to help */
 class ImageAnalysis {
  public:
-  ImageAnalysis(wxWindow *widget);
+  ImageAnalysis(wxWindow *widget)
+      : ImageAnalysis(widget, DEFAULT_IMAGE_ANALYSIS_PRECISION) {}
+  // Create an ImageAnalysis object where only x% of the pixels are sampled for
+  // color counts, for speed.
+  ImageAnalysis(wxWindow *widget, int precision_percent);
   float colorPercentage(wxColour color);
   float colorAmount(wxColour color);
   std::vector<int> colorList();
+
  private:
   std::map<unsigned int, int> color_counts;
   std::map<unsigned int, float> color_percentages;

@@ -39,6 +39,7 @@ void DisplayConfig::detectDisplays() {
   int numscreens = wxDisplay::GetCount();
 
   bool set_home = true;
+
   for (int i = 0; i < numscreens; i++) {
     wxDisplay display(i);
     proto::DisplayInfo *display_info = display_config.add_displays();
@@ -46,10 +47,16 @@ void DisplayConfig::detectDisplays() {
                         display_info->mutable_dimensions());
     if (isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);
+      if (numscreens == 1) {
 #ifdef WXDEBUG
-      // For debugging, we display home as if it was a second monitor.
-      display_info->mutable_side()->set_home(true);
+        // For debugging, we display home as if it was a second monitor.
+        display_info->mutable_side()->set_home(true);
+#else
+        // Create an error "screen" to let the user know we don't expect this to
+        // work.
+        display_info->mutable_side()->set_error(true);
 #endif
+      }
     } else {
       // The lowest monitor will default to home, the highest away, aside from
       // the primary.  If we have 4 or more monitors, we don't yet support that

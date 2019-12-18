@@ -49,11 +49,12 @@ MainView *GuiTest::mainView() {
   return (MainView *)FrameList::getInstance()->getMainView();
 }
 
-ImageAnalysis::ImageAnalysis(wxWindow *widget) {
+ImageAnalysis::ImageAnalysis(wxWindow *widget, int precision_percent) {
   wxClientDC dc(widget);
   wxRect dimensions = widget->GetRect();
-  for (int x = 0; x < dimensions.GetWidth(); ++x) {
-    for (int y = 0; y < dimensions.GetHeight(); ++y) {
+  int pixel_step = 100 / precision_percent;
+  for (int x = 0; x < dimensions.GetWidth(); x += pixel_step) {
+    for (int y = 0; y < dimensions.GetHeight(); y += pixel_step) {
       wxColour color;
       dc.GetPixel(x, y, &color);
       unsigned int rgb = color.GetRGB();
@@ -65,7 +66,7 @@ ImageAnalysis::ImageAnalysis(wxWindow *widget) {
     }
   }
 
-  int total = dimensions.GetWidth() * dimensions.GetHeight();
+  int total = (dimensions.GetWidth() * dimensions.GetHeight()) / pixel_step;
 
   for (auto iterator : color_counts) {
     unsigned int color_rgb = iterator.first;

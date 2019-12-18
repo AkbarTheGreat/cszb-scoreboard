@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include "config/DisplayConfig.h"
 #include "test/GuiTest.h"
 
 namespace cszb_scoreboard {
@@ -27,12 +28,21 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   ImageAnalysis analysis(mainView()->preview(0)->widget());
   std::vector<int> color_list = analysis.colorList();
   int list_size = color_list.size();
-  // The error image on pane 0 is ~50% white, ~50% red with black text over part
-  // of it.  This test will fail if run on a machine with multiple monitors.  If
-  // that comes up, fix this test, I guess.
-  ASSERT_GT(analysis.colorPercentage(wxColour("Red")), 40);
-  ASSERT_GT(analysis.colorPercentage(wxColour("White")), 40);
-  ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
+  if (DisplayConfig::getInstance()->displayDetails(0).side().error()) {
+    // The error image on pane 0 is ~50% white, ~50% red with black text over
+    // part of it.  We rely on display config to tell us which kind of display
+    // we should be testing.
+    ASSERT_GT(analysis.colorPercentage(wxColour("Red")), 40);
+    ASSERT_LT(analysis.colorPercentage(wxColour("Red")), 60);
+    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 40);
+    ASSERT_LT(analysis.colorPercentage(wxColour("White")), 60);
+    ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
+    ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 10);
+  } else {
+    ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 90);
+    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 3);
+    ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);
+  }
 }
 
 }  // namespace test

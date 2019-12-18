@@ -52,14 +52,10 @@ class TextEntryTest : public GuiTest {
   }
 
   ImageAnalysis getAnalysis() {
-    // Always assume we're dealing with the left view, which is 1 in debug,
-    // but we also assume that our tests only run on single-monitor.  So likely
-    // this fails in non-debug at the moment.
-    int preview_number = 0;
-#ifdef WXDEBUG
-    preview_number = 1;
-#endif
-    return ImageAnalysis(mainView()->preview(preview_number)->widget());
+    // Always assume we're dealing with the left (home) view, which is 0 in most
+    // cases, but may also be an error screen in release, so this will fail for
+    // release at the moment.
+    return ImageAnalysis(mainView()->preview(0)->widget());
   }
 };
 
