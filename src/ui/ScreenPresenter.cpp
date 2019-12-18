@@ -24,11 +24,9 @@ limitations under the License.
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
-ScreenPresenter::ScreenPresenter(int monitor_number, ScreenSide side,
-                                 ScreenText* widget)
+ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
     : wxFrame(NULL, wxID_ANY, "Scoreboard", wxDefaultPosition, wxDefaultSize) {
   this->monitor_number = monitor_number;
-  this->side = side;
 #ifndef WXDEBUG
   // Set external monitors to be always on top, unless we're debugging, since
   // sometimes we use one monitor to debug

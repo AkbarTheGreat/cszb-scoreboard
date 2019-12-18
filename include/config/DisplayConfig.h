@@ -22,22 +22,20 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "proto/config.pb.h"
-#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 
 class DisplayConfig {
  private:
   static DisplayConfig *singleton_instance;
-  proto::DisplayConfig displays;
+  proto::DisplayConfig display_config;
   DisplayConfig();
 
  public:
   static DisplayConfig *getInstance();
   void detectDisplays();
   proto::DisplayInfo displayDetails(int index);
-  int displayForSide(ScreenSide side);
   int numberOfDisplays();
-  int primaryDisplay();
+  bool isPrimaryDisplay(proto::DisplayInfo *display_info);
 };
 }  // namespace cszb_scoreboard

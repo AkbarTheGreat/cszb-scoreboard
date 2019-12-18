@@ -18,8 +18,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+
+#include "proto/config.pb.h"
 #include "ui/Color.h"
-#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 
@@ -27,15 +28,15 @@ class ScreenText : public wxPanel {
  private:
   wxImage image;
   wxString text;
-  ScreenSide side;
   Color font_color;
-  ScreenText(wxWindow* parent, const wxString& initial_text, ScreenSide side,
-             wxSize size);
+  ScreenText(wxWindow* parent, const wxString& initial_text,
+             proto::ScreenSide side, wxSize size);
+  ScreenText(wxWindow* parent, const wxString& initial_text, wxImage image,
+             Color font_color, wxSize size);
   void initializeForColor(wxSize size, Color color);
 
  public:
-  static ScreenText* getPreview(wxWindow* parent, const wxString& initial_text,
-                                ScreenSide side);
+  static ScreenText* getPreview(wxWindow* parent, proto::ScreenSide side);
 
   static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
                                   wxSize size);

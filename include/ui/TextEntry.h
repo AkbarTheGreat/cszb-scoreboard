@@ -21,7 +21,6 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "ui/MainView.h"
-#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 

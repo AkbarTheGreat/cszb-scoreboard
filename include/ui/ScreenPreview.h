@@ -1,4 +1,4 @@
-/* 
+/*
 ui/ScreenPreview.h: This class manages the thumbnail preview of a monitor
 in the main window.  In addition, the preview owns the ScreenPresenter which
 displays to the actual monitor, dispatching the updated view when necessary.
@@ -20,13 +20,13 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-#include "ui/ScreenSide.h"
+
 #include "ui/ScreenPresenter.h"
 
 namespace cszb_scoreboard {
 class ScreenPreview {
  public:
-  ScreenPreview(wxWindow* parent, ScreenSide side);
+  ScreenPreview(wxWindow* parent, proto::ScreenSide side);
   wxPanel* widget();
 
  private:

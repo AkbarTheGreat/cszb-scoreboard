@@ -20,7 +20,6 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 #include "ui/FrameList.h"
-#include "ui/ScreenSide.h"
 
 namespace cszb_scoreboard {
 
@@ -50,30 +49,12 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   status_text += " displays found.";
   SetStatusText(status_text);
 
-  switch (DisplayConfig::getInstance()->numberOfDisplays()) {
-    default:
-    case 0:
-      // This feels like an impossible scenario, since you shouldn't be flat-out
-      // headless, but treat it as one, for the purposes of just carrying on and
-      // at least attempting to display the main window.
-    case 1:
-      // Only the main window, this is a deprecated case, and probably a
-      // mistake.
-      screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_NONE));
-#ifdef WXDEBUG
-      // Run fullscreen behind our control window in debugging circumstances
-      screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_SINGLE));
-#endif
-      break;
-    case 2:
-      // Single scoreboard display, split-screen
-      screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_SINGLE));
-      break;
-    case 3:
-      // Two scoreboard displays
-      screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_LEFT));
-      screens.push_back(new ScreenPreview(this, ScreenSide::SIDE_RIGHT));
-      break;
+  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
+    proto::DisplayInfo display_info = DisplayConfig::getInstance()->displayDetails(i);
+    if (display_info.side().error() || display_info.side().home() ||
+        display_info.side().away()) {
+      screens.push_back(new ScreenPreview(this, display_info.side()));
+    }
   }
 
   text_entry = new TextEntry(this);

@@ -16,45 +16,56 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "ui/ScreenText.h"
+
 #include <wx/image.h>
+
 #include "ui/BackgroundImage.h"
 
 namespace cszb_scoreboard {
 
+// TODO: Get rid of this event table
 BEGIN_EVENT_TABLE(ScreenText, wxPanel)
 EVT_PAINT(ScreenText::paintEvent)
 END_EVENT_TABLE()
 
-ScreenText* ScreenText::getPreview(wxWindow* parent,
-                                   const wxString& initial_text,
-                                   ScreenSide side) {
+const char* WELCOME_MESSAGE = "Chandler";
+const char* ERROR_MESSAGE = "NO SCREENS FOUND!";
+
+ScreenText* ScreenText::getPreview(wxWindow* parent, proto::ScreenSide side) {
+  wxString initial_text;
+  if (side.error()) {
+    initial_text = ERROR_MESSAGE;
+  } else {
+    initial_text = WELCOME_MESSAGE;
+  }
   return new ScreenText(parent, initial_text, side, wxSize(640, 480));
 }
 
 ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
                                      wxSize size) {
-  return new ScreenText(parent, preview->text, preview->side, size);
+  return new ScreenText(parent, preview->text, preview->image, preview->font_color, size);
 }
 
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
-                       ScreenSide side, wxSize size)
+                       wxImage image, Color font_color, wxSize size)
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
+  text = initial_text;
+  this->image = image;
+  this->font_color = font_color;
+}
+
+ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
+                       proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   this->text = initial_text;
-  this->side = side;
 
-  switch (side) {
-    case SIDE_SINGLE:  // TODO: Build single screen functionality here
-    case SIDE_LEFT:
-      initializeForColor(size, Color("Blue"));
-      break;
-    case SIDE_RIGHT:
-      initializeForColor(size, Color("Red"));
-      break;
-    case SIDE_NONE:
-    default:
-      image = BackgroundImage::errorImage(size);
-      font_color = Color(Color("Black"));
-      break;
+  if (side.home()) {
+    initializeForColor(size, Color("Blue"));
+  } else if (side.away()) {
+    initializeForColor(size, Color("Red"));
+  } else if (side.error()) {
+    image = BackgroundImage::errorImage(size);
+    font_color = Color(Color("Black"));
   }
 }
 

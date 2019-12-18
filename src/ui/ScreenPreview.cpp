@@ -18,25 +18,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "ui/ScreenPreview.h"
+
 #include "ui/ScreenText.h"
 
 namespace cszb_scoreboard {
 
-const char* WELCOME_MESSAGE = "Chandler";
-const char* ERROR_MESSAGE = "NO SCREENS FOUND!";
-
-ScreenPreview::ScreenPreview(wxWindow* parent, ScreenSide side) {
+ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side) {
   this->parent = parent;
   ScreenText* screen_text = nullptr;
-  switch (side) {
-    case SIDE_NONE:
-      screen_text = ScreenText::getPreview(parent, ERROR_MESSAGE, side);
-      break;
-    default:
-      screen_text = ScreenText::getPreview(parent, WELCOME_MESSAGE, side);
-      presenter = new ScreenPresenter(
-          0, side,
-          screen_text);  // TODO: Pass along screen number that's expected
+  screen_text = ScreenText::getPreview(parent, side);
+  if (!side.error()) {
+    presenter = new ScreenPresenter(
+        0, screen_text);  // TODO: Pass along screen number that's expected
   }
   this->current_widget = screen_text;
 }
