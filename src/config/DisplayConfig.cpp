@@ -24,11 +24,16 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-DisplayConfig *DisplayConfig::singleton_instance = new DisplayConfig();
+DisplayConfig *DisplayConfig::singleton_instance;
 
 DisplayConfig::DisplayConfig() { detectDisplays(); }
 
-DisplayConfig *DisplayConfig::getInstance() { return singleton_instance; }
+DisplayConfig *DisplayConfig::getInstance() {
+  if (singleton_instance == nullptr) {
+    singleton_instance = new DisplayConfig();
+  }
+  return singleton_instance;
+}
 
 void DisplayConfig::detectDisplays() {
   int numscreens = wxDisplay::GetCount();
@@ -71,7 +76,12 @@ proto::DisplayInfo DisplayConfig::displayDetails(int index) {
 
 // Determines which display currently houses the main control window.
 bool DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) {
-  wxPoint main_size = FrameList::getInstance()->getMainView()->GetPosition();
+  wxFrame *main_view = FrameList::getInstance()->getMainView();
+  if (main_view == nullptr) {
+    return 0;  // Guess that screen 0 is our primary, as we haven't created our
+               // main window yet.
+  }
+  wxPoint main_size = main_view->GetPosition();
   if (ProtoUtil::wxRct(display_info->dimensions()).Contains(main_size)) {
     return true;
   }

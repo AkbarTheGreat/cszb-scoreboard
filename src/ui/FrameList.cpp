@@ -22,9 +22,12 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-FrameList* FrameList::singleton_instance = new FrameList();
+FrameList* FrameList::singleton_instance;
 
 FrameList* FrameList::getInstance() {
+  if (singleton_instance == nullptr) {
+      singleton_instance = new FrameList();
+  }
   return singleton_instance;
 }
 
