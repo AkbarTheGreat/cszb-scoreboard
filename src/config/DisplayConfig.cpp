@@ -19,9 +19,9 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
+#include "config/Persistence.h"
 #include "ui/FrameList.h"
 #include "util/ProtoUtil.h"
-#include "config/Persistence.h"
 
 namespace cszb_scoreboard {
 
@@ -38,6 +38,19 @@ DisplayConfig *DisplayConfig::getInstance() {
 
 void DisplayConfig::detectDisplays() {
   int numscreens = wxDisplay::GetCount();
+
+  display_config = Persistence::loadDisplays();
+
+  // Currently, don't re-detect displays if it matches our saved state,
+  // otherwise, we'll re-initialize them.  In the future, we may get fancier
+  // with trying to save the state of existing displays if new ones are added,
+  // or something similar.
+  if (numscreens == display_config.displays_size()) {
+    wxLogDebug("Screen count did not change from %d, using saved config", numscreens);
+    return;
+  }
+  wxLogDebug("Screen count changed from %d to %d, reconfiguring",
+             display_config.displays_size(), numscreens);
 
   bool set_home = true;
 

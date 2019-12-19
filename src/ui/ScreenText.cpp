@@ -43,15 +43,21 @@ ScreenText* ScreenText::getPreview(wxWindow* parent, proto::ScreenSide side) {
 
 ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
                                      wxSize size) {
-  return new ScreenText(parent, preview->text, preview->image, preview->font_color, size);
+  return new ScreenText(parent, preview->text, preview->image,
+                        preview->background_color, preview->font_color, size);
 }
 
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
-                       wxImage image, Color font_color, wxSize size)
+                       wxImage image, std::optional<Color> background_color,
+                       Color font_color, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   text = initial_text;
   this->image = image;
   this->font_color = font_color;
+  this->background_color = background_color;
+  if (background_color.has_value()) {
+    initializeForColor(size, *background_color);
+  }
 }
 
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
@@ -59,13 +65,15 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   this->text = initial_text;
 
-  if (side.home()) {
-    initializeForColor(size, Color("Blue"));
-  } else if (side.away()) {
-    initializeForColor(size, Color("Red"));
-  } else if (side.error()) {
+  if (side.error()) {
     image = BackgroundImage::errorImage(size);
     font_color = Color(Color("Black"));
+  } else {
+    background_color = Color("Blue");
+    if (side.away()) {
+      background_color = Color("Red");
+    }
+    initializeForColor(size, *background_color);
   }
 }
 
@@ -94,5 +102,15 @@ void ScreenText::paintEvent(wxPaintEvent& evt) {
   renderBackground(dc, image);
   renderText(dc, text, font_color, this->GetSize());
 }
+
+void ScreenText::setImage(const wxImage& image) {
+  this->background_color.reset();
+  this->image = image;
+};
+
+void ScreenText::setBackground(const Color color) {
+  this->background_color = color;
+  initializeForColor(GetSize(), color);
+};
 
 }  // namespace cszb_scoreboard

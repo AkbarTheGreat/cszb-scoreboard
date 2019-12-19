@@ -19,6 +19,8 @@ limitations under the License.
 
 #include <wx/wx.h>
 
+#include <optional>
+
 #include "proto/config.pb.h"
 #include "ui/Color.h"
 
@@ -28,11 +30,13 @@ class ScreenText : public wxPanel {
  private:
   wxImage image;
   wxString text;
+  std::optional<Color> background_color;
   Color font_color;
   ScreenText(wxWindow* parent, const wxString& initial_text,
              proto::ScreenSide side, wxSize size);
   ScreenText(wxWindow* parent, const wxString& initial_text, wxImage image,
-             Color font_color, wxSize size);
+             std::optional<Color> background_color, Color font_color,
+             wxSize size);
   void initializeForColor(wxSize size, Color color);
 
  public:
@@ -42,7 +46,8 @@ class ScreenText : public wxPanel {
                                   wxSize size);
 
   void paintEvent(wxPaintEvent& event);
-  inline void setImage(const wxImage& image) { this->image = image; };
+  void setImage(const wxImage& image);
+  void setBackground(const Color color);
   inline void setText(const wxString& text) { this->text = text; };
   DECLARE_EVENT_TABLE()
 };
