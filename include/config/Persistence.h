@@ -18,18 +18,14 @@ limitations under the License.
 */
 #pragma once
 
-#include <google/protobuf/util/time_util.h>
-#include <wx/wx.h>
-#include <fstream>
-#include <iostream>
 #include "proto/config.pb.h"
 
 namespace cszb_scoreboard {
 
 class Persistence {
  public:
-  proto::DisplayConfig loadDisplays();
-  void saveDisplays(proto::DisplayConfig display_config);
+  static proto::DisplayConfig loadDisplays();
+  static void saveDisplays(const proto::DisplayConfig &display_config);
 };
 
 }  // namespace cszb_scoreboard

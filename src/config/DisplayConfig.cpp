@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "ui/FrameList.h"
 #include "util/ProtoUtil.h"
+#include "config/Persistence.h"
 
 namespace cszb_scoreboard {
 
@@ -72,6 +73,7 @@ void DisplayConfig::detectDisplays() {
       }
     }
   }
+  Persistence::saveDisplays(display_config);
 }
 
 int DisplayConfig::numberOfDisplays() { return display_config.displays_size(); }
