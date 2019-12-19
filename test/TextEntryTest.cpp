@@ -60,12 +60,16 @@ class TextEntryTest : public GuiTest {
 };
 
 TEST_F(TextEntryTest, TypingTest) {
+  wxColour text_color = wxColour("Black");
+#ifdef WXDEBUG
+  text_color = wxColour("White");
+#endif
   enterText(".");
   ImageAnalysis analysis = getAnalysis();
-  float initial_text_ratio = analysis.colorPercentage(wxColour("White"));
+  float initial_text_ratio = analysis.colorPercentage(text_color);
   enterText("Longer Text");
   analysis = getAnalysis();
-  float new_text_ratio = analysis.colorPercentage(wxColour("White"));
+  float new_text_ratio = analysis.colorPercentage(text_color);
   // TODO: This test is broken, as the above act.Text() actions don't appear to
   // be firing correctly, or the SetFocus isn't working, one of the two.
   ASSERT_LT(initial_text_ratio, new_text_ratio);

@@ -58,9 +58,9 @@ wxButton *TextEntry::updateButton() { return update_screens; }
 wxTextCtrl *TextEntry::textField() { return text_entry; }
 
 void TextEntry::textUpdated(wxKeyEvent &event) {
-  // TODO: This is hard-coded to do screen 1 (the second one), which needs to be
+  // TODO: This is hard-coded to do screen 0 (the left-most one), which needs to be
   // changed
-  ScreenText *text = (ScreenText *)parent->preview(1)->widget();
+  ScreenText *text = (ScreenText *)parent->preview(0)->widget();
   text->setText(text_entry->GetValue());
   text->Refresh();
 }
