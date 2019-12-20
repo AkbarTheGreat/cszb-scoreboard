@@ -57,8 +57,7 @@ wxButton *TextEntry::updateButton() { return update_screens; }
 
 wxTextCtrl *TextEntry::textField() { return text_entry; }
 
-void TextEntry::textUpdated(wxKeyEvent &event) {
-  wxLogDebug("Text Updated");
+proto::ScreenSide TextEntry::selectedSide() {
   proto::ScreenSide side;
   switch (screen_selection->GetSelection()) {
     case 0:
@@ -72,7 +71,11 @@ void TextEntry::textUpdated(wxKeyEvent &event) {
       side.set_away(true);
       break;
   }
-  parent->setTextForPreview(text_entry->GetValue(), side);
+  return side;
+}
+
+void TextEntry::textUpdated(wxKeyEvent &event) {
+  parent->setTextForPreview(text_entry->GetValue(), selectedSide());
 }
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
@@ -81,12 +84,11 @@ void TextEntry::screenChanged(wxCommandEvent &event) {
   // a) Clear the text box at this point.
   // b) Revert the old screen to what it was before the last edit, then send
   // text to the new one.
-  wxLogDebug("Screen changed");
   textUpdated(wxKeyEvent());
 }
 
 void TextEntry::updateClicked(wxCommandEvent &event) {
-  // TODO: Have this update the full screens
+  parent->updatePresenters(selectedSide());
 }
 
 }  // namespace cszb_scoreboard

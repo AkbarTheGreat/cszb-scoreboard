@@ -34,6 +34,14 @@ ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side) {
   this->current_widget = screen_text;
 }
 
-wxPanel* ScreenPreview::widget() { return current_widget; }
+ScreenText* ScreenPreview::widget() { return current_widget; }
+
+void ScreenPreview::sendToPresenter() {
+  presenter->widget()->setAll(*current_widget);
+}
+
+void ScreenPreview::sendToPresenter(proto::ScreenSide side) {
+  if (current_widget->isSide(side)) sendToPresenter();
+}
 
 }  // namespace cszb_scoreboard

@@ -81,11 +81,7 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
 }
 
 void ScreenText::setText(const wxString& text, const proto::ScreenSide& side) {
-  if (screen_side.home() && side.home()) {
-    setText(text);
-  } else if (screen_side.away() && side.away()) {
-    setText(text);
-  } else if (screen_side.extra() && side.extra()) {
+  if (isSide(side)) {
     setText(text);
   }
 }
@@ -125,5 +121,25 @@ void ScreenText::setBackground(const Color color) {
   this->background_color = color;
   initializeForColor(GetSize(), color);
 };
+
+void ScreenText::setAll(const ScreenText& source) {
+  setImage(source.image);
+  if (source.background_color.has_value()) {
+    setBackground(*source.background_color);
+  }
+  setText(source.text);
+  Refresh();
+}
+
+bool ScreenText::isSide(proto::ScreenSide side) {
+  if (screen_side.home() && side.home()) {
+    return true;
+  } else if (screen_side.away() && side.away()) {
+    return true;
+  } else if (screen_side.extra() && side.extra()) {
+    return true;
+  }
+  return false;
+}
 
 }  // namespace cszb_scoreboard

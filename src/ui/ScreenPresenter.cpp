@@ -36,10 +36,6 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
   proto::DisplayInfo display =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
   wxRect screen = ProtoUtil::wxRct(display.dimensions());
-  wxLogDebug("Going to screen %d with %s", monitor_number,
-             display.dimensions().DebugString());
-  wxLogDebug("Post Conversion %d %d %d %d", screen.GetX(), screen.GetY(),
-             screen.GetWidth(), screen.GetHeight());
   current_widget = ScreenText::getPresenter(this, widget, screen.GetSize());
   SetPosition(screen.GetPosition());
   current_widget->SetSize(screen.GetSize());

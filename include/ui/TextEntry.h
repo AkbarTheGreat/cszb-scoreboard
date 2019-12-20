@@ -40,6 +40,7 @@ class TextEntry : public wxPanel {
  private:
   void updateClicked(wxCommandEvent &event);
   void screenChanged(wxCommandEvent &event);
+  proto::ScreenSide selectedSide();
   MainView *parent;
   wxButton *update_screens;
   wxRadioBox *screen_selection;

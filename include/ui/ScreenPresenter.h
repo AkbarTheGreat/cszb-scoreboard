@@ -25,10 +25,11 @@ namespace cszb_scoreboard {
 class ScreenPresenter : public wxFrame {
  public:
   ScreenPresenter(int monitor_number, ScreenText *widget);
+  inline ScreenText *widget() { return current_widget; }
 
  private:
   int monitor_number;
-  wxPanel *current_widget;
+  ScreenText *current_widget;
 };
 
 }  // namespace cszb_scoreboard

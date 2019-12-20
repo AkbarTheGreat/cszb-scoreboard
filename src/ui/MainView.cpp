@@ -72,9 +72,21 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 
 void MainView::setTextForPreview(wxString text, proto::ScreenSide side) {
   for (auto preview : screens) {
-    ScreenText* screen_text = (ScreenText*)preview->widget();
+    ScreenText* screen_text = preview->widget();
     screen_text->setText(text, side);
     screen_text->Refresh();
+  }
+}
+
+void MainView::updatePresenters(proto::ScreenSide side) {
+  for (auto preview : screens) {
+    preview->sendToPresenter(side);
+  }
+}
+
+void MainView::updatePresenters() {
+  for (auto preview : screens) {
+    preview->sendToPresenter();
   }
 }
 

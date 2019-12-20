@@ -27,11 +27,14 @@ namespace cszb_scoreboard {
 class ScreenPreview {
  public:
   ScreenPreview(wxWindow* parent, proto::ScreenSide side);
-  wxPanel* widget();
+  ScreenText* widget();
+  void sendToPresenter();
+  void sendToPresenter(proto::ScreenSide side);
 
  private:
-  wxPanel* current_widget;
+  ScreenText* current_widget;
   const wxWindow* parent;
   ScreenPresenter* presenter;
 };
 }  // namespace cszb_scoreboard
+

@@ -43,6 +43,8 @@ class MainView : public wxFrame {
   }
   TextEntry* textEntry() { return this->text_entry; }
   void setTextForPreview(wxString text, proto::ScreenSide side);
+  void updatePresenters(proto::ScreenSide side);
+  void updatePresenters();
 
  private:
   std::vector<ScreenPreview*> screens;
