@@ -47,7 +47,7 @@ TextEntry::TextEntry(MainView *parent)
   SetSizerAndFit(sizer);
 
   text_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
-  screen_selection->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
+  screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &TextEntry::screenChanged, this);
   update_screens->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &TextEntry::updateClicked,
                        this);
@@ -58,15 +58,31 @@ wxButton *TextEntry::updateButton() { return update_screens; }
 wxTextCtrl *TextEntry::textField() { return text_entry; }
 
 void TextEntry::textUpdated(wxKeyEvent &event) {
-  // TODO: This is hard-coded to do screen 0 (the left-most one), which needs to be
-  // changed
-  ScreenText *text = (ScreenText *)parent->preview(0)->widget();
-  text->setText(text_entry->GetValue());
-  text->Refresh();
+  wxLogDebug("Text Updated");
+  proto::ScreenSide side;
+  switch (screen_selection->GetSelection()) {
+    case 0:
+      side.set_home(true);
+      break;
+    case 1:
+      side.set_away(true);
+      break;
+    default:
+      side.set_home(true);
+      side.set_away(true);
+      break;
+  }
+  parent->setTextForPreview(text_entry->GetValue(), side);
 }
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
-  // TODO: Set screen to update
+  // For now, if someone changes the screen, just send the text to that screen
+  // immediately and leave the old one as-is.  Alternatives for the future:
+  // a) Clear the text box at this point.
+  // b) Revert the old screen to what it was before the last edit, then send
+  // text to the new one.
+  wxLogDebug("Screen changed");
+  textUpdated(wxKeyEvent());
 }
 
 void TextEntry::updateClicked(wxCommandEvent &event) {

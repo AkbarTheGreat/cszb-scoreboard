@@ -50,7 +50,8 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   SetStatusText(status_text);
 
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
-    proto::DisplayInfo display_info = DisplayConfig::getInstance()->displayDetails(i);
+    proto::DisplayInfo display_info =
+        DisplayConfig::getInstance()->displayDetails(i);
     if (display_info.side().error() || display_info.side().home() ||
         display_info.side().away()) {
       screens.push_back(new ScreenPreview(this, display_info.side()));
@@ -67,6 +68,14 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   }
   sizer->Add(text_entry, 1, wxEXPAND | wxALL, BORDER_WIDTH);
   SetSizerAndFit(sizer);
+}
+
+void MainView::setTextForPreview(wxString text, proto::ScreenSide side) {
+  for (auto preview : screens) {
+    ScreenText* screen_text = (ScreenText*)preview->widget();
+    screen_text->setText(text, side);
+    screen_text->Refresh();
+  }
 }
 
 void MainView::onExit(wxCommandEvent& event) { Close(true); }

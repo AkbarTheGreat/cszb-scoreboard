@@ -44,15 +44,17 @@ ScreenText* ScreenText::getPreview(wxWindow* parent, proto::ScreenSide side) {
 ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
                                      wxSize size) {
   return new ScreenText(parent, preview->text, preview->image,
-                        preview->background_color, preview->font_color, size);
+                        preview->background_color, preview->font_color,
+                        preview->screen_side, size);
 }
 
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
                        wxImage image, std::optional<Color> background_color,
-                       Color font_color, wxSize size)
+                       Color font_color, proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   text = initial_text;
   this->image = image;
+  this->screen_side = side;
   this->font_color = font_color;
   this->background_color = background_color;
   if (background_color.has_value()) {
@@ -64,6 +66,7 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
                        proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   this->text = initial_text;
+  this->screen_side = side;
 
   if (side.error()) {
     image = BackgroundImage::errorImage(size);
@@ -74,6 +77,16 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
       background_color = Color("Red");
     }
     initializeForColor(size, *background_color);
+  }
+}
+
+void ScreenText::setText(const wxString& text, const proto::ScreenSide& side) {
+  if (screen_side.home() && side.home()) {
+    setText(text);
+  } else if (screen_side.away() && side.away()) {
+    setText(text);
+  } else if (screen_side.extra() && side.extra()) {
+    setText(text);
   }
 }
 

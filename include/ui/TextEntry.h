@@ -43,7 +43,9 @@ class TextEntry : public wxPanel {
   MainView *parent;
   wxButton *update_screens;
   wxRadioBox *screen_selection;
-  wxString screen_choices[3] = {wxT("Left"), wxT("Right"), wxT("All")};
+  // If the list of screen_chocies changes, be sure to change what happens in
+  // textUpdated().
+  wxString screen_choices[3] = {wxT("Home"), wxT("Away"), wxT("All")};
   wxTextCtrl *text_entry;
 };
 
