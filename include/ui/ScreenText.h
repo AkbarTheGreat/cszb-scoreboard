@@ -27,20 +27,6 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 class ScreenText : public wxPanel {
- private:
-  wxImage image;
-  wxString text;
-  std::optional<Color> background_color;
-  Color font_color;
-  proto::ScreenSide screen_side;
-
-  ScreenText(wxWindow* parent, const wxString& initial_text,
-             proto::ScreenSide side, wxSize size);
-  ScreenText(wxWindow* parent, const wxString& initial_text, wxImage image,
-             std::optional<Color> background_color, Color font_color,
-             proto::ScreenSide side, wxSize size);
-  void initializeForColor(wxSize size, Color color);
-
  public:
   static ScreenText* getPreview(wxWindow* parent, proto::ScreenSide side);
 
@@ -55,6 +41,20 @@ class ScreenText : public wxPanel {
   void setAll(const ScreenText& source);
   bool isSide(proto::ScreenSide side);
   DECLARE_EVENT_TABLE()
+
+ private:
+  wxImage image;
+  wxString text;
+  std::optional<Color> background_color;
+  Color font_color;
+  proto::ScreenSide screen_side;
+
+  ScreenText(wxWindow* parent, const wxString& initial_text,
+             proto::ScreenSide side, wxSize size);
+  ScreenText(wxWindow* parent, const wxString& initial_text, wxImage image,
+             std::optional<Color> background_color, Color font_color,
+             proto::ScreenSide side, wxSize size);
+  void initializeForColor(wxSize size, Color color);
 };
 
 }  // namespace cszb_scoreboard

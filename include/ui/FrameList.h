@@ -20,17 +20,12 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+
 #include <set>
 
 namespace cszb_scoreboard {
 
 class FrameList {
- private:
-  wxFrame *main_view = nullptr;
-  std::set<wxFrame *> frames;
-  static FrameList *singleton_instance;
-  FrameList(){};
-
  public:
   static FrameList *getInstance();
   inline void setMainView(wxFrame *frame) { main_view = frame; }
@@ -38,6 +33,12 @@ class FrameList {
   inline void addFrame(wxFrame *frame) { frames.insert(frame); }
   inline void delFrame(wxFrame *frame) { frames.erase(frame); }
   void exitFrames();
+
+ private:
+  wxFrame *main_view = nullptr;
+  std::set<wxFrame *> frames;
+  static FrameList *singleton_instance;
+  FrameList(){};
 };
 
 }  // namespace cszb_scoreboard

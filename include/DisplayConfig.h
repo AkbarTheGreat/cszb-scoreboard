@@ -20,6 +20,7 @@ limitations under the License.
 
 #include <wx/display.h>
 #include <wx/wx.h>
+
 #include <vector>
 
 #include "proto/config.pb.h"
@@ -28,20 +29,15 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 class DisplayInfo {
- private:
-  wxRect dimensions;
-
  public:
   DisplayInfo(wxRect dimensions);
   inline wxRect getDimensions() { return dimensions; }
+
+ private:
+  wxRect dimensions;
 };
 
 class DisplayConfig {
- private:
-  static DisplayConfig *singleton_instance;
-  std::vector<proto::DisplayInfo> displays;
-  DisplayConfig();
-
  public:
   static DisplayConfig *getInstance();
   void detectDisplays();
@@ -49,6 +45,11 @@ class DisplayConfig {
   int displayForSide(ScreenSide side);
   int numberOfDisplays();
   int primaryDisplay();
+
+ private:
+  static DisplayConfig *singleton_instance;
+  std::vector<proto::DisplayInfo> displays;
+  DisplayConfig();
 };
 
 }  // namespace cszb_scoreboard

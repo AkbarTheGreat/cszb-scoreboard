@@ -26,16 +26,16 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 class DisplayConfig {
- private:
-  static DisplayConfig *singleton_instance;
-  proto::DisplayConfig display_config;
-  DisplayConfig();
-
  public:
   static DisplayConfig *getInstance();
   void detectDisplays();
   proto::DisplayInfo displayDetails(int index);
   int numberOfDisplays();
   bool isPrimaryDisplay(proto::DisplayInfo *display_info);
+
+ private:
+  static DisplayConfig *singleton_instance;
+  proto::DisplayConfig display_config;
+  DisplayConfig();
 };
 }  // namespace cszb_scoreboard
