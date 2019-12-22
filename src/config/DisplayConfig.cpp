@@ -46,12 +46,17 @@ void DisplayConfig::detectDisplays() {
   // with trying to save the state of existing displays if new ones are added,
   // or something similar.
   if (numscreens == display_config.displays_size()) {
-    wxLogDebug("Screen count did not change from %d, using saved config", numscreens);
+    wxLogDebug("Screen count did not change from %d, using saved config",
+               numscreens);
+#ifndef WXDEBUG
+    // Don't actually exit in debug mode, since we may change things around
+    // while developing.
     return;
+#endif
   }
   wxLogDebug("Screen count changed from %d to %d, reconfiguring",
              display_config.displays_size(), numscreens);
-
+  display_config.clear_displays();
   bool set_home = true;
 
   for (int i = 0; i < numscreens; i++) {

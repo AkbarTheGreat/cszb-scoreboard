@@ -54,7 +54,7 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
         DisplayConfig::getInstance()->displayDetails(i);
     if (display_info.side().error() || display_info.side().home() ||
         display_info.side().away()) {
-      screens.push_back(new ScreenPreview(this, display_info.side()));
+      screens.push_back(new ScreenPreview(this, display_info.side(), i));
     }
   }
 

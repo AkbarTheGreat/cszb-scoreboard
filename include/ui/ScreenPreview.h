@@ -26,7 +26,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenPreview {
  public:
-  ScreenPreview(wxWindow* parent, proto::ScreenSide side);
+  ScreenPreview(wxWindow* parent, proto::ScreenSide side, int monitor_number);
   ScreenText* widget();
   void sendToPresenter();
   void sendToPresenter(proto::ScreenSide side);
