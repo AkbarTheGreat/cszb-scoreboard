@@ -18,6 +18,7 @@ limitations under the License.
 #include "ui/ScreenText.h"
 
 #include <wx/image.h>
+#include <wx/tokenzr.h>
 
 #include "ui/BackgroundImage.h"
 
@@ -106,10 +107,26 @@ void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
   dc.SetFont(screen_font);
   dc.SetTextForeground(font_color);
   int width, height;
-  dc.GetTextExtent(text, &width, &height);
+  // dc.GetTextExtent(text, &width, &height);
+  getTextExtent(dc, text, &width, &height);
   int x = (widget_size.GetWidth() - width) / 2;
   int y = (widget_size.GetHeight() - height) / 2;
   dc.DrawText(text, x, y);
+}
+
+void ScreenText::getTextExtent(wxDC& dc, wxString text, int* width,
+                               int* height) {
+  wxStringTokenizer tokens(text, "\n\r");
+  *width = 0;
+  *height = 0;
+  wxString token = tokens.GetNextToken();
+  while (!token.IsEmpty()) {
+    int line_width, line_height;
+    dc.GetTextExtent(token, &line_width, &line_height);
+    if (line_width > *width) *width = line_width;
+    *height += line_height;
+    token = tokens.GetNextToken();
+  }
 }
 
 int ScreenText::scaleFont(wxSize to_size) {
