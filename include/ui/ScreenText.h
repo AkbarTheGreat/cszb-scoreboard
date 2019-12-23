@@ -28,7 +28,8 @@ namespace cszb_scoreboard {
 
 class ScreenText : public wxPanel {
  public:
-  static ScreenText* getPreview(wxWindow* parent, proto::ScreenSide side);
+  static ScreenText* getPreview(wxWindow* parent, float ratio,
+                                proto::ScreenSide side);
 
   static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
                                   wxSize size);
@@ -56,7 +57,7 @@ class ScreenText : public wxPanel {
              std::optional<Color> background_color, Color font_color,
              proto::ScreenSide side, wxSize size);
   void initializeForColor(wxSize size, Color color);
-  void getTextExtent(wxDC &dc, wxString text, int *width, int *height);
+  void getTextExtent(wxDC& dc, wxString text, int* width, int* height);
   void renderBackground(wxDC& dc, wxImage image);
   void renderText(wxDC& dc, wxString text, Color font_color,
                   wxSize widget_size);

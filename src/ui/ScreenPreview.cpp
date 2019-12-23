@@ -19,17 +19,27 @@ limitations under the License.
 */
 #include "ui/ScreenPreview.h"
 
+#include "config/DisplayConfig.h"
 #include "ui/ScreenText.h"
 
 namespace cszb_scoreboard {
 
-ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side, int monitor_number) {
+ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
+                             int monitor_number) {
   this->parent = parent;
   ScreenText* screen_text = nullptr;
-  screen_text = ScreenText::getPreview(parent, side);
+  float ratio = 4 / 3;
+  if (!side.error()) {
+    proto::Rectangle dimensions = DisplayConfig::getInstance()
+                                      ->displayDetails(monitor_number)
+                                      .dimensions();
+    ratio = (float)dimensions.width() / dimensions.height();
+  }
+  screen_text = ScreenText::getPreview(parent, ratio, side);
   if (!side.error()) {
     presenter = new ScreenPresenter(
-        monitor_number, screen_text);  // TODO: Pass along screen number that's expected
+        monitor_number,
+        screen_text);  // TODO: Pass along screen number that's expected
   }
   this->current_widget = screen_text;
 }
