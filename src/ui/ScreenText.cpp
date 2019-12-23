@@ -113,7 +113,7 @@ void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
 }
 
 int ScreenText::scaleFont(wxSize to_size) {
-  return to_size.GetHeight() / (font_size * 3 / 4);
+  return to_size.GetHeight() * font_size / 75;
 }
 
 void ScreenText::paintEvent(wxPaintEvent& evt) {
