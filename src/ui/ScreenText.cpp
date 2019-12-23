@@ -80,9 +80,11 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
   }
 }
 
-void ScreenText::setText(const wxString& text, const proto::ScreenSide& side) {
+void ScreenText::setText(const wxString& text, int font_size,
+                         const proto::ScreenSide& side) {
   if (isSide(side)) {
-    setText(text);
+    this->text = text;
+    this->font_size = font_size;
   }
 }
 
@@ -135,7 +137,7 @@ void ScreenText::setAll(const ScreenText& source) {
   if (source.background_color.has_value()) {
     setBackground(*source.background_color);
   }
-  setText(source.text);
+  setText(source.text, source.font_size, this->screen_side);
   Refresh();
 }
 

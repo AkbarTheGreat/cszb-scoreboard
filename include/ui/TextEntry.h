@@ -38,9 +38,6 @@ class TextEntry : public wxPanel {
   void textUpdated(wxKeyEvent &event);
 
  private:
-  void updateClicked(wxCommandEvent &event);
-  void screenChanged(wxCommandEvent &event);
-  proto::ScreenSide selectedSide();
   MainView *parent;
   wxButton *update_screens;
   wxRadioBox *screen_selection;
@@ -48,6 +45,11 @@ class TextEntry : public wxPanel {
   // textUpdated().
   wxString screen_choices[3] = {wxT("Home"), wxT("Away"), wxT("All")};
   wxTextCtrl *text_entry;
+  wxTextCtrl *font_size_entry;
+  int enteredFontSize();
+  void updateClicked(wxCommandEvent &event);
+  void screenChanged(wxCommandEvent &event);
+  proto::ScreenSide selectedSide();
 };
 
 }  // namespace cszb_scoreboard

@@ -42,7 +42,7 @@ class MainView : public wxFrame {
     return screens[index];
   }
   TextEntry* textEntry() { return this->text_entry; }
-  void setTextForPreview(wxString text, proto::ScreenSide side);
+  void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
   void updatePresenters(proto::ScreenSide side);
   void updatePresenters();
 

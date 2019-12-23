@@ -70,10 +70,10 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   SetSizerAndFit(sizer);
 }
 
-void MainView::setTextForPreview(wxString text, proto::ScreenSide side) {
+void MainView::setTextForPreview(wxString text, int font_size, proto::ScreenSide side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
-    screen_text->setText(text, side);
+    screen_text->setText(text, font_size, side);
     screen_text->Refresh();
   }
 }

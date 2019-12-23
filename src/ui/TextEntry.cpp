@@ -21,11 +21,18 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const int DEFAULT_FONT_SIZE = 10;
+
 TextEntry::TextEntry(MainView *parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
               wxTAB_TRAVERSAL) {
-  text_entry = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxPoint(2, 1),
-                              wxSize(-1, -1), 0);
+  text_entry = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+                              wxSize(-1, -1), wxTE_MULTILINE);
+  wxString initial_size;
+  initial_size.Printf(wxT("%d"), DEFAULT_FONT_SIZE);
+
+  font_size_entry = new wxTextCtrl(this, wxID_ANY, initial_size,
+                                   wxDefaultPosition, wxSize(-1, -1), 0);
   this->parent = parent;
 
   update_screens = new wxButton(this, wxID_ANY, wxT("Update"),
@@ -42,11 +49,13 @@ TextEntry::TextEntry(MainView *parent)
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
   sizer->Add(text_entry, 0, wxALL, 5);
+  sizer->Add(font_size_entry, 0, wxALL, 5);
   sizer->Add(update_screens, 0, wxALL, 5);
   sizer->Add(screen_selection, 0, wxALL, 5);
   SetSizerAndFit(sizer);
 
   text_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
+  font_size_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &TextEntry::screenChanged, this);
   update_screens->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &TextEntry::updateClicked,
@@ -75,7 +84,8 @@ proto::ScreenSide TextEntry::selectedSide() {
 }
 
 void TextEntry::textUpdated(wxKeyEvent &event) {
-  parent->setTextForPreview(text_entry->GetValue(), selectedSide());
+  parent->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
+                            selectedSide());
 }
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
@@ -89,6 +99,14 @@ void TextEntry::screenChanged(wxCommandEvent &event) {
 
 void TextEntry::updateClicked(wxCommandEvent &event) {
   parent->updatePresenters(selectedSide());
+}
+
+int TextEntry::enteredFontSize() {
+  long font_size = DEFAULT_FONT_SIZE;
+  if (font_size_entry->GetValue().IsNumber()) {
+    font_size_entry->GetValue().ToLong(&font_size);
+  }
+  return (int)font_size;
 }
 
 }  // namespace cszb_scoreboard
