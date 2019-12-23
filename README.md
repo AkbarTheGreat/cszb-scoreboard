@@ -28,6 +28,9 @@ early feedback, as my hope is that this can be a valuable alternative to
 existing options.  As features in the [Roadmap] section are completed, they
 will be moved to here.
 
+* A scoreboard monitor may display:
+  * Arbitrary text.
+
 ## Design Decisions
 
 This project was always intended to be a Windows-first project, but the value
@@ -56,10 +59,8 @@ possible I've noted which ones are considered gating for a 1.0 release.
 
 * Support for both a single monitor for a scoreboard as well as a dual monitor
   setup. [Gating for release]
-* Display/resolution auto-detection. [Gating for release]
 * Scoreboard may display:
   * Current score. [Gating for release]
-  * Arbitrary text. [Gating for release]
   * Saved images. [Gating for release]
   * Images from clipboard.
   * Images from a Google image search.
