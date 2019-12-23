@@ -105,7 +105,6 @@ void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
                             wxSize widget_size) {
   wxFont screen_font(wxFontInfo(scaleFont(widget_size))
                          .FaceName("Impact")
-                         .Bold()
                          .AntiAliased());
   dc.SetFont(screen_font);
   dc.SetTextForeground(font_color);
