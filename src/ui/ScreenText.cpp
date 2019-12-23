@@ -91,12 +91,16 @@ void ScreenText::initializeForColor(wxSize size, Color color) {
   font_color = color.contrastColor();
 }
 
-void renderBackground(wxDC& dc, wxImage image) {
+void ScreenText::renderBackground(wxDC& dc, wxImage image) {
   dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
 }
 
-void renderText(wxDC& dc, wxString text, Color font_color, wxSize widget_size) {
-  wxFont screen_font(wxFontInfo(64).FaceName("Impact").Bold().AntiAliased());
+void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
+                            wxSize widget_size) {
+  wxFont screen_font(wxFontInfo(scaleFont(widget_size))
+                         .FaceName("Impact")
+                         .Bold()
+                         .AntiAliased());
   dc.SetFont(screen_font);
   dc.SetTextForeground(font_color);
   int width, height;
@@ -104,6 +108,10 @@ void renderText(wxDC& dc, wxString text, Color font_color, wxSize widget_size) {
   int x = (widget_size.GetWidth() - width) / 2;
   int y = (widget_size.GetHeight() - height) / 2;
   dc.DrawText(text, x, y);
+}
+
+int ScreenText::scaleFont(wxSize to_size) {
+  return to_size.GetHeight() / (font_size * 3 / 4);
 }
 
 void ScreenText::paintEvent(wxPaintEvent& evt) {

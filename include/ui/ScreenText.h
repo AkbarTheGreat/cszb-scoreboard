@@ -47,6 +47,7 @@ class ScreenText : public wxPanel {
   wxString text;
   std::optional<Color> background_color;
   Color font_color;
+  float font_size = 10;
   proto::ScreenSide screen_side;
 
   ScreenText(wxWindow* parent, const wxString& initial_text,
@@ -55,6 +56,10 @@ class ScreenText : public wxPanel {
              std::optional<Color> background_color, Color font_color,
              proto::ScreenSide side, wxSize size);
   void initializeForColor(wxSize size, Color color);
+  void renderBackground(wxDC& dc, wxImage image);
+  void renderText(wxDC& dc, wxString text, Color font_color,
+                  wxSize widget_size);
+  int scaleFont(wxSize to_size);
 };
 
 }  // namespace cszb_scoreboard
