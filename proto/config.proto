@@ -45,3 +45,7 @@ message DisplayInfo {
 message DisplayConfig {
 	repeated DisplayInfo displays = 1;
 }
+
+message ScoreboardConfig {
+	DisplayConfig display_config = 1;
+}

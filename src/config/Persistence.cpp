@@ -1,6 +1,6 @@
 /*
 config/Persistence.cpp: This class manages serializing/deserializing
-our configuration proto to/from disk
+our configuration proto to/from disk via a singleton.
 
 Copyright 2019 Tracy Beck
 
@@ -27,6 +27,8 @@ limitations under the License.
 #include <fstream>
 #include <iostream>
 
+namespace cszb_scoreboard {
+
 // TODO: This is currently writing and reading binary files, I'd rather
 // read/write textproto as that's easier for a person to inspect if weird things
 // happen.
@@ -34,7 +36,15 @@ limitations under the License.
 
 const char* CONFIG_FILE = "scoreboard.config";
 
-namespace cszb_scoreboard {
+Persistence* Persistence::singleton_instance;
+
+Persistence* Persistence::getInstance() {
+  if (singleton_instance == nullptr) {
+    singleton_instance = new Persistence();
+    singleton_instance->loadFromDisk();
+  }
+  return singleton_instance;
+}
 
 #ifdef TEXT_CONFIGURATION_FILES
 int openFileForWrite(const char* filename) {
@@ -47,36 +57,48 @@ int openFileForWrite(const char* filename) {
 void closeFile(int descriptor) { _close(descriptor); }
 #endif
 
-proto::DisplayConfig Persistence::loadDisplays() {
-  proto::DisplayConfig display_config;
+void Persistence::loadFromDisk() {
 #ifdef TEXT_CONFIGURATION_FILES
   // TODO: Manage loading text files
 #else
   std::fstream input(CONFIG_FILE, std::ios::in | std::ios::binary);
   if (!input) {
     wxLogDebug("%s: File not found. Creating a default config.", CONFIG_FILE);
-  } else if (!display_config.ParseFromIstream(&input)) {
+  } else if (!full_config.ParseFromIstream(&input)) {
     wxLogDebug("Failure parsing configuration file %s.", CONFIG_FILE);
   }
 #endif
-  return display_config;
 }
 
-void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
+void Persistence::saveToDisk() {
 #ifdef TEXT_CONFIGURATION_FILES
   int descriptor = openFileForWrite(CONFIG_FILE);
   google::protobuf::io::FileOutputStream* fout =
       new google::protobuf::io::FileOutputStream(descriptor);
-  bool print_status = google::protobuf::TextFormat::Print(display_config, fout);
+  bool print_status = google::protobuf::TextFormat::Print(full_config, fout);
   delete fout;
   closeFile(descriptor);
 #else
   std::fstream output(CONFIG_FILE,
                       std::ios::out | std::ios::trunc | std::ios::binary);
-  if (!display_config.SerializeToOstream(&output)) {
+  if (!full_config.SerializeToOstream(&output)) {
     wxLogDebug("Failed to write configuration file %s.", CONFIG_FILE);
   }
 #endif
+}
+
+proto::DisplayConfig Persistence::loadDisplays() {
+  // We don't actually have a way to reload after initialization at this point,
+  // but that should be fine, as this should still represent what's written out.
+  return full_config.display_config();
+}
+
+void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
+  full_config.clear_display_config();
+  proto::DisplayConfig* new_display_config =
+      full_config.mutable_display_config();
+  new_display_config->CopyFrom(display_config);
+  saveToDisk();
 }
 
 }  // namespace cszb_scoreboard

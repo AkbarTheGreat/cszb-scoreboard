@@ -1,6 +1,6 @@
 /*
 config/Persistence.h: This class manages serializing/deserializing
-our configuration proto to/from disk
+our configuration proto to/from disk via a singleton.
 
 Copyright 2019 Tracy Beck
 
@@ -24,8 +24,15 @@ namespace cszb_scoreboard {
 
 class Persistence {
  public:
-  static proto::DisplayConfig loadDisplays();
-  static void saveDisplays(const proto::DisplayConfig &display_config);
+  static Persistence* Persistence::getInstance();
+  proto::DisplayConfig loadDisplays();
+  void saveDisplays(const proto::DisplayConfig& display_config);
+
+ private:
+  static Persistence* singleton_instance;
+  proto::ScoreboardConfig full_config;
+  void loadFromDisk();
+  void saveToDisk();
 };
 
 }  // namespace cszb_scoreboard

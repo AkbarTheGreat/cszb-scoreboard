@@ -39,7 +39,7 @@ DisplayConfig *DisplayConfig::getInstance() {
 void DisplayConfig::detectDisplays() {
   int numscreens = wxDisplay::GetCount();
 
-  display_config = Persistence::loadDisplays();
+  display_config = Persistence::getInstance()->loadDisplays();
 
   // Currently, don't re-detect displays if it matches our saved state,
   // otherwise, we'll re-initialize them.  In the future, we may get fancier
@@ -91,7 +91,7 @@ void DisplayConfig::detectDisplays() {
       }
     }
   }
-  Persistence::saveDisplays(display_config);
+  Persistence::getInstance()->saveDisplays(display_config);
 }
 
 int DisplayConfig::numberOfDisplays() { return display_config.displays_size(); }
