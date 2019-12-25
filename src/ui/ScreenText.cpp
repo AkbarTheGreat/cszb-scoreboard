@@ -24,11 +24,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-// TODO: Get rid of this event table
-BEGIN_EVENT_TABLE(ScreenText, wxPanel)
-EVT_PAINT(ScreenText::paintEvent)
-END_EVENT_TABLE()
-
 const char* WELCOME_MESSAGE = "Chandler";
 const char* ERROR_MESSAGE = "NO SCREENS FOUND!";
 const int PREVIEW_HEIGHT = 320;
@@ -66,6 +61,7 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
   if (background_color.has_value()) {
     initializeForColor(size, *background_color);
   }
+  bindEvents();
 }
 
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
@@ -84,6 +80,11 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
     }
     initializeForColor(size, *background_color);
   }
+  bindEvents();
+}
+
+void ScreenText::bindEvents() {
+  Bind(wxEVT_PAINT, &ScreenText::paintEvent, this);
 }
 
 void ScreenText::setText(const wxString& text, int font_size,

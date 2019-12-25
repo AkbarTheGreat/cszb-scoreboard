@@ -37,12 +37,13 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   text_entry = new TextEntry(this);
 
   positionWidgets();
+  bindEvents();
 }
 
 void MainView::createMenu() {
   wxMenu* menu_file = new wxMenu;
-  menu_file->Append(FILE_BLACK_OUT, "&Black Out...\tCtrl-B",
-                    "Black out both screens");
+  wxMenuItem* blackout_option = menu_file->Append(
+      FILE_BLACK_OUT, "&Black Out...\tCtrl-B", "Black out both screens");
   menu_file->AppendSeparator();
   menu_file->Append(wxID_EXIT);
   wxMenu* menu_help = new wxMenu;
@@ -86,6 +87,15 @@ void MainView::positionWidgets() {
   SetSizerAndFit(sizer);
 }
 
+void MainView::bindEvents() {
+  Bind(wxEVT_CLOSE_WINDOW, &MainView::onClose, this);
+  // Menu events bind against the frame itself, so a bare Bind() is useful
+  // here.
+  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::blackout, this, FILE_BLACK_OUT);
+  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onExit, this, wxID_EXIT);
+  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onAbout, this, wxID_ABOUT);
+}
+
 void MainView::setTextForPreview(wxString text, int font_size,
                                  proto::ScreenSide side) {
   for (auto preview : screens) {
@@ -125,17 +135,5 @@ void MainView::onClose(wxCloseEvent& event) {
   FrameList::getInstance()->exitFrames();
   Destroy();
 }
-
-/* Intellisense and auto-formatting both get very angry about our event table,
-   so placing it at the end for convenience.
-*/
-// clang-format off
-wxBEGIN_EVENT_TABLE(MainView, wxFrame)
-EVT_MENU(FILE_BLACK_OUT, MainView::blackout)
-EVT_MENU(wxID_EXIT, MainView::onExit)
-EVT_MENU(wxID_ABOUT, MainView::onAbout)
-EVT_CLOSE(MainView::onClose)
-wxEND_EVENT_TABLE()
-// clang-format on
 
 }  // namespace cszb_scoreboard

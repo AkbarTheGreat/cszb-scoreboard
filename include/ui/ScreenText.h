@@ -41,7 +41,6 @@ class ScreenText : public wxPanel {
                const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
   bool isSide(proto::ScreenSide side);
-  DECLARE_EVENT_TABLE()
 
  private:
   wxImage image;
@@ -56,6 +55,7 @@ class ScreenText : public wxPanel {
   ScreenText(wxWindow* parent, const wxString& initial_text, wxImage image,
              std::optional<Color> background_color, Color font_color,
              proto::ScreenSide side, wxSize size);
+  void bindEvents();
   void initializeForColor(wxSize size, Color color);
   void getTextExtent(wxDC& dc, wxString text, int* width, int* height);
   void renderBackground(wxDC& dc, wxImage image);
