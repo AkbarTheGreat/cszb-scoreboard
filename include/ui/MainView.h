@@ -44,7 +44,6 @@ class MainView : public wxFrame {
   TextEntry* textEntry() { return this->text_entry; }
   void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
   void updatePresenters(proto::ScreenSide side);
-  void updatePresenters();
 
  private:
   std::vector<ScreenPreview*> screens;
@@ -59,6 +58,6 @@ class MainView : public wxFrame {
   void onClose(wxCloseEvent& event);
   void positionWidgets();
 };
-enum { FILE_BLACK_OUT = 1 };
+enum { DISPLAY_BLACK_OUT = 1 };
 
 }  // namespace cszb_scoreboard

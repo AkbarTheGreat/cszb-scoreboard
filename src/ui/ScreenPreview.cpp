@@ -46,12 +46,16 @@ ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
 
 ScreenText* ScreenPreview::widget() { return current_widget; }
 
-void ScreenPreview::sendToPresenter() {
-  presenter->widget()->setAll(*current_widget);
+void ScreenPreview::sendToPresenter(proto::ScreenSide side) {
+  if (current_widget->isSide(side)) {
+    presenter->widget()->setAll(*current_widget);
+  }
 }
 
-void ScreenPreview::sendToPresenter(proto::ScreenSide side) {
-  if (current_widget->isSide(side)) sendToPresenter();
+void ScreenPreview::blackoutPresenter(proto::ScreenSide side) {
+  if (current_widget->isSide(side)) {
+    presenter->widget()->blackout();
+  }
 }
 
 }  // namespace cszb_scoreboard

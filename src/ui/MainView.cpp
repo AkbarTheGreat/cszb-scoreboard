@@ -41,15 +41,17 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 }
 
 void MainView::createMenu() {
-  wxMenu* menu_file = new wxMenu;
-  wxMenuItem* blackout_option = menu_file->Append(
-      FILE_BLACK_OUT, "&Black Out...\tCtrl-B", "Black out both screens");
-  menu_file->AppendSeparator();
-  menu_file->Append(wxID_EXIT);
+  wxMenu* menu_general = new wxMenu;
+  menu_general->AppendSeparator();
+  menu_general->Append(wxID_EXIT);
+  wxMenu* menu_display = new wxMenu;
+  menu_display->Append(DISPLAY_BLACK_OUT, "&Black Out\tCtrl-B",
+                       "Black out both screens");
   wxMenu* menu_help = new wxMenu;
   menu_help->Append(wxID_ABOUT);
   wxMenuBar* menu_bar = new wxMenuBar;
-  menu_bar->Append(menu_file, "&File");
+  menu_bar->Append(menu_general, "&General");
+  menu_bar->Append(menu_display, "&Display");
   menu_bar->Append(menu_help, "&Help");
   SetMenuBar(menu_bar);
 }
@@ -91,7 +93,8 @@ void MainView::bindEvents() {
   Bind(wxEVT_CLOSE_WINDOW, &MainView::onClose, this);
   // Menu events bind against the frame itself, so a bare Bind() is useful
   // here.
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::blackout, this, FILE_BLACK_OUT);
+  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::blackout, this,
+       DISPLAY_BLACK_OUT);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onExit, this, wxID_EXIT);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onAbout, this, wxID_ABOUT);
 }
@@ -111,12 +114,6 @@ void MainView::updatePresenters(proto::ScreenSide side) {
   }
 }
 
-void MainView::updatePresenters() {
-  for (auto preview : screens) {
-    preview->sendToPresenter();
-  }
-}
-
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
 
 void MainView::onAbout(wxCommandEvent& event) {
@@ -127,7 +124,14 @@ void MainView::onAbout(wxCommandEvent& event) {
 }
 
 void MainView::blackout(wxCommandEvent& event) {
-  // TODO: Blackout screens here
+  proto::ScreenSide side;
+  // Always blackout all screens
+  side.set_home(true);
+  side.set_away(true);
+  side.set_extra(true);
+  for (auto preview : screens) {
+    preview->blackoutPresenter(side);
+  }
 }
 
 void MainView::onClose(wxCloseEvent& event) {

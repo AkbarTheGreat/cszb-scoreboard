@@ -28,8 +28,8 @@ class ScreenPreview {
  public:
   ScreenPreview(wxWindow* parent, proto::ScreenSide side, int monitor_number);
   ScreenText* widget();
-  void sendToPresenter();
   void sendToPresenter(proto::ScreenSide side);
+  void blackoutPresenter(proto::ScreenSide side);
 
  private:
   ScreenText* current_widget;
@@ -37,4 +37,3 @@ class ScreenPreview {
   ScreenPresenter* presenter;
 };
 }  // namespace cszb_scoreboard
-

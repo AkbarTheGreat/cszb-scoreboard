@@ -34,6 +34,7 @@ class ScreenText : public wxPanel {
   static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
                                   wxSize size);
 
+  void blackout();
   void paintEvent(wxPaintEvent& event);
   void setImage(const wxImage& image);
   void setBackground(const Color color);
@@ -44,6 +45,7 @@ class ScreenText : public wxPanel {
 
  private:
   wxImage image;
+  wxImage blackout_image;
   wxString text;
   std::optional<Color> background_color;
   Color font_color;

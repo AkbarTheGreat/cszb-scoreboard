@@ -98,6 +98,18 @@ void ScreenText::setText(const wxString& text, int font_size,
 void ScreenText::initializeForColor(wxSize size, Color color) {
   image = BackgroundImage(size, color);
   font_color = color.contrastColor();
+  if (!blackout_image.IsOk() ||
+      size.GetWidth() != blackout_image.GetSize().GetWidth() ||
+      size.GetHeight() != blackout_image.GetSize().GetHeight()) {
+    blackout_image = BackgroundImage(size, Color("Black"));
+  }
+}
+
+void ScreenText::blackout() {
+  background_color = Color("Black");
+  image = blackout_image;
+  text = wxT("");
+  Refresh();
 }
 
 void ScreenText::renderBackground(wxDC& dc, wxImage image) {
@@ -157,6 +169,8 @@ void ScreenText::setAll(const ScreenText& source) {
   setImage(source.image);
   if (source.background_color.has_value()) {
     setBackground(*source.background_color);
+  } else {
+    background_color.reset();
   }
   setText(source.text, source.font_size, this->screen_side);
   Refresh();
