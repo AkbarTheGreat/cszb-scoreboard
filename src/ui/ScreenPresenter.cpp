@@ -33,21 +33,27 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
   SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
 #endif
   ShowFullScreen(true);
+
   proto::DisplayInfo display =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
   wxRect screen = ProtoUtil::wxRct(display.dimensions());
-  current_widget = ScreenText::getPresenter(this, widget, screen.GetSize());
-  SetPosition(screen.GetPosition());
-  current_widget->SetSize(screen.GetSize());
+
+  screen_text = ScreenText::getPresenter(this, widget, screen.GetSize());
+  screen_text->SetSize(screen.GetSize());
   wxLogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
              screen.y, screen.width, screen.height);
   FrameList::getInstance()->addFrame(this);
 
+  positionWidgets();
+  SetPosition(screen.GetPosition());
+  SetSize(screen.GetSize());
+}
+
+void ScreenPresenter::positionWidgets() {
   wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  sizer->Add(current_widget, 1, wxEXPAND | wxALL, 0);
+  sizer->Add(screen_text, 1, wxEXPAND | wxALL, 0);
   SetSizerAndFit(sizer);
-  this->SetSize(screen.GetSize());
 }
 }  // namespace cszb_scoreboard

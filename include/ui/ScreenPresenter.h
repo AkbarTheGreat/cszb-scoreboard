@@ -19,17 +19,19 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+
 #include "ui/ScreenText.h"
 
 namespace cszb_scoreboard {
 class ScreenPresenter : public wxFrame {
  public:
   ScreenPresenter(int monitor_number, ScreenText *widget);
-  inline ScreenText *widget() { return current_widget; }
+  inline ScreenText *widget() { return screen_text; }
 
  private:
   int monitor_number;
-  ScreenText *current_widget;
+  ScreenText *screen_text;
+  void positionWidgets();
 };
 
 }  // namespace cszb_scoreboard

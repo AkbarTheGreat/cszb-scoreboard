@@ -46,9 +46,11 @@ class TextEntry : public wxPanel {
   wxString screen_choices[3] = {wxT("Home"), wxT("Away"), wxT("All")};
   wxTextCtrl *text_entry;
   wxTextCtrl *font_size_entry;
+  void bindEvents();
   int enteredFontSize();
-  void updateClicked(wxCommandEvent &event);
+  void positionWidgets();
   void screenChanged(wxCommandEvent &event);
+  void updateClicked(wxCommandEvent &event);
   proto::ScreenSide selectedSide();
 };
 

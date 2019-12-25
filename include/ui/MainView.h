@@ -50,9 +50,13 @@ class MainView : public wxFrame {
   std::vector<ScreenPreview*> screens;
   TextEntry* text_entry;
   void blackout(wxCommandEvent& event);
+  void createMenu();
+  void createPreviews();
+  void createStatusBar();
   void onExit(wxCommandEvent& event);
   void onAbout(wxCommandEvent& event);
   void onClose(wxCloseEvent& event);
+  void positionWidgets();
   wxDECLARE_EVENT_TABLE();
 };
 enum { FILE_BLACK_OUT = 1 };

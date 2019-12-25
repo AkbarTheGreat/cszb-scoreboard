@@ -29,6 +29,17 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
   FrameList::getInstance()->setMainView(this);
+
+  createMenu();
+  createStatusBar();
+  createPreviews();
+
+  text_entry = new TextEntry(this);
+
+  positionWidgets();
+}
+
+void MainView::createMenu() {
   wxMenu* menu_file = new wxMenu;
   menu_file->Append(FILE_BLACK_OUT, "&Black Out...\tCtrl-B",
                     "Black out both screens");
@@ -40,6 +51,9 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   menu_bar->Append(menu_file, "&File");
   menu_bar->Append(menu_help, "&Help");
   SetMenuBar(menu_bar);
+}
+
+void MainView::createStatusBar() {
   CreateStatusBar();
   wxString status_text = "Welcome to ComedySportz Scoreboard, ";
   char* num_buffer = new char[16];
@@ -48,7 +62,9 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   delete[] num_buffer;
   status_text += " displays found.";
   SetStatusText(status_text);
+}
 
+void MainView::createPreviews() {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
         DisplayConfig::getInstance()->displayDetails(i);
@@ -57,9 +73,9 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
       screens.push_back(new ScreenPreview(this, display_info.side(), i));
     }
   }
+}
 
-  text_entry = new TextEntry(this);
-
+void MainView::positionWidgets() {
   wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);

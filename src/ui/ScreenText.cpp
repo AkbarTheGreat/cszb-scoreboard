@@ -47,6 +47,8 @@ ScreenText* ScreenText::getPreview(wxWindow* parent, float ratio,
 
 ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
                                      wxSize size) {
+  // Note that we copy most elements to the presenter, but specifically not the
+  // size.
   return new ScreenText(parent, preview->text, preview->image,
                         preview->background_color, preview->font_color,
                         preview->screen_side, size);
@@ -103,9 +105,8 @@ void ScreenText::renderBackground(wxDC& dc, wxImage image) {
 
 void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
                             wxSize widget_size) {
-  wxFont screen_font(wxFontInfo(scaleFont(widget_size))
-                         .FaceName("Impact")
-                         .AntiAliased());
+  wxFont screen_font(
+      wxFontInfo(scaleFont(widget_size)).FaceName("Impact").AntiAliased());
   dc.SetFont(screen_font);
   dc.SetTextForeground(font_color);
   int width, height;

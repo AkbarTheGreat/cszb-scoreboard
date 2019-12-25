@@ -26,14 +26,14 @@ const int DEFAULT_FONT_SIZE = 10;
 TextEntry::TextEntry(MainView *parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
               wxTAB_TRAVERSAL) {
+  this->parent = parent;
+
   text_entry = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
                               wxSize(-1, -1), wxTE_MULTILINE);
   wxString initial_size;
   initial_size.Printf(wxT("%d"), DEFAULT_FONT_SIZE);
-
   font_size_entry = new wxTextCtrl(this, wxID_ANY, initial_size,
                                    wxDefaultPosition, wxSize(-1, -1), 0);
-  this->parent = parent;
 
   update_screens = new wxButton(this, wxID_ANY, wxT("Update"),
                                 wxDefaultPosition, wxDefaultSize, 0);
@@ -44,6 +44,11 @@ TextEntry::TextEntry(MainView *parent)
       number_of_screen_choices, screen_choices, 1, wxRA_SPECIFY_COLS);
   screen_selection->SetSelection(0);
 
+  positionWidgets();
+  bindEvents();
+}
+
+void TextEntry::positionWidgets() {
   wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 2, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
@@ -53,7 +58,9 @@ TextEntry::TextEntry(MainView *parent)
   sizer->Add(update_screens, 0, wxALL, 5);
   sizer->Add(screen_selection, 0, wxALL, 5);
   SetSizerAndFit(sizer);
+}
 
+void TextEntry::bindEvents() {
   text_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
   font_size_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
