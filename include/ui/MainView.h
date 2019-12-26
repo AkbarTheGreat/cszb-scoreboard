@@ -24,6 +24,7 @@ limitations under the License.
 
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/TextEntry.h"
+#include "ui/dialog/SettingsDialog.h"
 
 namespace cszb_scoreboard {
 
@@ -48,6 +49,7 @@ class MainView : public wxFrame {
  private:
   std::vector<ScreenPreview*> screens;
   TextEntry* text_entry;
+  SettingsDialog* settings_dialog;
   void bindEvents();
   void blackout(wxCommandEvent& event);
   void createMenu();
@@ -57,7 +59,8 @@ class MainView : public wxFrame {
   void onAbout(wxCommandEvent& event);
   void onClose(wxCloseEvent& event);
   void positionWidgets();
+  void showSettings(wxCommandEvent& event);
 };
-enum { DISPLAY_BLACK_OUT = 1 };
+enum { GENERAL_SETTINGS = 1, DISPLAY_BLACK_OUT };
 
 }  // namespace cszb_scoreboard

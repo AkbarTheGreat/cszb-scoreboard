@@ -42,6 +42,8 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 
 void MainView::createMenu() {
   wxMenu* menu_general = new wxMenu;
+  menu_general->Append(GENERAL_SETTINGS, "&Settings",
+                       "Configure the scoreboard");
   menu_general->AppendSeparator();
   menu_general->Append(wxID_EXIT);
   wxMenu* menu_display = new wxMenu;
@@ -93,6 +95,8 @@ void MainView::bindEvents() {
   Bind(wxEVT_CLOSE_WINDOW, &MainView::onClose, this);
   // Menu events bind against the frame itself, so a bare Bind() is useful
   // here.
+  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::showSettings, this,
+       GENERAL_SETTINGS);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::blackout, this,
        DISPLAY_BLACK_OUT);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onExit, this, wxID_EXIT);
@@ -132,6 +136,12 @@ void MainView::blackout(wxCommandEvent& event) {
   for (auto preview : screens) {
     preview->blackoutPresenter(side);
   }
+}
+
+void MainView::showSettings(wxCommandEvent& event) {
+  settings_dialog = new SettingsDialog();
+  settings_dialog->Create(this);
+  settings_dialog->Show();
 }
 
 void MainView::onClose(wxCloseEvent& event) {
