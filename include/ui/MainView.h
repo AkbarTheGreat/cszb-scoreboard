@@ -22,8 +22,8 @@ limitations under the License.
 
 #include <vector>
 
-#include "ui/ScreenPreview.h"
-#include "ui/TextEntry.h"
+#include "ui/component/ScreenPreview.h"
+#include "ui/component/TextEntry.h"
 
 namespace cszb_scoreboard {
 

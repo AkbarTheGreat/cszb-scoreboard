@@ -21,7 +21,7 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-#include "ui/ScreenPresenter.h"
+#include "ui/component/ScreenPresenter.h"
 
 namespace cszb_scoreboard {
 class ScreenPreview {

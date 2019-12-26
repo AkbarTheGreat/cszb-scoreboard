@@ -18,7 +18,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/BackgroundImage.h"
+#include "ui/graphics/BackgroundImage.h"
 
 namespace cszb_scoreboard {
 

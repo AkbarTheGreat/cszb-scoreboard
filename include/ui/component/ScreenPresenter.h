@@ -20,7 +20,7 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-#include "ui/ScreenText.h"
+#include "ui/component/ScreenText.h"
 
 namespace cszb_scoreboard {
 class ScreenPresenter : public wxFrame {

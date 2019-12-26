@@ -15,12 +15,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include "ui/ScreenText.h"
+#include "ui/component/ScreenText.h"
 
 #include <wx/image.h>
 #include <wx/tokenzr.h>
 
-#include "ui/BackgroundImage.h"
+#include "ui/graphics/BackgroundImage.h"
 
 namespace cszb_scoreboard {
 

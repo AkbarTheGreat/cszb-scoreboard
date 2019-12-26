@@ -19,7 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-#include "ui/Color.h"
+#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 class BackgroundImage : public wxImage {

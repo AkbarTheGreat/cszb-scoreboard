@@ -17,7 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/TextEntry.h"
+#include "ui/component/TextEntry.h"
 
 namespace cszb_scoreboard {
 

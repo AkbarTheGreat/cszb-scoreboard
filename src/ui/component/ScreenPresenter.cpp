@@ -17,7 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/ScreenPresenter.h"
+#include "ui/component/ScreenPresenter.h"
 
 #include "config/DisplayConfig.h"
 #include "ui/FrameList.h"

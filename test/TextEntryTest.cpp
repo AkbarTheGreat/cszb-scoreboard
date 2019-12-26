@@ -17,7 +17,7 @@ limitations under the License.
 */
 
 #include "test/GuiTest.h"
-#include "ui/TextEntry.h"
+#include "ui/component/TextEntry.h"
 
 namespace cszb_scoreboard {
 namespace test {
