@@ -91,6 +91,16 @@ void DisplayConfig::detectDisplays() {
       }
     }
   }
+  saveSettings();
+}
+
+void DisplayConfig::setSide(int index, proto::ScreenSide side) {
+  proto::ScreenSide *side_copy = new proto::ScreenSide(side);
+  display_config.mutable_displays(index)->clear_side();
+  display_config.mutable_displays(index)->set_allocated_side(side_copy);
+}
+
+void DisplayConfig::saveSettings() {
   Persistence::getInstance()->saveDisplays(display_config);
 }
 

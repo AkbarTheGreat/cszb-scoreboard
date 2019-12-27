@@ -46,6 +46,7 @@ class SettingsDialog : public wxPropertySheetDialog {
   void bindEvents();
   wxPanel *createDisplayPage(wxBookCtrlBase *settings_book);
   void onOk(wxCommandEvent &event);
+  void saveDisplaySettings();
   bool validateDisplaySettings();
   std::vector<DisplaySettingsPanel *> display_settings_panels;
   wxWindow *parent;

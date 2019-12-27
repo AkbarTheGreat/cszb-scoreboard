@@ -60,6 +60,7 @@ void SettingsDialog::bindEvents() {
 void SettingsDialog::onOk(wxCommandEvent& event) {
   if (validateDisplaySettings()) {
     parent->SetFocus();
+    saveDisplaySettings();
     Close(true);
     return;
   }
@@ -95,6 +96,14 @@ bool SettingsDialog::validateDisplaySettings() {
     return false;
   }
   return true;
+}
+
+void SettingsDialog::saveDisplaySettings() {
+  for (int i = 0; i < display_settings_panels.size(); ++i) {
+    DisplayConfig::getInstance()->setSide(
+        i, display_settings_panels[i]->getSide());
+  }
+  DisplayConfig::getInstance()->saveSettings();
 }
 
 DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int display_number)

@@ -94,7 +94,7 @@ proto::DisplayConfig Persistence::loadDisplays() {
 }
 
 void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
-  full_config.clear_display_config();
+  //full_config.clear_display_config();
   proto::DisplayConfig* new_display_config =
       full_config.mutable_display_config();
   new_display_config->CopyFrom(display_config);
