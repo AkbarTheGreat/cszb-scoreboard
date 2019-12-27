@@ -21,14 +21,34 @@ limitations under the License.
 #include <wx/propdlg.h>
 #include <wx/wx.h>
 
+#include <vector>
+
+#include "proto/config.pb.h"
+
 namespace cszb_scoreboard {
+
+class DisplaySettingsPanel : public wxPanel {
+ public:
+  DisplaySettingsPanel(wxPanel *parent, int display_number);
+  proto::ScreenSide getSide();
+
+ private:
+  wxCheckBox *control_checkbox;
+  wxCheckBox *home_checkbox;
+  wxCheckBox *away_checkbox;
+};
 
 class SettingsDialog : public wxPropertySheetDialog {
  public:
   bool Create(wxWindow *parent);
 
  private:
+  void bindEvents();
   wxPanel *createDisplayPage(wxBookCtrlBase *settings_book);
+  void onOk(wxCommandEvent &event);
+  bool validateDisplaySettings();
+  std::vector<DisplaySettingsPanel *> display_settings_panels;
+  wxWindow *parent;
 };
 
 }  // namespace cszb_scoreboard
