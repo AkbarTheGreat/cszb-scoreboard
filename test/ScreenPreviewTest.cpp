@@ -40,7 +40,7 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
     ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 10);
   } else {
     ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 90);
-    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 3);
+    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 2);
     ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);
   }
 }
