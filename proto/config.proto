@@ -26,6 +26,11 @@ message Rectangle {
 	int32 height = 4;
 }
 
+message Color {
+    int32 rgb = 1;
+}
+
+
 // ScreenSide represents which team(s) each monitor represents.  It's not a
 // simple selection, and so must be contained as a mapping of possibilities.
 message ScreenSide {
@@ -44,6 +49,21 @@ message DisplayInfo {
 
 message DisplayConfig {
 	repeated DisplayInfo displays = 1;
+}
+
+message TeamInfo {
+  enum TeamType {
+    TEAM_ERROR = 0;
+    HOME_TEAM = 1;
+    AWAY_TEAM = 2;
+    EXTRA_TEAM = 3;
+  } 
+  TeamType team_type = 1;
+  Color team_color = 2;
+}
+
+message TeamConfig {
+	repeated TeamInfo teams = 1;
 }
 
 message ScoreboardConfig {

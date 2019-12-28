@@ -34,4 +34,11 @@ wxRect ProtoUtil::wxRct(proto::Rectangle input) {
   return rect;
 }
 
+proto::Color *ProtoUtil::protoClr(Color input, proto::Color *output) {
+  output->set_rgb(input.GetRGB());
+  return output;
+}
+
+Color ProtoUtil::wxClr(proto::Color input) { return Color(input.rgb()); }
+
 }  // namespace cszb_scoreboard

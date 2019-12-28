@@ -21,6 +21,7 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "proto/config.pb.h"
+#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 
@@ -28,6 +29,8 @@ class ProtoUtil {
  public:
   static proto::Rectangle *protoRct(wxRect input, proto::Rectangle *output);
   static wxRect wxRct(proto::Rectangle input);
+  static proto::Color *protoClr(Color input, proto::Color *output);
+  static Color wxClr(proto::Color input);
 };
 
 }  // namespace cszb_scoreboard
