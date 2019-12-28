@@ -1,5 +1,5 @@
 /*
-util/ProtoUtil.h: Convenience methods for converting between proto values and
+util/ProtoUtil.cpp: Convenience methods for converting between proto values and
 wxWidgets values.
 
 Copyright 2019 Tracy Beck
@@ -16,18 +16,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#pragma once
 
-#include <wx/wx.h>
-
-#include "proto/config.pb.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
-class ProtoUtil {
- public:
-  static proto::Rectangle *protoRct(wxRect input, proto::Rectangle *output);
-  static wxRect wxRct(proto::Rectangle input);
-};
+proto::Rectangle *ProtoUtil::protoRct(wxRect input, proto::Rectangle *output) {
+  output->set_x(input.GetX());
+  output->set_y(input.GetY());
+  output->set_width(input.GetWidth());
+  output->set_height(input.GetHeight());
+  return output;
+}
+
+wxRect ProtoUtil::wxRct(proto::Rectangle input) {
+  wxRect rect(input.x(), input.y(), input.width(), input.height());
+  return rect;
+}
 
 }  // namespace cszb_scoreboard
