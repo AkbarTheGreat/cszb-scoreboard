@@ -68,4 +68,5 @@ message TeamConfig {
 
 message ScoreboardConfig {
 	DisplayConfig display_config = 1;
+	TeamConfig team_config = 2;
 }

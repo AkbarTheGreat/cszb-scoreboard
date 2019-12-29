@@ -101,4 +101,18 @@ void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
   saveToDisk();
 }
 
+proto::TeamConfig Persistence::loadTeams() {
+  // We don't actually have a way to reload after initialization at this point,
+  // but that should be fine, as this should still represent what's written out.
+  return full_config.team_config();
+}
+
+void Persistence::saveTeams(const proto::TeamConfig& team_config) {
+  //full_config.clear_display_config();
+  proto::TeamConfig* new_team_config =
+      full_config.mutable_team_config();
+  new_team_config->CopyFrom(team_config);
+  saveToDisk();
+}
+
 }  // namespace cszb_scoreboard

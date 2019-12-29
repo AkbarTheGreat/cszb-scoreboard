@@ -1,6 +1,6 @@
 /*
-config/Persistence.h: This class manages serializing/deserializing
-our configuration proto to/from disk via a singleton.
+config/TeamConfig.h: This class is a configuration singleton which
+represents the team specific configuration pieces.
 
 Copyright 2019 Tracy Beck
 
@@ -19,22 +19,19 @@ limitations under the License.
 #pragma once
 
 #include "proto/config.pb.h"
+#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 
-class Persistence {
+class TeamConfig {
  public:
-  static Persistence* Persistence::getInstance();
-  proto::DisplayConfig loadDisplays();
-  void saveDisplays(const proto::DisplayConfig& display_config);
-  proto::TeamConfig loadTeams();
-  void saveTeams(const proto::TeamConfig& team_config);
+  static TeamConfig *getInstance();
+  void saveSettings();
 
  private:
-  static Persistence* singleton_instance;
-  proto::ScoreboardConfig full_config;
-  void loadFromDisk();
-  void saveToDisk();
+  static TeamConfig *singleton_instance;
+  proto::TeamConfig team_config;
+  TeamConfig();
+  void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
 };
-
 }  // namespace cszb_scoreboard
