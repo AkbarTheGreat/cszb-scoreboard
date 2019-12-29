@@ -25,6 +25,13 @@ namespace cszb_scoreboard {
 
 TeamConfig *TeamConfig::singleton_instance;
 
+TeamConfig *TeamConfig::getInstance() {
+  if (singleton_instance == nullptr) {
+    singleton_instance = new TeamConfig();
+  }
+  return singleton_instance;
+}
+
 TeamConfig::TeamConfig() {
   team_config = Persistence::getInstance()->loadTeams();
   bool defaults_updated = false;
@@ -69,11 +76,26 @@ void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {
   }
 }
 
-TeamConfig *TeamConfig::getInstance() {
-  if (singleton_instance == nullptr) {
-    singleton_instance = new TeamConfig();
+Color TeamConfig::teamColor(int index) {
+  return ProtoUtil::wxClr(team_config.teams(index).team_color());
+}
+
+wxString TeamConfig::teamName(int index) {
+  switch (team_config.teams(index).team_type()) {
+    case proto::TeamInfo_TeamType_HOME_TEAM:
+      return wxT("Home");
+    case proto::TeamInfo_TeamType_AWAY_TEAM:
+      return wxT("Away");
+    default:
+      return wxT("Unknown");
   }
-  return singleton_instance;
+}
+
+int TeamConfig::numberOfTeams() { return team_config.teams_size(); }
+
+proto::TeamInfo TeamConfig::teamInfo(int index) {
+  assert(index < team_config.teams_size() && index >= 0);
+  return team_config.teams(index);
 }
 
 void TeamConfig::saveSettings() {

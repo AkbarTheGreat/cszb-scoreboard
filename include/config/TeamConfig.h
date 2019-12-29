@@ -18,6 +18,8 @@ limitations under the License.
 */
 #pragma once
 
+#include <wx/wx.h>
+
 #include "proto/config.pb.h"
 #include "ui/graphics/Color.h"
 
@@ -27,6 +29,10 @@ class TeamConfig {
  public:
   static TeamConfig *getInstance();
   void saveSettings();
+  int numberOfTeams();
+  proto::TeamInfo teamInfo(int index);
+  Color teamColor(int index);
+  wxString teamName(int index);
 
  private:
   static TeamConfig *singleton_instance;

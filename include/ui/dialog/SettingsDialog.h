@@ -18,6 +18,7 @@ limitations under the License.
 */
 #pragma once
 
+#include <wx/clrpicker.h>
 #include <wx/propdlg.h>
 #include <wx/wx.h>
 
@@ -38,6 +39,14 @@ class DisplaySettingsPanel : public wxPanel {
   wxCheckBox *away_checkbox;
 };
 
+class TeamSettingsPanel : public wxPanel {
+ public:
+  TeamSettingsPanel(wxPanel *parent, int display_number);
+
+ private:
+  wxColourPickerCtrl *color_picker;
+};
+
 class SettingsDialog : public wxPropertySheetDialog {
  public:
   bool Create(wxWindow *parent);
@@ -45,10 +54,12 @@ class SettingsDialog : public wxPropertySheetDialog {
  private:
   void bindEvents();
   wxPanel *createDisplayPage(wxBookCtrlBase *settings_book);
+  wxPanel *createTeamsPage(wxBookCtrlBase *settings_book);
   void onOk(wxCommandEvent &event);
   void saveDisplaySettings();
   bool validateDisplaySettings();
   std::vector<DisplaySettingsPanel *> display_settings_panels;
+  std::vector<TeamSettingsPanel *> team_settings_panels;
   wxWindow *parent;
 };
 

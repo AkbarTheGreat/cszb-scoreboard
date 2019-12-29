@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/dialog/SettingsDialog.h"
 
 #include <config/DisplayConfig.h>
+#include <config/TeamConfig.h>
 #include <wx/bookctrl.h>
 
 namespace cszb_scoreboard {
@@ -31,10 +32,27 @@ bool SettingsDialog::Create(wxWindow* parent) {
   }
   CreateButtons(wxOK | wxCANCEL);
   wxBookCtrlBase* settings_book = GetBookCtrl();
+  settings_book->AddPage(createTeamsPage(settings_book), "Teams");
   settings_book->AddPage(createDisplayPage(settings_book), "Displays");
   LayoutDialog();
   bindEvents();
   return true;
+}
+
+wxPanel* SettingsDialog::createTeamsPage(wxBookCtrlBase* settings_book) {
+  wxPanel* panel = new wxPanel(settings_book);
+  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
+  sizer->SetFlexibleDirection(wxBOTH);
+  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+
+  for (int i = 0; i < TeamConfig::getInstance()->numberOfTeams(); ++i) {
+    TeamSettingsPanel* team_panel = new TeamSettingsPanel(panel, i);
+    team_settings_panels.push_back(team_panel);
+    sizer->Add(team_panel, 0, wxALL, 5);
+  }
+
+  panel->SetSizerAndFit(sizer);
+  return panel;
 }
 
 wxPanel* SettingsDialog::createDisplayPage(wxBookCtrlBase* settings_book) {
@@ -147,6 +165,30 @@ proto::ScreenSide DisplaySettingsPanel::getSide() {
   side.set_home(home_checkbox->GetValue());
   side.set_away(away_checkbox->GetValue());
   return side;
+}
+
+TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
+    : wxPanel(parent) {
+  proto::TeamInfo team_info = TeamConfig::getInstance()->teamInfo(team_index);
+
+  wxGridSizer* sizer = new wxGridSizer(0, 2, 0, 0);
+
+  // Label for this display
+  wxStaticText* label = new wxStaticText(
+      this, wxID_ANY,
+      TeamConfig::getInstance()->teamName(team_index));
+  wxFont font = label->GetFont();
+  font.SetWeight(wxFONTWEIGHT_BOLD);
+  label->SetFont(font);
+  sizer->Add(label, 0, wxALL, 5);
+  // Consume the right column on this row
+  sizer->Add(new wxStaticText(this, wxID_ANY, wxT("")), 0, wxALL, 5);
+
+  sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Color")), 0, wxALL, 5);
+  color_picker = new wxColourPickerCtrl(this, wxID_ANY, TeamConfig::getInstance()->teamColor(team_index));
+  sizer->Add(color_picker, 0, wxALL, 5);
+
+  SetSizerAndFit(sizer);
 }
 
 }  // namespace cszb_scoreboard
