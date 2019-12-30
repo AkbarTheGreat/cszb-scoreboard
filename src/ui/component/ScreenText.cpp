@@ -20,6 +20,7 @@ limitations under the License.
 #include <wx/image.h>
 #include <wx/tokenzr.h>
 
+#include "config/TeamConfig.h"
 #include "ui/graphics/BackgroundImage.h"
 
 namespace cszb_scoreboard {
@@ -74,10 +75,10 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
     image = BackgroundImage::errorImage(size);
     font_color = Color(Color("Black"));
   } else {
-    background_color = Color("Blue");
-    if (side.away()) {
-      background_color = Color("Red");
-    }
+    std::vector<int> team_indices =
+        TeamConfig::getInstance()->indicesForSide(side);
+    // TODO: Allow for a view to contain multiple sides
+    background_color = TeamConfig::getInstance()->teamColor(team_indices[0]);
     initializeForColor(size, *background_color);
   }
   bindEvents();

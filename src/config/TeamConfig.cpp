@@ -76,6 +76,29 @@ void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {
   }
 }
 
+std::vector<int> TeamConfig::indicesForSide(proto::ScreenSide side) {
+  std::vector<int> index_list;
+  if (side.home()) {
+    index_list.push_back(indexForTeam(proto::TeamInfo_TeamType_HOME_TEAM));
+  }
+  if (side.away()) {
+    index_list.push_back(indexForTeam(proto::TeamInfo_TeamType_AWAY_TEAM));
+  }
+  if (side.extra()) {
+    index_list.push_back(indexForTeam(proto::TeamInfo_TeamType_EXTRA_TEAM));
+  }
+  return index_list;
+}
+
+int TeamConfig::indexForTeam(proto::TeamInfo_TeamType team) {
+  for (int i = 0; i < team_config.teams_size(); ++i) {
+    if (team_config.teams(i).team_type() == team) {
+      return i;
+    }
+  }
+  return 0; // Not a great default, but we can live with it.
+}
+
 Color TeamConfig::teamColor(int index) {
   return ProtoUtil::wxClr(team_config.teams(index).team_color());
 }
@@ -92,6 +115,12 @@ wxString TeamConfig::teamName(int index) {
 }
 
 int TeamConfig::numberOfTeams() { return team_config.teams_size(); }
+
+void TeamConfig::setColor(int index, Color color) {
+  proto::TeamInfo *team_info = team_config.mutable_teams(index);
+  proto::Color *proto_color = team_info->mutable_team_color();
+  ProtoUtil::protoClr(color, proto_color);
+}
 
 proto::TeamInfo TeamConfig::teamInfo(int index) {
   assert(index < team_config.teams_size() && index >= 0);

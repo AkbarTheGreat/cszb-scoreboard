@@ -20,6 +20,8 @@ limitations under the License.
 
 #include <wx/wx.h>
 
+#include <vector>
+
 #include "proto/config.pb.h"
 #include "ui/graphics/Color.h"
 
@@ -28,8 +30,10 @@ namespace cszb_scoreboard {
 class TeamConfig {
  public:
   static TeamConfig *getInstance();
-  void saveSettings();
+  std::vector<int> indicesForSide(proto::ScreenSide side);
   int numberOfTeams();
+  void saveSettings();
+  void setColor(int index, Color color);
   proto::TeamInfo teamInfo(int index);
   Color teamColor(int index);
   wxString teamName(int index);
@@ -38,6 +42,7 @@ class TeamConfig {
   static TeamConfig *singleton_instance;
   proto::TeamConfig team_config;
   TeamConfig();
+  int indexForTeam(proto::TeamInfo_TeamType team);
   void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
 };
 }  // namespace cszb_scoreboard

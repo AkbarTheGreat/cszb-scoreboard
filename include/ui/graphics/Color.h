@@ -27,9 +27,10 @@ class Color : public wxColour {
   Color(unsigned char red, unsigned char green, unsigned char blue,
         unsigned char alpha = wxALPHA_OPAQUE)
       : wxColour(red, green, blue, alpha) {}
+  Color(const char *colorName) : wxColour(wxString(colorName)) {}
   Color(const wxString &colorName) : wxColour(colorName) {}
   Color(unsigned long colRGB) : wxColour(colRGB) {}
-  Color(const Color &color) : wxColour(color) {}
+  Color(const wxColour &color) : wxColour(color) {}
 
   inline unsigned char red() { return GetRGB() & 0xFF; }
   inline unsigned char green() { return (GetRGB() >> 8) & 0xFF; }

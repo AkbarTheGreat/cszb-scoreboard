@@ -25,6 +25,7 @@ limitations under the License.
 #include <vector>
 
 #include "proto/config.pb.h"
+#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 
@@ -42,6 +43,7 @@ class DisplaySettingsPanel : public wxPanel {
 class TeamSettingsPanel : public wxPanel {
  public:
   TeamSettingsPanel(wxPanel *parent, int display_number);
+  Color teamColor();
 
  private:
   wxColourPickerCtrl *color_picker;
@@ -57,11 +59,15 @@ class SettingsDialog : public wxPropertySheetDialog {
   wxPanel *createTeamsPage(wxBookCtrlBase *settings_book);
   void onOk(wxCommandEvent &event);
   void onClose(wxCloseEvent &event);
+  void saveSettings();
   void saveDisplaySettings();
+  void saveTeamSettings();
+  bool validateSettings();
   bool validateDisplaySettings();
+  bool validateTeamSettings();
   std::vector<DisplaySettingsPanel *> display_settings_panels;
   std::vector<TeamSettingsPanel *> team_settings_panels;
   wxWindow *parent;
-};  // namespace cszb_scoreboard
+};
 
 }  // namespace cszb_scoreboard

@@ -73,14 +73,13 @@ wxPanel* SettingsDialog::createDisplayPage(wxBookCtrlBase* settings_book) {
 
 void SettingsDialog::bindEvents() {
   Bind(wxEVT_BUTTON, &SettingsDialog::onOk, this, wxID_OK);
-  // Bind(wxEVT_BUTTON, &SettingsDialog::onCancel, this, wxID_CANCEL);
   Bind(wxEVT_CLOSE_WINDOW, &SettingsDialog::onClose, this);
 }
 
 void SettingsDialog::onOk(wxCommandEvent& event) {
   wxLogDebug("onOk");
-  if (validateDisplaySettings()) {
-    saveDisplaySettings();
+  if (validateSettings()) {
+    saveSettings();
     Close(true);
     return;
   }
@@ -97,6 +96,21 @@ void SettingsDialog::onClose(wxCloseEvent& event) {
   wxWindow* local_parent = parent;
   Destroy();
   local_parent->SetFocus();
+}
+
+bool SettingsDialog::validateSettings() {
+  if (!validateDisplaySettings()) {
+    return false;
+  }
+  if (!validateTeamSettings()) {
+    return false;
+  }
+  return true;
+}
+
+void SettingsDialog::saveSettings() {
+  saveDisplaySettings();
+  saveTeamSettings();
 }
 
 /* Returns true if the display settings are allowable, presents a warning dialog
@@ -137,6 +151,19 @@ void SettingsDialog::saveDisplaySettings() {
         i, display_settings_panels[i]->getSide());
   }
   DisplayConfig::getInstance()->saveSettings();
+}
+
+bool SettingsDialog::validateTeamSettings() {
+  // At present, nothing to validate
+  return true;
+}
+
+void SettingsDialog::saveTeamSettings() {
+  for (int i = 0; i < team_settings_panels.size(); ++i) {
+    TeamConfig::getInstance()->setColor(i,
+                                        team_settings_panels[i]->teamColor());
+  }
+  TeamConfig::getInstance()->saveSettings();
 }
 
 DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int display_number)
@@ -205,6 +232,11 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
   sizer->Add(color_picker, 0, wxALL, 5);
 
   SetSizerAndFit(sizer);
+}
+
+Color TeamSettingsPanel::teamColor() {
+  wxColour wx_color = color_picker->GetColour();
+  return Color(wx_color);
 }
 
 }  // namespace cszb_scoreboard
