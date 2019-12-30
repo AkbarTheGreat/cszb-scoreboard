@@ -56,11 +56,12 @@ class SettingsDialog : public wxPropertySheetDialog {
   wxPanel *createDisplayPage(wxBookCtrlBase *settings_book);
   wxPanel *createTeamsPage(wxBookCtrlBase *settings_book);
   void onOk(wxCommandEvent &event);
+  void onClose(wxCloseEvent &event);
   void saveDisplaySettings();
   bool validateDisplaySettings();
   std::vector<DisplaySettingsPanel *> display_settings_panels;
   std::vector<TeamSettingsPanel *> team_settings_panels;
   wxWindow *parent;
-};
+};  // namespace cszb_scoreboard
 
 }  // namespace cszb_scoreboard

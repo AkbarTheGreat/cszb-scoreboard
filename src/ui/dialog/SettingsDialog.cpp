@@ -73,15 +73,30 @@ wxPanel* SettingsDialog::createDisplayPage(wxBookCtrlBase* settings_book) {
 
 void SettingsDialog::bindEvents() {
   Bind(wxEVT_BUTTON, &SettingsDialog::onOk, this, wxID_OK);
+  // Bind(wxEVT_BUTTON, &SettingsDialog::onCancel, this, wxID_CANCEL);
+  Bind(wxEVT_CLOSE_WINDOW, &SettingsDialog::onClose, this);
 }
 
 void SettingsDialog::onOk(wxCommandEvent& event) {
+  wxLogDebug("onOk");
   if (validateDisplaySettings()) {
-    parent->SetFocus();
     saveDisplaySettings();
     Close(true);
     return;
   }
+}
+
+void SettingsDialog::onClose(wxCloseEvent& event) {
+  // Sometimes closing out this menu has given focus to a totally different
+  // window for focus for me in testing.  That's really obnoxious, because it
+  // can have the effect of sending the main window to the back of another
+  // window by virtue of exiting a dialog.  To top that off, if you set focus
+  // before calling Destroy(), things quit working.  But Destroying calls the
+  // destructor, so we can't rely on this->parent anymore after Destroy is
+  // called.  So we save it in a local pointer temporarily for this purpose.
+  wxWindow* local_parent = parent;
+  Destroy();
+  local_parent->SetFocus();
 }
 
 /* Returns true if the display settings are allowable, presents a warning dialog
@@ -175,8 +190,7 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
 
   // Label for this display
   wxStaticText* label = new wxStaticText(
-      this, wxID_ANY,
-      TeamConfig::getInstance()->teamName(team_index));
+      this, wxID_ANY, TeamConfig::getInstance()->teamName(team_index));
   wxFont font = label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);
   label->SetFont(font);
@@ -184,8 +198,10 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
   // Consume the right column on this row
   sizer->Add(new wxStaticText(this, wxID_ANY, wxT("")), 0, wxALL, 5);
 
-  sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Color")), 0, wxALL, 5);
-  color_picker = new wxColourPickerCtrl(this, wxID_ANY, TeamConfig::getInstance()->teamColor(team_index));
+  sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Default Color")), 0, wxALL,
+             5);
+  color_picker = new wxColourPickerCtrl(
+      this, wxID_ANY, TeamConfig::getInstance()->teamColor(team_index));
   sizer->Add(color_picker, 0, wxALL, 5);
 
   SetSizerAndFit(sizer);
