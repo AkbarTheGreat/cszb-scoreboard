@@ -32,7 +32,7 @@ class MainView;
 
 class TextEntry : public wxPanel {
  public:
-  TextEntry(MainView *mainView, wxWindow *parent);
+  TextEntry(MainView *main_view, wxWindow *parent);
   wxButton *updateButton();
   wxTextCtrl *textField();
   void textUpdated(wxKeyEvent &event);

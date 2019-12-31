@@ -23,9 +23,7 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 
-TextEntry::TextEntry(MainView *mainView, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-              wxTAB_TRAVERSAL) {
+TextEntry::TextEntry(MainView *main_view, wxWindow *parent) : wxPanel(parent) {
   this->main_view = main_view;
 
   text_label = new wxStaticText(this, wxID_ANY, wxT("Text"));
