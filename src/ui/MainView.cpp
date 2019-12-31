@@ -34,7 +34,8 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   createStatusBar();
   createPreviews();
 
-  text_entry = new TextEntry(this);
+  preview_panel = buildPreviewPanel();
+  control_notebook = createControlNotebook();
 
   positionWidgets();
   bindEvents();
@@ -69,6 +70,16 @@ void MainView::createStatusBar() {
   SetStatusText(status_text);
 }
 
+wxNotebook* MainView::createControlNotebook() {
+  wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
+  text_entry = new TextEntry(this, notebook);
+  notebook->AddPage(text_entry, "Text");
+  wxStaticText* score_control =
+      new wxStaticText(notebook, wxID_ANY, wxT("Coming Soon"));
+  notebook->AddPage(score_control, "Score");
+  return notebook;
+}
+
 void MainView::createPreviews() {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
@@ -81,14 +92,24 @@ void MainView::createPreviews() {
 }
 
 void MainView::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  sizer->Add(preview_panel, 0, wxEXPAND | wxALL);
+  sizer->Add(control_notebook, 0, wxEXPAND | wxALL);
+  SetSizerAndFit(sizer);
+}
+
+wxPanel* MainView::buildPreviewPanel() {
+  wxFlexGridSizer* sizer = new wxFlexGridSizer(1, 0, 0, 0);
+  sizer->SetFlexibleDirection(wxBOTH);
+  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxPanel* panel = new wxPanel(this);
   for (auto screen : screens) {
     sizer->Add(screen->widget(), 1, wxEXPAND | wxALL, BORDER_WIDTH);
   }
-  sizer->Add(text_entry, 1, wxEXPAND | wxALL, BORDER_WIDTH);
-  SetSizerAndFit(sizer);
+  panel->SetSizerAndFit(sizer);
+  return panel;
 }
 
 void MainView::bindEvents() {

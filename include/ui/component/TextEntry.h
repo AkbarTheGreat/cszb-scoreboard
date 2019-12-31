@@ -32,19 +32,21 @@ class MainView;
 
 class TextEntry : public wxPanel {
  public:
-  TextEntry(MainView *parent);
+  TextEntry(MainView *mainView, wxWindow *parent);
   wxButton *updateButton();
   wxTextCtrl *textField();
   void textUpdated(wxKeyEvent &event);
 
  private:
-  MainView *parent;
+  MainView *main_view;
   wxButton *update_screens;
   wxRadioBox *screen_selection;
   // If the list of screen_chocies changes, be sure to change what happens in
   // textUpdated().
   wxString screen_choices[3] = {wxT("Home"), wxT("Away"), wxT("All")};
+  wxStaticText *text_label;
   wxTextCtrl *text_entry;
+  wxStaticText *font_size_label;
   wxTextCtrl *font_size_entry;
   void bindEvents();
   int enteredFontSize();

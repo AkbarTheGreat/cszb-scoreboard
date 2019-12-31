@@ -23,24 +23,24 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 
-TextEntry::TextEntry(MainView *parent)
+TextEntry::TextEntry(MainView *mainView, wxWindow *parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
               wxTAB_TRAVERSAL) {
-  this->parent = parent;
+  this->main_view = main_view;
 
+  text_label = new wxStaticText(this, wxID_ANY, wxT("Text"));
   text_entry = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
                               wxSize(-1, -1), wxTE_MULTILINE);
   wxString initial_size;
   initial_size.Printf(wxT("%d"), DEFAULT_FONT_SIZE);
-  font_size_entry = new wxTextCtrl(this, wxID_ANY, initial_size,
-                                   wxDefaultPosition, wxSize(-1, -1), 0);
+  font_size_label = new wxStaticText(this, wxID_ANY, wxT("Font Size"));
+  font_size_entry = new wxTextCtrl(this, wxID_ANY, initial_size);
 
-  update_screens = new wxButton(this, wxID_ANY, wxT("Update"),
-                                wxDefaultPosition, wxDefaultSize, 0);
+  update_screens = new wxButton(this, wxID_ANY, wxT("Send to Monitors"));
 
   int number_of_screen_choices = sizeof(screen_choices) / sizeof(wxString);
   screen_selection = new wxRadioBox(
-      this, wxID_ANY, wxT("Send to Screen"), wxDefaultPosition, wxDefaultSize,
+      this, wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
       number_of_screen_choices, screen_choices, 1, wxRA_SPECIFY_COLS);
   screen_selection->SetSelection(0);
 
@@ -49,14 +49,16 @@ TextEntry::TextEntry(MainView *parent)
 }
 
 void TextEntry::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 4, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
+  sizer->Add(text_label, 0, wxALL, 5);
   sizer->Add(text_entry, 0, wxALL, 5);
+  sizer->Add(font_size_label, 0, wxALL, 5);
   sizer->Add(font_size_entry, 0, wxALL, 5);
-  sizer->Add(update_screens, 0, wxALL, 5);
   sizer->Add(screen_selection, 0, wxALL, 5);
+  sizer->Add(update_screens, 0, wxALL, 5);
   SetSizerAndFit(sizer);
 }
 
@@ -91,8 +93,8 @@ proto::ScreenSide TextEntry::selectedSide() {
 }
 
 void TextEntry::textUpdated(wxKeyEvent &event) {
-  parent->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
-                            selectedSide());
+  main_view->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
+                               selectedSide());
 }
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
@@ -105,7 +107,7 @@ void TextEntry::screenChanged(wxCommandEvent &event) {
 }
 
 void TextEntry::updateClicked(wxCommandEvent &event) {
-  parent->updatePresenters(selectedSide());
+  main_view->updatePresenters(selectedSide());
 }
 
 int TextEntry::enteredFontSize() {

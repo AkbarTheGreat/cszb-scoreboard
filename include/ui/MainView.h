@@ -18,6 +18,7 @@ limitations under the License.
 */
 #pragma once
 
+#include <wx/notebook.h>
 #include <wx/wx.h>
 
 #include <vector>
@@ -48,11 +49,15 @@ class MainView : public wxFrame {
 
  private:
   std::vector<ScreenPreview*> screens;
-  TextEntry* text_entry;
+  wxNotebook* control_notebook;
+  wxPanel* preview_panel;
   SettingsDialog* settings_dialog;
+  TextEntry* text_entry;
   void bindEvents();
   void blackout(wxCommandEvent& event);
+  wxPanel* buildPreviewPanel();
   void createMenu();
+  wxNotebook* createControlNotebook();
   void createPreviews();
   void createStatusBar();
   void onExit(wxCommandEvent& event);
