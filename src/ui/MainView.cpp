@@ -118,6 +118,22 @@ void MainView::updatePresenters(proto::ScreenSide side) {
   }
 }
 
+void MainView::updatePreviewsFromSettings() {
+  // Eventually, we may have the possibility for settings to reset where we now
+  // have more/less screens than we did before.  When that happens, this method
+  // needs to deal with that case, too.
+
+  int screen_index = 0;
+  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
+    proto::DisplayInfo display_info =
+        DisplayConfig::getInstance()->displayDetails(i);
+    if (display_info.side().error() || display_info.side().home() ||
+        display_info.side().away()) {
+      screens[screen_index++]->resetFromSettings(i);
+    }
+  }
+}
+
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
 
 void MainView::onAbout(wxCommandEvent& event) {
@@ -142,10 +158,14 @@ void MainView::showSettings(wxCommandEvent& event) {
   settings_dialog = new SettingsDialog();
   settings_dialog->Create(this);
   settings_dialog->Show();
+  settings_dialog->Bind(SETTINGS_UPDATED, &MainView::onSettingsChange, this);
+}
+
+void MainView::onSettingsChange(wxCommandEvent& event) {
+  updatePreviewsFromSettings();
 }
 
 void MainView::onClose(wxCloseEvent& event) {
-  wxLogDebug(wxT("Running On Close"));
   FrameList::getInstance()->exitFrames();
   Destroy();
 }

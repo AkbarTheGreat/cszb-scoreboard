@@ -58,8 +58,10 @@ class MainView : public wxFrame {
   void onExit(wxCommandEvent& event);
   void onAbout(wxCommandEvent& event);
   void onClose(wxCloseEvent& event);
+  void onSettingsChange(wxCommandEvent& event);
   void positionWidgets();
   void showSettings(wxCommandEvent& event);
+  void updatePreviewsFromSettings();
 };
 enum { GENERAL_SETTINGS = 1, DISPLAY_BLACK_OUT };
 

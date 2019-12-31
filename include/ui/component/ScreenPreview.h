@@ -30,10 +30,12 @@ class ScreenPreview {
   ScreenText* widget();
   void sendToPresenter(proto::ScreenSide side);
   void blackoutPresenter(proto::ScreenSide side);
+  void resetFromSettings(int monitor_number);
 
  private:
   ScreenText* current_widget;
   const wxWindow* parent;
   ScreenPresenter* presenter;
+  wxSize previewSize(int monitor_number);
 };
 }  // namespace cszb_scoreboard

@@ -25,20 +25,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const char* WELCOME_MESSAGE = "Chandler";
-const char* ERROR_MESSAGE = "NO SCREENS FOUND!";
-const int PREVIEW_HEIGHT = 320;
-
-ScreenText* ScreenText::getPreview(wxWindow* parent, float ratio,
-                                   proto::ScreenSide side) {
-  wxString initial_text;
-  if (side.error()) {
-    initial_text = ERROR_MESSAGE;
-  } else {
-    initial_text = WELCOME_MESSAGE;
-  }
-  return new ScreenText(parent, initial_text, side,
-                        wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT));
+ScreenText* ScreenText::getPreview(wxWindow* parent, wxString initial_text,
+                                   proto::ScreenSide side, wxSize size) {
+  return new ScreenText(parent, initial_text, side, size);
 }
 
 ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,

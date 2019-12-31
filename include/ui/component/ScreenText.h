@@ -28,8 +28,10 @@ namespace cszb_scoreboard {
 
 class ScreenText : public wxPanel {
  public:
-  static ScreenText* getPreview(wxWindow* parent, float ratio,
-                                proto::ScreenSide side);
+  // These two methods are really just light wrappers around constructors, but
+  // they help document the use each constructor is intended to fill.
+  static ScreenText* getPreview(wxWindow* parent, wxString initial_text,
+                                proto::ScreenSide side, wxSize size);
 
   static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
                                   wxSize size);

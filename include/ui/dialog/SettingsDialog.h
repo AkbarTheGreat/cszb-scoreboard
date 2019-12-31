@@ -29,6 +29,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
+
 class DisplaySettingsPanel : public wxPanel {
  public:
   DisplaySettingsPanel(wxPanel *parent, int display_number);
@@ -58,6 +60,7 @@ class SettingsDialog : public wxPropertySheetDialog {
   wxPanel *createDisplayPage(wxBookCtrlBase *settings_book);
   wxPanel *createTeamsPage(wxBookCtrlBase *settings_book);
   void onOk(wxCommandEvent &event);
+  void onCancel(wxCommandEvent &event);
   void onClose(wxCloseEvent &event);
   void saveSettings();
   void saveDisplaySettings();

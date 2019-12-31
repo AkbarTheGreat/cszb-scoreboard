@@ -25,6 +25,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
+
 bool SettingsDialog::Create(wxWindow* parent) {
   this->parent = parent;
   if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Scoreboard Settings")) {
@@ -73,17 +75,24 @@ wxPanel* SettingsDialog::createDisplayPage(wxBookCtrlBase* settings_book) {
 
 void SettingsDialog::bindEvents() {
   Bind(wxEVT_BUTTON, &SettingsDialog::onOk, this, wxID_OK);
+  Bind(wxEVT_BUTTON, &SettingsDialog::onCancel, this, wxID_CANCEL);
   Bind(wxEVT_CLOSE_WINDOW, &SettingsDialog::onClose, this);
 }
 
 void SettingsDialog::onOk(wxCommandEvent& event) {
-  wxLogDebug("onOk");
   if (validateSettings()) {
     saveSettings();
+    wxCommandEvent settings_updated_event(SETTINGS_UPDATED);
+    // Normally, I'd use wxPostEvent here for asynchronous event handling, but
+    // it sometimes doesn't work (Maybe due to a race condition with object
+    // destruction?)  Processing synchronously here is our best compromise.
+    ProcessEvent(settings_updated_event);
     Close(true);
     return;
   }
 }
+
+void SettingsDialog::onCancel(wxCommandEvent& event) { Close(true); }
 
 void SettingsDialog::onClose(wxCloseEvent& event) {
   // Sometimes closing out this menu has given focus to a totally different

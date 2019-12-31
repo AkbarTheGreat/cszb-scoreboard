@@ -20,31 +20,59 @@ limitations under the License.
 #include "ui/component/ScreenPreview.h"
 
 #include "config/DisplayConfig.h"
+#include "config/TeamConfig.h"
 #include "ui/component/ScreenText.h"
 
 namespace cszb_scoreboard {
 
+const char* WELCOME_MESSAGE = "Chandler";
+const char* ERROR_MESSAGE = "NO SCREENS FOUND!";
+const int PREVIEW_HEIGHT = 320;
+
 ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
                              int monitor_number) {
   this->parent = parent;
-  ScreenText* screen_text = nullptr;
-  float ratio = 4 / 3;
+
+  wxString initial_text;
+  if (side.error()) {
+    initial_text = ERROR_MESSAGE;
+  } else {
+    initial_text = WELCOME_MESSAGE;
+  }
+
+  current_widget = ScreenText::getPreview(parent, initial_text, side,
+                                          previewSize(monitor_number));
+
   if (!side.error()) {
-    proto::Rectangle dimensions = DisplayConfig::getInstance()
-                                      ->displayDetails(monitor_number)
-                                      .dimensions();
+    presenter = new ScreenPresenter(monitor_number, current_widget);
+  }
+}
+
+wxSize ScreenPreview::previewSize(int monitor_number) {
+  proto::DisplayInfo display_info =
+      DisplayConfig::getInstance()->displayDetails(monitor_number);
+
+  float ratio = 4 / 3;
+
+  if (!display_info.side().error()) {
+    proto::Rectangle dimensions = display_info.dimensions();
     ratio = (float)dimensions.width() / dimensions.height();
   }
-  screen_text = ScreenText::getPreview(parent, ratio, side);
-  if (!side.error()) {
-    presenter = new ScreenPresenter(
-        monitor_number,
-        screen_text);  // TODO: Pass along screen number that's expected
-  }
-  this->current_widget = screen_text;
+  return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
 }
 
 ScreenText* ScreenPreview::widget() { return current_widget; }
+
+void ScreenPreview::resetFromSettings(int monitor_number) {
+  current_widget->SetSize(previewSize(monitor_number));
+  proto::ScreenSide side =
+      DisplayConfig::getInstance()->displayDetails(monitor_number).side();
+  std::vector<int> side_indices =
+      TeamConfig::getInstance()->indicesForSide(side);
+  current_widget->setBackground(
+      TeamConfig::getInstance()->teamColor(side_indices[0]));
+  current_widget->Refresh();
+}
 
 void ScreenPreview::sendToPresenter(proto::ScreenSide side) {
   if (current_widget->isSide(side)) {
