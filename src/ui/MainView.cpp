@@ -92,8 +92,6 @@ void MainView::bindEvents() {
   // here.
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::showSettings, this,
        GENERAL_SETTINGS);
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onBlackout, this,
-       DISPLAY_BLACK_OUT);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onExit, this, wxID_EXIT);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onAbout, this, wxID_ABOUT);
 }
@@ -106,8 +104,6 @@ void MainView::onAbout(wxCommandEvent& event) {
       "Beck, Licensed via the Apache License.",
       "About Scoreboard", wxOK | wxICON_INFORMATION);
 }
-
-void MainView::onBlackout(wxCommandEvent& event) { preview_panel->blackout(); }
 
 void MainView::showSettings(wxCommandEvent& event) {
   settings_dialog = new SettingsDialog();

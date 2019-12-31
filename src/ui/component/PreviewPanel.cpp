@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/PreviewPanel.h"
 
 #include "config/DisplayConfig.h"
+#include "ui/component/Menu.h"
 
 namespace cszb_scoreboard {
 
@@ -36,6 +37,7 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
   }
 
   positionWidgets();
+  bindEvents();
 }
 
 void PreviewPanel::positionWidgets() {
@@ -46,6 +48,11 @@ void PreviewPanel::positionWidgets() {
     sizer->Add(screen->widget(), 1, wxEXPAND | wxALL, BORDER_WIDTH);
   }
   SetSizerAndFit(sizer);
+}
+
+void PreviewPanel::bindEvents() {
+  GetParent()->Bind(wxEVT_COMMAND_MENU_SELECTED, &PreviewPanel::blackout, this,
+                    DISPLAY_BLACK_OUT);
 }
 
 int PreviewPanel::numPreviews() { return screens.size(); }
@@ -86,7 +93,7 @@ void PreviewPanel::updatePreviewsFromSettings() {
   }
 }
 
-void PreviewPanel::blackout() {
+void PreviewPanel::blackout(wxCommandEvent& event) {
   proto::ScreenSide side;
   // Always blackout all screens
   side.set_home(true);

@@ -1,4 +1,3 @@
-
 /*
 ui/component/PreviewPanel.h: The panel which holds all of the screen previews
 (which then, in turn hold the screen presenters which control the monitors
@@ -33,16 +32,17 @@ namespace cszb_scoreboard {
 class PreviewPanel : public wxPanel {
  public:
   PreviewPanel(wxWindow* parent);
-  void blackout();
+  void blackout(wxCommandEvent& event);
   void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
   void updatePresenters(proto::ScreenSide side);
   void updatePreviewsFromSettings();
 
  private:
   std::vector<ScreenPreview*> screens;
+  void bindEvents();
   int numPreviews();
-  ScreenPreview* preview(int index);
   void positionWidgets();
+  ScreenPreview* preview(int index);
 };
 
 }  // namespace cszb_scoreboard

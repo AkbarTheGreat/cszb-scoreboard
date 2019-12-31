@@ -27,6 +27,7 @@ limitations under the License.
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/TextEntry.h"
 #include "ui/dialog/SettingsDialog.h"
+#include "ui/component/Menu.h"
 
 namespace cszb_scoreboard {
 
@@ -48,13 +49,10 @@ class MainView : public wxFrame {
   void createStatusBar();
   void onExit(wxCommandEvent& event);
   void onAbout(wxCommandEvent& event);
-  void onBlackout(wxCommandEvent& event);
   void onClose(wxCloseEvent& event);
   void onSettingsChange(wxCommandEvent& event);
   void positionWidgets();
   void showSettings(wxCommandEvent& event);
 };
-
-enum { GENERAL_SETTINGS = 1, DISPLAY_BLACK_OUT };
 
 }  // namespace cszb_scoreboard
