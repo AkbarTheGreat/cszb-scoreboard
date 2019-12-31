@@ -23,8 +23,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const int BORDER_WIDTH = 10;
-
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
@@ -32,9 +30,8 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 
   createMenu();
   createStatusBar();
-  createPreviews();
 
-  preview_panel = buildPreviewPanel();
+  preview_panel = new PreviewPanel(this);
   control_notebook = createControlNotebook();
 
   positionWidgets();
@@ -72,23 +69,12 @@ void MainView::createStatusBar() {
 
 wxNotebook* MainView::createControlNotebook() {
   wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
-  text_entry = new TextEntry(this, notebook);
+  text_entry = new TextEntry(preview_panel, notebook);
   notebook->AddPage(text_entry, "Text");
   wxStaticText* score_control =
       new wxStaticText(notebook, wxID_ANY, wxT("Coming Soon"));
   notebook->AddPage(score_control, "Score");
   return notebook;
-}
-
-void MainView::createPreviews() {
-  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
-    proto::DisplayInfo display_info =
-        DisplayConfig::getInstance()->displayDetails(i);
-    if (display_info.side().error() || display_info.side().home() ||
-        display_info.side().away()) {
-      screens.push_back(new ScreenPreview(this, display_info.side(), i));
-    }
-  }
 }
 
 void MainView::positionWidgets() {
@@ -100,59 +86,16 @@ void MainView::positionWidgets() {
   SetSizerAndFit(sizer);
 }
 
-wxPanel* MainView::buildPreviewPanel() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(1, 0, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  wxPanel* panel = new wxPanel(this);
-  for (auto screen : screens) {
-    sizer->Add(screen->widget(), 1, wxEXPAND | wxALL, BORDER_WIDTH);
-  }
-  panel->SetSizerAndFit(sizer);
-  return panel;
-}
-
 void MainView::bindEvents() {
   Bind(wxEVT_CLOSE_WINDOW, &MainView::onClose, this);
   // Menu events bind against the frame itself, so a bare Bind() is useful
   // here.
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::showSettings, this,
        GENERAL_SETTINGS);
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::blackout, this,
+  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onBlackout, this,
        DISPLAY_BLACK_OUT);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onExit, this, wxID_EXIT);
   Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onAbout, this, wxID_ABOUT);
-}
-
-void MainView::setTextForPreview(wxString text, int font_size,
-                                 proto::ScreenSide side) {
-  for (auto preview : screens) {
-    ScreenText* screen_text = preview->widget();
-    screen_text->setText(text, font_size, side);
-    screen_text->Refresh();
-  }
-}
-
-void MainView::updatePresenters(proto::ScreenSide side) {
-  for (auto preview : screens) {
-    preview->sendToPresenter(side);
-  }
-}
-
-void MainView::updatePreviewsFromSettings() {
-  // Eventually, we may have the possibility for settings to reset where we now
-  // have more/less screens than we did before.  When that happens, this method
-  // needs to deal with that case, too.
-
-  int screen_index = 0;
-  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
-    proto::DisplayInfo display_info =
-        DisplayConfig::getInstance()->displayDetails(i);
-    if (display_info.side().error() || display_info.side().home() ||
-        display_info.side().away()) {
-      screens[screen_index++]->resetFromSettings(i);
-    }
-  }
 }
 
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
@@ -164,16 +107,7 @@ void MainView::onAbout(wxCommandEvent& event) {
       "About Scoreboard", wxOK | wxICON_INFORMATION);
 }
 
-void MainView::blackout(wxCommandEvent& event) {
-  proto::ScreenSide side;
-  // Always blackout all screens
-  side.set_home(true);
-  side.set_away(true);
-  side.set_extra(true);
-  for (auto preview : screens) {
-    preview->blackoutPresenter(side);
-  }
-}
+void MainView::onBlackout(wxCommandEvent& event) { preview_panel->blackout(); }
 
 void MainView::showSettings(wxCommandEvent& event) {
   settings_dialog = new SettingsDialog();
@@ -183,7 +117,7 @@ void MainView::showSettings(wxCommandEvent& event) {
 }
 
 void MainView::onSettingsChange(wxCommandEvent& event) {
-  updatePreviewsFromSettings();
+  preview_panel->updatePreviewsFromSettings();
 }
 
 void MainView::onClose(wxCloseEvent& event) {

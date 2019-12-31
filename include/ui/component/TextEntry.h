@@ -20,25 +20,19 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-#include "ui/MainView.h"
+#include "ui/component/PreviewPanel.h"
 
 namespace cszb_scoreboard {
 
-// Predeclared here in order to accomodate the necessary circular dependency
-// inherent in having a member with a constructor which takes a parent pointer.
-// Use caution when working with these variables to ensure that overloads are
-// handled correctly.
-class MainView;
-
 class TextEntry : public wxPanel {
  public:
-  TextEntry(MainView *main_view, wxWindow *parent);
+  TextEntry(PreviewPanel *preview_panel, wxWindow *parent);
   wxButton *updateButton();
   wxTextCtrl *textField();
   void textUpdated(wxKeyEvent &event);
 
  private:
-  MainView *main_view;
+  PreviewPanel *preview_panel;
   wxButton *update_screens;
   wxRadioBox *screen_selection;
   // If the list of screen_chocies changes, be sure to change what happens in

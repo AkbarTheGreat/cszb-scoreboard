@@ -23,8 +23,9 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 
-TextEntry::TextEntry(MainView *main_view, wxWindow *parent) : wxPanel(parent) {
-  this->main_view = main_view;
+TextEntry::TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
+    : wxPanel(parent) {
+  this->preview_panel = preview_panel;
 
   text_label = new wxStaticText(this, wxID_ANY, wxT("Text"));
   text_entry = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
@@ -91,8 +92,8 @@ proto::ScreenSide TextEntry::selectedSide() {
 }
 
 void TextEntry::textUpdated(wxKeyEvent &event) {
-  main_view->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
-                               selectedSide());
+  preview_panel->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
+                                   selectedSide());
 }
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
@@ -105,7 +106,7 @@ void TextEntry::screenChanged(wxCommandEvent &event) {
 }
 
 void TextEntry::updateClicked(wxCommandEvent &event) {
-  main_view->updatePresenters(selectedSide());
+  preview_panel->updatePresenters(selectedSide());
 }
 
 int TextEntry::enteredFontSize() {

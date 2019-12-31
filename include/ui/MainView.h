@@ -23,51 +23,38 @@ limitations under the License.
 
 #include <vector>
 
+#include "ui/component/PreviewPanel.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/TextEntry.h"
 #include "ui/dialog/SettingsDialog.h"
 
 namespace cszb_scoreboard {
 
-// Predeclared here in order to accomodate the necessary circular dependency
-// inherent in having a member with a constructor which takes a parent pointer.
-// Use caution when working with these variables to ensure that overloads are
-// handled correctly.
-class TextEntry;
-
 class MainView : public wxFrame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
-  inline int numPreviews() { return screens.size(); }
-  inline ScreenPreview* preview(int index) {
-    assert(index >= 0 && index < screens.size());
-    return screens[index];
-  }
   TextEntry* textEntry() { return this->text_entry; }
   void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
   void updatePresenters(proto::ScreenSide side);
 
  private:
-  std::vector<ScreenPreview*> screens;
   wxNotebook* control_notebook;
-  wxPanel* preview_panel;
   SettingsDialog* settings_dialog;
   TextEntry* text_entry;
+  PreviewPanel* preview_panel;
   void bindEvents();
-  void blackout(wxCommandEvent& event);
-  wxPanel* buildPreviewPanel();
   void createMenu();
   wxNotebook* createControlNotebook();
-  void createPreviews();
   void createStatusBar();
   void onExit(wxCommandEvent& event);
   void onAbout(wxCommandEvent& event);
+  void onBlackout(wxCommandEvent& event);
   void onClose(wxCloseEvent& event);
   void onSettingsChange(wxCommandEvent& event);
   void positionWidgets();
   void showSettings(wxCommandEvent& event);
-  void updatePreviewsFromSettings();
 };
+
 enum { GENERAL_SETTINGS = 1, DISPLAY_BLACK_OUT };
 
 }  // namespace cszb_scoreboard
