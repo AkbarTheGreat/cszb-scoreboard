@@ -23,11 +23,11 @@ limitations under the License.
 
 #include <vector>
 
+#include "ui/component/Menu.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/TextEntry.h"
 #include "ui/dialog/SettingsDialog.h"
-#include "ui/component/Menu.h"
 
 namespace cszb_scoreboard {
 
@@ -37,6 +37,9 @@ class MainView : public wxFrame {
   TextEntry* textEntry() { return this->text_entry; }
   void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
   void updatePresenters(proto::ScreenSide side);
+
+PUBLIC_TEST_ONLY
+  inline PreviewPanel* previewPanel() { return preview_panel; }
 
  private:
   wxNotebook* control_notebook;

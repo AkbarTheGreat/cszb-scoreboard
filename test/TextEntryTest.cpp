@@ -55,7 +55,7 @@ class TextEntryTest : public GuiTest {
     // Always assume we're dealing with the left (home) view, which is 0 in most
     // cases, but may also be an error screen in release, so this will fail for
     // release at the moment.
-    return ImageAnalysis(mainView()->preview(0)->widget());
+    return ImageAnalysis(firstPreview()->widget());
   }
 };
 

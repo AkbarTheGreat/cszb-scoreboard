@@ -25,7 +25,7 @@ namespace test {
 TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
   WX_A(mainView()->SetFocus());
-  ImageAnalysis analysis(mainView()->preview(0)->widget());
+  ImageAnalysis analysis(firstPreview()->widget());
   std::vector<int> color_list = analysis.colorList();
   int list_size = color_list.size();
   if (DisplayConfig::getInstance()->displayDetails(0).side().error()) {

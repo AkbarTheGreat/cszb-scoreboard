@@ -44,9 +44,12 @@ void GuiTest::TearDown() {
   wxEntryCleanup();
 }
 
-/* Convenience method to get the main window, for testing purposes. */
 MainView *GuiTest::mainView() {
   return (MainView *)FrameList::getInstance()->getMainView();
+}
+
+ScreenPreview *GuiTest::firstPreview() {
+  return mainView()->previewPanel()->preview(0);
 }
 
 ImageAnalysis::ImageAnalysis(wxWindow *widget, int precision_percent) {

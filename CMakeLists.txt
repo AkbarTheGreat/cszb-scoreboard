@@ -88,6 +88,7 @@ list(APPEND TEST_ONLY_SRC
 macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
     add_executable(${TESTNAME} ${SCOREBOARD_PROTO} ${ARGN})
+    target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
     target_link_libraries(${TESTNAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES} gtest gmock gtest_main)

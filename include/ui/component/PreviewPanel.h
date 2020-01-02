@@ -24,6 +24,7 @@ limitations under the License.
 
 #include <vector>
 
+#include "ScoreboardCommon.h"
 #include "proto/config.pb.h"
 #include "ui/component/ScreenPreview.h"
 
@@ -37,12 +38,14 @@ class PreviewPanel : public wxPanel {
   void updatePresenters(proto::ScreenSide side);
   void updatePreviewsFromSettings();
 
+PUBLIC_TEST_ONLY
+  ScreenPreview* preview(int index);
+
  private:
   std::vector<ScreenPreview*> screens;
   void bindEvents();
   int numPreviews();
   void positionWidgets();
-  ScreenPreview* preview(int index);
 };
 
 }  // namespace cszb_scoreboard
