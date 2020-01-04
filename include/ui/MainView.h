@@ -18,11 +18,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/notebook.h>
 #include <wx/wx.h>
 
 #include <vector>
 
+#include "ui/component/ControlPanel.h"
 #include "ui/component/Menu.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/ScreenPreview.h"
@@ -34,17 +34,17 @@ namespace cszb_scoreboard {
 class MainView : public wxFrame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
-  TextEntry* textEntry() { return this->text_entry; }
   void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
   void updatePresenters(proto::ScreenSide side);
 
-PUBLIC_TEST_ONLY
+#ifdef SCOREBOARD_TESTING
   inline PreviewPanel* previewPanel() { return preview_panel; }
+  TextEntry* textEntry() { return control_panel->textEntry(); }
+#endif
 
  private:
-  wxNotebook* control_notebook;
+  ControlPanel* control_panel;
   SettingsDialog* settings_dialog;
-  TextEntry* text_entry;
   PreviewPanel* preview_panel;
   void bindEvents();
   void createMenu();

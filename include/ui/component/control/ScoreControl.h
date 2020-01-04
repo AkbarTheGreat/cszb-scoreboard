@@ -19,22 +19,30 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/component/ScreenTextController.h"
+#include <wx/wx.h>
+
+#include "proto/config.pb.h"
+#include "ui/component/control/ScreenTextController.h"
 
 namespace cszb_scoreboard {
 
 class ScoreControl : public ScreenTextController {
  public:
-  static TextEntry *Create(PreviewPanel *preview_panel, wxWindow *parent) {
-    return nullptr;
-  }
+  static ScoreControl *Create(PreviewPanel *preview_panel, wxWindow *parent);
 
  private:
   ScoreControl(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
-  void updatePreview() override {}
-  void createControls(wxPanel *control_panel) override {}
-  proto::ScreenSide updateSide() override { return proto::ScreenSide(); }
+  void bindEvents();
+  void createControls(wxPanel *control_panel) override;
+  void positionWidgets(wxPanel *control_panel);
+  void updatePreview() override;
+  proto::ScreenSide updateSide() override;
+
+  wxStaticText *home_score_label;
+  wxTextCtrl *home_score_entry;
+  wxStaticText *away_score_label;
+  wxTextCtrl *away_score_entry;
 };
 
 }  // namespace cszb_scoreboard
