@@ -1,6 +1,6 @@
 /*
-ui/TextEntry.h: This class is responsible for generating text which can go to
-one or all of the scoreboard screens.
+ui/component/control/TextEntry.h: This class is responsible for generating text
+which can go to one or all of the scoreboard screens.
 
 Copyright 2019 Tracy Beck
 
@@ -22,7 +22,7 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "ui/component/PreviewPanel.h"
-#include "ui/component/ScreenTextController.h"
+#include "ui/component/control/ScreenTextController.h"
 
 namespace cszb_scoreboard {
 

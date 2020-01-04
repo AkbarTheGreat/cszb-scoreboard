@@ -26,7 +26,7 @@ limitations under the License.
 #include "ui/component/Menu.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/ScreenPreview.h"
-#include "ui/component/TextEntry.h"
+#include "ui/component/control/TextEntry.h"
 #include "ui/dialog/SettingsDialog.h"
 
 namespace cszb_scoreboard {

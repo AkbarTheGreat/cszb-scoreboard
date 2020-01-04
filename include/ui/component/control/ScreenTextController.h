@@ -1,7 +1,7 @@
 /*
-ui/ScreenTextController.h: Any class which extends this serves to set
-information from the user into a ScreenText.  It could be arbitrary text, a
-single image, or a score update, to name a few.
+ui/component/control/ScreenTextController.h: Any class which extends this serves
+to set information from the user into a ScreenText.  It could be arbitrary text,
+a single image, or a score update, to name a few.
 
 Copyright 2019 Tracy Beck
 
