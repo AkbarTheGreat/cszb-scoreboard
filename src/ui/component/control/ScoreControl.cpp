@@ -29,12 +29,10 @@ ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
 }
 
 void ScoreControl::createControls(wxPanel *control_panel) {
-  home_score_label =
-      new wxStaticText(control_panel, wxID_ANY, wxT("Home"));
+  home_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Home"));
   home_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
 
-  away_score_label =
-      new wxStaticText(control_panel, wxID_ANY, wxT("Away"));
+  away_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Away"));
   away_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
 
   positionWidgets(control_panel);
