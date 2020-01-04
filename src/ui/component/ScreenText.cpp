@@ -1,5 +1,6 @@
 /*
-ui/ScreenText.cpp: Represents a text presentation on a ScreenProvider.
+ui/ScreenText.cpp: Represents a text presentation on a ScreenPresenter or a
+ScreenPreview.
 
 Copyright 2019 Tracy Beck
 

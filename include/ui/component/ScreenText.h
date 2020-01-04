@@ -1,5 +1,6 @@
 /*
-ui/ScreenText.h: Represents a text presentation on a ScreenProvider.
+ui/ScreenText.h: Represents a text presentation on a ScreenPresenter or a
+ScreenPreview.
 
 Copyright 2019 Tracy Beck
 
@@ -15,6 +16,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 #pragma once
 
 #include <wx/wx.h>

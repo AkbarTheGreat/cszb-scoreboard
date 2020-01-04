@@ -69,11 +69,14 @@ void MainView::createStatusBar() {
 
 wxNotebook* MainView::createControlNotebook() {
   wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
-  text_entry = new TextEntry(preview_panel, notebook);
+
+  text_entry = TextEntry::Create(preview_panel, notebook);
   notebook->AddPage(text_entry, "Text");
+
   wxStaticText* score_control =
       new wxStaticText(notebook, wxID_ANY, wxT("Coming Soon"));
   notebook->AddPage(score_control, "Score");
+
   return notebook;
 }
 

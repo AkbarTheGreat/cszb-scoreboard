@@ -23,31 +23,33 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 
-TextEntry::TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
-    : wxPanel(parent) {
-  this->preview_panel = preview_panel;
+TextEntry *TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent) {
+  TextEntry *entry = new TextEntry(preview_panel, parent);
+  entry->initializeWidgets();
+  return entry;
+}
 
-  text_label = new wxStaticText(this, wxID_ANY, wxT("Text"));
-  text_entry = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-                              wxSize(-1, -1), wxTE_MULTILINE);
+void TextEntry::createControls(wxPanel *control_panel) {
+  text_label = new wxStaticText(control_panel, wxID_ANY, wxT("Text"));
+  text_entry =
+      new wxTextCtrl(control_panel, wxID_ANY, wxEmptyString, wxDefaultPosition,
+                     wxSize(-1, -1), wxTE_MULTILINE);
   wxString initial_size;
   initial_size.Printf(wxT("%d"), DEFAULT_FONT_SIZE);
-  font_size_label = new wxStaticText(this, wxID_ANY, wxT("Font Size"));
-  font_size_entry = new wxTextCtrl(this, wxID_ANY, initial_size);
-
-  update_screens = new wxButton(this, wxID_ANY, wxT("Send to Monitors"));
+  font_size_label = new wxStaticText(control_panel, wxID_ANY, wxT("Font Size"));
+  font_size_entry = new wxTextCtrl(control_panel, wxID_ANY, initial_size);
 
   int number_of_screen_choices = sizeof(screen_choices) / sizeof(wxString);
   screen_selection = new wxRadioBox(
-      this, wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
+      control_panel, wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
       number_of_screen_choices, screen_choices, 1, wxRA_SPECIFY_COLS);
   screen_selection->SetSelection(0);
 
-  positionWidgets();
+  positionWidgets(control_panel);
   bindEvents();
 }
 
-void TextEntry::positionWidgets() {
+void TextEntry::positionWidgets(wxPanel *control_panel) {
   wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 4, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
@@ -57,8 +59,7 @@ void TextEntry::positionWidgets() {
   sizer->Add(font_size_label, 0, wxALL, 5);
   sizer->Add(font_size_entry, 0, wxALL, 5);
   sizer->Add(screen_selection, 0, wxALL, 5);
-  sizer->Add(update_screens, 0, wxALL, 5);
-  SetSizerAndFit(sizer);
+  control_panel->SetSizerAndFit(sizer);
 }
 
 void TextEntry::bindEvents() {
@@ -66,15 +67,11 @@ void TextEntry::bindEvents() {
   font_size_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &TextEntry::screenChanged, this);
-  update_screens->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &TextEntry::updateClicked,
-                       this);
 }
-
-wxButton *TextEntry::updateButton() { return update_screens; }
 
 wxTextCtrl *TextEntry::textField() { return text_entry; }
 
-proto::ScreenSide TextEntry::selectedSide() {
+proto::ScreenSide TextEntry::updateSide() {
   proto::ScreenSide side;
   switch (screen_selection->GetSelection()) {
     case 0:
@@ -91,10 +88,12 @@ proto::ScreenSide TextEntry::selectedSide() {
   return side;
 }
 
-void TextEntry::textUpdated(wxKeyEvent &event) {
-  preview_panel->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
-                                   selectedSide());
+void TextEntry::updatePreview() {
+  previewPanel()->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
+                                    updateSide());
 }
+
+void TextEntry::textUpdated(wxKeyEvent &event) { updatePreview(); }
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
   // For now, if someone changes the screen, just send the text to that screen
@@ -102,11 +101,7 @@ void TextEntry::screenChanged(wxCommandEvent &event) {
   // a) Clear the text box at this point.
   // b) Revert the old screen to what it was before the last edit, then send
   // text to the new one.
-  textUpdated(wxKeyEvent());
-}
-
-void TextEntry::updateClicked(wxCommandEvent &event) {
-  preview_panel->updatePresenters(selectedSide());
+  updatePreview();
 }
 
 int TextEntry::enteredFontSize() {
