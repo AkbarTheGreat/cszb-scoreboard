@@ -41,6 +41,7 @@ class TextEntry : public ScreenTextController {
   wxStaticText *text_label;
   wxTextCtrl *text_entry;
   wxStaticText *font_size_label;
+  wxPanel *inner_panel;
   wxTextCtrl *font_size_entry;
   wxString home_text;
   wxString away_text;
@@ -53,7 +54,6 @@ class TextEntry : public ScreenTextController {
       : ScreenTextController(preview_panel, parent) {}
   void updatePreview() override;
   void createControls(wxPanel *control_panel) override;
-  proto::ScreenSide updateSide() override;
 
   void bindEvents();
   int enteredFontSize();

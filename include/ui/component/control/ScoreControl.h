@@ -39,7 +39,6 @@ class ScoreControl : public ScreenTextController {
   void homeUpdated(wxKeyEvent &event);
   void positionWidgets(wxPanel *control_panel);
   void updatePreview() override;
-  proto::ScreenSide updateSide() override;
 
   wxStaticText *home_score_label;
   wxTextCtrl *home_score_entry;

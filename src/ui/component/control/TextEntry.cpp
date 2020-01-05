@@ -22,10 +22,12 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
+const int BORDER_SIZE = 5;
 
 TextEntry *TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   TextEntry *entry = new TextEntry(preview_panel, parent);
   entry->initializeWidgets();
+  entry->updatePreview();
   return entry;
 }
 
@@ -39,13 +41,16 @@ void TextEntry::createControls(wxPanel *control_panel) {
   text_entry =
       new wxTextCtrl(control_panel, wxID_ANY, home_text, wxDefaultPosition,
                      wxSize(-1, -1), wxTE_MULTILINE);
-  font_size_label = new wxStaticText(control_panel, wxID_ANY, wxT("Font Size"));
+
+  inner_panel = new wxPanel(control_panel);
+
+  font_size_label = new wxStaticText(inner_panel, wxID_ANY, wxT("Font Size"));
   font_size_entry =
-      new wxTextCtrl(control_panel, wxID_ANY, intToString(DEFAULT_FONT_SIZE));
+      new wxTextCtrl(inner_panel, wxID_ANY, intToString(DEFAULT_FONT_SIZE));
 
   int number_of_screen_choices = sizeof(screen_choices) / sizeof(wxString);
   screen_selection = new wxRadioBox(
-      control_panel, wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
+      inner_panel, wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
       number_of_screen_choices, screen_choices, 1, wxRA_SPECIFY_COLS);
   screen_selection->SetSelection(0);
 
@@ -54,16 +59,27 @@ void TextEntry::createControls(wxPanel *control_panel) {
 }
 
 void TextEntry::positionWidgets(wxPanel *control_panel) {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 4, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 3, 0, 0);
+  outer_sizer->SetFlexibleDirection(wxBOTH);
+  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  sizer->Add(text_label, 0, wxALL, 5);
-  sizer->Add(text_entry, 0, wxALL, 5);
-  sizer->Add(font_size_label, 0, wxALL, 5);
-  sizer->Add(font_size_entry, 0, wxALL, 5);
-  sizer->Add(screen_selection, 0, wxALL, 5);
-  control_panel->SetSizerAndFit(sizer);
+  wxFlexGridSizer *inner_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  inner_sizer->SetFlexibleDirection(wxBOTH);
+  inner_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+
+  // Outer sizer holds text label and inner_panel
+  outer_sizer->Add(text_label, 0, wxALL, BORDER_SIZE);
+  outer_sizer->Add(text_entry, 0, wxALL, BORDER_SIZE);
+  outer_sizer->Add(inner_panel, 0, wxALL, BORDER_SIZE);
+
+  inner_sizer->Add(font_size_label, 0, wxALL, BORDER_SIZE);
+  inner_sizer->Add(font_size_entry, 0, wxALL, BORDER_SIZE);
+  inner_sizer->Add(new wxStaticText(inner_panel, -1, wxT("")), 0, wxALL,
+                   BORDER_SIZE);
+  inner_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+
+  inner_panel->SetSizerAndFit(inner_sizer);
+  control_panel->SetSizerAndFit(outer_sizer);
 }
 
 void TextEntry::bindEvents() {
@@ -74,23 +90,6 @@ void TextEntry::bindEvents() {
 }
 
 wxTextCtrl *TextEntry::textField() { return text_entry; }
-
-proto::ScreenSide TextEntry::updateSide() {
-  proto::ScreenSide side;
-  switch (screen_selection->GetSelection()) {
-    case 0:
-      side.set_home(true);
-      break;
-    case 1:
-      side.set_away(true);
-      break;
-    default:
-      side.set_home(true);
-      side.set_away(true);
-      break;
-  }
-  return side;
-}
 
 void TextEntry::updatePreview() {
   // Send the combined text to both previews

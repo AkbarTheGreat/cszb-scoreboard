@@ -58,4 +58,11 @@ void ScreenTextController::updateClicked(wxCommandEvent &event) {
   preview_panel->updatePresenters(updateSide());
 }
 
+proto::ScreenSide ScreenTextController::updateSide() {
+  proto::ScreenSide side;
+  side.set_home(true);
+  side.set_away(true);
+  return side;
+}
+
 }  // namespace cszb_scoreboard

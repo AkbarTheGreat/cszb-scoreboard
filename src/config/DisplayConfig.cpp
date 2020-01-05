@@ -66,16 +66,23 @@ void DisplayConfig::detectDisplays() {
                         display_info->mutable_dimensions());
     if (isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);
-      if (numscreens == 1) {
+      display_info->mutable_side()->set_home(true);
+      set_home = false;
 #ifdef WXDEBUG
-        // For debugging, we display home as if it was a second monitor.
+      if (numscreens < 3) {
+        // For debugging, we display home as if it was a second monitor.  That
+        // way we can either test a single display setup with no second monitor,
+        // or a two display setup with only one extra monitor.
         display_info->mutable_side()->set_home(true);
-#else
-        // Create an error "screen" to let the user know we don't expect this to
-        // work.
-        display_info->mutable_side()->set_error(true);
-#endif
+        set_home = false;
       }
+#else
+      if (numscreens == 1) {
+        // Create an error "screen" to let the user know we don't expect this to
+        // work, unless we're debugging.
+        display_info->mutable_side()->set_error(true);
+      }
+#endif
     } else {
       // The lowest monitor will default to home, the highest away, aside from
       // the primary.  If we have 4 or more monitors, we don't yet support that

@@ -74,11 +74,4 @@ void ScoreControl::homeUpdated(wxKeyEvent &event) { updatePreview(); }
 
 void ScoreControl::awayUpdated(wxKeyEvent &event) { updatePreview(); }
 
-proto::ScreenSide ScoreControl::updateSide() {
-  proto::ScreenSide side;
-  side.set_home(true);
-  side.set_away(true);
-  return side;
-}
-
 }  // namespace cszb_scoreboard
