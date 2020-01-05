@@ -33,8 +33,10 @@ class ScoreControl : public ScreenTextController {
  private:
   ScoreControl(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
+  void awayUpdated(wxKeyEvent &event);
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
+  void homeUpdated(wxKeyEvent &event);
   void positionWidgets(wxPanel *control_panel);
   void updatePreview() override;
   proto::ScreenSide updateSide() override;

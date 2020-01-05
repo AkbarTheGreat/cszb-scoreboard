@@ -21,6 +21,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const int SCORE_FONT_SIZE = 20;
+
 ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
                                    wxWindow *parent) {
   ScoreControl *control = new ScoreControl(preview_panel, parent);
@@ -39,7 +41,10 @@ void ScoreControl::createControls(wxPanel *control_panel) {
   bindEvents();
 }
 
-void ScoreControl::bindEvents() {}
+void ScoreControl::bindEvents() {
+  home_score_entry->Bind(wxEVT_KEY_UP, &ScoreControl::homeUpdated, this);
+  away_score_entry->Bind(wxEVT_KEY_UP, &ScoreControl::awayUpdated, this);
+}
 
 void ScoreControl::positionWidgets(wxPanel *control_panel) {
   wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 2, 0, 0);
@@ -54,8 +59,26 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
   control_panel->SetSizerAndFit(sizer);
 }
 
-void ScoreControl::updatePreview() {}
+void ScoreControl::updatePreview() {
+  proto::ScreenSide home_side;
+  home_side.set_home(true);
+  proto::ScreenSide away_side;
+  away_side.set_away(true);
+  previewPanel()->setTextForPreview(home_score_entry->GetValue(),
+                                    SCORE_FONT_SIZE, home_side);
+  previewPanel()->setTextForPreview(away_score_entry->GetValue(),
+                                    SCORE_FONT_SIZE, away_side);
+}
 
-proto::ScreenSide ScoreControl::updateSide() { return proto::ScreenSide(); }
+void ScoreControl::homeUpdated(wxKeyEvent &event) { updatePreview(); }
+
+void ScoreControl::awayUpdated(wxKeyEvent &event) { updatePreview(); }
+
+proto::ScreenSide ScoreControl::updateSide() {
+  proto::ScreenSide side;
+  side.set_home(true);
+  side.set_away(true);
+  return side;
+}
 
 }  // namespace cszb_scoreboard

@@ -19,15 +19,28 @@ limitations under the License.
 
 #include "ui/component/ControlPanel.h"
 
+#include "ui/component/control/ScoreControl.h"
+#include "ui/component/control/TextEntry.h"
+
 namespace cszb_scoreboard {
 
 ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
     : wxNotebook(parent, wxID_ANY) {
-  text_entry = TextEntry::Create(preview_panel, this);
-  AddPage(text_entry, "Text");
+  controllers.push_back(TextEntry::Create(preview_panel, this));
+  AddPage(controllers.back(), "Text");
 
-  score_control = ScoreControl::Create(preview_panel, this);
-  AddPage(score_control, "Score");
+  controllers.push_back(ScoreControl::Create(preview_panel, this));
+  AddPage(controllers.back(), "Score");
+
+  bindEvents();
+}
+
+void ControlPanel::bindEvents() {
+  Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &ControlPanel::tabChanged, this);
+}
+
+void ControlPanel::tabChanged(wxBookCtrlEvent& event) {
+  controllers[event.GetSelection()]->updatePreview();
 }
 
 }  // namespace cszb_scoreboard

@@ -22,10 +22,11 @@ limitations under the License.
 #include <wx/notebook.h>
 #include <wx/wx.h>
 
+#include <vector>
+
 #include "ScoreboardCommon.h"
 #include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScoreControl.h"
-#include "ui/component/control/TextEntry.h"
+#include "ui/component/control/ScreenTextController.h"
 
 namespace cszb_scoreboard {
 
@@ -38,8 +39,9 @@ class ControlPanel : public wxNotebook {
 #endif
 
  private:
-  TextEntry* text_entry;
-  ScoreControl* score_control;
+  void bindEvents();
+  void tabChanged(wxBookCtrlEvent& event);
+  std::vector<ScreenTextController*> controllers;
 };
 
 }  // namespace cszb_scoreboard
