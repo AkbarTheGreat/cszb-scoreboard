@@ -30,14 +30,18 @@ TextEntry *TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent) {
 }
 
 void TextEntry::createControls(wxPanel *control_panel) {
+  home_text = wxT("Home Team");
+  away_text = wxT("Away Team");
+  all_text = wxT("");
+  home_font_size = away_font_size = all_font_size = DEFAULT_FONT_SIZE;
+
   text_label = new wxStaticText(control_panel, wxID_ANY, wxT("Text"));
   text_entry =
-      new wxTextCtrl(control_panel, wxID_ANY, wxEmptyString, wxDefaultPosition,
+      new wxTextCtrl(control_panel, wxID_ANY, home_text, wxDefaultPosition,
                      wxSize(-1, -1), wxTE_MULTILINE);
-  wxString initial_size;
-  initial_size.Printf(wxT("%d"), DEFAULT_FONT_SIZE);
   font_size_label = new wxStaticText(control_panel, wxID_ANY, wxT("Font Size"));
-  font_size_entry = new wxTextCtrl(control_panel, wxID_ANY, initial_size);
+  font_size_entry =
+      new wxTextCtrl(control_panel, wxID_ANY, intToString(DEFAULT_FONT_SIZE));
 
   int number_of_screen_choices = sizeof(screen_choices) / sizeof(wxString);
   screen_selection = new wxRadioBox(
@@ -89,18 +93,55 @@ proto::ScreenSide TextEntry::updateSide() {
 }
 
 void TextEntry::updatePreview() {
-  previewPanel()->setTextForPreview(text_entry->GetValue(), enteredFontSize(),
-                                    updateSide());
+  // Send the combined text to both previews
+  if (screen_selection->GetSelection() == 2) {
+    proto::ScreenSide side;
+    side.set_home(true);
+    side.set_away(true);
+    previewPanel()->setTextForPreview(all_text, all_font_size, side);
+  } else {
+    proto::ScreenSide home_side;
+    home_side.set_home(true);
+    proto::ScreenSide away_side;
+    away_side.set_away(true);
+    previewPanel()->setTextForPreview(home_text, home_font_size, home_side);
+    previewPanel()->setTextForPreview(away_text, away_font_size, away_side);
+  }
 }
 
-void TextEntry::textUpdated(wxKeyEvent &event) { updatePreview(); }
+void TextEntry::textUpdated(wxKeyEvent &event) {
+  switch (screen_selection->GetSelection()) {
+    case 0:
+      home_text = text_entry->GetValue();
+      home_font_size = enteredFontSize();
+      break;
+    case 1:
+      away_text = text_entry->GetValue();
+      away_font_size = enteredFontSize();
+      break;
+    default:
+      all_text = text_entry->GetValue();
+      all_font_size = enteredFontSize();
+      break;
+  }
+  updatePreview();
+}
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
-  // For now, if someone changes the screen, just send the text to that screen
-  // immediately and leave the old one as-is.  Alternatives for the future:
-  // a) Clear the text box at this point.
-  // b) Revert the old screen to what it was before the last edit, then send
-  // text to the new one.
+  switch (screen_selection->GetSelection()) {
+    case 0:
+      text_entry->SetValue(home_text);
+      font_size_entry->SetValue(intToString(home_font_size));
+      break;
+    case 1:
+      text_entry->SetValue(away_text);
+      font_size_entry->SetValue(intToString(away_font_size));
+      break;
+    default:
+      text_entry->SetValue(all_text);
+      font_size_entry->SetValue(intToString(all_font_size));
+      break;
+  }
   updatePreview();
 }
 
@@ -110,6 +151,12 @@ int TextEntry::enteredFontSize() {
     font_size_entry->GetValue().ToLong(&font_size);
   }
   return (int)font_size;
+}
+
+wxString TextEntry::intToString(int value) {
+  wxString string;
+  string.Printf(wxT("%d"), value);
+  return string;
 }
 
 }  // namespace cszb_scoreboard

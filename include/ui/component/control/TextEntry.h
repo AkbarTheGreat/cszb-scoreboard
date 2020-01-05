@@ -42,6 +42,12 @@ class TextEntry : public ScreenTextController {
   wxTextCtrl *text_entry;
   wxStaticText *font_size_label;
   wxTextCtrl *font_size_entry;
+  wxString home_text;
+  wxString away_text;
+  wxString all_text;
+  int home_font_size;
+  int away_font_size;
+  int all_font_size;
 
   TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
@@ -51,6 +57,7 @@ class TextEntry : public ScreenTextController {
 
   void bindEvents();
   int enteredFontSize();
+  wxString intToString(int value);
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
 };
