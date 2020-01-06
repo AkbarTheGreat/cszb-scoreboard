@@ -48,7 +48,8 @@ void PreviewPanel::positionWidgets() {
     sizer->Add(screen->widget(), 1, wxALL, BORDER_WIDTH);
   }
   for (auto screen : screens) {
-    sizer->Add(screen->thumbnailWidget(), 1, wxLEFT | wxRIGHT | wxBOTTOM | wxALIGN_CENTER);
+    sizer->Add(screen->thumbnailWidget(), 1,
+               wxLEFT | wxRIGHT | wxBOTTOM | wxALIGN_CENTER);
   }
   SetSizerAndFit(sizer);
 }

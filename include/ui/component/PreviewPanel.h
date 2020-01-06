@@ -38,7 +38,7 @@ class PreviewPanel : public wxPanel {
   void updatePresenters(proto::ScreenSide side);
   void updatePreviewsFromSettings();
 
-PUBLIC_TEST_ONLY
+  PUBLIC_TEST_ONLY
   ScreenPreview* preview(int index);
 
  private:

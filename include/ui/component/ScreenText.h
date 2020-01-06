@@ -1,6 +1,6 @@
 /*
-ui/ScreenText.h: Represents a text presentation on a ScreenPresenter or a
-ScreenPreview.
+ui/component/ScreenText.h: Represents a text presentation on a ScreenPresenter
+or a ScreenPreview.
 
 Copyright 2019 Tracy Beck
 

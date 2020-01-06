@@ -1,5 +1,5 @@
 /*
-ui/ScreenText.cpp: Represents a text presentation on a ScreenPresenter or a
+ui/component/ScreenText.cpp: Represents a text presentation on a ScreenPresenter or a
 ScreenPreview.
 
 Copyright 2019 Tracy Beck
@@ -16,6 +16,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 #include "ui/component/ScreenText.h"
 
 #include <wx/image.h>
@@ -114,7 +115,6 @@ void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
   dc.SetFont(screen_font);
   dc.SetTextForeground(font_color);
   int width, height;
-  // dc.GetTextExtent(text, &width, &height);
   getTextExtent(dc, text, &width, &height);
   int x = (widget_size.GetWidth() - width) / 2;
   int y = (widget_size.GetHeight() - height) / 2;
