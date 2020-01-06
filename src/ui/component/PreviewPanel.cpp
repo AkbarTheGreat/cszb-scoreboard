@@ -45,11 +45,11 @@ void PreviewPanel::positionWidgets() {
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   for (auto screen : screens) {
-    sizer->Add(screen->widget(), 1, wxALL, BORDER_WIDTH);
+    sizer->Add(screen->thumbnailWidget(), 1,
+               wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
   }
   for (auto screen : screens) {
-    sizer->Add(screen->thumbnailWidget(), 1,
-               wxLEFT | wxRIGHT | wxBOTTOM | wxALIGN_CENTER);
+    sizer->Add(screen->widget(), 1, wxALL, BORDER_WIDTH);
   }
   SetSizerAndFit(sizer);
 }
