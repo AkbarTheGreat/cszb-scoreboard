@@ -45,6 +45,7 @@ ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
 
   if (!side.error()) {
     presenter = new ScreenPresenter(monitor_number, current_widget);
+    thumbnail = new ScreenThumbnail(parent, monitor_number, current_widget);
   }
 }
 
@@ -63,6 +64,8 @@ wxSize ScreenPreview::previewSize(int monitor_number) {
 
 ScreenText* ScreenPreview::widget() { return current_widget; }
 
+ScreenText* ScreenPreview::thumbnailWidget() { return thumbnail->widget(); }
+
 void ScreenPreview::resetFromSettings(int monitor_number) {
   current_widget->SetSize(previewSize(monitor_number));
   proto::ScreenSide side =
@@ -77,12 +80,14 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
 void ScreenPreview::sendToPresenter(proto::ScreenSide side) {
   if (current_widget->isSide(side)) {
     presenter->widget()->setAll(*current_widget);
+    thumbnail->widget()->setAll(*current_widget);
   }
 }
 
 void ScreenPreview::blackoutPresenter(proto::ScreenSide side) {
   if (current_widget->isSide(side)) {
     presenter->widget()->blackout();
+    thumbnail->widget()->blackout();
   }
 }
 

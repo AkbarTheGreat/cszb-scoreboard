@@ -41,11 +41,14 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
 }
 
 void PreviewPanel::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(1, 0, 0, 0);
+  wxFlexGridSizer* sizer = new wxFlexGridSizer(2, screens.size(), 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   for (auto screen : screens) {
-    sizer->Add(screen->widget(), 1, wxEXPAND | wxALL, BORDER_WIDTH);
+    sizer->Add(screen->widget(), 1, wxALL, BORDER_WIDTH);
+  }
+  for (auto screen : screens) {
+    sizer->Add(screen->thumbnailWidget(), 1, wxLEFT | wxRIGHT | wxBOTTOM | wxALIGN_CENTER);
   }
   SetSizerAndFit(sizer);
 }
