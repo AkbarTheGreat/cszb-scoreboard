@@ -37,19 +37,19 @@ ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
                                      wxSize size) {
   // Note that we copy most elements to the presenter, but specifically not the
   // size.
-  return new ScreenText(parent, preview->text, preview->image,
-                        preview->background_color, preview->font,
-                        preview->screen_side, size);
+  return new ScreenText(parent, preview->texts, preview->image,
+                        preview->background_color, preview->screen_side, size);
 }
 
-ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
+ScreenText::ScreenText(wxWindow* parent, std::vector<RenderableText> texts,
                        wxImage image, std::optional<Color> background_color,
-                       proto::Font font, proto::ScreenSide side, wxSize size)
+                       proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  text = initial_text;
+  for (auto new_text : texts) {
+    this->texts.push_back(new_text);
+  }
   this->image = image;
   this->screen_side = side;
-  this->font = font;
   this->background_color = background_color;
   if (background_color.has_value()) {
     initializeForColor(size, *background_color);
@@ -60,14 +60,14 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
                        proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  this->text = initial_text;
-  this->screen_side = side;
+  RenderableText default_text(initial_text, 10);
+  texts.push_back(default_text);
 
-  setFont(10);
+  this->screen_side = side;
 
   if (side.error()) {
     image = BackgroundImage::errorImage(size);
-    setFontColor(Color("Black"));
+    texts[0].setFontColor(Color("Black"));
   } else {
     std::vector<int> team_indices =
         TeamConfig::getInstance()->indicesForSide(side);
@@ -82,26 +82,32 @@ void ScreenText::bindEvents() {
   Bind(wxEVT_PAINT, &ScreenText::paintEvent, this);
 }
 
-void ScreenText::setFont(float font_size) {
-  font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
-  font.set_size(font_size);
-}
+void ScreenText::resetAllText() { texts.clear(); }
 
-void ScreenText::setFontColor(Color color) {
-  ProtoUtil::protoClr(color, font.mutable_color());
+void ScreenText::addText(const wxString& text, proto::Font font,
+                         const proto::ScreenSide& side) {
+  if (isSide(side)) {
+    RenderableText renderable_text(text, font);
+    renderable_text.setFontColor(background_color->contrastColor());
+    texts.push_back(renderable_text);
+  }
 }
 
 void ScreenText::setText(const wxString& text, int font_size,
                          const proto::ScreenSide& side) {
   if (isSide(side)) {
-    this->text = text;
-    setFont(font_size);
+    resetAllText();
+    proto::Font font;
+    font.set_size(font_size);
+    addText(text, font, side);
   }
 }
 
 void ScreenText::initializeForColor(wxSize size, Color color) {
   image = BackgroundImage(size, color);
-  setFontColor(color.contrastColor());
+  for (auto &text : texts) {
+    text.setFontColor(color.contrastColor());
+  }
   if (!blackout_image.IsOk() ||
       size.GetWidth() != blackout_image.GetSize().GetWidth() ||
       size.GetHeight() != blackout_image.GetSize().GetHeight()) {
@@ -112,7 +118,7 @@ void ScreenText::initializeForColor(wxSize size, Color color) {
 void ScreenText::blackout() {
   background_color = Color("Black");
   image = blackout_image;
-  text = wxT("");
+  resetAllText();
   Refresh();
 }
 
@@ -120,14 +126,20 @@ void ScreenText::renderBackground(wxDC& dc) {
   dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
 }
 
-void ScreenText::renderText(wxDC& dc) {
-  dc.SetFont(ProtoUtil::wxScaledFont(font, GetSize()));
-  dc.SetTextForeground(ProtoUtil::wxClr(font.color()));
+void ScreenText::renderText(wxDC& dc, RenderableText text) {
+  dc.SetFont(ProtoUtil::wxScaledFont(text.getFont(), GetSize()));
+  dc.SetTextForeground(ProtoUtil::wxClr(text.getFont().color()));
   int width, height;
-  getTextExtent(dc, text, &width, &height);
+  getTextExtent(dc, text.getText(), &width, &height);
   int x = (GetSize().GetWidth() - width) / 2;
   int y = (GetSize().GetHeight() - height) / 2;
-  dc.DrawText(text, x, y);
+  dc.DrawText(text.getText(), x, y);
+}
+
+void ScreenText::renderAllText(wxDC& dc) {
+  for (auto text : texts) {
+    renderText(dc, text);
+  }
 }
 
 void ScreenText::getTextExtent(wxDC& dc, wxString text, int* width,
@@ -148,7 +160,7 @@ void ScreenText::getTextExtent(wxDC& dc, wxString text, int* width,
 void ScreenText::paintEvent(wxPaintEvent& evt) {
   wxPaintDC dc(this);
   renderBackground(dc);
-  renderText(dc);
+  renderAllText(dc);
 }
 
 void ScreenText::setImage(const wxImage& image) {
@@ -168,7 +180,12 @@ void ScreenText::setAll(const ScreenText& source) {
   } else {
     background_color.reset();
   }
-  setText(source.text, source.font.size(), this->screen_side);
+
+  resetAllText();
+  for (auto new_text : source.texts) {
+    addText(new_text.getText(), new_text.getFont(), this->screen_side);
+  }
+
   Refresh();
 }
 
@@ -182,5 +199,35 @@ bool ScreenText::isSide(proto::ScreenSide side) {
   }
   return false;
 }
+
+RenderableText::RenderableText(wxString text, float font_size) {
+  this->text = text;
+  setFont(font_size);
+  font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
+}
+
+RenderableText::RenderableText(wxString text, proto::Font font) {
+  this->text = text;
+  this->font = font;
+
+  if (this->font.style() == proto::Font_FontStyle_FONT_STYLE_UNDEFINED) {
+    this->font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
+  }
+}
+
+void RenderableText::setFont(float font_size) { font.set_size(font_size); }
+
+void RenderableText::setFontColor(Color color) {
+  ProtoUtil::protoClr(color, font.mutable_color());
+}
+
+void RenderableText::setText(const wxString& text, int font_size) {
+  this->text = text;
+  setFont(font_size);
+}
+
+wxString RenderableText::getText() { return text; }
+
+proto::Font RenderableText::getFont() { return font; }
 
 }  // namespace cszb_scoreboard
