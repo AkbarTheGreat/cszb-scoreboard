@@ -31,6 +31,7 @@ class ProtoUtil {
   static wxRect wxRct(proto::Rectangle input);
   static proto::Color *protoClr(Color input, proto::Color *output);
   static Color wxClr(proto::Color input);
+  static wxFont wxScaledFont(proto::Font input, wxSize scale_size);
 };
 
 }  // namespace cszb_scoreboard

@@ -41,4 +41,23 @@ proto::Color *ProtoUtil::protoClr(Color input, proto::Color *output) {
 
 Color ProtoUtil::wxClr(proto::Color input) { return Color(input.rgb()); }
 
+wxFont ProtoUtil::wxScaledFont(proto::Font input, wxSize scale_size) {
+  int scaled_size = scale_size.GetHeight() * input.size() / 75;
+
+  wxFontInfo font_info(scaled_size);
+
+  switch (input.style()) {
+    case proto::Font_FontStyle_FONT_STYLE_IMPACT:
+      font_info.FaceName("Impact");
+      break;
+    case proto::Font_FontStyle_FONT_STYLE_UNDEFINED:
+    default:
+      // Pick a reasonable default.
+      font_info.Family(wxFONTFAMILY_MODERN);
+      break;
+  }
+
+  return font_info.AntiAliased();
+}
+
 }  // namespace cszb_scoreboard

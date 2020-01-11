@@ -63,12 +63,11 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
   this->text = initial_text;
   this->screen_side = side;
 
-  font.set_size(10);
-  font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
+  setFont(10);
 
   if (side.error()) {
     image = BackgroundImage::errorImage(size);
-    ProtoUtil::protoClr(Color("Black"), font.mutable_color());
+    setFontColor(Color("Black"));
   } else {
     std::vector<int> team_indices =
         TeamConfig::getInstance()->indicesForSide(side);
@@ -83,17 +82,26 @@ void ScreenText::bindEvents() {
   Bind(wxEVT_PAINT, &ScreenText::paintEvent, this);
 }
 
+void ScreenText::setFont(float font_size) {
+  font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
+  font.set_size(font_size);
+}
+
+void ScreenText::setFontColor(Color color) {
+  ProtoUtil::protoClr(color, font.mutable_color());
+}
+
 void ScreenText::setText(const wxString& text, int font_size,
                          const proto::ScreenSide& side) {
   if (isSide(side)) {
     this->text = text;
-    font.set_size(font_size);
+    setFont(font_size);
   }
 }
 
 void ScreenText::initializeForColor(wxSize size, Color color) {
   image = BackgroundImage(size, color);
-  ProtoUtil::protoClr(color.contrastColor(), font.mutable_color());
+  setFontColor(color.contrastColor());
   if (!blackout_image.IsOk() ||
       size.GetWidth() != blackout_image.GetSize().GetWidth() ||
       size.GetHeight() != blackout_image.GetSize().GetHeight()) {
@@ -108,21 +116,17 @@ void ScreenText::blackout() {
   Refresh();
 }
 
-void ScreenText::renderBackground(wxDC& dc, wxImage image) {
+void ScreenText::renderBackground(wxDC& dc) {
   dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
 }
 
-void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
-                            wxSize widget_size) {
-  // TODO: Set Impact via the enum
-  wxFont screen_font(
-      wxFontInfo(scaleFont(widget_size)).FaceName("Impact").AntiAliased());
-  dc.SetFont(screen_font);
-  dc.SetTextForeground(font_color);
+void ScreenText::renderText(wxDC& dc) {
+  dc.SetFont(ProtoUtil::wxScaledFont(font, GetSize()));
+  dc.SetTextForeground(ProtoUtil::wxClr(font.color()));
   int width, height;
   getTextExtent(dc, text, &width, &height);
-  int x = (widget_size.GetWidth() - width) / 2;
-  int y = (widget_size.GetHeight() - height) / 2;
+  int x = (GetSize().GetWidth() - width) / 2;
+  int y = (GetSize().GetHeight() - height) / 2;
   dc.DrawText(text, x, y);
 }
 
@@ -141,14 +145,10 @@ void ScreenText::getTextExtent(wxDC& dc, wxString text, int* width,
   }
 }
 
-int ScreenText::scaleFont(wxSize to_size) {
-  return to_size.GetHeight() * font.size() / 75;
-}
-
 void ScreenText::paintEvent(wxPaintEvent& evt) {
   wxPaintDC dc(this);
-  renderBackground(dc, image);
-  renderText(dc, text, ProtoUtil::wxClr(font.color()), this->GetSize());
+  renderBackground(dc);
+  renderText(dc);
 }
 
 void ScreenText::setImage(const wxImage& image) {

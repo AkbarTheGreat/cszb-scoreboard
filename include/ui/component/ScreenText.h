@@ -63,10 +63,10 @@ class ScreenText : public wxPanel {
   void bindEvents();
   void initializeForColor(wxSize size, Color color);
   void getTextExtent(wxDC& dc, wxString text, int* width, int* height);
-  void renderBackground(wxDC& dc, wxImage image);
-  void renderText(wxDC& dc, wxString text, Color font_color,
-                  wxSize widget_size);
-  int scaleFont(wxSize to_size);
+  void renderBackground(wxDC& dc);
+  void renderText(wxDC& dc);
+  void setFont(float font_size);
+  void setFontColor(Color color);
 };
 
 }  // namespace cszb_scoreboard
