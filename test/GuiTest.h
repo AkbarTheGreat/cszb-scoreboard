@@ -31,6 +31,7 @@ limitations under the License.
 #include "cszb-scoreboard.h"
 #include "ui/FrameList.h"
 #include "ui/MainView.h"
+#include "ui/component/ControlPanel.h"
 #include "ui/component/ScreenPreview.h"
 
 namespace cszb_scoreboard {
@@ -78,8 +79,9 @@ class GuiTest : public testing::Test {
 
   virtual void SetUp() override;
   virtual void TearDown() override;
-  /* Convenience method to get the main window, for testing purposes. */
+  /* Convenience method to get various UI components, for testing purposes. */
   MainView *mainView();
+  TextEntry *textEntry();
   /* Simply makes getting the first preview pane shorter in test code. */
   ScreenPreview *firstPreview();
 };

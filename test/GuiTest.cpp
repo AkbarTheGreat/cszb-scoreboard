@@ -48,6 +48,10 @@ MainView *GuiTest::mainView() {
   return (MainView *)FrameList::getInstance()->getMainView();
 }
 
+TextEntry *GuiTest::textEntry() {
+  return (TextEntry *)mainView()->controlPanel()->textController(0);
+}
+
 ScreenPreview *GuiTest::firstPreview() {
   return mainView()->previewPanel()->preview(0);
 }

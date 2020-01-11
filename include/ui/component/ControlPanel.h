@@ -35,7 +35,7 @@ class ControlPanel : public wxNotebook {
   ControlPanel(wxWindow* parent, PreviewPanel* preview_panel);
 
 #ifdef SCOREBOARD_TESTING
-  TextEntry* textEntry() { return text_entry; }
+  ScreenTextController* textController(int index) { return controllers[index]; }
 #endif
 
  private:

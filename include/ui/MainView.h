@@ -39,7 +39,7 @@ class MainView : public wxFrame {
 
 #ifdef SCOREBOARD_TESTING
   inline PreviewPanel* previewPanel() { return preview_panel; }
-  TextEntry* textEntry() { return control_panel->textEntry(); }
+  ControlPanel* controlPanel() { return control_panel; }
 #endif
 
  private:

@@ -25,7 +25,7 @@ namespace test {
 class TextEntryTest : public GuiTest {
  protected:
   void enterTextIndirect(const char *text) {
-    TextEntry *entry = mainView()->textEntry();
+    TextEntry *entry = textEntry();
     WX_A(entry->textField()->SetFocus());
     WX_A(entry->textField()->Clear());
     WX_A(entry->textField()->WriteText(text));
@@ -33,7 +33,7 @@ class TextEntryTest : public GuiTest {
   }
 
   void enterTextDirect(const char *text) {
-    TextEntry *entry = mainView()->textEntry();
+    TextEntry *entry = textEntry();
     WX_A(entry->textField()->SetFocus());
     WX_A(entry->textField()->Clear());
     WX_A(act.Text(text));
