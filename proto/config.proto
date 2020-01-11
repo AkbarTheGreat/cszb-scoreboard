@@ -30,7 +30,6 @@ message Color {
     int32 rgb = 1;
 }
 
-
 // ScreenSide represents which team(s) each monitor represents.  It's not a
 // simple selection, and so must be contained as a mapping of possibilities.
 message ScreenSide {
@@ -39,6 +38,17 @@ message ScreenSide {
 	bool home = 3;
 	bool away = 4;
 	bool extra = 5;
+}
+
+// A scaling font used in ScreenText presentations.
+message Font {
+  enum FontStyle {
+    FONT_STYLE_UNDEFINED = 0;
+    FONT_STYLE_IMPACT = 1;
+  } 
+  FontStyle style = 1;
+  float size = 2;
+  Color color = 3;
 }
 
 message DisplayInfo {

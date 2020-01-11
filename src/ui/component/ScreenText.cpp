@@ -1,6 +1,6 @@
 /*
-ui/component/ScreenText.cpp: Represents a text presentation on a ScreenPresenter or a
-ScreenPreview.
+ui/component/ScreenText.cpp: Represents a text presentation on a ScreenPresenter
+or a ScreenPreview.
 
 Copyright 2019 Tracy Beck
 
@@ -24,6 +24,7 @@ limitations under the License.
 
 #include "config/TeamConfig.h"
 #include "ui/graphics/BackgroundImage.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -37,18 +38,18 @@ ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
   // Note that we copy most elements to the presenter, but specifically not the
   // size.
   return new ScreenText(parent, preview->text, preview->image,
-                        preview->background_color, preview->font_color,
+                        preview->background_color, preview->font,
                         preview->screen_side, size);
 }
 
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
                        wxImage image, std::optional<Color> background_color,
-                       Color font_color, proto::ScreenSide side, wxSize size)
+                       proto::Font font, proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   text = initial_text;
   this->image = image;
   this->screen_side = side;
-  this->font_color = font_color;
+  this->font = font;
   this->background_color = background_color;
   if (background_color.has_value()) {
     initializeForColor(size, *background_color);
@@ -62,9 +63,12 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
   this->text = initial_text;
   this->screen_side = side;
 
+  font.set_size(10);
+  font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
+
   if (side.error()) {
     image = BackgroundImage::errorImage(size);
-    font_color = Color(Color("Black"));
+    ProtoUtil::protoClr(Color("Black"), font.mutable_color());
   } else {
     std::vector<int> team_indices =
         TeamConfig::getInstance()->indicesForSide(side);
@@ -83,13 +87,13 @@ void ScreenText::setText(const wxString& text, int font_size,
                          const proto::ScreenSide& side) {
   if (isSide(side)) {
     this->text = text;
-    this->font_size = font_size;
+    font.set_size(font_size);
   }
 }
 
 void ScreenText::initializeForColor(wxSize size, Color color) {
   image = BackgroundImage(size, color);
-  font_color = color.contrastColor();
+  ProtoUtil::protoClr(color.contrastColor(), font.mutable_color());
   if (!blackout_image.IsOk() ||
       size.GetWidth() != blackout_image.GetSize().GetWidth() ||
       size.GetHeight() != blackout_image.GetSize().GetHeight()) {
@@ -110,6 +114,7 @@ void ScreenText::renderBackground(wxDC& dc, wxImage image) {
 
 void ScreenText::renderText(wxDC& dc, wxString text, Color font_color,
                             wxSize widget_size) {
+  // TODO: Set Impact via the enum
   wxFont screen_font(
       wxFontInfo(scaleFont(widget_size)).FaceName("Impact").AntiAliased());
   dc.SetFont(screen_font);
@@ -137,13 +142,13 @@ void ScreenText::getTextExtent(wxDC& dc, wxString text, int* width,
 }
 
 int ScreenText::scaleFont(wxSize to_size) {
-  return to_size.GetHeight() * font_size / 75;
+  return to_size.GetHeight() * font.size() / 75;
 }
 
 void ScreenText::paintEvent(wxPaintEvent& evt) {
   wxPaintDC dc(this);
   renderBackground(dc, image);
-  renderText(dc, text, font_color, this->GetSize());
+  renderText(dc, text, ProtoUtil::wxClr(font.color()), this->GetSize());
 }
 
 void ScreenText::setImage(const wxImage& image) {
@@ -163,7 +168,7 @@ void ScreenText::setAll(const ScreenText& source) {
   } else {
     background_color.reset();
   }
-  setText(source.text, source.font_size, this->screen_side);
+  setText(source.text, source.font.size(), this->screen_side);
   Refresh();
 }
 
