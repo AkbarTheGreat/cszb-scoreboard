@@ -32,6 +32,9 @@ class ProtoUtil {
   static proto::Color *protoClr(Color input, proto::Color *output);
   static Color wxClr(proto::Color input);
   static wxFont wxScaledFont(proto::Font input, wxSize scale_size);
+  static void setFontColor(proto::Font *font, Color color);
+  static void defaultFont(proto::Font *font);
+  static void validateFont(proto::Font *font);
 };
 
 }  // namespace cszb_scoreboard

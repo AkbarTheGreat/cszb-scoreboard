@@ -41,8 +41,9 @@ ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
                         preview->background_color, preview->screen_side, size);
 }
 
-ScreenText::ScreenText(wxWindow* parent, std::vector<RenderableText> texts,
-                       wxImage image, std::optional<Color> background_color,
+ScreenText::ScreenText(wxWindow* parent,
+                       std::vector<proto::RenderableText> texts, wxImage image,
+                       std::optional<Color> background_color,
                        proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   for (auto new_text : texts) {
@@ -60,14 +61,16 @@ ScreenText::ScreenText(wxWindow* parent, std::vector<RenderableText> texts,
 ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
                        proto::ScreenSide side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  RenderableText default_text(initial_text, 10);
+  proto::RenderableText default_text;
+  default_text.set_text(initial_text);
+  ProtoUtil::defaultFont(default_text.mutable_font());
   texts.push_back(default_text);
 
   this->screen_side = side;
 
   if (side.error()) {
     image = BackgroundImage::errorImage(size);
-    texts[0].setFontColor(Color("Black"));
+    ProtoUtil::setFontColor(texts[0].mutable_font(), Color("Black"));
   } else {
     std::vector<int> team_indices =
         TeamConfig::getInstance()->indicesForSide(side);
@@ -84,12 +87,10 @@ void ScreenText::bindEvents() {
 
 void ScreenText::resetAllText() { texts.clear(); }
 
-void ScreenText::addText(const wxString& text, proto::Font font,
+void ScreenText::addText(proto::RenderableText text,
                          const proto::ScreenSide& side) {
   if (isSide(side)) {
-    RenderableText renderable_text(text, font);
-    renderable_text.setFontColor(background_color->contrastColor());
-    texts.push_back(renderable_text);
+    texts.push_back(text);
   }
 }
 
@@ -97,16 +98,23 @@ void ScreenText::setText(const wxString& text, int font_size,
                          const proto::ScreenSide& side) {
   if (isSide(side)) {
     resetAllText();
-    proto::Font font;
-    font.set_size(font_size);
-    addText(text, font, side);
+
+    proto::RenderableText renderable_text;
+    renderable_text.set_text(text);
+    renderable_text.mutable_font()->set_size(font_size);
+
+    ProtoUtil::validateFont(renderable_text.mutable_font());
+    ProtoUtil::setFontColor(renderable_text.mutable_font(),
+                            background_color->contrastColor());
+
+    addText(renderable_text, side);
   }
 }
 
 void ScreenText::initializeForColor(wxSize size, Color color) {
   image = BackgroundImage(size, color);
-  for (auto &text : texts) {
-    text.setFontColor(color.contrastColor());
+  for (auto& text : texts) {
+    ProtoUtil::setFontColor(text.mutable_font(), color.contrastColor());
   }
   if (!blackout_image.IsOk() ||
       size.GetWidth() != blackout_image.GetSize().GetWidth() ||
@@ -126,14 +134,18 @@ void ScreenText::renderBackground(wxDC& dc) {
   dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
 }
 
-void ScreenText::renderText(wxDC& dc, RenderableText text) {
-  dc.SetFont(ProtoUtil::wxScaledFont(text.getFont(), GetSize()));
-  dc.SetTextForeground(ProtoUtil::wxClr(text.getFont().color()));
-  int width, height;
-  getTextExtent(dc, text.getText(), &width, &height);
-  int x = (GetSize().GetWidth() - width) / 2;
-  int y = (GetSize().GetHeight() - height) / 2;
-  dc.DrawText(text.getText(), x, y);
+wxPoint ScreenText::centerText(wxDC& dc, wxString text) {
+  wxSize text_extent = getTextExtent(dc, text);
+  int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
+  int y = (GetSize().GetHeight() - text_extent.GetHeight()) / 2;
+  return wxPoint(x, y);
+}
+
+void ScreenText::renderText(wxDC& dc, proto::RenderableText text) {
+  dc.SetFont(ProtoUtil::wxScaledFont(text.font(), GetSize()));
+  dc.SetTextForeground(ProtoUtil::wxClr(text.font().color()));
+  wxPoint placement = centerText(dc, text.text());
+  dc.DrawText(text.text(), placement.x, placement.y);
 }
 
 void ScreenText::renderAllText(wxDC& dc) {
@@ -142,19 +154,20 @@ void ScreenText::renderAllText(wxDC& dc) {
   }
 }
 
-void ScreenText::getTextExtent(wxDC& dc, wxString text, int* width,
-                               int* height) {
+wxSize ScreenText::getTextExtent(wxDC& dc, wxString text) {
   wxStringTokenizer tokens(text, "\n\r");
-  *width = 0;
-  *height = 0;
+  int width = 0;
+  int height = 0;
   wxString token = tokens.GetNextToken();
   while (!token.IsEmpty()) {
     int line_width, line_height;
     dc.GetTextExtent(token, &line_width, &line_height);
-    if (line_width > *width) *width = line_width;
-    *height += line_height;
+    if (line_width > width) width = line_width;
+    height += line_height;
     token = tokens.GetNextToken();
   }
+
+  return wxSize(width, height);
 }
 
 void ScreenText::paintEvent(wxPaintEvent& evt) {
@@ -183,7 +196,7 @@ void ScreenText::setAll(const ScreenText& source) {
 
   resetAllText();
   for (auto new_text : source.texts) {
-    addText(new_text.getText(), new_text.getFont(), this->screen_side);
+    addText(new_text, this->screen_side);
   }
 
   Refresh();
@@ -199,35 +212,5 @@ bool ScreenText::isSide(proto::ScreenSide side) {
   }
   return false;
 }
-
-RenderableText::RenderableText(wxString text, float font_size) {
-  this->text = text;
-  setFont(font_size);
-  font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
-}
-
-RenderableText::RenderableText(wxString text, proto::Font font) {
-  this->text = text;
-  this->font = font;
-
-  if (this->font.style() == proto::Font_FontStyle_FONT_STYLE_UNDEFINED) {
-    this->font.set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
-  }
-}
-
-void RenderableText::setFont(float font_size) { font.set_size(font_size); }
-
-void RenderableText::setFontColor(Color color) {
-  ProtoUtil::protoClr(color, font.mutable_color());
-}
-
-void RenderableText::setText(const wxString& text, int font_size) {
-  this->text = text;
-  setFont(font_size);
-}
-
-wxString RenderableText::getText() { return text; }
-
-proto::Font RenderableText::getFont() { return font; }
 
 }  // namespace cszb_scoreboard

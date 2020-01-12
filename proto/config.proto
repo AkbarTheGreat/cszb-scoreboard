@@ -46,15 +46,21 @@ message Font {
     FONT_STYLE_UNDEFINED = 0;
     FONT_STYLE_IMPACT = 1;
   } 
+  FontStyle style = 1;
+  float size = 2;
+  Color color = 3;
+}
+
+// Represents text which may be rendered on a ScreenText and all of the relevant pieces necessary.
+message RenderableText {
   enum ScreenPosition {
     FONT_SCREEN_POSITION_CENTERED = 0;
     FONT_SCREEN_POSITION_TOP = 1;
     FONT_SCREEN_POSITION_BOTTOM = 2;
   }
-  FontStyle style = 1;
-  float size = 2;
-  Color color = 3;
-  ScreenPosition position = 4;
+  string text = 1;
+  Font font = 2;
+  ScreenPosition position = 3;
 }
 
 message DisplayInfo {

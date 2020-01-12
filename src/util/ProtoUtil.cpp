@@ -21,6 +21,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const float DEFAULT_FONT_SIZE = 10;
+
 proto::Rectangle *ProtoUtil::protoRct(wxRect input, proto::Rectangle *output) {
   output->set_x(input.GetX());
   output->set_y(input.GetY());
@@ -58,6 +60,21 @@ wxFont ProtoUtil::wxScaledFont(proto::Font input, wxSize scale_size) {
   }
 
   return font_info.AntiAliased();
+}
+
+void ProtoUtil::setFontColor(proto::Font *font, Color color) {
+  protoClr(color, font->mutable_color());
+}
+
+void ProtoUtil::defaultFont(proto::Font *font) {
+  font->set_size(DEFAULT_FONT_SIZE);
+  validateFont(font);
+}
+
+void ProtoUtil::validateFont(proto::Font *font) {
+  if (font->style() == proto::Font_FontStyle_FONT_STYLE_UNDEFINED) {
+    font->set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
+  }
 }
 
 }  // namespace cszb_scoreboard

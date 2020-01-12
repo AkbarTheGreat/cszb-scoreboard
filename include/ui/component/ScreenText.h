@@ -29,21 +29,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class RenderableText {
- public:
-  RenderableText(wxString text, float font_size);
-  RenderableText(wxString text, proto::Font font);
-  void setFont(float font_size);
-  void setFontColor(Color color);
-  void setText(const wxString& text, int font_size);
-  wxString getText();
-  proto::Font getFont();
-
- private:
-  wxString text;
-  proto::Font font;
-};
-
 class ScreenText : public wxPanel {
  public:
   // These two methods are really just light wrappers around constructors, but
@@ -68,22 +53,22 @@ class ScreenText : public wxPanel {
   wxImage blackout_image;
   std::optional<Color> background_color;
   proto::ScreenSide screen_side;
-  std::vector<RenderableText> texts;
+  std::vector<proto::RenderableText> texts;
 
   ScreenText(wxWindow* parent, const wxString& initial_text,
              proto::ScreenSide side, wxSize size);
-  ScreenText(wxWindow* parent, std::vector<RenderableText> texts, wxImage image,
-             std::optional<Color> background_color, proto::ScreenSide side,
-             wxSize size);
+  ScreenText(wxWindow* parent, std::vector<proto::RenderableText> texts,
+             wxImage image, std::optional<Color> background_color,
+             proto::ScreenSide side, wxSize size);
   void bindEvents();
+  wxPoint centerText(wxDC& dc, wxString text);
   void initializeForColor(wxSize size, Color color);
-  void getTextExtent(wxDC& dc, wxString text, int* width, int* height);
+  wxSize getTextExtent(wxDC& dc, wxString text);
   void renderBackground(wxDC& dc);
-  void renderText(wxDC& dc, RenderableText text);
+  void renderText(wxDC& dc, proto::RenderableText text);
   void renderAllText(wxDC& dc);
   void resetAllText();
-  void addText(const wxString& text, proto::Font font,
-               const proto::ScreenSide& side);
+  void addText(proto::RenderableText text, const proto::ScreenSide& side);
 };
 
 }  // namespace cszb_scoreboard
