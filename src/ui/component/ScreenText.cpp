@@ -28,6 +28,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+// Margin for the top or bottom, as a percentage
+const float TOP_OR_BOTTOM_MARGIN = 2;
+
 ScreenText* ScreenText::getPreview(wxWindow* parent, wxString initial_text,
                                    proto::ScreenSide side, wxSize size) {
   return new ScreenText(parent, initial_text, side, size);
@@ -135,8 +138,11 @@ void ScreenText::renderBackground(wxDC& dc) {
 }
 
 wxPoint ScreenText::bottomText(wxDC& dc, wxString text) {
-  // TODO: calculate a good bottom offset
-  return wxPoint(0, 0);
+  wxSize text_extent = getTextExtent(dc, text);
+  int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
+  int margin = GetSize().GetHeight() * (TOP_OR_BOTTOM_MARGIN / 100);
+  int y = GetSize().GetHeight() - text_extent.GetHeight() - margin;
+  return wxPoint(x, y);
 }
 
 wxPoint ScreenText::centerText(wxDC& dc, wxString text) {
@@ -147,8 +153,10 @@ wxPoint ScreenText::centerText(wxDC& dc, wxString text) {
 }
 
 wxPoint ScreenText::topText(wxDC& dc, wxString text) {
-  // TODO: calculate a good top offset
-  return wxPoint(0, 0);
+  wxSize text_extent = getTextExtent(dc, text);
+  int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
+  int y = GetSize().GetHeight() * (TOP_OR_BOTTOM_MARGIN / 100);
+  return wxPoint(x, y);
 }
 
 wxPoint ScreenText::positionText(wxDC& dc, proto::RenderableText text) {
