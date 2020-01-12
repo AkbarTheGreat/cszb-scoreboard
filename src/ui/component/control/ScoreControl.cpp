@@ -22,6 +22,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int SCORE_FONT_SIZE = 20;
+const int TEAM_FONT_SIZE = 10;
 
 ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
                                    wxWindow *parent) {
@@ -64,10 +65,29 @@ void ScoreControl::updatePreview() {
   home_side.set_home(true);
   proto::ScreenSide away_side;
   away_side.set_away(true);
-  previewPanel()->setTextForPreview(home_score_entry->GetValue(),
-                                    SCORE_FONT_SIZE, home_side);
-  previewPanel()->setTextForPreview(away_score_entry->GetValue(),
-                                    SCORE_FONT_SIZE, away_side);
+
+  std::vector<proto::RenderableText> home_update;
+  home_update.push_back(proto::RenderableText());
+  home_update.back().set_text(home_score_entry->GetValue());
+  home_update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
+  home_update.push_back(proto::RenderableText());
+  home_update.back().set_text("Home Team");
+  home_update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
+  home_update.back().set_position(
+      proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
+
+  std::vector<proto::RenderableText> away_update;
+  away_update.push_back(proto::RenderableText());
+  away_update.back().set_text(away_score_entry->GetValue());
+  away_update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
+  away_update.push_back(proto::RenderableText());
+  away_update.back().set_text("Away Team");
+  away_update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
+  away_update.back().set_position(
+      proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
+
+  previewPanel()->setTextForPreview(home_update, home_side);
+  previewPanel()->setTextForPreview(away_update, away_side);
 }
 
 void ScoreControl::homeUpdated(wxKeyEvent &event) { updatePreview(); }

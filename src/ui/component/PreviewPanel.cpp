@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 #include "ui/component/Menu.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -72,6 +73,20 @@ void PreviewPanel::setTextForPreview(wxString text, int font_size,
     ScreenText* screen_text = preview->widget();
     screen_text->setText(text, font_size, side);
     screen_text->Refresh();
+  }
+}
+
+void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
+                                     proto::ScreenSide side) {
+  for (auto preview : screens) {
+    ScreenText* screen_text = preview->widget();
+    screen_text->resetAllText(side);
+    for (auto line : lines) {
+      ProtoUtil::validateFont(line.mutable_font());
+      screen_text->setFontColor(line.mutable_font());
+      screen_text->addText(line, side);
+      screen_text->Refresh();
+    }
   }
 }
 

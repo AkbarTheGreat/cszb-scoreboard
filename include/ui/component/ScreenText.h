@@ -39,10 +39,13 @@ class ScreenText : public wxPanel {
   static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
                                   wxSize size);
 
+  void addText(proto::RenderableText text, const proto::ScreenSide& side);
   void blackout();
   void paintEvent(wxPaintEvent& event);
+  void resetAllText(const proto::ScreenSide& side);
   void setImage(const wxImage& image);
-  void setBackground(const Color color);
+  void setBackground(const Color& color);
+  void setFontColor(proto::Font* font);
   void setText(const wxString& text, int font_size,
                const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
@@ -60,7 +63,6 @@ class ScreenText : public wxPanel {
   ScreenText(wxWindow* parent, std::vector<proto::RenderableText> texts,
              wxImage image, std::optional<Color> background_color,
              proto::ScreenSide side, wxSize size);
-  void addText(proto::RenderableText text, const proto::ScreenSide& side);
   void bindEvents();
   wxPoint bottomText(wxDC& dc, wxString text);
   wxPoint centerText(wxDC& dc, wxString text);
@@ -70,7 +72,6 @@ class ScreenText : public wxPanel {
   void renderBackground(wxDC& dc);
   void renderText(wxDC& dc, proto::RenderableText text);
   void renderAllText(wxDC& dc);
-  void resetAllText();
   wxPoint topText(wxDC& dc, wxString text);
 };
 

@@ -88,7 +88,11 @@ void ScreenText::bindEvents() {
   Bind(wxEVT_PAINT, &ScreenText::paintEvent, this);
 }
 
-void ScreenText::resetAllText() { texts.clear(); }
+void ScreenText::resetAllText(const proto::ScreenSide& side) {
+  if (isSide(side)) {
+    texts.clear();
+  }
+}
 
 void ScreenText::addText(proto::RenderableText text,
                          const proto::ScreenSide& side) {
@@ -99,16 +103,17 @@ void ScreenText::addText(proto::RenderableText text,
 
 void ScreenText::setText(const wxString& text, int font_size,
                          const proto::ScreenSide& side) {
+  // We don't really need to check side in this method, but it saves us a lot of
+  // renderable_text creation if we do.
   if (isSide(side)) {
-    resetAllText();
+    resetAllText(side);
 
     proto::RenderableText renderable_text;
     renderable_text.set_text(text);
     renderable_text.mutable_font()->set_size(font_size);
 
     ProtoUtil::validateFont(renderable_text.mutable_font());
-    ProtoUtil::setFontColor(renderable_text.mutable_font(),
-                            background_color->contrastColor());
+    setFontColor(renderable_text.mutable_font());
 
     addText(renderable_text, side);
   }
@@ -126,10 +131,19 @@ void ScreenText::initializeForColor(wxSize size, Color color) {
   }
 }
 
+void ScreenText::setFontColor(proto::Font* font) {
+  if (background_color.has_value()) {
+    ProtoUtil::setFontColor(font, background_color->contrastColor());
+  } else {
+    // Just assume white as a default for now.
+    ProtoUtil::setFontColor(font, Color("White"));
+  }
+}
+
 void ScreenText::blackout() {
   background_color = Color("Black");
   image = blackout_image;
-  resetAllText();
+  resetAllText(this->screen_side);
   Refresh();
 }
 
@@ -214,7 +228,7 @@ void ScreenText::setImage(const wxImage& image) {
   this->image = image;
 };
 
-void ScreenText::setBackground(const Color color) {
+void ScreenText::setBackground(const Color& color) {
   this->background_color = color;
   initializeForColor(GetSize(), color);
 };
@@ -227,7 +241,7 @@ void ScreenText::setAll(const ScreenText& source) {
     background_color.reset();
   }
 
-  resetAllText();
+  resetAllText(this->screen_side);
   for (auto new_text : source.texts) {
     addText(new_text, this->screen_side);
   }
