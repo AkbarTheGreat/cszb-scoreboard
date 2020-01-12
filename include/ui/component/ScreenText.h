@@ -60,15 +60,18 @@ class ScreenText : public wxPanel {
   ScreenText(wxWindow* parent, std::vector<proto::RenderableText> texts,
              wxImage image, std::optional<Color> background_color,
              proto::ScreenSide side, wxSize size);
+  void addText(proto::RenderableText text, const proto::ScreenSide& side);
   void bindEvents();
+  wxPoint bottomText(wxDC& dc, wxString text);
   wxPoint centerText(wxDC& dc, wxString text);
   void initializeForColor(wxSize size, Color color);
   wxSize getTextExtent(wxDC& dc, wxString text);
+  wxPoint positionText(wxDC& dc, proto::RenderableText text);
   void renderBackground(wxDC& dc);
   void renderText(wxDC& dc, proto::RenderableText text);
   void renderAllText(wxDC& dc);
   void resetAllText();
-  void addText(proto::RenderableText text, const proto::ScreenSide& side);
+  wxPoint topText(wxDC& dc, wxString text);
 };
 
 }  // namespace cszb_scoreboard

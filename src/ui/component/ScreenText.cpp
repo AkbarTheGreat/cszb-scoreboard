@@ -134,6 +134,11 @@ void ScreenText::renderBackground(wxDC& dc) {
   dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
 }
 
+wxPoint ScreenText::bottomText(wxDC& dc, wxString text) {
+  // TODO: calculate a good bottom offset
+  return wxPoint(0, 0);
+}
+
 wxPoint ScreenText::centerText(wxDC& dc, wxString text) {
   wxSize text_extent = getTextExtent(dc, text);
   int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
@@ -141,10 +146,30 @@ wxPoint ScreenText::centerText(wxDC& dc, wxString text) {
   return wxPoint(x, y);
 }
 
+wxPoint ScreenText::topText(wxDC& dc, wxString text) {
+  // TODO: calculate a good top offset
+  return wxPoint(0, 0);
+}
+
+wxPoint ScreenText::positionText(wxDC& dc, proto::RenderableText text) {
+  switch (text.position()) {
+    case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_BOTTOM:
+      return bottomText(dc, text.text());
+      break;
+    case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP:
+      return topText(dc, text.text());
+      break;
+    case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_CENTERED:
+    default:
+      return centerText(dc, text.text());
+      break;
+  }
+}
+
 void ScreenText::renderText(wxDC& dc, proto::RenderableText text) {
   dc.SetFont(ProtoUtil::wxScaledFont(text.font(), GetSize()));
   dc.SetTextForeground(ProtoUtil::wxClr(text.font().color()));
-  wxPoint placement = centerText(dc, text.text());
+  wxPoint placement = positionText(dc, text);
   dc.DrawText(text.text(), placement.x, placement.y);
 }
 
