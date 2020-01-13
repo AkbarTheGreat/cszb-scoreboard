@@ -20,6 +20,8 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"
 
+#include "ui/frame/HotkeyTable.h"
+
 namespace cszb_scoreboard {
 
 ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
@@ -29,7 +31,10 @@ ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
 }
 
 void ScreenTextController::initializeWidgets() {
-  update_screens = new wxButton(this, wxID_ANY, wxT("Send to Monitors"));
+  update_screens = new wxButton(this, wxID_ANY, "Send to Monitors");
+  update_screens->SetToolTip("Ctrl+Space");
+  HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, WXK_SPACE,
+                                        update_screens->GetId());
   control_panel = new wxPanel(this);
   createControls(control_panel);
   positionWidgets();

@@ -1,6 +1,5 @@
 /*
-config/Persistence.h: This class manages serializing/deserializing
-our configuration proto to/from disk via a singleton.
+ui/frame/HotkeyTable.h: This class manages hotkeys for the application.
 
 Copyright 2019 Tracy Beck
 
@@ -16,25 +15,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 #pragma once
 
-#include "proto/config.pb.h"
+#include <wx/wx.h>
+
+#include <vector>
 
 namespace cszb_scoreboard {
 
-class Persistence {
+class HotkeyTable {
  public:
-  static Persistence* getInstance();
-  proto::DisplayConfig loadDisplays();
-  void saveDisplays(const proto::DisplayConfig& display_config);
-  proto::TeamConfig loadTeams();
-  void saveTeams(const proto::TeamConfig& team_config);
+  static HotkeyTable* getInstance();
+  void addHotkey(int modifier_flags, int key_code, wxWindowID widget_id);
+  void installHotkeys(wxFrame* main_window);
 
  private:
-  static Persistence* singleton_instance;
-  proto::ScoreboardConfig full_config;
-  void loadFromDisk();
-  void saveToDisk();
+  static HotkeyTable* singleton_instance;
+  std::vector<wxAcceleratorEntry> accel_entries;
+  HotkeyTable();
 };
 
 }  // namespace cszb_scoreboard

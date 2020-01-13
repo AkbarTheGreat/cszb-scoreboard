@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 #include "ui/FrameList.h"
+#include "ui/frame/HotkeyTable.h"
 
 namespace cszb_scoreboard {
 
@@ -36,6 +37,8 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 
   positionWidgets();
   bindEvents();
+
+  HotkeyTable::getInstance()->installHotkeys(this);
 }
 
 void MainView::createMenu() {
