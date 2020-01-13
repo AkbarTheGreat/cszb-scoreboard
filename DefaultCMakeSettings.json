@@ -1,6 +1,4 @@
-﻿// Saving a good starting point Cmakesettings.json here for a quicker setup in
-//  msvc, but it's just a suggestion.  The file itself is in .gitignore.
-{
+﻿{
   "configurations": [
     {
       "name": "x64-Debug",
@@ -16,7 +14,7 @@
       "variables": [
         {
           "name": "protobuf_DIR",
-          "value": "<Path to Protobuf vcpkg .cmake files>"
+          "value": "<path to vcpkg>/packages/protobuf_x64-windows/share/protobuf",
           "type": "PATH"
         },
         {
@@ -33,7 +31,7 @@
     },
     {
       "name": "x64-Release",
-      "generator": "Visual Studio 16 2019 Win64",
+      "generator": "Ninja",
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
@@ -44,19 +42,14 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "variables": [
         {
-          "name": "protobuf_DIR",
-          "value": "<Path to Protobuf vcpkg .cmake files>"
-          "type": "PATH"
-        },
-        {
           "name": "VCPKG_TARGET_TRIPLET",
           "value": "x64-windows-static",
           "type": "STRING"
         },
         {
-          "name": "CMAKE_BUILD_TYPE",
-          "value": "Release",
-          "type": "STRING"
+          "name": "Protobuf_SRC_ROOT_FOLDER",
+          "value": "<path to vcpkg>/packages/protobuf_x64-windows-static",
+          "type": "PATH"
         }
       ]
     }

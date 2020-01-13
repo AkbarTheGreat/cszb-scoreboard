@@ -50,7 +50,7 @@ else()
     add_definitions(-D_UNICODE -DUNICODE -DWXUSINGDLL -DwxUSE_GUI=1 -D__WXMSW__)
 endif()
 
-set(_VCPKG_PROTOBUF_DIR ${_VCPKG_INSTALLED_DIR}/../packages/protobuf_x64-windows)
+set(_VCPKG_PROTOBUF_DIR ${_VCPKG_INSTALLED_DIR}/../packages/protobuf_x64-windows-static)
 
 include_directories(SYSTEM INTERFACE ${_VCPKG_PROTOBUF_DIR}/include)
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
@@ -72,8 +72,6 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 		set(protobuf_LIBRARIES
 			${protobuf_LIB_DIR}/lib/libprotobufd.lib
 		)
-		file(COPY ${protobuf_LIB_DIR}/bin/libprotobufd.dll
-		     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313ud_net_vc_x64_custom.dll
@@ -108,8 +106,6 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 		set(protobuf_LIBRARIES
 			${protobuf_LIB_DIR}/lib/libprotobuf.lib
 		)
-		file(COPY ${protobuf_LIB_DIR}/bin/libprotobuf.dll
-		     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313u_net_vc_x64_custom.dll
