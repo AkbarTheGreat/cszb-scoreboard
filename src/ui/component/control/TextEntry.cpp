@@ -152,6 +152,7 @@ int TextEntry::enteredFontSize() {
   return (int)font_size;
 }
 
+// TODO: Put this in a utility class
 wxString TextEntry::intToString(int value) {
   wxString string;
   string.Printf(wxT("%d"), value);

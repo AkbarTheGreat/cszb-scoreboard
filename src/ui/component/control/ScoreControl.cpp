@@ -23,6 +23,7 @@ namespace cszb_scoreboard {
 
 const int SCORE_FONT_SIZE = 20;
 const int TEAM_FONT_SIZE = 10;
+const int BORDER_SIZE = 3;
 
 ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
                                    wxWindow *parent) {
@@ -32,11 +33,30 @@ ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
 }
 
 void ScoreControl::createControls(wxPanel *control_panel) {
+  // TODO: Populate these from settings-based defaults
   home_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Home"));
+  home_name_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("Home Team"));
   home_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
 
   away_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Away"));
+  away_name_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("Away Team"));
   away_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
+
+  home_button_panel = new wxPanel(control_panel);
+  home_plus_1 = new wxButton(home_button_panel, wxID_ANY, "+1",
+                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  home_plus_5 = new wxButton(home_button_panel, wxID_ANY, "+5",
+                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  home_minus_1 = new wxButton(home_button_panel, wxID_ANY, "-1",
+                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+
+  away_button_panel = new wxPanel(control_panel);
+  away_plus_1 = new wxButton(away_button_panel, wxID_ANY, "+1",
+                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  away_plus_5 = new wxButton(away_button_panel, wxID_ANY, "+5",
+                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  away_minus_1 = new wxButton(away_button_panel, wxID_ANY, "-1",
+                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 
   positionWidgets(control_panel);
   bindEvents();
@@ -44,7 +64,21 @@ void ScoreControl::createControls(wxPanel *control_panel) {
 
 void ScoreControl::bindEvents() {
   home_score_entry->Bind(wxEVT_KEY_UP, &ScoreControl::homeUpdated, this);
+  home_name_entry->Bind(wxEVT_KEY_UP, &ScoreControl::homeNameUpdated, this);
   away_score_entry->Bind(wxEVT_KEY_UP, &ScoreControl::awayUpdated, this);
+  away_name_entry->Bind(wxEVT_KEY_UP, &ScoreControl::awayNameUpdated, this);
+  home_plus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::homeAddOne,
+                    this);
+  home_plus_5->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::homeAddFive,
+                    this);
+  home_minus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::homeMinusOne,
+                     this);
+  away_plus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::awayAddOne,
+                    this);
+  away_plus_5->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::awayAddFive,
+                    this);
+  away_minus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::awayMinusOne,
+                     this);
 }
 
 void ScoreControl::positionWidgets(wxPanel *control_panel) {
@@ -52,10 +86,26 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  sizer->Add(home_score_label, 0, wxALL, 5);
-  sizer->Add(away_score_label, 0, wxALL, 5);
-  sizer->Add(home_score_entry, 0, wxALL, 5);
-  sizer->Add(away_score_entry, 0, wxALL, 5);
+  sizer->Add(home_score_label, 0, wxALL, BORDER_SIZE);
+  sizer->Add(away_score_label, 0, wxALL, BORDER_SIZE);
+  sizer->Add(home_name_entry, 0, wxALL, BORDER_SIZE);
+  sizer->Add(away_name_entry, 0, wxALL, BORDER_SIZE);
+  sizer->Add(home_score_entry, 0, wxALL, BORDER_SIZE);
+  sizer->Add(away_score_entry, 0, wxALL, BORDER_SIZE);
+
+  wxFlexGridSizer *home_panel_sizer = new wxFlexGridSizer(1, 0, 0, 0);
+  home_panel_sizer->Add(home_plus_1, 0, wxALL, BORDER_SIZE);
+  home_panel_sizer->Add(home_plus_5, 0, wxALL, BORDER_SIZE);
+  home_panel_sizer->Add(home_minus_1, 0, wxALL, BORDER_SIZE);
+  home_button_panel->SetSizerAndFit(home_panel_sizer);
+  sizer->Add(home_button_panel, 0, wxALL, BORDER_SIZE);
+
+  wxFlexGridSizer *away_panel_sizer = new wxFlexGridSizer(1, 0, 0, 0);
+  away_panel_sizer->Add(away_plus_1, 0, wxALL, BORDER_SIZE);
+  away_panel_sizer->Add(away_plus_5, 0, wxALL, BORDER_SIZE);
+  away_panel_sizer->Add(away_minus_1, 0, wxALL, BORDER_SIZE);
+  away_button_panel->SetSizerAndFit(away_panel_sizer);
+  sizer->Add(away_button_panel, 0, wxALL, BORDER_SIZE);
 
   control_panel->SetSizerAndFit(sizer);
 }
@@ -71,7 +121,7 @@ void ScoreControl::updatePreview() {
   home_update.back().set_text(home_score_entry->GetValue());
   home_update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
   home_update.push_back(proto::RenderableText());
-  home_update.back().set_text("Home Team");
+  home_update.back().set_text(home_name_entry->GetValue());
   home_update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
   home_update.back().set_position(
       proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
@@ -81,7 +131,7 @@ void ScoreControl::updatePreview() {
   away_update.back().set_text(away_score_entry->GetValue());
   away_update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
   away_update.push_back(proto::RenderableText());
-  away_update.back().set_text("Away Team");
+  away_update.back().set_text(away_name_entry->GetValue());
   away_update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
   away_update.back().set_position(
       proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
@@ -92,6 +142,46 @@ void ScoreControl::updatePreview() {
 
 void ScoreControl::homeUpdated(wxKeyEvent &event) { updatePreview(); }
 
+void ScoreControl::homeNameUpdated(wxKeyEvent &event) { updatePreview(); }
+
 void ScoreControl::awayUpdated(wxKeyEvent &event) { updatePreview(); }
+
+void ScoreControl::awayNameUpdated(wxKeyEvent &event) { updatePreview(); }
+
+void ScoreControl::addToEntry(wxTextCtrl *entry, int amount) {
+  long current_score = 0;
+  if (entry->GetValue().IsNumber()) {
+    entry->GetValue().ToLong(&current_score);
+  }
+  // TODO: When TextEntry::intToString is in a utility, use that here.
+  wxString string;
+  string.Printf(wxT("%d"), current_score + amount);
+  entry->SetValue(string);
+  updatePreview();
+}
+
+void ScoreControl::homeAddOne(wxCommandEvent &event) {
+  addToEntry(home_score_entry, 1);
+}
+
+void ScoreControl::homeAddFive(wxCommandEvent &event) {
+  addToEntry(home_score_entry, 5);
+}
+
+void ScoreControl::homeMinusOne(wxCommandEvent &event) {
+  addToEntry(home_score_entry, -1);
+}
+
+void ScoreControl::awayAddOne(wxCommandEvent &event) {
+  addToEntry(away_score_entry, 1);
+}
+
+void ScoreControl::awayAddFive(wxCommandEvent &event) {
+  addToEntry(away_score_entry, 5);
+}
+
+void ScoreControl::awayMinusOne(wxCommandEvent &event) {
+  addToEntry(away_score_entry, -1);
+}
 
 }  // namespace cszb_scoreboard
