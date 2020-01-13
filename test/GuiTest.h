@@ -29,8 +29,8 @@ limitations under the License.
 #include <vector>
 
 #include "cszb-scoreboard.h"
-#include "ui/FrameList.h"
-#include "ui/MainView.h"
+#include "ui/frame/FrameList.h"
+#include "ui/frame/MainView.h"
 #include "ui/component/ControlPanel.h"
 #include "ui/component/ScreenPreview.h"
 

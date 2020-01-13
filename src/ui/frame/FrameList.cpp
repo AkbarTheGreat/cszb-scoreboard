@@ -1,5 +1,5 @@
 /*
-ui/FrameList.cpp: This class is a singleton which holds a list to all active
+ui/frame/FrameList.cpp: This class is a singleton which holds a list to all active
 frames (or windows) in the current application.  This is primarily to manage
 destroying all frames when the application is shut down.
 
@@ -18,7 +18,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/FrameList.h"
+#include "ui/frame/FrameList.h"
 
 namespace cszb_scoreboard {
 

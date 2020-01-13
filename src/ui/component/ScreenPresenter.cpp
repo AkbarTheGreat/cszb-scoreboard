@@ -20,7 +20,7 @@ limitations under the License.
 #include "ui/component/ScreenPresenter.h"
 
 #include "config/DisplayConfig.h"
-#include "ui/FrameList.h"
+#include "ui/frame/FrameList.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {

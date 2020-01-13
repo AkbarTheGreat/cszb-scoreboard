@@ -19,7 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-#include "ui/MainView.h"
+#include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard {
 class Scoreboard : public wxApp {

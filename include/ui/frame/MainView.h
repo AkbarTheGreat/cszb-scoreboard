@@ -1,5 +1,5 @@
 /*
-ui/MainView.h: This class represents the main control window for the
+ui/frame/MainView.h: This class represents the main control window for the
 application.
 
 Copyright 2019 Tracy Beck

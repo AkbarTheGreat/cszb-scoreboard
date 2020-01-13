@@ -1,5 +1,5 @@
 /*
-ui/FrameList.h: This class is a singleton which holds a list to all active
+ui/frame/FrameList.h: This class is a singleton which holds a list to all active
 frames (or windows) in the current application.  This is primarily to manage
 destroying all frames when the application is shut down.
 

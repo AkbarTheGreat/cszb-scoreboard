@@ -1,5 +1,5 @@
 /*
-ui/MainView.cpp: This class represents the main control window for the
+ui/frame/MainView.cpp: This class represents the main control window for the
 application.
 
 Copyright 2019 Tracy Beck
@@ -16,10 +16,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include "ui/MainView.h"
+#include "ui/frame/MainView.h"
 
 #include "config/DisplayConfig.h"
-#include "ui/FrameList.h"
+#include "ui/frame/FrameList.h"
 #include "ui/frame/HotkeyTable.h"
 
 namespace cszb_scoreboard {
