@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "ui/component/control/TextEntry.h"
 
-#include "util/StringUtil.h";
+#include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
 
