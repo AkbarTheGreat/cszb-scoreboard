@@ -31,6 +31,12 @@ set(LINKING_TYPE "static")
 
 find_package(protobuf REQUIRED)
 
+find_package(GTest REQUIRED)
+
+#include_directories("${GTEST_INCLUDE_DIR}")
+
+find_package(jsoncpp REQUIRED)
+
 initialize_vcpkg_code()
 
 if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
@@ -56,30 +62,13 @@ file(GLOB SCOREBOARD_SRC
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
 add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO})
 
-target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES} ${JSONCPP_LIBRARIES})
 
 protobuf_generate(TARGET ${PROJECT_NAME})
 
 finalize_vcpkg_code(${PROJECT_NAME})
 
 # Testing specific code follows
-
-include(FetchContent)
-
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        release-1.10.0
-  GIT_PROGRESS   TRUE
-)
-
-FetchContent_GetProperties(googletest)
-if(NOT googletest_POPULATED)
-  FetchContent_Populate(googletest)
-  add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
-endif()
-
-find_package(GTest)
 
 list(APPEND TEST_ONLY_SRC
     "test/GuiTest.cpp"
@@ -93,7 +82,7 @@ macro(package_add_test TESTNAME)
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
-    target_link_libraries(${TESTNAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES} gtest gmock gtest_main)
+    target_link_libraries(${TESTNAME} ${wxWidgets_LIBRARIES} ${protobuf_LIBRARIES} ${GTEST_BOTH_LIBRARIES})
     protobuf_generate(TARGET ${TESTNAME})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it

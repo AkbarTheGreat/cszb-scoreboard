@@ -43,14 +43,20 @@ case anyone wants to know.
 
 ### Packages you’ll need to install
 
-If you’re using vcpkg, you’ll want to get these two packages from vcpkg.
+If you’re using vcpkg, you’ll want to get these four packages from vcpkg.
 Otherwise, you’ll need to have these development packages somewhere that you
-can point Cmake at them.
+can point Cmake at them.  Note that for Windows development, you'll want to
+get the 64 bit static versions of all of these libraries.
 
 * [wxWidgets](https://www.wxwidgets.org/) - This is the UI framework the
   scoreboard uses.
 * [Protocol buffers](https://developers.google.com/protocol-buffers) - The
   scoreboard uses protobuf for configuration storage and serialization.
+* [jsconcpp](https://github.com/open-source-parsers/jsoncpp) - Our autoupdater
+  has to parse a json response to know what the latest released version of the
+  application is.
+* [GoogleTest](https://github.com/google/googletest) - Google's C++ unit
+  testing framework.
 
 ## Initial Setup
 
