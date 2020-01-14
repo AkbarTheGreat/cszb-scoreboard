@@ -57,7 +57,6 @@ class TextEntry : public ScreenTextController {
 
   void bindEvents();
   int enteredFontSize();
-  wxString intToString(int value);
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
 };

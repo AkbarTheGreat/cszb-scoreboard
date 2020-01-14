@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/TextEntry.h"
 
+#include "util/StringUtil.h";
+
 namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
@@ -45,8 +47,8 @@ void TextEntry::createControls(wxPanel *control_panel) {
   inner_panel = new wxPanel(control_panel);
 
   font_size_label = new wxStaticText(inner_panel, wxID_ANY, wxT("Font Size"));
-  font_size_entry =
-      new wxTextCtrl(inner_panel, wxID_ANY, intToString(DEFAULT_FONT_SIZE));
+  font_size_entry = new wxTextCtrl(inner_panel, wxID_ANY,
+                                   StringUtil::intToString(DEFAULT_FONT_SIZE));
 
   int number_of_screen_choices = sizeof(screen_choices) / sizeof(wxString);
   screen_selection = new wxRadioBox(
@@ -130,33 +132,23 @@ void TextEntry::screenChanged(wxCommandEvent &event) {
   switch (screen_selection->GetSelection()) {
     case 0:
       text_entry->SetValue(home_text);
-      font_size_entry->SetValue(intToString(home_font_size));
+      font_size_entry->SetValue(StringUtil::intToString(home_font_size));
       break;
     case 1:
       text_entry->SetValue(away_text);
-      font_size_entry->SetValue(intToString(away_font_size));
+      font_size_entry->SetValue(StringUtil::intToString(away_font_size));
       break;
     default:
       text_entry->SetValue(all_text);
-      font_size_entry->SetValue(intToString(all_font_size));
+      font_size_entry->SetValue(StringUtil::intToString(all_font_size));
       break;
   }
   updatePreview();
 }
 
 int TextEntry::enteredFontSize() {
-  long font_size = DEFAULT_FONT_SIZE;
-  if (font_size_entry->GetValue().IsNumber()) {
-    font_size_entry->GetValue().ToLong(&font_size);
-  }
-  return (int)font_size;
-}
-
-// TODO: Put this in a utility class
-wxString TextEntry::intToString(int value) {
-  wxString string;
-  string.Printf(wxT("%d"), value);
-  return string;
+  return (int)StringUtil::stringToInt(font_size_entry->GetValue(),
+                                      DEFAULT_FONT_SIZE);
 }
 
 }  // namespace cszb_scoreboard

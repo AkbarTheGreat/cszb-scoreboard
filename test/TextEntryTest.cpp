@@ -70,8 +70,6 @@ TEST_F(TextEntryTest, TypingTest) {
   enterText("Longer Text");
   analysis = getAnalysis();
   float new_text_ratio = analysis.colorPercentage(text_color);
-  // TODO: This test is broken, as the above act.Text() actions don't appear to
-  // be firing correctly, or the SetFocus isn't working, one of the two.
   ASSERT_LT(initial_text_ratio, new_text_ratio);
 }
 

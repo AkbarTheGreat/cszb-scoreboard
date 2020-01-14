@@ -59,7 +59,7 @@ void closeFile(int descriptor) { _close(descriptor); }
 
 void Persistence::loadFromDisk() {
 #ifdef TEXT_CONFIGURATION_FILES
-  // TODO: Manage loading text files
+  // TODO: Write code to load text files
 #else
   std::fstream input(CONFIG_FILE, std::ios::in | std::ios::binary);
   if (!input) {

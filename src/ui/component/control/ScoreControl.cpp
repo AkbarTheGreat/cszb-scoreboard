@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
+#include "util/StringUtil.h"
+
 namespace cszb_scoreboard {
 
 const int SCORE_FONT_SIZE = 20;
@@ -149,14 +151,8 @@ void ScoreControl::awayUpdated(wxKeyEvent &event) { updatePreview(); }
 void ScoreControl::awayNameUpdated(wxKeyEvent &event) { updatePreview(); }
 
 void ScoreControl::addToEntry(wxTextCtrl *entry, int amount) {
-  long current_score = 0;
-  if (entry->GetValue().IsNumber()) {
-    entry->GetValue().ToLong(&current_score);
-  }
-  // TODO: When TextEntry::intToString is in a utility, use that here.
-  wxString string;
-  string.Printf(wxT("%d"), current_score + amount);
-  entry->SetValue(string);
+  long current_score = StringUtil::stringToInt(entry->GetValue());
+  entry->SetValue(StringUtil::intToString(current_score + amount));
   updatePreview();
 }
 
