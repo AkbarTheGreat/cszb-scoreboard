@@ -55,6 +55,8 @@ get the 64 bit static versions of all of these libraries.
 * [jsconcpp](https://github.com/open-source-parsers/jsoncpp) - Our autoupdater
   has to parse a json response to know what the latest released version of the
   application is.
+* [Curl](https://curl.haxx.se/libcurl) - A pretty standard library for
+  communicating with HTTP services.
 * [GoogleTest](https://github.com/google/googletest) - Google's C++ unit
   testing framework.
 
