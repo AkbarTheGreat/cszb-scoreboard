@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 cszb-scoreboard.cpp : Defines the entry point for the application.
 
 Copyright 2019 Tracy Beck
@@ -23,10 +23,10 @@ namespace cszb_scoreboard {
 wxIMPLEMENT_APP(Scoreboard);
 
 bool Scoreboard::OnInit() {
-  wxInitAllImageHandlers(); 
-  wxLogDebug(wxT("Starting stuff"));
+  wxInitAllImageHandlers();
+  wxLogDebug(wxT("Starting up main loop"));
   main_window = new MainView("ComedySportz Scoreboard", wxPoint(50, 50),
-                                 wxSize(700, 500));
+                             wxSize(700, 500));
   main_window->Show(true);
   return true;
 }
