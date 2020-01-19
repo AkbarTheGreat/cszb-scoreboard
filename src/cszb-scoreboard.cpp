@@ -18,7 +18,9 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
+#ifndef SCOREBOARD_TESTING
 wxIMPLEMENT_APP(cszb_scoreboard::Scoreboard);
+#endif
 
 namespace cszb_scoreboard {
 bool Scoreboard::OnInit() {
