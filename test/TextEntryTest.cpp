@@ -29,7 +29,8 @@ class TextEntryTest : public GuiTest {
     WX_A(entry->textField()->SetFocus());
     WX_A(entry->textField()->Clear());
     WX_A(entry->textField()->WriteText(text));
-    WX_A(entry->textUpdated(wxKeyEvent()));
+    wxKeyEvent event;
+    WX_A(entry->textUpdated(event));
   }
 
   void enterTextDirect(const char *text) {

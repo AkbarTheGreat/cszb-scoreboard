@@ -18,10 +18,9 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
+wxIMPLEMENT_APP(cszb_scoreboard::Scoreboard);
+
 namespace cszb_scoreboard {
-
-wxIMPLEMENT_APP(Scoreboard);
-
 bool Scoreboard::OnInit() {
   wxInitAllImageHandlers();
   wxLogDebug(wxT("Starting up main loop"));

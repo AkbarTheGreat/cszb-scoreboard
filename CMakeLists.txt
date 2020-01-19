@@ -27,7 +27,11 @@ set (Protobuf_MSVC_STATIC_RUNTIME ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
-set(LINKING_TYPE "static")
+if(MSVC)
+	set(LINKING_TYPE "static")
+else()
+	set(LINKING_TYPE "dynamic")
+endif()
 
 find_package(Protobuf REQUIRED)
 find_package(GTest REQUIRED)
@@ -70,7 +74,7 @@ file(GLOB SCOREBOARD_SRC
 add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl)
+                      ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl)
 
 if(MSVC)
     protobuf_generate(TARGET ${PROJECT_NAME})
@@ -115,7 +119,7 @@ endmacro()
 
 enable_testing()
 
-package_add_ui_test(AutoUpdateTest  test/AutoUpdateTest.cpp)
+package_add_test(AutoUpdateTest  test/AutoUpdateTest.cpp src/util/AutoUpdate.cpp src/util/StringUtil.cpp)
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp src/util/ProtoUtil.cpp src/ui/graphics/Color.cpp)
 package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
