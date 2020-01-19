@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Cmake Generation') {
       steps {
-        cmakeBuild(installation: '/usr/bin/cmake', buildDir: 'out/build')
+        cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build', buildType: 'Debug')
       }
     }
 
