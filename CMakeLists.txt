@@ -16,24 +16,23 @@
 
 cmake_minimum_required(VERSION 3.9.0)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${protobuf_INCLUDE_DIR})
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
 
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set (protobuf_BUILD_SHARED_LIBS OFF)
-set (protobuf_MSVC_STATIC_RUNTIME ON)
+set (Protobuf_BUILD_SHARED_LIBS OFF)
+set (Protobuf_MSVC_STATIC_RUNTIME ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
 set(LINKING_TYPE "static")
 
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 find_package(GTest REQUIRED)
 find_package(jsoncpp REQUIRED)
 find_package(CURL CONFIG REQUIRED)
-
 
 initialize_vcpkg_code()
 
@@ -41,16 +40,17 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_definitions(-DwxDEBUG_LEVEL=0)
 endif()
 
-
-include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
+# There is a bug with protobuf_generate_cpp which generates protobuf files in the directory in which the .proto file lives, but tries to include it from the top level, so just define them by hand as a workaround.  See https://gitlab.kitware.com/cmake/cmake/issues/18828
 
 file(GLOB SCOREBOARD_PROTO "proto/*.proto")
+protobuf_generate_cpp(SCOREBOARD_BROKEN_PROTO_SOURCES SCOREBOARD_BROKEN_PROTO_HEADERS ${SCOREBOARD_PROTO})
+set(SCOREBOARD_PROTO_SOURCES proto/config.pb.cc)
+set(SCOREBOARD_PROTO_HEADERS proto/config.pb.h)
+
+include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
+include_directories(PRIVATE "${SCOREBOARD_PROTO_HEADERS}")
 
 file(GLOB SCOREBOARD_SRC
-    "include/*.h"
-    "include/*/*.h"
-    "include/*/*/*.h"
-    "include/*/*/*/*.h"
     "src/*.cpp"
     "src/*/*.cpp"
     "src/*/*/*.cpp"
@@ -58,12 +58,10 @@ file(GLOB SCOREBOARD_SRC
 )
 
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
-add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO})
+add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCES})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl)
-
-protobuf_generate(TARGET ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${wxWidgets_LIBRARIES}
+                      ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl)
 
 finalize_vcpkg_code(${PROJECT_NAME})
 
@@ -77,14 +75,13 @@ list(APPEND TEST_ONLY_SRC
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
 macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
-    add_executable(${TESTNAME} ${SCOREBOARD_PROTO} ${ARGN})
+    add_executable(${TESTNAME} ${SCOREBOARD_PROTO_SOURCES} ${ARGN})
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl
+                      ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl
                       ${GTEST_BOTH_LIBRARIES})
-    protobuf_generate(TARGET ${TESTNAME})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
     gtest_discover_tests(${TESTNAME}

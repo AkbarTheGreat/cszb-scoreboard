@@ -94,7 +94,7 @@ std::string AutoUpdate::checkForUpdate(const std::string current_version) {
   }
 
   Json::Value root;
-  Json::String errors;
+  std::string errors;
   Json::CharReader *json_reader = Json::CharReaderBuilder().newCharReader();
   json_reader->parse(raw_json.data(), raw_json.data() + raw_json.size(), &root,
                      &errors);

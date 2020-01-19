@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "ui/frame/MainView.h"
+#include "util/StringUtil.h"
 
 #include "config/DisplayConfig.h"
 #include "ui/frame/FrameList.h"
@@ -62,10 +63,8 @@ void MainView::createMenu() {
 void MainView::createStatusBar() {
   CreateStatusBar();
   wxString status_text = "Welcome to ComedySportz Scoreboard, ";
-  char* num_buffer = new char[16];
   status_text +=
-      _itoa(DisplayConfig::getInstance()->numberOfDisplays(), num_buffer, 10);
-  delete[] num_buffer;
+	  StringUtil::intToString(DisplayConfig::getInstance()->numberOfDisplays());
   status_text += " displays found.";
   SetStatusText(status_text);
 }

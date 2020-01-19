@@ -18,6 +18,7 @@ limitations under the License.
 */
 
 #include "ui/dialog/SettingsDialog.h"
+#include "util/StringUtil.h"
 
 #include <config/DisplayConfig.h>
 #include <config/TeamConfig.h>
@@ -183,9 +184,8 @@ DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int display_number)
 
   proto::ScreenSide screen_side = display_info.side();
   // Label for this display
-  char* string_buffer = new char[16];
   wxString label_text = wxT("Display ");
-  label_text += _itoa(display_number + 1, string_buffer, 10);
+  label_text += StringUtil::intToString(display_number+1);
   wxStaticText* label = new wxStaticText(this, wxID_ANY, label_text);
   wxFont font = label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);

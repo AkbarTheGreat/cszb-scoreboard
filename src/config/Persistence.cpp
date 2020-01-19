@@ -21,7 +21,6 @@ limitations under the License.
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
-#include <io.h>
 #include <wx/wx.h>
 
 #include <fstream>
