@@ -42,7 +42,7 @@ make all'''
         stage('Debug Test') {
           steps {
             wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-              ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug')
+              ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test')
             }
           }
         }
@@ -50,7 +50,7 @@ make all'''
         stage('Release Test') {
           steps {
             wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-              ctest(installation: 'AutoInstall', workingDir: 'out/build/Release')
+              ctest(installation: 'AutoInstall', workingDir: 'out/build/Release', arguments: '-T Test')
             }
           }
         }
@@ -99,5 +99,10 @@ make all'''
       }
    }
 
+  }
+  post { 
+    always {
+      junit 'out/build/*/Testing/**/*.xml'
+    }
   }
 }
