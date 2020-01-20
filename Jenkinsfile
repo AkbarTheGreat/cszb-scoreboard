@@ -59,42 +59,44 @@ make all'''
     }
     
     stage('Valgrind') {
-      runValgrind (
-        childSilentAfterFork: true,
-        excludePattern: '',
-        generateSuppressions: true,
-        ignoreExitCode: true,
-        includePattern: 'bin/test_leak',
-        outputDirectory: '',
-        outputFileEnding: '.memcheck',
-        programOptions: '',
-        removeOldReports: true,
-        suppressionFiles: '',
-        tool: [$class: 'ValgrindToolMemcheck',
-                        leakCheckLevel: 'full',
-                        showReachable: true,
-                        trackOrigins: true,
-                        undefinedValueErrors: true],
-        traceChildren: true,
-        valgrindExecutable: '/usr/bin/valgrind',
-        valgrindOptions: '',
-        workingDirectory: 'out/build/Debug'
-      )
-
-      publishValgrind (
-        failBuildOnInvalidReports: false,
-        failBuildOnMissingReports: false,
-        failThresholdDefinitelyLost: '',
-        failThresholdInvalidReadWrite: '',
-        failThresholdTotal: '',
-        pattern: '*.memcheck',
-        publishResultsForAbortedBuilds: false,
-        publishResultsForFailedBuilds: false,
-        sourceSubstitutionPaths: '',
-        unstableThresholdDefinitelyLost: '',
-        unstableThresholdInvalidReadWrite: '',
-        unstableThresholdTotal: ''
-      )
+      steps {
+        runValgrind (
+          childSilentAfterFork: true,
+          excludePattern: '',
+          generateSuppressions: true,
+          ignoreExitCode: true,
+          includePattern: 'bin/test_leak',
+          outputDirectory: '',
+          outputFileEnding: '.memcheck',
+          programOptions: '',
+          removeOldReports: true,
+          suppressionFiles: '',
+          tool: [$class: 'ValgrindToolMemcheck',
+                          leakCheckLevel: 'full',
+                          showReachable: true,
+                          trackOrigins: true,
+                          undefinedValueErrors: true],
+          traceChildren: true,
+          valgrindExecutable: '/usr/bin/valgrind',
+          valgrindOptions: '',
+          workingDirectory: 'out/build/Debug'
+        )
+  
+        publishValgrind (
+          failBuildOnInvalidReports: false,
+          failBuildOnMissingReports: false,
+          failThresholdDefinitelyLost: '',
+          failThresholdInvalidReadWrite: '',
+          failThresholdTotal: '',
+          pattern: '*.memcheck',
+          publishResultsForAbortedBuilds: false,
+          publishResultsForFailedBuilds: false,
+          sourceSubstitutionPaths: '',
+          unstableThresholdDefinitelyLost: '',
+          unstableThresholdInvalidReadWrite: '',
+          unstableThresholdTotal: ''
+        )
+      }
    }
 
   }
