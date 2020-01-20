@@ -63,8 +63,26 @@ make all'''
   }
   post {
     always {
-      junit 'out/build/*/Testing/**/*.xml'
+      archiveArtifacts (
+        artifacts: 'out/build/*/Testing/**/*.xml',
+        fingerprint: true
+      )
+      xunit (
+        testTimeMargin: '3000',
+        thresholdMode: 1,
+        thresholds: [
+          skipped(failureThreshold: '0'),
+          failed(failureThreshold: '0')
+        ],
+        tools: [CTest(
+          pattern: 'out/build/*/Testing/**/*.xml',
+          deleteOutputFiles: true,
+          failIfNotNew: false,
+          skipNoTestFiles: true,
+          stopProcessingIfError: true
+        )]
+      )
+      deleteDir()
     }
-
   }
 }
