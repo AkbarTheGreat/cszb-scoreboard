@@ -34,6 +34,10 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
 #endif
   ShowFullScreen(true);
 
+#ifdef SCOREBOARD_TESTING
+  Iconize();
+#endif
+
   proto::DisplayInfo display =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
   wxRect screen = ProtoUtil::wxRct(display.dimensions());
