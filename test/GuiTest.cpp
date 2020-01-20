@@ -56,12 +56,37 @@ ScreenPreview *GuiTest::firstPreview() {
   return mainView()->previewPanel()->preview(0);
 }
 
-ImageAnalysis::ImageAnalysis(wxWindow *widget, int precision_percent) {
+ImageAnalysis::ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode) {
   wxClientDC dc(widget);
   wxRect dimensions = widget->GetRect();
-  int pixel_step = 100 / precision_percent;
-  for (int x = 0; x < dimensions.GetWidth(); x += pixel_step) {
-    for (int y = 0; y < dimensions.GetHeight(); y += pixel_step) {
+
+  int total = 1;
+
+  switch (scan_mode) {
+    case IA_MODE_CENTERLINE_SCAN:
+      countCenterlinePixels(dc, dimensions);
+      total = dimensions.GetWidth();
+      break;
+    case IA_MODE_QUARTER_SCAN:
+      countQuarterScanlinePixels(dc, dimensions);
+      total = dimensions.GetWidth() * 5;
+      break;
+    default:
+      countAllPixels(dc, dimensions);
+      total = dimensions.GetWidth() * dimensions.GetHeight();
+  }
+
+  for (auto iterator : color_counts) {
+    unsigned int color_rgb = iterator.first;
+    float count = iterator.second;
+    color_percentages[color_rgb] = count * 100 / total;
+  }
+}
+
+void ImageAnalysis::countAllPixels(const wxClientDC &dc,
+                                   const wxRect &dimensions) {
+  for (int x = 0; x < dimensions.GetWidth(); ++x) {
+    for (int y = 0; y < dimensions.GetHeight(); ++y) {
       wxColour color;
       dc.GetPixel(x, y, &color);
       unsigned int rgb = color.GetRGB();
@@ -72,13 +97,37 @@ ImageAnalysis::ImageAnalysis(wxWindow *widget, int precision_percent) {
       }
     }
   }
+}
 
-  int total = (dimensions.GetWidth() * dimensions.GetHeight()) / pixel_step;
+void ImageAnalysis::countQuarterScanlinePixels(const wxClientDC &dc,
+                                               const wxRect &dimensions) {
+  int quarter_step = dimensions.GetHeight() / 4;
+  for (int y = 0; y < dimensions.GetHeight(); y += quarter_step) {
+    for (int x = 0; x < dimensions.GetWidth(); ++x) {
+      wxColour color;
+      dc.GetPixel(x, y, &color);
+      unsigned int rgb = color.GetRGB();
+      if (color_counts.find(rgb) == color_counts.end()) {
+        color_counts[rgb] = 1;
+      } else {
+        color_counts[rgb]++;
+      }
+    }
+  }
+}
 
-  for (auto iterator : color_counts) {
-    unsigned int color_rgb = iterator.first;
-    float count = iterator.second;
-    color_percentages[color_rgb] = count * 100 / total;
+void ImageAnalysis::countCenterlinePixels(const wxClientDC &dc,
+                                          const wxRect &dimensions) {
+  int y = dimensions.GetHeight() / 2;
+  for (int x = 0; x < dimensions.GetWidth(); ++x) {
+    wxColour color;
+    dc.GetPixel(x, y, &color);
+    unsigned int rgb = color.GetRGB();
+    if (color_counts.find(rgb) == color_counts.end()) {
+      color_counts[rgb] = 1;
+    } else {
+      color_counts[rgb]++;
+    }
   }
 }
 

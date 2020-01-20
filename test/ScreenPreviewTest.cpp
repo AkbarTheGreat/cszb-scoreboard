@@ -25,7 +25,7 @@ namespace test {
 TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
   WX_A(mainView()->SetFocus());
-  ImageAnalysis analysis(firstPreview()->widget());
+  ImageAnalysis analysis(firstPreview()->widget(), IA_MODE_QUARTER_SCAN);
   std::vector<int> color_list = analysis.colorList();
   int list_size = color_list.size();
   if (DisplayConfig::getInstance()->displayDetails(0).side().error()) {
@@ -39,7 +39,7 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
     ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
     ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 10);
   } else {
-    ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 90);
+    ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 70);
     ASSERT_GT(analysis.colorPercentage(wxColour("White")), 2);
     ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);
   }

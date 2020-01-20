@@ -29,22 +29,13 @@ limitations under the License.
 #include <vector>
 
 #include "cszb-scoreboard.h"
-#include "ui/frame/FrameList.h"
-#include "ui/frame/MainView.h"
 #include "ui/component/ControlPanel.h"
 #include "ui/component/ScreenPreview.h"
+#include "ui/frame/FrameList.h"
+#include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard {
 namespace test {
-
-// Ultimately, I want to tune these so that they can be sped up.  But it doesn't
-// work well yet, so call this a weirdly worded TODO.
-#define FULL_TEST
-#ifdef FULL_TEST
-const int DEFAULT_IMAGE_ANALYSIS_PRECISION = 100;
-#else
-const int DEFAULT_IMAGE_ANALYSIS_PRECISION = 50;
-#endif
 
 /* Performs an action against the wxWidgets UI, and yields to allow it to
  * execute */
@@ -55,14 +46,19 @@ const int DEFAULT_IMAGE_ANALYSIS_PRECISION = 50;
     mainView()->Update(); \
   }
 
+enum ImageAnalysisMode {
+  IA_MODE_FULL_SCAN,
+  IA_MODE_CENTERLINE_SCAN,
+  IA_MODE_QUARTER_SCAN,
+};
+
 /* Checking if images are correct or not is tricky, so we have this to help */
 class ImageAnalysis {
  public:
-  ImageAnalysis(wxWindow *widget)
-      : ImageAnalysis(widget, DEFAULT_IMAGE_ANALYSIS_PRECISION) {}
+  ImageAnalysis(wxWindow *widget) : ImageAnalysis(widget, IA_MODE_FULL_SCAN) {}
   // Create an ImageAnalysis object where only x% of the pixels are sampled for
   // color counts, for speed.
-  ImageAnalysis(wxWindow *widget, int precision_percent);
+  ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode);
   float colorPercentage(wxColour color);
   float colorAmount(wxColour color);
   std::vector<int> colorList();
@@ -70,6 +66,10 @@ class ImageAnalysis {
  private:
   std::map<unsigned int, int> color_counts;
   std::map<unsigned int, float> color_percentages;
+  void countAllPixels(const wxClientDC &dc, const wxRect &dimensions);
+  void countCenterlinePixels(const wxClientDC &dc, const wxRect &dimensions);
+  void countQuarterScanlinePixels(const wxClientDC &dc,
+                                  const wxRect &dimensions);
 };
 
 class GuiTest : public testing::Test {
