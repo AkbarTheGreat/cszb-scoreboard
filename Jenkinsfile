@@ -38,19 +38,22 @@ make all'''
     }
 
     stage('Test') {
-      wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-        stages {
-          stage('Debug Test') {
-            steps {
+      stages {
+        stage('Debug Test') {
+          steps {
+            wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
               ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test --output-on-failure')
             }
 
           }
+        }
 
-          stage('Release Test') {
-            steps {
+        stage('Release Test') {
+          steps {
+            wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
               ctest(installation: 'AutoInstall', workingDir: 'out/build/Release', arguments: '-T Test')
             }
+
           }
         }
 
