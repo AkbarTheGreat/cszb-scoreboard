@@ -41,7 +41,7 @@ make all'''
       parallel {
         stage('Debug Test') {
           steps {
-            wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+            wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
               ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test --output-on-failure')
             }
 
