@@ -38,35 +38,16 @@ find_package(GTest REQUIRED)
 find_package(jsoncpp REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
-
 initialize_vcpkg_code()
 
 if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_definitions(-DwxDEBUG_LEVEL=0)
 endif()
 
-# There is a bug with protobuf_generate_cpp which generates protobuf files in
-# the directory in which the .proto file lives, but tries to include it from
-# the top level, so just define them by hand as a workaround.  See
-# https://gitlab.kitware.com/cmake/cmake/issues/18828
-
-if(True) 
-   file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
-else()
-   file(GLOB SCOREBOARD_PROTO "*.proto")
-   protobuf_generate_cpp(SCOREBOARD_BROKEN_PROTO_SOURCES SCOREBOARD_BROKEN_PROTO_HEADERS ${SCOREBOARD_PROTO})
-   set(SCOREBOARD_PROTO_SOURCES proto/config.pb.cc)
-   set(SCOREBOARD_PROTO_HEADERS proto/config.pb.h)
-   include_directories(PRIVATE "${SCOREBOARD_PROTO_HEADERS}")
-endif()
-
+file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
 include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
 file(GLOB SCOREBOARD_SRC
-    "include/*.h"
-    "include/*/*.h"
-    "include/*/*/*.h"
-    "include/*/*/*/*.h"
     "src/*.cpp"
     "src/*/*.cpp"
     "src/*/*/*.cpp"
@@ -79,9 +60,7 @@ add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCE
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl)
 
-if(True)
-    protobuf_generate(TARGET ${PROJECT_NAME})
-endif()
+protobuf_generate(TARGET ${PROJECT_NAME})
 
 finalize_vcpkg_code(${PROJECT_NAME})
 
@@ -102,9 +81,7 @@ macro(package_add_test TESTNAME)
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl
                       ${GTEST_BOTH_LIBRARIES})
-    if(True)
-        protobuf_generate(TARGET ${TESTNAME})
-    endif()
+    protobuf_generate(TARGET ${TESTNAME})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
     gtest_discover_tests(${TESTNAME}
