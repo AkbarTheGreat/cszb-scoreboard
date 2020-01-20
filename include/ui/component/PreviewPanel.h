@@ -25,7 +25,7 @@ limitations under the License.
 #include <vector>
 
 #include "ScoreboardCommon.h"
-#include "proto/config.pb.h"
+#include "config.pb.h"
 #include "ui/component/ScreenPreview.h"
 
 namespace cszb_scoreboard {

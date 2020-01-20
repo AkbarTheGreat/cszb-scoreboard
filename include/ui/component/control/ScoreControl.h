@@ -21,7 +21,7 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-#include "proto/config.pb.h"
+#include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 
 namespace cszb_scoreboard {

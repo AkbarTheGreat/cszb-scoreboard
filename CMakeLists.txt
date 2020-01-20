@@ -45,12 +45,15 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_definitions(-DwxDEBUG_LEVEL=0)
 endif()
 
-# There is a bug with protobuf_generate_cpp which generates protobuf files in the directory in which the .proto file lives, but tries to include it from the top level, so just define them by hand as a workaround.  See https://gitlab.kitware.com/cmake/cmake/issues/18828
+# There is a bug with protobuf_generate_cpp which generates protobuf files in
+# the directory in which the .proto file lives, but tries to include it from
+# the top level, so just define them by hand as a workaround.  See
+# https://gitlab.kitware.com/cmake/cmake/issues/18828
 
-if(MSVC) 
-   file(GLOB SCOREBOARD_PROTO_SOURCES "proto/*.proto")
+if(True) 
+   file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
 else()
-   file(GLOB SCOREBOARD_PROTO "proto/*.proto")
+   file(GLOB SCOREBOARD_PROTO "*.proto")
    protobuf_generate_cpp(SCOREBOARD_BROKEN_PROTO_SOURCES SCOREBOARD_BROKEN_PROTO_HEADERS ${SCOREBOARD_PROTO})
    set(SCOREBOARD_PROTO_SOURCES proto/config.pb.cc)
    set(SCOREBOARD_PROTO_HEADERS proto/config.pb.h)
@@ -76,7 +79,7 @@ add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCE
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl)
 
-if(MSVC)
+if(True)
     protobuf_generate(TARGET ${PROJECT_NAME})
 endif()
 
@@ -99,7 +102,7 @@ macro(package_add_test TESTNAME)
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl
                       ${GTEST_BOTH_LIBRARIES})
-    if(MSVC)
+    if(True)
         protobuf_generate(TARGET ${TESTNAME})
     endif()
     # gtest_discover_tests replaces gtest_add_tests,

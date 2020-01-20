@@ -17,7 +17,7 @@ limitations under the License.
 */
 
 #include "gtest/gtest.h"
-#include "proto/config.pb.h"
+#include "config.pb.h"
 #include "util/ProtoUtil.h"
 
 extern wxColourDatabase *wxTheColourDatabase;

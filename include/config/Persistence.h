@@ -18,7 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include "proto/config.pb.h"
+#include "config.pb.h"
 
 namespace cszb_scoreboard {
 

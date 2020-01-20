@@ -21,7 +21,7 @@ limitations under the License.
 #include <wx/display.h>
 #include <wx/wx.h>
 
-#include "proto/config.pb.h"
+#include "config.pb.h"
 
 namespace cszb_scoreboard {
 

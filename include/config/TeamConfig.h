@@ -22,7 +22,7 @@ limitations under the License.
 
 #include <vector>
 
-#include "proto/config.pb.h"
+#include "config.pb.h"
 #include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
