@@ -22,6 +22,8 @@ pipeline {
       parallel {
         stage('Debug Test') {
           steps {
+            sh '''cd out/build/Debug
+make all'''
             ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug')
           }
         }
