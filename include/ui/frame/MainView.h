@@ -28,6 +28,7 @@ limitations under the License.
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/control/TextEntry.h"
 #include "ui/dialog/SettingsDialog.h"
+#include "ui/event/UpdateTimer.h"
 
 namespace cszb_scoreboard {
 
@@ -46,6 +47,7 @@ class MainView : public wxFrame {
   ControlPanel* control_panel;
   SettingsDialog* settings_dialog;
   PreviewPanel* preview_panel;
+  UpdateTimer* update_timer;
   void bindEvents();
   void createMenu();
   wxNotebook* createControlNotebook();

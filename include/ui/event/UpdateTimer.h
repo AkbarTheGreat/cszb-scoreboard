@@ -1,7 +1,5 @@
-﻿/*
-ScoreboardCommon.h: This header holds common constants and macros which should
-be available anywhere in the program.  It should depend on nothing else
-internal.
+/*
+ui/event/UpdateTimer.h: A timer which periodically checks for updates.
 
 Copyright 2019 Tracy Beck
 
@@ -20,16 +18,17 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/wx.h>
+
 namespace cszb_scoreboard {
 
-#define SCOREBOARD_VERSION 0.0.2
+class UpdateTimer : public wxTimer {
+ public:
+  UpdateTimer(wxFrame *main_view);
 
-// Evaluates to public: in a test environment, private: in non-test code, to
-// hide dependencies as tightly as possible
-#ifdef SCOREBOARD_TESTING
-#define PUBLIC_TEST_ONLY public:
-#else
-#define PUBLIC_TEST_ONLY private:
-#endif
+ private:
+  wxFrame *main_view;
+  void Notify();
+};
 
 }  // namespace cszb_scoreboard

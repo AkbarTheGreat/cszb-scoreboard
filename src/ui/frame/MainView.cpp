@@ -17,11 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "ui/frame/MainView.h"
-#include "util/StringUtil.h"
 
 #include "config/DisplayConfig.h"
 #include "ui/frame/FrameList.h"
 #include "ui/frame/HotkeyTable.h"
+#include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -38,6 +38,9 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 
   positionWidgets();
   bindEvents();
+
+  update_timer = new UpdateTimer(this);
+  update_timer->Start(0, true);
 
   HotkeyTable::getInstance()->installHotkeys(this);
 }
@@ -64,7 +67,7 @@ void MainView::createStatusBar() {
   CreateStatusBar();
   wxString status_text = "Welcome to ComedySportz Scoreboard, ";
   status_text +=
-	  StringUtil::intToString(DisplayConfig::getInstance()->numberOfDisplays());
+      StringUtil::intToString(DisplayConfig::getInstance()->numberOfDisplays());
   status_text += " displays found.";
   SetStatusText(status_text);
 }
