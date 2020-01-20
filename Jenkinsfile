@@ -42,7 +42,7 @@ make all'''
         stage('Debug Test') {
           steps {
             wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-              ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test --output-on-failure')
+              ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test --output-on-failure --no-compress-output')
             }
 
           }
@@ -51,7 +51,7 @@ make all'''
         stage('Release Test') {
           steps {
             wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-              ctest(installation: 'AutoInstall', workingDir: 'out/build/Release', arguments: '-T Test')
+              ctest(installation: 'AutoInstall', workingDir: 'out/build/Release', arguments: '-T Test --output-on-failure --no-compress-output')
             }
 
           }
