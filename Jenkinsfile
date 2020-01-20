@@ -18,12 +18,29 @@ pipeline {
       }
     }
 
+    stage('Build') {
+      parallel {
+        stage('Debug Build') {
+          steps {
+            sh '''cd out/build/Debug
+make all'''
+          }
+        }
+
+        stage('Release Build') {
+          steps {
+            sh '''cd out/build/Release
+make all'''
+          }
+        }
+
+      }
+    }
+
     stage('Test') {
       parallel {
         stage('Debug Test') {
           steps {
-            sh '''cd out/build/Debug
-make all'''
             ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug')
           }
         }
