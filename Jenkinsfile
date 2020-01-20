@@ -41,13 +41,17 @@ make all'''
       parallel {
         stage('Debug Test') {
           steps {
-            ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug')
+            wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+              ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug')
+            }
           }
         }
 
         stage('Release Test') {
           steps {
-            ctest(installation: 'AutoInstall', workingDir: 'out/build/Release')
+            wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+              ctest(installation: 'AutoInstall', workingDir: 'out/build/Release')
+            }
           }
         }
 
