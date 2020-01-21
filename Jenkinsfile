@@ -63,14 +63,14 @@ make all'''
     stage('Valgrind') {
       steps {
         runValgrind (
-          childSilentAfterFork: true,
-          excludePattern: '',
+          childSilentAfterFork: false,
+          excludePattern: 'donotexcludeanything',
           generateSuppressions: true,
           ignoreExitCode: true,
-          includePattern: '*Test',
+          includePattern: 'out/build/Debug/*Test',
           outputDirectory: 'out/build/Debug',
           outputFileEnding: '.memcheck',
-          programOptions: '',
+          programOptions: ' ',
           removeOldReports: true,
           suppressionFiles: '',
           tool: [$class: 'ValgrindToolMemcheck',
@@ -79,8 +79,8 @@ make all'''
             trackOrigins: true,
             undefinedValueErrors: true],
           traceChildren: true,
-          valgrindExecutable: '',
-          valgrindOptions: '',
+          valgrindExecutable: '/usr/bin/valgrind',
+          valgrindOptions: ' ',
           workingDirectory: 'out/build/Debug'
         )
   
