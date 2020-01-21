@@ -90,7 +90,7 @@ make all'''
           failThresholdDefinitelyLost: '',
           failThresholdInvalidReadWrite: '',
           failThresholdTotal: '',
-          pattern: '*.memcheck',
+          pattern: 'out/build/Debug/*.memcheck',
           publishResultsForAbortedBuilds: false,
           publishResultsForFailedBuilds: false,
           sourceSubstitutionPaths: '',
