@@ -66,7 +66,6 @@ void DisplayConfig::detectDisplays() {
                         display_info->mutable_dimensions());
     if (isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);
-      display_info->mutable_side()->set_home(true);
       set_home = false;
 #ifdef WXDEBUG
       if (numscreens < 3) {

@@ -26,7 +26,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const char* WELCOME_MESSAGE = "Chandler";
-const char* ERROR_MESSAGE = "NO SCREENS FOUND!";
+const char* ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
 const int PREVIEW_HEIGHT = 320;
 
 ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,

@@ -47,7 +47,6 @@ make all'''
 
           }
         }
-/* Disabling release tests while I figure out my memory issues
         stage('Release Test') {
           steps {
             wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
@@ -56,8 +55,6 @@ make all'''
 
           }
         }
-*/
-
       }
     }
     stage('Valgrind') {
