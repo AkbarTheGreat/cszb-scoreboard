@@ -43,9 +43,9 @@ ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
   current_widget = ScreenText::getPreview(parent, initial_text, side,
                                           previewSize(monitor_number));
 
+  thumbnail = new ScreenThumbnail(parent, monitor_number, current_widget);
   if (!side.error()) {
     presenter = new ScreenPresenter(monitor_number, current_widget);
-    thumbnail = new ScreenThumbnail(parent, monitor_number, current_widget);
   }
 }
 
