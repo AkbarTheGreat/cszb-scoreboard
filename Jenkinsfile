@@ -62,28 +62,30 @@ make all'''
     }
     stage('Valgrind') {
       steps {
-        runValgrind (
-          childSilentAfterFork: false,
-          excludePattern: 'donotexcludeanything',
-          generateSuppressions: true,
-          ignoreExitCode: true,
-          includePattern: 'out/build/Debug/*Test',
-          outputDirectory: 'out/build/Debug',
-          outputFileEnding: '.memcheck',
-          programOptions: ' ',
-          removeOldReports: true,
-          suppressionFiles: '',
-          tool: [$class: 'ValgrindToolMemcheck',
-            leakCheckLevel: 'full',
-            showReachable: true,
-            trackOrigins: true,
-            undefinedValueErrors: true],
-          traceChildren: true,
-          valgrindExecutable: '/usr/bin/valgrind',
-          valgrindOptions: ' ',
-          workingDirectory: 'out/build/Debug'
-        )
-  
+        wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
+          runValgrind (
+            childSilentAfterFork: false,
+            excludePattern: 'donotexcludeanything',
+            generateSuppressions: true,
+            ignoreExitCode: true,
+            includePattern: 'out/build/Debug/*Test',
+            outputDirectory: 'out/build/Debug',
+            outputFileEnding: '.memcheck',
+            programOptions: ' ',
+            removeOldReports: true,
+            suppressionFiles: '',
+            tool: [$class: 'ValgrindToolMemcheck',
+              leakCheckLevel: 'full',
+              showReachable: true,
+              trackOrigins: true,
+              undefinedValueErrors: true],
+            traceChildren: true,
+            valgrindExecutable: '/usr/bin/valgrind',
+            valgrindOptions: ' ',
+            workingDirectory: 'out/build/Debug'
+          )
+        }
+    
         publishValgrind (
           failBuildOnInvalidReports: false,
           failBuildOnMissingReports: false,
