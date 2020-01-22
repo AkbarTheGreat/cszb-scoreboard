@@ -25,7 +25,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-DisplayConfig *DisplayConfig::singleton_instance;
+DisplayConfig *DisplayConfig::singleton_instance = nullptr;
 
 DisplayConfig::DisplayConfig() { detectDisplays(); }
 

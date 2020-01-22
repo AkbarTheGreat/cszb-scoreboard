@@ -18,6 +18,7 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
+#include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
 #include "ui/frame/FrameList.h"
 #include "ui/frame/HotkeyTable.h"
@@ -39,8 +40,10 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   positionWidgets();
   bindEvents();
 
-  update_timer = new UpdateTimer(this);
-  update_timer->Start(0, true);
+  if (CommandArgs::getInstance()->autoUpdate()) {
+    update_timer = new UpdateTimer(this);
+    update_timer->Start(0, true);
+  }
 
   HotkeyTable::getInstance()->installHotkeys(this);
 }

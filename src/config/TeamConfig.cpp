@@ -23,7 +23,7 @@ limitations under the License.
 #include "util/ProtoUtil.h"
 namespace cszb_scoreboard {
 
-TeamConfig *TeamConfig::singleton_instance;
+TeamConfig *TeamConfig::singleton_instance = nullptr;
 
 TeamConfig *TeamConfig::getInstance() {
   if (singleton_instance == nullptr) {
@@ -96,7 +96,7 @@ int TeamConfig::indexForTeam(proto::TeamInfo_TeamType team) {
       return i;
     }
   }
-  return 0; // Not a great default, but we can live with it.
+  return 0;  // Not a great default, but we can live with it.
 }
 
 Color TeamConfig::teamColor(int index) {

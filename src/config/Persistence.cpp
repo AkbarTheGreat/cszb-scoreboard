@@ -35,7 +35,7 @@ namespace cszb_scoreboard {
 
 const char* CONFIG_FILE = "scoreboard.config";
 
-Persistence* Persistence::singleton_instance;
+Persistence* Persistence::singleton_instance = nullptr;
 
 Persistence* Persistence::getInstance() {
   if (singleton_instance == nullptr) {
@@ -93,7 +93,7 @@ proto::DisplayConfig Persistence::loadDisplays() {
 }
 
 void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
-  //full_config.clear_display_config();
+  // full_config.clear_display_config();
   proto::DisplayConfig* new_display_config =
       full_config.mutable_display_config();
   new_display_config->CopyFrom(display_config);
@@ -107,9 +107,8 @@ proto::TeamConfig Persistence::loadTeams() {
 }
 
 void Persistence::saveTeams(const proto::TeamConfig& team_config) {
-  //full_config.clear_display_config();
-  proto::TeamConfig* new_team_config =
-      full_config.mutable_team_config();
+  // full_config.clear_display_config();
+  proto::TeamConfig* new_team_config = full_config.mutable_team_config();
   new_team_config->CopyFrom(team_config);
   saveToDisk();
 }

@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 cszb-scoreboard.h: Include for main program for the scoreboard.
 
 Copyright 2019 Tracy Beck
@@ -18,7 +18,9 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/cmdline.h>
 #include <wx/wx.h>
+
 #include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard {
@@ -27,6 +29,8 @@ class Scoreboard : public wxApp {
   virtual bool OnInit();
 
  private:
-  MainView *main_window;
+  MainView* main_window;
+  virtual void OnInitCmdLine(wxCmdLineParser& parser);
+  virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 };
 }  // namespace cszb_scoreboard
