@@ -48,7 +48,7 @@ void Scoreboard::OnInitCmdLine(wxCmdLineParser& parser) {
 }
 
 bool Scoreboard::OnCmdLineParsed(wxCmdLineParser& parser) {
-  if (!CommandArgs::process_args(parser)) {
+  if (!CommandArgs::process_args(parser, argc, argv)) {
     return false;
   }
   return wxApp::OnCmdLineParsed(parser);

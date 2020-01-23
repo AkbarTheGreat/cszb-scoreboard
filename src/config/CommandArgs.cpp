@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "config/CommandArgs.h"
 
+#include <wx/wx.h>
+
 #include <stdexcept>
 
 namespace cszb_scoreboard {
@@ -33,16 +35,19 @@ CommandArgs *CommandArgs::getInstance() {
   return singleton_instance;
 }
 
-bool CommandArgs::process_args(const wxCmdLineParser &parser) {
+bool CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
+                               const wxCmdLineArgsArray &argv) {
   if (singleton_instance != nullptr) {
     throw new std::runtime_error(
         "Cannot call process_args on an initialized CommandArgs object");
   }
   singleton_instance = new CommandArgs();
-  return singleton_instance->process_args_internal(parser);
+  return singleton_instance->process_args_internal(parser, argc, argv);
 }
 
-bool CommandArgs::process_args_internal(const wxCmdLineParser &parser) {
+bool CommandArgs::process_args_internal(const wxCmdLineParser &parser, int argc,
+                                        const wxCmdLineArgsArray &argv) {
+  command_path = argv[0];
   auto_update = !parser.Found(wxT("n"));
   reset_config = parser.Found(wxT("r"));
 
@@ -58,5 +63,6 @@ CommandArgs::CommandArgs() {
 
 bool CommandArgs::autoUpdate() { return auto_update; }
 bool CommandArgs::resetConfig() { return reset_config; }
+std::string CommandArgs::commandPath() { return command_path; }
 
 }  // namespace cszb_scoreboard

@@ -34,17 +34,21 @@ class CommandArgs {
  public:
   static CommandArgs *getInstance();
   /* parse must be called before getInstance, or an exception is thrown. */
-  static bool process_args(const wxCmdLineParser &parser);
+  static bool process_args(const wxCmdLineParser &parser, int argc,
+                           const wxCmdLineArgsArray &argv);
 
   // flag getters
   bool autoUpdate();
   bool resetConfig();
+  std::string commandPath();
 
  private:
   static CommandArgs *singleton_instance;
   bool auto_update, reset_config;
+  std::string command_path;
 
   CommandArgs();
-  bool process_args_internal(const wxCmdLineParser &parser);
+  bool process_args_internal(const wxCmdLineParser &parser, int argc,
+                             const wxCmdLineArgsArray &argv);
 };
 }  // namespace cszb_scoreboard
