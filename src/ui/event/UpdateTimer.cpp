@@ -32,7 +32,7 @@ UpdateTimer::UpdateTimer(wxFrame *main_view) : wxTimer() {
 
 void UpdateTimer::Notify() {
   std::string new_version =
-      AutoUpdate::getInstance()->checkForUpdate("SCOREBOARD_VERSION");
+      AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version != "") {
     wxString string;
     string.Printf(wxT("New Version Found!  Please download at: %s"),
