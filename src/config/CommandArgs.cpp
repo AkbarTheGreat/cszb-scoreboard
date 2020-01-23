@@ -44,7 +44,7 @@ bool CommandArgs::process_args(const wxCmdLineParser &parser) {
 
 bool CommandArgs::process_args_internal(const wxCmdLineParser &parser) {
   auto_update = !parser.Found(wxT("n"));
-  reset_config = !parser.Found(wxT("r"));
+  reset_config = parser.Found(wxT("r"));
 
   return true;
 }

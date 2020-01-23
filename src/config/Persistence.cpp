@@ -26,6 +26,8 @@ limitations under the License.
 #include <fstream>
 #include <iostream>
 
+#include "config/CommandArgs.h"
+
 namespace cszb_scoreboard {
 
 // TODO: This is currently writing and reading binary files, I'd rather
@@ -57,6 +59,11 @@ void closeFile(int descriptor) { _close(descriptor); }
 #endif
 
 void Persistence::loadFromDisk() {
+  if (CommandArgs::getInstance()->resetConfig()) {
+    wxLogDebug(
+        "Reset config argument passed, so all configuration data reset.");
+    return;
+  }
 #ifdef TEXT_CONFIGURATION_FILES
   // TODO: Write code to load text files
 #else
