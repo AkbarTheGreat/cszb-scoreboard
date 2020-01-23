@@ -37,22 +37,20 @@ make all'''
       }
     }
 
-    stage('Test') {
-      stages {
-        stage('Debug Test') {
-          steps {
-            wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-              ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test --output-on-failure --no-compress-output')
-            }
-
+    stage('Debug Test') {
+      steps {
+        retry(3) {
+          wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
+            ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test --output-on-failure --no-compress-output')
           }
         }
-        stage('Release Test') {
-          steps {
-            wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-              ctest(installation: 'AutoInstall', workingDir: 'out/build/Release', arguments: '-T Test --output-on-failure --no-compress-output')
-            }
-
+      }
+    }
+    stage('Release Test') {
+      steps {
+        retry(3) {
+          wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+            ctest(installation: 'AutoInstall', workingDir: 'out/build/Release', arguments: '-T Test --output-on-failure --no-compress-output')
           }
         }
       }
