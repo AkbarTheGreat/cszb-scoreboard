@@ -42,8 +42,8 @@ AutoUpdate *AutoUpdate::getInstance() {
   return singleton_instance;
 }
 
-size_t AutoUpdate::curlCallback(void *new_content, size_t byte_size,
-                                size_t size, void *page_content) {
+size_t curlCallback(void *new_content, size_t byte_size, size_t size,
+                    void *page_content) {
   size_t grow_size = byte_size * size;
   std::vector<char> *page_vector = (std::vector<char> *)page_content;
 
@@ -62,17 +62,14 @@ size_t AutoUpdate::curlCallback(void *new_content, size_t byte_size,
   return grow_size;
 }
 
-bool AutoUpdate::checkForUpdate(const std::string current_version) {
-  std::vector<char> raw_json;
-
+CURLcode curlRead(const char *url, std::vector<char> &response_buffer) {
   curl_global_init(CURL_GLOBAL_ALL);
 
   // setup curl junk
   CURL *curl_handle = curl_easy_init();
-  curl_easy_setopt(curl_handle, CURLOPT_URL, LATEST_VERSION_URL);
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION,
-                   AutoUpdate::curlCallback);
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&raw_json);
+  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, curlCallback);
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response_buffer);
   curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
   // Actual HTTP request
@@ -82,6 +79,13 @@ bool AutoUpdate::checkForUpdate(const std::string current_version) {
   curl_easy_cleanup(curl_handle);
   curl_global_cleanup();
 
+  return curl_response;
+}
+
+bool AutoUpdate::checkForUpdate(const std::string current_version) {
+  std::vector<char> raw_json;
+
+  CURLcode curl_response = curlRead(LATEST_VERSION_URL, raw_json);
   if (curl_response != CURLE_OK) {
     // Log an error, but otherwise ignore it, for user convenience.
     wxLogDebug("Curl failure checking for update: %s",
