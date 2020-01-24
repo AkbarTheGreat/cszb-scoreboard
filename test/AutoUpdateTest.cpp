@@ -46,11 +46,11 @@ TEST(AutoUpdateTest, VersionComparisons) {
 }
 
 TEST(AutoUpdateTest, NewVersionFound) {
-  EXPECT_NE(AutoUpdate::getInstance()->checkForUpdate("0.0.0"), "");
+  EXPECT_TRUE(AutoUpdate::getInstance()->checkForUpdate("0.0.0"));
 }
 
 TEST(AutoUpdateTest, NoNewVersionFound) {
-  EXPECT_EQ(AutoUpdate::getInstance()->checkForUpdate("99999.0.0"), "");
+  EXPECT_FALSE(AutoUpdate::getInstance()->checkForUpdate("99999.0.0"));
 }
 
 }  // namespace test

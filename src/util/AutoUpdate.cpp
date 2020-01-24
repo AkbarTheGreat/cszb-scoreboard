@@ -30,11 +30,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-// Here's the command line way to download the .exe.  Figure out how to make
-// this work right in C++ curl - s
-// https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases/latest |
-// grep browser_download_url | cut -d : -f 2,3 | tr -d \" | wget -qi -
-
 const char *LATEST_VERSION_URL =
     "https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases/"
     "latest";
@@ -67,7 +62,7 @@ size_t AutoUpdate::curlCallback(void *new_content, size_t byte_size,
   return grow_size;
 }
 
-std::string AutoUpdate::checkForUpdate(const std::string current_version) {
+bool AutoUpdate::checkForUpdate(const std::string current_version) {
   std::vector<char> raw_json;
 
   curl_global_init(CURL_GLOBAL_ALL);
@@ -89,8 +84,9 @@ std::string AutoUpdate::checkForUpdate(const std::string current_version) {
 
   if (curl_response != CURLE_OK) {
     // Log an error, but otherwise ignore it, for user convenience.
-    wxLogDebug("Curl failure checking for update: %s", curl_easy_strerror(curl_response));
-    return "";
+    wxLogDebug("Curl failure checking for update: %s",
+               curl_easy_strerror(curl_response));
+    return false;
   }
 
   Json::Value root;
@@ -102,13 +98,15 @@ std::string AutoUpdate::checkForUpdate(const std::string current_version) {
   Version new_version(root.get("name", current_version).asString());
   Version old_version(current_version);
 
+  update_available = false;
   if (new_version > old_version) {
     Json::Value download_url = root["assets"][0]["browser_download_url"];
     Json::Value assets = root.get("assets", {});
     Json::Value asset_zero = assets.get((Json::Value::ArrayIndex)0, "");
-    return asset_zero.get("browser_download_url", "").asString();
+    new_binary_url = asset_zero.get("browser_download_url", "").asString();
+    update_available = true;
   }
-  return "";
+  return update_available;
 }
 
 Version::Version(std::string version_string) {

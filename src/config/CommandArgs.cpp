@@ -47,6 +47,9 @@ bool CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
 
 bool CommandArgs::process_args_internal(const wxCmdLineParser &parser, int argc,
                                         const wxCmdLineArgsArray &argv) {
+  // TODO: This is always an absolute path on Windows, but may be a relative
+  // path on Linux.  An update to always get an absolute path is probably
+  // worthwhile.
   command_path = argv[0];
   auto_update = !parser.Found(wxT("n"));
   reset_config = parser.Found(wxT("r"));

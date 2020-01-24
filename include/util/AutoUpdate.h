@@ -48,12 +48,14 @@ class Version {
 class AutoUpdate {
  public:
   static AutoUpdate *getInstance();
-  std::string checkForUpdate(const std::string current_version);
+  bool checkForUpdate(const std::string current_version);
 
  private:
   static AutoUpdate *singleton_instance;
   static size_t curlCallback(void *page_content, size_t byte_size, size_t size,
                              void *userp);
+  std::string new_binary_url;
+  bool update_available;
 };
 
 }  // namespace cszb_scoreboard

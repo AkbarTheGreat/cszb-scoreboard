@@ -31,12 +31,11 @@ UpdateTimer::UpdateTimer(wxFrame *main_view) : wxTimer() {
 }
 
 void UpdateTimer::Notify() {
-  std::string new_version =
+  bool new_version_available =
       AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
-  if (new_version != "") {
+  if (new_version_available) {
     wxString string;
-    string.Printf(wxT("New Version Found!  Please download at: %s"),
-                  new_version);
+    string.Printf(wxT("New Version Found!"));
     main_view->SetStatusText(string);
   }
 
