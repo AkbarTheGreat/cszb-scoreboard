@@ -24,11 +24,16 @@ limitations under the License.
 #include <json/reader.h>
 #include <wx/wx.h>
 
+#include <filesystem>
+#include <fstream>
 #include <regex>
 
+#include "config/CommandArgs.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
+
+const char *AUTO_UPDATE_BACKUP_NAME = "old_version_to_be_deleted";
 
 const char *LATEST_VERSION_URL =
     "https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases/"
@@ -106,6 +111,12 @@ std::string isRedirect(const std::vector<char> &http_data) {
     return "";
   }
   return getHref(http_data.data());
+}
+
+std::filesystem::path backupPath() {
+  std::filesystem::path backup_path = CommandArgs::getInstance()->commandPath();
+  backup_path.replace_filename(AUTO_UPDATE_BACKUP_NAME);
+  return backup_path;
 }
 
 bool AutoUpdate::checkForUpdate(const std::string current_version) {
@@ -186,12 +197,27 @@ bool AutoUpdate::downloadUpdate(std::vector<char> &update_data) {
 bool AutoUpdate::updateInPlace() {
   std::vector<char> data_response;
 
-  downloadUpdate(data_response);
+  if (!downloadUpdate(data_response)) {
+    return false;
+  }
+  wxLogDebug("Writing auto-update to %s",
+             CommandArgs::getInstance()->commandPath().string());
 
-  wxLogDebug("Update would continue now.  I have all of the data.");
+  std::filesystem::path executable_path =
+      CommandArgs::getInstance()->commandPath();
+  std::filesystem::path backup_path = backupPath();
 
+  std::filesystem::rename(executable_path, backup_path);
+
+  std::fstream output(executable_path.c_str(),
+                      std::ios::out | std::ios::trunc | std::ios::binary);
+
+  output.write(data_response.data(), data_response.size());
+  output.close();
   return true;
 }
+
+void AutoUpdate::removeOldUpdate() { std::filesystem::remove(backupPath()); }
 
 Version::Version(std::string version_string) {
   size_t first_dot = version_string.find('.', 0);

@@ -31,13 +31,22 @@ UpdateTimer::UpdateTimer(wxFrame *main_view) : wxTimer() {
 }
 
 void UpdateTimer::Notify() {
+  if (IsOneShot()) {
+    // First time through, remove an old auto-update.
+    AutoUpdate::getInstance()->removeOldUpdate();
+  }
+
   bool new_version_available =
       AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version_available) {
-    wxString string;
-    string.Printf(wxT("New version found, downloading..."));
-    main_view->SetStatusText(string);
-    AutoUpdate::getInstance()->updateInPlace();
+    main_view->SetStatusText("New version found, downloading...");
+    if (AutoUpdate::getInstance()->updateInPlace()) {
+      main_view->SetStatusText(
+          "Auto-update downloaded.  Please restart to apply.");
+    } else {
+      main_view->SetStatusText(
+          "Auto-update failed!  Please manually update scoreboard.");
+    }
   }
 
   // If called as a one-shot, we need to establish this as a periodic event.
