@@ -97,10 +97,12 @@ void MainView::bindEvents() {
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
 
 void MainView::onAbout(wxCommandEvent& event) {
-  wxMessageBox(
-      "cszb-scoreboard: The ComedySportz Scoreboard.  Copyright (c) Tracy "
-      "Beck, Licensed via the Apache License.",
-      "About Scoreboard", wxOK | wxICON_INFORMATION);
+  wxString about_string;
+  about_string.Printf(
+      "cszb-scoreboard: The ComedySportz Scoreboard.  Version %s.  Copyright "
+      "(c) Tracy Beck, Licensed via the Apache License.",
+      SCOREBOARD_VERSION);
+  wxMessageBox(about_string, "About Scoreboard", wxOK | wxICON_INFORMATION);
 }
 
 void MainView::showSettings(wxCommandEvent& event) {
