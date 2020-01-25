@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <vector>
+
 #include "gtest/gtest.h"
 #include "util/AutoUpdate.h"
 
@@ -51,6 +53,15 @@ TEST(AutoUpdateTest, NewVersionFound) {
 
 TEST(AutoUpdateTest, NoNewVersionFound) {
   EXPECT_FALSE(AutoUpdate::getInstance()->checkForUpdate("99999.0.0"));
+}
+
+TEST(AutoUpdateTest, VersionDownloads) {
+  // We need to ask for an update before it'll ever work anyway, so assert on it
+  // in case it goes wrong, although NewVersionFound properly tests this.
+  EXPECT_TRUE(AutoUpdate::getInstance()->checkForUpdate("0.0.0"));
+  std::vector<char> update_data;
+  EXPECT_TRUE(AutoUpdate::getInstance()->downloadUpdate(update_data));
+  EXPECT_GT(update_data.size(), 4000);
 }
 
 }  // namespace test

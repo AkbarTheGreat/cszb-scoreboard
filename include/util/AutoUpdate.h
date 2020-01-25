@@ -24,6 +24,7 @@ limitations under the License.
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace cszb_scoreboard {
 
@@ -49,11 +50,16 @@ class AutoUpdate {
  public:
   static AutoUpdate *getInstance();
   bool checkForUpdate(const std::string current_version);
+  bool downloadUpdate(std::vector<char> &update_data);
+  bool updateInPlace();
 
  private:
   static AutoUpdate *singleton_instance;
   std::string new_binary_url;
   bool update_available;
+  int update_size;
+  bool downloadUpdate(const std::string &url, std::vector<char> &update_data,
+                      int redirect_depth = 0);
 };
 
 }  // namespace cszb_scoreboard

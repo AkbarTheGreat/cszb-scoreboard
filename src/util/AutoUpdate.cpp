@@ -24,8 +24,6 @@ limitations under the License.
 #include <json/reader.h>
 #include <wx/wx.h>
 
-#include <vector>
-
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -82,6 +80,16 @@ CURLcode curlRead(const char *url, std::vector<char> &response_buffer) {
   return curl_response;
 }
 
+// Returns "" if it's not a redirect
+std::string isRedirect(const std::vector<char> &http_data) {
+  if (http_data.size() > 1000) {
+    return "";
+  }
+  // Check for redirect:  <html><body>You are being <a
+  // href="https://github-production-release-asset-2e65be.s3.amazonaws.com/226004533/1a52a100-3b1b-11ea-9570-42e75ad00eb5?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20200124%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20200124T133110Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=562e9ad04c223adeeb611e6044bc9a4b5fcec22af2555018ccdb44f7f4cf00f7&amp;X-Amz-SignedHeaders=host&amp;actor_id=0&amp;response-content-disposition=attachment%3B%20filename%3Dcszb-scoreboard.exe&amp;response-content-type=application%2Foctet-stream">redirected</a>.</body></html>.
+  return "";
+}
+
 bool AutoUpdate::checkForUpdate(const std::string current_version) {
   std::vector<char> raw_json;
 
@@ -107,10 +115,57 @@ bool AutoUpdate::checkForUpdate(const std::string current_version) {
     Json::Value download_url = root["assets"][0]["browser_download_url"];
     Json::Value assets = root.get("assets", {});
     Json::Value asset_zero = assets.get((Json::Value::ArrayIndex)0, "");
+    update_size = asset_zero.get("size", "0").asInt();
     new_binary_url = asset_zero.get("browser_download_url", "").asString();
     update_available = true;
   }
   return update_available;
+}
+
+bool AutoUpdate::downloadUpdate(const std::string &url,
+                                std::vector<char> &update_data,
+                                int redirect_depth) {
+  if (redirect_depth > 5) {
+    wxLogDebug("Too many redirects.  Cancelling update.");
+    return false;
+  }
+
+  CURLcode curl_response = curlRead(url.c_str(), update_data);
+  if (curl_response != CURLE_OK) {
+    // Log an error, but otherwise ignore it, for user convenience.
+    wxLogDebug("Curl failure checking for update: %s",
+               curl_easy_strerror(curl_response));
+    return false;
+  }
+
+  std::string redirect = isRedirect(update_data);
+
+  if (redirect != "") {
+    update_data.resize(0);
+    return downloadUpdate(redirect, update_data, ++redirect_depth);
+  }
+
+  if (update_data.size() != update_size) {
+    wxLogDebug("Problem with update!  Expected %d bytes, but got %d.",
+               update_size, (int)update_data.size());
+    wxLogDebug("Data: %s.", update_data.data());
+    return false;
+  }
+  return true;
+}
+
+bool AutoUpdate::downloadUpdate(std::vector<char> &update_data) {
+  return downloadUpdate(new_binary_url, update_data);
+}
+
+bool AutoUpdate::updateInPlace() {
+  std::vector<char> data_response;
+
+  downloadUpdate(data_response);
+
+  wxLogDebug("Update would continue now.  I have all of the data.");
+
+  return true;
 }
 
 Version::Version(std::string version_string) {

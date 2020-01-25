@@ -35,8 +35,9 @@ void UpdateTimer::Notify() {
       AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version_available) {
     wxString string;
-    string.Printf(wxT("New Version Found!"));
+    string.Printf(wxT("New version found, downloading..."));
     main_view->SetStatusText(string);
+    AutoUpdate::getInstance()->updateInPlace();
   }
 
   // If called as a one-shot, we need to establish this as a periodic event.
