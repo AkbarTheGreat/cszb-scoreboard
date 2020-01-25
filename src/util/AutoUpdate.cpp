@@ -24,6 +24,8 @@ limitations under the License.
 #include <json/reader.h>
 #include <wx/wx.h>
 
+#include <regex>
+
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -80,14 +82,30 @@ CURLcode curlRead(const char *url, std::vector<char> &response_buffer) {
   return curl_response;
 }
 
-// Returns "" if it's not a redirect
-std::string isRedirect(const std::vector<char> &http_data) {
-  if (http_data.size() > 1000) {
+std::string getHref(const std::string &html) {
+  size_t href_start = html.find("href=\"", 0) + 6;
+  size_t href_end = html.find('"', href_start);
+
+  if (href_start == -1 || href_end == -1) {
     return "";
   }
-  // Check for redirect:  <html><body>You are being <a
-  // href="https://github-production-release-asset-2e65be.s3.amazonaws.com/226004533/1a52a100-3b1b-11ea-9570-42e75ad00eb5?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20200124%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20200124T133110Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=562e9ad04c223adeeb611e6044bc9a4b5fcec22af2555018ccdb44f7f4cf00f7&amp;X-Amz-SignedHeaders=host&amp;actor_id=0&amp;response-content-disposition=attachment%3B%20filename%3Dcszb-scoreboard.exe&amp;response-content-type=application%2Foctet-stream">redirected</a>.</body></html>.
-  return "";
+
+  std::string raw_href = html.substr(href_start, href_end - href_start);
+  std::regex regex("&amp;");
+  return std::regex_replace(raw_href, regex, "&");
+}
+
+// Returns "" if it's not a redirect
+std::string isRedirect(const std::vector<char> &http_data) {
+  if (http_data.size() > 1000 || http_data.size() < 50) {
+    return "";
+  }
+  // Check to see if it looks like an html page.
+  if (http_data[0] != '<' || http_data[1] != 'h' || http_data[2] != 't' ||
+      http_data[3] != 'm' || http_data[4] != 'l' || http_data[5] != '>') {
+    return "";
+  }
+  return getHref(http_data.data());
 }
 
 bool AutoUpdate::checkForUpdate(const std::string current_version) {
@@ -145,12 +163,19 @@ bool AutoUpdate::downloadUpdate(const std::string &url,
     return downloadUpdate(redirect, update_data, ++redirect_depth);
   }
 
+  // Presuming that this is binary, we've added a null at the end we now need to
+  // shed.
+  if (update_data.size() > 1) {
+    update_data.resize(update_data.size() - 1);
+  }
+
   if (update_data.size() != update_size) {
     wxLogDebug("Problem with update!  Expected %d bytes, but got %d.",
                update_size, (int)update_data.size());
     wxLogDebug("Data: %s.", update_data.data());
     return false;
   }
+
   return true;
 }
 
