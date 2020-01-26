@@ -51,7 +51,7 @@ void UpdateTimer::Notify() {
 #else
     main_view->SetStatusText(
         "New version found, please go to "
-        "github.com/AkbarTheGreat/cszb-scoreboard to update.")
+        "github.com/AkbarTheGreat/cszb-scoreboard to update.");
 #endif
   }
 
