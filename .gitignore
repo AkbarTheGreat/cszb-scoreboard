@@ -5,3 +5,4 @@
 /.vs
 /out/build
 /CMakeSettings.json
+/etc/scripts/release_token
