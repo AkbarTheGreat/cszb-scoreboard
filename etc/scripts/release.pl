@@ -22,6 +22,9 @@ limitations under the License.
 
 =cut
 
+# Sample command line:
+# C:\Strawberry\perl\bin\perl.exe .\etc\scripts\release.pl -v 0.0.3
+
 use 5.030;
 use strict;
 use File::Basename qw{dirname};
@@ -111,7 +114,7 @@ sub update_version {
 
     open my $of, '>', $version_file or die 'Could not open ' . $version_file . ' for write: ' . $!;
     for (@file_lines) {
-        s/(#define SCOREBOARD_VERSION ")[\d\.]+"/${1}${opt_version}"/;
+        s/(#define SCOREBOARD_VERSION ")[\w\d\.]+"/${1}${opt_version}"/;
         print {$of} $_;
 	}
     close $of or die 'Broken pipe writing to ' . $version_file . ': ' . $!;
