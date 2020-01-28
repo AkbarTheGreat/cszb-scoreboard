@@ -22,7 +22,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-#define SCOREBOARD_VERSION "0.0.3_script_test"
+#define SCOREBOARD_VERSION "0.0.3"
 
 // Evaluates to public: in a test environment, private: in non-test code, to
 // hide dependencies as tightly as possible
