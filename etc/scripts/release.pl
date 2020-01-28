@@ -27,9 +27,12 @@ use strict;
 use File::Basename qw{dirname};
 use File::Path qw{make_path rmtree};
 use Getopt::Long qw{GetOptions};
+use HTTP::Tiny;
+use JSON;
 
 our $TEMP_ROOT = 'C:/temp';
 our $GIT_REPO = 'git@github.com:AkbarTheGreat/cszb-scoreboard.git';
+our $VERSION_FILE = '/include/ScoreboardCommon.h';
 
 # This needs to be populated with a valid Github token.  Mine is not checked in for obvious reasons.
 our $GIT_TOKEN = read_token();
@@ -41,13 +44,16 @@ our $CMAKE_ROOT = 'C:/PROGRAM FILES (X86)/MICROSOFT VISUAL STUDIO/2019/COMMUNITY
 our $CMAKE_CMD = $CMAKE_ROOT . 'cmake.exe';
 our $CTEST_CMD = $CMAKE_ROOT . 'ctest.exe';
 
-my ($opt_help, $opt_version, $opt_dry_run, $opt_keep_dir);
+my ($opt_help, $opt_version, $opt_dry_run, $opt_keep_dir, $opt_skip_git);
+
+my ($repo_path, $upload_url);
 
 my %options = (
     'help|?'    => {'val'=>\$opt_help,'help'=>'This help'},
     'version=s' => {'val'=>\$opt_version,'help'=>'Version to release (required)'},
     'dry_run'   => {'val'=>\$opt_dry_run,'help'=>'Dry run only'},
     'keep_dir'  => {'val'=>\$opt_keep_dir,'help'=>'Keep the temporary directory created by this script'},
+    'skip_git'  => {'val'=>\$opt_skip_git,'help'=>'Skip checking in, tagging, and pushing in git.  (Not recommended unless a second run fixing a failure.)'},
 );
 
 sub usage {
@@ -56,6 +62,16 @@ sub usage {
         say "\t" . $opt . ': ' . $options{$opt}{'help'};
 	}
     exit 0;
+}
+
+sub parse_options {
+    my %parseable_options;
+    for my $key (keys %options) {
+        $parseable_options{$key} = $options{$key}{'val'};
+	}
+    GetOptions(%parseable_options) or usage();
+    usage() if $opt_help;
+    usage unless $opt_version;
 }
 
 sub run_cmd {
@@ -76,18 +92,16 @@ sub read_token{
 }
 
 sub get_repo {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 1);
-    my ($repo_path) = @_;
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
     return run_cmd($GIT_CMD, 'clone', $GIT_REPO, $repo_path);
 }
 
 sub update_version {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 1);
-    my ($repo_path) = @_;
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
 
     return 0 if $opt_dry_run;
 
-    my $version_file = $repo_path . '/include/ScoreboardCommon.h';
+    my $version_file = $repo_path . $VERSION_FILE;
     my @file_lines;
     open my $if, '<', $version_file or die 'Could not open ' . $version_file . ' for read: ' . $!;
     while (<$if>) {
@@ -105,8 +119,7 @@ sub update_version {
 }
 
 sub cmake {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 1);
-    my ($repo_path) = @_;
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
 
     unless ($opt_dry_run) {
         make_path($repo_path . '/out/build');
@@ -127,52 +140,133 @@ sub cmake {
 }
 
 sub make {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 1);
-    my ($repo_path) = @_;
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
     
     return run_cmd($CMAKE_CMD, '--build', '.', '--config', 'Release')
 }
 
 sub test {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 1);
-    my ($repo_path) = @_;
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
     
     return run_cmd($CTEST_CMD);
 }
 
-sub parse_options {
-    my %parseable_options;
-    for my $key (keys %options) {
-        $parseable_options{$key} = $options{$key}{'val'};
+sub commit_and_tag {
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    
+    my $retval = run_cmd($GIT_CMD, 'add', $repo_path . $VERSION_FILE);
+    return $retval if $retval;
+
+    my $retval = run_cmd($GIT_CMD, 'commit', '-m', 'Version auto-commit via release script');
+    return $retval if $retval;
+
+    my $retval = run_cmd($GIT_CMD, 'tag', '-a', 'release_' . $opt_version, '-m', 'Version auto-commit via release script');
+    return $retval if $retval;
+
+    return run_cmd($GIT_CMD, 'push');
+}
+
+sub create_release {
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+
+	my $json = encode_json {
+        'tag_name' => 'release_' . $opt_version,
+        'name' => $opt_version,
+        'body' => "Released via script.  No better description yet.",
+        'draft' => $JSON::true,
+        'prerelease' => $JSON::false,
+    };
+
+    my $http = HTTP::Tiny->new(
+        default_headers => {
+        'Authorization' => 'Token ' . $GIT_TOKEN,
+        'Content-Type' => 'application/json',
+    });
+
+    my $response = $http->post(
+        'https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases' => {
+        content => $json,
+    });
+
+    if ($response->{'success'} && $response->{'reason'} eq 'Created') {
+        my $content =  decode_json $response->{'content'} ;
+        $upload_url = $content->{'upload_url'};
+        return 0;
 	}
-    GetOptions(%parseable_options) or usage();
-    usage() if $opt_help;
-    usage unless $opt_version;
+    $? = $response->{'reason'};
+    return 1;
+}
+sub upload_binary {
+    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+
+    my $url = $upload_url;
+    my $binary;
+
+    $url =~ s/\{\?name,label}/?name=cszb-scoreboard.exe&label=Win64/;
+
+    open my ($fh), '<:raw', $repo_path . '/out/build/Release/cszb-scoreboard.exe';
+    for (<$fh>) {$binary .= $_;}
+    close $fh;
+
+    open my ($out_fh), '>:raw', $repo_path . '/out/build/Release/copy_test.exe';
+    print {$out_fh} $binary;
+    close $out_fh;
+
+    my $http = HTTP::Tiny->new(
+        default_headers => {
+        'Authorization' => 'Token ' . $GIT_TOKEN,
+        'Content-Type' => 'application/octet-stream',
+    });
+
+    my $response = $http->post(
+        $url => {
+        content => $binary,
+    });
+
+    if ($response->{'success'} && $response->{'reason'} eq 'Created') {
+        return 0;
+	}
+    $? = $response->{'reason'};
+    return 1;
 }
 
 sub main {
     parse_options();
-    my $repo_path = $TEMP_ROOT . '/' . $$;
-    if (get_repo($repo_path) != 0) {
+    $repo_path = $TEMP_ROOT . '/' . $$;
+
+    if (get_repo() != 0) {
         die 'Error cloning repo: ' . $!;
 	}
-    if (update_version($repo_path) != 0) {
+    if (update_version() != 0) {
         die 'Error updating version: ' . $!;
 	}
-    if (cmake($repo_path) != 0) {
+    if (cmake() != 0) {
         die 'Error running cmake: ' . $!;
 	}
-    if (make($repo_path) != 0) {
+    if (make() != 0) {
         die 'Error building: ' . $!;
 	}
-    if (test($repo_path) != 0) {
+    if (test() != 0) {
         die 'Error running tests: ' . $!;
 	}
+    unless ($opt_skip_git) {
+        if (commit_and_tag() != 0) {
+			die 'Error updating repo: ' . $!;
+		}
+    }
+    if (create_release() != 0) {
+        die 'Error creating release at Github: ' . $!;
+	}
+    if (upload_binary() != 0) {
+        die 'Error adding file to release at Github: ' . $!;
+	}
+    
+    # Clean up now that we're done.
     unless ($opt_dry_run || $opt_keep_dir) {
         chdir($TEMP_ROOT);
         rmtree($repo_path);
     }
-    say 'Done.'
+    say 'Release ' . $opt_version . ' created.  Available at /https://github.com/AkbarTheGreat/cszb-scoreboard/releases/tag/release_' . $opt_version;
 }
 
 main();
