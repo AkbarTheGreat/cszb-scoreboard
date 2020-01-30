@@ -23,6 +23,7 @@ limitations under the License.
 
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/control/ScreenTextController.h"
+#include "ui/component/control/TeamSelector.h"
 
 namespace cszb_scoreboard {
 
@@ -34,10 +35,7 @@ class TextEntry : public ScreenTextController {
   void textUpdated(wxKeyEvent &event);
 
  private:
-  wxRadioBox *screen_selection;
-  // If the list of screen_choices changes, be sure to change what happens in
-  // textUpdated().
-  wxString screen_choices[3] = {wxT("Home"), wxT("Away"), wxT("All")};
+  TeamSelector *screen_selection;
   wxStaticText *text_label;
   wxTextCtrl *text_entry;
   wxStaticText *font_size_label;

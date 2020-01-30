@@ -50,11 +50,7 @@ void TextEntry::createControls(wxPanel *control_panel) {
   font_size_entry = new wxTextCtrl(inner_panel, wxID_ANY,
                                    StringUtil::intToString(DEFAULT_FONT_SIZE));
 
-  int number_of_screen_choices = sizeof(screen_choices) / sizeof(wxString);
-  screen_selection = new wxRadioBox(
-      inner_panel, wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
-      number_of_screen_choices, screen_choices, 1, wxRA_SPECIFY_COLS);
-  screen_selection->SetSelection(0);
+  screen_selection = new TeamSelector(inner_panel);
 
   positionWidgets(control_panel);
   bindEvents();
@@ -95,7 +91,7 @@ wxTextCtrl *TextEntry::textField() { return text_entry; }
 
 void TextEntry::updatePreview() {
   // Send the combined text to both previews
-  if (screen_selection->GetSelection() == 2) {
+  if (screen_selection->allSelected()) {
     proto::ScreenSide side;
     side.set_home(true);
     side.set_away(true);
@@ -111,38 +107,31 @@ void TextEntry::updatePreview() {
 }
 
 void TextEntry::textUpdated(wxKeyEvent &event) {
-  switch (screen_selection->GetSelection()) {
-    case 0:
-      home_text = text_entry->GetValue();
-      home_font_size = enteredFontSize();
-      break;
-    case 1:
-      away_text = text_entry->GetValue();
-      away_font_size = enteredFontSize();
-      break;
-    default:
-      all_text = text_entry->GetValue();
-      all_font_size = enteredFontSize();
-      break;
+  if (screen_selection->allSelected()) {
+    all_text = text_entry->GetValue();
+    all_font_size = enteredFontSize();
+  } else if (screen_selection->homeSelected()) {
+    home_text = text_entry->GetValue();
+    home_font_size = enteredFontSize();
+  } else if (screen_selection->awaySelected()) {
+    away_text = text_entry->GetValue();
+    away_font_size = enteredFontSize();
   }
   updatePreview();
 }
 
 void TextEntry::screenChanged(wxCommandEvent &event) {
-  switch (screen_selection->GetSelection()) {
-    case 0:
-      text_entry->SetValue(home_text);
-      font_size_entry->SetValue(StringUtil::intToString(home_font_size));
-      break;
-    case 1:
-      text_entry->SetValue(away_text);
-      font_size_entry->SetValue(StringUtil::intToString(away_font_size));
-      break;
-    default:
-      text_entry->SetValue(all_text);
-      font_size_entry->SetValue(StringUtil::intToString(all_font_size));
-      break;
+  if (screen_selection->allSelected()) {
+    text_entry->SetValue(all_text);
+    font_size_entry->SetValue(StringUtil::intToString(all_font_size));
+  } else if (screen_selection->homeSelected()) {
+    text_entry->SetValue(home_text);
+    font_size_entry->SetValue(StringUtil::intToString(home_font_size));
+  } else if (screen_selection->awaySelected()) {
+    text_entry->SetValue(away_text);
+    font_size_entry->SetValue(StringUtil::intToString(away_font_size));
   }
+
   updatePreview();
 }
 
