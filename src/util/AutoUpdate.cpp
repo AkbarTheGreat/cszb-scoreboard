@@ -234,12 +234,16 @@ Version::Version(std::string version_string) {
                                 version_string.size() - first_dot - 1),
           0);
     } else {
+      size_t end_point = version_string.find('_', second_dot + 1);
+      if (end_point == -1) {
+        end_point = version_string.size();
+      }
+
       minor_component = StringUtil::stringToInt(
           version_string.substr(first_dot + 1, second_dot - first_dot - 1), 0);
+
       subminor_component = StringUtil::stringToInt(
-          version_string.substr(second_dot + 1,
-                                version_string.size() - second_dot - 1),
-          0);
+          version_string.substr(second_dot + 1, end_point - second_dot - 1), 0);
     }
   }
 }

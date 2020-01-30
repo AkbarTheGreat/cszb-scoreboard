@@ -45,6 +45,11 @@ TEST(AutoUpdateTest, VersionComparisons) {
   EXPECT_LE(Version("1.1.0"), Version("1.1.1"));
   EXPECT_LE(Version("1.0.1"), Version("1.1.1"));
   EXPECT_LE(Version("0.1.1"), Version("1.1.1"));
+
+  // Handle versions with extra data at the end.
+  EXPECT_EQ(Version("1.2.3"), Version("1.2.3_extra_text"));
+  EXPECT_GT(Version("1.2.3"), Version("1.2.0_extra_text"));
+  EXPECT_LT(Version("1.2.0"), Version("1.2.3_extra_text"));
 }
 
 TEST(AutoUpdateTest, NewVersionFound) {
