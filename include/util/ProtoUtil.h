@@ -2,7 +2,7 @@
 util/ProtoUtil.h: Convenience methods for converting between proto values and
 wxWidgets values.
 
-Copyright 2019 Tracy Beck
+Copyright 2019-2020 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -2,7 +2,7 @@
 ui/component/control/TextEntry.cpp: This class is responsible for generating
 text which can go to one or all of the scoreboard screens.
 
-Copyright 2019 Tracy Beck
+Copyright 2019-2020 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

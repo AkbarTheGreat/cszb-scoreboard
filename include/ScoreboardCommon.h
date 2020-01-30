@@ -3,7 +3,7 @@ ScoreboardCommon.h: This header holds common constants and macros which should
 be available anywhere in the program.  It should depend on nothing else
 internal.
 
-Copyright 2019 Tracy Beck
+Copyright 2019-2020 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -2,7 +2,7 @@
 ui/component/control/ScoreControl.h: This class is responsible for generating a
 score update which is sent to all scoreboard screens.
 
-Copyright 2019 Tracy Beck
+Copyright 2019-2020 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

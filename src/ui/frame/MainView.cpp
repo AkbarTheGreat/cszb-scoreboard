@@ -2,7 +2,7 @@
 ui/frame/MainView.cpp: This class represents the main control window for the
 application.
 
-Copyright 2019 Tracy Beck
+Copyright 2019-2020 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
