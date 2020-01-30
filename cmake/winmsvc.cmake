@@ -50,14 +50,10 @@ else()
     add_definitions(-D_UNICODE -DUNICODE -DWXUSINGDLL -DwxUSE_GUI=1 -D__WXMSW__)
 endif()
 
-set(_VCPKG_PROTOBUF_DIR ${_VCPKG_INSTALLED_DIR}/../packages/protobuf_x64-windows-static)
-
-include_directories(SYSTEM INTERFACE ${_VCPKG_PROTOBUF_DIR}/include)
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 	add_definitions(-D_DEBUG)
 	include_directories(SYSTEM INTERFACE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/mswud ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 	set(wxWidgets_LIB_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug)
-	set(protobuf_LIB_DIR ${_VCPKG_PROTOBUF_DIR}/debug)
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIB_DIR}/lib/wxbase31ud_net.lib
@@ -69,9 +65,6 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/lib/tiffd.lib
 			${wxWidgets_LIB_DIR}/lib/zlibd.lib
 		)
-		set(protobuf_LIBRARIES
-			${protobuf_LIB_DIR}/lib/libprotobufd.lib
-		)
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313ud_net_vc_x64_custom.dll
@@ -79,9 +72,6 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/bin/wxbase313ud_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/libpng16d.dll
 			${wxWidgets_LIB_DIR}/bin/zlibd1.dll
-		)
-		set(protobuf_LIBRARIES
-			${protobuf_LIB_DIR}/bin/libprotobufd.dll
 		)
 	endif()
 	set(wxWidgets_LIBRARIES
@@ -91,7 +81,6 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 	include_directories(SYSTEM INTERFACE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/mswu ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 	set(wxWidgets_LIB_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
-	set(protobuf_LIB_DIR ${_VCPKG_PROTOBUF_DIR})
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIB_DIR}/lib/wxbase31u_net.lib
@@ -103,9 +92,6 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 			${wxWidgets_LIB_DIR}/lib/tiff.lib
 			${wxWidgets_LIB_DIR}/lib/zlib.lib
 		)
-		set(protobuf_LIBRARIES
-			${protobuf_LIB_DIR}/lib/libprotobuf.lib
-		)
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313u_net_vc_x64_custom.dll
@@ -113,9 +99,6 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 			${wxWidgets_LIB_DIR}/bin/wxbase313u_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/libpng16.dll
 			${wxWidgets_LIB_DIR}/bin/zlib1.dll
-		)
-		set(protobuf_LIBRARIES
-			${protobuf_LIB_DIR}/bin/libprotobuf.dll
 		)
 	endif()
 	set(wxWidgets_LIBRARIES
