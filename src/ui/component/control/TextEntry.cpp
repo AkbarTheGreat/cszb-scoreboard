@@ -24,7 +24,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
-const int BORDER_SIZE = 5;
+const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 TextEntry *TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   TextEntry *entry = new TextEntry(preview_panel, parent);

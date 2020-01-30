@@ -26,6 +26,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const int BORDER_SIZE = 0;
+
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
@@ -79,8 +81,8 @@ void MainView::positionWidgets() {
   wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  sizer->Add(preview_panel, 0, wxEXPAND | wxALL);
-  sizer->Add(control_panel, 0, wxEXPAND | wxALL);
+  sizer->Add(preview_panel, 0, wxEXPAND | wxALL, BORDER_SIZE);
+  sizer->Add(control_panel, 0, wxEXPAND | wxALL, BORDER_SIZE);
   SetSizerAndFit(sizer);
 }
 

@@ -24,6 +24,9 @@ limitations under the License.
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
+
+const int BORDER_SIZE = 0;
+
 ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
     : wxFrame(NULL, wxID_ANY, "Scoreboard", wxDefaultPosition, wxDefaultSize) {
   this->monitor_number = monitor_number;
@@ -57,7 +60,7 @@ void ScreenPresenter::positionWidgets() {
   wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  sizer->Add(screen_text, 1, wxEXPAND | wxALL, 0);
+  sizer->Add(screen_text, 1, wxEXPAND | wxALL, BORDER_SIZE);
   SetSizerAndFit(sizer);
 }
 }  // namespace cszb_scoreboard

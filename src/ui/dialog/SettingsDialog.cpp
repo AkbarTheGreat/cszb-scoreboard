@@ -18,13 +18,17 @@ limitations under the License.
 */
 
 #include "ui/dialog/SettingsDialog.h"
-#include "util/StringUtil.h"
 
 #include <config/DisplayConfig.h>
 #include <config/TeamConfig.h>
 #include <wx/bookctrl.h>
 
+#include "ScoreboardCommon.h"
+#include "util/StringUtil.h"
+
 namespace cszb_scoreboard {
+
+const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 
@@ -51,7 +55,7 @@ wxPanel* SettingsDialog::createTeamsPage(wxBookCtrlBase* settings_book) {
   for (int i = 0; i < TeamConfig::getInstance()->numberOfTeams(); ++i) {
     TeamSettingsPanel* team_panel = new TeamSettingsPanel(panel, i);
     team_settings_panels.push_back(team_panel);
-    sizer->Add(team_panel, 0, wxALL, 5);
+    sizer->Add(team_panel, 0, wxALL, BORDER_SIZE);
   }
 
   panel->SetSizerAndFit(sizer);
@@ -185,7 +189,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int display_number)
   proto::ScreenSide screen_side = display_info.side();
   // Label for this display
   wxString label_text = wxT("Display ");
-  label_text += StringUtil::intToString(display_number+1);
+  label_text += StringUtil::intToString(display_number + 1);
   wxStaticText* label = new wxStaticText(this, wxID_ANY, label_text);
   wxFont font = label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);

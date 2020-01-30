@@ -25,7 +25,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const int BORDER_WIDTH = 10;
+const int BORDER_SIZE = 10;
 
 PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
@@ -50,7 +50,7 @@ void PreviewPanel::positionWidgets() {
                wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
   }
   for (auto screen : screens) {
-    sizer->Add(screen->widget(), 1, wxALL, BORDER_WIDTH);
+    sizer->Add(screen->widget(), 1, wxALL, BORDER_SIZE);
   }
   SetSizerAndFit(sizer);
 }

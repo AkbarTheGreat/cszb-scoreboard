@@ -24,6 +24,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+
 ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
                                            wxWindow *parent)
     : wxPanel(parent) {
@@ -46,8 +48,8 @@ void ScreenTextController::positionWidgets() {
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  sizer->Add(control_panel, 0, wxALL, 5);
-  sizer->Add(update_screens, 0, wxALL, 5);
+  sizer->Add(control_panel, 0, wxALL, BORDER_SIZE);
+  sizer->Add(update_screens, 0, wxALL, BORDER_SIZE);
 
   SetSizerAndFit(sizer);
 }

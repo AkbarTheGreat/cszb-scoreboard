@@ -22,6 +22,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const int DEFAULT_BORDER_SIZE = 5;
+
 #define SCOREBOARD_VERSION "0.0.3"
 
 // Evaluates to public: in a test environment, private: in non-test code, to
