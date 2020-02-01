@@ -70,3 +70,11 @@ a few paths which will be specific to your system, the location of the vcpkg
 toolchain file and the location of where vcpkg installed protobuf.  Each is
 listed in both profiles (debug & release), so you’ll change four variables.
 
+## Linux
+
+I've also developed on Ubuntu.  Here's what I did to get things compiling on Ubuntu.
+
+### Packages you’ll need to install
+
+sudo apt install cmake cmake-curses-gui ninja-build g++ libprotobuf-dev protobuf-compiler libgtest-dev libjsoncpp-dev libcurl4-openssl-dev
+
