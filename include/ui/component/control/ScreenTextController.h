@@ -46,9 +46,9 @@ class ScreenTextController : public wxPanel {
   ScreenTextController(PreviewPanel *preview_panel, wxWindow *parent);
   void initializeWidgets();
   PreviewPanel *previewPanel();
+  wxPanel *control_panel;
 
  private:
-  wxPanel *control_panel;
   PreviewPanel *preview_panel;
   wxButton *update_screens;
 

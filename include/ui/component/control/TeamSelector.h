@@ -21,11 +21,14 @@ limitations under the License.
 
 #include <wx/wx.h>
 
+#include "config.pb.h"
+
 namespace cszb_scoreboard {
 
 class TeamSelector : public wxRadioBox {
  public:
   TeamSelector(wxWindow *parent);
+  TeamSelector(wxWindow *parent, proto::ScreenSide initial_side);
   bool allSelected();
   bool awaySelected();
   bool homeSelected();

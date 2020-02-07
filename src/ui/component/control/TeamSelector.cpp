@@ -25,11 +25,22 @@ const int NUMBER_OF_SCREEN_CHOICES = 3;
 const wxString SCREEN_CHOICES[NUMBER_OF_SCREEN_CHOICES] = {
     wxT("Home"), wxT("Away"), wxT("All")};
 
-TeamSelector::TeamSelector(wxWindow *parent)
+TeamSelector::TeamSelector(wxWindow* parent)
     : wxRadioBox(parent, wxID_ANY, wxT("Team"), wxDefaultPosition,
                  wxDefaultSize, NUMBER_OF_SCREEN_CHOICES, SCREEN_CHOICES, 1,
                  wxRA_SPECIFY_COLS) {
   SetSelection(0);
+}
+
+TeamSelector::TeamSelector(wxWindow* parent, proto::ScreenSide side)
+    : TeamSelector(parent) {
+  if (side.home() && side.away()) {
+    SetSelection(2);
+  } else if (side.away()) {
+    SetSelection(1);
+  } else if (side.home()) {
+    SetSelection(0);
+  }
 }
 
 bool TeamSelector::allSelected() { return (GetSelection() == 2); }
