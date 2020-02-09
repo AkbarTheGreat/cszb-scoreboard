@@ -37,7 +37,7 @@ class LocalImage : public ScreenTextController {
   wxButton *browse_button;
   wxStaticText *current_file;
   wxPanel *inner_panel;
-  std::filesystem::path last_selected_file;
+  std::filesystem::path all_screen_file, home_screen_file, away_screen_file;
   TeamSelector *screen_selection;
 
   LocalImage(PreviewPanel *preview_panel, wxWindow *parent)
@@ -46,6 +46,7 @@ class LocalImage : public ScreenTextController {
   void browsePressed(wxCommandEvent &event);
   void createControls(wxPanel *control_panel) override;
   void positionWidgets(wxPanel *control_panel);
+  void screenChanged(wxCommandEvent &event);
   void updatePreview() override;
 };
 

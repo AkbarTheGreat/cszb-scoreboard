@@ -23,6 +23,15 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
+const std::string IMAGE_SELECTION_STRING =
+    "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
+
+//  This string has a bunch of trailing whitespace to buffer out the
+//  layout to make room for most filenames.  It's hacky, but it's a bit
+//  better than completely resizing the panels, IMHO.
+const std::string NO_IMAGE_MESSAGE =
+    "<No Image Selected>                               ";
+
 LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   LocalImage *local_image = new LocalImage(preview_panel, parent);
   local_image->initializeWidgets();
@@ -34,12 +43,7 @@ void LocalImage::createControls(wxPanel *control_panel) {
   inner_panel = new wxPanel(control_panel);
   browse_button = new wxButton(inner_panel, wxID_ANY, "Browse");
   screen_selection = new TeamSelector(inner_panel);
-  current_file = new wxStaticText(
-      control_panel, wxID_ANY,
-      //  This string has a bunch of trailing whitespace to buffer out the
-      //  layout to make room for most filenames.  It's hacky, but it's a bit
-      //  better than completely resizing the panels, IMHO.
-      "<No Image Selected>                               ");
+  current_file = new wxStaticText(control_panel, wxID_ANY, NO_IMAGE_MESSAGE);
   positionWidgets(control_panel);
   bindEvents();
 }
@@ -66,23 +70,74 @@ void LocalImage::positionWidgets(wxPanel *control_panel) {
 
 void LocalImage::bindEvents() {
   browse_button->Bind(wxEVT_BUTTON, &LocalImage::browsePressed, this);
+  screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
+                         &LocalImage::screenChanged, this);
 }
 
 void LocalImage::updatePreview() {
-  // TODO: Fill out this logic
-  if (screen_selection->allSelected()) {
-  } else if (screen_selection->homeSelected()) {
-  } else if (screen_selection->awaySelected()) {
+  if (screen_selection->allSelected() && !all_screen_file.empty()) {
+    // Send the image to both screens
+    proto::ScreenSide side;
+    side.set_home(true);
+    side.set_away(true);
+    previewPanel()->setImageForPreview(wxImage(all_screen_file.c_str()), side);
+    previewPanel()->setTextForPreview("", 1, side);
+  } else {
+    proto::ScreenSide home_side;
+    home_side.set_home(true);
+    proto::ScreenSide away_side;
+    away_side.set_away(true);
+    if (!home_screen_file.empty()) {
+      previewPanel()->setImageForPreview(wxImage(home_screen_file.c_str()),
+                                         home_side);
+      previewPanel()->setTextForPreview("", 1, home_side);
+    }
+    if (!away_screen_file.empty()) {
+      previewPanel()->setImageForPreview(wxImage(away_screen_file.c_str()),
+                                         away_side);
+      previewPanel()->setTextForPreview("", 1, away_side);
+    }
   }
 }
 
 void LocalImage::browsePressed(wxCommandEvent &event) {
-  wxFileDialog dialog(this, _("Select Image"), "", "",
-                      "Image files (*.png)|*.png",
+  wxFileDialog dialog(this, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() != wxID_CANCEL) {
-    last_selected_file = (std::string)dialog.GetPath();
-    current_file->SetLabelText(last_selected_file.filename().c_str());
+    std::filesystem::path selected_file = (std::string)dialog.GetPath();
+    if (screen_selection->allSelected()) {
+      all_screen_file = selected_file;
+    } else if (screen_selection->awaySelected()) {
+      away_screen_file = selected_file;
+    } else {
+      home_screen_file = selected_file;
+    }
+    current_file->SetLabelText(selected_file.filename().c_str());
+  }
+
+  control_panel->Update();
+  updatePreview();
+}
+
+void LocalImage::screenChanged(wxCommandEvent &event) {
+  if (screen_selection->allSelected()) {
+    if (all_screen_file.empty()) {
+      current_file->SetLabelText(NO_IMAGE_MESSAGE);
+    } else {
+      current_file->SetLabelText(all_screen_file.filename().c_str());
+    }
+  } else if (screen_selection->homeSelected()) {
+    if (home_screen_file.empty()) {
+      current_file->SetLabelText(NO_IMAGE_MESSAGE);
+    } else {
+      current_file->SetLabelText(home_screen_file.filename().c_str());
+    }
+  } else if (screen_selection->awaySelected()) {
+    if (away_screen_file.empty()) {
+      current_file->SetLabelText(NO_IMAGE_MESSAGE);
+    } else {
+      current_file->SetLabelText(away_screen_file.filename().c_str());
+    }
   }
 
   control_panel->Update();

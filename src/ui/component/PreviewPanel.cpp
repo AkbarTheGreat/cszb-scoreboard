@@ -67,6 +67,15 @@ ScreenPreview* PreviewPanel::preview(int index) {
   return screens[index];
 }
 
+void PreviewPanel::setImageForPreview(const wxImage& image,
+                                      proto::ScreenSide side) {
+  for (auto preview : screens) {
+    ScreenText* screen_text = preview->widget();
+    screen_text->setImage(image);
+    screen_text->Refresh();
+  }
+}
+
 void PreviewPanel::setTextForPreview(wxString text, int font_size,
                                      proto::ScreenSide side) {
   for (auto preview : screens) {
