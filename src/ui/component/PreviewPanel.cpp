@@ -77,21 +77,11 @@ void PreviewPanel::setImageForPreview(const wxImage& image,
   }
 }
 
-void PreviewPanel::setDefaultBackground(ScreenText* screen_text,
-                                        const proto::ScreenSide& side) {
-  std::vector<int> team_indices =
-      TeamConfig::getInstance()->indicesForSide(side);
-  // TODO: Allow for a view to contain multiple sides
-  Color background_color =
-      TeamConfig::getInstance()->teamColor(team_indices[0]);
-  screen_text->setBackground(background_color, side);
-}
-
 void PreviewPanel::setTextForPreview(wxString text, int font_size,
                                      const proto::ScreenSide& side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
-    setDefaultBackground(screen_text, side);
+    screen_text->setDefaultBackground(side);
     screen_text->setText(text, font_size, side);
     screen_text->Refresh();
   }
@@ -102,7 +92,7 @@ void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
     screen_text->resetAllText(side);
-    setDefaultBackground(screen_text, side);
+    screen_text->setDefaultBackground(side);
     for (auto line : lines) {
       ProtoUtil::validateFont(line.mutable_font());
       screen_text->setFontColor(line.mutable_font());

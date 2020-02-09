@@ -50,8 +50,6 @@ class PreviewPanel : public wxPanel {
   void bindEvents();
   int numPreviews();
   void positionWidgets();
-  void setDefaultBackground(ScreenText* screen_text,
-                            const proto::ScreenSide& side);
 };
 
 }  // namespace cszb_scoreboard

@@ -77,10 +77,7 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
     image = BackgroundImage::errorImage(size);
     ProtoUtil::setFontColor(texts[0].mutable_font(), Color("Black"));
   } else {
-    std::vector<int> team_indices =
-        TeamConfig::getInstance()->indicesForSide(side);
-    // TODO: Allow for a view to contain multiple sides
-    background_color = TeamConfig::getInstance()->teamColor(team_indices[0]);
+    setDefaultBackground(side);
     initializeForColor(size, *background_color);
   }
   bindEvents();
@@ -276,6 +273,15 @@ void ScreenText::setBackground(const Color& color) {
   this->background_color = color;
   initializeForColor(GetSize(), color);
 };
+
+void ScreenText::setDefaultBackground(const proto::ScreenSide& side) {
+  std::vector<int> team_indices =
+      TeamConfig::getInstance()->indicesForSide(side);
+  // TODO: Allow for a view to contain multiple sides
+  Color background_color =
+      TeamConfig::getInstance()->teamColor(team_indices[0]);
+  setBackground(background_color, side);
+}
 
 void ScreenText::setAll(const ScreenText& source) {
   setImage(source.image, source.image_is_scaled);
