@@ -73,7 +73,7 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
   std::vector<int> side_indices =
       TeamConfig::getInstance()->indicesForSide(side);
   current_widget->setBackground(
-      TeamConfig::getInstance()->teamColor(side_indices[0]));
+      TeamConfig::getInstance()->teamColor(side_indices[0]), side);
   current_widget->Refresh();
 }
 

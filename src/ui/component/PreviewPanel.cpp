@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/PreviewPanel.h"
 
 #include "config/DisplayConfig.h"
+#include "config/TeamConfig.h"
 #include "ui/component/Menu.h"
 #include "util/ProtoUtil.h"
 
@@ -68,28 +69,40 @@ ScreenPreview* PreviewPanel::preview(int index) {
 }
 
 void PreviewPanel::setImageForPreview(const wxImage& image,
-                                      proto::ScreenSide side) {
+                                      const proto::ScreenSide& side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
-    screen_text->setImage(image);
+    screen_text->setImage(image, true);
     screen_text->Refresh();
   }
 }
 
+void PreviewPanel::setDefaultBackground(ScreenText* screen_text,
+                                        const proto::ScreenSide& side) {
+  std::vector<int> team_indices =
+      TeamConfig::getInstance()->indicesForSide(side);
+  // TODO: Allow for a view to contain multiple sides
+  Color background_color =
+      TeamConfig::getInstance()->teamColor(team_indices[0]);
+  screen_text->setBackground(background_color, side);
+}
+
 void PreviewPanel::setTextForPreview(wxString text, int font_size,
-                                     proto::ScreenSide side) {
+                                     const proto::ScreenSide& side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
+    setDefaultBackground(screen_text, side);
     screen_text->setText(text, font_size, side);
     screen_text->Refresh();
   }
 }
 
 void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
-                                     proto::ScreenSide side) {
+                                     const proto::ScreenSide& side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
     screen_text->resetAllText(side);
+    setDefaultBackground(screen_text, side);
     for (auto line : lines) {
       ProtoUtil::validateFont(line.mutable_font());
       screen_text->setFontColor(line.mutable_font());
@@ -99,7 +112,7 @@ void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
   }
 }
 
-void PreviewPanel::updatePresenters(proto::ScreenSide side) {
+void PreviewPanel::updatePresenters(const proto::ScreenSide& side) {
   for (auto preview : screens) {
     preview->sendToPresenter(side);
   }

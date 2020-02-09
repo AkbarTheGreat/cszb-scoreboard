@@ -55,6 +55,7 @@ ScreenText::ScreenText(wxWindow* parent,
   this->image = image;
   this->screen_side = side;
   this->background_color = background_color;
+  image_is_scaled = false;
   if (background_color.has_value()) {
     initializeForColor(size, *background_color);
   }
@@ -70,6 +71,7 @@ ScreenText::ScreenText(wxWindow* parent, const wxString& initial_text,
   texts.push_back(default_text);
 
   this->screen_side = side;
+  image_is_scaled = false;
 
   if (side.error()) {
     image = BackgroundImage::errorImage(size);
@@ -120,6 +122,7 @@ void ScreenText::setText(const wxString& text, int font_size,
 }
 
 void ScreenText::initializeForColor(wxSize size, Color color) {
+  image_is_scaled = false;
   image = BackgroundImage(size, color);
   for (auto& text : texts) {
     ProtoUtil::setFontColor(text.mutable_font(), color.contrastColor());
@@ -147,8 +150,37 @@ void ScreenText::blackout() {
   Refresh();
 }
 
+void ScreenText::renderScaledBackground(wxDC& dc) {
+  wxImage scaled_image = image;
+  wxSize screen_size = GetSize();
+  wxSize image_size = scaled_image.GetSize();
+  float screen_ratio = ratio(screen_size);
+  float image_ratio = ratio(image_size);
+  int image_height, image_width;
+  if (screen_ratio > image_ratio) {
+    // Screen is wider than image, so make the heights match
+    image_height = screen_size.GetHeight();
+    image_width = screen_size.GetHeight() * image_ratio;
+  } else {
+    // Screen is either the same ratio or narrower than image, so make the
+    // widths match
+    image_width = screen_size.GetWidth();
+    image_height = screen_size.GetWidth() / image_ratio;
+  }
+
+  scaled_image.Rescale(image_width, image_height);
+  int x = (screen_size.GetWidth() - image_width) / 2;
+  int y = (screen_size.GetHeight() - image_height) / 2;
+
+  dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
+}
+
 void ScreenText::renderBackground(wxDC& dc) {
-  dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
+  if (image_is_scaled) {
+    renderScaledBackground(dc);
+  } else {
+    dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
+  }
 }
 
 wxPoint ScreenText::bottomText(wxDC& dc, wxString text) {
@@ -224,9 +256,21 @@ void ScreenText::paintEvent(wxPaintEvent& evt) {
 }
 
 void ScreenText::setImage(const wxImage& image) {
-  this->background_color.reset();
+  background_color.reset();
   this->image = image;
+}
+
+void ScreenText::setImage(const wxImage& image, bool is_scaled) {
+  image_is_scaled = is_scaled;
+  setImage(image);
 };
+
+void ScreenText::setBackground(const Color& color,
+                               const proto::ScreenSide& side) {
+  if (isSide(side)) {
+    setBackground(color);
+  }
+}
 
 void ScreenText::setBackground(const Color& color) {
   this->background_color = color;
@@ -234,7 +278,7 @@ void ScreenText::setBackground(const Color& color) {
 };
 
 void ScreenText::setAll(const ScreenText& source) {
-  setImage(source.image);
+  setImage(source.image, source.image_is_scaled);
   if (source.background_color.has_value()) {
     setBackground(*source.background_color);
   } else {
@@ -258,6 +302,12 @@ bool ScreenText::isSide(proto::ScreenSide side) {
     return true;
   }
   return false;
+}
+
+float ScreenText::ratio(const wxSize& size) {
+  float ratio = 4 / 3;
+  ratio = (float)size.GetWidth() / size.GetHeight();
+  return ratio;
 }
 
 }  // namespace cszb_scoreboard

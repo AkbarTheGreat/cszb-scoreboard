@@ -34,11 +34,12 @@ class PreviewPanel : public wxPanel {
  public:
   PreviewPanel(wxWindow* parent);
   void blackout(wxCommandEvent& event);
-  void setImageForPreview(const wxImage& image, proto::ScreenSide side);
-  void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
+  void setImageForPreview(const wxImage& image, const proto::ScreenSide& side);
+  void setTextForPreview(wxString text, int font_size,
+                         const proto::ScreenSide& side);
   void setTextForPreview(std::vector<proto::RenderableText> lines,
-                         proto::ScreenSide side);
-  void updatePresenters(proto::ScreenSide side);
+                         const proto::ScreenSide& side);
+  void updatePresenters(const proto::ScreenSide& side);
   void updatePreviewsFromSettings();
 
   PUBLIC_TEST_ONLY
@@ -49,6 +50,8 @@ class PreviewPanel : public wxPanel {
   void bindEvents();
   int numPreviews();
   void positionWidgets();
+  void setDefaultBackground(ScreenText* screen_text,
+                            const proto::ScreenSide& side);
 };
 
 }  // namespace cszb_scoreboard
