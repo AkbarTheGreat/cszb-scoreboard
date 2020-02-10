@@ -71,7 +71,7 @@ wxPanel* SettingsDialog::createDisplayPage(wxBookCtrlBase* settings_book) {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     DisplaySettingsPanel* display_panel = new DisplaySettingsPanel(panel, i);
     display_settings_panels.push_back(display_panel);
-    sizer->Add(display_panel, 0, wxALL, 5);
+    sizer->Add(display_panel, 0, wxALL, BORDER_SIZE);
   }
 
   panel->SetSizerAndFit(sizer);
@@ -194,22 +194,22 @@ DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int display_number)
   wxFont font = label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);
   label->SetFont(font);
-  sizer->Add(label, 0, wxALL, 5);
+  sizer->Add(label, 0, wxALL, BORDER_SIZE);
 
   // Booth monitor checkbox
   control_checkbox = new wxCheckBox(this, wxID_ANY, wxT("&Booth Monitor"));
   control_checkbox->SetValue(screen_side.control());
-  sizer->Add(control_checkbox, 0, wxALL, 5);
+  sizer->Add(control_checkbox, 0, wxALL, BORDER_SIZE);
 
   // Home team checkbox
   home_checkbox = new wxCheckBox(this, wxID_ANY, wxT("&Home Team"));
   home_checkbox->SetValue(screen_side.home());
-  sizer->Add(home_checkbox, 0, wxALL, 5);
+  sizer->Add(home_checkbox, 0, wxALL, BORDER_SIZE);
 
   // Away team checkbox
   away_checkbox = new wxCheckBox(this, wxID_ANY, wxT("&Away Team"));
   away_checkbox->SetValue(screen_side.away());
-  sizer->Add(away_checkbox, 0, wxALL, 5);
+  sizer->Add(away_checkbox, 0, wxALL, BORDER_SIZE);
 
   SetSizerAndFit(sizer);
 }
@@ -234,15 +234,15 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
   wxFont font = label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);
   label->SetFont(font);
-  sizer->Add(label, 0, wxALL, 5);
+  sizer->Add(label, 0, wxALL, BORDER_SIZE);
   // Consume the right column on this row
-  sizer->Add(new wxStaticText(this, wxID_ANY, wxT("")), 0, wxALL, 5);
+  sizer->Add(new wxStaticText(this, wxID_ANY, wxT("")), 0, wxALL, BORDER_SIZE);
 
   sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Default Color")), 0, wxALL,
-             5);
+             BORDER_SIZE);
   color_picker = new wxColourPickerCtrl(
       this, wxID_ANY, TeamConfig::getInstance()->teamColor(team_index));
-  sizer->Add(color_picker, 0, wxALL, 5);
+  sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
 
   SetSizerAndFit(sizer);
 }
