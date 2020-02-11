@@ -54,7 +54,7 @@ class ScoreControl : public ScreenTextController {
   wxButton *team_intro_button;
   wxPanel *team_controls_panel;
 
-  wxStaticText *home_score_label
+  wxStaticText *home_score_label;
   wxColourPickerCtrl *home_color_picker;
   wxTextCtrl *home_name_entry;
   wxTextCtrl *home_score_entry;
