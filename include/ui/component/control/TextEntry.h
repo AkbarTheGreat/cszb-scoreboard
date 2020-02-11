@@ -53,14 +53,13 @@ class TextEntry : public ScreenTextController {
   Color away_color;
   Color all_color;
 
-  TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenTextController(preview_panel, parent) {}
+  TextEntry(PreviewPanel *preview_panel, wxWindow *parent);
   void updatePreview() override;
   void createControls(wxPanel *control_panel) override;
 
   void bindEvents();
+  void colorChanged(wxColourPickerEvent &event);
   int enteredFontSize();
-  void initializeData();
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
 };

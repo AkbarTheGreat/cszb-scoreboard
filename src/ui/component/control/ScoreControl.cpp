@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
+#include "config/TeamConfig.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -36,13 +37,14 @@ ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
 
 void ScoreControl::createControls(wxPanel *control_panel) {
   // TODO: Populate these from settings-based defaults
+  proto::ScreenSide side;
+  side.set_home(true);
+
   home_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Home"));
+  home_color_picker = new wxColourPickerCtrl(
+      control_panel, wxID_ANY, TeamConfig::getInstance()->teamColor(side)[0]);
   home_name_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("Home Team"));
   home_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
-
-  away_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Away"));
-  away_name_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("Away Team"));
-  away_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
 
   home_button_panel = new wxPanel(control_panel);
   home_plus_1 = new wxButton(home_button_panel, wxID_ANY, "+1",
@@ -51,6 +53,16 @@ void ScoreControl::createControls(wxPanel *control_panel) {
                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
   home_minus_1 = new wxButton(home_button_panel, wxID_ANY, "-1",
                               wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+
+  side.set_home(false);
+  side.set_away(true);
+
+  away_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Away"));
+  away_color_picker = new wxColourPickerCtrl(
+      control_panel, wxID_ANY, TeamConfig::getInstance()->teamColor(side)[0]);
+
+  away_name_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("Away Team"));
+  away_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
 
   away_button_panel = new wxPanel(control_panel);
   away_plus_1 = new wxButton(away_button_panel, wxID_ANY, "+1",
@@ -81,6 +93,10 @@ void ScoreControl::bindEvents() {
                     this);
   away_minus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::awayMinusOne,
                      this);
+  home_color_picker->Bind(wxEVT_COLOURPICKER_CHANGED,
+                          &ScoreControl::colorChanged, this);
+  away_color_picker->Bind(wxEVT_COLOURPICKER_CHANGED,
+                          &ScoreControl::colorChanged, this);
 }
 
 void ScoreControl::positionWidgets(wxPanel *control_panel) {
@@ -90,6 +106,8 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
 
   sizer->Add(home_score_label, 0, wxALL, BORDER_SIZE);
   sizer->Add(away_score_label, 0, wxALL, BORDER_SIZE);
+  sizer->Add(home_color_picker, 0, wxALL, BORDER_SIZE);
+  sizer->Add(away_color_picker, 0, wxALL, BORDER_SIZE);
   sizer->Add(home_name_entry, 0, wxALL, BORDER_SIZE);
   sizer->Add(away_name_entry, 0, wxALL, BORDER_SIZE);
   sizer->Add(home_score_entry, 0, wxALL, BORDER_SIZE);
@@ -138,8 +156,10 @@ void ScoreControl::updatePreview() {
   away_update.back().set_position(
       proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
 
-  previewPanel()->setTextForPreview(home_update, home_side);
-  previewPanel()->setTextForPreview(away_update, away_side);
+  previewPanel()->setTextForPreview(home_update, home_color_picker->GetColour(),
+                                    home_side);
+  previewPanel()->setTextForPreview(away_update, away_color_picker->GetColour(),
+                                    away_side);
 }
 
 void ScoreControl::homeUpdated(wxKeyEvent &event) { updatePreview(); }
@@ -149,6 +169,8 @@ void ScoreControl::homeNameUpdated(wxKeyEvent &event) { updatePreview(); }
 void ScoreControl::awayUpdated(wxKeyEvent &event) { updatePreview(); }
 
 void ScoreControl::awayNameUpdated(wxKeyEvent &event) { updatePreview(); }
+
+void ScoreControl::colorChanged(wxColourPickerEvent &event) { updatePreview(); }
 
 void ScoreControl::addToEntry(wxTextCtrl *entry, int amount) {
   long current_score = StringUtil::stringToInt(entry->GetValue());

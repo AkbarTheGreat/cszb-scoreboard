@@ -19,6 +19,7 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/clrpicker.h>
 #include <wx/wx.h>
 
 #include "config.pb.h"
@@ -40,6 +41,7 @@ class ScoreControl : public ScreenTextController {
   void awayAddFive(wxCommandEvent &event);
   void awayMinusOne(wxCommandEvent &event);
   void bindEvents();
+  void colorChanged(wxColourPickerEvent &event);
   void createControls(wxPanel *control_panel) override;
   void homeUpdated(wxKeyEvent &event);
   void homeNameUpdated(wxKeyEvent &event);
@@ -49,14 +51,18 @@ class ScoreControl : public ScreenTextController {
   void positionWidgets(wxPanel *control_panel);
   void updatePreview() override;
 
+  wxPanel *home_title_panel;
   wxStaticText *home_score_label;
+  wxColourPickerCtrl *home_color_picker;
   wxTextCtrl *home_name_entry;
   wxTextCtrl *home_score_entry;
   wxPanel *home_button_panel;
   wxButton *home_plus_1;
   wxButton *home_plus_5;
   wxButton *home_minus_1;
+  wxPanel *away_title_panel;
   wxStaticText *away_score_label;
+  wxColourPickerCtrl *away_color_picker;
   wxTextCtrl *away_name_entry;
   wxTextCtrl *away_score_entry;
   wxPanel *away_button_panel;

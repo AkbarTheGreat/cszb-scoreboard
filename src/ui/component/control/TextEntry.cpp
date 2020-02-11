@@ -30,13 +30,13 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 TextEntry *TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   TextEntry *entry = new TextEntry(preview_panel, parent);
-  entry->initializeData();
   entry->initializeWidgets();
   entry->updatePreview();
   return entry;
 }
 
-void TextEntry::initializeData() {
+TextEntry::TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
+    : ScreenTextController(preview_panel, parent) {
   home_text = wxT("Home Team");
   away_text = wxT("Away Team");
   all_text = wxT("");
@@ -104,6 +104,8 @@ void TextEntry::bindEvents() {
   font_size_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &TextEntry::screenChanged, this);
+  color_picker->Bind(wxEVT_COLOURPICKER_CHANGED, &TextEntry::colorChanged,
+                     this);
 }
 
 wxTextCtrl *TextEntry::textField() { return text_entry; }
@@ -114,15 +116,28 @@ void TextEntry::updatePreview() {
     proto::ScreenSide side;
     side.set_home(true);
     side.set_away(true);
-    previewPanel()->setTextForPreview(all_text, all_font_size, side);
+    previewPanel()->setTextForPreview(all_text, all_font_size, all_color, side);
   } else {
     proto::ScreenSide home_side;
     home_side.set_home(true);
     proto::ScreenSide away_side;
     away_side.set_away(true);
-    previewPanel()->setTextForPreview(home_text, home_font_size, home_side);
-    previewPanel()->setTextForPreview(away_text, away_font_size, away_side);
+    previewPanel()->setTextForPreview(home_text, home_font_size, home_color,
+                                      home_side);
+    previewPanel()->setTextForPreview(away_text, away_font_size, away_color,
+                                      away_side);
   }
+}
+
+void TextEntry::colorChanged(wxColourPickerEvent &event) {
+  if (screen_selection->allSelected()) {
+    all_color = event.GetColour();
+  } else if (screen_selection->homeSelected()) {
+    home_color = event.GetColour();
+  } else if (screen_selection->awaySelected()) {
+    away_color = event.GetColour();
+  }
+  updatePreview();
 }
 
 void TextEntry::textUpdated(wxKeyEvent &event) {

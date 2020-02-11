@@ -257,9 +257,12 @@ void ScreenText::setImage(const wxImage& image) {
   this->image = image;
 }
 
-void ScreenText::setImage(const wxImage& image, bool is_scaled) {
-  image_is_scaled = is_scaled;
-  setImage(image);
+void ScreenText::setImage(const wxImage& image, bool is_scaled,
+                          const proto::ScreenSide& side) {
+  if (isSide(side)) {
+    image_is_scaled = is_scaled;
+    setImage(image);
+  }
 };
 
 void ScreenText::setBackground(const Color& color,
@@ -281,7 +284,7 @@ void ScreenText::setDefaultBackground(const proto::ScreenSide& side) {
 }
 
 void ScreenText::setAll(const ScreenText& source) {
-  setImage(source.image, source.image_is_scaled);
+  setImage(source.image, source.image_is_scaled, this->screen_side);
   if (source.background_color.has_value()) {
     setBackground(*source.background_color);
   } else {

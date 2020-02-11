@@ -44,7 +44,8 @@ class ScreenText : public wxPanel {
   void paintEvent(wxPaintEvent& event);
   void resetAllText(const proto::ScreenSide& side);
   void setImage(const wxImage& image);
-  void setImage(const wxImage& image, bool is_scaled);
+  void setImage(const wxImage& image, bool is_scaled,
+                const proto::ScreenSide& side);
   void setBackground(const Color& color, const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
   void setFontColor(proto::Font* font);
