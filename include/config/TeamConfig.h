@@ -36,6 +36,7 @@ class TeamConfig {
   void setColor(int index, Color color);
   proto::TeamInfo teamInfo(int index);
   Color teamColor(int index);
+  std::vector<Color> teamColor(proto::ScreenSide side);
   wxString teamName(int index);
 
  private:

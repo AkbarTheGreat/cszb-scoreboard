@@ -103,6 +103,15 @@ Color TeamConfig::teamColor(int index) {
   return ProtoUtil::wxClr(team_config.teams(index).team_color());
 }
 
+std::vector<Color> TeamConfig::teamColor(proto::ScreenSide side) {
+  std::vector<int> indices = indicesForSide(side);
+  std::vector<Color> colors;
+  for (auto index : indices) {
+    colors.push_back(teamColor(index));
+  }
+  return colors;
+}
+
 wxString TeamConfig::teamName(int index) {
   switch (team_config.teams(index).team_type()) {
     case proto::TeamInfo_TeamType_HOME_TEAM:

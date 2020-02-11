@@ -275,11 +275,8 @@ void ScreenText::setBackground(const Color& color) {
 };
 
 void ScreenText::setDefaultBackground(const proto::ScreenSide& side) {
-  std::vector<int> team_indices =
-      TeamConfig::getInstance()->indicesForSide(side);
   // TODO: Allow for a view to contain multiple sides
-  Color background_color =
-      TeamConfig::getInstance()->teamColor(team_indices[0]);
+  Color background_color = TeamConfig::getInstance()->teamColor(side)[0];
   setBackground(background_color, side);
 }
 

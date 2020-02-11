@@ -70,10 +70,8 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
   current_widget->SetSize(previewSize(monitor_number));
   proto::ScreenSide side =
       DisplayConfig::getInstance()->displayDetails(monitor_number).side();
-  std::vector<int> side_indices =
-      TeamConfig::getInstance()->indicesForSide(side);
-  current_widget->setBackground(
-      TeamConfig::getInstance()->teamColor(side_indices[0]), side);
+  current_widget->setBackground(TeamConfig::getInstance()->teamColor(side)[0],
+                                side);
   current_widget->Refresh();
 }
 

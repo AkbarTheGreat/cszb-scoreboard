@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/TextEntry.h"
 
+#include "config/TeamConfig.h"
+#include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -28,17 +30,33 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 TextEntry *TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   TextEntry *entry = new TextEntry(preview_panel, parent);
+  entry->initializeData();
   entry->initializeWidgets();
   entry->updatePreview();
   return entry;
 }
 
-void TextEntry::createControls(wxPanel *control_panel) {
+void TextEntry::initializeData() {
   home_text = wxT("Home Team");
   away_text = wxT("Away Team");
   all_text = wxT("");
+
   home_font_size = away_font_size = all_font_size = DEFAULT_FONT_SIZE;
 
+  proto::ScreenSide side;
+
+  side.set_home(true);
+  home_color = TeamConfig::getInstance()->teamColor(side)[0];
+  side.set_home(false);
+
+  side.set_away(true);
+  away_color = TeamConfig::getInstance()->teamColor(side)[0];
+  side.set_away(false);
+
+  Color all_color("Black");
+}
+
+void TextEntry::createControls(wxPanel *control_panel) {
   text_label = new wxStaticText(control_panel, wxID_ANY, wxT("Text"));
   text_entry =
       new wxTextCtrl(control_panel, wxID_ANY, home_text, wxDefaultPosition,
@@ -51,6 +69,8 @@ void TextEntry::createControls(wxPanel *control_panel) {
                                    StringUtil::intToString(DEFAULT_FONT_SIZE));
 
   screen_selection = new TeamSelector(inner_panel);
+
+  color_picker = new wxColourPickerCtrl(inner_panel, wxID_ANY, home_color);
 
   positionWidgets(control_panel);
   bindEvents();
@@ -72,9 +92,8 @@ void TextEntry::positionWidgets(wxPanel *control_panel) {
 
   inner_sizer->Add(font_size_label, 0, wxALL, BORDER_SIZE);
   inner_sizer->Add(font_size_entry, 0, wxALL, BORDER_SIZE);
-  inner_sizer->Add(new wxStaticText(inner_panel, -1, wxT("")), 0, wxALL,
-                   BORDER_SIZE);
   inner_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  inner_sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
 
   inner_panel->SetSizerAndFit(inner_sizer);
   control_panel->SetSizerAndFit(outer_sizer);
@@ -124,12 +143,15 @@ void TextEntry::screenChanged(wxCommandEvent &event) {
   if (screen_selection->allSelected()) {
     text_entry->SetValue(all_text);
     font_size_entry->SetValue(StringUtil::intToString(all_font_size));
+    color_picker->SetColour(all_color);
   } else if (screen_selection->homeSelected()) {
     text_entry->SetValue(home_text);
     font_size_entry->SetValue(StringUtil::intToString(home_font_size));
+    color_picker->SetColour(home_color);
   } else if (screen_selection->awaySelected()) {
     text_entry->SetValue(away_text);
     font_size_entry->SetValue(StringUtil::intToString(away_font_size));
+    color_picker->SetColour(away_color);
   }
 
   updatePreview();

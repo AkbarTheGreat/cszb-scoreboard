@@ -19,6 +19,7 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/clrpicker.h>
 #include <wx/wx.h>
 
 #include "ui/component/PreviewPanel.h"
@@ -35,18 +36,22 @@ class TextEntry : public ScreenTextController {
   void textUpdated(wxKeyEvent &event);
 
  private:
-  TeamSelector *screen_selection;
-  wxStaticText *text_label;
-  wxTextCtrl *text_entry;
+  wxColourPickerCtrl *color_picker;
   wxStaticText *font_size_label;
   wxPanel *inner_panel;
   wxTextCtrl *font_size_entry;
+  TeamSelector *screen_selection;
+  wxStaticText *text_label;
+  wxTextCtrl *text_entry;
   wxString home_text;
   wxString away_text;
   wxString all_text;
   int home_font_size;
   int away_font_size;
   int all_font_size;
+  Color home_color;
+  Color away_color;
+  Color all_color;
 
   TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
@@ -55,6 +60,7 @@ class TextEntry : public ScreenTextController {
 
   void bindEvents();
   int enteredFontSize();
+  void initializeData();
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
 };
