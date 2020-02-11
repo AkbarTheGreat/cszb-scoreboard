@@ -51,8 +51,10 @@ class ScoreControl : public ScreenTextController {
   void positionWidgets(wxPanel *control_panel);
   void updatePreview() override;
 
-  wxPanel *home_title_panel;
-  wxStaticText *home_score_label;
+  wxButton *team_intro_button;
+  wxPanel *team_controls_panel;
+
+  wxStaticText *home_score_label
   wxColourPickerCtrl *home_color_picker;
   wxTextCtrl *home_name_entry;
   wxTextCtrl *home_score_entry;
@@ -60,7 +62,6 @@ class ScoreControl : public ScreenTextController {
   wxButton *home_plus_1;
   wxButton *home_plus_5;
   wxButton *home_minus_1;
-  wxPanel *away_title_panel;
   wxStaticText *away_score_label;
   wxColourPickerCtrl *away_color_picker;
   wxTextCtrl *away_name_entry;

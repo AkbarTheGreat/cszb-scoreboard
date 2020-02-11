@@ -36,17 +36,23 @@ ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
 }
 
 void ScoreControl::createControls(wxPanel *control_panel) {
-  // TODO: Populate these from settings-based defaults
+  // TODO: Populate the team names from settings-based defaults
+
+  team_controls_panel = new wxPanel(control_panel);
+
   proto::ScreenSide side;
   side.set_home(true);
 
-  home_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Home"));
-  home_color_picker = new wxColourPickerCtrl(
-      control_panel, wxID_ANY, TeamConfig::getInstance()->teamColor(side)[0]);
-  home_name_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("Home Team"));
-  home_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
+  home_score_label =
+      new wxStaticText(team_controls_panel, wxID_ANY, wxT("Home"));
+  home_color_picker =
+      new wxColourPickerCtrl(team_controls_panel, wxID_ANY,
+                             TeamConfig::getInstance()->teamColor(side)[0]);
+  home_name_entry =
+      new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("Home Team"));
+  home_score_entry = new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("0"));
 
-  home_button_panel = new wxPanel(control_panel);
+  home_button_panel = new wxPanel(team_controls_panel);
   home_plus_1 = new wxButton(home_button_panel, wxID_ANY, "+1",
                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
   home_plus_5 = new wxButton(home_button_panel, wxID_ANY, "+5",
@@ -57,20 +63,25 @@ void ScoreControl::createControls(wxPanel *control_panel) {
   side.set_home(false);
   side.set_away(true);
 
-  away_score_label = new wxStaticText(control_panel, wxID_ANY, wxT("Away"));
-  away_color_picker = new wxColourPickerCtrl(
-      control_panel, wxID_ANY, TeamConfig::getInstance()->teamColor(side)[0]);
+  away_score_label =
+      new wxStaticText(team_controls_panel, wxID_ANY, wxT("Away"));
+  away_color_picker =
+      new wxColourPickerCtrl(team_controls_panel, wxID_ANY,
+                             TeamConfig::getInstance()->teamColor(side)[0]);
 
-  away_name_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("Away Team"));
-  away_score_entry = new wxTextCtrl(control_panel, wxID_ANY, wxT("0"));
+  away_name_entry =
+      new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("Away Team"));
+  away_score_entry = new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("0"));
 
-  away_button_panel = new wxPanel(control_panel);
+  away_button_panel = new wxPanel(team_controls_panel);
   away_plus_1 = new wxButton(away_button_panel, wxID_ANY, "+1",
                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
   away_plus_5 = new wxButton(away_button_panel, wxID_ANY, "+5",
                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
   away_minus_1 = new wxButton(away_button_panel, wxID_ANY, "-1",
                               wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+
+  team_intro_button = new wxButton(control_panel, wxID_ANY, "Introduce Teams");
 
   positionWidgets(control_panel);
   bindEvents();
@@ -100,34 +111,42 @@ void ScoreControl::bindEvents() {
 }
 
 void ScoreControl::positionWidgets(wxPanel *control_panel) {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxFlexGridSizer *team_control_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  team_control_sizer->SetFlexibleDirection(wxBOTH);
+  team_control_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  sizer->Add(home_score_label, 0, wxALL, BORDER_SIZE);
-  sizer->Add(away_score_label, 0, wxALL, BORDER_SIZE);
-  sizer->Add(home_color_picker, 0, wxALL, BORDER_SIZE);
-  sizer->Add(away_color_picker, 0, wxALL, BORDER_SIZE);
-  sizer->Add(home_name_entry, 0, wxALL, BORDER_SIZE);
-  sizer->Add(away_name_entry, 0, wxALL, BORDER_SIZE);
-  sizer->Add(home_score_entry, 0, wxALL, BORDER_SIZE);
-  sizer->Add(away_score_entry, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(home_score_label, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(away_score_label, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(home_color_picker, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(away_color_picker, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(home_name_entry, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(away_name_entry, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(home_score_entry, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(away_score_entry, 0, wxALL, BORDER_SIZE);
 
   wxFlexGridSizer *home_panel_sizer = new wxFlexGridSizer(1, 0, 0, 0);
   home_panel_sizer->Add(home_plus_1, 0, wxALL, BORDER_SIZE);
   home_panel_sizer->Add(home_plus_5, 0, wxALL, BORDER_SIZE);
   home_panel_sizer->Add(home_minus_1, 0, wxALL, BORDER_SIZE);
   home_button_panel->SetSizerAndFit(home_panel_sizer);
-  sizer->Add(home_button_panel, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(home_button_panel, 0, wxALL, BORDER_SIZE);
 
   wxFlexGridSizer *away_panel_sizer = new wxFlexGridSizer(1, 0, 0, 0);
   away_panel_sizer->Add(away_plus_1, 0, wxALL, BORDER_SIZE);
   away_panel_sizer->Add(away_plus_5, 0, wxALL, BORDER_SIZE);
   away_panel_sizer->Add(away_minus_1, 0, wxALL, BORDER_SIZE);
   away_button_panel->SetSizerAndFit(away_panel_sizer);
-  sizer->Add(away_button_panel, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(away_button_panel, 0, wxALL, BORDER_SIZE);
 
-  control_panel->SetSizerAndFit(sizer);
+  team_controls_panel->SetSizerAndFit(team_control_sizer);
+
+  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  outer_sizer->SetFlexibleDirection(wxBOTH);
+  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  outer_sizer->Add(team_controls_panel, 0, wxALL, BORDER_SIZE);
+  outer_sizer->Add(team_intro_button, 0, wxALL | wxALIGN_CENTRE_VERTICAL,
+                   BORDER_SIZE);
+  control_panel->SetSizerAndFit(outer_sizer);
 }
 
 void ScoreControl::updatePreview() {
