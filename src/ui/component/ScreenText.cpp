@@ -93,6 +93,12 @@ void ScreenText::resetAllText(const proto::ScreenSide& side) {
   }
 }
 
+void ScreenText::setAutoFit(bool auto_fit, const proto::ScreenSide& side) {
+  if (isSide(side)) {
+    auto_fit_text = auto_fit;
+  }
+}
+
 void ScreenText::addText(proto::RenderableText text,
                          const proto::ScreenSide& side) {
   if (isSide(side)) {

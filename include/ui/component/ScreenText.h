@@ -52,9 +52,11 @@ class ScreenText : public wxPanel {
   void setText(const wxString& text, int font_size,
                const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
+  void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
   bool isSide(proto::ScreenSide side);
 
  private:
+  bool auto_fit_text;
   wxImage blackout_image;
   std::optional<Color> background_color;
   wxImage image;

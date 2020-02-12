@@ -116,16 +116,17 @@ void TextEntry::updatePreview() {
     proto::ScreenSide side;
     side.set_home(true);
     side.set_away(true);
-    previewPanel()->setTextForPreview(all_text, all_font_size, all_color, side);
+    previewPanel()->setTextForPreview(all_text, all_font_size, all_color, false,
+                                      side);
   } else {
     proto::ScreenSide home_side;
     home_side.set_home(true);
     proto::ScreenSide away_side;
     away_side.set_away(true);
     previewPanel()->setTextForPreview(home_text, home_font_size, home_color,
-                                      home_side);
+                                      false, home_side);
     previewPanel()->setTextForPreview(away_text, away_font_size, away_color,
-                                      away_side);
+                                      false, away_side);
   }
 }
 

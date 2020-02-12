@@ -78,10 +78,11 @@ void PreviewPanel::setImageForPreview(const wxImage& image,
 }
 
 void PreviewPanel::setTextForPreview(wxString text, int font_size,
-                                     const Color& background,
+                                     const Color& background, bool auto_fit,
                                      const proto::ScreenSide& side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
+    screen_text->setAutoFit(auto_fit, side);
     screen_text->setBackground(background, side);
     screen_text->setText(text, font_size, side);
     screen_text->Refresh();
@@ -89,10 +90,11 @@ void PreviewPanel::setTextForPreview(wxString text, int font_size,
 }
 
 void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
-                                     const Color& background,
+                                     const Color& background, bool auto_fit,
                                      const proto::ScreenSide& side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
+    screen_text->setAutoFit(auto_fit, side);
     screen_text->resetAllText(side);
     screen_text->setBackground(background, side);
     for (auto line : lines) {

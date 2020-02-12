@@ -80,7 +80,7 @@ void LocalImage::updatePreview() {
     proto::ScreenSide side;
     side.set_home(true);
     side.set_away(true);
-    previewPanel()->setTextForPreview("", 1, Color("Black"), side);
+    previewPanel()->setTextForPreview("", 1, Color("Black"), false, side);
     previewPanel()->setImageForPreview(wxImage(all_screen_file.c_str()), side);
   } else {
     proto::ScreenSide home_side;
@@ -88,12 +88,14 @@ void LocalImage::updatePreview() {
     proto::ScreenSide away_side;
     away_side.set_away(true);
     if (!home_screen_file.empty()) {
-      previewPanel()->setTextForPreview("", 1, Color("Black"), home_side);
+      previewPanel()->setTextForPreview("", 1, Color("Black"), false,
+                                        home_side);
       previewPanel()->setImageForPreview(wxImage(home_screen_file.c_str()),
                                          home_side);
     }
     if (!away_screen_file.empty()) {
-      previewPanel()->setTextForPreview("", 1, Color("Black"), away_side);
+      previewPanel()->setTextForPreview("", 1, Color("Black"), false,
+                                        away_side);
       previewPanel()->setImageForPreview(wxImage(away_screen_file.c_str()),
                                          away_side);
     }

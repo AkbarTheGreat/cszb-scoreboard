@@ -216,9 +216,9 @@ void ScoreControl::updatePreview() {
   }
 
   previewPanel()->setTextForPreview(home_update, home_color_picker->GetColour(),
-                                    home_side);
+                                    true, home_side);
   previewPanel()->setTextForPreview(away_update, away_color_picker->GetColour(),
-                                    away_side);
+                                    true, away_side);
 }
 
 void ScoreControl::homeUpdated(wxKeyEvent &event) { updatePreview(); }
