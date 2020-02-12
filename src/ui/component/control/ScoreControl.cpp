@@ -81,7 +81,8 @@ void ScoreControl::createControls(wxPanel *control_panel) {
   away_minus_1 = new wxButton(away_button_panel, wxID_ANY, "-1",
                               wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 
-  team_intro_button = new wxButton(control_panel, wxID_ANY, "Introduce Teams");
+  team_intro_button =
+      new wxToggleButton(control_panel, wxID_ANY, "Introduce Teams");
 
   positionWidgets(control_panel);
   bindEvents();
@@ -108,6 +109,8 @@ void ScoreControl::bindEvents() {
                           &ScoreControl::colorChanged, this);
   away_color_picker->Bind(wxEVT_COLOURPICKER_CHANGED,
                           &ScoreControl::colorChanged, this);
+  team_intro_button->Bind(wxEVT_TOGGLEBUTTON, &ScoreControl::toggleIntroMode,
+                          this);
 }
 
 void ScoreControl::positionWidgets(wxPanel *control_panel) {
@@ -149,6 +152,52 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
   control_panel->SetSizerAndFit(outer_sizer);
 }
 
+std::vector<proto::RenderableText> ScoreControl::scoreLines(bool isHome) {
+  std::vector<proto::RenderableText> update;
+
+  wxTextCtrl *score_entry = away_score_entry;
+  wxTextCtrl *name_entry = away_name_entry;
+
+  if (isHome) {
+    score_entry = home_score_entry;
+    name_entry = home_name_entry;
+  }
+
+  update.push_back(proto::RenderableText());
+  update.back().set_text(score_entry->GetValue());
+  update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
+  update.push_back(proto::RenderableText());
+  update.back().set_text(name_entry->GetValue());
+  update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
+  update.back().set_position(
+      proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
+
+  return update;
+}
+
+std::vector<proto::RenderableText> ScoreControl::introLines(bool isHome) {
+  std::vector<proto::RenderableText> update;
+
+  wxTextCtrl *name_entry = away_name_entry;
+  std::string intro_text = "Visitors";
+
+  if (isHome) {
+    name_entry = home_name_entry;
+    intro_text = "Home";
+  }
+
+  update.push_back(proto::RenderableText());
+  update.back().set_text(name_entry->GetValue());
+  update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
+  update.push_back(proto::RenderableText());
+  update.back().set_text(intro_text);
+  update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
+  update.back().set_position(
+      proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
+
+  return update;
+}
+
 void ScoreControl::updatePreview() {
   proto::ScreenSide home_side;
   home_side.set_home(true);
@@ -156,24 +205,15 @@ void ScoreControl::updatePreview() {
   away_side.set_away(true);
 
   std::vector<proto::RenderableText> home_update;
-  home_update.push_back(proto::RenderableText());
-  home_update.back().set_text(home_score_entry->GetValue());
-  home_update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
-  home_update.push_back(proto::RenderableText());
-  home_update.back().set_text(home_name_entry->GetValue());
-  home_update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
-  home_update.back().set_position(
-      proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
-
   std::vector<proto::RenderableText> away_update;
-  away_update.push_back(proto::RenderableText());
-  away_update.back().set_text(away_score_entry->GetValue());
-  away_update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
-  away_update.push_back(proto::RenderableText());
-  away_update.back().set_text(away_name_entry->GetValue());
-  away_update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
-  away_update.back().set_position(
-      proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
+
+  if (team_intro_button->GetValue()) {
+    home_update = introLines(true);
+    away_update = introLines(false);
+  } else {
+    home_update = scoreLines(true);
+    away_update = scoreLines(false);
+  }
 
   previewPanel()->setTextForPreview(home_update, home_color_picker->GetColour(),
                                     home_side);
@@ -190,6 +230,8 @@ void ScoreControl::awayUpdated(wxKeyEvent &event) { updatePreview(); }
 void ScoreControl::awayNameUpdated(wxKeyEvent &event) { updatePreview(); }
 
 void ScoreControl::colorChanged(wxColourPickerEvent &event) { updatePreview(); }
+
+void ScoreControl::toggleIntroMode(wxCommandEvent &event) { updatePreview(); }
 
 void ScoreControl::addToEntry(wxTextCtrl *entry, int amount) {
   long current_score = StringUtil::stringToInt(entry->GetValue());

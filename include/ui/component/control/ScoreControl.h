@@ -20,7 +20,10 @@ limitations under the License.
 #pragma once
 
 #include <wx/clrpicker.h>
+#include <wx/tglbtn.h>
 #include <wx/wx.h>
+
+#include <vector>
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
@@ -49,9 +52,12 @@ class ScoreControl : public ScreenTextController {
   void homeAddFive(wxCommandEvent &event);
   void homeMinusOne(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel);
+  void toggleIntroMode(wxCommandEvent &event);
+  std::vector<proto::RenderableText> introLines(bool isHome);
+  std::vector<proto::RenderableText> scoreLines(bool isHome);
   void updatePreview() override;
 
-  wxButton *team_intro_button;
+  wxToggleButton *team_intro_button;
   wxPanel *team_controls_panel;
 
   wxStaticText *home_score_label;
