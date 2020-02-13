@@ -25,7 +25,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int SCORE_FONT_SIZE = 20;
-const int TEAM_FONT_SIZE = 10;
+const int TEAM_FONT_SIZE = 5;
 const int BORDER_SIZE = 3;
 
 ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
