@@ -186,6 +186,20 @@ void ScreenText::renderBackground(wxDC& dc) {
   }
 }
 
+void ScreenText::autoFitText(wxDC& dc, proto::RenderableText& text) {
+  proto::Font* font = text.mutable_font();
+  wxSize screen_size = GetSize();
+
+  dc.SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
+  wxSize text_extent = getTextExtent(dc, text.text());
+
+  while (text_extent.GetWidth() > screen_size.GetWidth() && font->size() > 0) {
+    font->set_size(font->size() - .5);
+    dc.SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    text_extent = getTextExtent(dc, text.text());
+  }
+}
+
 wxPoint ScreenText::bottomText(wxDC& dc, wxString text) {
   wxSize text_extent = getTextExtent(dc, text);
   int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
@@ -224,6 +238,9 @@ wxPoint ScreenText::positionText(wxDC& dc, proto::RenderableText text) {
 }
 
 void ScreenText::renderText(wxDC& dc, proto::RenderableText text) {
+  if (auto_fit_text) {
+    autoFitText(dc, text);
+  }
   dc.SetFont(ProtoUtil::wxScaledFont(text.font(), GetSize()));
   dc.SetTextForeground(ProtoUtil::wxClr(text.font().color()));
   wxPoint placement = positionText(dc, text);

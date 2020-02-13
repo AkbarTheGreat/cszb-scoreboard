@@ -69,6 +69,7 @@ class ScreenText : public wxPanel {
   ScreenText(wxWindow* parent, std::vector<proto::RenderableText> texts,
              wxImage image, std::optional<Color> background_color,
              proto::ScreenSide side, wxSize size);
+  void autoFitText(wxDC& dc, proto::RenderableText& text);
   void bindEvents();
   wxPoint bottomText(wxDC& dc, wxString text);
   wxPoint centerText(wxDC& dc, wxString text);
