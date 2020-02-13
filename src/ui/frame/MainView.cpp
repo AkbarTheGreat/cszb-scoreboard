@@ -47,6 +47,9 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
     update_timer->Start(0, true);
   }
 
+  // Set focus to the control_panel so that tab movement works correctly without
+  // an initial click.
+  control_panel->SetFocus();
   HotkeyTable::getInstance()->installHotkeys(this);
 }
 
