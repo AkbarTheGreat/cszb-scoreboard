@@ -31,7 +31,6 @@ namespace cszb_scoreboard {
 class TextEntry : public ScreenTextController {
  public:
   static TextEntry *Create(PreviewPanel *preview_panel, wxWindow *parent);
-  wxButton *updateButton();
   wxTextCtrl *textField();
   void textUpdated(wxKeyEvent &event);
 
