@@ -29,9 +29,71 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+class Replacement {
+ public:
+  Replacement(wxWindow *parent, ScreenTextController *owning_controller);
+  std::vector<wxWindow *> line();
+  static int lineWidth();
+
+ private:
+  ScreenTextController *owning_controller;
+  wxTextCtrl *replaceable;
+  wxTextCtrl *replacement;
+  wxButton *remove_replacement_button;
+
+  void bindEvents();
+  void deleteReplacement(wxCommandEvent &event);
+};
+
+class ReplacementsPanel : public wxPanel {
+ public:
+  ReplacementsPanel(wxWindow *parent, ScreenTextController *owning_controller);
+
+ private:
+  ScreenTextController *owning_controller;
+  std::vector<Replacement> replacements;
+
+  void bindEvents();
+  void positionWidgets();
+};
+
+class Activity {
+ public:
+  Activity(wxWindow *parent, wxWindow *parent_frame,
+           ScreenTextController *owning_controller);
+  std::vector<wxWindow *> line();
+  static int lineWidth();
+  ReplacementsPanel *replacementsPanel() { return replacement_panel; }
+
+ private:
+  wxRadioButton *activity_selector;
+  wxTextCtrl *activity_text;
+  wxButton *remove_activity_button;
+  ReplacementsPanel *replacement_panel;
+  ScreenTextController *owning_controller;
+
+  void bindEvents();
+};
+
+class ActivitiesPanel : public wxPanel {
+ public:
+  ActivitiesPanel(wxWindow *parent, ScreenTextController *owning_controller);
+  void addActivity();
+  ReplacementsPanel *replacementsPanel();
+
+ private:
+  std::vector<Activity> activities;
+  ScreenTextController *owning_controller;
+  wxWindow *parent;
+
+  void bindEvents();
+  void positionWidgets();
+};
+
 class ThingsMode : public ScreenTextController {
  public:
   static ThingsMode *Create(PreviewPanel *preview_panel, wxWindow *parent);
+  void textUpdated(wxKeyEvent &event);
 
  private:
   TeamSelector *screen_selection;
@@ -39,32 +101,9 @@ class ThingsMode : public ScreenTextController {
   wxButton *new_replacement_button;
   wxScrolledWindow *scrollable_panel;
 
-  wxPanel *home_activities_panel;
-  wxPanel *home_replacements_panel;
-  std::vector<wxRadioButton *> home_activity_selectors;
-  std::vector<wxTextCtrl *> home_activities;
-  std::vector<wxButton *> home_remove_activity_buttons;
-  std::vector<wxTextCtrl *> home_replacables;
-  std::vector<wxTextCtrl *> home_replacements;
-  std::vector<wxButton *> home_remove_replacement_buttons;
-
-  wxPanel *away_activities_panel;
-  wxPanel *away_replacements_panel;
-  std::vector<wxRadioButton *> away_activity_selectors;
-  std::vector<wxTextCtrl *> away_activities;
-  std::vector<wxButton *> away_remove_activity_buttons;
-  std::vector<wxTextCtrl *> away_replacables;
-  std::vector<wxTextCtrl *> away_replacements;
-  std::vector<wxButton *> away_remove_replacement_buttons;
-
-  wxPanel *all_activities_panel;
-  wxPanel *all_replacements_panel;
-  std::vector<wxRadioButton *> all_activity_selectors;
-  std::vector<wxTextCtrl *> all_activities;
-  std::vector<wxButton *> all_remove_activity_buttons;
-  std::vector<wxTextCtrl *> all_replacables;
-  std::vector<wxTextCtrl *> all_replacements;
-  std::vector<wxButton *> all_remove_replacement_buttons;
+  ActivitiesPanel *home_activities_panel;
+  ActivitiesPanel *away_activities_panel;
+  ActivitiesPanel *all_activities_panel;
 
   ThingsMode(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
@@ -75,10 +114,8 @@ class ThingsMode : public ScreenTextController {
   void addActivity(wxCommandEvent &event);
   void addReplacement(wxCommandEvent &event);
   void bindEvents();
-  void placeAndSizePanel(int rows, wxPanel *panel);
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
-  void textUpdated(wxKeyEvent &event);
   void updateScroll();
 };
 
