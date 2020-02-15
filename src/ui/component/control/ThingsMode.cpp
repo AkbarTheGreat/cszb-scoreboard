@@ -45,7 +45,6 @@ void ThingsMode::createControls(wxPanel *control_panel) {
       new wxButton(scrollable_panel, wxID_ANY, "New Activity");
   new_replacement_button =
       new wxButton(scrollable_panel, wxID_ANY, "New Replacement");
-  new_replacement_button->Disable();
 
   home_activities_panel = new ActivitiesPanel(scrollable_panel, this);
   away_activities_panel = new ActivitiesPanel(scrollable_panel, this);
@@ -135,7 +134,7 @@ void ThingsMode::screenChanged(wxCommandEvent &event) {
 }
 
 void ThingsMode::addActivity(wxCommandEvent &event) {
-  home_activities_panel->addActivity();
+  home_activities_panel->addActivity(scrollable_panel);
 
   scrollable_panel->SetSizer(scrollable_panel->GetSizer());
   scrollable_panel->FitInside();
@@ -158,6 +157,9 @@ Replacement::Replacement(wxWindow *parent,
                                wxSize(-1, -1), wxTE_MULTILINE);
   remove_replacement_button = new wxButton(
       parent, wxID_ANY, "X", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  // We add a blank space to the end of the line so that when the scrollbar
+  // appears it doesn't occlude the delete button.
+  spacer_text = new wxStaticText(parent, wxID_ANY, "   ");
   bindEvents();
 }
 
@@ -166,10 +168,11 @@ std::vector<wxWindow *> Replacement::line() {
   list_of_widgets.push_back(replaceable);
   list_of_widgets.push_back(replacement);
   list_of_widgets.push_back(remove_replacement_button);
+  list_of_widgets.push_back(spacer_text);
   return list_of_widgets;
 }
 
-int lineWidth() { return 3; }
+int Replacement::lineWidth() { return 4; }
 
 void Replacement::bindEvents() {}
 
@@ -187,7 +190,8 @@ ReplacementsPanel::ReplacementsPanel(wxWindow *parent,
 void ReplacementsPanel::bindEvents() {}
 
 void ReplacementsPanel::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, Activity::lineWidth(), 0, 0);
+  wxFlexGridSizer *sizer =
+      new wxFlexGridSizer(0, Replacement::lineWidth(), 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   for (auto replacement : replacements) {
@@ -199,9 +203,16 @@ void ReplacementsPanel::positionWidgets() {
 }
 
 Activity::Activity(wxWindow *parent, wxWindow *top_frame,
-                   ScreenTextController *owning_controller) {
+                   ScreenTextController *owning_controller, bool is_first) {
   this->owning_controller = owning_controller;
-  activity_selector = new wxRadioButton(parent, wxID_ANY, "");
+  this->parent = parent;
+
+  if (is_first) {
+    activity_selector = new wxRadioButton(
+        parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+  } else {
+    activity_selector = new wxRadioButton(parent, wxID_ANY, "");
+  }
   activity_text = new wxTextCtrl(parent, wxID_ANY, "", wxDefaultPosition,
                                  wxSize(-1, -1), wxTE_MULTILINE);
   remove_activity_button = new wxButton(
@@ -209,6 +220,10 @@ Activity::Activity(wxWindow *parent, wxWindow *top_frame,
   replacement_panel = new ReplacementsPanel(top_frame, owning_controller);
   bindEvents();
 }
+
+void Activity::select() { activity_selector->SetValue(true); }
+
+bool Activity::isSelected() { return activity_selector->GetValue(); }
 
 std::vector<wxWindow *> Activity::line() {
   std::vector<wxWindow *> list_of_widgets;
@@ -220,31 +235,64 @@ std::vector<wxWindow *> Activity::line() {
 
 int Activity::lineWidth() { return 3; }
 
-void Activity::bindEvents() {}
+void Activity::bindEvents() {
+  activity_selector->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
+                          &ActivitiesPanel::selectionChanged, (ActivitiesPanel *)parent);
+}
+
+void Activity::selectionChanged(wxCommandEvent &event) {
+  ((ActivitiesPanel *)parent)->selectionChanged(event);
+}
 
 ActivitiesPanel::ActivitiesPanel(wxWindow *parent,
                                  ScreenTextController *owning_controller)
     : wxPanel(parent) {
   this->owning_controller = owning_controller;
   this->parent = parent;
-  activities.push_back(Activity(this, parent, owning_controller));
+  activities.push_back(Activity(this, parent, owning_controller, true));
   bindEvents();
   positionWidgets();
 }
 
-void ActivitiesPanel::addActivity() {
-  activities.push_back(Activity(this, parent, owning_controller));
+void ActivitiesPanel::addActivity(wxPanel *parent_panel) {
+  bool is_first = (activities.empty());
+  activities.push_back(
+      Activity(this, parent_panel, owning_controller, is_first));
   for (auto widget : activities.back().line()) {
     GetSizer()->Add(widget, 0, wxALL, BORDER_SIZE);
   }
-  // TODO: Set selected activity to the new one and add a new replacement widget
+  parent_panel->GetSizer()->Add(activities.back().replacementsPanel(), 0, wxALL,
+                                BORDER_SIZE);
+  activities.back().select();
+  selectionChanged(wxCommandEvent());
   SetSizerAndFit(GetSizer());
+}
+
+void ActivitiesPanel::selectionChanged(wxCommandEvent &event) {
+  for (auto activity : activities) {
+    if (activity.isSelected()) {
+      activity.replacementsPanel()->Show();
+    } else {
+      activity.replacementsPanel()->Hide();
+    }
+  }
+  owning_controller->updatePreview();
 }
 
 void ActivitiesPanel::bindEvents() {}
 
 ReplacementsPanel *ActivitiesPanel::replacementsPanel() {
-  // TODO: Return a currently selected replacement, not just the first
+  if (activities.empty()) {
+    return nullptr;
+  }
+
+  for (auto activity : activities) {
+    if (activity.isSelected()) {
+      return activity.replacementsPanel();
+    }
+  }
+
+  // Should be unreachable.
   return activities[0].replacementsPanel();
 }
 

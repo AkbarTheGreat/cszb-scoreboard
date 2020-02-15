@@ -40,6 +40,7 @@ class Replacement {
   wxTextCtrl *replaceable;
   wxTextCtrl *replacement;
   wxButton *remove_replacement_button;
+  wxStaticText *spacer_text;
 
   void bindEvents();
   void deleteReplacement(wxCommandEvent &event);
@@ -60,25 +61,30 @@ class ReplacementsPanel : public wxPanel {
 class Activity {
  public:
   Activity(wxWindow *parent, wxWindow *parent_frame,
-           ScreenTextController *owning_controller);
+           ScreenTextController *owning_controller, bool is_first);
+  bool isSelected();
   std::vector<wxWindow *> line();
   static int lineWidth();
   ReplacementsPanel *replacementsPanel() { return replacement_panel; }
+  void select();
 
  private:
   wxRadioButton *activity_selector;
   wxTextCtrl *activity_text;
+  wxWindow *parent;
   wxButton *remove_activity_button;
   ReplacementsPanel *replacement_panel;
   ScreenTextController *owning_controller;
 
   void bindEvents();
+  void selectionChanged(wxCommandEvent &event);
 };
 
 class ActivitiesPanel : public wxPanel {
  public:
   ActivitiesPanel(wxWindow *parent, ScreenTextController *owning_controller);
-  void addActivity();
+  void addActivity(wxPanel *parent_panel);
+  void selectionChanged(wxCommandEvent &event);
   ReplacementsPanel *replacementsPanel();
 
  private:
@@ -94,6 +100,7 @@ class ThingsMode : public ScreenTextController {
  public:
   static ThingsMode *Create(PreviewPanel *preview_panel, wxWindow *parent);
   void textUpdated(wxKeyEvent &event);
+  void updatePreview() override;
 
  private:
   TeamSelector *screen_selection;
@@ -108,7 +115,6 @@ class ThingsMode : public ScreenTextController {
   ThingsMode(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
 
-  void updatePreview() override;
   void createControls(wxPanel *control_panel) override;
 
   void addActivity(wxCommandEvent &event);
