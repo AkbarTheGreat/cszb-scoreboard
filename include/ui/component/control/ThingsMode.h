@@ -26,75 +26,9 @@ limitations under the License.
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/TeamSelector.h"
+#include "ui/component/control/things_mode/ActivityPanel.h"
 
 namespace cszb_scoreboard {
-
-class Replacement {
- public:
-  Replacement(wxWindow *parent, ScreenTextController *owning_controller);
-  std::vector<wxWindow *> line();
-  static int lineWidth();
-
- private:
-  ScreenTextController *owning_controller;
-  wxTextCtrl *replaceable;
-  wxTextCtrl *replacement;
-  wxButton *remove_replacement_button;
-  wxStaticText *spacer_text;
-
-  void bindEvents();
-  void deleteReplacement(wxCommandEvent &event);
-};
-
-class ReplacementsPanel : public wxPanel {
- public:
-  ReplacementsPanel(wxWindow *parent, ScreenTextController *owning_controller);
-
- private:
-  ScreenTextController *owning_controller;
-  std::vector<Replacement> replacements;
-
-  void bindEvents();
-  void positionWidgets();
-};
-
-class Activity {
- public:
-  Activity(wxWindow *parent, wxWindow *parent_frame,
-           ScreenTextController *owning_controller, bool is_first);
-  bool isSelected();
-  std::vector<wxWindow *> line();
-  static int lineWidth();
-  ReplacementsPanel *replacementsPanel() { return replacement_panel; }
-  void select();
-
- private:
-  wxRadioButton *activity_selector;
-  wxTextCtrl *activity_text;
-  wxWindow *parent;
-  wxButton *remove_activity_button;
-  ReplacementsPanel *replacement_panel;
-  ScreenTextController *owning_controller;
-
-  void bindEvents();
-  void selectionChanged(wxCommandEvent &event);
-};
-
-class ActivitiesPanel : public wxPanel {
- public:
-  ActivitiesPanel(wxWindow *parent, ScreenTextController *owning_controller);
-  void addActivity(wxPanel *parent_panel);
-  void selectionChanged(wxCommandEvent &event);
-  ReplacementsPanel *replacementsPanel();
-
- private:
-  std::vector<Activity> activities;
-  ScreenTextController *owning_controller;
-  wxWindow *parent;
-
-  void bindEvents();
-  void positionWidgets();
-};
 
 class ThingsMode : public ScreenTextController {
  public:
@@ -108,9 +42,9 @@ class ThingsMode : public ScreenTextController {
   wxButton *new_replacement_button;
   wxScrolledWindow *scrollable_panel;
 
-  ActivitiesPanel *home_activities_panel;
-  ActivitiesPanel *away_activities_panel;
-  ActivitiesPanel *all_activities_panel;
+  ActivityPanel *home_activities_panel;
+  ActivityPanel *away_activities_panel;
+  ActivityPanel *all_activities_panel;
 
   ThingsMode(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}

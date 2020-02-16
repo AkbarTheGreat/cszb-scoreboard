@@ -52,6 +52,7 @@ file(GLOB SCOREBOARD_SRC
     "src/*/*.cpp"
     "src/*/*/*.cpp"
     "src/*/*/*/*.cpp"
+    "src/*/*/*/*/*.cpp"
 )
 
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
