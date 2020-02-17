@@ -29,15 +29,15 @@ limitations under the License.
 namespace cszb_scoreboard {
 class Activity {
  public:
-  Activity(wxWindow *parent, wxWindow *parent_frame,
-           ScreenTextController *owning_controller, bool is_first);
+  Activity(wxWindow *parent, ScreenTextController *owning_controller,
+           bool is_first);
+  wxPanel *controlPane() { return control_pane; }
   bool isSelected();
-  std::vector<wxWindow *> line();
-  static int lineWidth();
   ReplacementPanel *replacementPanel() { return replacement_panel; }
   void select();
 
  private:
+  wxPanel *control_pane;
   wxRadioButton *activity_selector;
   wxTextCtrl *activity_text;
   wxWindow *parent;
@@ -46,6 +46,7 @@ class Activity {
   ScreenTextController *owning_controller;
 
   void bindEvents();
+  void positionWidgets();
   void selectionChanged(wxCommandEvent &event);
 };
 

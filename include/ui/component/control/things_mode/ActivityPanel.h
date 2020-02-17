@@ -1,5 +1,6 @@
 /*
-ui/component/control/things_mode/ActivityPanel.h: Represents all activities in 5/6 things.
+ui/component/control/things_mode/ActivityPanel.h: Represents all activities in
+5/6 things.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -18,9 +19,11 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/aui/aui.h>
 #include <wx/wx.h>
 
 #include <vector>
+
 #include "ui/component/control/things_mode/Activity.h"
 
 namespace cszb_scoreboard {
@@ -32,10 +35,13 @@ class ActivityPanel : public wxPanel {
   ReplacementPanel *replacementPanel();
 
  private:
+  wxAuiManager aui_manager;
   std::vector<Activity> activities;
   ScreenTextController *owning_controller;
   wxWindow *parent;
 
+  ~ActivityPanel() { aui_manager.UnInit(); }
+  void addToAui(wxWindow *widget, bool on_right = false, int row = 0);
   void bindEvents();
   void positionWidgets();
 };

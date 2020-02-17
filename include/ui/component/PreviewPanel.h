@@ -20,6 +20,7 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/aui/aui.h>
 #include <wx/wx.h>
 
 #include <vector>
@@ -27,8 +28,6 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "ui/component/ScreenPreview.h"
-
-#include "wx/aui/aui.h"
 
 namespace cszb_scoreboard {
 

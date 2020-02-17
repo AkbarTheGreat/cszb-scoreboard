@@ -19,6 +19,7 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/aui/aui.h>
 #include <wx/wx.h>
 
 #include <vector>
@@ -37,10 +38,11 @@ class ThingsMode : public ScreenTextController {
   void updatePreview() override;
 
  private:
+  wxAuiManager aui_manager;
   TeamSelector *screen_selection;
+  wxScrolledWindow *scrollable_panel;
   wxButton *new_activity_button;
   wxButton *new_replacement_button;
-  wxScrolledWindow *scrollable_panel;
 
   ActivityPanel *home_activities_panel;
   ActivityPanel *away_activities_panel;
@@ -48,11 +50,13 @@ class ThingsMode : public ScreenTextController {
 
   ThingsMode(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
+  ~ThingsMode() { aui_manager.UnInit(); }
 
   void createControls(wxPanel *control_panel) override;
 
   void addActivity(wxCommandEvent &event);
   void addReplacement(wxCommandEvent &event);
+  void addToScrollable(wxWindow *item, int row);
   void bindEvents();
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);

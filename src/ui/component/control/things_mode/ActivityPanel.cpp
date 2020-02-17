@@ -1,5 +1,6 @@
 /*
-ui/component/control/things_mode/ActivityPanel.cpp: Represents all activities in 5/6 things.
+ui/component/control/things_mode/ActivityPanel.cpp: Represents all activities in
+5/6 things.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -17,6 +18,7 @@ limitations under the License.
 */
 
 #include "ui/component/control/things_mode/ActivityPanel.h"
+
 #include "ScoreboardCommon.h"
 
 namespace cszb_scoreboard {
@@ -24,37 +26,35 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 ActivityPanel::ActivityPanel(wxWindow *parent,
-                                 ScreenTextController *owning_controller)
+                             ScreenTextController *owning_controller)
     : wxPanel(parent) {
+  aui_manager.SetManagedWindow(this);
   this->owning_controller = owning_controller;
   this->parent = parent;
-  activities.push_back(Activity(this, parent, owning_controller, true));
+  activities.push_back(Activity(this, owning_controller, true));
   bindEvents();
   positionWidgets();
 }
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
-  activities.push_back(
-      Activity(this, parent_panel, owning_controller, is_first));
-  for (auto widget : activities.back().line()) {
-    GetSizer()->Add(widget, 0, wxALL, BORDER_SIZE);
-  }
-  parent_panel->GetSizer()->Add(activities.back().replacementPanel(), 0, wxALL,
-                                BORDER_SIZE);
+  activities.push_back(Activity(this, owning_controller, is_first));
+  addToAui(activities.back().controlPane(), true);
+
   activities.back().select();
   selectionChanged(wxCommandEvent());
-  SetSizerAndFit(GetSizer());
+  SetSize(517,192);
 }
 
 void ActivityPanel::selectionChanged(wxCommandEvent &event) {
   for (auto activity : activities) {
     if (activity.isSelected()) {
-      activity.replacementPanel()->Show();
+      addToAui(activity.replacementPanel());
     } else {
-      activity.replacementPanel()->Hide();
+      aui_manager.DetachPane(activity.replacementPanel());
     }
   }
+  aui_manager.Update();
   owning_controller->updatePreview();
 }
 
@@ -75,15 +75,54 @@ ReplacementPanel *ActivityPanel::replacementPanel() {
   return activities[0].replacementPanel();
 }
 
-void ActivityPanel::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, Activity::lineWidth(), 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  for (auto activity : activities) {
-    for (auto widget : activity.line()) {
-      sizer->Add(widget, 0, wxALL, BORDER_SIZE);
-    }
+void ActivityPanel::addToAui(wxWindow *widget, bool on_left, int row) {
+  wxAuiPaneInfo pane_info;
+  // pane_info.CenterPane();
+
+  if (on_left) {
+    pane_info.Left();
+  } else {
+    pane_info.Right();
   }
-  SetSizerAndFit(sizer);
+
+  pane_info.MinSize(widget->GetSize());
+  aui_manager.AddPane(widget, pane_info);
 }
+
+void ActivityPanel::positionWidgets() {
+  addToAui(replacementPanel());
+
+  for (auto activity : activities) {
+    addToAui(activity.controlPane(), true);
+  }
+
+  wxSize my_size(
+      replacementPanel()->GetSize().GetWidth() +
+          activities.back().controlPane()->GetSize().GetWidth(),
+      std::max(replacementPanel()->GetSize().GetHeight(),
+               activities.back().controlPane()->GetSize().GetHeight()));
+
+  wxLogDebug("My size: %dx%d", my_size.GetWidth(), my_size.GetHeight());
+  wxLogDebug("Replacement panel size: %dx%d",
+             replacementPanel()->GetSize().GetWidth(),
+             replacementPanel()->GetSize().GetHeight());
+  wxLogDebug("Controls panel size: %dx%d",
+             activities.back().controlPane()->GetSize().GetWidth(),
+             activities.back().controlPane()->GetSize().GetHeight());
+  wxLogDebug("Activity panel size: %dx%d", GetSize().GetWidth(),
+             GetSize().GetHeight());
+
+  SetSizeHints(my_size);
+  aui_manager.Update();
+  wxLogDebug("Replacement panel size: %dx%d",
+             replacementPanel()->GetSize().GetWidth(),
+             replacementPanel()->GetSize().GetHeight());
+  wxLogDebug("Controls panel size: %dx%d",
+             activities.back().controlPane()->GetSize().GetWidth(),
+             activities.back().controlPane()->GetSize().GetHeight());
+  wxLogDebug("Activity panel size: %dx%d", GetSize().GetWidth(),
+             GetSize().GetHeight());
+  SetSize(my_size);
+}
+
 }  // namespace cszb_scoreboard
