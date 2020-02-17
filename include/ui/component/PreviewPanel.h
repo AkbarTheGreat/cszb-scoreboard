@@ -28,6 +28,8 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/ScreenPreview.h"
 
+#include "wx/aui/aui.h"
+
 namespace cszb_scoreboard {
 
 class PreviewPanel : public wxPanel {
@@ -47,6 +49,8 @@ class PreviewPanel : public wxPanel {
   ScreenPreview* preview(int index);
 
  private:
+  ~PreviewPanel();
+  wxAuiManager aui_manager;
   std::vector<ScreenPreview*> screens;
   void bindEvents();
   int numPreviews();

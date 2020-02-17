@@ -1,7 +1,8 @@
 /*
-ui/component/ScreenPreview.h: This class manages the thumbnail preview of a monitor
-in the main window.  In addition, the preview owns the ScreenPresenter which
-displays to the actual monitor, dispatching the updated view when necessary.
+ui/component/ScreenPreview.h: This class manages the thumbnail preview of a
+monitor in the main window.  In addition, the preview owns the ScreenPresenter
+which displays to the actual monitor, dispatching the updated view when
+necessary.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -31,14 +32,17 @@ class ScreenPreview {
   ScreenText* widget();
   void sendToPresenter(proto::ScreenSide side);
   void blackoutPresenter(proto::ScreenSide side);
+  wxPanel* controlPane();
   void resetFromSettings(int monitor_number);
   ScreenText* thumbnailWidget();
 
  private:
+  wxPanel* control_pane;
   ScreenText* current_widget;
   const wxWindow* parent;
   ScreenPresenter* presenter;
   ScreenThumbnail* thumbnail;
+  void positionWidgets();
   wxSize previewSize(int monitor_number);
 };
 }  // namespace cszb_scoreboard

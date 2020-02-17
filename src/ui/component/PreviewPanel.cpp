@@ -26,9 +26,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const int BORDER_SIZE = 10;
-
 PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
+  aui_manager.SetManagedWindow(this);
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
         DisplayConfig::getInstance()->displayDetails(i);
@@ -42,18 +41,21 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
   bindEvents();
 }
 
+PreviewPanel::~PreviewPanel() { aui_manager.UnInit(); }
+
 void PreviewPanel::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(2, screens.size(), 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxAuiPaneInfo pane_style;
+  pane_style.CenterPane();
+  pane_style.Top();
+  pane_style.CloseButton(false);
   for (auto screen : screens) {
-    sizer->Add(screen->thumbnailWidget(), 1,
-               wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
+    wxPanel* pane = screen->controlPane();
+    pane_style.MinSize(pane->GetSize());
+    // TODO: write something like pane_style.Position(screen.position()) to
+    // allow users to change the order of monitors.
+    aui_manager.AddPane(pane, pane_style);
   }
-  for (auto screen : screens) {
-    sizer->Add(screen->widget(), 1, wxALL, BORDER_SIZE);
-  }
-  SetSizerAndFit(sizer);
+  aui_manager.Update();
 }
 
 void PreviewPanel::bindEvents() {

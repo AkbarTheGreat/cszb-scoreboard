@@ -25,7 +25,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const char* WELCOME_MESSAGE = "Chandler";
+const int BORDER_SIZE = 10;
+const char* WELCOME_MESSAGE = "Hello";
 const char* ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
 const int PREVIEW_HEIGHT = 320;
 
@@ -40,13 +41,26 @@ ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
     initial_text = WELCOME_MESSAGE;
   }
 
-  current_widget = ScreenText::getPreview(parent, initial_text, side,
+  control_pane = new wxPanel(parent);
+
+  current_widget = ScreenText::getPreview(control_pane, initial_text, side,
                                           previewSize(monitor_number));
 
-  thumbnail = new ScreenThumbnail(parent, monitor_number, current_widget);
+  thumbnail = new ScreenThumbnail(control_pane, monitor_number, current_widget);
   if (!side.error()) {
     presenter = new ScreenPresenter(monitor_number, current_widget);
   }
+
+  positionWidgets();
+}
+
+void ScreenPreview::positionWidgets() {
+  wxFlexGridSizer* sizer = new wxFlexGridSizer(2, 1, 0, 0);
+  sizer->SetFlexibleDirection(wxBOTH);
+  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  sizer->Add(thumbnail->widget(), 1, wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
+  sizer->Add(current_widget, 1, wxALL, BORDER_SIZE);
+  control_pane->SetSizerAndFit(sizer);
 }
 
 wxSize ScreenPreview::previewSize(int monitor_number) {
@@ -61,6 +75,8 @@ wxSize ScreenPreview::previewSize(int monitor_number) {
   }
   return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
 }
+
+wxPanel* ScreenPreview::controlPane() { return control_pane; }
 
 ScreenText* ScreenPreview::widget() { return current_widget; }
 

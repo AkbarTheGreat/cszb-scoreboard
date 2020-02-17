@@ -57,6 +57,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIB_DIR}/lib/wxbase31ud_net.lib
+			${wxWidgets_LIB_DIR}/lib/wxmsw31ud_aui.lib
 			${wxWidgets_LIB_DIR}/lib/wxmsw31ud_core.lib
 			${wxWidgets_LIB_DIR}/lib/wxbase31ud.lib
 			${wxWidgets_LIB_DIR}/lib/jpegd.lib
@@ -68,6 +69,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313ud_net_vc_x64_custom.dll
+			${wxWidgets_LIB_DIR}/bin/wxmsw313ud_aui_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/wxmsw313ud_core_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/wxbase313ud_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/libpng16d.dll
@@ -84,6 +86,7 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIB_DIR}/lib/wxbase31u_net.lib
+			${wxWidgets_LIB_DIR}/lib/wxmsw31u_aui.lib
 			${wxWidgets_LIB_DIR}/lib/wxmsw31u_core.lib
 			${wxWidgets_LIB_DIR}/lib/wxbase31u.lib
 			${wxWidgets_LIB_DIR}/lib/jpeg.lib
@@ -95,6 +98,7 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 	else()
 		set(wxWidgets_LIBRARIES
 			${wxWidgets_LIB_DIR}/bin/wxbase313u_net_vc_x64_custom.dll
+			${wxWidgets_LIB_DIR}/bin/wxmsw313u_aui_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/wxmsw313u_core_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/wxbase313u_vc_x64_custom.dll
 			${wxWidgets_LIB_DIR}/bin/libpng16.dll
