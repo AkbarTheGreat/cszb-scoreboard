@@ -27,18 +27,18 @@ limitations under the License.
 namespace cszb_scoreboard {
 class Replacement {
  public:
-  Replacement(wxWindow *parent, ScreenTextController *owning_controller);
-  std::vector<wxWindow *> line();
-  static int lineWidth();
+  Replacement(wxWindow *parent);
+  wxPanel *controlPane() { return control_pane; }
 
  private:
-  ScreenTextController *owning_controller;
+  wxPanel *control_pane;
   wxTextCtrl *replaceable;
   wxTextCtrl *replacement;
   wxButton *remove_replacement_button;
   wxStaticText *spacer_text;
 
   void bindEvents();
+  void positionWidgets();
   void deleteReplacement(wxCommandEvent &event);
 };
 }  // namespace cszb_scoreboard

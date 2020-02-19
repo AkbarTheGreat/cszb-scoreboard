@@ -31,14 +31,14 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   aui_manager.SetManagedWindow(this);
   this->owning_controller = owning_controller;
   this->parent = parent;
-  activities.push_back(Activity(this, owning_controller, true));
+  activities.push_back(Activity(this, true));
   bindEvents();
   positionWidgets();
 }
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
-  activities.push_back(Activity(this, owning_controller, is_first));
+  activities.push_back(Activity(this, is_first));
   addToAui(activities.back().controlPane(), true);
 
   activities.back().select();

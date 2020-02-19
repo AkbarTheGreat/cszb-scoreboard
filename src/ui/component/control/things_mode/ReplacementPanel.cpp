@@ -29,11 +29,8 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-ReplacementPanel::ReplacementPanel(wxWindow *parent,
-                                   ScreenTextController *owning_controller)
-    : wxPanel(parent) {
-  this->owning_controller = owning_controller;
-  replacements.push_back(Replacement(this, owning_controller));
+ReplacementPanel::ReplacementPanel(wxWindow *parent) : wxPanel(parent) {
+  replacements.push_back(Replacement(this));
   bindEvents();
   positionWidgets();
 }
@@ -41,14 +38,11 @@ ReplacementPanel::ReplacementPanel(wxWindow *parent,
 void ReplacementPanel::bindEvents() {}
 
 void ReplacementPanel::positionWidgets() {
-  wxFlexGridSizer *sizer =
-      new wxFlexGridSizer(0, Replacement::lineWidth(), 0, 0);
+  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 1, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   for (auto replacement : replacements) {
-    for (auto widget : replacement.line()) {
-      sizer->Add(widget, 0, wxALL, BORDER_SIZE);
-    }
+    sizer->Add(replacement.controlPane(), 0, wxALL, BORDER_SIZE);
   }
   SetSizerAndFit(sizer);
 }
