@@ -1,5 +1,5 @@
 /*
-ui/component/control/things_mode/Activity.h: Represents an activity in 5/6
+ui/component/control/things_mode/Activity.cpp: Represents an activity in 5/6
 things.
 
 Copyright 2019-2020 Tracy Beck

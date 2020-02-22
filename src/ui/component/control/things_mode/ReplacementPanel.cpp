@@ -1,6 +1,6 @@
 /*
-ui/component/control/things_mode/ReplacementPanel.h: Represents all replacements
-for one activity in 5/6 things.
+ui/component/control/things_mode/ReplacementPanel.cpp: Represents all
+replacements for one activity in 5/6 things.
 
 Copyright 2019-2020 Tracy Beck
 
