@@ -1,5 +1,6 @@
 /*
-ui/component/control/things_mode/ActivityPanel.h: Represents all activities in 5/6 things.
+ui/component/control/things_mode/ActivityPanel.h: Represents all activities in
+5/6 things.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -21,6 +22,7 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include <vector>
+
 #include "ui/component/control/things_mode/Activity.h"
 
 namespace cszb_scoreboard {

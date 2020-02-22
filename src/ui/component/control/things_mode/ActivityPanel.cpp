@@ -1,5 +1,6 @@
 /*
-ui/component/control/things_mode/ActivityPanel.cpp: Represents all activities in 5/6 things.
+ui/component/control/things_mode/ActivityPanel.cpp: Represents all activities in
+5/6 things.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -17,6 +18,7 @@ limitations under the License.
 */
 
 #include "ui/component/control/things_mode/ActivityPanel.h"
+
 #include "ScoreboardCommon.h"
 
 namespace cszb_scoreboard {
@@ -24,22 +26,32 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 ActivityPanel::ActivityPanel(wxWindow *parent,
-                                 ScreenTextController *owning_controller)
+                             ScreenTextController *owning_controller)
     : wxPanel(parent) {
   this->owning_controller = owning_controller;
   this->parent = parent;
-  activities.push_back(Activity(this, parent, owning_controller, true));
+  activities.push_back(Activity(this, this, owning_controller, true));
   bindEvents();
   positionWidgets();
+}
+
+void ActivityPanel::bindEvents() {}
+
+void ActivityPanel::positionWidgets() {
+  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 1, 0, 0);
+  sizer->SetFlexibleDirection(wxBOTH);
+  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  for (auto activity : activities) {
+    sizer->Add(activity.controlPane(), 0, wxALL, BORDER_SIZE);
+  }
+  SetSizerAndFit(sizer);
 }
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
   activities.push_back(
       Activity(this, parent_panel, owning_controller, is_first));
-  for (auto widget : activities.back().line()) {
-    GetSizer()->Add(widget, 0, wxALL, BORDER_SIZE);
-  }
+  GetSizer()->Add(activities.back().controlPane(), 0, wxALL, BORDER_SIZE);
   parent_panel->GetSizer()->Add(activities.back().replacementPanel(), 0, wxALL,
                                 BORDER_SIZE);
   activities.back().select();
@@ -58,8 +70,6 @@ void ActivityPanel::selectionChanged(wxCommandEvent &event) {
   owning_controller->updatePreview();
 }
 
-void ActivityPanel::bindEvents() {}
-
 ReplacementPanel *ActivityPanel::replacementPanel() {
   if (activities.empty()) {
     return nullptr;
@@ -75,15 +85,4 @@ ReplacementPanel *ActivityPanel::replacementPanel() {
   return activities[0].replacementPanel();
 }
 
-void ActivityPanel::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, Activity::lineWidth(), 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  for (auto activity : activities) {
-    for (auto widget : activity.line()) {
-      sizer->Add(widget, 0, wxALL, BORDER_SIZE);
-    }
-  }
-  SetSizerAndFit(sizer);
-}
 }  // namespace cszb_scoreboard

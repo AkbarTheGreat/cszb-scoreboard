@@ -19,41 +19,46 @@ limitations under the License.
 
 #pragma once
 
+#include "ui/component/control/things_mode/Replacement.h"
+
 #include <wx/wx.h>
 
 #include <vector>
 
-#include "ui/component/control/things_mode/Replacement.h"
-
 namespace cszb_scoreboard {
+
+const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 Replacement::Replacement(wxWindow *parent,
                          ScreenTextController *owning_controller) {
   this->owning_controller = owning_controller;
-  replaceable = new wxTextCtrl(parent, wxID_ANY, "", wxDefaultPosition,
+  control_pane = new wxPanel(parent);
+  replaceable = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                wxSize(-1, -1), wxTE_MULTILINE);
-  replacement = new wxTextCtrl(parent, wxID_ANY, "", wxDefaultPosition,
+  replacement = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                wxSize(-1, -1), wxTE_MULTILINE);
-  remove_replacement_button = new wxButton(
-      parent, wxID_ANY, "X", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  remove_replacement_button =
+      new wxButton(control_pane, wxID_ANY, "X", wxDefaultPosition,
+                   wxDefaultSize, wxBU_EXACTFIT);
   // We add a blank space to the end of the line so that when the scrollbar
   // appears it doesn't occlude the delete button.
-  spacer_text = new wxStaticText(parent, wxID_ANY, "   ");
+  spacer_text = new wxStaticText(control_pane, wxID_ANY, "   ");
   bindEvents();
+  positionWidgets();
 }
-
-std::vector<wxWindow *> Replacement::line() {
-  std::vector<wxWindow *> list_of_widgets;
-  list_of_widgets.push_back(replaceable);
-  list_of_widgets.push_back(replacement);
-  list_of_widgets.push_back(remove_replacement_button);
-  list_of_widgets.push_back(spacer_text);
-  return list_of_widgets;
-}
-
-int Replacement::lineWidth() { return 4; }
 
 void Replacement::bindEvents() {}
+
+void Replacement::positionWidgets() {
+  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 4, 0, 0);
+  sizer->SetFlexibleDirection(wxBOTH);
+  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  sizer->Add(replaceable, 0, wxALL, BORDER_SIZE);
+  sizer->Add(replacement, 0, wxALL, BORDER_SIZE);
+  sizer->Add(remove_replacement_button, 0, wxALL, BORDER_SIZE);
+  sizer->Add(spacer_text, 0, wxALL, BORDER_SIZE);
+  control_pane->SetSizerAndFit(sizer);
+}
 
 void Replacement::deleteReplacement(wxCommandEvent &event) {}
 

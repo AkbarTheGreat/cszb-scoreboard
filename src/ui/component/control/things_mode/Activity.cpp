@@ -1,5 +1,6 @@
 /*
-ui/component/control/things_mode/Activity.h: Represents an activity in 5/6 things.
+ui/component/control/things_mode/Activity.h: Represents an activity in 5/6
+things.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -18,46 +19,41 @@ limitations under the License.
 
 #pragma once
 
+#include "ui/component/control/things_mode/Activity.h"
+
 #include <wx/wx.h>
 
 #include <vector>
-#include "ui/component/control/things_mode/Activity.h"
+
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
 namespace cszb_scoreboard {
+
+const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 Activity::Activity(wxWindow *parent, wxWindow *top_frame,
                    ScreenTextController *owning_controller, bool is_first) {
   this->owning_controller = owning_controller;
   this->parent = parent;
 
+  control_pane = new wxPanel(parent);
+
   if (is_first) {
-    activity_selector = new wxRadioButton(
-        parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+    activity_selector =
+        new wxRadioButton(control_pane, wxID_ANY, "", wxDefaultPosition,
+                          wxDefaultSize, wxRB_GROUP);
   } else {
-    activity_selector = new wxRadioButton(parent, wxID_ANY, "");
+    activity_selector = new wxRadioButton(control_pane, wxID_ANY, "");
   }
-  activity_text = new wxTextCtrl(parent, wxID_ANY, "", wxDefaultPosition,
+  activity_text = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                  wxSize(-1, -1), wxTE_MULTILINE);
-  remove_activity_button = new wxButton(
-      parent, wxID_ANY, "X", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  remove_activity_button =
+      new wxButton(control_pane, wxID_ANY, "X", wxDefaultPosition,
+                   wxDefaultSize, wxBU_EXACTFIT);
   replacement_panel = new ReplacementPanel(top_frame, owning_controller);
   bindEvents();
+  positionWidgets();
 }
-
-void Activity::select() { activity_selector->SetValue(true); }
-
-bool Activity::isSelected() { return activity_selector->GetValue(); }
-
-std::vector<wxWindow *> Activity::line() {
-  std::vector<wxWindow *> list_of_widgets;
-  list_of_widgets.push_back(activity_selector);
-  list_of_widgets.push_back(activity_text);
-  list_of_widgets.push_back(remove_activity_button);
-  return list_of_widgets;
-}
-
-int Activity::lineWidth() { return 3; }
 
 void Activity::bindEvents() {
   activity_selector->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
@@ -65,7 +61,21 @@ void Activity::bindEvents() {
                           (ActivityPanel *)parent);
 }
 
+void Activity::positionWidgets() {
+  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 3, 0, 0);
+  sizer->SetFlexibleDirection(wxBOTH);
+  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  sizer->Add(activity_selector, 0, wxALL, BORDER_SIZE);
+  sizer->Add(activity_text, 0, wxALL, BORDER_SIZE);
+  sizer->Add(remove_activity_button, 0, wxALL, BORDER_SIZE);
+  control_pane->SetSizerAndFit(sizer);
+}
+
+void Activity::select() { activity_selector->SetValue(true); }
+
+bool Activity::isSelected() { return activity_selector->GetValue(); }
+
 void Activity::selectionChanged(wxCommandEvent &event) {
   ((ActivityPanel *)parent)->selectionChanged(event);
 }
-}  // namespace cszb_scorebaord
+}  // namespace cszb_scoreboard
