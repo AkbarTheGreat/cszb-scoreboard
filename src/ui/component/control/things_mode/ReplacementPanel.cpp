@@ -17,8 +17,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
-
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
 #include <wx/wx.h>

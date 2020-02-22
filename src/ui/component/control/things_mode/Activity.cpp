@@ -17,8 +17,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
-
 #include "ui/component/control/things_mode/Activity.h"
 
 #include <wx/wx.h>
@@ -66,11 +64,16 @@ void Activity::positionWidgets() {
   control_pane->SetSizerAndFit(sizer);
 }
 
-void Activity::select() { activity_selector->SetValue(true); }
+void Activity::select() {
+  if (!activity_selector->GetValue()) {
+    activity_selector->SetValue(true);
+    wxCommandEvent event;
+    event.SetEventObject(activity_selector);
+    ((ActivityPanel *)parent)->selectionChanged(event);
+  }
+}
 
 void Activity::unselect() { activity_selector->SetValue(false); }
-
-bool Activity::isSelected() { return activity_selector->GetValue(); }
 
 bool Activity::resolveSelection(wxObject *selected_object) {
   if (activity_selector == selected_object) {

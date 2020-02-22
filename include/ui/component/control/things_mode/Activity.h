@@ -32,7 +32,6 @@ class Activity {
   Activity(wxWindow *parent, wxPanel *activity_frame,
            wxPanel *replacement_frame, bool is_first);
   wxPanel *controlPane() { return control_pane; }
-  bool isSelected();
   ReplacementPanel *replacementPanel() { return replacement_panel; }
   bool resolveSelection(wxObject *selected_object);
   void select();

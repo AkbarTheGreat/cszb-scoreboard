@@ -70,8 +70,7 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
                                  BORDER_SIZE);
   replacement_side->GetSizer()->Add(activities.back().replacementPanel(), 0,
                                     wxALL, BORDER_SIZE);
-  //activities.back().select();
-  //selectionChanged(wxCommandEvent());
+  activities.back().select();
   activity_side->SetSizerAndFit(activity_side->GetSizer());
   SetSizerAndFit(GetSizer());
 }
