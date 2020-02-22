@@ -75,6 +75,8 @@ void Activity::select() {
 
 void Activity::unselect() { activity_selector->SetValue(false); }
 
+bool Activity::isSelected() { return activity_selector->GetValue(); }
+
 bool Activity::resolveSelection(wxObject *selected_object) {
   if (activity_selector == selected_object) {
     select();
