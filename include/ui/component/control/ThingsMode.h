@@ -41,6 +41,7 @@ class ThingsMode : public ScreenTextController {
   wxButton *new_activity_button;
   wxButton *new_replacement_button;
   wxScrolledWindow *scrollable_panel;
+  wxPanel *button_panel;
 
   ActivityPanel *home_activities_panel;
   ActivityPanel *away_activities_panel;
@@ -56,7 +57,7 @@ class ThingsMode : public ScreenTextController {
   void bindEvents();
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
-  void updateScroll();
+  void updateActivityPanel();
 };
 
 }  // namespace cszb_scoreboard

@@ -34,6 +34,8 @@ class ActivityPanel : public wxPanel {
   ReplacementPanel *replacementPanel();
 
  private:
+  wxPanel *activity_side;
+  wxPanel *replacement_side;
   std::vector<Activity> activities;
   ScreenTextController *owning_controller;
   wxWindow *parent;

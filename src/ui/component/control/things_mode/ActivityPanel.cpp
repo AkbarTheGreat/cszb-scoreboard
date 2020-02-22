@@ -30,7 +30,9 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
     : wxPanel(parent) {
   this->owning_controller = owning_controller;
   this->parent = parent;
-  activities.push_back(Activity(this, this, owning_controller, true));
+  activity_side = new wxPanel(this);
+  replacement_side = new wxPanel(this);
+  activities.push_back(Activity(this, activity_side, replacement_side, true));
   bindEvents();
   positionWidgets();
 }
@@ -38,24 +40,39 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
 void ActivityPanel::bindEvents() {}
 
 void ActivityPanel::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxFlexGridSizer *activity_sizer = new wxFlexGridSizer(0, 1, 0, 0);
+  activity_sizer->SetFlexibleDirection(wxBOTH);
+  activity_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   for (auto activity : activities) {
-    sizer->Add(activity.controlPane(), 0, wxALL, BORDER_SIZE);
+    activity_sizer->Add(activity.controlPane(), 0, wxALL, BORDER_SIZE);
   }
-  SetSizerAndFit(sizer);
+  activity_side->SetSizerAndFit(activity_sizer);
+
+  wxFlexGridSizer *replacement_sizer = new wxFlexGridSizer(0, 1, 0, 0);
+  replacement_sizer->SetFlexibleDirection(wxBOTH);
+  replacement_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  replacement_sizer->Add(replacementPanel(), 0, wxALL, BORDER_SIZE);
+  replacement_side->SetSizerAndFit(replacement_sizer);
+
+  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  outer_sizer->SetFlexibleDirection(wxBOTH);
+  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  outer_sizer->Add(activity_side, 0, wxALL, BORDER_SIZE);
+  outer_sizer->Add(replacement_side, 0, wxALL, BORDER_SIZE);
+  SetSizerAndFit(outer_sizer);
 }
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
   activities.push_back(
-      Activity(this, parent_panel, owning_controller, is_first));
-  GetSizer()->Add(activities.back().controlPane(), 0, wxALL, BORDER_SIZE);
-  parent_panel->GetSizer()->Add(activities.back().replacementPanel(), 0, wxALL,
-                                BORDER_SIZE);
-  activities.back().select();
+      Activity(this, activity_side, replacement_side, is_first));
+  activity_side->GetSizer()->Add(activities.back().controlPane(), 0, wxALL,
+                                 BORDER_SIZE);
+  replacement_side->GetSizer()->Add(activities.back().replacementPanel(), 0,
+                                    wxALL, BORDER_SIZE);
+  // activities.back().select();
   selectionChanged(wxCommandEvent());
+  activity_side->SetSizerAndFit(activity_side->GetSizer());
   SetSizerAndFit(GetSizer());
 }
 
@@ -67,6 +84,8 @@ void ActivityPanel::selectionChanged(wxCommandEvent &event) {
       activity.replacementPanel()->Hide();
     }
   }
+  replacement_side->SetSizerAndFit(replacement_side->GetSizer());
+  SetSizerAndFit(GetSizer());
   owning_controller->updatePreview();
 }
 

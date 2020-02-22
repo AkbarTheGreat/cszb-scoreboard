@@ -31,12 +31,11 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-Activity::Activity(wxWindow *parent, wxWindow *top_frame,
-                   ScreenTextController *owning_controller, bool is_first) {
-  this->owning_controller = owning_controller;
+Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
+                   wxPanel *replacement_frame, bool is_first) {
   this->parent = parent;
 
-  control_pane = new wxPanel(parent);
+  control_pane = new wxPanel(activity_frame);
 
   if (is_first) {
     activity_selector =
@@ -50,7 +49,7 @@ Activity::Activity(wxWindow *parent, wxWindow *top_frame,
   remove_activity_button =
       new wxButton(control_pane, wxID_ANY, "X", wxDefaultPosition,
                    wxDefaultSize, wxBU_EXACTFIT);
-  replacement_panel = new ReplacementPanel(top_frame, owning_controller);
+  replacement_panel = new ReplacementPanel(replacement_frame);
   bindEvents();
   positionWidgets();
 }

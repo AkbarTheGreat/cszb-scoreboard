@@ -31,7 +31,6 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 ThingsMode *ThingsMode::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   ThingsMode *entry = new ThingsMode(preview_panel, parent);
   entry->initializeWidgets();
-  entry->updatePreview();
   return entry;
 }
 
@@ -41,10 +40,11 @@ void ThingsMode::createControls(wxPanel *control_panel) {
 
   screen_selection = new TeamSelector(scrollable_panel);
 
-  new_activity_button =
-      new wxButton(scrollable_panel, wxID_ANY, "New Activity");
+  button_panel = new wxPanel(scrollable_panel);
+
+  new_activity_button = new wxButton(button_panel, wxID_ANY, "New Activity");
   new_replacement_button =
-      new wxButton(scrollable_panel, wxID_ANY, "New Replacement");
+      new wxButton(button_panel, wxID_ANY, "New Replacement");
 
   home_activities_panel = new ActivityPanel(scrollable_panel, this);
   away_activities_panel = new ActivityPanel(scrollable_panel, this);
@@ -55,27 +55,29 @@ void ThingsMode::createControls(wxPanel *control_panel) {
 }
 
 void ThingsMode::positionWidgets(wxPanel *control_panel) {
+  wxFlexGridSizer *button_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  button_sizer->SetFlexibleDirection(wxBOTH);
+  button_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  button_sizer->Add(new_activity_button, 0, wxALL, BORDER_SIZE);
+  button_sizer->Add(new_replacement_button, 0, wxALL, BORDER_SIZE);
+  button_panel->SetSizerAndFit(button_sizer);
+
   wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   outer_sizer->SetFlexibleDirection(wxBOTH);
   outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  wxFlexGridSizer *scrollable_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  wxFlexGridSizer *scrollable_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   scrollable_sizer->SetFlexibleDirection(wxBOTH);
   scrollable_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  scrollable_sizer->Add(new_activity_button, 0, wxALL, BORDER_SIZE);
-  scrollable_sizer->Add(new_replacement_button, 0, wxALL, BORDER_SIZE);
+  scrollable_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  scrollable_sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
 
   scrollable_sizer->Add(home_activities_panel);
-  scrollable_sizer->Add(home_activities_panel->replacementPanel());
   scrollable_sizer->Add(away_activities_panel);
-  scrollable_sizer->Add(away_activities_panel->replacementPanel());
   scrollable_sizer->Add(all_activities_panel);
-  scrollable_sizer->Add(all_activities_panel->replacementPanel());
 
-  screenChanged(wxCommandEvent());
-
-  scrollable_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  updateActivityPanel();
 
   scrollable_panel->SetSizer(scrollable_sizer);
   scrollable_panel->FitInside();
@@ -93,6 +95,12 @@ void ThingsMode::bindEvents() {
 }
 
 void ThingsMode::updatePreview() {
+  // Re-size for scrollable windows
+  scrollable_panel->SetSizer(scrollable_panel->GetSizer());
+  scrollable_panel->FitInside();
+  scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
+  scrollable_panel->SetScrollRate(0, 20);
+
   // Send the combined text to both previews
   if (screen_selection->allSelected()) {
     proto::ScreenSide side;
@@ -106,29 +114,24 @@ void ThingsMode::updatePreview() {
 
 void ThingsMode::textUpdated(wxKeyEvent &event) { updatePreview(); }
 
-void ThingsMode::screenChanged(wxCommandEvent &event) {
+void ThingsMode::updateActivityPanel() {
   if (screen_selection->allSelected()) {
     home_activities_panel->Hide();
-    home_activities_panel->replacementPanel()->Hide();
     away_activities_panel->Hide();
-    away_activities_panel->replacementPanel()->Hide();
     all_activities_panel->Show();
-    all_activities_panel->replacementPanel()->Show();
   } else if (screen_selection->homeSelected()) {
     away_activities_panel->Hide();
-    away_activities_panel->replacementPanel()->Hide();
     all_activities_panel->Hide();
-    all_activities_panel->replacementPanel()->Hide();
     home_activities_panel->Show();
-    home_activities_panel->replacementPanel()->Show();
   } else if (screen_selection->awaySelected()) {
     home_activities_panel->Hide();
-    home_activities_panel->replacementPanel()->Hide();
     all_activities_panel->Hide();
-    all_activities_panel->replacementPanel()->Hide();
     away_activities_panel->Show();
-    away_activities_panel->replacementPanel()->Show();
   }
+}
+
+void ThingsMode::screenChanged(wxCommandEvent &event) {
+  updateActivityPanel();
 
   updatePreview();
 }
@@ -136,14 +139,7 @@ void ThingsMode::screenChanged(wxCommandEvent &event) {
 void ThingsMode::addActivity(wxCommandEvent &event) {
   home_activities_panel->addActivity(scrollable_panel);
 
-  scrollable_panel->SetSizer(scrollable_panel->GetSizer());
-  scrollable_panel->FitInside();
-  scrollable_panel->SetScrollRate(0, scrollable_panel->GetSize().GetHeight());
-  scrollable_panel->SetSizeHints(scrollable_panel->GetSize());
-  //  scrollable_panel->SetSize(scrollable_panel->GetVirtualSize().GetWidth(),
-  //                            scrollable_panel->GetSize().GetHeight());
-
-  control_panel->SetSizerAndFit(control_panel->GetSizer());
+  updatePreview();
 }
 
 void ThingsMode::addReplacement(wxCommandEvent &event) {}

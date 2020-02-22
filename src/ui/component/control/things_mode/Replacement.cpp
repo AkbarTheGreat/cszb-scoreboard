@@ -29,9 +29,7 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-Replacement::Replacement(wxWindow *parent,
-                         ScreenTextController *owning_controller) {
-  this->owning_controller = owning_controller;
+Replacement::Replacement(wxWindow *parent) {
   control_pane = new wxPanel(parent);
   replaceable = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                wxSize(-1, -1), wxTE_MULTILINE);

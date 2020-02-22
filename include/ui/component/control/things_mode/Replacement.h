@@ -28,12 +28,11 @@ limitations under the License.
 namespace cszb_scoreboard {
 class Replacement {
  public:
-  Replacement(wxWindow *parent, ScreenTextController *owning_controller);
+  Replacement(wxWindow *parent);
   wxPanel *controlPane() { return control_pane; }
 
  private:
   wxPanel *control_pane;
-  ScreenTextController *owning_controller;
   wxTextCtrl *replaceable;
   wxTextCtrl *replacement;
   wxButton *remove_replacement_button;

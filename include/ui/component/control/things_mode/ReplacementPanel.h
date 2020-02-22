@@ -28,10 +28,9 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ReplacementPanel : public wxPanel {
  public:
-  ReplacementPanel(wxWindow *parent, ScreenTextController *owning_controller);
+  ReplacementPanel(wxWindow *parent);
 
  private:
-  ScreenTextController *owning_controller;
   std::vector<Replacement> replacements;
 
   void bindEvents();
