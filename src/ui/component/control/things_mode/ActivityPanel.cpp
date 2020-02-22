@@ -77,8 +77,9 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
 }
 
 void ActivityPanel::selectionChanged(wxCommandEvent &event) {
+  wxObject *event_object = event.GetEventObject();
   for (auto activity : activities) {
-    if (activity.isSelected()) {
+    if (activity.resolveSelection(event_object)) {
       activity.replacementPanel()->Show();
     } else {
       activity.replacementPanel()->Hide();

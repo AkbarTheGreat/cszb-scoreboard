@@ -34,7 +34,9 @@ class Activity {
   wxPanel *controlPane() { return control_pane; }
   bool isSelected();
   ReplacementPanel *replacementPanel() { return replacement_panel; }
+  bool resolveSelection(wxObject *selected_object);
   void select();
+  void unselect();
 
  private:
   wxPanel *control_pane;

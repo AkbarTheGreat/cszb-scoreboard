@@ -37,13 +37,9 @@ Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
 
   control_pane = new wxPanel(activity_frame);
 
-  if (is_first) {
-    activity_selector =
-        new wxRadioButton(control_pane, wxID_ANY, "", wxDefaultPosition,
-                          wxDefaultSize, wxRB_GROUP);
-  } else {
-    activity_selector = new wxRadioButton(control_pane, wxID_ANY, "");
-  }
+  activity_selector =
+      new wxRadioButton(control_pane, wxID_ANY, "", wxDefaultPosition,
+                        wxDefaultSize, wxRB_SINGLE);
   activity_text = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                  wxSize(-1, -1), wxTE_MULTILINE);
   remove_activity_button =
@@ -72,7 +68,19 @@ void Activity::positionWidgets() {
 
 void Activity::select() { activity_selector->SetValue(true); }
 
+void Activity::unselect() { activity_selector->SetValue(false); }
+
 bool Activity::isSelected() { return activity_selector->GetValue(); }
+
+bool Activity::resolveSelection(wxObject *selected_object) {
+  if (activity_selector == selected_object) {
+    select();
+    return true;
+  } else {
+    unselect();
+    return false;
+  }
+}
 
 void Activity::selectionChanged(wxCommandEvent &event) {
   ((ActivityPanel *)parent)->selectionChanged(event);
