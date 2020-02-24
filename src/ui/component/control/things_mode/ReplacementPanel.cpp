@@ -57,6 +57,12 @@ void ReplacementPanel::positionWidgets() {
   SetSizerAndFit(sizer);
 }
 
+void ReplacementPanel::addReplacement() {
+  replacements.push_back(new Replacement(this));
+  GetSizer()->Add(replacements.back()->controlPane(), 0, wxALL, BORDER_SIZE);
+  updateNotify();
+}
+
 void ReplacementPanel::deleteReplacement(wxCommandEvent &event) {
   wxObject *event_object = event.GetEventObject();
   int offset = 0;
@@ -64,11 +70,16 @@ void ReplacementPanel::deleteReplacement(wxCommandEvent &event) {
     if (replacement->containsDeleteButton(event_object)) {
       delete replacement;
       replacements.erase(replacements.begin() + offset);
-      ((ActivityPanel *)activity_panel)->updateNotify();
+      updateNotify();
       return;
     }
     offset++;
   }
+}
+
+void ReplacementPanel::updateNotify() {
+  SetSizerAndFit(GetSizer());
+  ((ActivityPanel *)activity_panel)->updateNotify();
 }
 
 }  // namespace cszb_scoreboard

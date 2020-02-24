@@ -58,6 +58,8 @@ void ActivityPanel::positionWidgets() {
   wxFlexGridSizer *replacement_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   replacement_sizer->SetFlexibleDirection(wxBOTH);
   replacement_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  // This is only called during construction, so we can assume
+  // replacementPanel() is not null here
   replacement_sizer->Add(replacementPanel(), 0, wxALL, BORDER_SIZE);
   replacement_side->SetSizerAndFit(replacement_sizer);
 
@@ -79,6 +81,13 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
                                     wxALL, BORDER_SIZE);
   activities.back()->select();
   updateNotify();
+}
+
+void ActivityPanel::addReplacement() {
+  if (replacementPanel() != nullptr) {
+    replacementPanel()->addReplacement();
+    updateNotify();
+  }
 }
 
 void ActivityPanel::deleteActivity(wxCommandEvent &event) {

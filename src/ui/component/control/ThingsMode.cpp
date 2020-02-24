@@ -90,6 +90,8 @@ void ThingsMode::positionWidgets(wxPanel *control_panel) {
 void ThingsMode::bindEvents() {
   new_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                             &ThingsMode::addActivity, this);
+  new_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                               &ThingsMode::addReplacement, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &ThingsMode::screenChanged, this);
 }
@@ -138,10 +140,10 @@ void ThingsMode::screenChanged(wxCommandEvent &event) {
 
 void ThingsMode::addActivity(wxCommandEvent &event) {
   home_activities_panel->addActivity(scrollable_panel);
-
-  updatePreview();
 }
 
-void ThingsMode::addReplacement(wxCommandEvent &event) {}
+void ThingsMode::addReplacement(wxCommandEvent &event) {
+  home_activities_panel->addReplacement();
+}
 
 }  // namespace cszb_scoreboard

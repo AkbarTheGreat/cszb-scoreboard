@@ -30,6 +30,7 @@ class ReplacementPanel : public wxPanel {
  public:
   ReplacementPanel(wxWindow *parent, wxWindow *activity_panel);
   ~ReplacementPanel();
+  void addReplacement();
   void deleteReplacement(wxCommandEvent &event);
 
  private:
@@ -38,5 +39,6 @@ class ReplacementPanel : public wxPanel {
 
   void bindEvents();
   void positionWidgets();
+  void updateNotify();
 };
 }  // namespace cszb_scoreboard

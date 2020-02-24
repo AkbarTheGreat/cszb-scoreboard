@@ -31,6 +31,7 @@ class ActivityPanel : public wxPanel {
   ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller);
   ~ActivityPanel();
   void addActivity(wxPanel *parent_panel);
+  void addReplacement();
   void deleteActivity(wxCommandEvent &event);
   void selectionChanged(wxCommandEvent &event);
   ReplacementPanel *replacementPanel();
