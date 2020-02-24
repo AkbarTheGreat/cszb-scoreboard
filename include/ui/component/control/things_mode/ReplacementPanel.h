@@ -28,11 +28,13 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ReplacementPanel : public wxPanel {
  public:
-  ReplacementPanel(wxWindow *parent);
+  ReplacementPanel(wxWindow *parent, wxWindow *activity_panel);
   ~ReplacementPanel();
+  void deleteReplacement(wxCommandEvent &event);
 
  private:
-  std::vector<Replacement*> replacements;
+  wxWindow *activity_panel;
+  std::vector<Replacement *> replacements;
 
   void bindEvents();
   void positionWidgets();

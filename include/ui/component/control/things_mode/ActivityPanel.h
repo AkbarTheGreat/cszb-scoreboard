@@ -34,6 +34,7 @@ class ActivityPanel : public wxPanel {
   void deleteActivity(wxCommandEvent &event);
   void selectionChanged(wxCommandEvent &event);
   ReplacementPanel *replacementPanel();
+  void updateNotify();
 
  private:
   wxPanel *activity_side;

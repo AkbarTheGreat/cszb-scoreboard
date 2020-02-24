@@ -43,7 +43,7 @@ Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
   remove_activity_button =
       new wxButton(control_pane, wxID_ANY, "X", wxDefaultPosition,
                    wxDefaultSize, wxBU_EXACTFIT);
-  replacement_panel = new ReplacementPanel(replacement_frame);
+  replacement_panel = new ReplacementPanel(replacement_frame, parent);
   bindEvents();
   positionWidgets();
 }

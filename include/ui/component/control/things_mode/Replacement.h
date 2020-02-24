@@ -30,10 +30,12 @@ class Replacement {
  public:
   Replacement(wxWindow *parent);
   ~Replacement();
+  bool containsDeleteButton(wxObject *delete_button);
   wxPanel *controlPane() { return control_pane; }
 
  private:
   wxPanel *control_pane;
+  wxWindow *parent;
   wxTextCtrl *replaceable;
   wxTextCtrl *replacement;
   wxButton *remove_replacement_button;

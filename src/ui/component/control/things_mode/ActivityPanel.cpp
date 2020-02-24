@@ -78,9 +78,7 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
   replacement_side->GetSizer()->Add(activities.back()->replacementPanel(), 0,
                                     wxALL, BORDER_SIZE);
   activities.back()->select();
-  activity_side->SetSizerAndFit(activity_side->GetSizer());
-  SetSizerAndFit(GetSizer());
-  owning_controller->updatePreview();
+  updateNotify();
 }
 
 void ActivityPanel::deleteActivity(wxCommandEvent &event) {
@@ -99,7 +97,7 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
       }
       delete activity;
       activities.erase(activities.begin() + offset);
-      owning_controller->updatePreview();
+      updateNotify();
       return;
     }
     offset++;
@@ -115,7 +113,12 @@ void ActivityPanel::selectionChanged(wxCommandEvent &event) {
       activity->replacementPanel()->Hide();
     }
   }
+  updateNotify();
+}
+
+void ActivityPanel::updateNotify() {
   replacement_side->SetSizerAndFit(replacement_side->GetSizer());
+  activity_side->SetSizerAndFit(activity_side->GetSizer());
   SetSizerAndFit(GetSizer());
   owning_controller->updatePreview();
 }

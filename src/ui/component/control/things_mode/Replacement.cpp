@@ -23,11 +23,14 @@ limitations under the License.
 
 #include <vector>
 
+#include "ui/component/control/things_mode/ReplacementPanel.h"
+
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 Replacement::Replacement(wxWindow *parent) {
+  this->parent = parent;
   control_pane = new wxPanel(parent);
   replaceable = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                wxSize(-1, -1), wxTE_MULTILINE);
@@ -45,7 +48,11 @@ Replacement::Replacement(wxWindow *parent) {
 
 Replacement::~Replacement() { control_pane->Destroy(); }
 
-void Replacement::bindEvents() {}
+void Replacement::bindEvents() {
+  remove_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                                  &ReplacementPanel::deleteReplacement,
+                                  (ReplacementPanel *)parent);
+}
 
 void Replacement::positionWidgets() {
   wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 4, 0, 0);
@@ -56,6 +63,14 @@ void Replacement::positionWidgets() {
   sizer->Add(remove_replacement_button, 0, wxALL, BORDER_SIZE);
   sizer->Add(spacer_text, 0, wxALL, BORDER_SIZE);
   control_pane->SetSizerAndFit(sizer);
+}
+
+bool Replacement::containsDeleteButton(wxObject *delete_button) {
+  if (delete_button == remove_replacement_button) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void Replacement::deleteReplacement(wxCommandEvent &event) {}

@@ -23,11 +23,17 @@ limitations under the License.
 
 #include <vector>
 
+#include "ui/component/control/things_mode/ActivityPanel.h"
+
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-ReplacementPanel::ReplacementPanel(wxWindow *parent) : wxPanel(parent) {
+ReplacementPanel::ReplacementPanel(wxWindow *parent, wxWindow *activity_panel)
+    : wxPanel(parent) {
+  // TODO: Research custom events and throw an event upward to propigate these
+  // changes rather than a much more brittle forced-cast relationship.
+  this->activity_panel = activity_panel;
   replacements.push_back(new Replacement(this));
   bindEvents();
   positionWidgets();
@@ -49,6 +55,20 @@ void ReplacementPanel::positionWidgets() {
     sizer->Add(replacement->controlPane(), 0, wxALL, BORDER_SIZE);
   }
   SetSizerAndFit(sizer);
+}
+
+void ReplacementPanel::deleteReplacement(wxCommandEvent &event) {
+  wxObject *event_object = event.GetEventObject();
+  int offset = 0;
+  for (auto replacement : replacements) {
+    if (replacement->containsDeleteButton(event_object)) {
+      delete replacement;
+      replacements.erase(replacements.begin() + offset);
+      ((ActivityPanel *)activity_panel)->updateNotify();
+      return;
+    }
+    offset++;
+  }
 }
 
 }  // namespace cszb_scoreboard
