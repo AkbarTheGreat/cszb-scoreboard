@@ -29,9 +29,10 @@ namespace cszb_scoreboard {
 class ReplacementPanel : public wxPanel {
  public:
   ReplacementPanel(wxWindow *parent);
+  ~ReplacementPanel();
 
  private:
-  std::vector<Replacement> replacements;
+  std::vector<Replacement*> replacements;
 
   void bindEvents();
   void positionWidgets();

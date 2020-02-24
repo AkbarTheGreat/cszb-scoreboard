@@ -48,10 +48,19 @@ Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
   positionWidgets();
 }
 
+Activity::~Activity() {
+  delete replacement_panel;
+  control_pane->Destroy();
+}
+
 void Activity::bindEvents() {
   activity_selector->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
                           &ActivityPanel::selectionChanged,
                           (ActivityPanel *)parent);
+
+  remove_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                               &ActivityPanel::deleteActivity,
+                               (ActivityPanel *)parent);
 }
 
 void Activity::positionWidgets() {
@@ -83,6 +92,13 @@ bool Activity::resolveSelection(wxObject *selected_object) {
     return true;
   } else {
     unselect();
+    return false;
+  }
+}
+bool Activity::containsDeleteButton(wxObject *delete_button) {
+  if (delete_button == remove_activity_button) {
+    return true;
+  } else {
     return false;
   }
 }

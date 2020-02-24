@@ -29,6 +29,7 @@ namespace cszb_scoreboard {
 class Replacement {
  public:
   Replacement(wxWindow *parent);
+  ~Replacement();
   wxPanel *controlPane() { return control_pane; }
 
  private:

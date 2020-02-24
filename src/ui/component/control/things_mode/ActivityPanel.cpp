@@ -32,9 +32,16 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   this->parent = parent;
   activity_side = new wxPanel(this);
   replacement_side = new wxPanel(this);
-  activities.push_back(Activity(this, activity_side, replacement_side, true));
+  activities.push_back(
+      new Activity(this, activity_side, replacement_side, true));
   bindEvents();
   positionWidgets();
+}
+
+ActivityPanel::~ActivityPanel() {
+  for (auto activity : activities) {
+    delete activity;
+  }
 }
 
 void ActivityPanel::bindEvents() {}
@@ -44,7 +51,7 @@ void ActivityPanel::positionWidgets() {
   activity_sizer->SetFlexibleDirection(wxBOTH);
   activity_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   for (auto activity : activities) {
-    activity_sizer->Add(activity.controlPane(), 0, wxALL, BORDER_SIZE);
+    activity_sizer->Add(activity->controlPane(), 0, wxALL, BORDER_SIZE);
   }
   activity_side->SetSizerAndFit(activity_sizer);
 
@@ -65,23 +72,47 @@ void ActivityPanel::positionWidgets() {
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
   activities.push_back(
-      Activity(this, activity_side, replacement_side, is_first));
-  activity_side->GetSizer()->Add(activities.back().controlPane(), 0, wxALL,
+      new Activity(this, activity_side, replacement_side, is_first));
+  activity_side->GetSizer()->Add(activities.back()->controlPane(), 0, wxALL,
                                  BORDER_SIZE);
-  replacement_side->GetSizer()->Add(activities.back().replacementPanel(), 0,
+  replacement_side->GetSizer()->Add(activities.back()->replacementPanel(), 0,
                                     wxALL, BORDER_SIZE);
-  activities.back().select();
+  activities.back()->select();
   activity_side->SetSizerAndFit(activity_side->GetSizer());
   SetSizerAndFit(GetSizer());
+  owning_controller->updatePreview();
+}
+
+void ActivityPanel::deleteActivity(wxCommandEvent &event) {
+  wxObject *event_object = event.GetEventObject();
+  int offset = 0;
+  for (auto activity : activities) {
+    if (activity->containsDeleteButton(event_object)) {
+      if (activity->isSelected()) {
+        if (activities.size() > 1) {
+          if (offset == 0) {
+            activities[1]->select();
+          } else {
+            activities[0]->select();
+          }
+        }
+      }
+      delete activity;
+      activities.erase(activities.begin() + offset);
+      owning_controller->updatePreview();
+      return;
+    }
+    offset++;
+  }
 }
 
 void ActivityPanel::selectionChanged(wxCommandEvent &event) {
   wxObject *event_object = event.GetEventObject();
   for (auto activity : activities) {
-    if (activity.resolveSelection(event_object)) {
-      activity.replacementPanel()->Show();
+    if (activity->resolveSelection(event_object)) {
+      activity->replacementPanel()->Show();
     } else {
-      activity.replacementPanel()->Hide();
+      activity->replacementPanel()->Hide();
     }
   }
   replacement_side->SetSizerAndFit(replacement_side->GetSizer());
@@ -95,13 +126,13 @@ ReplacementPanel *ActivityPanel::replacementPanel() {
   }
 
   for (auto activity : activities) {
-    if (activity.isSelected()) {
-      return activity.replacementPanel();
+    if (activity->isSelected()) {
+      return activity->replacementPanel();
     }
   }
 
   // Should be unreachable.
-  return activities[0].replacementPanel();
+  return activities[0]->replacementPanel();
 }
 
 }  // namespace cszb_scoreboard

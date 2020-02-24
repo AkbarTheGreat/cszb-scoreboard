@@ -43,6 +43,8 @@ Replacement::Replacement(wxWindow *parent) {
   positionWidgets();
 }
 
+Replacement::~Replacement() { control_pane->Destroy(); }
+
 void Replacement::bindEvents() {}
 
 void Replacement::positionWidgets() {

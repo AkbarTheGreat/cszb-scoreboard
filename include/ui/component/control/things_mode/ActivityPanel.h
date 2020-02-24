@@ -29,14 +29,16 @@ namespace cszb_scoreboard {
 class ActivityPanel : public wxPanel {
  public:
   ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller);
+  ~ActivityPanel();
   void addActivity(wxPanel *parent_panel);
+  void deleteActivity(wxCommandEvent &event);
   void selectionChanged(wxCommandEvent &event);
   ReplacementPanel *replacementPanel();
 
  private:
   wxPanel *activity_side;
   wxPanel *replacement_side;
-  std::vector<Activity> activities;
+  std::vector<Activity *> activities;
   ScreenTextController *owning_controller;
   wxWindow *parent;
 

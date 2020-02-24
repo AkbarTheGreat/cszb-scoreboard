@@ -31,7 +31,10 @@ class Activity {
  public:
   Activity(wxWindow *parent, wxPanel *activity_frame,
            wxPanel *replacement_frame, bool is_first);
+  ~Activity();
   wxPanel *controlPane() { return control_pane; }
+  bool containsDeleteButton(wxObject *delete_button);
+  bool destroy();
   ReplacementPanel *replacementPanel() { return replacement_panel; }
   bool resolveSelection(wxObject *selected_object);
   bool isSelected();
