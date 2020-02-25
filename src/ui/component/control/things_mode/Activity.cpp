@@ -38,6 +38,9 @@ Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
   activity_selector =
       new wxRadioButton(control_pane, wxID_ANY, "", wxDefaultPosition,
                         wxDefaultSize, wxRB_SINGLE);
+  if (is_first) {
+    activity_selector->SetValue(true);
+  }
   activity_text = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                  wxSize(-1, -1), wxTE_MULTILINE);
   remove_activity_button =
