@@ -27,6 +27,9 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+const int NUMBER_OF_PRESENTER_OPTIONS = 2;
+const wxString PRESENTER_OPTIONS[NUMBER_OF_PRESENTER_OPTIONS] = {
+    wxT("Activity List"), wxT("Replacements")};
 
 ThingsMode *ThingsMode::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   ThingsMode *entry = new ThingsMode(preview_panel, parent);
@@ -38,9 +41,13 @@ void ThingsMode::createControls(wxPanel *control_panel) {
   scrollable_panel = new wxScrolledWindow(
       control_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
 
-  screen_selection = new TeamSelector(scrollable_panel);
-
   button_panel = new wxPanel(scrollable_panel);
+
+  screen_selection = new TeamSelector(button_panel);
+  presenter_selection = new wxRadioBox(
+      button_panel, wxID_ANY, wxT("Present"), wxDefaultPosition, wxDefaultSize,
+      NUMBER_OF_PRESENTER_OPTIONS, PRESENTER_OPTIONS, 1, wxRA_SPECIFY_COLS);
+  presenter_selection->SetSelection(0);
 
   new_activity_button = new wxButton(button_panel, wxID_ANY, "New Activity");
   new_replacement_button =
@@ -52,12 +59,14 @@ void ThingsMode::createControls(wxPanel *control_panel) {
 
   positionWidgets(control_panel);
   bindEvents();
-}
+}  // namespace cszb_scoreboard
 
 void ThingsMode::positionWidgets(wxPanel *control_panel) {
   wxFlexGridSizer *button_sizer = new wxFlexGridSizer(0, 2, 0, 0);
   button_sizer->SetFlexibleDirection(wxBOTH);
   button_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  button_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  button_sizer->Add(presenter_selection, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(new_activity_button, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(new_replacement_button, 0, wxALL, BORDER_SIZE);
   button_panel->SetSizerAndFit(button_sizer);
@@ -70,7 +79,6 @@ void ThingsMode::positionWidgets(wxPanel *control_panel) {
   scrollable_sizer->SetFlexibleDirection(wxBOTH);
   scrollable_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  scrollable_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
   scrollable_sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
 
   scrollable_sizer->Add(home_activities_panel);
@@ -94,6 +102,8 @@ void ThingsMode::bindEvents() {
                                &ThingsMode::addReplacement, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &ThingsMode::screenChanged, this);
+  presenter_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
+                         &ThingsMode::presentedListChanged, this);
 }
 
 void ThingsMode::updatePreview() {
@@ -135,6 +145,10 @@ void ThingsMode::updateActivityPanel() {
 void ThingsMode::screenChanged(wxCommandEvent &event) {
   updateActivityPanel();
 
+  updatePreview();
+}
+
+void ThingsMode::presentedListChanged(wxCommandEvent &event) {
   updatePreview();
 }
 

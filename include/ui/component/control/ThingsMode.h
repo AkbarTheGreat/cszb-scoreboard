@@ -37,11 +37,12 @@ class ThingsMode : public ScreenTextController {
   void updatePreview() override;
 
  private:
-  TeamSelector *screen_selection;
+  wxPanel *button_panel;
   wxButton *new_activity_button;
   wxButton *new_replacement_button;
+  wxRadioBox *presenter_selection;
+  TeamSelector *screen_selection;
   wxScrolledWindow *scrollable_panel;
-  wxPanel *button_panel;
 
   ActivityPanel *home_activities_panel;
   ActivityPanel *away_activities_panel;
@@ -56,6 +57,7 @@ class ThingsMode : public ScreenTextController {
   void addReplacement(wxCommandEvent &event);
   void bindEvents();
   void positionWidgets(wxPanel *control_panel);
+  void presentedListChanged(wxCommandEvent &event);
   void screenChanged(wxCommandEvent &event);
   void updateActivityPanel();
 };
