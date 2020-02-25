@@ -175,11 +175,23 @@ void ThingsMode::presentedListChanged(wxCommandEvent &event) {
 }
 
 void ThingsMode::addActivity(wxCommandEvent &event) {
-  home_activities_panel->addActivity(scrollable_panel);
+  if (screen_selection->allSelected()) {
+    all_activities_panel->addActivity(scrollable_panel);
+  } else if (screen_selection->homeSelected()) {
+    home_activities_panel->addActivity(scrollable_panel);
+  } else if (screen_selection->awaySelected()) {
+    away_activities_panel->addActivity(scrollable_panel);
+  }
 }
 
 void ThingsMode::addReplacement(wxCommandEvent &event) {
-  home_activities_panel->addReplacement();
+  if (screen_selection->allSelected()) {
+    all_activities_panel->addReplacement();
+  } else if (screen_selection->homeSelected()) {
+    home_activities_panel->addReplacement();
+  } else if (screen_selection->awaySelected()) {
+    away_activities_panel->addReplacement();
+  }
 }
 
 }  // namespace cszb_scoreboard
