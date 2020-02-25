@@ -103,7 +103,7 @@ void ThingsMode::bindEvents() {
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &ThingsMode::screenChanged, this);
   presenter_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
-                         &ThingsMode::presentedListChanged, this);
+                            &ThingsMode::presentedListChanged, this);
 }
 
 void ThingsMode::updatePreview() {
@@ -113,15 +113,38 @@ void ThingsMode::updatePreview() {
   scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
   scrollable_panel->SetScrollRate(0, 20);
 
-  // Send the combined text to both previews
+  // Set all sides to true, in order to present to all monitors
+  proto::ScreenSide side;
+  side.set_home(true);
+  side.set_away(true);
+  side.set_extra(true);
+
+  // TODO: Centralize team colors and use that here instead
+  Color screen_color("Black");
+  ActivityPanel *selected_panel = all_activities_panel;
   if (screen_selection->allSelected()) {
-    proto::ScreenSide side;
-    side.set_home(true);
-    side.set_away(true);
-    // previewPanel()->setTextForPreview(all_text, all_font_size, all_color,
-    // false, side);
-  } else {
+    // Do nothing, these are already set.
+  } else if (screen_selection->homeSelected()) {
+    screen_color = Color("Blue");
+    selected_panel = home_activities_panel;
+  } else if (screen_selection->awaySelected()) {
+    screen_color = Color("Red");
+    selected_panel = away_activities_panel;
   }
+
+  std::vector<proto::RenderableText> screen_lines;
+
+  if (presenter_selection->GetSelection() == 0) {
+    screen_lines.push_back(proto::RenderableText());
+    screen_lines.back().set_text("Activities Go Here");
+    screen_lines.back().mutable_font()->set_size(DEFAULT_FONT_SIZE);
+  } else {
+    screen_lines.push_back(proto::RenderableText());
+    screen_lines.back().set_text("Replacements Go Here");
+    screen_lines.back().mutable_font()->set_size(DEFAULT_FONT_SIZE);
+  }
+
+  previewPanel()->setTextForPreview(screen_lines, screen_color, true, side);
 }
 
 void ThingsMode::textUpdated(wxKeyEvent &event) { updatePreview(); }
@@ -144,7 +167,6 @@ void ThingsMode::updateActivityPanel() {
 
 void ThingsMode::screenChanged(wxCommandEvent &event) {
   updateActivityPanel();
-
   updatePreview();
 }
 
