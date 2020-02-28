@@ -52,6 +52,10 @@ void Replacement::bindEvents() {
   remove_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                   &ReplacementPanel::deleteReplacement,
                                   (ReplacementPanel *)parent);
+  replaceable->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
+                    (ReplacementPanel *)parent);
+  replacement->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
+                    (ReplacementPanel *)parent);
 }
 
 void Replacement::positionWidgets() {
@@ -74,5 +78,12 @@ bool Replacement::containsDeleteButton(wxObject *delete_button) {
 }
 
 void Replacement::deleteReplacement(wxCommandEvent &event) {}
+
+std::string Replacement::previewText() {
+  if (replaceable->GetValue() == "" && replacement->GetValue() == "") {
+    return " ";
+  }
+  return replaceable->GetValue() + ": " + replacement->GetValue();
+}
 
 }  // namespace cszb_scoreboard

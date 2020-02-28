@@ -135,13 +135,10 @@ void ThingsMode::updatePreview() {
   std::vector<proto::RenderableText> screen_lines;
 
   if (presenter_selection->GetSelection() == 0) {
-    screen_lines.push_back(proto::RenderableText());
-    screen_lines.back().set_text("Activities Go Here");
-    screen_lines.back().mutable_font()->set_size(DEFAULT_FONT_SIZE);
+    screen_lines = selected_panel->previewText(DEFAULT_FONT_SIZE);
   } else {
-    screen_lines.push_back(proto::RenderableText());
-    screen_lines.back().set_text("Replacements Go Here");
-    screen_lines.back().mutable_font()->set_size(DEFAULT_FONT_SIZE);
+    screen_lines =
+        selected_panel->replacementPanel()->previewText(DEFAULT_FONT_SIZE);
   }
 
   previewPanel()->setTextForPreview(screen_lines, screen_color, true, side);

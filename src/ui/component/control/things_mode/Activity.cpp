@@ -64,6 +64,8 @@ void Activity::bindEvents() {
   remove_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                &ActivityPanel::deleteActivity,
                                (ActivityPanel *)parent);
+  activity_text->Bind(wxEVT_KEY_UP, &ActivityPanel::textUpdated,
+                      (ActivityPanel *)parent);
 }
 
 void Activity::positionWidgets() {
@@ -109,4 +111,12 @@ bool Activity::containsDeleteButton(wxObject *delete_button) {
 void Activity::selectionChanged(wxCommandEvent &event) {
   ((ActivityPanel *)parent)->selectionChanged(event);
 }
+
+std::string Activity::previewText() {
+  if (activity_text->GetValue() == "") {
+    return " ";
+  }
+  return activity_text->GetValue();
+}
+
 }  // namespace cszb_scoreboard

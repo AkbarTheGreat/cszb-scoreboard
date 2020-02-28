@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <vector>
 
+#include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 
 namespace cszb_scoreboard {
@@ -32,6 +33,7 @@ class Replacement {
   ~Replacement();
   bool containsDeleteButton(wxObject *delete_button);
   wxPanel *controlPane() { return control_pane; }
+  std::string previewText();
 
  private:
   wxPanel *control_pane;

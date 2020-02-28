@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <vector>
 
+#include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
@@ -34,7 +35,7 @@ class Activity {
   ~Activity();
   wxPanel *controlPane() { return control_pane; }
   bool containsDeleteButton(wxObject *delete_button);
-  bool destroy();
+  std::string previewText();
   ReplacementPanel *replacementPanel() { return replacement_panel; }
   bool resolveSelection(wxObject *selected_object);
   bool isSelected();

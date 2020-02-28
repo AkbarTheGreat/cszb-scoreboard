@@ -77,6 +77,21 @@ void ReplacementPanel::deleteReplacement(wxCommandEvent &event) {
   }
 }
 
+std::vector<proto::RenderableText> ReplacementPanel::previewText(
+    int font_size) {
+  std::string preview_text;
+  for (auto replacement : replacements) {
+    preview_text += replacement->previewText() + "\n";
+  }
+  std::vector<proto::RenderableText> return_vector;
+  return_vector.push_back(proto::RenderableText());
+  return_vector.back().set_text(preview_text);
+  return_vector.back().mutable_font()->set_size(font_size);
+  return return_vector;
+}
+
+void ReplacementPanel::textUpdated(wxKeyEvent &event) { updateNotify(); }
+
 void ReplacementPanel::updateNotify() {
   SetSizerAndFit(GetSizer());
   ((ActivityPanel *)activity_panel)->updateNotify();

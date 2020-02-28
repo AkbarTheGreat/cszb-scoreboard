@@ -125,6 +125,8 @@ void ActivityPanel::selectionChanged(wxCommandEvent &event) {
   updateNotify();
 }
 
+void ActivityPanel::textUpdated(wxKeyEvent &event) { updateNotify(); }
+
 void ActivityPanel::updateNotify() {
   replacement_side->SetSizerAndFit(replacement_side->GetSizer());
   activity_side->SetSizerAndFit(activity_side->GetSizer());
@@ -145,6 +147,18 @@ ReplacementPanel *ActivityPanel::replacementPanel() {
 
   // Should be unreachable.
   return activities[0]->replacementPanel();
+}
+
+std::vector<proto::RenderableText> ActivityPanel::previewText(int font_size) {
+  std::string preview_text;
+  for (auto activity : activities) {
+    preview_text += activity->previewText() + "\n";
+  }
+  std::vector<proto::RenderableText> return_vector;
+  return_vector.push_back(proto::RenderableText());
+  return_vector.back().set_text(preview_text);
+  return_vector.back().mutable_font()->set_size(font_size);
+  return return_vector;
 }
 
 }  // namespace cszb_scoreboard

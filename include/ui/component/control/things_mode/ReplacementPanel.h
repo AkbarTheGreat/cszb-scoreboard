@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <vector>
 
+#include "config.pb.h"
 #include "ui/component/control/things_mode/Replacement.h"
 
 namespace cszb_scoreboard {
@@ -32,6 +33,8 @@ class ReplacementPanel : public wxPanel {
   ~ReplacementPanel();
   void addReplacement();
   void deleteReplacement(wxCommandEvent &event);
+  std::vector<proto::RenderableText> previewText(int font_size);
+  void textUpdated(wxKeyEvent &event);
 
  private:
   wxWindow *activity_panel;
