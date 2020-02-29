@@ -28,13 +28,16 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+const int INITIAL_NUMBER_OF_REPLACEMENTS = 3;
 
 ReplacementPanel::ReplacementPanel(wxWindow *parent, wxWindow *activity_panel)
     : wxPanel(parent) {
   // TODO: Research custom events and throw an event upward to propigate these
   // changes rather than a much more brittle forced-cast relationship.
   this->activity_panel = activity_panel;
-  replacements.push_back(new Replacement(this));
+  for (int i = 0; i < INITIAL_NUMBER_OF_REPLACEMENTS; i++) {
+    replacements.push_back(new Replacement(this));
+  }
   bindEvents();
   positionWidgets();
 }

@@ -24,6 +24,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 
 ActivityPanel::ActivityPanel(wxWindow *parent,
                              ScreenTextController *owning_controller)
@@ -32,8 +33,12 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   this->parent = parent;
   activity_side = new wxPanel(this);
   replacement_side = new wxPanel(this);
-  activities.push_back(
-      new Activity(this, activity_side, replacement_side, true));
+  bool is_first = true;
+  for (int i = 0; i < INITIAL_NUMBER_OF_ACTIVITIES; i++) {
+    activities.push_back(
+        new Activity(this, activity_side, replacement_side, is_first));
+    is_first = false;
+  }
   bindEvents();
   positionWidgets();
 }
@@ -50,17 +55,20 @@ void ActivityPanel::positionWidgets() {
   wxFlexGridSizer *activity_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   activity_sizer->SetFlexibleDirection(wxBOTH);
   activity_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  for (auto activity : activities) {
-    activity_sizer->Add(activity->controlPane(), 0, wxALL, BORDER_SIZE);
-  }
-  activity_side->SetSizerAndFit(activity_sizer);
 
   wxFlexGridSizer *replacement_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   replacement_sizer->SetFlexibleDirection(wxBOTH);
   replacement_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-  // This is only called during construction, so we can assume
-  // replacementPanel() is not null here
-  replacement_sizer->Add(replacementPanel(), 0, wxALL, BORDER_SIZE);
+
+  for (auto activity : activities) {
+    activity_sizer->Add(activity->controlPane(), 0, wxALL, BORDER_SIZE);
+    replacement_sizer->Add(activity->replacementPanel(), 0, wxALL, BORDER_SIZE);
+    if (!activity->isSelected()) {
+      activity->replacementPanel()->Hide();
+    }
+  }
+
+  activity_side->SetSizerAndFit(activity_sizer);
   replacement_side->SetSizerAndFit(replacement_sizer);
 
   wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 2, 0, 0);
