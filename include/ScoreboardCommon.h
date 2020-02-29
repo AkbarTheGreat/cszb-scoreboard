@@ -24,7 +24,7 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_BORDER_SIZE = 5;
 
-#define SCOREBOARD_VERSION "0.0.3"
+#define SCOREBOARD_VERSION "0.5.0"
 
 // Evaluates to public: in a test environment, private: in non-test code, to
 // hide dependencies as tightly as possible
