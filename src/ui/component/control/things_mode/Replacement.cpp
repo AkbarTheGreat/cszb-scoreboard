@@ -83,7 +83,8 @@ std::string Replacement::previewText() {
   if (replaceable->GetValue() == "" && replacement->GetValue() == "") {
     return " ";
   }
-  return replaceable->GetValue() + ": " + replacement->GetValue();
+  return replaceable->GetValue().ToStdString() + ": " +
+         replacement->GetValue().ToStdString();
 }
 
 }  // namespace cszb_scoreboard

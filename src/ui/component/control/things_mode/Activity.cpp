@@ -116,7 +116,7 @@ std::string Activity::previewText() {
   if (activity_text->GetValue() == "") {
     return " ";
   }
-  return activity_text->GetValue();
+  return activity_text->GetValue().ToStdString();
 }
 
 }  // namespace cszb_scoreboard
