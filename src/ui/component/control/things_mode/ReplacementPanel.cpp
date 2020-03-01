@@ -28,7 +28,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-const int INITIAL_NUMBER_OF_REPLACEMENTS = 3;
+const int INITIAL_NUMBER_OF_REPLACEMENTS = 2;
 
 ReplacementPanel::ReplacementPanel(wxWindow *parent, wxWindow *activity_panel)
     : wxPanel(parent) {
