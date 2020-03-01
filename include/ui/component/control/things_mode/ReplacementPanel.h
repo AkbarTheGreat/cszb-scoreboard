@@ -23,18 +23,25 @@ limitations under the License.
 
 #include <vector>
 
+#include "config.pb.h"
 #include "ui/component/control/things_mode/Replacement.h"
 
 namespace cszb_scoreboard {
 class ReplacementPanel : public wxPanel {
  public:
-  ReplacementPanel(wxWindow *parent);
+  ReplacementPanel(wxWindow *parent, wxWindow *activity_panel);
+  ~ReplacementPanel();
+  void addReplacement();
+  void deleteReplacement(wxCommandEvent &event);
+  std::vector<proto::RenderableText> previewText(int font_size);
+  void textUpdated(wxKeyEvent &event);
 
  private:
-  wxScrolledWindow* thing_container;
-  std::vector<Replacement> replacements;
+  wxWindow *activity_panel;
+  std::vector<Replacement *> replacements;
 
   void bindEvents();
   void positionWidgets();
+  void updateNotify();
 };
 }  // namespace cszb_scoreboard

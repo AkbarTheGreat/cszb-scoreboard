@@ -41,6 +41,9 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
   controllers.push_back(LocalImage::Create(preview_panel, this));
   AddPage(controllers.back(), "Image");
 
+  controllers.push_back(ThingsMode::Create(preview_panel, this));
+  AddPage(controllers.back(), "5/6 Things");
+
   bindEvents();
 }
 

@@ -198,6 +198,13 @@ void ScreenText::autoFitText(wxDC& dc, proto::RenderableText& text) {
     dc.SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
     text_extent = getTextExtent(dc, text.text());
   }
+
+  while (text_extent.GetHeight() > screen_size.GetHeight() &&
+         font->size() > 0) {
+    font->set_size(font->size() - .5);
+    dc.SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    text_extent = getTextExtent(dc, text.text());
+  }
 }
 
 wxPoint ScreenText::bottomText(wxDC& dc, wxString text) {

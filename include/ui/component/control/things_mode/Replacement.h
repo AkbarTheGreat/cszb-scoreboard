@@ -1,5 +1,6 @@
 /*
-ui/component/control/things_mode/Replacement.h: Represents a replacement in 5/6 things.
+ui/component/control/things_mode/Replacement.h: Represents a replacement in 5/6
+things.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -21,17 +22,22 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include <vector>
-#include "ui/component/control/ScreenTextController.h"
 
+#include "config.pb.h"
+#include "ui/component/control/ScreenTextController.h"
 
 namespace cszb_scoreboard {
 class Replacement {
  public:
   Replacement(wxWindow *parent);
+  ~Replacement();
+  bool containsDeleteButton(wxObject *delete_button);
   wxPanel *controlPane() { return control_pane; }
+  std::string previewText();
 
  private:
   wxPanel *control_pane;
+  wxWindow *parent;
   wxTextCtrl *replaceable;
   wxTextCtrl *replacement;
   wxButton *remove_replacement_button;

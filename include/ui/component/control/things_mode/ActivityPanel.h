@@ -19,29 +19,34 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/aui/aui.h>
 #include <wx/wx.h>
 
 #include <vector>
 
+#include "config.pb.h"
 #include "ui/component/control/things_mode/Activity.h"
 
 namespace cszb_scoreboard {
 class ActivityPanel : public wxPanel {
  public:
   ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller);
+  ~ActivityPanel();
   void addActivity(wxPanel *parent_panel);
-  void selectionChanged(wxCommandEvent &event);
+  void addReplacement();
+  void deleteActivity(wxCommandEvent &event);
+  std::vector<proto::RenderableText> previewText(int font_size);
   ReplacementPanel *replacementPanel();
+  void selectionChanged(wxCommandEvent &event);
+  void textUpdated(wxKeyEvent &event);
+  void updateNotify();
 
  private:
-  wxAuiManager aui_manager;
-  std::vector<Activity> activities;
+  wxPanel *activity_side;
+  wxPanel *replacement_side;
+  std::vector<Activity *> activities;
   ScreenTextController *owning_controller;
   wxWindow *parent;
 
-  ~ActivityPanel() { aui_manager.UnInit(); }
-  void addToAui(wxWindow *widget, bool on_right = false, int row = 0);
   void bindEvents();
   void positionWidgets();
 };

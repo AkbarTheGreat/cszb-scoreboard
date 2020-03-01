@@ -27,11 +27,13 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+const int NUMBER_OF_PRESENTER_OPTIONS = 2;
+const wxString PRESENTER_OPTIONS[NUMBER_OF_PRESENTER_OPTIONS] = {
+    wxT("Activity List"), wxT("Replacements")};
 
 ThingsMode *ThingsMode::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   ThingsMode *entry = new ThingsMode(preview_panel, parent);
   entry->initializeWidgets();
-  entry->updatePreview();
   return entry;
 }
 
@@ -39,59 +41,54 @@ void ThingsMode::createControls(wxPanel *control_panel) {
   scrollable_panel = new wxScrolledWindow(
       control_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
 
-  aui_manager.SetManagedWindow(scrollable_panel);
+  button_panel = new wxPanel(scrollable_panel);
 
-  screen_selection = new TeamSelector(scrollable_panel);
+  screen_selection = new TeamSelector(button_panel);
+  presenter_selection = new wxRadioBox(
+      button_panel, wxID_ANY, wxT("Present"), wxDefaultPosition, wxDefaultSize,
+      NUMBER_OF_PRESENTER_OPTIONS, PRESENTER_OPTIONS, 1, wxRA_SPECIFY_COLS);
+  presenter_selection->SetSelection(0);
 
-  new_activity_button =
-      new wxButton(scrollable_panel, wxID_ANY, "New Activity");
+  new_activity_button = new wxButton(button_panel, wxID_ANY, "New Activity");
   new_replacement_button =
-      new wxButton(scrollable_panel, wxID_ANY, "New Replacement");
+      new wxButton(button_panel, wxID_ANY, "New Replacement");
 
   home_activities_panel = new ActivityPanel(scrollable_panel, this);
-  // away_activities_panel = new ActivityPanel(scrollable_panel, this);
-  // all_activities_panel = new ActivityPanel(scrollable_panel, this);
+  away_activities_panel = new ActivityPanel(scrollable_panel, this);
+  all_activities_panel = new ActivityPanel(scrollable_panel, this);
 
   positionWidgets(control_panel);
   bindEvents();
-}
-
-void ThingsMode::addToScrollable(wxWindow *item, int row) {
-  wxAuiPaneInfo info;
-  info.CenterPane();
-  // info.Row(row);
-  switch (row) {
-    case 0:
-      info.Top();
-      break;
-    case 1:
-      info.Center();
-      break;
-    default:
-      info.Bottom();
-  }
-  info.MinSize(item->GetSize());
-  aui_manager.AddPane(item, info);
-}
+}  // namespace cszb_scoreboard
 
 void ThingsMode::positionWidgets(wxPanel *control_panel) {
+  wxFlexGridSizer *button_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  button_sizer->SetFlexibleDirection(wxBOTH);
+  button_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  button_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  button_sizer->Add(presenter_selection, 0, wxALL, BORDER_SIZE);
+  button_sizer->Add(new_activity_button, 0, wxALL, BORDER_SIZE);
+  button_sizer->Add(new_replacement_button, 0, wxALL, BORDER_SIZE);
+  button_panel->SetSizerAndFit(button_sizer);
+
   wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   outer_sizer->SetFlexibleDirection(wxBOTH);
   outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  addToScrollable(new_activity_button, 0);
-  addToScrollable(new_replacement_button, 0);
+  wxFlexGridSizer *scrollable_sizer = new wxFlexGridSizer(0, 1, 0, 0);
+  scrollable_sizer->SetFlexibleDirection(wxBOTH);
+  scrollable_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  addToScrollable(home_activities_panel, 1);
+  scrollable_sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
 
-  addToScrollable(screen_selection, 2);
+  scrollable_sizer->Add(home_activities_panel);
+  scrollable_sizer->Add(away_activities_panel);
+  scrollable_sizer->Add(all_activities_panel);
 
-  // aui_manager.DetachPane(away_activities_panel);
-  // aui_manager.DetachPane(all_activities_panel);
+  updateActivityPanel();
 
-  aui_manager.Update();
-  // scrollable_panel->SetSizer(scrollable_sizer);
-  // scrollable_panel->FitInside();
+  scrollable_panel->SetSizer(scrollable_sizer);
+  scrollable_panel->FitInside();
   scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
 
   outer_sizer->Add(scrollable_panel, 0, wxALL, BORDER_SIZE);
@@ -101,55 +98,97 @@ void ThingsMode::positionWidgets(wxPanel *control_panel) {
 void ThingsMode::bindEvents() {
   new_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                             &ThingsMode::addActivity, this);
+  new_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                               &ThingsMode::addReplacement, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &ThingsMode::screenChanged, this);
+  presenter_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
+                            &ThingsMode::presentedListChanged, this);
 }
 
 void ThingsMode::updatePreview() {
-  aui_manager.Update();
-  // Send the combined text to both previews
+  // Re-size for scrollable windows
+  scrollable_panel->SetSizer(scrollable_panel->GetSizer());
+  scrollable_panel->FitInside();
+  scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
+  scrollable_panel->SetScrollRate(0, 20);
+
+  // Set all sides to true, in order to present to all monitors
+  proto::ScreenSide side;
+  side.set_home(true);
+  side.set_away(true);
+  side.set_extra(true);
+
+  // TODO: Centralize team colors and use that here instead
+  Color screen_color("Black");
+  ActivityPanel *selected_panel = all_activities_panel;
   if (screen_selection->allSelected()) {
-    proto::ScreenSide side;
-    side.set_home(true);
-    side.set_away(true);
-    // previewPanel()->setTextForPreview(all_text, all_font_size, all_color,
-    // false, side);
-  } else {
+    // Do nothing, these are already set.
+  } else if (screen_selection->homeSelected()) {
+    screen_color = Color("Blue");
+    selected_panel = home_activities_panel;
+  } else if (screen_selection->awaySelected()) {
+    screen_color = Color("Red");
+    selected_panel = away_activities_panel;
   }
+
+  std::vector<proto::RenderableText> screen_lines;
+
+  if (presenter_selection->GetSelection() == 0) {
+    screen_lines = selected_panel->previewText(DEFAULT_FONT_SIZE);
+  } else {
+    screen_lines =
+        selected_panel->replacementPanel()->previewText(DEFAULT_FONT_SIZE);
+  }
+
+  previewPanel()->setTextForPreview(screen_lines, screen_color, true, side);
 }
 
 void ThingsMode::textUpdated(wxKeyEvent &event) { updatePreview(); }
 
-void ThingsMode::screenChanged(wxCommandEvent &event) {
-  aui_manager.DetachPane(all_activities_panel);
-  aui_manager.DetachPane(away_activities_panel);
-  aui_manager.DetachPane(home_activities_panel);
-
+void ThingsMode::updateActivityPanel() {
   if (screen_selection->allSelected()) {
-    addToScrollable(all_activities_panel, 1);
+    home_activities_panel->Hide();
+    away_activities_panel->Hide();
+    all_activities_panel->Show();
   } else if (screen_selection->homeSelected()) {
-    addToScrollable(home_activities_panel, 1);
+    away_activities_panel->Hide();
+    all_activities_panel->Hide();
+    home_activities_panel->Show();
   } else if (screen_selection->awaySelected()) {
-    addToScrollable(away_activities_panel, 1);
+    home_activities_panel->Hide();
+    all_activities_panel->Hide();
+    away_activities_panel->Show();
   }
-  aui_manager.Update();
+}
 
+void ThingsMode::screenChanged(wxCommandEvent &event) {
+  updateActivityPanel();
+  updatePreview();
+}
+
+void ThingsMode::presentedListChanged(wxCommandEvent &event) {
   updatePreview();
 }
 
 void ThingsMode::addActivity(wxCommandEvent &event) {
-  home_activities_panel->addActivity(scrollable_panel);
-
-  // scrollable_panel->SetSizer(scrollable_panel->GetSizer());
-  scrollable_panel->FitInside();
-  scrollable_panel->SetScrollRate(0, scrollable_panel->GetSize().GetHeight());
-  scrollable_panel->SetSizeHints(scrollable_panel->GetSize());
-  //  scrollable_panel->SetSize(scrollable_panel->GetVirtualSize().GetWidth(),
-  //                            scrollable_panel->GetSize().GetHeight());
-
-  control_panel->SetSizerAndFit(control_panel->GetSizer());
+  if (screen_selection->allSelected()) {
+    all_activities_panel->addActivity(scrollable_panel);
+  } else if (screen_selection->homeSelected()) {
+    home_activities_panel->addActivity(scrollable_panel);
+  } else if (screen_selection->awaySelected()) {
+    away_activities_panel->addActivity(scrollable_panel);
+  }
 }
 
-void ThingsMode::addReplacement(wxCommandEvent &event) {}
+void ThingsMode::addReplacement(wxCommandEvent &event) {
+  if (screen_selection->allSelected()) {
+    all_activities_panel->addReplacement();
+  } else if (screen_selection->homeSelected()) {
+    home_activities_panel->addReplacement();
+  } else if (screen_selection->awaySelected()) {
+    away_activities_panel->addReplacement();
+  }
+}
 
 }  // namespace cszb_scoreboard

@@ -23,17 +23,24 @@ limitations under the License.
 
 #include <vector>
 
+#include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
 namespace cszb_scoreboard {
 class Activity {
  public:
-  Activity(wxWindow *parent, bool is_first);
+  Activity(wxWindow *parent, wxPanel *activity_frame,
+           wxPanel *replacement_frame, bool is_first);
+  ~Activity();
   wxPanel *controlPane() { return control_pane; }
-  bool isSelected();
+  bool containsDeleteButton(wxObject *delete_button);
+  std::string previewText();
   ReplacementPanel *replacementPanel() { return replacement_panel; }
+  bool resolveSelection(wxObject *selected_object);
+  bool isSelected();
   void select();
+  void unselect();
 
  private:
   wxPanel *control_pane;

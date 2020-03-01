@@ -1,6 +1,6 @@
 /*
-ui/component/control/things_mode/Replacement.h: Represents a replacement in 5/6
-things.
+ui/component/control/things_mode/Replacement.cpp: Represents a replacement in
+5/6 things.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -17,19 +17,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
-
 #include "ui/component/control/things_mode/Replacement.h"
 
 #include <wx/wx.h>
 
 #include <vector>
 
+#include "ui/component/control/things_mode/ReplacementPanel.h"
+
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 Replacement::Replacement(wxWindow *parent) {
+  this->parent = parent;
   control_pane = new wxPanel(parent);
   replaceable = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                wxSize(-1, -1), wxTE_MULTILINE);
@@ -45,21 +46,45 @@ Replacement::Replacement(wxWindow *parent) {
   positionWidgets();
 }
 
-void Replacement::bindEvents() {}
+Replacement::~Replacement() { control_pane->Destroy(); }
+
+void Replacement::bindEvents() {
+  remove_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                                  &ReplacementPanel::deleteReplacement,
+                                  (ReplacementPanel *)parent);
+  replaceable->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
+                    (ReplacementPanel *)parent);
+  replacement->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
+                    (ReplacementPanel *)parent);
+}
 
 void Replacement::positionWidgets() {
   wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 4, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
   sizer->Add(replaceable, 0, wxALL, BORDER_SIZE);
   sizer->Add(replacement, 0, wxALL, BORDER_SIZE);
   sizer->Add(remove_replacement_button, 0, wxALL, BORDER_SIZE);
   sizer->Add(spacer_text, 0, wxALL, BORDER_SIZE);
-
   control_pane->SetSizerAndFit(sizer);
 }
 
+bool Replacement::containsDeleteButton(wxObject *delete_button) {
+  if (delete_button == remove_replacement_button) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 void Replacement::deleteReplacement(wxCommandEvent &event) {}
+
+std::string Replacement::previewText() {
+  if (replaceable->GetValue() == "" && replacement->GetValue() == "") {
+    return " ";
+  }
+  return replaceable->GetValue().ToStdString() + ": " +
+         replacement->GetValue().ToStdString();
+}
 
 }  // namespace cszb_scoreboard
