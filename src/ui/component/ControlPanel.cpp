@@ -26,8 +26,12 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const int NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
+                           wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;
+
 ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
-    : wxNotebook(parent, wxID_ANY) {
+    : wxAuiNotebook(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                    NOTEBOOK_STYLE) {
   controllers.push_back(TextEntry::Create(preview_panel, this));
   AddPage(controllers.back(), "Text");
 

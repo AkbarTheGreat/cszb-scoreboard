@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/notebook.h>
+#include <wx/aui/aui.h>
 #include <wx/wx.h>
 
 #include <vector>
@@ -30,7 +30,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class ControlPanel : public wxNotebook {
+class ControlPanel : public wxAuiNotebook {
  public:
   ControlPanel(wxWindow* parent, PreviewPanel* preview_panel);
 
