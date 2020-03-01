@@ -28,10 +28,6 @@ namespace cszb_scoreboard {
 
 ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
     : wxNotebook(parent, wxID_ANY) {
-  // TODO: Put this tab at the back of the notebook before merging back to trunk
-  controllers.push_back(ThingsMode::Create(preview_panel, this));
-  AddPage(controllers.back(), "5/6 Things");
-
   controllers.push_back(TextEntry::Create(preview_panel, this));
   AddPage(controllers.back(), "Text");
 
