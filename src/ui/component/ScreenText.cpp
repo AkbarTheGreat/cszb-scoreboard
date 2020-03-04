@@ -326,6 +326,8 @@ void ScreenText::setAll(const ScreenText& source) {
     addText(new_text, this->screen_side);
   }
 
+  setAutoFit(source.auto_fit_text, this->screen_side);
+
   Refresh();
 }
 
