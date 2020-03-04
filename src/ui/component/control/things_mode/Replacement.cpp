@@ -83,7 +83,7 @@ std::string Replacement::previewText() {
   if (replaceable->GetValue() == "" && replacement->GetValue() == "") {
     return " ";
   }
-  return replaceable->GetValue().ToStdString() + ": " +
+  return "• " + replaceable->GetValue().ToStdString() + " - " +
          replacement->GetValue().ToStdString();
 }
 

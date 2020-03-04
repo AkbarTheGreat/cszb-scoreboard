@@ -38,6 +38,7 @@ class ActivityPanel : public wxPanel {
   void refreshSizers();
   ReplacementPanel *replacementPanel();
   void selectionChanged(wxCommandEvent &event);
+  std::string selectedActivityText();
   void textUpdated(wxKeyEvent &event);
   void updateNotify();
 

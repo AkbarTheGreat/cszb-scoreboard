@@ -175,10 +175,19 @@ ReplacementPanel *ActivityPanel::replacementPanel() {
   return activities[0]->replacementPanel();
 }
 
+std::string ActivityPanel::selectedActivityText() {
+  for (auto activity : activities) {
+    if (activity->isSelected()) {
+      return activity->previewText();
+    }
+  }
+  return " ";
+}
+
 std::vector<proto::RenderableText> ActivityPanel::previewText(int font_size) {
   std::string preview_text;
   for (auto activity : activities) {
-    preview_text += activity->previewText() + "\n";
+    preview_text += "• " + activity->previewText() + "\n";
   }
   std::vector<proto::RenderableText> return_vector;
   return_vector.push_back(proto::RenderableText());

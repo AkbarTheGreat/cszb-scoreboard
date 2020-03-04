@@ -82,7 +82,9 @@ void ReplacementPanel::deleteReplacement(wxCommandEvent &event) {
 
 std::vector<proto::RenderableText> ReplacementPanel::previewText(
     int font_size) {
-  std::string preview_text;
+  std::string preview_text =
+      ((ActivityPanel *)activity_panel)->selectedActivityText() + "\n \n";
+
   for (auto replacement : replacements) {
     preview_text += replacement->previewText() + "\n";
   }
