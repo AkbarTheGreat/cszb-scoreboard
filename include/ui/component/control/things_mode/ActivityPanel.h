@@ -35,6 +35,7 @@ class ActivityPanel : public wxPanel {
   void addReplacement();
   void deleteActivity(wxCommandEvent &event);
   std::vector<proto::RenderableText> previewText(int font_size);
+  void refreshSizers();
   ReplacementPanel *replacementPanel();
   void selectionChanged(wxCommandEvent &event);
   void textUpdated(wxKeyEvent &event);

@@ -59,7 +59,9 @@ void ThingsMode::createControls(wxPanel *control_panel) {
 
   positionWidgets(control_panel);
   bindEvents();
-}  // namespace cszb_scoreboard
+
+  wxSize scrollable_size = scrollable_panel->GetSize();
+}
 
 void ThingsMode::positionWidgets(wxPanel *control_panel) {
   wxFlexGridSizer *button_sizer = new wxFlexGridSizer(0, 2, 0, 0);
@@ -107,6 +109,21 @@ void ThingsMode::bindEvents() {
 }
 
 void ThingsMode::updatePreview() {
+  ActivityPanel *selected_panel = all_activities_panel;
+  // TODO: Centralize team colors and use that here instead
+  Color screen_color("Black");
+  if (screen_selection->allSelected()) {
+    // Do nothing, these are already set.
+  } else if (screen_selection->homeSelected()) {
+    screen_color = Color("Blue");
+    selected_panel = home_activities_panel;
+  } else if (screen_selection->awaySelected()) {
+    screen_color = Color("Red");
+    selected_panel = away_activities_panel;
+  }
+
+  selected_panel->refreshSizers();
+
   // Re-size for scrollable windows
   scrollable_panel->SetSizer(scrollable_panel->GetSizer());
   scrollable_panel->FitInside();
@@ -118,19 +135,6 @@ void ThingsMode::updatePreview() {
   side.set_home(true);
   side.set_away(true);
   side.set_extra(true);
-
-  // TODO: Centralize team colors and use that here instead
-  Color screen_color("Black");
-  ActivityPanel *selected_panel = all_activities_panel;
-  if (screen_selection->allSelected()) {
-    // Do nothing, these are already set.
-  } else if (screen_selection->homeSelected()) {
-    screen_color = Color("Blue");
-    selected_panel = home_activities_panel;
-  } else if (screen_selection->awaySelected()) {
-    screen_color = Color("Red");
-    selected_panel = away_activities_panel;
-  }
 
   std::vector<proto::RenderableText> screen_lines;
 
