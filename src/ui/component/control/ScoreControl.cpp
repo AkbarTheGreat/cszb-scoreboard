@@ -28,6 +28,9 @@ const int SCORE_FONT_SIZE = 20;
 const int TEAM_FONT_SIZE = 5;
 const int BORDER_SIZE = 3;
 
+const std::string INTRO_MODE_LABEL = "Introduce Teams";
+const std::string SCORE_MODE_LABEL = "Show Scores";
+
 ScoreControl *ScoreControl::Create(PreviewPanel *preview_panel,
                                    wxWindow *parent) {
   ScoreControl *control = new ScoreControl(preview_panel, parent);
@@ -82,7 +85,7 @@ void ScoreControl::createControls(wxPanel *control_panel) {
                               wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 
   team_intro_button =
-      new wxToggleButton(control_panel, wxID_ANY, "Introduce Teams");
+      new wxToggleButton(control_panel, wxID_ANY, INTRO_MODE_LABEL);
 
   positionWidgets(control_panel);
   bindEvents();
@@ -231,7 +234,14 @@ void ScoreControl::awayNameUpdated(wxKeyEvent &event) { updatePreview(); }
 
 void ScoreControl::colorChanged(wxColourPickerEvent &event) { updatePreview(); }
 
-void ScoreControl::toggleIntroMode(wxCommandEvent &event) { updatePreview(); }
+void ScoreControl::toggleIntroMode(wxCommandEvent &event) {
+  if (team_intro_button->GetValue()) {
+    team_intro_button->SetLabelText(SCORE_MODE_LABEL);
+  } else {
+    team_intro_button->SetLabelText(INTRO_MODE_LABEL);
+  }
+  updatePreview();
+}
 
 void ScoreControl::addToEntry(wxTextCtrl *entry, int amount) {
   long current_score = StringUtil::stringToInt(entry->GetValue());
