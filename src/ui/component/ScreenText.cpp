@@ -244,7 +244,7 @@ wxPoint ScreenText::positionText(wxDC& dc, proto::RenderableText text) {
   }
 }
 
-void ScreenText::renderText(wxDC& dc, proto::RenderableText text) {
+void ScreenText::renderText(wxDC& dc, proto::RenderableText& text) {
   if (auto_fit_text) {
     autoFitText(dc, text);
   }
@@ -255,7 +255,7 @@ void ScreenText::renderText(wxDC& dc, proto::RenderableText text) {
 }
 
 void ScreenText::renderAllText(wxDC& dc) {
-  for (auto text : texts) {
+  for (auto& text : texts) {
     renderText(dc, text);
   }
 }
@@ -323,10 +323,9 @@ void ScreenText::setAll(const ScreenText& source) {
 
   resetAllText(this->screen_side);
   for (auto new_text : source.texts) {
+    wxLogDebug("Setting text %s, %f", new_text.text(), new_text.font().size());
     addText(new_text, this->screen_side);
   }
-
-  setAutoFit(source.auto_fit_text, this->screen_side);
 
   Refresh();
 }

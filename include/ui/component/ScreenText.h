@@ -79,7 +79,7 @@ class ScreenText : public wxPanel {
   float ratio(const wxSize& size);
   void renderBackground(wxDC& dc);
   void renderScaledBackground(wxDC& dc);
-  void renderText(wxDC& dc, proto::RenderableText text);
+  void renderText(wxDC& dc, proto::RenderableText &text);
   void renderAllText(wxDC& dc);
   void setBackground(const Color& color);
   wxPoint topText(wxDC& dc, wxString text);
