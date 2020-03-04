@@ -48,10 +48,10 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
 }
 
 void ControlPanel::bindEvents() {
-  Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &ControlPanel::tabChanged, this);
+  Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &ControlPanel::tabChanged, this);
 }
 
-void ControlPanel::tabChanged(wxBookCtrlEvent& event) {
+void ControlPanel::tabChanged(wxAuiNotebookEvent& event) {
   controllers[event.GetSelection()]->updatePreview();
 }
 

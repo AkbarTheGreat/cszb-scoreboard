@@ -40,7 +40,7 @@ class ControlPanel : public wxAuiNotebook {
 
  private:
   void bindEvents();
-  void tabChanged(wxBookCtrlEvent& event);
+  void tabChanged(wxAuiNotebookEvent& event);
   std::vector<ScreenTextController*> controllers;
 };
 
