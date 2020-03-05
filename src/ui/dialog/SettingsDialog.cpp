@@ -19,11 +19,11 @@ limitations under the License.
 
 #include "ui/dialog/SettingsDialog.h"
 
-#include <config/DisplayConfig.h>
-#include <config/TeamConfig.h>
 #include <wx/bookctrl.h>
 
 #include "ScoreboardCommon.h"
+#include "ui/dialog/settings/DisplaySettingsPage.h"
+#include "ui/dialog/settings/TeamSettingsPage.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -38,44 +38,16 @@ bool SettingsDialog::Create(wxWindow* parent) {
     return false;
   }
   CreateButtons(wxOK | wxCANCEL);
-  wxBookCtrlBase* settings_book = GetBookCtrl();
-  settings_book->AddPage(createTeamsPage(settings_book), "Teams");
-  settings_book->AddPage(createDisplayPage(settings_book), "Displays");
+  addPage(new TeamSettingsPage(GetBookCtrl()), "Teams");
+  addPage(new DisplaySettingsPage(GetBookCtrl()), "Displays");
   LayoutDialog();
   bindEvents();
   return true;
 }
 
-wxPanel* SettingsDialog::createTeamsPage(wxBookCtrlBase* settings_book) {
-  wxPanel* panel = new wxPanel(settings_book);
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  for (int i = 0; i < TeamConfig::getInstance()->numberOfTeams(); ++i) {
-    TeamSettingsPanel* team_panel = new TeamSettingsPanel(panel, i);
-    team_settings_panels.push_back(team_panel);
-    sizer->Add(team_panel, 0, wxALL, BORDER_SIZE);
-  }
-
-  panel->SetSizerAndFit(sizer);
-  return panel;
-}
-
-wxPanel* SettingsDialog::createDisplayPage(wxBookCtrlBase* settings_book) {
-  wxPanel* panel = new wxPanel(settings_book);
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
-    DisplaySettingsPanel* display_panel = new DisplaySettingsPanel(panel, i);
-    display_settings_panels.push_back(display_panel);
-    sizer->Add(display_panel, 0, wxALL, BORDER_SIZE);
-  }
-
-  panel->SetSizerAndFit(sizer);
-  return panel;
+void SettingsDialog::addPage(SettingsPage* page, std::string name) {
+  pages.push_back(page);
+  GetBookCtrl()->AddPage(page, name);
 }
 
 void SettingsDialog::bindEvents() {
@@ -113,71 +85,18 @@ void SettingsDialog::onClose(wxCloseEvent& event) {
 }
 
 bool SettingsDialog::validateSettings() {
-  if (!validateDisplaySettings()) {
-    return false;
-  }
-  if (!validateTeamSettings()) {
-    return false;
+  for (auto page : pages) {
+    if (!page->validateSettings()) {
+      return false;
+    }
   }
   return true;
 }
 
 void SettingsDialog::saveSettings() {
-  saveDisplaySettings();
-  saveTeamSettings();
-}
-
-/* Returns true if the display settings are allowable, presents a warning dialog
- * if not (and returns false). */
-bool SettingsDialog::validateDisplaySettings() {
-  bool has_control = false;
-  for (auto display_panel : display_settings_panels) {
-    proto::ScreenSide side = display_panel->getSide();
-    if (side.control()) {
-      // Two controls, that's problematic.
-      if (has_control) {
-        wxMessageBox(
-            "ERROR: Only one window may be selected as a Booth Monitor.");
-        return false;
-      }
-      has_control = true;
-      if (side.home() || side.away() || side.extra()) {
-// This can't be checked in debug, because we break this rule often in debug
-// mode.
-#ifndef WXDEBUG
-        wxMessageBox(
-            "ERROR: The Booth Monitor display may not also be a team display.");
-        return false;
-#endif
-      }
-    }
+  for (auto page : pages) {
+    page->saveSettings();
   }
-  if (!has_control) {
-    wxMessageBox("ERROR: One window must be selected as a Booth Monitor.");
-    return false;
-  }
-  return true;
-}
-
-void SettingsDialog::saveDisplaySettings() {
-  for (int i = 0; i < display_settings_panels.size(); ++i) {
-    DisplayConfig::getInstance()->setSide(
-        i, display_settings_panels[i]->getSide());
-  }
-  DisplayConfig::getInstance()->saveSettings();
-}
-
-bool SettingsDialog::validateTeamSettings() {
-  // At present, nothing to validate
-  return true;
-}
-
-void SettingsDialog::saveTeamSettings() {
-  for (int i = 0; i < team_settings_panels.size(); ++i) {
-    TeamConfig::getInstance()->setColor(i,
-                                        team_settings_panels[i]->teamColor());
-  }
-  TeamConfig::getInstance()->saveSettings();
 }
 
 }  // namespace cszb_scoreboard

@@ -1,6 +1,6 @@
 /*
-ui/dialog/SettingsDialog.h: A settings dialog for configuring various aspects of
-the scoreboard which are then saved as a part of the configuration protobuf.
+ui/dialog/settings/DisplaySettingsPage.h: The page of the settings notebook
+which handles display settings.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -18,33 +18,23 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/propdlg.h>
 #include <wx/wx.h>
 
-#include <vector>
-
-#include "ScoreboardCommon.h"
 #include "config.pb.h"
+#include "config/DisplayConfig.h"
+#include "ui/dialog/settings/DisplaySettingsPanel.h"
 #include "ui/dialog/settings/SettingsPage.h"
 
 namespace cszb_scoreboard {
 
-extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
-
-class SettingsDialog : public wxPropertySheetDialog {
+class DisplaySettingsPage : public SettingsPage {
  public:
-  bool Create(wxWindow *parent);
+  DisplaySettingsPage(wxWindow *parent);
+  void saveSettings() override;
+  bool validateSettings() override;
 
  private:
-  void addPage(SettingsPage *page, std::string name);
-  void bindEvents();
-  void onOk(wxCommandEvent &event);
-  void onCancel(wxCommandEvent &event);
-  void onClose(wxCloseEvent &event);
-  void saveSettings();
-  bool validateSettings();
-  std::vector<SettingsPage *> pages;
-  wxWindow *parent;
+  std::vector<DisplaySettingsPanel *> display_settings_panels;
 };
 
 }  // namespace cszb_scoreboard
