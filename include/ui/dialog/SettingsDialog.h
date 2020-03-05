@@ -18,38 +18,19 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/clrpicker.h>
 #include <wx/propdlg.h>
 #include <wx/wx.h>
 
 #include <vector>
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"
-#include "ui/graphics/Color.h"
+#include "ui/dialog/settings/DisplaySettingsPanel.h"
+#include "ui/dialog/settings/TeamSettingsPanel.h"
 
 namespace cszb_scoreboard {
 
 extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
-
-class DisplaySettingsPanel : public wxPanel {
- public:
-  DisplaySettingsPanel(wxPanel *parent, int display_number);
-  proto::ScreenSide getSide();
-
- private:
-  wxCheckBox *control_checkbox;
-  wxCheckBox *home_checkbox;
-  wxCheckBox *away_checkbox;
-};
-
-class TeamSettingsPanel : public wxPanel {
- public:
-  TeamSettingsPanel(wxPanel *parent, int display_number);
-  Color teamColor();
-
- private:
-  wxColourPickerCtrl *color_picker;
-};
 
 class SettingsDialog : public wxPropertySheetDialog {
  public:
