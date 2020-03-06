@@ -62,6 +62,7 @@ void DisplayConfig::detectDisplays() {
   for (int i = 0; i < numscreens; i++) {
     wxDisplay display(i);
     proto::DisplayInfo *display_info = display_config.add_displays();
+    display_info->set_id(i);
     ProtoUtil::protoRct(display.GetGeometry(),
                         display_info->mutable_dimensions());
     if (isPrimaryDisplay(display_info)) {
