@@ -72,6 +72,8 @@ bool DisplaySettingsPage::validateSettings() {
 
 void DisplaySettingsPage::saveSettings() {
   for (int i = 0; i < display_settings_panels.size(); ++i) {
+    DisplayConfig::getInstance()->setDisplayId(
+        i, display_settings_panels[i]->getDisplayId());
     DisplayConfig::getInstance()->setSide(
         i, display_settings_panels[i]->getSide());
   }

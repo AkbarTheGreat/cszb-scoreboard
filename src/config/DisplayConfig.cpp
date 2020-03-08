@@ -106,6 +106,10 @@ void DisplayConfig::setSide(int index, proto::ScreenSide side) {
   display_config.mutable_displays(index)->set_allocated_side(side_copy);
 }
 
+void DisplayConfig::setDisplayId(int index, int id) {
+  display_config.mutable_displays(index)->set_id(id);
+}
+
 void DisplayConfig::saveSettings() {
   Persistence::getInstance()->saveDisplays(display_config);
 }

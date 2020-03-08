@@ -32,6 +32,7 @@ class DisplaySettingsPanel : public wxPanel {
   DisplaySettingsPanel(wxPanel *parent, int index);
   void copyFrom(DisplaySettingsPanel *other);
   proto::ScreenSide getSide();
+  int getDisplayId() { return display_id; }
 
  private:
   void copyCheckbox(wxCheckBox *source, wxCheckBox *target);
