@@ -106,8 +106,12 @@ void DisplayConfig::setSide(int index, proto::ScreenSide side) {
   display_config.mutable_displays(index)->set_allocated_side(side_copy);
 }
 
-void DisplayConfig::setDisplayId(int index, int id) {
+bool DisplayConfig::setDisplayId(int index, int id) {
+  if (display_config.mutable_displays(index)->id() == id) {
+    return false;
+  }
   display_config.mutable_displays(index)->set_id(id);
+  return true;
 }
 
 void DisplayConfig::saveSettings() {

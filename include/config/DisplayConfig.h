@@ -33,7 +33,9 @@ class DisplayConfig {
   int numberOfDisplays();
   bool isPrimaryDisplay(proto::DisplayInfo *display_info);
   void saveSettings();
-  void setDisplayId(int index, int id);
+  // Set the display id to the given monitor index.  Returns true if this was an
+  // effective change, false if the values were identical already.
+  bool setDisplayId(int index, int id);
   void setSide(int index, proto::ScreenSide side);
 
  private:

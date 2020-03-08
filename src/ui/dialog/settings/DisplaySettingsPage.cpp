@@ -71,9 +71,16 @@ bool DisplaySettingsPage::validateSettings() {
 }
 
 void DisplaySettingsPage::saveSettings() {
+  bool warnedAboutOrderChange = false;
   for (int i = 0; i < display_settings_panels.size(); ++i) {
-    DisplayConfig::getInstance()->setDisplayId(
-        i, display_settings_panels[i]->getDisplayId());
+    if (DisplayConfig::getInstance()->setDisplayId(
+            i, display_settings_panels[i]->getDisplayId()) &&
+        !warnedAboutOrderChange) {
+      wxMessageBox(
+          "WARNING: You have changed monitor ordering.  To see this take "
+          "effect, you must restart the application.");
+      warnedAboutOrderChange = true;
+    }
     DisplayConfig::getInstance()->setSide(
         i, display_settings_panels[i]->getSide());
   }
