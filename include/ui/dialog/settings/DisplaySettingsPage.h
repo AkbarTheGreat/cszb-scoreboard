@@ -32,6 +32,7 @@ class DisplaySettingsPage : public SettingsPage {
   DisplaySettingsPage(wxWindow *parent);
   void saveSettings() override;
   bool validateSettings() override;
+  void swapDisplays(int a, int b) ;
 
  private:
   std::vector<DisplaySettingsPanel *> display_settings_panels;

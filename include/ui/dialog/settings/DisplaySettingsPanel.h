@@ -29,13 +29,25 @@ namespace cszb_scoreboard {
 
 class DisplaySettingsPanel : public wxPanel {
  public:
-  DisplaySettingsPanel(wxPanel *parent, int display_number);
+  DisplaySettingsPanel(wxPanel *parent, int index);
+  void copyFrom(DisplaySettingsPanel *other);
   proto::ScreenSide getSide();
 
  private:
+  void copyCheckbox(wxCheckBox *source, wxCheckBox *target);
+  void createButtonPanel();
+  void moveDisplay(wxCommandEvent &event);
+  void updateLabel();
+
+  int display_id;
+  int index;
   wxCheckBox *control_checkbox;
   wxCheckBox *home_checkbox;
   wxCheckBox *away_checkbox;
+  wxStaticText *display_label;
+  wxPanel *button_panel;
+  wxButton *down_button;
+  wxButton *up_button;
 };
 
 }  // namespace cszb_scoreboard

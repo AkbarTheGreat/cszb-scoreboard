@@ -78,4 +78,11 @@ void DisplaySettingsPage::saveSettings() {
   DisplayConfig::getInstance()->saveSettings();
 }
 
+void DisplaySettingsPage::swapDisplays(int a, int b) {
+  DisplaySettingsPanel temp(this, 0);
+  temp.copyFrom(display_settings_panels[a]);
+  display_settings_panels[a]->copyFrom(display_settings_panels[b]);
+  display_settings_panels[b]->copyFrom(&temp);
+}
+
 }  // namespace cszb_scoreboard
