@@ -25,15 +25,18 @@ limitations under the License.
 
 #include "config.pb.h"
 #include "ui/component/control/things_mode/Activity.h"
+#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 class ActivityPanel : public wxPanel {
  public:
-  ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller);
+  ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller,
+                proto::ScreenSide side);
   ~ActivityPanel();
   void addActivity(wxPanel *parent_panel);
   void addReplacement();
   void deleteActivity(wxCommandEvent &event);
+  Color getColor();
   std::vector<proto::RenderableText> previewText(int font_size);
   void refreshSizers();
   ReplacementPanel *replacementPanel();
@@ -43,8 +46,9 @@ class ActivityPanel : public wxPanel {
   void updateNotify();
 
  private:
-  wxPanel *activity_side;
-  wxPanel *replacement_side;
+  wxPanel *activity_half;
+  wxPanel *replacement_half;
+  proto::ScreenSide side;
   std::vector<Activity *> activities;
   ScreenTextController *owning_controller;
   wxWindow *parent;

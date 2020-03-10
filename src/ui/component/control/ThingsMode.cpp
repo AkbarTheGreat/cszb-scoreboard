@@ -53,9 +53,13 @@ void ThingsMode::createControls(wxPanel *control_panel) {
   new_replacement_button =
       new wxButton(button_panel, wxID_ANY, "New Replacement");
 
-  home_activities_panel = new ActivityPanel(scrollable_panel, this);
-  away_activities_panel = new ActivityPanel(scrollable_panel, this);
-  all_activities_panel = new ActivityPanel(scrollable_panel, this);
+  proto::ScreenSide home_side, away_side, all_side;
+  home_side.set_home(true);
+  away_side.set_away(true);
+
+  home_activities_panel = new ActivityPanel(scrollable_panel, this, home_side);
+  away_activities_panel = new ActivityPanel(scrollable_panel, this, away_side);
+  all_activities_panel = new ActivityPanel(scrollable_panel, this, all_side);
 
   positionWidgets(control_panel);
   bindEvents();
@@ -110,19 +114,16 @@ void ThingsMode::bindEvents() {
 
 void ThingsMode::updatePreview() {
   ActivityPanel *selected_panel = all_activities_panel;
-  // TODO: Centralize team colors and use that here instead
-  Color screen_color("Black");
   if (screen_selection->allSelected()) {
-    // Do nothing, these are already set.
+    // Do nothing, already set
   } else if (screen_selection->homeSelected()) {
-    screen_color = Color("Blue");
     selected_panel = home_activities_panel;
   } else if (screen_selection->awaySelected()) {
-    screen_color = Color("Red");
     selected_panel = away_activities_panel;
   }
 
   selected_panel->refreshSizers();
+  Color screen_color = selected_panel->getColor();
 
   // Re-size for scrollable windows
   scrollable_panel->SetSizer(scrollable_panel->GetSizer());
