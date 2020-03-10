@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/control/ScoreControl.h"
 
 #include "config/TeamConfig.h"
+#include "ui/graphics/TeamColors.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -48,9 +49,8 @@ void ScoreControl::createControls(wxPanel *control_panel) {
 
   home_score_label =
       new wxStaticText(team_controls_panel, wxID_ANY, wxT("Home"));
-  home_color_picker =
-      new wxColourPickerCtrl(team_controls_panel, wxID_ANY,
-                             TeamConfig::getInstance()->teamColor(side)[0]);
+  home_color_picker = new wxColourPickerCtrl(
+      team_controls_panel, wxID_ANY, TeamColors::getInstance()->getColor(side));
   home_name_entry =
       new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("Home Team"));
   home_score_entry = new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("0"));
@@ -68,9 +68,8 @@ void ScoreControl::createControls(wxPanel *control_panel) {
 
   away_score_label =
       new wxStaticText(team_controls_panel, wxID_ANY, wxT("Away"));
-  away_color_picker =
-      new wxColourPickerCtrl(team_controls_panel, wxID_ANY,
-                             TeamConfig::getInstance()->teamColor(side)[0]);
+  away_color_picker = new wxColourPickerCtrl(
+      team_controls_panel, wxID_ANY, TeamColors::getInstance()->getColor(side));
 
   away_name_entry =
       new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("Away Team"));
@@ -207,6 +206,9 @@ void ScoreControl::updatePreview() {
   proto::ScreenSide away_side;
   away_side.set_away(true);
 
+  home_color_picker->SetColour(TeamColors::getInstance()->getColor(home_side));
+  away_color_picker->SetColour(TeamColors::getInstance()->getColor(away_side));
+
   std::vector<proto::RenderableText> home_update;
   std::vector<proto::RenderableText> away_update;
 
@@ -232,7 +234,19 @@ void ScoreControl::awayUpdated(wxKeyEvent &event) { updatePreview(); }
 
 void ScoreControl::awayNameUpdated(wxKeyEvent &event) { updatePreview(); }
 
-void ScoreControl::colorChanged(wxColourPickerEvent &event) { updatePreview(); }
+void ScoreControl::colorChanged(wxColourPickerEvent &event) {
+  proto::ScreenSide home_side;
+  home_side.set_home(true);
+  proto::ScreenSide away_side;
+  away_side.set_away(true);
+
+  TeamColors::getInstance()->setColor(home_side,
+                                      home_color_picker->GetColour());
+  TeamColors::getInstance()->setColor(away_side,
+                                      away_color_picker->GetColour());
+
+  updatePreview();
+}
 
 void ScoreControl::toggleIntroMode(wxCommandEvent &event) {
   if (team_intro_button->GetValue()) {
