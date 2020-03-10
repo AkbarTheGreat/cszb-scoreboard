@@ -38,6 +38,11 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   this->side = side;
   activity_half = new wxPanel(this);
   replacement_half = new wxPanel(this);
+  color_picker = new wxColourPickerCtrl(
+      this, wxID_ANY, TeamColors::getInstance()->getColor(side));
+
+  // Add only as many activites as we want the initial pane size to be sized
+  // for.
   bool is_first = true;
   for (int i = 0; i < ACTIVITIES_FOR_SIZING; i++) {
     activities.push_back(
@@ -47,6 +52,7 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   bindEvents();
   positionWidgets();
 
+  // Add the activities which we don't size the scrollbar for.
   for (int i = 0; i < INITIAL_NUMBER_OF_ACTIVITIES - ACTIVITIES_FOR_SIZING;
        i++) {
     activities.push_back(
@@ -66,7 +72,10 @@ ActivityPanel::~ActivityPanel() {
   }
 }
 
-void ActivityPanel::bindEvents() {}
+void ActivityPanel::bindEvents() {
+  color_picker->Bind(wxEVT_COLOURPICKER_CHANGED, &ActivityPanel::colorChanged,
+                     this);
+}
 
 void ActivityPanel::positionWidgets() {
   wxFlexGridSizer *activity_sizer = new wxFlexGridSizer(0, 1, 0, 0);
@@ -93,6 +102,7 @@ void ActivityPanel::positionWidgets() {
   outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   outer_sizer->Add(activity_half, 0, wxALL, BORDER_SIZE);
   outer_sizer->Add(replacement_half, 0, wxALL, BORDER_SIZE);
+  outer_sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
   SetSizerAndFit(outer_sizer);
 }
 
@@ -157,6 +167,12 @@ void ActivityPanel::updateNotify() {
   owning_controller->updatePreview();
 }
 
+void ActivityPanel::colorChanged(wxColourPickerEvent &event) {
+  TeamColors::getInstance()->setColor(side, color_picker->GetColour());
+
+  owning_controller->updatePreview();
+}
+
 void ActivityPanel::refreshSizers() {
   replacement_half->SetSizerAndFit(replacement_half->GetSizer());
   activity_half->SetSizerAndFit(activity_half->GetSizer());
@@ -164,6 +180,7 @@ void ActivityPanel::refreshSizers() {
 }
 
 Color ActivityPanel::getColor() {
+  color_picker->SetColour(TeamColors::getInstance()->getColor(side));
   return TeamColors::getInstance()->getColor(side);
 }
 

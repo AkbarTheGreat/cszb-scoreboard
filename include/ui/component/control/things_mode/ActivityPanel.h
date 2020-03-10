@@ -19,6 +19,7 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/clrpicker.h>
 #include <wx/wx.h>
 
 #include <vector>
@@ -47,6 +48,7 @@ class ActivityPanel : public wxPanel {
 
  private:
   wxPanel *activity_half;
+  wxColourPickerCtrl *color_picker;
   wxPanel *replacement_half;
   proto::ScreenSide side;
   std::vector<Activity *> activities;
@@ -55,5 +57,6 @@ class ActivityPanel : public wxPanel {
 
   void bindEvents();
   void positionWidgets();
+  void colorChanged(wxColourPickerEvent &event);
 };
 }  // namespace cszb_scoreboard
