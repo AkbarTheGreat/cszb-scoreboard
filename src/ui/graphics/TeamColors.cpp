@@ -40,23 +40,27 @@ TeamColors::TeamColors() {
 
   setColor(home_side, TeamConfig::getInstance()->teamColor(home_side)[0]);
   setColor(away_side, TeamConfig::getInstance()->teamColor(away_side)[0]);
+  all_color = Color("Black");
 }
 
 Color TeamColors::getColor(const proto::ScreenSide& side) {
-  if (side.home()) {
-    wxLogDebug("GETTING COLOR (for home)");
+  if (side.home() && side.away() && side.extra()) {
+    return all_color;
+  } else if (side.home()) {
     return home_color;
   } else if (side.away()) {
-    wxLogDebug("GETTING COLOR (for away)");
     return away_color;
   } else {
-    wxLogDebug("Attempting to get a color to a non-home, non-away side.");
+    wxLogDebug(
+        "Attempting to get a color to a non-home, non-away, non-all side.");
     return Color("Black");
   }
 }
 
 void TeamColors::setColor(const proto::ScreenSide& side, Color color) {
-  if (side.home()) {
+  if (side.home() && side.away() && side.extra()) {
+    all_color = color;
+  } else if (side.home()) {
     home_color = color;
   } else if (side.away()) {
     away_color = color;

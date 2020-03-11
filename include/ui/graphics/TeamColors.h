@@ -34,6 +34,7 @@ class TeamColors {
   static TeamColors* singleton_instance;
   Color home_color;
   Color away_color;
+  Color all_color;
 };
 
 }  // namespace cszb_scoreboard

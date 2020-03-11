@@ -56,6 +56,9 @@ void ThingsMode::createControls(wxPanel *control_panel) {
   proto::ScreenSide home_side, away_side, all_side;
   home_side.set_home(true);
   away_side.set_away(true);
+  all_side.set_home(true);
+  all_side.set_away(true);
+  all_side.set_extra(true);
 
   home_activities_panel = new ActivityPanel(scrollable_panel, this, home_side);
   away_activities_panel = new ActivityPanel(scrollable_panel, this, away_side);
