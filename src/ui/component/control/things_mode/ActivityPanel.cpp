@@ -183,7 +183,6 @@ void ActivityPanel::refreshSizers() {
 }
 
 void ActivityPanel::swapActivities(int a, int b) {
-  wxLogDebug("Swapping %d and %d", a, b);
   Activity temp(this, activity_half, replacement_half, 0, false);
   temp.copyFrom(activities[a]);
   activities[a]->copyFrom(activities[b]);
@@ -196,6 +195,8 @@ void ActivityPanel::swapActivities(int a, int b) {
     activities[b]->replacementPanel()->Show();
     activities[a]->replacementPanel()->Hide();
   }
+
+  updateNotify();
 }
 
 Color ActivityPanel::getColor() {
