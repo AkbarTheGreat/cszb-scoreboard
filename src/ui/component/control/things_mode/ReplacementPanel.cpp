@@ -48,6 +48,19 @@ ReplacementPanel::~ReplacementPanel() {
   }
 }
 
+void ReplacementPanel::copyFrom(ReplacementPanel *other) {
+  while (replacements.size() > 0) {
+    wxCommandEvent event;
+    event.SetEventObject(replacements.back()->deleteButton());
+    deleteReplacement(event);
+  }
+
+  for (auto other_replacement : other->replacements) {
+    addReplacement();
+    replacements.back()->copyFrom(other_replacement);
+  }
+}
+
 void ReplacementPanel::bindEvents() {}
 
 void ReplacementPanel::positionWidgets() {

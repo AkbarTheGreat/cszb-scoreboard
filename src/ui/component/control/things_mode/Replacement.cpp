@@ -48,6 +48,11 @@ Replacement::Replacement(wxWindow *parent) {
 
 Replacement::~Replacement() { control_pane->Destroy(); }
 
+void Replacement::copyFrom(Replacement *other) {
+  replaceable->SetValue(other->replaceable->GetValue());
+  replacement->SetValue(other->replacement->GetValue());
+}
+
 void Replacement::bindEvents() {
   remove_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                   &ReplacementPanel::deleteReplacement,
@@ -76,8 +81,6 @@ bool Replacement::containsDeleteButton(wxObject *delete_button) {
     return false;
   }
 }
-
-void Replacement::deleteReplacement(wxCommandEvent &event) {}
 
 std::string Replacement::previewText() {
   if (replaceable->GetValue() == "" && replacement->GetValue() == "") {

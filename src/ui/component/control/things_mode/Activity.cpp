@@ -30,7 +30,8 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
-                   wxPanel *replacement_frame, bool is_first) {
+                   wxPanel *replacement_frame, int index, bool is_first) {
+  this->index = index;
   this->parent = parent;
 
   control_pane = new wxPanel(activity_frame);
@@ -43,12 +44,22 @@ Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
   }
   activity_text = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                  wxSize(-1, -1), wxTE_MULTILINE);
+  up_button = new wxButton(control_pane, wxID_ANY, "^", wxDefaultPosition,
+                           wxDefaultSize, wxBU_EXACTFIT);
+  down_button = new wxButton(control_pane, wxID_ANY, "v", wxDefaultPosition,
+                             wxDefaultSize, wxBU_EXACTFIT);
   remove_activity_button =
       new wxButton(control_pane, wxID_ANY, "X", wxDefaultPosition,
                    wxDefaultSize, wxBU_EXACTFIT);
   replacement_panel = new ReplacementPanel(replacement_frame, parent);
   bindEvents();
   positionWidgets();
+}
+
+void Activity::copyFrom(Activity *other) {
+  activity_selector->SetValue(other->activity_selector->GetValue());
+  activity_text->SetValue(other->activity_text->GetValue());
+  replacement_panel->copyFrom(other->replacement_panel);
 }
 
 Activity::~Activity() {
@@ -61,6 +72,9 @@ void Activity::bindEvents() {
                           &ActivityPanel::selectionChanged,
                           (ActivityPanel *)parent);
 
+  up_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Activity::moveButton, this);
+  down_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Activity::moveButton, this);
+
   remove_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                &ActivityPanel::deleteActivity,
                                (ActivityPanel *)parent);
@@ -69,13 +83,23 @@ void Activity::bindEvents() {
 }
 
 void Activity::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 3, 0, 0);
+  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 5, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   sizer->Add(activity_selector, 0, wxALL, BORDER_SIZE);
   sizer->Add(activity_text, 0, wxALL, BORDER_SIZE);
+  sizer->Add(up_button, 0, wxALL, BORDER_SIZE);
+  sizer->Add(down_button, 0, wxALL, BORDER_SIZE);
   sizer->Add(remove_activity_button, 0, wxALL, BORDER_SIZE);
   control_pane->SetSizerAndFit(sizer);
+}
+
+void Activity::moveButton(wxCommandEvent &event) {
+  if (event.GetEventObject() == up_button) {
+    ((ActivityPanel *)parent)->swapActivities(index, index - 1);
+  } else if (event.GetEventObject() == down_button) {
+    ((ActivityPanel *)parent)->swapActivities(index, index + 1);
+  }
 }
 
 void Activity::select() {
@@ -100,6 +124,21 @@ bool Activity::resolveSelection(wxObject *selected_object) {
     return false;
   }
 }
+
+void Activity::setIndex(int index, int max_index) {
+  this->index = index;
+  if (index == 0) {
+    up_button->Disable();
+  } else {
+    up_button->Enable();
+  }
+  if (index == max_index) {
+    down_button->Disable();
+  } else {
+    down_button->Enable();
+  }
+}
+
 bool Activity::containsDeleteButton(wxObject *delete_button) {
   if (delete_button == remove_activity_button) {
     return true;

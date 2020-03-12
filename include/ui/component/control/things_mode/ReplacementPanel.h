@@ -31,6 +31,7 @@ class ReplacementPanel : public wxPanel {
  public:
   ReplacementPanel(wxWindow *parent, wxWindow *activity_panel);
   ~ReplacementPanel();
+  void copyFrom(ReplacementPanel *other);
   void addReplacement();
   void deleteReplacement(wxCommandEvent &event);
   std::vector<proto::RenderableText> previewText(int font_size);

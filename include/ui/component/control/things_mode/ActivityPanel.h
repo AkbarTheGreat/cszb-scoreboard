@@ -43,6 +43,7 @@ class ActivityPanel : public wxPanel {
   ReplacementPanel *replacementPanel();
   void selectionChanged(wxCommandEvent &event);
   std::string selectedActivityText();
+  void swapActivities(int a, int b);
   void textUpdated(wxKeyEvent &event);
   void updateNotify();
 
@@ -58,5 +59,6 @@ class ActivityPanel : public wxPanel {
   void bindEvents();
   void positionWidgets();
   void colorChanged(wxColourPickerEvent &event);
+  void resetActivityMoveButtons();
 };
 }  // namespace cszb_scoreboard

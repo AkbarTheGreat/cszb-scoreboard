@@ -46,17 +46,16 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   bool is_first = true;
   for (int i = 0; i < ACTIVITIES_FOR_SIZING; i++) {
     activities.push_back(
-        new Activity(this, activity_half, replacement_half, is_first));
+        new Activity(this, activity_half, replacement_half, i, is_first));
     is_first = false;
   }
   bindEvents();
   positionWidgets();
 
   // Add the activities which we don't size the scrollbar for.
-  for (int i = 0; i < INITIAL_NUMBER_OF_ACTIVITIES - ACTIVITIES_FOR_SIZING;
-       i++) {
+  for (int i = ACTIVITIES_FOR_SIZING; i < INITIAL_NUMBER_OF_ACTIVITIES; i++) {
     activities.push_back(
-        new Activity(this, activity_half, replacement_half, is_first));
+        new Activity(this, activity_half, replacement_half, i, is_first));
     is_first = false;
     activity_half->GetSizer()->Add(activities.back()->controlPane(), 0, wxALL,
                                    BORDER_SIZE);
@@ -64,6 +63,7 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
                                       wxALL, BORDER_SIZE);
     activities.back()->replacementPanel()->Hide();
   }
+  resetActivityMoveButtons();
 }
 
 ActivityPanel::~ActivityPanel() {
@@ -108,13 +108,15 @@ void ActivityPanel::positionWidgets() {
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
-  activities.push_back(
-      new Activity(this, activity_half, replacement_half, is_first));
+  activities.push_back(new Activity(this, activity_half, replacement_half,
+                                    activities.size(), is_first));
   activity_half->GetSizer()->Add(activities.back()->controlPane(), 0, wxALL,
                                  BORDER_SIZE);
   replacement_half->GetSizer()->Add(activities.back()->replacementPanel(), 0,
                                     wxALL, BORDER_SIZE);
   activities.back()->select();
+
+  resetActivityMoveButtons();
   updateNotify();
 }
 
@@ -141,6 +143,7 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
       }
       delete activity;
       activities.erase(activities.begin() + offset);
+      resetActivityMoveButtons();
       updateNotify();
       return;
     }
@@ -177,6 +180,22 @@ void ActivityPanel::refreshSizers() {
   replacement_half->SetSizerAndFit(replacement_half->GetSizer());
   activity_half->SetSizerAndFit(activity_half->GetSizer());
   SetSizerAndFit(GetSizer());
+}
+
+void ActivityPanel::swapActivities(int a, int b) {
+  wxLogDebug("Swapping %d and %d", a, b);
+  Activity temp(this, activity_half, replacement_half, 0, false);
+  temp.copyFrom(activities[a]);
+  activities[a]->copyFrom(activities[b]);
+  activities[b]->copyFrom(&temp);
+
+  if (activities[a]->isSelected()) {
+    activities[a]->replacementPanel()->Show();
+    activities[b]->replacementPanel()->Hide();
+  } else if (activities[b]->isSelected()) {
+    activities[b]->replacementPanel()->Show();
+    activities[a]->replacementPanel()->Hide();
+  }
 }
 
 Color ActivityPanel::getColor() {
@@ -218,6 +237,12 @@ std::vector<proto::RenderableText> ActivityPanel::previewText(int font_size) {
   return_vector.back().set_text(preview_text);
   return_vector.back().mutable_font()->set_size(font_size);
   return return_vector;
+}
+
+void ActivityPanel::resetActivityMoveButtons() {
+  for (int i = 0; i < activities.size(); i++) {
+    activities[i]->setIndex(i, activities.size() - 1);
+  }
 }
 
 }  // namespace cszb_scoreboard

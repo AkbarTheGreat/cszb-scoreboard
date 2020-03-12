@@ -31,27 +31,33 @@ namespace cszb_scoreboard {
 class Activity {
  public:
   Activity(wxWindow *parent, wxPanel *activity_frame,
-           wxPanel *replacement_frame, bool is_first);
+           wxPanel *replacement_frame, int index, bool is_first);
   ~Activity();
+  void copyFrom(Activity *other);
   wxPanel *controlPane() { return control_pane; }
   bool containsDeleteButton(wxObject *delete_button);
   std::string previewText();
   ReplacementPanel *replacementPanel() { return replacement_panel; }
   bool resolveSelection(wxObject *selected_object);
+  void setIndex(int index, int max_index);
   bool isSelected();
   void select();
   void unselect();
 
  private:
+  int index;
   wxPanel *control_pane;
   wxRadioButton *activity_selector;
   wxTextCtrl *activity_text;
+  wxButton *down_button;
   wxWindow *parent;
   wxButton *remove_activity_button;
   ReplacementPanel *replacement_panel;
+  wxButton *up_button;
 
   void bindEvents();
   void positionWidgets();
+  void moveButton(wxCommandEvent &event);
   void selectionChanged(wxCommandEvent &event);
 };
 

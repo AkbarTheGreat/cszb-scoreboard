@@ -31,8 +31,10 @@ class Replacement {
  public:
   Replacement(wxWindow *parent);
   ~Replacement();
+  void copyFrom(Replacement *other);
   bool containsDeleteButton(wxObject *delete_button);
   wxPanel *controlPane() { return control_pane; }
+  wxButton *deleteButton() { return remove_replacement_button; }
   std::string previewText();
 
  private:
@@ -45,6 +47,5 @@ class Replacement {
 
   void bindEvents();
   void positionWidgets();
-  void deleteReplacement(wxCommandEvent &event);
 };
 }  // namespace cszb_scoreboard
