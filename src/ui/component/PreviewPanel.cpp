@@ -33,7 +33,7 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
         DisplayConfig::getInstance()->displayDetails(i);
     if (display_info.side().error() || display_info.side().home() ||
         display_info.side().away()) {
-      screens.push_back(new ScreenPreview(this, display_info.side(), i));
+      screens.push_back(new ScreenPreview(this, display_info.side(), display_info.id()));
     }
   }
 
