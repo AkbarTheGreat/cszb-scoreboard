@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/clrpicker.h>
 #include <wx/wx.h>
 
+#include "ScoreboardCommon.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/TeamSelector.h"
@@ -33,6 +34,9 @@ class TextEntry : public ScreenTextController {
   static TextEntry *Create(PreviewPanel *preview_panel, wxWindow *parent);
   wxTextCtrl *textField();
   void textUpdated(wxKeyEvent &event);
+
+PUBLIC_TEST_ONLY
+  void selectTeam(int index);
 
  private:
   wxColourPickerCtrl *color_picker;
@@ -61,6 +65,7 @@ class TextEntry : public ScreenTextController {
   int enteredFontSize();
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
+  void doScreenChanged();
 };
 
 }  // namespace cszb_scoreboard

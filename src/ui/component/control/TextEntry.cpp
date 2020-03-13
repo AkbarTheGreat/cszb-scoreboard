@@ -141,7 +141,14 @@ void TextEntry::textUpdated(wxKeyEvent &event) {
   updatePreview();
 }
 
-void TextEntry::screenChanged(wxCommandEvent &event) {
+void TextEntry::selectTeam(int index) {
+  screen_selection->SetSelection(index);
+  doScreenChanged();
+}
+
+void TextEntry::screenChanged(wxCommandEvent &event) { doScreenChanged(); }
+
+void TextEntry::doScreenChanged() {
   if (screen_selection->allSelected()) {
     text_entry->SetValue(all_text);
     font_size_entry->SetValue(StringUtil::intToString(all_font_size));

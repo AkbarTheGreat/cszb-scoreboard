@@ -49,7 +49,8 @@ MainView *GuiTest::mainView() {
 }
 
 TextEntry *GuiTest::textEntry() {
-  return (TextEntry *)mainView()->controlPanel()->textController(0);
+  mainView()->controlPanel()->SetSelection(3);
+  return (TextEntry *)mainView()->controlPanel()->textController(3);
 }
 
 ScreenPreview *GuiTest::firstPreview() {

@@ -67,10 +67,10 @@ TEST_F(TextEntryTest, TypingTest) {
     // accept text entry, so just pass spuriously.
     return;
   }
-  wxColour text_color = wxColour("Black");
-#ifdef WXDEBUG
-  text_color = wxColour("White");
-#endif
+
+  WX_A(textEntry()->selectTeam(0));
+
+  wxColour text_color = wxColour("White");
   enterText(".");
   ImageAnalysis analysis = getAnalysis();
   float initial_text_ratio = analysis.colorPercentage(text_color);
