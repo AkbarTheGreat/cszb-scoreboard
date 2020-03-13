@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/graphics/TeamColors.h"
 
 #include "config/TeamConfig.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -34,12 +35,10 @@ TeamColors* TeamColors::getInstance() {
 
 TeamColors::TeamColors() {
   // Initialize colors from configured defaults
-  proto::ScreenSide home_side, away_side;
-  home_side.set_home(true);
-  away_side.set_away(true);
-
-  setColor(home_side, TeamConfig::getInstance()->teamColor(home_side)[0]);
-  setColor(away_side, TeamConfig::getInstance()->teamColor(away_side)[0]);
+  setColor(ProtoUtil::homeSide(),
+           TeamConfig::getInstance()->teamColor(ProtoUtil::homeSide())[0]);
+  setColor(ProtoUtil::awaySide(),
+           TeamConfig::getInstance()->teamColor(ProtoUtil::awaySide())[0]);
   all_color = Color("Black");
 }
 

@@ -35,6 +35,10 @@ class ProtoUtil {
   static void setFontColor(proto::Font *font, Color color);
   static void defaultFont(proto::Font *font);
   static void validateFont(proto::Font *font);
+  static proto::ScreenSide homeSide();
+  static proto::ScreenSide awaySide();
+  static proto::ScreenSide allSide();
+  static proto::ScreenSide noSide();
 };
 
 }  // namespace cszb_scoreboard

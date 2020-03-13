@@ -53,16 +53,12 @@ void ThingsMode::createControls(wxPanel *control_panel) {
   new_replacement_button =
       new wxButton(button_panel, wxID_ANY, "New Replacement");
 
-  proto::ScreenSide home_side, away_side, all_side;
-  home_side.set_home(true);
-  away_side.set_away(true);
-  all_side.set_home(true);
-  all_side.set_away(true);
-  all_side.set_extra(true);
-
-  home_activities_panel = new ActivityPanel(scrollable_panel, this, home_side);
-  away_activities_panel = new ActivityPanel(scrollable_panel, this, away_side);
-  all_activities_panel = new ActivityPanel(scrollable_panel, this, all_side);
+  home_activities_panel =
+      new ActivityPanel(scrollable_panel, this, ProtoUtil::homeSide());
+  away_activities_panel =
+      new ActivityPanel(scrollable_panel, this, ProtoUtil::awaySide());
+  all_activities_panel =
+      new ActivityPanel(scrollable_panel, this, ProtoUtil::allSide());
 
   positionWidgets(control_panel);
   bindEvents();
@@ -134,12 +130,6 @@ void ThingsMode::updatePreview() {
   scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
   scrollable_panel->SetScrollRate(0, 20);
 
-  // Set all sides to true, in order to present to all monitors
-  proto::ScreenSide side;
-  side.set_home(true);
-  side.set_away(true);
-  side.set_extra(true);
-
   std::vector<proto::RenderableText> screen_lines;
 
   if (presenter_selection->GetSelection() == 0) {
@@ -149,7 +139,8 @@ void ThingsMode::updatePreview() {
         selected_panel->replacementPanel()->previewText(DEFAULT_FONT_SIZE);
   }
 
-  previewPanel()->setTextForPreview(screen_lines, screen_color, true, side);
+  previewPanel()->setTextForPreview(screen_lines, screen_color, true,
+                                    ProtoUtil::allSide());
 }
 
 void ThingsMode::textUpdated(wxKeyEvent &event) { updatePreview(); }

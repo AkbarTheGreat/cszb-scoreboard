@@ -33,7 +33,8 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
         DisplayConfig::getInstance()->displayDetails(i);
     if (display_info.side().error() || display_info.side().home() ||
         display_info.side().away()) {
-      screens.push_back(new ScreenPreview(this, display_info.side(), display_info.id()));
+      screens.push_back(
+          new ScreenPreview(this, display_info.side(), display_info.id()));
     }
   }
 
@@ -131,13 +132,8 @@ void PreviewPanel::updatePreviewsFromSettings() {
 }
 
 void PreviewPanel::blackout(wxCommandEvent& event) {
-  proto::ScreenSide side;
-  // Always blackout all screens
-  side.set_home(true);
-  side.set_away(true);
-  side.set_extra(true);
   for (auto preview : screens) {
-    preview->blackoutPresenter(side);
+    preview->blackoutPresenter(ProtoUtil::allSide());
   }
 }
 

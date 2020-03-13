@@ -77,4 +77,29 @@ void ProtoUtil::validateFont(proto::Font *font) {
   }
 }
 
+proto::ScreenSide ProtoUtil::homeSide() {
+  proto::ScreenSide side;
+  side.set_home(true);
+  return side;
+}
+
+proto::ScreenSide ProtoUtil::awaySide() {
+  proto::ScreenSide side;
+  side.set_away(true);
+  return side;
+}
+
+proto::ScreenSide ProtoUtil::allSide() {
+  proto::ScreenSide side;
+  side.set_home(true);
+  side.set_away(true);
+  side.set_extra(true);
+  return side;
+}
+
+proto::ScreenSide ProtoUtil::noSide() {
+  proto::ScreenSide side;
+  return side;
+}
+
 }  // namespace cszb_scoreboard

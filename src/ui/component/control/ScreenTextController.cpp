@@ -21,6 +21,7 @@ limitations under the License.
 #include "ui/component/control/ScreenTextController.h"
 
 #include "ui/frame/HotkeyTable.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -66,10 +67,7 @@ void ScreenTextController::updateClicked(wxCommandEvent &event) {
 }
 
 proto::ScreenSide ScreenTextController::updateSide() {
-  proto::ScreenSide side;
-  side.set_home(true);
-  side.set_away(true);
-  return side;
+  return ProtoUtil::allSide();
 }
 
 }  // namespace cszb_scoreboard

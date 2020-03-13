@@ -43,15 +43,8 @@ TextEntry::TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
 
   home_font_size = away_font_size = all_font_size = DEFAULT_FONT_SIZE;
 
-  proto::ScreenSide side;
-
-  side.set_home(true);
-  home_color = TeamConfig::getInstance()->teamColor(side)[0];
-  side.set_home(false);
-
-  side.set_away(true);
-  away_color = TeamConfig::getInstance()->teamColor(side)[0];
-  side.set_away(false);
+  home_color = TeamConfig::getInstance()->teamColor(ProtoUtil::homeSide())[0];
+  away_color = TeamConfig::getInstance()->teamColor(ProtoUtil::awaySide())[0];
 
   Color all_color("Black");
 }
@@ -113,20 +106,13 @@ wxTextCtrl *TextEntry::textField() { return text_entry; }
 void TextEntry::updatePreview() {
   // Send the combined text to both previews
   if (screen_selection->allSelected()) {
-    proto::ScreenSide side;
-    side.set_home(true);
-    side.set_away(true);
     previewPanel()->setTextForPreview(all_text, all_font_size, all_color, false,
-                                      side);
+                                      ProtoUtil::allSide());
   } else {
-    proto::ScreenSide home_side;
-    home_side.set_home(true);
-    proto::ScreenSide away_side;
-    away_side.set_away(true);
     previewPanel()->setTextForPreview(home_text, home_font_size, home_color,
-                                      false, home_side);
+                                      false, ProtoUtil::homeSide());
     previewPanel()->setTextForPreview(away_text, away_font_size, away_color,
-                                      false, away_side);
+                                      false, ProtoUtil::awaySide());
   }
 }
 

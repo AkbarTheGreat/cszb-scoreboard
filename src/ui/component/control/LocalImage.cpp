@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
+#include "util/ProtoUtil.h"
+
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
@@ -77,27 +79,22 @@ void LocalImage::bindEvents() {
 void LocalImage::updatePreview() {
   if (screen_selection->allSelected() && !all_screen_file.empty()) {
     // Send the image to both screens
-    proto::ScreenSide side;
-    side.set_home(true);
-    side.set_away(true);
-    previewPanel()->setTextForPreview("", 1, Color("Black"), false, side);
-    previewPanel()->setImageForPreview(wxImage(all_screen_file.c_str()), side);
+    previewPanel()->setTextForPreview("", 1, Color("Black"), false,
+                                      ProtoUtil::allSide());
+    previewPanel()->setImageForPreview(wxImage(all_screen_file.c_str()),
+                                       ProtoUtil::allSide());
   } else {
-    proto::ScreenSide home_side;
-    home_side.set_home(true);
-    proto::ScreenSide away_side;
-    away_side.set_away(true);
     if (!home_screen_file.empty()) {
       previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                        home_side);
+                                        ProtoUtil::homeSide());
       previewPanel()->setImageForPreview(wxImage(home_screen_file.c_str()),
-                                         home_side);
+                                         ProtoUtil::homeSide());
     }
     if (!away_screen_file.empty()) {
       previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                        away_side);
+                                        ProtoUtil::awaySide());
       previewPanel()->setImageForPreview(wxImage(away_screen_file.c_str()),
-                                         away_side);
+                                         ProtoUtil::awaySide());
     }
   }
 }
