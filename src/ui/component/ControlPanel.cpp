@@ -32,9 +32,6 @@ const int NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
 ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
     : wxAuiNotebook(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                     NOTEBOOK_STYLE) {
-  controllers.push_back(TextEntry::Create(preview_panel, this));
-  AddPage(controllers.back(), "Text");
-
   controllers.push_back(ScoreControl::Create(preview_panel, this));
   AddPage(controllers.back(), "Score");
 
@@ -43,6 +40,9 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
 
   controllers.push_back(ThingsMode::Create(preview_panel, this));
   AddPage(controllers.back(), "5/6 Things");
+
+  controllers.push_back(TextEntry::Create(preview_panel, this));
+  AddPage(controllers.back(), "Text");
 
   bindEvents();
 }
