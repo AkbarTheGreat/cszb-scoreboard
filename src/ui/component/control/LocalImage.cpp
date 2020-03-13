@@ -44,7 +44,7 @@ LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {
 void LocalImage::createControls(wxPanel *control_panel) {
   inner_panel = new wxPanel(control_panel);
   browse_button = new wxButton(inner_panel, wxID_ANY, "Browse");
-  screen_selection = new TeamSelector(inner_panel);
+  screen_selection = new TeamSelector(inner_panel, ProtoUtil::allSide());
   current_file = new wxStaticText(control_panel, wxID_ANY, NO_IMAGE_MESSAGE);
   positionWidgets(control_panel);
   bindEvents();

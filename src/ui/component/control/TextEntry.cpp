@@ -39,7 +39,7 @@ TextEntry::TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
     : ScreenTextController(preview_panel, parent) {
   home_text = wxT("Home Team");
   away_text = wxT("Away Team");
-  all_text = wxT("");
+  all_text = wxT("Enter Text");
 
   home_font_size = away_font_size = all_font_size = DEFAULT_FONT_SIZE;
 
@@ -52,7 +52,7 @@ TextEntry::TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
 void TextEntry::createControls(wxPanel *control_panel) {
   text_label = new wxStaticText(control_panel, wxID_ANY, wxT("Text"));
   text_entry =
-      new wxTextCtrl(control_panel, wxID_ANY, home_text, wxDefaultPosition,
+      new wxTextCtrl(control_panel, wxID_ANY, all_text, wxDefaultPosition,
                      wxSize(-1, -1), wxTE_MULTILINE);
 
   inner_panel = new wxPanel(control_panel);
@@ -61,9 +61,9 @@ void TextEntry::createControls(wxPanel *control_panel) {
   font_size_entry = new wxTextCtrl(inner_panel, wxID_ANY,
                                    StringUtil::intToString(DEFAULT_FONT_SIZE));
 
-  screen_selection = new TeamSelector(inner_panel);
+  screen_selection = new TeamSelector(inner_panel, ProtoUtil::allSide());
 
-  color_picker = new wxColourPickerCtrl(inner_panel, wxID_ANY, home_color);
+  color_picker = new wxColourPickerCtrl(inner_panel, wxID_ANY, all_color);
 
   positionWidgets(control_panel);
   bindEvents();
