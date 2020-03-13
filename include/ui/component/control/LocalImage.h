@@ -21,8 +21,6 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-#include <filesystem>
-
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/TeamSelector.h"
@@ -37,7 +35,8 @@ class LocalImage : public ScreenTextController {
   wxButton *browse_button;
   wxStaticText *current_file;
   wxPanel *inner_panel;
-  std::filesystem::path all_screen_file, home_screen_file, away_screen_file;
+  wxImage all_screen_image, home_screen_image, away_screen_image;
+  std::string all_screen_filename, home_screen_filename, away_screen_filename;
   TeamSelector *screen_selection;
 
   LocalImage(PreviewPanel *preview_panel, wxWindow *parent)

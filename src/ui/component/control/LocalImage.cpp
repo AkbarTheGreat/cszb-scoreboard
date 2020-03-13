@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
+#include <filesystem>
+
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -77,27 +79,26 @@ void LocalImage::bindEvents() {
 }
 
 void LocalImage::updatePreview() {
-  if (screen_selection->allSelected() && !all_screen_file.empty()) {
+  if (screen_selection->allSelected() && all_screen_image.IsOk()) {
     // Send the image to both screens
     previewPanel()->setTextForPreview("", 1, Color("Black"), false,
                                       ProtoUtil::allSide());
-    previewPanel()->setImageForPreview(wxImage(all_screen_file.c_str()),
-                                       ProtoUtil::allSide());
+    previewPanel()->setImageForPreview(all_screen_image, ProtoUtil::allSide());
   } else {
-    if (!home_screen_file.empty()) {
+    if (home_screen_image.IsOk()) {
       previewPanel()->setTextForPreview("", 1, Color("Black"), false,
                                         ProtoUtil::homeSide());
-      previewPanel()->setImageForPreview(wxImage(home_screen_file.c_str()),
+      previewPanel()->setImageForPreview(home_screen_image,
                                          ProtoUtil::homeSide());
     }
-    if (!away_screen_file.empty()) {
+    if (away_screen_image.IsOk()) {
       previewPanel()->setTextForPreview("", 1, Color("Black"), false,
                                         ProtoUtil::awaySide());
-      previewPanel()->setImageForPreview(wxImage(away_screen_file.c_str()),
+      previewPanel()->setImageForPreview(away_screen_image,
                                          ProtoUtil::awaySide());
     }
   }
-}
+}  // namespace cszb_scoreboard
 
 void LocalImage::browsePressed(wxCommandEvent &event) {
   wxFileDialog dialog(this, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
@@ -105,11 +106,14 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
   if (dialog.ShowModal() != wxID_CANCEL) {
     std::filesystem::path selected_file = (std::string)dialog.GetPath();
     if (screen_selection->allSelected()) {
-      all_screen_file = selected_file;
+      all_screen_image = wxImage(selected_file.c_str());
+      all_screen_filename = selected_file.filename().string();
     } else if (screen_selection->awaySelected()) {
-      away_screen_file = selected_file;
+      away_screen_image = wxImage(selected_file.c_str());
+      away_screen_filename = selected_file.filename().string();
     } else {
-      home_screen_file = selected_file;
+      home_screen_image = wxImage(selected_file.c_str());
+      home_screen_filename = selected_file.filename().string();
     }
     current_file->SetLabelText(selected_file.filename().c_str());
   }
@@ -120,22 +124,22 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
 
 void LocalImage::screenChanged(wxCommandEvent &event) {
   if (screen_selection->allSelected()) {
-    if (all_screen_file.empty()) {
+    if (all_screen_filename.empty()) {
       current_file->SetLabelText(NO_IMAGE_MESSAGE);
     } else {
-      current_file->SetLabelText(all_screen_file.filename().c_str());
+      current_file->SetLabelText(all_screen_filename);
     }
   } else if (screen_selection->homeSelected()) {
-    if (home_screen_file.empty()) {
+    if (home_screen_filename.empty()) {
       current_file->SetLabelText(NO_IMAGE_MESSAGE);
     } else {
-      current_file->SetLabelText(home_screen_file.filename().c_str());
+      current_file->SetLabelText(home_screen_filename);
     }
   } else if (screen_selection->awaySelected()) {
-    if (away_screen_file.empty()) {
+    if (away_screen_filename.empty()) {
       current_file->SetLabelText(NO_IMAGE_MESSAGE);
     } else {
-      current_file->SetLabelText(away_screen_file.filename().c_str());
+      current_file->SetLabelText(away_screen_filename);
     }
   }
 
