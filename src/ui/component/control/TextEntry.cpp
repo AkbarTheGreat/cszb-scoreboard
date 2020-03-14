@@ -46,7 +46,7 @@ TextEntry::TextEntry(PreviewPanel *preview_panel, wxWindow *parent)
   home_color = TeamConfig::getInstance()->teamColor(ProtoUtil::homeSide())[0];
   away_color = TeamConfig::getInstance()->teamColor(ProtoUtil::awaySide())[0];
 
-  Color all_color("Black");
+  all_color = Color("Black");
 }
 
 void TextEntry::createControls(wxPanel *control_panel) {
