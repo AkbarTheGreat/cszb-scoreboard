@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
+#include <wx/clipbrd.h>
+
 #include <filesystem>
 
 #include "util/ProtoUtil.h"
@@ -30,11 +32,14 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string IMAGE_SELECTION_STRING =
     "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
 
-//  This string has a bunch of trailing whitespace to buffer out the
+//  These strings have a bunch of trailing whitespace to buffer out the
 //  layout to make room for most filenames.  It's hacky, but it's a bit
 //  better than completely resizing the panels, IMHO.
 const std::string NO_IMAGE_MESSAGE =
     "<No Image Selected>                               ";
+
+const std::string CLIPBOARD_IMAGE_MESSAGE =
+    "<Image Loaded From Clipboard>                     ";
 
 LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   LocalImage *local_image = new LocalImage(preview_panel, parent);
@@ -45,7 +50,9 @@ LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {
 
 void LocalImage::createControls(wxPanel *control_panel) {
   inner_panel = new wxPanel(control_panel);
-  browse_button = new wxButton(inner_panel, wxID_ANY, "Browse");
+  button_panel = new wxPanel(inner_panel);
+  browse_button = new wxButton(button_panel, wxID_ANY, "Browse");
+  paste_button = new wxButton(button_panel, wxID_ANY, "Load From Clipboard");
   screen_selection = new TeamSelector(inner_panel, ProtoUtil::allSide());
   current_file = new wxStaticText(control_panel, wxID_ANY, NO_IMAGE_MESSAGE);
   positionWidgets(control_panel);
@@ -61,7 +68,16 @@ void LocalImage::positionWidgets(wxPanel *control_panel) {
   inner_sizer->SetFlexibleDirection(wxBOTH);
   inner_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  inner_sizer->Add(browse_button, 0, wxALL, BORDER_SIZE);
+  wxFlexGridSizer *button_sizer = new wxFlexGridSizer(2, 0, 0, 0);
+  inner_sizer->SetFlexibleDirection(wxBOTH);
+  inner_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+
+  button_sizer->Add(browse_button, 0, wxALL, BORDER_SIZE);
+  button_sizer->Add(paste_button, 0, wxALL, BORDER_SIZE);
+
+  button_panel->SetSizerAndFit(button_sizer);
+
+  inner_sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
   inner_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
 
   inner_panel->SetSizerAndFit(inner_sizer);
@@ -74,6 +90,7 @@ void LocalImage::positionWidgets(wxPanel *control_panel) {
 
 void LocalImage::bindEvents() {
   browse_button->Bind(wxEVT_BUTTON, &LocalImage::browsePressed, this);
+  paste_button->Bind(wxEVT_BUTTON, &LocalImage::pastePressed, this);
   screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                          &LocalImage::screenChanged, this);
 }
@@ -117,6 +134,34 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
     }
     current_file->SetLabelText(selected_file.filename().c_str());
   }
+
+  control_panel->Update();
+  updatePreview();
+}
+
+void LocalImage::pastePressed(wxCommandEvent &event) {
+  wxImage clipboard_image;
+
+  if (wxTheClipboard->Open()) {
+    if (wxTheClipboard->IsSupported(wxDF_BITMAP)) {
+      wxBitmapDataObject data;
+      wxTheClipboard->GetData(data);
+      clipboard_image = data.GetBitmap().ConvertToImage();
+    }
+    wxTheClipboard->Close();
+  }
+
+  if (screen_selection->allSelected()) {
+    all_screen_image = clipboard_image;
+    all_screen_filename = CLIPBOARD_IMAGE_MESSAGE;
+  } else if (screen_selection->awaySelected()) {
+    away_screen_image = clipboard_image;
+    away_screen_filename = CLIPBOARD_IMAGE_MESSAGE;
+  } else {
+    home_screen_image = clipboard_image;
+    home_screen_filename = CLIPBOARD_IMAGE_MESSAGE;
+  }
+  current_file->SetLabelText(CLIPBOARD_IMAGE_MESSAGE);
 
   control_panel->Update();
   updatePreview();

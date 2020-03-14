@@ -33,7 +33,9 @@ class LocalImage : public ScreenTextController {
 
  private:
   wxButton *browse_button;
+  wxPanel *button_panel;
   wxStaticText *current_file;
+  wxButton *paste_button;
   wxPanel *inner_panel;
   wxImage all_screen_image, home_screen_image, away_screen_image;
   std::string all_screen_filename, home_screen_filename, away_screen_filename;
@@ -44,6 +46,7 @@ class LocalImage : public ScreenTextController {
   void bindEvents();
   void browsePressed(wxCommandEvent &event);
   void createControls(wxPanel *control_panel) override;
+  void pastePressed(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel);
   void screenChanged(wxCommandEvent &event);
   void updatePreview() override;
