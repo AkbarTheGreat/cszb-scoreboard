@@ -146,9 +146,13 @@ void LocalImage::pastePressed(wxCommandEvent &event) {
     if (wxTheClipboard->IsSupported(wxDF_BITMAP)) {
       wxBitmapDataObject data;
       wxTheClipboard->GetData(data);
+      wxTheClipboard->Close();
       clipboard_image = data.GetBitmap().ConvertToImage();
+    } else {
+      wxTheClipboard->Close();
+      wxMessageBox("ERROR: No supported image data found in clipboard.");
+      return;
     }
-    wxTheClipboard->Close();
   }
 
   if (screen_selection->allSelected()) {
