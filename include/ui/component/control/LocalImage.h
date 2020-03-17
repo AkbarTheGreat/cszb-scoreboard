@@ -1,6 +1,6 @@
 /*
-ui/component/control/LocalImage.h: Handles loading images from disk (or a local
-library which is stored on disk) to display on one or both screens.
+ui/component/control/LocalImage.h: Handles loading images from disk or from the
+clipboard.
 
 Copyright 2019-2020 Tracy Beck
 
