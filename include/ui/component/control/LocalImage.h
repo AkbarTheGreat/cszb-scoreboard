@@ -23,7 +23,6 @@ limitations under the License.
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenImageController.h"
-#include "ui/component/control/TeamSelector.h"
 
 namespace cszb_scoreboard {
 
