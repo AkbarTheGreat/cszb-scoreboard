@@ -22,34 +22,28 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "config.pb.h"
-#include "ui/component/control/ScreenTextController.h"
+#include "ui/component/control/ScreenImageController.h"
 #include "ui/component/control/TeamSelector.h"
 
 namespace cszb_scoreboard {
 
-class LocalImage : public ScreenTextController {
+class LocalImage : public ScreenImageController {
  public:
   static LocalImage *Create(PreviewPanel *preview_panel, wxWindow *parent);
 
  private:
   wxButton *browse_button;
   wxPanel *button_panel;
-  wxStaticText *current_file;
   wxButton *paste_button;
   wxPanel *inner_panel;
-  wxImage all_screen_image, home_screen_image, away_screen_image;
-  std::string all_screen_filename, home_screen_filename, away_screen_filename;
-  TeamSelector *screen_selection;
 
   LocalImage(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenTextController(preview_panel, parent) {}
+      : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
   void browsePressed(wxCommandEvent &event);
   void createControls(wxPanel *control_panel) override;
   void pastePressed(wxCommandEvent &event);
-  void positionWidgets(wxPanel *control_panel);
-  void screenChanged(wxCommandEvent &event);
-  void updatePreview() override;
+  void positionWidgets(wxPanel *control_panel) override;
 };
 
 }  // namespace cszb_scoreboard

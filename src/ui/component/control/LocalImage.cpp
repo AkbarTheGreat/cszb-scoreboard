@@ -32,14 +32,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string IMAGE_SELECTION_STRING =
     "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
 
-//  These strings have a bunch of trailing whitespace to buffer out the
-//  layout to make room for most filenames.  It's hacky, but it's a bit
-//  better than completely resizing the panels, IMHO.
-const std::string NO_IMAGE_MESSAGE =
-    "<No Image Selected>                               ";
-
-const std::string CLIPBOARD_IMAGE_MESSAGE =
-    "<Image Loaded From Clipboard>                     ";
+const std::string CLIPBOARD_IMAGE_MESSAGE = "<Image Loaded From Clipboard>";
 
 LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {
   LocalImage *local_image = new LocalImage(preview_panel, parent);
@@ -49,12 +42,15 @@ LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {
 }
 
 void LocalImage::createControls(wxPanel *control_panel) {
+  ScreenImageController::createControls(control_panel);
   inner_panel = new wxPanel(control_panel);
+
+  // Reparent our screen_selection to position it into inner_panel, for layout.
+  screen_selection->Reparent(inner_panel);
+
   button_panel = new wxPanel(inner_panel);
   browse_button = new wxButton(button_panel, wxID_ANY, "Browse");
   paste_button = new wxButton(button_panel, wxID_ANY, "Load From Clipboard");
-  screen_selection = new TeamSelector(inner_panel, ProtoUtil::allSide());
-  current_file = new wxStaticText(control_panel, wxID_ANY, NO_IMAGE_MESSAGE);
   positionWidgets(control_panel);
   bindEvents();
 }
@@ -82,7 +78,7 @@ void LocalImage::positionWidgets(wxPanel *control_panel) {
 
   inner_panel->SetSizerAndFit(inner_sizer);
 
-  outer_sizer->Add(current_file, 0, wxALL, BORDER_SIZE);
+  outer_sizer->Add(current_image_label, 0, wxALL, BORDER_SIZE);
   outer_sizer->Add(inner_panel, 0, wxALL, 0);
 
   control_panel->SetSizerAndFit(outer_sizer);
@@ -91,31 +87,7 @@ void LocalImage::positionWidgets(wxPanel *control_panel) {
 void LocalImage::bindEvents() {
   browse_button->Bind(wxEVT_BUTTON, &LocalImage::browsePressed, this);
   paste_button->Bind(wxEVT_BUTTON, &LocalImage::pastePressed, this);
-  screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
-                         &LocalImage::screenChanged, this);
 }
-
-void LocalImage::updatePreview() {
-  if (screen_selection->allSelected() && all_screen_image.IsOk()) {
-    // Send the image to both screens
-    previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                      ProtoUtil::allSide());
-    previewPanel()->setImageForPreview(all_screen_image, ProtoUtil::allSide());
-  } else {
-    if (home_screen_image.IsOk()) {
-      previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                        ProtoUtil::homeSide());
-      previewPanel()->setImageForPreview(home_screen_image,
-                                         ProtoUtil::homeSide());
-    }
-    if (away_screen_image.IsOk()) {
-      previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                        ProtoUtil::awaySide());
-      previewPanel()->setImageForPreview(away_screen_image,
-                                         ProtoUtil::awaySide());
-    }
-  }
-}  // namespace cszb_scoreboard
 
 void LocalImage::browsePressed(wxCommandEvent &event) {
   wxFileDialog dialog(this, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
@@ -124,15 +96,15 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
     std::filesystem::path selected_file = (std::string)dialog.GetPath();
     if (screen_selection->allSelected()) {
       all_screen_image = wxImage(selected_file.c_str());
-      all_screen_filename = selected_file.filename().string();
+      all_screen_image_name = selected_file.filename().string();
     } else if (screen_selection->awaySelected()) {
       away_screen_image = wxImage(selected_file.c_str());
-      away_screen_filename = selected_file.filename().string();
+      away_screen_image_name = selected_file.filename().string();
     } else {
       home_screen_image = wxImage(selected_file.c_str());
-      home_screen_filename = selected_file.filename().string();
+      home_screen_image_name = selected_file.filename().string();
     }
-    current_file->SetLabelText(selected_file.filename().c_str());
+    current_image_label->SetLabelText(selected_file.filename().c_str());
   }
 
   control_panel->Update();
@@ -157,40 +129,15 @@ void LocalImage::pastePressed(wxCommandEvent &event) {
 
   if (screen_selection->allSelected()) {
     all_screen_image = clipboard_image;
-    all_screen_filename = CLIPBOARD_IMAGE_MESSAGE;
+    all_screen_image_name = CLIPBOARD_IMAGE_MESSAGE;
   } else if (screen_selection->awaySelected()) {
     away_screen_image = clipboard_image;
-    away_screen_filename = CLIPBOARD_IMAGE_MESSAGE;
+    away_screen_image_name = CLIPBOARD_IMAGE_MESSAGE;
   } else {
     home_screen_image = clipboard_image;
-    home_screen_filename = CLIPBOARD_IMAGE_MESSAGE;
+    home_screen_image_name = CLIPBOARD_IMAGE_MESSAGE;
   }
-  current_file->SetLabelText(CLIPBOARD_IMAGE_MESSAGE);
-
-  control_panel->Update();
-  updatePreview();
-}
-
-void LocalImage::screenChanged(wxCommandEvent &event) {
-  if (screen_selection->allSelected()) {
-    if (all_screen_filename.empty()) {
-      current_file->SetLabelText(NO_IMAGE_MESSAGE);
-    } else {
-      current_file->SetLabelText(all_screen_filename);
-    }
-  } else if (screen_selection->homeSelected()) {
-    if (home_screen_filename.empty()) {
-      current_file->SetLabelText(NO_IMAGE_MESSAGE);
-    } else {
-      current_file->SetLabelText(home_screen_filename);
-    }
-  } else if (screen_selection->awaySelected()) {
-    if (away_screen_filename.empty()) {
-      current_file->SetLabelText(NO_IMAGE_MESSAGE);
-    } else {
-      current_file->SetLabelText(away_screen_filename);
-    }
-  }
+  current_image_label->SetLabelText(CLIPBOARD_IMAGE_MESSAGE);
 
   control_panel->Update();
   updatePreview();
