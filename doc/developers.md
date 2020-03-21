@@ -52,7 +52,7 @@ get the 64 bit static versions of all of these libraries.
   scoreboard uses.
 * [Protocol buffers](https://developers.google.com/protocol-buffers) - The
   scoreboard uses protobuf for configuration storage and serialization.
-* [jsconcpp](https://github.com/open-source-parsers/jsoncpp) - Our autoupdater
+* [jsoncpp](https://github.com/open-source-parsers/jsoncpp) - Our autoupdater
   has to parse a json response to know what the latest released version of the
   application is.
 * [Curl](https://curl.haxx.se/libcurl) - A pretty standard library for
