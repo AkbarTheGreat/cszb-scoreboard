@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/ControlPanel.h"
 
 #include "ui/component/control/LocalImage.h"
+#include "ui/component/control/ImageLibrary.h"
 #include "ui/component/control/ScoreControl.h"
 #include "ui/component/control/TextEntry.h"
 #include "ui/component/control/ThingsMode.h"
@@ -35,8 +36,13 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
   controllers.push_back(ScoreControl::Create(preview_panel, this));
   AddPage(controllers.back(), "Score");
 
+  /*
+  controllers.push_back(ImageLibrary::Create(preview_panel, this));
+  AddPage(controllers.back(), "Image Library");
+  */
+
   controllers.push_back(LocalImage::Create(preview_panel, this));
-  AddPage(controllers.back(), "Image");
+  AddPage(controllers.back(), "Load Image");
 
   controllers.push_back(ThingsMode::Create(preview_panel, this));
   AddPage(controllers.back(), "5/6 Things");
