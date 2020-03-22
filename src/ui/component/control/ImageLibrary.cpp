@@ -20,8 +20,6 @@ limitations under the License.
 
 #include "ui/component/control/ImageLibrary.h"
 
-#include <filesystem>
-
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {

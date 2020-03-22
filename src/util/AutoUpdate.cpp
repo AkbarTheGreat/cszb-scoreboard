@@ -24,11 +24,11 @@ limitations under the License.
 #include <json/reader.h>
 #include <wx/wx.h>
 
-#include <filesystem>
 #include <fstream>
 #include <regex>
 
 #include "config/CommandArgs.h"
+#include "util/FilesystemPath.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -113,8 +113,8 @@ std::string isRedirect(const std::vector<char> &http_data) {
   return getHref(http_data.data());
 }
 
-std::filesystem::path backupPath() {
-  std::filesystem::path backup_path = CommandArgs::getInstance()->commandPath();
+FilesystemPath backupPath() {
+  FilesystemPath backup_path = CommandArgs::getInstance()->commandPath();
   backup_path.replace_filename(AUTO_UPDATE_BACKUP_NAME);
   return backup_path;
 }
@@ -203,11 +203,10 @@ bool AutoUpdate::updateInPlace() {
   wxLogDebug("Writing auto-update to %s",
              CommandArgs::getInstance()->commandPath().string());
 
-  std::filesystem::path executable_path =
-      CommandArgs::getInstance()->commandPath();
-  std::filesystem::path backup_path = backupPath();
+  FilesystemPath executable_path = CommandArgs::getInstance()->commandPath();
+  FilesystemPath backup_path = backupPath();
 
-  std::filesystem::rename(executable_path, backup_path);
+  FilesystemPath::rename(executable_path, backup_path);
 
   std::fstream output(executable_path.c_str(),
                       std::ios::out | std::ios::trunc | std::ios::binary);
@@ -217,7 +216,7 @@ bool AutoUpdate::updateInPlace() {
   return true;
 }
 
-void AutoUpdate::removeOldUpdate() { std::filesystem::remove(backupPath()); }
+void AutoUpdate::removeOldUpdate() { FilesystemPath::remove(backupPath()); }
 
 Version::Version(std::string version_string) {
   size_t first_dot = version_string.find('.', 0);

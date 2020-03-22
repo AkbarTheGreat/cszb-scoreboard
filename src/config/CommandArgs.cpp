@@ -50,7 +50,7 @@ bool CommandArgs::process_args_internal(const wxCmdLineParser &parser, int argc,
   // TODO: This is always an absolute path on Windows, but may be a relative
   // path on Linux.  An update to always get an absolute path is probably
   // worthwhile.
-  command_path = std::filesystem::path((const char *)argv[0].c_str());
+  command_path = FilesystemPath((const char *)argv[0].c_str());
   auto_update = !parser.Found(wxT("n"));
   reset_config = parser.Found(wxT("r"));
 
@@ -66,6 +66,6 @@ CommandArgs::CommandArgs() {
 
 bool CommandArgs::autoUpdate() { return auto_update; }
 bool CommandArgs::resetConfig() { return reset_config; }
-std::filesystem::path CommandArgs::commandPath() { return command_path; }
+FilesystemPath CommandArgs::commandPath() { return command_path; }
 
 }  // namespace cszb_scoreboard

@@ -20,7 +20,7 @@ limitations under the License.
 
 #include <wx/cmdline.h>
 
-#include <filesystem>
+#include "util/FilesystemPath.h";
 
 namespace cszb_scoreboard {
 
@@ -42,12 +42,12 @@ class CommandArgs {
   // flag getters
   bool autoUpdate();
   bool resetConfig();
-  std::filesystem::path commandPath();
+  FilesystemPath commandPath();
 
  private:
   static CommandArgs *singleton_instance;
   bool auto_update, reset_config;
-  std::filesystem::path command_path;
+  FilesystemPath command_path;
 
   CommandArgs();
   bool process_args_internal(const wxCmdLineParser &parser, int argc,
