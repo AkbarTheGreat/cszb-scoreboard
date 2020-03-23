@@ -23,7 +23,10 @@ limitations under the License.
 #include <wx/srchctrl.h>
 #include <wx/wx.h>
 
+#include <vector>
+
 #include "config.pb.h"
+#include "ui/component/control/ImagePreview.h"
 #include "ui/component/control/ScreenImageController.h"
 
 namespace cszb_scoreboard {
@@ -33,7 +36,10 @@ class ImageLibrary : public ScreenImageController {
   static ImageLibrary *Create(PreviewPanel *preview_panel, wxWindow *parent);
 
  private:
+  wxButton *left_button, *right_button, *configure_button;
   wxSearchCtrl *search_box;
+  wxPanel *search_panel, *image_preview_panel;
+  std::vector<ImagePreview *> image_previews;
 
   ImageLibrary(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenImageController(preview_panel, parent) {}

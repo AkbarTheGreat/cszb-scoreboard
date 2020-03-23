@@ -26,14 +26,18 @@ namespace cszb_scoreboard {
 
 ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size,
                            const wxImage& image)
-    : wxPanel(parent) {
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   this->image = image;
   this->size = size;
   bindEvents();
-}
+}  // namespace cszb_scoreboard
+
+ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size,
+                           std::string image_filename)
+    : ImagePreview(parent, size, wxImage(image_filename)) {}
 
 ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size)
-    : ImagePreview(parent, size, BackgroundImage(size, Color("Gray"))) {}
+    : ImagePreview(parent, size, BackgroundImage(size, Color("Grey"))) {}
 
 void ImagePreview::bindEvents() {
   Bind(wxEVT_PAINT, &ImagePreview::paintEvent, this);

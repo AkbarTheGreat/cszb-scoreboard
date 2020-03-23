@@ -24,6 +24,8 @@ namespace cszb_scoreboard {
 class ImagePreview : public wxPanel {
  public:
   ImagePreview(wxWindow* parent, const wxSize& size, const wxImage& image);
+  ImagePreview(wxWindow* parent, const wxSize& size,
+               std::string image_filename);
   ImagePreview(wxWindow* parent, const wxSize& size);
 
  private:
