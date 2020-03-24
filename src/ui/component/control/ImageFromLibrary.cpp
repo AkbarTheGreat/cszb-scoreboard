@@ -1,5 +1,5 @@
 /*
-ui/component/control/ImageLibrary.cpp: Handles loading images from a
+ui/component/control/ImageFromLibrary.cpp: Handles loading images from a
 pre-populated library of tagged images on disk and presenting them to one or
 more screens.
 
@@ -18,7 +18,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/component/control/ImageLibrary.h"
+#include "ui/component/control/ImageFromLibrary.h"
 
 #include "util/ProtoUtil.h"
 
@@ -29,15 +29,15 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int NUM_PREVIEWS = 5;
 const wxSize PREVIEW_SIZE(160, 90);
 
-ImageLibrary *ImageLibrary::Create(PreviewPanel *preview_panel,
+ImageFromLibrary *ImageFromLibrary::Create(PreviewPanel *preview_panel,
                                    wxWindow *parent) {
-  ImageLibrary *library = new ImageLibrary(preview_panel, parent);
+  ImageFromLibrary *library = new ImageFromLibrary(preview_panel, parent);
   library->initializeWidgets();
   library->updatePreview();
   return library;
 }
 
-void ImageLibrary::createControls(wxPanel *control_panel) {
+void ImageFromLibrary::createControls(wxPanel *control_panel) {
   ScreenImageController::createControls(control_panel);
   search_panel = new wxPanel(control_panel);
   image_preview_panel = new wxPanel(control_panel);
@@ -65,7 +65,7 @@ void ImageLibrary::createControls(wxPanel *control_panel) {
   bindEvents();
 }
 
-void ImageLibrary::positionWidgets(wxPanel *control_panel) {
+void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   wxFlexGridSizer *main_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   main_sizer->SetFlexibleDirection(wxBOTH);
   main_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
@@ -98,6 +98,6 @@ void ImageLibrary::positionWidgets(wxPanel *control_panel) {
   control_panel->SetSizerAndFit(main_sizer);
 }
 
-void ImageLibrary::bindEvents() {}
+void ImageFromLibrary::bindEvents() {}
 
 }  // namespace cszb_scoreboard

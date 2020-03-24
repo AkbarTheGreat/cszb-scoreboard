@@ -1,5 +1,5 @@
 /*
-ui/component/control/ImageLibrary.h: Handles loading images from a
+ui/component/control/ImageFromLibrary.h: Handles loading images from a
 pre-populated library of tagged images on disk and presenting them to one or
 more screens.
 
@@ -31,9 +31,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class ImageLibrary : public ScreenImageController {
+class ImageFromLibrary : public ScreenImageController {
  public:
-  static ImageLibrary *Create(PreviewPanel *preview_panel, wxWindow *parent);
+  static ImageFromLibrary *Create(PreviewPanel *preview_panel, wxWindow *parent);
 
  private:
   wxButton *left_button, *right_button, *configure_button;
@@ -41,7 +41,7 @@ class ImageLibrary : public ScreenImageController {
   wxPanel *search_panel, *image_preview_panel;
   std::vector<ImagePreview *> image_previews;
 
-  ImageLibrary(PreviewPanel *preview_panel, wxWindow *parent)
+  ImageFromLibrary(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
