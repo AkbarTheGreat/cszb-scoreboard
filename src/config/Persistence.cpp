@@ -36,13 +36,14 @@ namespace cszb_scoreboard {
 // #define TEXT_CONFIGURATION_FILES
 
 const char* CONFIG_FILE = "scoreboard.config";
+const char* IMAGE_LIBRARY_FILE = "image_library.data";
 
 Persistence* Persistence::singleton_instance = nullptr;
 
 Persistence* Persistence::getInstance() {
   if (singleton_instance == nullptr) {
     singleton_instance = new Persistence();
-    singleton_instance->loadFromDisk();
+    singleton_instance->loadConfigFromDisk();
   }
   return singleton_instance;
 }
@@ -58,7 +59,7 @@ int openFileForWrite(const char* filename) {
 void closeFile(int descriptor) { _close(descriptor); }
 #endif
 
-void Persistence::loadFromDisk() {
+void Persistence::loadConfigFromDisk() {
   if (CommandArgs::getInstance()->resetConfig()) {
     wxLogDebug(
         "Reset config argument passed, so all configuration data reset.");
@@ -76,7 +77,7 @@ void Persistence::loadFromDisk() {
 #endif
 }
 
-void Persistence::saveToDisk() {
+void Persistence::saveConfigToDisk() {
 #ifdef TEXT_CONFIGURATION_FILES
   int descriptor = openFileForWrite(CONFIG_FILE);
   google::protobuf::io::FileOutputStream* fout =
@@ -93,6 +94,24 @@ void Persistence::saveToDisk() {
 #endif
 }
 
+void Persistence::loadImageLibraryFromDisk() {
+  std::fstream input(IMAGE_LIBRARY_FILE, std::ios::in | std::ios::binary);
+  if (!input) {
+    wxLogDebug("%s: File not found. Creating an empty library.",
+               IMAGE_LIBRARY_FILE);
+  } else if (!image_library.ParseFromIstream(&input)) {
+    wxLogDebug("Failure parsing image library file %s.", IMAGE_LIBRARY_FILE);
+  }
+}
+
+void Persistence::saveImageLibraryToDisk() {
+  std::fstream output(IMAGE_LIBRARY_FILE,
+                      std::ios::out | std::ios::trunc | std::ios::binary);
+  if (!image_library.SerializeToOstream(&output)) {
+    wxLogDebug("Failed to write image library file %s.", IMAGE_LIBRARY_FILE);
+  }
+}
+
 proto::DisplayConfig Persistence::loadDisplays() {
   // We don't actually have a way to reload after initialization at this point,
   // but that should be fine, as this should still represent what's written out.
@@ -104,7 +123,7 @@ void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
   proto::DisplayConfig* new_display_config =
       full_config.mutable_display_config();
   new_display_config->CopyFrom(display_config);
-  saveToDisk();
+  saveConfigToDisk();
 }
 
 proto::TeamConfig Persistence::loadTeams() {
@@ -117,7 +136,18 @@ void Persistence::saveTeams(const proto::TeamConfig& team_config) {
   // full_config.clear_display_config();
   proto::TeamConfig* new_team_config = full_config.mutable_team_config();
   new_team_config->CopyFrom(team_config);
-  saveToDisk();
+  saveConfigToDisk();
+}
+
+proto::ImageLibrary Persistence::loadImageLibrary() {
+  // There's currently no route to reload from disk and any attempt to save to
+  // disk updates this variable, so for now this is sufficient.
+  return image_library;
+}
+
+void Persistence::saveImageLibrary(const proto::ImageLibrary& library) {
+  image_library.CopyFrom(library);
+  saveImageLibraryToDisk();
 }
 
 }  // namespace cszb_scoreboard

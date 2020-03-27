@@ -102,6 +102,11 @@ enable_testing()
 
 package_add_test(AutoUpdateTest  test/AutoUpdateTest.cpp src/util/AutoUpdate.cpp
                  src/config/CommandArgs.cpp src/util/StringUtil.cpp)
+package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/ImageLibrary.cpp
+                 src/config/CommandArgs.cpp
+                 src/config/Persistence.cpp
+                 src/util/FilesystemPath.cpp
+                 )
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp src/util/ProtoUtil.cpp src/ui/graphics/Color.cpp)
 package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)

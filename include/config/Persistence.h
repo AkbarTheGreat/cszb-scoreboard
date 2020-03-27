@@ -19,6 +19,7 @@ limitations under the License.
 #pragma once
 
 #include "config.pb.h"
+#include "image_library.pb.h"
 
 namespace cszb_scoreboard {
 
@@ -29,12 +30,17 @@ class Persistence {
   void saveDisplays(const proto::DisplayConfig& display_config);
   proto::TeamConfig loadTeams();
   void saveTeams(const proto::TeamConfig& team_config);
+  proto::ImageLibrary loadImageLibrary();
+  void saveImageLibrary(const proto::ImageLibrary& library);
 
  private:
   static Persistence* singleton_instance;
   proto::ScoreboardConfig full_config;
-  void loadFromDisk();
-  void saveToDisk();
+  proto::ImageLibrary image_library;
+  void loadConfigFromDisk();
+  void saveConfigToDisk();
+  void loadImageLibraryFromDisk();
+  void saveImageLibraryToDisk();
 };
 
 }  // namespace cszb_scoreboard
