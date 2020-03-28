@@ -20,7 +20,7 @@ limitations under the License.
 
 #include <wx/cmdline.h>
 
-#include "util/FilesystemPath.h";
+#include "util/FilesystemPath.h"
 
 namespace cszb_scoreboard {
 
