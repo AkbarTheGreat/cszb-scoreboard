@@ -17,7 +17,6 @@ limitations under the License.
 */
 
 #include "config/ImageLibrary.h"
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 namespace cszb_scoreboard {
@@ -27,7 +26,7 @@ ImageLibrary testLibrary() {
   proto::ImageLibrary library;
 
   // Add a corgi
-  proto::ImageInfo *image = library.add_images();
+  proto::ImageInfo* image = library.add_images();
   image->set_name("corgi");
   image->set_file_path("/test/corgi.jpg");
   image->add_tags("dog");
@@ -62,36 +61,74 @@ ImageLibrary testLibrary() {
   return ImageLibrary(library);
 }
 
+// A couple of convenience defines to handle vector comparisons
+#define ASSERT_VECTOR(a, b) ASSERT_PRED_FORMAT2(assertVectorEquality, a, b)
+#define ASSERT_PATH_VECTOR(a, ...) \
+  ASSERT_VECTOR(a, filesystemPathVector(__VA_ARGS__))
+#define ASSERT_STR_VECTOR(a, ...) \
+  ASSERT_VECTOR(a, std::vector<std::string>(__VA_ARGS__))
+
+// Predicate for asserting against two arbitrary vectors.
+template <typename T, typename A>
+::testing::AssertionResult assertVectorEquality(
+    const char* actual_expression, const char* expected_expression,
+    std::vector<T, A> const& actual, std::vector<T, A> const& expected) {
+  if (actual.size() != expected.size()) {
+    return ::testing::AssertionFailure()
+           << actual_expression << " and " << expected_expression
+           << " have differing sizes (" << actual.size() << ", "
+           << expected.size() << ")";
+  }
+
+  for (int i = 0; i < actual.size(); i++) {
+    if (actual[i] != expected[i]) {
+      return ::testing::AssertionFailure()
+             << actual_expression << " and " << expected_expression
+             << " differ beginning at index " << i << " (" << actual[i] << ", "
+             << expected[i] << ")";
+    }
+  }
+
+  return ::testing::AssertionSuccess();
+}
+
+// Quick and easy cast of a list of strings to a list of paths
+std::vector<FilesystemPath> filesystemPathVector(
+    const std::vector<std::string>& in) {
+  std::vector<FilesystemPath> out;
+  for (auto i : in) {
+    out.push_back(FilesystemPath(i));
+  }
+  return out;
+}
+
 TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
   ImageLibrary library = testLibrary();
   std::vector<std::string> tags = library.allTags();
-  // Our test data has 8 unique tags.
-  EXPECT_EQ(tags.size(), 8);
   // Check that they're in the correct (alphabetical) order.
-  ASSERT_THAT(tags, ::testing::ElementsAre("cute", "dog", "gender", "neutral",
-                                           "rodent", "short", "stall", "tall"));
+  ASSERT_STR_VECTOR(tags, {"cute", "dog", "gender", "neutral", "rodent",
+                           "short", "stall", "tall"});
 }
 
 // Searches for full single words match the relevant tag if it exists.
 TEST(ImageLibraryTest, FullWordSearches) {
   ImageLibrary library = testLibrary();
+
   // Simple search works
   auto result = library.search("dog");
-  ASSERT_THAT(result.matched_tags(), ::testing::ElementsAre("dog"));
-  ASSERT_THAT(
-      result.filenames(),
-      ::testing::ElementsAre("/test/corgi.jpg", "/test/great_dane.jpg"));
+  ASSERT_STR_VECTOR(result.matched_tags(), {"dog"});
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {"/test/corgi.jpg", "/test/great_dane.jpg"});
 
   // Potentially conflicting search doesn't collide
   result = library.search("tall");
-  ASSERT_THAT(result.matched_tags(), ::testing::ElementsAre("tall"));
-  ASSERT_THAT(result.filenames(),
-              ::testing::ElementsAre("/test/great_dane.jpg"));
+  ASSERT_STR_VECTOR(result.matched_tags(), {"tall"});
+  ASSERT_PATH_VECTOR(result.filenames(), {"/test/great_dane.jpg"});
 
   // Bad search returns nothing
   result = library.search("notgonnafindit");
-  ASSERT_THAT(result.matched_tags(), ::testing::ElementsAre());
-  ASSERT_THAT(result.filenames(), ::testing::ElementsAre());
+  ASSERT_STR_VECTOR(result.matched_tags(), {});
+  ASSERT_PATH_VECTOR(result.filenames(), {});
 }
 
 // Searches for words that are not a tag return all partially matching tags.
@@ -99,30 +136,29 @@ TEST(ImageLibraryTest, PartialWordSearches) {
   ImageLibrary library = testLibrary();
   // Simple search works
   auto result = library.search("do");
-  ASSERT_THAT(result.matched_tags(), ::testing::ElementsAre("dog"));
-  ASSERT_THAT(
-      result.filenames(),
-      ::testing::ElementsAre("/test/corgi.jpg", "/test/great_dane.jpg"));
+  ASSERT_STR_VECTOR(result.matched_tags(), {"dog"});
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {"/test/corgi.jpg", "/test/great_dane.jpg"});
 
   // Potentially conflicting search doesn't collide
   result = library.search("tal");
-  ASSERT_THAT(result.matched_tags(), ::testing::ElementsAre("stall", "tall"));
-  ASSERT_THAT(result.filenames(), ::testing::ElementsAre("/test/great_dane.jpg",
-                                                         "/test/but-why.jpg"));
+  ASSERT_STR_VECTOR(result.matched_tags(), {"stall", "tall"});
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {"/test/great_dane.jpg", "/test/but-why.jpg"});
 
   // Empty search returns everything
   result = library.search("");
-  ASSERT_THAT(result.matched_tags(),
-              ::testing::ElementsAre("cute", "dog", "gender", "neutral",
-                                     "rodent", "short", "stall", "tall"));
-  ASSERT_THAT(result.filenames(),
-              ::testing::ElementsAre("/test/corgi.jpg", "/test/great_dane.jpg",
-                                     "/test/capy.jpg", "/test/but-why.jpg"));
+  ASSERT_STR_VECTOR(
+      result.matched_tags(),
+      {"cute", "dog", "gender", "neutral", "rodent", "short", "stall", "tall"});
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {"/test/corgi.jpg", "/test/great_dane.jpg",
+                      "/test/capy.jpg", "/test/but-why.jpg"});
 
   // Bad search still returns nothing
   result = library.search("notgonnafindit");
-  ASSERT_THAT(result.matched_tags(), ::testing::ElementsAre());
-  ASSERT_THAT(result.filenames(), ::testing::ElementsAre());
+  ASSERT_STR_VECTOR(result.matched_tags(), {});
+  ASSERT_PATH_VECTOR(result.filenames(), {});
 }
 
 }  // namespace test
