@@ -127,7 +127,7 @@ std::vector<FilesystemPath> ImageSearchResults::filenames() {
   return files;
 }
 
-std::vector<std::string> ImageSearchResults::matched_tags() {
+std::vector<std::string> ImageSearchResults::matchedTags() {
   std::vector<std::string> tags;
   for (auto tag : matched_tag_list) {
     tags.push_back(tag);

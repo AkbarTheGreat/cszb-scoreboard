@@ -28,7 +28,7 @@ namespace cszb_scoreboard {
 class ImageSearchResults {
  public:
   std::vector<FilesystemPath> filenames();
-  std::vector<std::string> matched_tags();
+  std::vector<std::string> matchedTags();
 
  private:
   ImageSearchResults(const std::vector<proto::ImageInfo> &matched_images,

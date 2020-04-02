@@ -116,18 +116,18 @@ TEST(ImageLibraryTest, FullWordSearches) {
 
   // Simple search works
   auto result = library.search("dog");
-  ASSERT_STR_VECTOR(result.matched_tags(), {"dog"});
+  ASSERT_STR_VECTOR(result.matchedTags(), {"dog"});
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/corgi.jpg", "/test/great_dane.jpg"});
 
   // Potentially conflicting search doesn't collide
   result = library.search("tall");
-  ASSERT_STR_VECTOR(result.matched_tags(), {"tall"});
+  ASSERT_STR_VECTOR(result.matchedTags(), {"tall"});
   ASSERT_PATH_VECTOR(result.filenames(), {"/test/great_dane.jpg"});
 
   // Bad search returns nothing
   result = library.search("notgonnafindit");
-  ASSERT_STR_VECTOR(result.matched_tags(), {});
+  ASSERT_STR_VECTOR(result.matchedTags(), {});
   ASSERT_PATH_VECTOR(result.filenames(), {});
 }
 
@@ -136,20 +136,20 @@ TEST(ImageLibraryTest, PartialWordSearches) {
   ImageLibrary library = testLibrary();
   // Simple search works
   auto result = library.search("do");
-  ASSERT_STR_VECTOR(result.matched_tags(), {"dog"});
+  ASSERT_STR_VECTOR(result.matchedTags(), {"dog"});
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/corgi.jpg", "/test/great_dane.jpg"});
 
   // Potentially conflicting search doesn't collide
   result = library.search("tal");
-  ASSERT_STR_VECTOR(result.matched_tags(), {"stall", "tall"});
+  ASSERT_STR_VECTOR(result.matchedTags(), {"stall", "tall"});
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/great_dane.jpg", "/test/but-why.jpg"});
 
   // Empty search returns everything
   result = library.search("");
   ASSERT_STR_VECTOR(
-      result.matched_tags(),
+      result.matchedTags(),
       {"cute", "dog", "gender", "neutral", "rodent", "short", "stall", "tall"});
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/corgi.jpg", "/test/great_dane.jpg",
@@ -157,7 +157,7 @@ TEST(ImageLibraryTest, PartialWordSearches) {
 
   // Bad search still returns nothing
   result = library.search("notgonnafindit");
-  ASSERT_STR_VECTOR(result.matched_tags(), {});
+  ASSERT_STR_VECTOR(result.matchedTags(), {});
   ASSERT_PATH_VECTOR(result.filenames(), {});
 }
 
