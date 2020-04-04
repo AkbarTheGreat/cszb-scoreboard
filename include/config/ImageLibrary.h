@@ -42,10 +42,14 @@ class ImageSearchResults {
 
 class ImageLibrary {
  public:
-  ImageLibrary *getInstance();
+  static ImageLibrary *getInstance();
   // Returns all unique tags, sorted
+  std::vector<FilesystemPath> allFilenames();
   std::vector<std::string> allTags();
+  std::map<FilesystemPath, proto::ImageInfo> imageMap();
+  std::string name(FilesystemPath filename);
   ImageSearchResults search(std::string query);
+  std::vector<std::string> tags(FilesystemPath filename);
 
   PUBLIC_TEST_ONLY
   // Test-available constructor which initializes this object from an in-memory
@@ -59,6 +63,7 @@ class ImageLibrary {
       : ImageLibrary(Persistence::getInstance()->loadImageLibrary()) {}
   ImageSearchResults emptySearch();
   ImageSearchResults exactMatchSearch(std::string query);
+  proto::ImageInfo infoByFile(FilesystemPath filename);
   ImageSearchResults partialMatchSearch(std::string query);
 };
 

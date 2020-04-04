@@ -30,7 +30,7 @@ const int NUM_PREVIEWS = 5;
 const wxSize PREVIEW_SIZE(160, 90);
 
 ImageFromLibrary *ImageFromLibrary::Create(PreviewPanel *preview_panel,
-                                   wxWindow *parent) {
+                                           wxWindow *parent) {
   ImageFromLibrary *library = new ImageFromLibrary(preview_panel, parent);
   library->initializeWidgets();
   library->updatePreview();
@@ -98,6 +98,15 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   control_panel->SetSizerAndFit(main_sizer);
 }
 
-void ImageFromLibrary::bindEvents() {}
+void ImageFromLibrary::bindEvents() {
+  configure_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                         &ImageFromLibrary::editButton, this);
+}
+
+void ImageFromLibrary::editButton(wxCommandEvent &event) {
+  edit_dialog = new EditImageLibraryDialog();
+  edit_dialog->Create(this);
+  edit_dialog->Show();
+}
 
 }  // namespace cszb_scoreboard

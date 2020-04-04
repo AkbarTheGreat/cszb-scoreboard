@@ -20,9 +20,14 @@ limitations under the License.
 
 #pragma once
 
+#include <string>
+
 namespace cszb_scoreboard {
 
 const int DEFAULT_BORDER_SIZE = 5;
+
+const std::string IMAGE_SELECTION_STRING =
+    "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
 
 #define SCOREBOARD_VERSION "0.5.5"
 

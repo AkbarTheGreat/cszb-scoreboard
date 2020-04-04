@@ -19,8 +19,8 @@ limitations under the License.
 
 #include "ui/component/ControlPanel.h"
 
-#include "ui/component/control/LocalImage.h"
 #include "ui/component/control/ImageFromLibrary.h"
+#include "ui/component/control/LocalImage.h"
 #include "ui/component/control/ScoreControl.h"
 #include "ui/component/control/TextEntry.h"
 #include "ui/component/control/ThingsMode.h"

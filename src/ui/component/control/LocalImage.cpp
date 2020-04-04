@@ -28,9 +28,6 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-const std::string IMAGE_SELECTION_STRING =
-    "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
-
 const std::string CLIPBOARD_IMAGE_MESSAGE = "<Image Loaded From Clipboard>";
 
 LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {

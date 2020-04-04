@@ -44,12 +44,46 @@ ImageLibrary *ImageLibrary::getInstance() {
   return singleton_instance;
 }
 
+std::vector<FilesystemPath> ImageLibrary::allFilenames() {
+  return search("").filenames();
+}
+
 std::vector<std::string> ImageLibrary::allTags() {
   std::vector<std::string> tags;
   for (auto image : library.images()) {
     for (auto tag : image.tags()) {
       insertIntoSortedVector(tags, tag);
     }
+  }
+  return tags;
+}
+
+std::map<FilesystemPath, proto::ImageInfo> ImageLibrary::imageMap() {
+  std::map<FilesystemPath, proto::ImageInfo> image_map;
+  for (auto image : library.images()) {
+    image_map.emplace(FilesystemPath(image.file_path()), image);
+  }
+  return image_map;
+}
+
+proto::ImageInfo ImageLibrary::infoByFile(FilesystemPath filename) {
+  for (auto image : library.images()) {
+    if (image.file_path() == filename) {
+      return image;
+    }
+  }
+  return proto::ImageInfo();
+}
+
+std::string ImageLibrary::name(FilesystemPath filename) {
+  return infoByFile(filename).name();
+}
+
+std::vector<std::string> ImageLibrary::tags(FilesystemPath filename) {
+  proto::ImageInfo image = infoByFile(filename);
+  std::vector<std::string> tags;
+  for (auto tag : image.tags()) {
+    insertIntoSortedVector(tags, tag);
   }
   return tags;
 }

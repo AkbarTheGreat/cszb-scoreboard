@@ -28,24 +28,28 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/control/ImagePreview.h"
 #include "ui/component/control/ScreenImageController.h"
+#include "ui/dialog/EditImageLibraryDialog.h"
 
 namespace cszb_scoreboard {
 
 class ImageFromLibrary : public ScreenImageController {
  public:
-  static ImageFromLibrary *Create(PreviewPanel *preview_panel, wxWindow *parent);
+  static ImageFromLibrary *Create(PreviewPanel *preview_panel,
+                                  wxWindow *parent);
 
  private:
   wxButton *left_button, *right_button, *configure_button;
   wxSearchCtrl *search_box;
   wxPanel *search_panel, *image_preview_panel;
   std::vector<ImagePreview *> image_previews;
+  EditImageLibraryDialog *edit_dialog;
 
   ImageFromLibrary(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
   void positionWidgets(wxPanel *control_panel) override;
+  void editButton(wxCommandEvent &event);
 };
 
 }  // namespace cszb_scoreboard
