@@ -40,11 +40,13 @@ class FileListBox : public wxEditableListBox {
   FilesystemPath selectedFilename();
 
  protected:
-  std::vector<FilesystemPath> filenames;
-
   void bindEvents();
+  long listSize();
   void newPressed(wxCommandEvent& event);
-  void updateStrings();
+  void selectItem(long select_index);
+  long selectedIndex();
+  void updateStrings(const std::vector<FilesystemPath>& filenames,
+                     long select_index = 0);
 };
 
 }  // namespace cszb_scoreboard

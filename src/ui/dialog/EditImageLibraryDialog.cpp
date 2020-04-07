@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/dialog/EditImageLibraryDialog.h"
 
 #include <wx/bookctrl.h>
+#include <wx/listctrl.h>
 
 #include "ScoreboardCommon.h"
 #include "config/ImageLibrary.h"
@@ -37,17 +38,26 @@ bool EditImageLibraryDialog::Create(wxWindow* parent) {
   images = ImageLibrary::getInstance()->imageMap();
   panel = new wxPanel(GetBookCtrl());
   file_list = new FileListBox(panel, wxID_ANY, "Filename");
+
+  name_entry = new wxTextCtrl(panel, wxID_ANY);
+  name_label = new wxStaticText(panel, wxID_ANY, "Display name");
+
+  tag_list = new wxEditableListBox(panel, wxID_ANY, "Tags");
+
   positionWidgets();
   bindEvents();
   return true;
 }
 
 void EditImageLibraryDialog::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
+  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
   sizer->Add(file_list, 0, wxALL, BORDER_SIZE);
+  sizer->Add(tag_list, 0, wxALL, BORDER_SIZE);
+  sizer->Add(name_label, 0, wxALL, BORDER_SIZE);
+  sizer->Add(name_entry, 0, wxALL, BORDER_SIZE);
 
   CreateButtons(wxOK | wxCANCEL);
 
@@ -62,6 +72,11 @@ void EditImageLibraryDialog::bindEvents() {
   Bind(wxEVT_BUTTON, &EditImageLibraryDialog::onOk, this, wxID_OK);
   Bind(wxEVT_BUTTON, &EditImageLibraryDialog::onCancel, this, wxID_CANCEL);
   Bind(wxEVT_CLOSE_WINDOW, &EditImageLibraryDialog::onClose, this);
+  file_list->Bind(wxEVT_LIST_ITEM_SELECTED,
+                  &EditImageLibraryDialog::fileSelected, this);
+  name_entry->Bind(wxEVT_KEY_UP, &EditImageLibraryDialog::nameUpdated, this);
+  tag_list->Bind(wxEVT_LIST_END_LABEL_EDIT,
+                 &EditImageLibraryDialog::tagsUpdated, this);
 }
 
 void EditImageLibraryDialog::onOk(wxCommandEvent& event) {
@@ -93,14 +108,32 @@ void EditImageLibraryDialog::saveSettings() {
   // TODO: Save it out
 }
 
-wxEditableListBox* EditImageLibraryDialog::createFileList(wxPanel* panel) {
-  wxEditableListBox* list = new wxEditableListBox(panel, wxID_ANY, "Filename");
-  wxArrayString files;
-  for (auto iter : images) {
-    files.Add(iter.first.c_str());
+void EditImageLibraryDialog::fileSelected(wxListEvent& event) {
+  FilesystemPath filename = file_list->selectedFilename();
+
+  name_entry->SetValue(images[filename].name());
+  wxArrayString tags;
+  for (auto tag : images[filename].tags()) {
+    tags.Add(tag);
   }
-  list->SetStrings(files);
-  return list;
+  tag_list->SetStrings(tags);
+}
+
+void EditImageLibraryDialog::nameUpdated(wxKeyEvent& event) {
+  images[file_list->selectedFilename()].set_name(name_entry->GetValue());
+}
+
+void EditImageLibraryDialog::tagsUpdated(wxListEvent& event) {
+  wxArrayString tags;
+  tag_list->GetStrings(tags);
+  tags.Add(event.GetText());
+  tag_list->SetStrings(tags);
+
+  FilesystemPath filename = file_list->selectedFilename();
+  images[filename].clear_tags();
+  for (auto tag : tags) {
+    images[filename].add_tags(tag);
+  }
 }
 
 }  // namespace cszb_scoreboard

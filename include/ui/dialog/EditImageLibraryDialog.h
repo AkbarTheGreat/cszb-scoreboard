@@ -34,17 +34,22 @@ class EditImageLibraryDialog : public wxPropertySheetDialog {
 
  private:
   FileListBox* file_list;
+  wxTextCtrl* name_entry;
+  wxStaticText* name_label;
+  wxEditableListBox* tag_list;
   std::map<FilesystemPath, proto::ImageInfo> images;
   wxPanel* panel;
   wxWindow* parent;
 
   void bindEvents();
-  wxEditableListBox* createFileList(wxPanel* panel);
+  void fileSelected(wxListEvent& event);
   void onOk(wxCommandEvent& event);
   void onCancel(wxCommandEvent& event);
   void onClose(wxCloseEvent& event);
+  void nameUpdated(wxKeyEvent& event);
   void positionWidgets();
   void saveSettings();
+  void tagsUpdated(wxListEvent& event);
   bool validateSettings();
 };
 
