@@ -60,7 +60,7 @@ std::vector<FilesystemPath> FileListBox::getFilenames() {
 
   for (auto entry : strings) {
     if (entry != "") {
-      filenames.push_back(FilesystemPath(entry));
+      filenames.push_back(FilesystemPath(std::string(entry)));
     }
   }
 
