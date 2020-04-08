@@ -40,6 +40,8 @@ ImageLibrary::ImageLibrary(proto::ImageLibrary library) {
 ImageLibrary *ImageLibrary::getInstance() {
   if (singleton_instance == nullptr) {
     singleton_instance = new ImageLibrary();
+    singleton_instance->library =
+        Persistence::getInstance()->loadImageLibrary();
   }
   return singleton_instance;
 }
@@ -86,6 +88,22 @@ std::vector<std::string> ImageLibrary::tags(FilesystemPath filename) {
     insertIntoSortedVector(tags, tag);
   }
   return tags;
+}
+
+void ImageLibrary::addImage(FilesystemPath file, std::string name,
+                            std::vector<std::string> tags) {
+  proto::ImageInfo *new_image = library.add_images();
+  new_image->set_file_path(file.string());
+  new_image->set_name(name);
+  for (auto tag : tags) {
+    new_image->add_tags(tag);
+  }
+}
+
+void ImageLibrary::clearLibrary() { library.Clear(); }
+
+void ImageLibrary::saveLibrary() {
+  Persistence::getInstance()->saveImageLibrary(library);
 }
 
 ImageSearchResults ImageLibrary::search(std::string query) {

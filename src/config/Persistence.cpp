@@ -44,6 +44,7 @@ Persistence* Persistence::getInstance() {
   if (singleton_instance == nullptr) {
     singleton_instance = new Persistence();
     singleton_instance->loadConfigFromDisk();
+    singleton_instance->loadImageLibraryFromDisk();
   }
   return singleton_instance;
 }

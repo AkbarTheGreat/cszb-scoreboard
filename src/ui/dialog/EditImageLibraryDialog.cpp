@@ -105,7 +105,16 @@ void EditImageLibraryDialog::onClose(wxCloseEvent& event) {
 bool EditImageLibraryDialog::validateSettings() { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  // TODO: Save it out
+  ImageLibrary::getInstance()->clearLibrary();
+  for (auto filename : file_list->getFilenames()) {
+    std::vector<std::string> tags;
+    for (auto tag : images[filename].tags()) {
+      tags.push_back(tag);
+    }
+    ImageLibrary::getInstance()->addImage(filename, images[filename].name(),
+                                          tags);
+  }
+  ImageLibrary::getInstance()->saveLibrary();
 }
 
 void EditImageLibraryDialog::fileSelected(wxListEvent& event) {
