@@ -48,9 +48,9 @@ class ImageLibrary {
   std::vector<std::string> allTags();
   std::map<FilesystemPath, proto::ImageInfo> imageMap();
   std::string name(FilesystemPath filename);
-  void ImageLibrary::addImage(FilesystemPath file, std::string name,
+  void addImage(FilesystemPath file, std::string name,
                               std::vector<std::string> tags);
-  void ImageLibrary::clearLibrary();
+  void clearLibrary();
   void saveLibrary();
   ImageSearchResults search(std::string query);
   std::vector<std::string> tags(FilesystemPath filename);
