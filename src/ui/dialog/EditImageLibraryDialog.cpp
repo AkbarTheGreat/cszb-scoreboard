@@ -126,6 +126,7 @@ void EditImageLibraryDialog::fileSelected(wxListEvent& event) {
     tags.Add(tag);
   }
   tag_list->SetStrings(tags);
+  event.Skip();
 }
 
 void EditImageLibraryDialog::nameUpdated(wxKeyEvent& event) {
