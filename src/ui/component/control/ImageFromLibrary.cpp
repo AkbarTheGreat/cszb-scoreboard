@@ -103,18 +103,42 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
 void ImageFromLibrary::bindEvents() {
   configure_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                          &ImageFromLibrary::editButton, this);
+  search_box->Bind(wxEVT_TEXT, &ImageFromLibrary::doSearch, this);
+  left_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ImageFromLibrary::pageChange,
+                    this);
+  right_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                     &ImageFromLibrary::pageChange, this);
+}
+
+void ImageFromLibrary::doSearch(wxCommandEvent &event) {
+  setImages(search_box->GetValue());
 }
 
 void ImageFromLibrary::editButton(wxCommandEvent &event) {
   edit_dialog = new EditImageLibraryDialog();
   edit_dialog->Create(this);
   edit_dialog->Show();
+  setImages(search_box->GetValue());
+}
+
+void ImageFromLibrary::pageChange(wxCommandEvent &event) {
+  if (event.GetEventObject() == left_button) {
+    if (current_image_page > 0) {
+      setImages(search_box->GetValue(), current_image_page - 1);
+    }
+  } else {
+    setImages(search_box->GetValue(), current_image_page + 1);
+  }
 }
 
 void ImageFromLibrary::setImages(std::string search, unsigned int page_number) {
+  wxLogDebug("Setting Images (%s), %d", search, page_number);
+  current_image_page = page_number;
+
   ImageSearchResults results = ImageLibrary::getInstance()->search(search);
   std::vector<FilesystemPath> files = results.filenames();
   if (files.size() == 0) {
+    current_image_page = 0;
     return;
   }
 

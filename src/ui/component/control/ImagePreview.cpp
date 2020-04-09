@@ -88,7 +88,7 @@ void ImagePreview::setImage(std::string filename) {
 
 void ImagePreview::setImage(const wxImage& image) {
   this->image = image;
-  Update();
+  Refresh();
 }
 
 }  // namespace cszb_scoreboard

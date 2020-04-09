@@ -38,6 +38,7 @@ class ImageFromLibrary : public ScreenImageController {
                                   wxWindow *parent);
 
  private:
+  int current_image_page = 0;
   wxButton *left_button, *right_button, *configure_button;
   wxSearchCtrl *search_box;
   wxPanel *search_panel, *image_preview_panel;
@@ -48,9 +49,11 @@ class ImageFromLibrary : public ScreenImageController {
       : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
+  void doSearch(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel) override;
   void setImages(std::string search, unsigned int page_number = 0);
   void editButton(wxCommandEvent &event);
+  void pageChange(wxCommandEvent &event);
 };
 
 }  // namespace cszb_scoreboard
