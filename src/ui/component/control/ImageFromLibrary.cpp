@@ -134,7 +134,7 @@ void ImageFromLibrary::pageChange(wxCommandEvent &event) {
 void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
   current_image_page = page_number;
 
-  ImageSearchResults results = ImageLibrary::getInstance()->search(search);
+  ImageSearchResults results = ImageLibrary::getInstance()->search(std::string(search));
   std::vector<FilesystemPath> files = results.filenames();
   if (files.size() == 0) {
     current_image_page = 0;
