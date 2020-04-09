@@ -49,6 +49,7 @@ class ImageFromLibrary : public ScreenImageController {
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
   void positionWidgets(wxPanel *control_panel) override;
+  void setImages(std::string search, unsigned int page_number = 0);
   void editButton(wxCommandEvent &event);
 };
 

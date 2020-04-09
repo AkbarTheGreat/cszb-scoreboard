@@ -78,4 +78,17 @@ float ImagePreview::ratio(const wxSize& size) {
   return ratio;
 }
 
+void ImagePreview::setImage() {
+  setImage(BackgroundImage(size, Color("Grey")));
+}
+
+void ImagePreview::setImage(std::string filename) {
+  setImage(wxImage(filename));
+}
+
+void ImagePreview::setImage(const wxImage& image) {
+  this->image = image;
+  Update();
+}
+
 }  // namespace cszb_scoreboard

@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "ui/component/control/ImageFromLibrary.h"
 
+#include "config/ImageLibrary.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -56,10 +57,11 @@ void ImageFromLibrary::createControls(wxPanel *control_panel) {
 
   for (int i = 0; i < NUM_PREVIEWS; i++) {
     // TODO: Populate this with images from an actual library.
-    ImagePreview *preview = new ImagePreview(image_preview_panel, PREVIEW_SIZE,
-                                             "C:/temp/sample_image.jpg");
+    ImagePreview *preview = new ImagePreview(image_preview_panel, PREVIEW_SIZE);
     image_previews.push_back(preview);
   }
+
+  setImages("");
 
   positionWidgets(control_panel);
   bindEvents();
@@ -107,6 +109,33 @@ void ImageFromLibrary::editButton(wxCommandEvent &event) {
   edit_dialog = new EditImageLibraryDialog();
   edit_dialog->Create(this);
   edit_dialog->Show();
+}
+
+void ImageFromLibrary::setImages(std::string search, unsigned int page_number) {
+  ImageSearchResults results = ImageLibrary::getInstance()->search(search);
+  std::vector<FilesystemPath> files = results.filenames();
+  if (files.size() == 0) {
+    return;
+  }
+
+  int start_num = NUM_PREVIEWS * page_number;
+
+  if (start_num >= files.size()) {
+    return setImages(search, page_number - 1);
+  }
+
+  int stop_num = start_num + NUM_PREVIEWS;
+  if (stop_num >= files.size()) {
+    stop_num = files.size();
+  }
+
+  for (int i = start_num; i < stop_num; i++) {
+    image_previews[i - start_num]->setImage(files[i].string());
+  }
+
+  for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {
+    image_previews[i]->setImage();
+  }
 }
 
 }  // namespace cszb_scoreboard

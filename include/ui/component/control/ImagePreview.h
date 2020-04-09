@@ -28,6 +28,10 @@ class ImagePreview : public wxPanel {
                std::string image_filename);
   ImagePreview(wxWindow* parent, const wxSize& size);
 
+  void setImage();
+  void setImage(std::string filename);
+  void setImage(const wxImage& image);
+
  private:
   void bindEvents();
   void paintEvent(wxPaintEvent& evt);
