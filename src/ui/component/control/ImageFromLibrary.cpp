@@ -131,8 +131,7 @@ void ImageFromLibrary::pageChange(wxCommandEvent &event) {
   }
 }
 
-void ImageFromLibrary::setImages(std::string search, unsigned int page_number) {
-  wxLogDebug("Setting Images (%s), %d", search, page_number);
+void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
   current_image_page = page_number;
 
   ImageSearchResults results = ImageLibrary::getInstance()->search(search);
