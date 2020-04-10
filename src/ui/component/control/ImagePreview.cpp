@@ -24,20 +24,15 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size,
-                           const wxImage& image)
-    : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  this->image = image;
-  this->size = size;
-  bindEvents();
-}  // namespace cszb_scoreboard
-
-ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size,
-                           std::string image_filename)
-    : ImagePreview(parent, size, wxImage(image_filename)) {}
+const std::string DEFAULT_PREVIEW_COLOR = "Grey";
+// const Color DEFAULT_PREVIEW_COLOR("Grey");
 
 ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size)
-    : ImagePreview(parent, size, BackgroundImage(size, Color("Grey"))) {}
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
+  this->size = size;
+  this->image = BackgroundImage(size, Color(DEFAULT_PREVIEW_COLOR));
+  bindEvents();
+}
 
 void ImagePreview::bindEvents() {
   Bind(wxEVT_PAINT, &ImagePreview::paintEvent, this);
@@ -78,16 +73,17 @@ float ImagePreview::ratio(const wxSize& size) {
   return ratio;
 }
 
-void ImagePreview::setImage() {
-  setImage(BackgroundImage(size, Color("Grey")));
+void ImagePreview::clearImage() {
+  image = BackgroundImage(size, Color(DEFAULT_PREVIEW_COLOR));
+  filename.reset();
+  Refresh();
 }
 
-void ImagePreview::setImage(std::string filename) {
-  setImage(wxImage(filename));
-}
+std::optional<FilesystemPath> ImagePreview::getFilename() { return filename; }
 
-void ImagePreview::setImage(const wxImage& image) {
-  this->image = image;
+void ImagePreview::setImage(const FilesystemPath& filename) {
+  this->filename = filename;
+  image = wxImage(filename.string());
   Refresh();
 }
 

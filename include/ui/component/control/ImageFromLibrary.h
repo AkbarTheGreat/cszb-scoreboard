@@ -51,6 +51,7 @@ class ImageFromLibrary : public ScreenImageController {
   void createControls(wxPanel *control_panel) override;
   void doSearch(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel) override;
+  void selectImage(wxMouseEvent &event);
   void setImages(wxString search, unsigned int page_number = 0);
   void editButton(wxCommandEvent &event);
   void pageChange(wxCommandEvent &event);

@@ -19,18 +19,19 @@ limitations under the License.
 
 #include <wx/wx.h>
 
+#include <optional>
+
+#include "util/FilesystemPath.h"
+
 namespace cszb_scoreboard {
 
 class ImagePreview : public wxPanel {
  public:
-  ImagePreview(wxWindow* parent, const wxSize& size, const wxImage& image);
-  ImagePreview(wxWindow* parent, const wxSize& size,
-               std::string image_filename);
   ImagePreview(wxWindow* parent, const wxSize& size);
 
-  void setImage();
-  void setImage(std::string filename);
-  void setImage(const wxImage& image);
+  void clearImage();
+  std::optional<FilesystemPath> getFilename();
+  void setImage(const FilesystemPath& filename);
 
  private:
   void bindEvents();
@@ -38,6 +39,7 @@ class ImagePreview : public wxPanel {
   float ratio(const wxSize& size);
   void renderImage(wxDC& dc);
 
+  std::optional<FilesystemPath> filename;
   wxImage image;
   wxSize size;
 };

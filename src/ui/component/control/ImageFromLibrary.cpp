@@ -108,6 +108,9 @@ void ImageFromLibrary::bindEvents() {
                     this);
   right_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                      &ImageFromLibrary::pageChange, this);
+  for (auto preview : image_previews) {
+    preview->Bind(wxEVT_LEFT_DOWN, &ImageFromLibrary::selectImage, this);
+  }
 }
 
 void ImageFromLibrary::doSearch(wxCommandEvent &event) {
@@ -131,10 +134,35 @@ void ImageFromLibrary::pageChange(wxCommandEvent &event) {
   }
 }
 
+void ImageFromLibrary::selectImage(wxMouseEvent &event) {
+  std::optional<FilesystemPath> filename =
+      ((ImagePreview *)event.GetEventObject())->getFilename();
+
+  if (!filename) return;  // do nothing if someone clicked a gray box
+
+  if (screen_selection->allSelected()) {
+    all_screen_image = wxImage(filename->string());
+    all_screen_image_name = ImageLibrary::getInstance()->name(*filename);
+    current_image_label->SetLabelText(all_screen_image_name);
+  } else if (screen_selection->awaySelected()) {
+    away_screen_image = wxImage(filename->string());
+    away_screen_image_name = ImageLibrary::getInstance()->name(*filename);
+    current_image_label->SetLabelText(away_screen_image_name);
+  } else {
+    home_screen_image = wxImage(filename->string());
+    home_screen_image_name = ImageLibrary::getInstance()->name(*filename);
+    current_image_label->SetLabelText(home_screen_image_name);
+  }
+
+  control_panel->Update();
+  updatePreview();
+}
+
 void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
   current_image_page = page_number;
 
-  ImageSearchResults results = ImageLibrary::getInstance()->search(std::string(search));
+  ImageSearchResults results =
+      ImageLibrary::getInstance()->search(std::string(search));
   std::vector<FilesystemPath> files = results.filenames();
   if (files.size() == 0) {
     current_image_page = 0;
@@ -153,11 +181,11 @@ void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
   }
 
   for (int i = start_num; i < stop_num; i++) {
-    image_previews[i - start_num]->setImage(files[i].string());
+    image_previews[i - start_num]->setImage(files[i]);
   }
 
   for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {
-    image_previews[i]->setImage();
+    image_previews[i]->clearImage();
   }
 }
 
