@@ -36,10 +36,8 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
   controllers.push_back(ScoreControl::Create(preview_panel, this));
   AddPage(controllers.back(), "Score");
 
-  /*
   controllers.push_back(ImageFromLibrary::Create(preview_panel, this));
   AddPage(controllers.back(), "Image Library");
-  */
 
   controllers.push_back(LocalImage::Create(preview_panel, this));
   AddPage(controllers.back(), "Load Image");

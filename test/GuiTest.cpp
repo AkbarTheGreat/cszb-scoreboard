@@ -27,6 +27,7 @@ namespace test {
 const int TEST_ARGC = 1;
 const char *TEST_BIN_NAME = "scoreboardUnitTest.exe";
 const char *TEST_ARGV[TEST_ARGC] = {TEST_BIN_NAME};
+const int TEXT_ENTRY_TAB_INDEX = 4;
 
 void GuiTest::SetUp() {
   app = new Scoreboard();
@@ -49,8 +50,8 @@ MainView *GuiTest::mainView() {
 }
 
 TextEntry *GuiTest::textEntry() {
-  mainView()->controlPanel()->SetSelection(3);
-  return (TextEntry *)mainView()->controlPanel()->textController(3);
+  mainView()->controlPanel()->SetSelection(TEXT_ENTRY_TAB_INDEX);
+  return (TextEntry *)mainView()->controlPanel()->textController(TEXT_ENTRY_TAB_INDEX);
 }
 
 ScreenPreview *GuiTest::firstPreview() {
