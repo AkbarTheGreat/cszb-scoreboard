@@ -43,6 +43,7 @@ class ImageFromLibrary : public ScreenImageController {
   wxSearchCtrl *search_box;
   wxPanel *search_panel, *image_preview_panel;
   std::vector<ImagePreview *> image_previews;
+  std::vector<wxStaticText *> image_names;
   EditImageLibraryDialog *edit_dialog;
 
   ImageFromLibrary(PreviewPanel *preview_panel, wxWindow *parent)

@@ -57,8 +57,9 @@ void ImageFromLibrary::createControls(wxPanel *control_panel) {
 
   for (int i = 0; i < NUM_PREVIEWS; i++) {
     // TODO: Populate this with images from an actual library.
-    ImagePreview *preview = new ImagePreview(image_preview_panel, PREVIEW_SIZE);
-    image_previews.push_back(preview);
+    image_previews.push_back(
+        new ImagePreview(image_preview_panel, PREVIEW_SIZE));
+    image_names.push_back(new wxStaticText(image_preview_panel, wxID_ANY, "          "));
   }
 
   setImages("");
@@ -93,6 +94,10 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
 
   for (auto preview : image_previews) {
     image_preview_sizer->Add(preview, 0, wxALL, BORDER_SIZE);
+  }
+
+  for (auto name : image_names) {
+    image_preview_sizer->Add(name, 0, wxALL, BORDER_SIZE);
   }
 
   search_panel->SetSizerAndFit(search_panel_sizer);
@@ -182,10 +187,12 @@ void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
 
   for (int i = start_num; i < stop_num; i++) {
     image_previews[i - start_num]->setImage(files[i]);
+    image_names[i - start_num]->SetLabelText(ImageLibrary::getInstance()->name(files[i]));
   }
 
   for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {
     image_previews[i]->clearImage();
+    image_names[i]->SetLabelText("");
   }
 }
 
