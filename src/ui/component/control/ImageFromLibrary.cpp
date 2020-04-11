@@ -40,26 +40,29 @@ ImageFromLibrary *ImageFromLibrary::Create(PreviewPanel *preview_panel,
 
 void ImageFromLibrary::createControls(wxPanel *control_panel) {
   ScreenImageController::createControls(control_panel);
-  search_panel = new wxPanel(control_panel);
+  main_panel = new wxPanel(control_panel);
   image_preview_panel = new wxPanel(control_panel);
+  search_panel = new wxPanel(main_panel);
 
   // Reparent our screen_selection to position it into inner_panel, for layout.
-  screen_selection->Reparent(search_panel);
+  screen_selection->Reparent(main_panel);
+
+  left_button = new wxButton(main_panel, wxID_ANY, "<");
+  right_button = new wxButton(main_panel, wxID_ANY, ">");
+  configure_button = new wxButton(control_panel, wxID_ANY, "Edit Library");
 
   search_box = new wxSearchCtrl(search_panel, wxID_ANY);
   search_box->SetDescriptiveText("Find by tag/name");
   search_box->ShowSearchButton(false);
   search_box->ShowCancelButton(true);
-
-  left_button = new wxButton(search_panel, wxID_ANY, "<");
-  right_button = new wxButton(search_panel, wxID_ANY, ">");
-  configure_button = new wxButton(control_panel, wxID_ANY, "Edit Library");
+  tag_list_label = new wxStaticText(search_panel, wxID_ANY, "");
 
   for (int i = 0; i < NUM_PREVIEWS; i++) {
     // TODO: Populate this with images from an actual library.
     image_previews.push_back(
         new ImagePreview(image_preview_panel, PREVIEW_SIZE));
-    image_names.push_back(new wxStaticText(image_preview_panel, wxID_ANY, "          "));
+    image_names.push_back(
+        new wxStaticText(image_preview_panel, wxID_ANY, "          "));
   }
 
   setImages("");
@@ -73,7 +76,11 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   main_sizer->SetFlexibleDirection(wxBOTH);
   main_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
-  wxFlexGridSizer *search_panel_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  wxFlexGridSizer *main_panel_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  main_panel_sizer->SetFlexibleDirection(wxBOTH);
+  main_panel_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+
+  wxFlexGridSizer *search_panel_sizer = new wxFlexGridSizer(0, 1, 0, 0);
   search_panel_sizer->SetFlexibleDirection(wxBOTH);
   search_panel_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
@@ -83,12 +90,15 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   image_preview_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
   search_panel_sizer->Add(search_box, 0, wxALL, BORDER_SIZE);
-  search_panel_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
-  search_panel_sizer->Add(left_button, 0, wxALL, BORDER_SIZE);
-  search_panel_sizer->Add(right_button, 0, wxALL, BORDER_SIZE);
+  search_panel_sizer->Add(tag_list_label, 0, wxALL, BORDER_SIZE);
+
+  main_panel_sizer->Add(search_panel, 0, wxALL, BORDER_SIZE);
+  main_panel_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  main_panel_sizer->Add(left_button, 0, wxALL, BORDER_SIZE);
+  main_panel_sizer->Add(right_button, 0, wxALL, BORDER_SIZE);
 
   main_sizer->Add(current_image_label, 0, wxALL, BORDER_SIZE);
-  main_sizer->Add(search_panel, 0, wxALL, BORDER_SIZE);
+  main_sizer->Add(main_panel, 0, wxALL, BORDER_SIZE);
   main_sizer->Add(image_preview_panel, 0, wxALL, BORDER_SIZE);
   main_sizer->Add(configure_button, 0, wxALL, BORDER_SIZE);
 
@@ -101,6 +111,7 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   }
 
   search_panel->SetSizerAndFit(search_panel_sizer);
+  main_panel->SetSizerAndFit(main_panel_sizer);
   image_preview_panel->SetSizerAndFit(image_preview_sizer);
   control_panel->SetSizerAndFit(main_sizer);
 }
@@ -168,6 +179,20 @@ void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
 
   ImageSearchResults results =
       ImageLibrary::getInstance()->search(std::string(search));
+
+  if (search == "") {
+    tag_list_label->SetLabel("");
+  } else {
+    std::string tag_string;
+    bool first = true;
+    for (auto tag : results.matchedTags()) {
+      if (!first) tag_string += ", ";
+      tag_string += tag;
+      first = false;
+    }
+    tag_list_label->SetLabel(tag_string);
+  }
+
   std::vector<FilesystemPath> files = results.filenames();
   if (files.size() == 0) {
     current_image_page = 0;
@@ -187,7 +212,8 @@ void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
 
   for (int i = start_num; i < stop_num; i++) {
     image_previews[i - start_num]->setImage(files[i]);
-    image_names[i - start_num]->SetLabelText(ImageLibrary::getInstance()->name(files[i]));
+    image_names[i - start_num]->SetLabelText(
+        ImageLibrary::getInstance()->name(files[i]));
   }
 
   for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {

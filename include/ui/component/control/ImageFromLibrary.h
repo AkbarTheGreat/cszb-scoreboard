@@ -41,7 +41,8 @@ class ImageFromLibrary : public ScreenImageController {
   int current_image_page = 0;
   wxButton *left_button, *right_button, *configure_button;
   wxSearchCtrl *search_box;
-  wxPanel *search_panel, *image_preview_panel;
+  wxPanel *main_panel, *search_panel, *image_preview_panel;
+  wxStaticText *tag_list_label;
   std::vector<ImagePreview *> image_previews;
   std::vector<wxStaticText *> image_names;
   EditImageLibraryDialog *edit_dialog;
