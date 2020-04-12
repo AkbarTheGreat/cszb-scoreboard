@@ -21,6 +21,7 @@ limitations under the License.
 
 #include <wx/clipbrd.h>
 
+#include "ui/UiUtil.h"
 #include "util/FilesystemPath.h"
 #include "util/ProtoUtil.h"
 
@@ -52,17 +53,9 @@ void LocalImage::createControls(wxPanel *control_panel) {
 }
 
 void LocalImage::positionWidgets(wxPanel *control_panel) {
-  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  outer_sizer->SetFlexibleDirection(wxBOTH);
-  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *inner_sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  inner_sizer->SetFlexibleDirection(wxBOTH);
-  inner_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *button_sizer = new wxFlexGridSizer(2, 0, 0, 0);
-  inner_sizer->SetFlexibleDirection(wxBOTH);
-  inner_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *outer_sizer = UiUtil::sizer(0, 1);
+  wxSizer *inner_sizer = UiUtil::sizer(0, 2);
+  wxSizer *button_sizer = UiUtil::sizer(2, 0);
 
   button_sizer->Add(browse_button, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(paste_button, 0, wxALL, BORDER_SIZE);

@@ -24,6 +24,7 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"
 #include "config/ImageLibrary.h"
+#include "ui/UiUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -50,9 +51,7 @@ bool EditImageLibraryDialog::Create(wxWindow* parent) {
 }
 
 void EditImageLibraryDialog::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer* sizer = UiUtil::sizer(0, 2);
 
   sizer->Add(file_list, 0, wxALL, BORDER_SIZE);
   sizer->Add(tag_list, 0, wxALL, BORDER_SIZE);

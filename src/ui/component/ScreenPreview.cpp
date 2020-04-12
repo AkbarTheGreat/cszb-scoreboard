@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 #include "config/TeamConfig.h"
+#include "ui/UiUtil.h"
 #include "ui/component/ScreenText.h"
 
 namespace cszb_scoreboard {
@@ -55,9 +56,7 @@ ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
 }
 
 void ScreenPreview::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(2, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer* sizer = UiUtil::sizer(2, 1);
   sizer->Add(thumbnail->widget(), 1, wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
   sizer->Add(current_widget, 1, wxALL, BORDER_SIZE);
   control_pane->SetSizerAndFit(sizer);

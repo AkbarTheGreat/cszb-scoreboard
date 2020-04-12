@@ -21,6 +21,7 @@ limitations under the License.
 #include "ui/component/control/ImageFromLibrary.h"
 
 #include "config/ImageLibrary.h"
+#include "ui/UiUtil.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -72,22 +73,10 @@ void ImageFromLibrary::createControls(wxPanel *control_panel) {
 }
 
 void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
-  wxFlexGridSizer *main_sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  main_sizer->SetFlexibleDirection(wxBOTH);
-  main_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *main_panel_sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  main_panel_sizer->SetFlexibleDirection(wxBOTH);
-  main_panel_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *search_panel_sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  search_panel_sizer->SetFlexibleDirection(wxBOTH);
-  search_panel_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *image_preview_sizer =
-      new wxFlexGridSizer(0, NUM_PREVIEWS, 0, 0);
-  image_preview_sizer->SetFlexibleDirection(wxBOTH);
-  image_preview_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *main_sizer = UiUtil::sizer(0, 1);
+  wxSizer *main_panel_sizer = UiUtil::sizer(0, 2);
+  wxSizer *search_panel_sizer = UiUtil::sizer(0, 1);
+  wxSizer *image_preview_sizer = UiUtil::sizer(0, NUM_PREVIEWS);
 
   search_panel_sizer->Add(search_box, 0, wxALL, BORDER_SIZE);
   search_panel_sizer->Add(tag_list_label, 0, wxALL, BORDER_SIZE);

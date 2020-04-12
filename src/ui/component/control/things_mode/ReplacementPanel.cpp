@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <vector>
 
+#include "ui/UiUtil.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
 namespace cszb_scoreboard {
@@ -64,9 +65,7 @@ void ReplacementPanel::copyFrom(ReplacementPanel *other) {
 void ReplacementPanel::bindEvents() {}
 
 void ReplacementPanel::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *sizer = UiUtil::sizer(0, 1);
   for (auto replacement : replacements) {
     sizer->Add(replacement->controlPane(), 0, wxALL, BORDER_SIZE);
   }

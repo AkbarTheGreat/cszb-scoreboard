@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPanel.h"
 
+#include "ui/UiUtil.h"
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
 namespace cszb_scoreboard {
@@ -34,7 +35,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int index)
   proto::DisplayInfo display_info =
       DisplayConfig::getInstance()->displayDetails(index);
   this->display_id = display_info.id();
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
+  wxSizer* sizer = UiUtil::sizer(0, 1);
 
   proto::ScreenSide screen_side = display_info.side();
   // Label for this display
@@ -94,7 +95,7 @@ void DisplaySettingsPanel::updateLabel() {
 }
 
 void DisplaySettingsPanel::createButtonPanel() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
+  wxSizer* sizer = UiUtil::sizer(0, 2);
 
   button_panel = new wxPanel(this);
   up_button = new wxButton(button_panel, wxID_ANY, "^", wxDefaultPosition,

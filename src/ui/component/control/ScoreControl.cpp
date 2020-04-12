@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/control/ScoreControl.h"
 
 #include "config/TeamConfig.h"
+#include "ui/UiUtil.h"
 #include "ui/graphics/TeamColors.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
@@ -113,9 +114,7 @@ void ScoreControl::bindEvents() {
 }
 
 void ScoreControl::positionWidgets(wxPanel *control_panel) {
-  wxFlexGridSizer *team_control_sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  team_control_sizer->SetFlexibleDirection(wxBOTH);
-  team_control_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *team_control_sizer = UiUtil::sizer(0, 2);
 
   team_control_sizer->Add(home_score_label, 0, wxALL, BORDER_SIZE);
   team_control_sizer->Add(away_score_label, 0, wxALL, BORDER_SIZE);
@@ -126,14 +125,14 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
   team_control_sizer->Add(home_score_entry, 0, wxALL, BORDER_SIZE);
   team_control_sizer->Add(away_score_entry, 0, wxALL, BORDER_SIZE);
 
-  wxFlexGridSizer *home_panel_sizer = new wxFlexGridSizer(1, 0, 0, 0);
+  wxSizer *home_panel_sizer = UiUtil::sizer(1, 0);
   home_panel_sizer->Add(home_plus_1, 0, wxALL, BORDER_SIZE);
   home_panel_sizer->Add(home_plus_5, 0, wxALL, BORDER_SIZE);
   home_panel_sizer->Add(home_minus_1, 0, wxALL, BORDER_SIZE);
   home_button_panel->SetSizerAndFit(home_panel_sizer);
   team_control_sizer->Add(home_button_panel, 0, wxALL, BORDER_SIZE);
 
-  wxFlexGridSizer *away_panel_sizer = new wxFlexGridSizer(1, 0, 0, 0);
+  wxSizer *away_panel_sizer = UiUtil::sizer(1, 0);
   away_panel_sizer->Add(away_plus_1, 0, wxALL, BORDER_SIZE);
   away_panel_sizer->Add(away_plus_5, 0, wxALL, BORDER_SIZE);
   away_panel_sizer->Add(away_minus_1, 0, wxALL, BORDER_SIZE);
@@ -142,9 +141,7 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
 
   team_controls_panel->SetSizerAndFit(team_control_sizer);
 
-  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  outer_sizer->SetFlexibleDirection(wxBOTH);
-  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *outer_sizer = UiUtil::sizer(0, 2);
   outer_sizer->Add(team_controls_panel, 0, wxALL, BORDER_SIZE);
   outer_sizer->Add(team_intro_button, 0, wxALL | wxALIGN_CENTRE_VERTICAL,
                    BORDER_SIZE);

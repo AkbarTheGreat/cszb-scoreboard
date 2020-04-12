@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
 #include "ScoreboardCommon.h"
+#include "ui/UiUtil.h"
 #include "ui/graphics/TeamColors.h"
 
 namespace cszb_scoreboard {
@@ -78,13 +79,8 @@ void ActivityPanel::bindEvents() {
 }
 
 void ActivityPanel::positionWidgets() {
-  wxFlexGridSizer *activity_sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  activity_sizer->SetFlexibleDirection(wxBOTH);
-  activity_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *replacement_sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  replacement_sizer->SetFlexibleDirection(wxBOTH);
-  replacement_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *activity_sizer = UiUtil::sizer(0, 1);
+  wxSizer *replacement_sizer = UiUtil::sizer(0, 1);
 
   for (auto activity : activities) {
     activity_sizer->Add(activity->controlPane(), 0, wxALL, BORDER_SIZE);
@@ -97,9 +93,7 @@ void ActivityPanel::positionWidgets() {
   activity_half->SetSizerAndFit(activity_sizer);
   replacement_half->SetSizerAndFit(replacement_sizer);
 
-  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  outer_sizer->SetFlexibleDirection(wxBOTH);
-  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *outer_sizer = UiUtil::sizer(0, 2);
   outer_sizer->Add(activity_half, 0, wxALL, BORDER_SIZE);
   outer_sizer->Add(replacement_half, 0, wxALL, BORDER_SIZE);
   outer_sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);

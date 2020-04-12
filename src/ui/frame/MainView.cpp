@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
+#include "ui/UiUtil.h"
 #include "ui/frame/FrameList.h"
 #include "ui/frame/HotkeyTable.h"
 #include "util/StringUtil.h"
@@ -81,9 +82,7 @@ void MainView::createStatusBar() {
 }
 
 void MainView::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer* sizer = UiUtil::sizer(0, 1);
   sizer->Add(preview_panel, 0, wxEXPAND | wxALL, BORDER_SIZE);
   sizer->Add(control_panel, 0, wxEXPAND | wxALL, BORDER_SIZE);
   SetSizerAndFit(sizer);

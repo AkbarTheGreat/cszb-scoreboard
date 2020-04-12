@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <vector>
 
+#include "ui/UiUtil.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
 namespace cszb_scoreboard {
@@ -64,9 +65,7 @@ void Replacement::bindEvents() {
 }
 
 void Replacement::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 4, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *sizer = UiUtil::sizer(0, 4);
   sizer->Add(replaceable, 0, wxALL, BORDER_SIZE);
   sizer->Add(replacement, 0, wxALL, BORDER_SIZE);
   sizer->Add(remove_replacement_button, 0, wxALL, BORDER_SIZE);

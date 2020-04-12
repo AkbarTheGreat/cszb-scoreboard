@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/control/ThingsMode.h"
 
 #include "config/TeamConfig.h"
+#include "ui/UiUtil.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
 
@@ -67,22 +68,15 @@ void ThingsMode::createControls(wxPanel *control_panel) {
 }
 
 void ThingsMode::positionWidgets(wxPanel *control_panel) {
-  wxFlexGridSizer *button_sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  button_sizer->SetFlexibleDirection(wxBOTH);
-  button_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *button_sizer = UiUtil::sizer(0, 2);
+  wxSizer *outer_sizer = UiUtil::sizer(0, 1);
+  wxSizer *scrollable_sizer = UiUtil::sizer(0, 1);
+
   button_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(presenter_selection, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(new_activity_button, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(new_replacement_button, 0, wxALL, BORDER_SIZE);
   button_panel->SetSizerAndFit(button_sizer);
-
-  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  outer_sizer->SetFlexibleDirection(wxBOTH);
-  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *scrollable_sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  scrollable_sizer->SetFlexibleDirection(wxBOTH);
-  scrollable_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
   scrollable_sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
 

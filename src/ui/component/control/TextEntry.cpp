@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/control/TextEntry.h"
 
 #include "config/TeamConfig.h"
+#include "ui/UiUtil.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
 
@@ -70,13 +71,8 @@ void TextEntry::createControls(wxPanel *control_panel) {
 }
 
 void TextEntry::positionWidgets(wxPanel *control_panel) {
-  wxFlexGridSizer *outer_sizer = new wxFlexGridSizer(0, 3, 0, 0);
-  outer_sizer->SetFlexibleDirection(wxBOTH);
-  outer_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
-
-  wxFlexGridSizer *inner_sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  inner_sizer->SetFlexibleDirection(wxBOTH);
-  inner_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *outer_sizer = UiUtil::sizer(0, 3);
+  wxSizer *inner_sizer = UiUtil::sizer(0, 2);
 
   // Outer sizer holds text label and inner_panel
   outer_sizer->Add(text_label, 0, wxALL, BORDER_SIZE);

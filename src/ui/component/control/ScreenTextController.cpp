@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"
 
+#include "ui/UiUtil.h"
 #include "ui/frame/HotkeyTable.h"
 #include "util/ProtoUtil.h"
 
@@ -45,9 +46,7 @@ void ScreenTextController::initializeWidgets() {
 }
 
 void ScreenTextController::positionWidgets() {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer *sizer = UiUtil::sizer(0, 1);
 
   sizer->Add(control_panel, 0, wxALL, BORDER_SIZE);
   sizer->Add(update_screens, 0, wxALL, BORDER_SIZE);

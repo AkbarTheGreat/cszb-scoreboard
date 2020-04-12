@@ -19,15 +19,15 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
+#include "ui/UiUtil.h"
+
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
     : SettingsPage(parent) {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer* sizer = UiUtil::sizer(0, 1);
 
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     DisplaySettingsPanel* display_panel = new DisplaySettingsPanel(this, i);

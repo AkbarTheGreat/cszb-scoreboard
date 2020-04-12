@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/ScreenPresenter.h"
 
 #include "config/DisplayConfig.h"
+#include "ui/UiUtil.h"
 #include "ui/frame/FrameList.h"
 #include "util/ProtoUtil.h"
 
@@ -57,9 +58,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
 }
 
 void ScreenPresenter::positionWidgets() {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 2, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer* sizer = UiUtil::sizer(0, 2);
   sizer->Add(screen_text, 1, wxEXPAND | wxALL, BORDER_SIZE);
   SetSizerAndFit(sizer);
 }

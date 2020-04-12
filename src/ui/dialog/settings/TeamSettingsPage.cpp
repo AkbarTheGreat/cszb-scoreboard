@@ -19,14 +19,14 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
+#include "ui/UiUtil.h"
+
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 TeamSettingsPage::TeamSettingsPage(wxWindow* parent) : SettingsPage(parent) {
-  wxFlexGridSizer* sizer = new wxFlexGridSizer(0, 1, 0, 0);
-  sizer->SetFlexibleDirection(wxBOTH);
-  sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+  wxSizer* sizer = UiUtil::sizer(0, 1);
 
   for (int i = 0; i < TeamConfig::getInstance()->numberOfTeams(); ++i) {
     TeamSettingsPanel* team_panel = new TeamSettingsPanel(this, i);
