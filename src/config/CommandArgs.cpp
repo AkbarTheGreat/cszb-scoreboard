@@ -53,6 +53,9 @@ bool CommandArgs::process_args_internal(const wxCmdLineParser &parser, int argc,
   command_path = FilesystemPath((const char *)argv[0].c_str());
   auto_update = !parser.Found(wxT("n"));
   reset_config = parser.Found(wxT("r"));
+  if (!parser.Found(wxT("w"), &num_windows)) {
+    num_windows = -1;
+  }
 
   return true;
 }
@@ -62,10 +65,18 @@ CommandArgs::CommandArgs() {
   // process_args.
   auto_update = true;
   reset_config = false;
+  num_windows = -1;
 }
 
 bool CommandArgs::autoUpdate() { return auto_update; }
 bool CommandArgs::resetConfig() { return reset_config; }
 FilesystemPath CommandArgs::commandPath() { return command_path; }
+bool CommandArgs::windowedMode() {
+  if (num_windows == 0) {
+    return false;
+  }
+  return true;
+}
+long CommandArgs::numWindows() { return num_windows; }
 
 }  // namespace cszb_scoreboard

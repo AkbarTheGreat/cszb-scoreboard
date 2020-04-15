@@ -30,6 +30,11 @@ static const wxCmdLineEntryDesc ARG_LIST[] = {
     {wxCMD_LINE_SWITCH, "n", "noupdate", "no automatic update checks"},
     {wxCMD_LINE_SWITCH, "r", "resetconfig",
      "reset all configuration to defaults"},
+    {wxCMD_LINE_OPTION, "w", "windows",
+     "[Not Recommended] Places the scoreboard into a windowed mode, which is "
+     "not suitable for use for most shows.  This is useful for debugging or "
+     "for virtual performances.",
+     wxCMD_LINE_VAL_NUMBER},
     {wxCMD_LINE_NONE}};
 
 class CommandArgs {
@@ -42,11 +47,14 @@ class CommandArgs {
   // flag getters
   bool autoUpdate();
   bool resetConfig();
+  bool windowedMode();
+  long numWindows();
   FilesystemPath commandPath();
 
  private:
   static CommandArgs *singleton_instance;
   bool auto_update, reset_config;
+  long num_windows;
   FilesystemPath command_path;
 
   CommandArgs();
