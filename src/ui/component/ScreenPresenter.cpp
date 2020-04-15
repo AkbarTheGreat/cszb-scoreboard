@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "ui/component/ScreenPresenter.h"
 
+#include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
 #include "ui/frame/FrameList.h"
@@ -31,12 +32,17 @@ const int BORDER_SIZE = 0;
 ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
     : wxFrame(NULL, wxID_ANY, "Scoreboard", wxDefaultPosition, wxDefaultSize) {
   this->monitor_number = monitor_number;
+
+  if (CommandArgs::getInstance()->windowedMode()) {
+    Show(true);
+  } else {
 #ifndef WXDEBUG
-  // Set external monitors to be always on top, unless we're debugging, since
-  // sometimes we use one monitor to debug
-  SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
+    // Set external monitors to be always on top, unless we're debugging, since
+    // sometimes we use one monitor to debug
+    SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
 #endif
-  ShowFullScreen(true);
+    ShowFullScreen(true);
+  }
 
 #ifdef SCOREBOARD_TESTING
   Iconize();

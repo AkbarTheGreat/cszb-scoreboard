@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
+#include "config/CommandArgs.h"
 #include "config/Persistence.h"
 #include "ui/frame/FrameList.h"
 #include "util/ProtoUtil.h"
@@ -39,6 +40,10 @@ DisplayConfig *DisplayConfig::getInstance() {
 void DisplayConfig::detectDisplays() {
   int numscreens = wxDisplay::GetCount();
 
+  if (CommandArgs::getInstance()->windowedMode()) {
+    numscreens = CommandArgs::getInstance()->numWindows();
+  }
+
   display_config = Persistence::getInstance()->loadDisplays();
 
   // Currently, don't re-detect displays if it matches our saved state,
@@ -48,11 +53,7 @@ void DisplayConfig::detectDisplays() {
   if (numscreens == display_config.displays_size()) {
     wxLogDebug("Screen count did not change from %d, using saved config",
                numscreens);
-#ifndef WXDEBUG
-    // Don't actually exit in debug mode, since we may change things around
-    // while developing.
     return;
-#endif
   }
   wxLogDebug("Screen count changed from %d to %d, reconfiguring",
              display_config.displays_size(), numscreens);
@@ -60,15 +61,21 @@ void DisplayConfig::detectDisplays() {
   bool set_home = true;
 
   for (int i = 0; i < numscreens; i++) {
-    wxDisplay display(i);
     proto::DisplayInfo *display_info = display_config.add_displays();
     display_info->set_id(i);
-    ProtoUtil::protoRct(display.GetGeometry(),
-                        display_info->mutable_dimensions());
+    if (CommandArgs::getInstance()->windowedMode()) {
+      // If we're in windowed mode, just do a reasonably sized window.
+      ProtoUtil::protoRct(wxRect(0, 0, 1024, 768),
+                          display_info->mutable_dimensions());
+    } else {
+      wxDisplay display(i);
+      ProtoUtil::protoRct(display.GetGeometry(),
+                          display_info->mutable_dimensions());
+    }
     if (isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);
 #ifdef WXDEBUG
-      if (numscreens < 3) {
+      if (numscreens < 3 && !CommandArgs::getInstance()->windowedMode()) {
         // For debugging, we display home as if it was a second monitor.  That
         // way we can either test a single display setup with no second monitor,
         // or a two display setup with only one extra monitor.
