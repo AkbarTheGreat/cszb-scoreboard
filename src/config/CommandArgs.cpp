@@ -72,7 +72,7 @@ bool CommandArgs::autoUpdate() { return auto_update; }
 bool CommandArgs::resetConfig() { return reset_config; }
 FilesystemPath CommandArgs::commandPath() { return command_path; }
 bool CommandArgs::windowedMode() {
-  if (num_windows == 0) {
+  if (num_windows <= 0) {
     return false;
   }
   return true;
