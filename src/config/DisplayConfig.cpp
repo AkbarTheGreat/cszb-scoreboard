@@ -72,7 +72,8 @@ void DisplayConfig::detectDisplays() {
       ProtoUtil::protoRct(display.GetGeometry(),
                           display_info->mutable_dimensions());
     }
-    if (isPrimaryDisplay(display_info)) {
+    if (!CommandArgs::getInstance()->windowedMode() &&
+        isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);
 #ifdef WXDEBUG
       if (numscreens < 3 && !CommandArgs::getInstance()->windowedMode()) {
