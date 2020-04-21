@@ -1,6 +1,7 @@
 /*
-ui/component/ScreenText.h: Represents a text presentation on a ScreenPresenter
-or a ScreenPreview.
+ui/component/ScreenTextSide.cpp: A single side of renderable image/text.  One or
+more of these are contained in a ScreenText, for use in presenting to a preview
+or external monitor.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -25,23 +26,19 @@ limitations under the License.
 #include <vector>
 
 #include "config.pb.h"
-#include "ui/component/ScreenTextSide.h"
 #include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 
-class ScreenText : public wxPanel {
+class ScreenTextSide : public wxPanel {
  public:
-  // These two methods are really just light wrappers around constructors, but
-  // they help document the use each constructor is intended to fill.
-  static ScreenText* getPreview(wxWindow* parent, wxString initial_text,
-                                proto::ScreenSide side, wxSize size);
-
-  static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
-                                  wxSize size);
+  ScreenTextSide(wxWindow* parent, const wxString& initial_text,
+                 proto::ScreenSide side, wxSize size);
+  ScreenTextSide(wxWindow* parent, ScreenTextSide* source_side, wxSize size);
 
   void addText(proto::RenderableText text, const proto::ScreenSide& side);
   void blackout();
+  void paintEvent(wxPaintEvent& event);
   void resetAllText(const proto::ScreenSide& side);
   void setImage(const wxImage& image);
   void setImage(const wxImage& image, bool is_scaled,
@@ -51,17 +48,33 @@ class ScreenText : public wxPanel {
   void setFontColor(proto::Font* font);
   void setText(const wxString& text, int font_size,
                const proto::ScreenSide& side);
-  void setAll(const ScreenText& source);
+  void setAll(const ScreenTextSide* source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
   bool isSide(proto::ScreenSide side);
 
  private:
-  std::vector<ScreenTextSide*> text_sides;
+  bool auto_fit_text;
+  wxImage blackout_image;
+  std::optional<Color> background_color;
+  wxImage image;
+  bool image_is_scaled;
+  proto::ScreenSide screen_side;
+  std::vector<proto::RenderableText> texts;
 
-  ScreenText(wxWindow* parent, wxSize size)
-      : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {}
-
-  void initializeSides(std::vector<ScreenTextSide*> text_sides);
+  void autoFitText(wxDC& dc, proto::RenderableText& text);
+  void bindEvents();
+  wxPoint bottomText(wxDC& dc, wxString text);
+  wxPoint centerText(wxDC& dc, wxString text);
+  void initializeForColor(wxSize size, Color color);
+  wxSize getTextExtent(wxDC& dc, wxString text);
+  wxPoint positionText(wxDC& dc, proto::RenderableText text);
+  float ratio(const wxSize& size);
+  void renderBackground(wxDC& dc);
+  void renderScaledBackground(wxDC& dc);
+  void renderText(wxDC& dc, proto::RenderableText& text);
+  void renderAllText(wxDC& dc);
+  void setBackground(const Color& color);
+  wxPoint topText(wxDC& dc, wxString text);
 };
 
 }  // namespace cszb_scoreboard
