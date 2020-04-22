@@ -148,19 +148,10 @@ void ScreenText::setDefaultBackground(const proto::ScreenSide& side) {
 
 void ScreenText::setAll(const ScreenText& source) {
   // TODO: This assumes both have the same number of sides, and may not be
-  // useful long-term
+  // safe long-term
   for (int i = 0; i < text_sides.size(); i++) {
     this->text_sides[i]->setAll(source.text_sides[i]);
   }
-}
-
-bool ScreenText::isSide(proto::ScreenSide side) {
-  for (auto text_side : text_sides) {
-    if (text_side->isSide(side)) {
-      return true;
-    }
-  }
-  return false;
 }
 
 }  // namespace cszb_scoreboard

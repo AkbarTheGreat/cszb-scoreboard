@@ -91,18 +91,14 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
   current_widget->Refresh();
 }
 
-void ScreenPreview::sendToPresenter(proto::ScreenSide side) {
-  if (current_widget->isSide(side)) {
-    presenter->widget()->setAll(*current_widget);
-    thumbnail->widget()->setAll(*current_widget);
-  }
+void ScreenPreview::sendToPresenter() {
+  presenter->widget()->setAll(*current_widget);
+  thumbnail->widget()->setAll(*current_widget);
 }
 
-void ScreenPreview::blackoutPresenter(proto::ScreenSide side) {
-  if (current_widget->isSide(side)) {
-    presenter->widget()->blackout();
-    thumbnail->widget()->blackout();
-  }
+void ScreenPreview::blackoutPresenter() {
+  presenter->widget()->blackout();
+  thumbnail->widget()->blackout();
 }
 
 }  // namespace cszb_scoreboard

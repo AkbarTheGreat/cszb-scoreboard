@@ -54,7 +54,6 @@ class ScreenText : public wxPanel {
                const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
-  bool isSide(proto::ScreenSide side);
 
  private:
   std::vector<ScreenTextSide*> text_sides;

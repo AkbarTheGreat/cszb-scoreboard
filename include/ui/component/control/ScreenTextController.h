@@ -42,7 +42,6 @@ class ScreenTextController : public wxPanel {
   virtual void createControls(wxPanel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
    * Defaults to all screens, may be overridden for more control. */
-  virtual proto::ScreenSide updateSide();
   ScreenTextController(PreviewPanel *preview_panel, wxWindow *parent);
   void initializeWidgets();
   PreviewPanel *previewPanel();

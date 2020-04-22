@@ -62,11 +62,7 @@ void ScreenTextController::bindEvents() {
 PreviewPanel *ScreenTextController::previewPanel() { return preview_panel; }
 
 void ScreenTextController::updateClicked(wxCommandEvent &event) {
-  preview_panel->updatePresenters(updateSide());
-}
-
-proto::ScreenSide ScreenTextController::updateSide() {
-  return ProtoUtil::allSide();
+  preview_panel->updatePresenters();
 }
 
 }  // namespace cszb_scoreboard

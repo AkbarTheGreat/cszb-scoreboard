@@ -120,9 +120,9 @@ void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
   }
 }
 
-void PreviewPanel::updatePresenters(const proto::ScreenSide& side) {
+void PreviewPanel::updatePresenters() {
   for (auto preview : screens) {
-    preview->sendToPresenter(side);
+    preview->sendToPresenter();
   }
 }
 
@@ -144,7 +144,7 @@ void PreviewPanel::updatePreviewsFromSettings() {
 
 void PreviewPanel::blackout(wxCommandEvent& event) {
   for (auto preview : screens) {
-    preview->blackoutPresenter(ProtoUtil::allSide());
+    preview->blackoutPresenter();
   }
 }
 
