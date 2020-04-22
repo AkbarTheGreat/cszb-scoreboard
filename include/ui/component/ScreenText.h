@@ -35,7 +35,8 @@ class ScreenText : public wxPanel {
   // These two methods are really just light wrappers around constructors, but
   // they help document the use each constructor is intended to fill.
   static ScreenText* getPreview(wxWindow* parent, wxString initial_text,
-                                proto::ScreenSide side, wxSize size);
+                                std::vector<proto::ScreenSide> sides,
+                                wxSize size);
 
   static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
                                   wxSize size);

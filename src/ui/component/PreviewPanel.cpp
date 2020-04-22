@@ -31,10 +31,21 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
         DisplayConfig::getInstance()->displayDetails(i);
-    if (display_info.side().error() || display_info.side().home() ||
-        display_info.side().away()) {
-      screens.push_back(
-          new ScreenPreview(this, display_info.side(), display_info.id()));
+    std::vector<proto::ScreenSide> sides;
+    if (display_info.side().error()) {
+      sides.push_back(proto::ScreenSide());
+      sides.back().set_error(true);
+    }
+    if (display_info.side().home()) {
+      sides.push_back(proto::ScreenSide());
+      sides.back().set_home(true);
+    }
+    if (display_info.side().away()) {
+      sides.push_back(proto::ScreenSide());
+      sides.back().set_away(true);
+    }
+    if (sides.size()) {
+      screens.push_back(new ScreenPreview(this, sides, display_info.id()));
     }
   }
 

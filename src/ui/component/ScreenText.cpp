@@ -34,13 +34,18 @@ const float TOP_OR_BOTTOM_MARGIN = 2;
 const int BORDER_SIZE = 0;
 
 ScreenText* ScreenText::getPreview(wxWindow* parent, wxString initial_text,
-                                   proto::ScreenSide side, wxSize size) {
-  // For now, we only do one ScreenTextSide per ScreenText.  Functionality to
-  // have multiples are yet to come.
+                                   std::vector<proto::ScreenSide> sides,
+                                   wxSize size) {
   ScreenText* screen_text = new ScreenText(parent, size);
   std::vector<ScreenTextSide*> text_sides;
-  text_sides.push_back(
-      new ScreenTextSide(screen_text, initial_text, side, size));
+
+  wxSize split_size(size.x / sides.size(), size.y);
+
+  for (auto side : sides) {
+    text_sides.push_back(
+        new ScreenTextSide(screen_text, initial_text, side, split_size));
+  }
+
   screen_text->initializeSides(text_sides);
   return screen_text;
 }
@@ -50,9 +55,11 @@ ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
   ScreenText* screen_text = new ScreenText(parent, size);
   std::vector<ScreenTextSide*> text_sides;
 
+  wxSize split_size(size.x / preview->text_sides.size(), size.y);
+
   for (auto source_text_side : preview->text_sides) {
     text_sides.push_back(
-        new ScreenTextSide(screen_text, source_text_side, size));
+        new ScreenTextSide(screen_text, source_text_side, split_size));
   }
 
   screen_text->initializeSides(text_sides);

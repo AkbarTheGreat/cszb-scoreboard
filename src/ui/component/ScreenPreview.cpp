@@ -31,12 +31,13 @@ const char* WELCOME_MESSAGE = "Hello";
 const char* ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
 const int PREVIEW_HEIGHT = 320;
 
-ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
+ScreenPreview::ScreenPreview(wxWindow* parent,
+                             std::vector<proto::ScreenSide> sides,
                              int monitor_number) {
   this->parent = parent;
 
   wxString initial_text;
-  if (side.error()) {
+  if (sides[0].error()) {
     initial_text = ERROR_MESSAGE;
   } else {
     initial_text = WELCOME_MESSAGE;
@@ -44,11 +45,11 @@ ScreenPreview::ScreenPreview(wxWindow* parent, proto::ScreenSide side,
 
   control_pane = new wxPanel(parent);
 
-  current_widget = ScreenText::getPreview(control_pane, initial_text, side,
+  current_widget = ScreenText::getPreview(control_pane, initial_text, sides,
                                           previewSize(monitor_number));
 
   thumbnail = new ScreenThumbnail(control_pane, monitor_number, current_widget);
-  if (!side.error()) {
+  if (!sides[0].error()) {
     presenter = new ScreenPresenter(monitor_number, current_widget);
   }
 
