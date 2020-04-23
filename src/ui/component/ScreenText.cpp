@@ -155,12 +155,17 @@ void ScreenText::setDefaultBackground(const proto::ScreenSide& side) {
 }
 
 void ScreenText::singleDisplay() {
-  if (text_sides.size() < 1) return;
+  if (text_sides.size() < 2) {
+    return;
+  }
   text_sides[0]->setSize(GetSize());
   Update();
 }
 
 void ScreenText::splitDisplays() {
+  if (text_sides.size() < 2) {
+    return;
+  }
   wxSize split_size(GetSize().x / text_sides.size(), GetSize().y);
   text_sides[0]->setSize(split_size);
   Update();

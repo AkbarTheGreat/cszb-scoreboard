@@ -137,6 +137,9 @@ void ScreenTextSide::setFontColor(proto::Font* font) {
 }
 
 void ScreenTextSide::setSize(const wxSize& size) {
+  if (size == GetSize()) {
+    return;
+  }
   SetSize(size);
   if (background_color.has_value()) {
     initializeForColor(GetSize(), *background_color);
