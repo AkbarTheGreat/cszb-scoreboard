@@ -50,6 +50,7 @@ class ScreenTextSide : public wxPanel {
                const proto::ScreenSide& side);
   void setAll(const ScreenTextSide* source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
+  void setSize(const wxSize& size);
   bool isSide(proto::ScreenSide side);
 
  private:
@@ -65,6 +66,7 @@ class ScreenTextSide : public wxPanel {
   void bindEvents();
   wxPoint bottomText(wxDC& dc, wxString text);
   wxPoint centerText(wxDC& dc, wxString text);
+  void createBlackout();
   void initializeForColor(wxSize size, Color color);
   wxSize getTextExtent(wxDC& dc, wxString text);
   wxPoint positionText(wxDC& dc, proto::RenderableText text);

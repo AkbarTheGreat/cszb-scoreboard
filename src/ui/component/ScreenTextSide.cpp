@@ -116,10 +116,14 @@ void ScreenTextSide::initializeForColor(wxSize size, Color color) {
   for (auto& text : texts) {
     ProtoUtil::setFontColor(text.mutable_font(), color.contrastColor());
   }
+  createBlackout();
+}
+
+void ScreenTextSide::createBlackout() {
   if (!blackout_image.IsOk() ||
-      size.GetWidth() != blackout_image.GetSize().GetWidth() ||
-      size.GetHeight() != blackout_image.GetSize().GetHeight()) {
-    blackout_image = BackgroundImage(size, Color("Black"));
+      GetSize().GetWidth() != blackout_image.GetSize().GetWidth() ||
+      GetSize().GetHeight() != blackout_image.GetSize().GetHeight()) {
+    blackout_image = BackgroundImage(GetSize(), Color("Black"));
   }
 }
 
@@ -130,6 +134,14 @@ void ScreenTextSide::setFontColor(proto::Font* font) {
     // Just assume white as a default for now.
     ProtoUtil::setFontColor(font, Color("White"));
   }
+}
+
+void ScreenTextSide::setSize(const wxSize& size) {
+  SetSize(size);
+  if (background_color.has_value()) {
+    initializeForColor(GetSize(), *background_color);
+  }
+  createBlackout();
 }
 
 void ScreenTextSide::blackout() {
