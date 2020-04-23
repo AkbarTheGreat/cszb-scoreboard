@@ -45,7 +45,7 @@ class ScreenTextSide : public wxPanel {
                 const proto::ScreenSide& side);
   void setBackground(const Color& color, const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
-  void setFontColor(proto::Font* font);
+  void setFontColor(proto::Font* font, const proto::ScreenSide& side);
   void setText(const wxString& text, int font_size,
                const proto::ScreenSide& side);
   void setAll(const ScreenTextSide* source);

@@ -104,7 +104,7 @@ void ScreenTextSide::setText(const wxString& text, int font_size,
     renderable_text.mutable_font()->set_size(font_size);
 
     ProtoUtil::validateFont(renderable_text.mutable_font());
-    setFontColor(renderable_text.mutable_font());
+    setFontColor(renderable_text.mutable_font(), side);
 
     addText(renderable_text, side);
   }
@@ -127,7 +127,8 @@ void ScreenTextSide::createBlackout() {
   }
 }
 
-void ScreenTextSide::setFontColor(proto::Font* font) {
+void ScreenTextSide::setFontColor(proto::Font* font,
+                                  const proto::ScreenSide& side) {
   if (background_color.has_value()) {
     ProtoUtil::setFontColor(font, background_color->contrastColor());
   } else {

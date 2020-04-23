@@ -113,7 +113,7 @@ void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
     screen_text->setBackground(background, side);
     for (auto line : lines) {
       ProtoUtil::validateFont(line.mutable_font());
-      screen_text->setFontColor(line.mutable_font());
+      screen_text->setFontColor(line.mutable_font(), side);
       screen_text->addText(line, side);
       screen_text->Refresh();
     }

@@ -44,12 +44,11 @@ class ScreenText : public wxPanel {
   void addText(proto::RenderableText text, const proto::ScreenSide& side);
   void blackout();
   void resetAllText(const proto::ScreenSide& side);
-  void setImage(const wxImage& image);
   void setImage(const wxImage& image, bool is_scaled,
                 const proto::ScreenSide& side);
   void setBackground(const Color& color, const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
-  void setFontColor(proto::Font* font);
+  void setFontColor(proto::Font* font, const proto::ScreenSide& side);
   void setText(const wxString& text, int font_size,
                const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
@@ -57,10 +56,12 @@ class ScreenText : public wxPanel {
 
  private:
   std::vector<ScreenTextSide*> text_sides;
+  bool is_single_view = false;
 
   ScreenText(wxWindow* parent, wxSize size)
       : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {}
 
+  void autosplitDisplays(proto::ScreenSide side);
   void initializeSides(std::vector<ScreenTextSide*> text_sides);
   void singleDisplay();
   void splitDisplays();
