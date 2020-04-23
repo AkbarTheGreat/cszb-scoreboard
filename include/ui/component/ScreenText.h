@@ -54,6 +54,10 @@ class ScreenText : public wxPanel {
   void setAll(const ScreenText& source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
 
+#ifdef SCOREBOARD_TESTING
+  wxPanel* sidePanel(int index) { return text_sides[index]; }
+#endif
+
  private:
   std::vector<ScreenTextSide*> text_sides;
   bool is_single_view = false;

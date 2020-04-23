@@ -26,7 +26,8 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
   WX_A(mainView()->SetFocus());
   WX_A(textEntry()->selectTeam(0));
-  ImageAnalysis analysis(firstPreview()->widget(), IA_MODE_QUARTER_SCAN);
+  ImageAnalysis analysis(firstPreview()->widget()->sidePanel(0),
+                         IA_MODE_QUARTER_SCAN);
   std::vector<int> color_list = analysis.colorList();
   int list_size = color_list.size();
   if (DisplayConfig::getInstance()->displayDetails(0).side().error()) {
