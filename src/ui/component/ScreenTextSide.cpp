@@ -156,27 +156,20 @@ void ScreenTextSide::blackout() {
 }
 
 void ScreenTextSide::renderScaledBackground(wxDC& dc) {
-  wxImage scaled_image = image;
-  wxSize screen_size = GetSize();
-  wxSize image_size = scaled_image.GetSize();
-  float screen_ratio = ratio(screen_size);
-  float image_ratio = ratio(image_size);
-  int image_height, image_width;
-  if (screen_ratio > image_ratio) {
-    // Screen is wider than image, so make the heights match
-    image_height = screen_size.GetHeight();
-    image_width = screen_size.GetHeight() * image_ratio;
-  } else {
-    // Screen is either the same ratio or narrower than image, so make the
-    // widths match
-    image_width = screen_size.GetWidth();
-    image_height = screen_size.GetWidth() / image_ratio;
+  wxImage scaled_image = scaleImage(image, GetSize());
+  int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
+  int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
+  dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
+}
+
+void ScreenTextSide::renderOverlay(wxDC& dc) {
+  if (!background_overlay.has_value()) {
+    return;
   }
-
-  scaled_image.Rescale(image_width, image_height);
-  int x = (screen_size.GetWidth() - image_width) / 2;
-  int y = (screen_size.GetHeight() - image_height) / 2;
-
+  wxImage scaled_image =
+      scaleImage(*background_overlay, GetSize() * overlay_percentage);
+  int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
+  int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
   dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
 }
 
@@ -186,6 +179,29 @@ void ScreenTextSide::renderBackground(wxDC& dc) {
   } else {
     dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
   }
+  renderOverlay(dc);
+}
+
+wxImage ScreenTextSide::scaleImage(const wxImage& image,
+                                   const wxSize& target_size) {
+  wxImage scaled_image = image;
+  wxSize image_size = scaled_image.GetSize();
+  float screen_ratio = ratio(target_size);
+  float image_ratio = ratio(image_size);
+  int image_height, image_width;
+  if (screen_ratio > image_ratio) {
+    // Screen is wider than image, so make the heights match
+    image_height = target_size.GetHeight();
+    image_width = target_size.GetHeight() * image_ratio;
+  } else {
+    // Screen is either the same ratio or narrower than image, so make the
+    // widths match
+    image_width = target_size.GetWidth();
+    image_height = target_size.GetWidth() / image_ratio;
+  }
+
+  scaled_image.Rescale(image_width, image_height);
+  return scaled_image;
 }
 
 void ScreenTextSide::autoFitText(wxDC& dc, proto::RenderableText& text) {
@@ -284,16 +300,13 @@ void ScreenTextSide::paintEvent(wxPaintEvent& evt) {
   renderAllText(dc);
 }
 
-void ScreenTextSide::setImage(const wxImage& image) {
-  background_color.reset();
-  this->image = image;
-}
-
 void ScreenTextSide::setImage(const wxImage& image, bool is_scaled,
                               const proto::ScreenSide& side) {
   if (isSide(side)) {
     image_is_scaled = is_scaled;
-    setImage(image);
+    background_color.reset();
+    this->image = image;
+    background_overlay.reset();
   }
 };
 
@@ -307,7 +320,17 @@ void ScreenTextSide::setBackground(const Color& color,
 void ScreenTextSide::setBackground(const Color& color) {
   this->background_color = color;
   initializeForColor(GetSize(), color);
+  background_overlay.reset();
 };
+
+void ScreenTextSide::setBackgroundOverlay(const wxImage& overlay,
+                                          double overlay_screen_percentage,
+                                          const proto::ScreenSide& side) {
+  if (isSide(side)) {
+    background_overlay = overlay;
+    overlay_percentage = overlay_screen_percentage;
+  }
+}
 
 void ScreenTextSide::setDefaultBackground(const proto::ScreenSide& side) {
   // TODO: Allow for a view to contain multiple sides
@@ -321,6 +344,13 @@ void ScreenTextSide::setAll(const ScreenTextSide* source) {
     setBackground(*source->background_color);
   } else {
     background_color.reset();
+  }
+
+  if (source->background_overlay.has_value()) {
+    background_overlay = *source->background_overlay;
+    overlay_percentage = source->overlay_percentage;
+  } else {
+    background_overlay.reset();
   }
 
   resetAllText(this->screen_side);

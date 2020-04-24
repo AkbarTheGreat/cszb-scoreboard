@@ -40,10 +40,12 @@ class ScreenTextSide : public wxPanel {
   void blackout();
   void paintEvent(wxPaintEvent& event);
   void resetAllText(const proto::ScreenSide& side);
-  void setImage(const wxImage& image);
   void setImage(const wxImage& image, bool is_scaled,
                 const proto::ScreenSide& side);
   void setBackground(const Color& color, const proto::ScreenSide& side);
+  void setBackgroundOverlay(const wxImage& overlay,
+                            double overlay_screen_percentage,
+                            const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
   void setFontColor(proto::Font* font, const proto::ScreenSide& side);
   void setText(const wxString& text, int font_size,
@@ -57,6 +59,8 @@ class ScreenTextSide : public wxPanel {
   bool auto_fit_text;
   wxImage blackout_image;
   std::optional<Color> background_color;
+  std::optional<wxImage> background_overlay;
+  double overlay_percentage;
   wxImage image;
   bool image_is_scaled;
   proto::ScreenSide screen_side;
@@ -72,9 +76,11 @@ class ScreenTextSide : public wxPanel {
   wxPoint positionText(wxDC& dc, proto::RenderableText text);
   float ratio(const wxSize& size);
   void renderBackground(wxDC& dc);
+  void renderOverlay(wxDC& dc);
   void renderScaledBackground(wxDC& dc);
   void renderText(wxDC& dc, proto::RenderableText& text);
   void renderAllText(wxDC& dc);
+  wxImage scaleImage(const wxImage& image, const wxSize &target_size);
   void setBackground(const Color& color);
   wxPoint topText(wxDC& dc, wxString text);
 };

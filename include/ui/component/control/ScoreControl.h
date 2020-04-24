@@ -52,6 +52,7 @@ class ScoreControl : public ScreenTextController {
   void homeAddFive(wxCommandEvent &event);
   void homeMinusOne(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel);
+  void selectLogo(wxCommandEvent &event);
   void toggleIntroMode(wxCommandEvent &event);
   std::vector<proto::RenderableText> introLines(bool isHome);
   std::vector<proto::RenderableText> scoreLines(bool isHome);
@@ -59,23 +60,16 @@ class ScoreControl : public ScreenTextController {
 
   wxToggleButton *team_intro_button;
   wxPanel *team_controls_panel;
-
-  wxStaticText *home_score_label;
-  wxColourPickerCtrl *home_color_picker;
-  wxTextCtrl *home_name_entry;
-  wxTextCtrl *home_score_entry;
-  wxPanel *home_button_panel;
-  wxButton *home_plus_1;
-  wxButton *home_plus_5;
-  wxButton *home_minus_1;
-  wxStaticText *away_score_label;
-  wxColourPickerCtrl *away_color_picker;
-  wxTextCtrl *away_name_entry;
-  wxTextCtrl *away_score_entry;
-  wxPanel *away_button_panel;
-  wxButton *away_plus_1;
-  wxButton *away_plus_5;
-  wxButton *away_minus_1;
+  wxStaticText *home_score_label, *away_score_label;
+  wxColourPickerCtrl *home_color_picker, *away_color_picker;
+  wxTextCtrl *home_name_entry, *away_name_entry;
+  wxTextCtrl *home_score_entry, *away_score_entry;
+  wxPanel *home_button_panel, *away_button_panel;
+  wxButton *home_plus_1, *home_plus_5, *home_minus_1;
+  wxButton *away_plus_1, *away_plus_5, *away_minus_1;
+  wxButton *home_logo_button, *away_logo_button;
+  wxStaticText *home_logo_label, *away_logo_label;
+  std::optional<wxImage> home_logo, away_logo;
 };
 
 }  // namespace cszb_scoreboard

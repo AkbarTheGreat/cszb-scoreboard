@@ -19,9 +19,11 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
+#include "ScoreboardCommon.h"
 #include "config/TeamConfig.h"
 #include "ui/UiUtil.h"
 #include "ui/graphics/TeamColors.h"
+#include "util/FilesystemPath.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
 
@@ -30,6 +32,8 @@ namespace cszb_scoreboard {
 const int SCORE_FONT_SIZE = 20;
 const int TEAM_FONT_SIZE = 5;
 const int BORDER_SIZE = 3;
+const double LOGO_OVERLAY_SCALE = 0.75;
+const std::string NO_LOGO_MESSAGE = "<No Logo Selected>";
 
 const std::string INTRO_MODE_LABEL = "Introduce Teams";
 const std::string SCORE_MODE_LABEL = "Show Scores";
@@ -63,6 +67,10 @@ void ScoreControl::createControls(wxPanel *control_panel) {
   home_minus_1 = new wxButton(home_button_panel, wxID_ANY, "-1",
                               wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 
+  home_logo_label =
+      new wxStaticText(team_controls_panel, wxID_ANY, NO_LOGO_MESSAGE);
+  home_logo_button = new wxButton(team_controls_panel, wxID_ANY, "Choose Logo");
+
   away_score_label =
       new wxStaticText(team_controls_panel, wxID_ANY, wxT("Away"));
   away_color_picker = new wxColourPickerCtrl(
@@ -80,6 +88,10 @@ void ScoreControl::createControls(wxPanel *control_panel) {
                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
   away_minus_1 = new wxButton(away_button_panel, wxID_ANY, "-1",
                               wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+
+  away_logo_label =
+      new wxStaticText(team_controls_panel, wxID_ANY, NO_LOGO_MESSAGE);
+  away_logo_button = new wxButton(team_controls_panel, wxID_ANY, "Choose Logo");
 
   team_intro_button =
       new wxToggleButton(control_panel, wxID_ANY, INTRO_MODE_LABEL);
@@ -109,6 +121,7 @@ void ScoreControl::bindEvents() {
                           &ScoreControl::colorChanged, this);
   away_color_picker->Bind(wxEVT_COLOURPICKER_CHANGED,
                           &ScoreControl::colorChanged, this);
+  home_logo_button->Bind(wxEVT_BUTTON, &ScoreControl::selectLogo, this);
   team_intro_button->Bind(wxEVT_TOGGLEBUTTON, &ScoreControl::toggleIntroMode,
                           this);
 }
@@ -139,6 +152,11 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
   away_button_panel->SetSizerAndFit(away_panel_sizer);
   team_control_sizer->Add(away_button_panel, 0, wxALL, BORDER_SIZE);
 
+  team_control_sizer->Add(home_logo_label, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(away_logo_label, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(home_logo_button, 0, wxALL, BORDER_SIZE);
+  team_control_sizer->Add(away_logo_button, 0, wxALL, BORDER_SIZE);
+
   team_controls_panel->SetSizerAndFit(team_control_sizer);
 
   wxSizer *outer_sizer = UiUtil::sizer(0, 2);
@@ -146,6 +164,24 @@ void ScoreControl::positionWidgets(wxPanel *control_panel) {
   outer_sizer->Add(team_intro_button, 0, wxALL | wxALIGN_CENTRE_VERTICAL,
                    BORDER_SIZE);
   control_panel->SetSizerAndFit(outer_sizer);
+}
+
+void ScoreControl::selectLogo(wxCommandEvent &event) {
+  wxFileDialog dialog(this, _("Select Logo Image"), "", "",
+                      LOGO_SELECTION_STRING, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  if (dialog.ShowModal() != wxID_CANCEL) {
+    FilesystemPath selected_file = (std::string)dialog.GetPath();
+    if (event.GetEventObject() == home_logo_button) {
+      home_logo = wxImage(selected_file.c_str());
+      home_logo_label->SetLabelText(selected_file.filename().c_str());
+    }
+    if (event.GetEventObject() == away_logo_button) {
+      away_logo = wxImage(selected_file.c_str());
+      away_logo_label->SetLabelText(selected_file.filename().c_str());
+    }
+  }
+  control_panel->Update();
+  updatePreview();
 }
 
 std::vector<proto::RenderableText> ScoreControl::scoreLines(bool isHome) {
@@ -211,10 +247,24 @@ void ScoreControl::updatePreview() {
     away_update = scoreLines(false);
   }
 
-  previewPanel()->setTextForPreview(home_update, home_color_picker->GetColour(),
-                                    true, ProtoUtil::homeSide());
-  previewPanel()->setTextForPreview(away_update, away_color_picker->GetColour(),
-                                    true, ProtoUtil::awaySide());
+  if (home_logo.has_value()) {
+    previewPanel()->setTextForPreview(
+        home_update, home_color_picker->GetColour(), true, *home_logo,
+        LOGO_OVERLAY_SCALE, ProtoUtil::homeSide());
+  } else {
+    previewPanel()->setTextForPreview(home_update,
+                                      home_color_picker->GetColour(), true,
+                                      ProtoUtil::homeSide());
+  }
+  if (away_logo.has_value()) {
+    previewPanel()->setTextForPreview(
+        away_update, away_color_picker->GetColour(), true, *away_logo,
+        LOGO_OVERLAY_SCALE, ProtoUtil::awaySide());
+  } else {
+    previewPanel()->setTextForPreview(away_update,
+                                      away_color_picker->GetColour(), true,
+                                      ProtoUtil::awaySide());
+  }
 }
 
 void ScoreControl::homeUpdated(wxKeyEvent &event) { updatePreview(); }

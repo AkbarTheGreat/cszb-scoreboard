@@ -120,6 +120,27 @@ void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
   }
 }
 
+void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
+                                     const Color& background, bool auto_fit,
+                                     const wxImage& logo_overlay,
+                                     double overlay_screen_percentage,
+                                     const proto::ScreenSide& side) {
+  for (auto preview : screens) {
+    ScreenText* screen_text = preview->widget();
+    screen_text->setAutoFit(auto_fit, side);
+    screen_text->resetAllText(side);
+    screen_text->setBackground(background, side);
+    screen_text->setBackgroundOverlay(logo_overlay, overlay_screen_percentage,
+                                      side);
+    for (auto line : lines) {
+      ProtoUtil::validateFont(line.mutable_font());
+      screen_text->setFontColor(line.mutable_font(), side);
+      screen_text->addText(line, side);
+      screen_text->Refresh();
+    }
+  }
+}
+
 void PreviewPanel::updatePresenters() {
   for (auto preview : screens) {
     preview->sendToPresenter();

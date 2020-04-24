@@ -41,6 +41,11 @@ class PreviewPanel : public wxPanel {
   void setTextForPreview(std::vector<proto::RenderableText> lines,
                          const Color& background, bool auto_fit,
                          const proto::ScreenSide& side);
+  void setTextForPreview(std::vector<proto::RenderableText> lines,
+                         const Color& background, bool auto_fit,
+                         const wxImage& logo_overlay,
+                         double overlay_screen_percentage,
+                         const proto::ScreenSide& side);
   void updatePresenters();
   void updatePreviewsFromSettings();
 

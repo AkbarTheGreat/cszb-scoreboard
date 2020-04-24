@@ -47,6 +47,9 @@ class ScreenText : public wxPanel {
   void setImage(const wxImage& image, bool is_scaled,
                 const proto::ScreenSide& side);
   void setBackground(const Color& color, const proto::ScreenSide& side);
+  void setBackgroundOverlay(const wxImage& overlay,
+                            double overlay_screen_percentage,
+                            const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
   void setFontColor(proto::Font* font, const proto::ScreenSide& side);
   void setText(const wxString& text, int font_size,

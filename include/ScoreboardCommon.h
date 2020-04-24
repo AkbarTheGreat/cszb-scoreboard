@@ -29,6 +29,8 @@ const int DEFAULT_BORDER_SIZE = 5;
 const std::string IMAGE_SELECTION_STRING =
     "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
 
+const std::string LOGO_SELECTION_STRING = "Logo files (png)|*.png";
+
 #define SCOREBOARD_VERSION "0.5.5"
 
 // Evaluates to public: in a test environment, private: in non-test code, to
