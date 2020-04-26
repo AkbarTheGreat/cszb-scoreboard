@@ -33,6 +33,8 @@ const int SCORE_FONT_SIZE = 20;
 const int TEAM_FONT_SIZE = 5;
 const int BORDER_SIZE = 3;
 const double LOGO_OVERLAY_SCALE = 0.75;
+const unsigned char LOGO_ALPHA = 96;
+
 const std::string NO_LOGO_MESSAGE = "<No Logo Selected>";
 
 const std::string INTRO_MODE_LABEL = "Introduce Teams";
@@ -250,7 +252,7 @@ void ScoreControl::updatePreview() {
   if (home_logo.has_value()) {
     previewPanel()->setTextForPreview(
         home_update, home_color_picker->GetColour(), true, *home_logo,
-        LOGO_OVERLAY_SCALE, ProtoUtil::homeSide());
+        LOGO_OVERLAY_SCALE, LOGO_ALPHA, ProtoUtil::homeSide());
   } else {
     previewPanel()->setTextForPreview(home_update,
                                       home_color_picker->GetColour(), true,
@@ -259,7 +261,7 @@ void ScoreControl::updatePreview() {
   if (away_logo.has_value()) {
     previewPanel()->setTextForPreview(
         away_update, away_color_picker->GetColour(), true, *away_logo,
-        LOGO_OVERLAY_SCALE, ProtoUtil::awaySide());
+        LOGO_OVERLAY_SCALE, LOGO_ALPHA, ProtoUtil::awaySide());
   } else {
     previewPanel()->setTextForPreview(away_update,
                                       away_color_picker->GetColour(), true,

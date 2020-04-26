@@ -143,10 +143,12 @@ void ScreenText::setBackground(const Color& color,
 
 void ScreenText::setBackgroundOverlay(const wxImage& overlay,
                                       double overlay_screen_percentage,
+                                      unsigned char overlay_alpha,
                                       const proto::ScreenSide& side) {
   autosplitDisplays(side);
   for (auto text_side : text_sides) {
-    text_side->setBackgroundOverlay(overlay, overlay_screen_percentage, side);
+    text_side->setBackgroundOverlay(overlay, overlay_screen_percentage,
+                                    overlay_alpha, side);
   }
 }
 

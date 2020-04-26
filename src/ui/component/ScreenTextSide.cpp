@@ -168,6 +168,9 @@ void ScreenTextSide::renderOverlay(wxDC& dc) {
   }
   wxImage scaled_image =
       scaleImage(*background_overlay, GetSize() * overlay_percentage);
+
+  adjustOverlayColorAndAlpha(scaled_image,
+                             ProtoUtil::wxClr(texts[0].font().color()));
   int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
   int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
   dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
@@ -202,6 +205,21 @@ wxImage ScreenTextSide::scaleImage(const wxImage& image,
 
   scaled_image.Rescale(image_width, image_height);
   return scaled_image;
+}
+
+void ScreenTextSide::adjustOverlayColorAndAlpha(wxImage& image,
+                                                const Color& color) {
+  // We presume that the overlay is predominantly black, so subtracting it from
+  // color should give us that color most of the time.
+  wxRect dimensions(wxPoint(0, 0), image.GetSize());
+  image.SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
+  unsigned char* alpha = image.GetAlpha();
+  for (int i = 0; i < image.GetSize().GetWidth() * image.GetSize().GetHeight();
+       i++) {
+    if (alpha[i] > overlay_alpha) {
+      alpha[i] = overlay_alpha;
+    }
+  }
 }
 
 void ScreenTextSide::autoFitText(wxDC& dc, proto::RenderableText& text) {
@@ -325,10 +343,12 @@ void ScreenTextSide::setBackground(const Color& color) {
 
 void ScreenTextSide::setBackgroundOverlay(const wxImage& overlay,
                                           double overlay_screen_percentage,
+                                          unsigned char overlay_alpha,
                                           const proto::ScreenSide& side) {
   if (isSide(side)) {
     background_overlay = overlay;
     overlay_percentage = overlay_screen_percentage;
+    this->overlay_alpha = overlay_alpha;
   }
 }
 

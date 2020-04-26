@@ -45,6 +45,7 @@ class PreviewPanel : public wxPanel {
                          const Color& background, bool auto_fit,
                          const wxImage& logo_overlay,
                          double overlay_screen_percentage,
+                         unsigned char logo_alpha,
                          const proto::ScreenSide& side);
   void updatePresenters();
   void updatePreviewsFromSettings();
