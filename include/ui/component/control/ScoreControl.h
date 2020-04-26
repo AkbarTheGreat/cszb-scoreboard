@@ -58,6 +58,7 @@ class ScoreControl : public ScreenTextController {
   std::vector<proto::RenderableText> scoreLines(bool isHome);
   void updatePreview() override;
 
+  wxTextCtrl *alpha_ctrl, *size_ctrl;
   wxToggleButton *team_intro_button;
   wxPanel *team_controls_panel;
   wxStaticText *home_score_label, *away_score_label;

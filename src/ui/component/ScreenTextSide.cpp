@@ -369,6 +369,7 @@ void ScreenTextSide::setAll(const ScreenTextSide* source) {
   if (source->background_overlay.has_value()) {
     background_overlay = *source->background_overlay;
     overlay_percentage = source->overlay_percentage;
+    overlay_alpha = source->overlay_alpha;
   } else {
     background_overlay.reset();
   }

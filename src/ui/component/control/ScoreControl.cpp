@@ -32,7 +32,7 @@ namespace cszb_scoreboard {
 const int SCORE_FONT_SIZE = 20;
 const int TEAM_FONT_SIZE = 5;
 const int BORDER_SIZE = 3;
-const double LOGO_OVERLAY_SCALE = 0.75;
+const double LOGO_OVERLAY_SCALE = 0.65;
 const unsigned char LOGO_ALPHA = 96;
 
 const std::string NO_LOGO_MESSAGE = "<No Logo Selected>";
@@ -124,6 +124,7 @@ void ScoreControl::bindEvents() {
   away_color_picker->Bind(wxEVT_COLOURPICKER_CHANGED,
                           &ScoreControl::colorChanged, this);
   home_logo_button->Bind(wxEVT_BUTTON, &ScoreControl::selectLogo, this);
+  away_logo_button->Bind(wxEVT_BUTTON, &ScoreControl::selectLogo, this);
   team_intro_button->Bind(wxEVT_TOGGLEBUTTON, &ScoreControl::toggleIntroMode,
                           this);
 }
@@ -249,7 +250,7 @@ void ScoreControl::updatePreview() {
     away_update = scoreLines(false);
   }
 
-  if (home_logo.has_value()) {
+  if (team_intro_button->GetValue() && home_logo.has_value()) {
     previewPanel()->setTextForPreview(
         home_update, home_color_picker->GetColour(), true, *home_logo,
         LOGO_OVERLAY_SCALE, LOGO_ALPHA, ProtoUtil::homeSide());
@@ -258,7 +259,7 @@ void ScoreControl::updatePreview() {
                                       home_color_picker->GetColour(), true,
                                       ProtoUtil::homeSide());
   }
-  if (away_logo.has_value()) {
+  if (team_intro_button->GetValue() && away_logo.has_value()) {
     previewPanel()->setTextForPreview(
         away_update, away_color_picker->GetColour(), true, *away_logo,
         LOGO_OVERLAY_SCALE, LOGO_ALPHA, ProtoUtil::awaySide());
