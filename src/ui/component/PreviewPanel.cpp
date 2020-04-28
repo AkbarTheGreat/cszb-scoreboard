@@ -125,6 +125,7 @@ void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
                                      const wxImage& logo_overlay,
                                      double overlay_screen_percentage,
                                      unsigned char logo_alpha,
+                                     OverlayScreenPosition logo_position,
                                      const proto::ScreenSide& side) {
   for (auto preview : screens) {
     ScreenText* screen_text = preview->widget();
@@ -132,7 +133,7 @@ void PreviewPanel::setTextForPreview(std::vector<proto::RenderableText> lines,
     screen_text->resetAllText(side);
     screen_text->setBackground(background, side);
     screen_text->setBackgroundOverlay(logo_overlay, overlay_screen_percentage,
-                                      logo_alpha, side);
+                                      logo_alpha, logo_position, side);
     for (auto line : lines) {
       ProtoUtil::validateFont(line.mutable_font());
       screen_text->setFontColor(line.mutable_font(), side);

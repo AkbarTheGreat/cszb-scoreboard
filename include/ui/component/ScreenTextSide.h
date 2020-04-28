@@ -30,6 +30,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+enum class OverlayScreenPosition { Centered, BottomLeft };
+
 class ScreenTextSide : public wxPanel {
  public:
   ScreenTextSide(wxWindow* parent, const wxString& initial_text,
@@ -46,6 +48,7 @@ class ScreenTextSide : public wxPanel {
   void setBackgroundOverlay(const wxImage& overlay,
                             double overlay_screen_percentage,
                             unsigned char overlay_alpha,
+                            OverlayScreenPosition position,
                             const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
   void setFontColor(proto::Font* font, const proto::ScreenSide& side);
@@ -63,6 +66,7 @@ class ScreenTextSide : public wxPanel {
   std::optional<wxImage> background_overlay;
   unsigned char overlay_alpha;
   double overlay_percentage;
+  OverlayScreenPosition overlay_position;
   wxImage image;
   bool image_is_scaled;
   proto::ScreenSide screen_side;
@@ -80,6 +84,8 @@ class ScreenTextSide : public wxPanel {
   float ratio(const wxSize& size);
   void renderBackground(wxDC& dc);
   void renderOverlay(wxDC& dc);
+  void renderOverlayBottomCorner(wxDC& dc);
+  void renderOverlayCentered(wxDC& dc);
   void renderScaledBackground(wxDC& dc);
   void renderText(wxDC& dc, proto::RenderableText& text);
   void renderAllText(wxDC& dc);

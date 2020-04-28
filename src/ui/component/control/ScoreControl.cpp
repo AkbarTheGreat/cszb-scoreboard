@@ -242,27 +242,31 @@ void ScoreControl::updatePreview() {
   std::vector<proto::RenderableText> home_update;
   std::vector<proto::RenderableText> away_update;
 
+  OverlayScreenPosition logo_position;
+
   if (team_intro_button->GetValue()) {
     home_update = introLines(true);
     away_update = introLines(false);
+    logo_position = OverlayScreenPosition::Centered;
   } else {
     home_update = scoreLines(true);
     away_update = scoreLines(false);
+    logo_position = OverlayScreenPosition::BottomLeft;
   }
 
-  if (team_intro_button->GetValue() && home_logo.has_value()) {
+  if (home_logo.has_value()) {
     previewPanel()->setTextForPreview(
         home_update, home_color_picker->GetColour(), true, *home_logo,
-        LOGO_OVERLAY_SCALE, LOGO_ALPHA, ProtoUtil::homeSide());
+        LOGO_OVERLAY_SCALE, LOGO_ALPHA, logo_position, ProtoUtil::homeSide());
   } else {
     previewPanel()->setTextForPreview(home_update,
                                       home_color_picker->GetColour(), true,
                                       ProtoUtil::homeSide());
   }
-  if (team_intro_button->GetValue() && away_logo.has_value()) {
+  if (away_logo.has_value()) {
     previewPanel()->setTextForPreview(
         away_update, away_color_picker->GetColour(), true, *away_logo,
-        LOGO_OVERLAY_SCALE, LOGO_ALPHA, ProtoUtil::awaySide());
+        LOGO_OVERLAY_SCALE, LOGO_ALPHA, logo_position, ProtoUtil::awaySide());
   } else {
     previewPanel()->setTextForPreview(away_update,
                                       away_color_picker->GetColour(), true,

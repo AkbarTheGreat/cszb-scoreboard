@@ -50,6 +50,7 @@ class ScreenText : public wxPanel {
   void setBackgroundOverlay(const wxImage& overlay,
                             double overlay_screen_percentage,
                             unsigned char overlay_alpha,
+                            OverlayScreenPosition position,
                             const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
   void setFontColor(proto::Font* font, const proto::ScreenSide& side);

@@ -166,11 +166,38 @@ void ScreenTextSide::renderOverlay(wxDC& dc) {
   if (!background_overlay.has_value()) {
     return;
   }
+
+  if (overlay_position == OverlayScreenPosition::Centered) {
+    renderOverlayCentered(dc);
+  } else if (overlay_position == OverlayScreenPosition::BottomLeft) {
+    renderOverlayBottomCorner(dc);
+  }
+}
+
+void ScreenTextSide::renderOverlayBottomCorner(wxDC& dc) {
+  wxImage scaled_image = scaleImage(*background_overlay, GetSize() * 0.30);
+  Color font_color("White");
+  if (texts.size()) {
+    font_color = ProtoUtil::wxClr(texts[0].font().color());
+  }
+  adjustOverlayColorAndAlpha(scaled_image, font_color);
+
+  int x = TOP_OR_BOTTOM_MARGIN;
+  int y = GetSize().GetHeight() - scaled_image.GetSize().GetHeight() -
+          TOP_OR_BOTTOM_MARGIN;
+  dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
+}
+
+void ScreenTextSide::renderOverlayCentered(wxDC& dc) {
   wxImage scaled_image =
       scaleImage(*background_overlay, GetSize() * overlay_percentage);
 
-  adjustOverlayColorAndAlpha(scaled_image,
-                             ProtoUtil::wxClr(texts[0].font().color()));
+  Color font_color("White");
+  if (texts.size()) {
+    font_color = ProtoUtil::wxClr(texts[0].font().color());
+  }
+  adjustOverlayColorAndAlpha(scaled_image, font_color);
+
   int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
   int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
   dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
@@ -210,7 +237,7 @@ wxImage ScreenTextSide::scaleImage(const wxImage& image,
 void ScreenTextSide::adjustOverlayColorAndAlpha(wxImage& image,
                                                 const Color& color) {
   // We presume that the overlay is predominantly black, so subtracting it from
-  // color should give us that color most of the time.
+  // the font color should give us that color most of the time.
   wxRect dimensions(wxPoint(0, 0), image.GetSize());
   image.SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
   unsigned char* alpha = image.GetAlpha();
@@ -344,16 +371,17 @@ void ScreenTextSide::setBackground(const Color& color) {
 void ScreenTextSide::setBackgroundOverlay(const wxImage& overlay,
                                           double overlay_screen_percentage,
                                           unsigned char overlay_alpha,
+                                          OverlayScreenPosition position,
                                           const proto::ScreenSide& side) {
   if (isSide(side)) {
     background_overlay = overlay;
     overlay_percentage = overlay_screen_percentage;
+    overlay_position = position;
     this->overlay_alpha = overlay_alpha;
   }
 }
 
 void ScreenTextSide::setDefaultBackground(const proto::ScreenSide& side) {
-  // TODO: Allow for a view to contain multiple sides
   Color background_color = TeamConfig::getInstance()->teamColor(side)[0];
   setBackground(background_color, side);
 }
@@ -368,8 +396,9 @@ void ScreenTextSide::setAll(const ScreenTextSide* source) {
 
   if (source->background_overlay.has_value()) {
     background_overlay = *source->background_overlay;
-    overlay_percentage = source->overlay_percentage;
     overlay_alpha = source->overlay_alpha;
+    overlay_percentage = source->overlay_percentage;
+    overlay_position = source->overlay_position;
   } else {
     background_overlay.reset();
   }

@@ -28,6 +28,7 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "ui/component/ScreenPreview.h"
+#include "ui/component/ScreenTextSide.h"
 
 namespace cszb_scoreboard {
 
@@ -46,6 +47,7 @@ class PreviewPanel : public wxPanel {
                          const wxImage& logo_overlay,
                          double overlay_screen_percentage,
                          unsigned char logo_alpha,
+                         OverlayScreenPosition logo_position,
                          const proto::ScreenSide& side);
   void updatePresenters();
   void updatePreviewsFromSettings();
