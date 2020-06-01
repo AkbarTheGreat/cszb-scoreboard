@@ -73,7 +73,11 @@ void ProtoUtil::defaultFont(proto::Font *font) {
 
 void ProtoUtil::validateFont(proto::Font *font) {
   if (font->style() == proto::Font_FontStyle_FONT_STYLE_UNDEFINED) {
+#ifdef WIN32
     font->set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
+#else
+    font->set_style(proto::Font_FontStyle_FONT_STYLE_MODERN);
+#endif
   }
 }
 
