@@ -41,9 +41,14 @@ ScreenText* ScreenText::getPreview(wxWindow* parent, wxString initial_text,
 
   wxSize split_size(size.x / sides.size(), size.y);
 
-  for (auto side : sides) {
-    text_sides.push_back(
-        new ScreenTextSide(screen_text, initial_text, side, split_size));
+  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+    for (auto side : sides) {
+      if (ProtoUtil::sideContains(side, team)) {
+        text_sides.push_back(
+            new ScreenTextSide(screen_text, initial_text, side, split_size));
+        break;
+      }
+    }
   }
 
   screen_text->initializeSides(text_sides);

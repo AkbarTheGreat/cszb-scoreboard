@@ -120,6 +120,14 @@ void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {
   }
 }
 
+std::vector<proto::TeamInfo_TeamType> TeamConfig::singleScreenOrder() {
+  std::vector<proto::TeamInfo_TeamType> order;
+  for (auto config_entry : team_config.single_screen_order()) {
+    order.push_back((proto::TeamInfo_TeamType)config_entry);
+  }
+  return order;
+}
+
 std::vector<int> TeamConfig::indicesForSide(proto::ScreenSide side) {
   std::vector<int> index_list;
   if (side.home()) {

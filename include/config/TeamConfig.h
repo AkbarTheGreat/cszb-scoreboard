@@ -34,6 +34,7 @@ class TeamConfig {
   int numberOfTeams();
   void saveSettings();
   void setColor(int index, Color color);
+  std::vector<proto::TeamInfo_TeamType> singleScreenOrder();
   proto::TeamInfo teamInfo(int index);
   Color teamColor(int index);
   std::vector<Color> teamColor(proto::ScreenSide side);
