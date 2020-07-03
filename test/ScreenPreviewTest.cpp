@@ -34,15 +34,15 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
     // The error image on pane 0 is ~50% white, ~50% red with black text over
     // part of it.  We rely on display config to tell us which kind of display
     // we should be testing.
-    ASSERT_GT(analysis.colorPercentage(wxColour("Red")), 30);
+    ASSERT_GT(analysis.colorPercentage(wxColour("Red")), 25);
     ASSERT_LT(analysis.colorPercentage(wxColour("Red")), 70);
-    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 30);
+    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 25);
     ASSERT_LT(analysis.colorPercentage(wxColour("White")), 70);
     ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
     ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 20);
   } else {
     ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 70);
-    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 2);
+    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 1.25);
     ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);
   }
 }

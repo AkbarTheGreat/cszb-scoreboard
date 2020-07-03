@@ -45,6 +45,7 @@ message Font {
   enum FontStyle {
     FONT_STYLE_UNDEFINED = 0;
     FONT_STYLE_IMPACT = 1;
+    FONT_STYLE_MODERN = 2;
   } 
   FontStyle style = 1;
   float size = 2;
