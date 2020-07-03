@@ -39,6 +39,8 @@ class ProtoUtil {
   static proto::ScreenSide awaySide();
   static proto::ScreenSide allSide();
   static proto::ScreenSide noSide();
+  static bool sideContains(proto::ScreenSide side,
+                           proto::TeamInfo_TeamType team);
 };
 
 }  // namespace cszb_scoreboard

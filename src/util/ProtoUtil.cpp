@@ -102,4 +102,20 @@ proto::ScreenSide ProtoUtil::noSide() {
   return side;
 }
 
+bool ProtoUtil::sideContains(proto::ScreenSide side,
+                             proto::TeamInfo_TeamType team) {
+  switch (team) {
+    case proto::TeamInfo_TeamType_HOME_TEAM:
+      return side.home();
+    case proto::TeamInfo_TeamType_AWAY_TEAM:
+      return side.away();
+    case proto::TeamInfo_TeamType_EXTRA_TEAM:
+      return side.extra();
+    case proto::TeamInfo_TeamType_TEAM_ERROR:
+      return side.error();
+    default:
+      return false;
+  }
+}
+
 }  // namespace cszb_scoreboard

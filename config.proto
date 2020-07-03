@@ -86,6 +86,7 @@ message TeamInfo {
 
 message TeamConfig {
 	repeated TeamInfo teams = 1;
+    repeated TeamInfo.TeamType single_screen_order = 2;
 }
 
 message ScoreboardConfig {

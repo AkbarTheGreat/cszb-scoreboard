@@ -34,30 +34,74 @@ TeamConfig *TeamConfig::getInstance() {
 
 TeamConfig::TeamConfig() {
   team_config = Persistence::getInstance()->loadTeams();
-  bool defaults_updated = false;
+  bool settings_changed = false;
+
+  settings_changed = checkTeamConfig() || settings_changed;
+  settings_changed = checkTeamOrder() || settings_changed;
+
+  if (settings_changed) {
+    saveSettings();
+  }
+}
+
+bool TeamConfig::checkTeamConfig() {
+  bool teams_updated = false;
 
   // Since the team config is usually pretty small, establish defaults
   // one-by-one, if necessary.
   if (team_config.teams_size() < 1) {
     setTeam(team_config.add_teams(), proto::TeamInfo_TeamType_HOME_TEAM);
-    defaults_updated = true;
+    teams_updated = true;
   } else if (team_config.teams(0).team_type() !=
              proto::TeamInfo_TeamType_HOME_TEAM) {
     setTeam(team_config.mutable_teams(0), proto::TeamInfo_TeamType_HOME_TEAM);
-    defaults_updated = true;
+    teams_updated = true;
   }
 
   if (team_config.teams_size() < 2) {
     setTeam(team_config.add_teams(), proto::TeamInfo_TeamType_AWAY_TEAM);
-    defaults_updated = true;
+    teams_updated = true;
   } else if (team_config.teams(1).team_type() !=
              proto::TeamInfo_TeamType_AWAY_TEAM) {
     setTeam(team_config.mutable_teams(1), proto::TeamInfo_TeamType_AWAY_TEAM);
-    defaults_updated = true;
+    teams_updated = true;
   }
-  if (defaults_updated) {
-    saveSettings();
+
+  // TODO: Add support for "Extra" team
+
+  return teams_updated;
+}
+
+bool TeamConfig::checkTeamOrder() {
+  bool order_updated = false;
+
+  // TODO: Check for and remove duplicates.
+
+  if (team_config.single_screen_order_size() < 2) {
+    bool home_present = false;
+    bool away_present = false;
+    for (int i = 0; i < team_config.single_screen_order_size(); i++) {
+      if (team_config.single_screen_order()[i] ==
+          proto::TeamInfo_TeamType_HOME_TEAM) {
+        home_present = true;
+      }
+      if (team_config.single_screen_order()[i] ==
+          proto::TeamInfo_TeamType_AWAY_TEAM) {
+        away_present = true;
+      }
+    }
+    if (!home_present) {
+      team_config.add_single_screen_order(proto::TeamInfo_TeamType_HOME_TEAM);
+      order_updated = true;
+    }
+    if (!away_present) {
+      team_config.add_single_screen_order(proto::TeamInfo_TeamType_AWAY_TEAM);
+      order_updated = true;
+    }
   }
+
+  // TODO: Add support for "Extra" team;
+  return order_updated;
 }
 
 void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {

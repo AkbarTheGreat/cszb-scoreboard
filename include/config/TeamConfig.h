@@ -43,6 +43,8 @@ class TeamConfig {
   static TeamConfig *singleton_instance;
   proto::TeamConfig team_config;
   TeamConfig();
+  bool checkTeamConfig();
+  bool checkTeamOrder();
   int indexForTeam(proto::TeamInfo_TeamType team);
   void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
 };

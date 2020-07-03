@@ -16,8 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "gtest/gtest.h"
 #include "config.pb.h"
+#include "gtest/gtest.h"
 #include "util/ProtoUtil.h"
 
 extern wxColourDatabase *wxTheColourDatabase;
@@ -101,6 +101,48 @@ TEST_F(ProtoUtilTest, CovertsAProtoColorCorrectly) {
 
   Color converted_black = ProtoUtil::wxClr(proto_black);
   EXPECT_EQ(converted_black, wx_black);
+}
+
+TEST_F(ProtoUtilTest, SideContainsTests) {
+  // Test all sides
+  EXPECT_TRUE(ProtoUtil::sideContains(ProtoUtil::allSide(),
+                                      proto::TeamInfo_TeamType_HOME_TEAM));
+  EXPECT_TRUE(ProtoUtil::sideContains(ProtoUtil::allSide(),
+                                      proto::TeamInfo_TeamType_AWAY_TEAM));
+  EXPECT_TRUE(ProtoUtil::sideContains(ProtoUtil::allSide(),
+                                      proto::TeamInfo_TeamType_EXTRA_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::allSide(),
+                                       proto::TeamInfo_TeamType_TEAM_ERROR));
+
+  // Test home side
+  EXPECT_TRUE(ProtoUtil::sideContains(ProtoUtil::homeSide(),
+                                      proto::TeamInfo_TeamType_HOME_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::homeSide(),
+                                       proto::TeamInfo_TeamType_AWAY_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::homeSide(),
+                                       proto::TeamInfo_TeamType_EXTRA_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::homeSide(),
+                                       proto::TeamInfo_TeamType_TEAM_ERROR));
+
+  // Test away side
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::awaySide(),
+                                       proto::TeamInfo_TeamType_HOME_TEAM));
+  EXPECT_TRUE(ProtoUtil::sideContains(ProtoUtil::awaySide(),
+                                      proto::TeamInfo_TeamType_AWAY_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::awaySide(),
+                                       proto::TeamInfo_TeamType_EXTRA_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::awaySide(),
+                                       proto::TeamInfo_TeamType_TEAM_ERROR));
+
+  // Test "no" side
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::noSide(),
+                                       proto::TeamInfo_TeamType_HOME_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::noSide(),
+                                       proto::TeamInfo_TeamType_AWAY_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::noSide(),
+                                       proto::TeamInfo_TeamType_EXTRA_TEAM));
+  EXPECT_FALSE(ProtoUtil::sideContains(ProtoUtil::noSide(),
+                                       proto::TeamInfo_TeamType_TEAM_ERROR));
 }
 
 }  // namespace test
