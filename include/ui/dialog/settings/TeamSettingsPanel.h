@@ -31,10 +31,18 @@ namespace cszb_scoreboard {
 class TeamSettingsPanel : public wxPanel {
  public:
   TeamSettingsPanel(wxPanel *parent, int display_number);
+  void copyFrom(TeamSettingsPanel *other);
   Color teamColor();
 
  private:
+  int index;
+  wxStaticText *label;
   wxColourPickerCtrl *color_picker;
+  wxPanel *button_panel;
+  wxButton *down_button;
+  wxButton *up_button;
+  void createButtonPanel();
+  void moveTeam(wxCommandEvent &event);
 };
 
 }  // namespace cszb_scoreboard

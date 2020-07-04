@@ -31,6 +31,7 @@ class TeamSettingsPage : public SettingsPage {
  public:
   TeamSettingsPage(wxWindow *parent);
   void saveSettings() override;
+  void swapTeams(int a, int b);
   bool validateSettings() override;
 
  private:

@@ -50,4 +50,11 @@ void TeamSettingsPage::saveSettings() {
   TeamConfig::getInstance()->saveSettings();
 }
 
+void TeamSettingsPage::swapTeams(int a, int b) {
+  TeamSettingsPanel temp(this, 0);
+  temp.copyFrom(team_settings_panels[a]);
+  team_settings_panels[a]->copyFrom(team_settings_panels[b]);
+  team_settings_panels[b]->copyFrom(&temp);
+}
+
 }  // namespace cszb_scoreboard
