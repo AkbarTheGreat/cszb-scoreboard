@@ -29,16 +29,17 @@ const std::string ARROW_TOOL_TIP =
     "Change the order of teams appear when two teams share the same screen.  "
     "Requires a restart to take effect.";
 
-TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
+TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index,
+                                     proto::TeamInfo_TeamType team)
     : wxPanel(parent) {
   index = team_index;
-  proto::TeamInfo team_info = TeamConfig::getInstance()->teamInfo(index);
+  team_type = team;
 
   wxGridSizer* sizer = new wxGridSizer(0, 2, 0, 0);
 
   // Label for this display
   label = new wxStaticText(this, wxID_ANY,
-                           TeamConfig::getInstance()->teamName(index));
+                           TeamConfig::getInstance()->teamName(team_type));
   wxFont font = label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);
   label->SetFont(font);
@@ -56,7 +57,7 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
   sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Default Color")), 0, wxALL,
              BORDER_SIZE);
   color_picker = new wxColourPickerCtrl(
-      this, wxID_ANY, TeamConfig::getInstance()->teamColor(index));
+      this, wxID_ANY, TeamConfig::getInstance()->teamColor(team));
   sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
 
   SetSizerAndFit(sizer);
@@ -65,6 +66,7 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index)
 void TeamSettingsPanel::copyFrom(TeamSettingsPanel* other) {
   label->SetLabelText(other->label->GetLabelText());
   color_picker->SetColour(other->color_picker->GetColour());
+  team_type = other->team_type;
 }
 
 void TeamSettingsPanel::createButtonPanel() {

@@ -120,6 +120,14 @@ void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {
   }
 }
 
+void TeamConfig::setSingleScreenOrder(
+    std::vector<proto::TeamInfo_TeamType> order) {
+  team_config.clear_single_screen_order();
+  for (auto item : order) {
+    team_config.add_single_screen_order(item);
+  }
+}
+
 std::vector<proto::TeamInfo_TeamType> TeamConfig::singleScreenOrder() {
   std::vector<proto::TeamInfo_TeamType> order;
   for (auto config_entry : team_config.single_screen_order()) {
@@ -128,18 +136,19 @@ std::vector<proto::TeamInfo_TeamType> TeamConfig::singleScreenOrder() {
   return order;
 }
 
-std::vector<int> TeamConfig::indicesForSide(proto::ScreenSide side) {
-  std::vector<int> index_list;
+std::vector<proto::TeamInfo_TeamType> TeamConfig::teamsForSide(
+    proto::ScreenSide side) {
+  std::vector<proto::TeamInfo_TeamType> team_list;
   if (side.home()) {
-    index_list.push_back(indexForTeam(proto::TeamInfo_TeamType_HOME_TEAM));
+    team_list.push_back(proto::TeamInfo_TeamType_HOME_TEAM);
   }
   if (side.away()) {
-    index_list.push_back(indexForTeam(proto::TeamInfo_TeamType_AWAY_TEAM));
+    team_list.push_back(proto::TeamInfo_TeamType_AWAY_TEAM);
   }
   if (side.extra()) {
-    index_list.push_back(indexForTeam(proto::TeamInfo_TeamType_EXTRA_TEAM));
+    team_list.push_back(proto::TeamInfo_TeamType_EXTRA_TEAM);
   }
-  return index_list;
+  return team_list;
 }
 
 int TeamConfig::indexForTeam(proto::TeamInfo_TeamType team) {
@@ -151,21 +160,20 @@ int TeamConfig::indexForTeam(proto::TeamInfo_TeamType team) {
   return 0;  // Not a great default, but we can live with it.
 }
 
-Color TeamConfig::teamColor(int index) {
-  return ProtoUtil::wxClr(team_config.teams(index).team_color());
+Color TeamConfig::teamColor(proto::TeamInfo_TeamType team) {
+  return ProtoUtil::wxClr(team_config.teams(indexForTeam(team)).team_color());
 }
 
 std::vector<Color> TeamConfig::teamColor(proto::ScreenSide side) {
-  std::vector<int> indices = indicesForSide(side);
   std::vector<Color> colors;
-  for (auto index : indices) {
-    colors.push_back(teamColor(index));
+  for (auto team : teamsForSide(side)) {
+    colors.push_back(teamColor(team));
   }
   return colors;
 }
 
-wxString TeamConfig::teamName(int index) {
-  switch (team_config.teams(index).team_type()) {
+wxString TeamConfig::teamName(proto::TeamInfo_TeamType team) {
+  switch (team_config.teams(indexForTeam(team)).team_type()) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
       return wxT("Home");
     case proto::TeamInfo_TeamType_AWAY_TEAM:
@@ -177,15 +185,10 @@ wxString TeamConfig::teamName(int index) {
 
 int TeamConfig::numberOfTeams() { return team_config.teams_size(); }
 
-void TeamConfig::setColor(int index, Color color) {
-  proto::TeamInfo *team_info = team_config.mutable_teams(index);
+void TeamConfig::setColor(proto::TeamInfo_TeamType team, Color color) {
+  proto::TeamInfo *team_info = team_config.mutable_teams(indexForTeam(team));
   proto::Color *proto_color = team_info->mutable_team_color();
   ProtoUtil::protoClr(color, proto_color);
-}
-
-proto::TeamInfo TeamConfig::teamInfo(int index) {
-  assert(index < team_config.teams_size() && index >= 0);
-  return team_config.teams(index);
 }
 
 void TeamConfig::saveSettings() {

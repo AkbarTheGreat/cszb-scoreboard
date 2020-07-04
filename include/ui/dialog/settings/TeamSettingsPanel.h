@@ -30,12 +30,15 @@ namespace cszb_scoreboard {
 
 class TeamSettingsPanel : public wxPanel {
  public:
-  TeamSettingsPanel(wxPanel *parent, int display_number);
+  TeamSettingsPanel(wxPanel *parent, int team_index,
+                    proto::TeamInfo_TeamType team);
   void copyFrom(TeamSettingsPanel *other);
   Color teamColor();
+  proto::TeamInfo_TeamType team() { return team_type; }
 
  private:
   int index;
+  proto::TeamInfo_TeamType team_type;
   wxStaticText *label;
   wxColourPickerCtrl *color_picker;
   wxPanel *button_panel;

@@ -28,8 +28,9 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 TeamSettingsPage::TeamSettingsPage(wxWindow* parent) : SettingsPage(parent) {
   wxSizer* sizer = UiUtil::sizer(0, 1);
 
-  for (int i = 0; i < TeamConfig::getInstance()->numberOfTeams(); ++i) {
-    TeamSettingsPanel* team_panel = new TeamSettingsPanel(this, i);
+  int i = 0;
+  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+    TeamSettingsPanel* team_panel = new TeamSettingsPanel(this, i++, team);
     team_settings_panels.push_back(team_panel);
     sizer->Add(team_panel, 0, wxALL, BORDER_SIZE);
   }
@@ -43,15 +44,17 @@ bool TeamSettingsPage::validateSettings() {
 }
 
 void TeamSettingsPage::saveSettings() {
-  for (int i = 0; i < team_settings_panels.size(); ++i) {
-    TeamConfig::getInstance()->setColor(i,
-                                        team_settings_panels[i]->teamColor());
+  std::vector<proto::TeamInfo_TeamType> team_order;
+  for (auto panel : team_settings_panels) {
+    TeamConfig::getInstance()->setColor(panel->team(), panel->teamColor());
+    team_order.push_back(panel->team());
   }
+  TeamConfig::getInstance()->setSingleScreenOrder(team_order);
   TeamConfig::getInstance()->saveSettings();
 }
 
 void TeamSettingsPage::swapTeams(int a, int b) {
-  TeamSettingsPanel temp(this, 0);
+  TeamSettingsPanel temp(this, 0, proto::TeamInfo_TeamType_TEAM_ERROR);
   temp.copyFrom(team_settings_panels[a]);
   team_settings_panels[a]->copyFrom(team_settings_panels[b]);
   team_settings_panels[b]->copyFrom(&temp);

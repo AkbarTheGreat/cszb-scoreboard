@@ -30,15 +30,14 @@ namespace cszb_scoreboard {
 class TeamConfig {
  public:
   static TeamConfig *getInstance();
-  std::vector<int> indicesForSide(proto::ScreenSide side);
   int numberOfTeams();
   void saveSettings();
-  void setColor(int index, Color color);
+  void setColor(proto::TeamInfo_TeamType team, Color color);
+  void setSingleScreenOrder(std::vector<proto::TeamInfo_TeamType> order);
   std::vector<proto::TeamInfo_TeamType> singleScreenOrder();
-  proto::TeamInfo teamInfo(int index);
-  Color teamColor(int index);
+  Color teamColor(proto::TeamInfo_TeamType team);
   std::vector<Color> teamColor(proto::ScreenSide side);
-  wxString teamName(int index);
+  wxString teamName(proto::TeamInfo_TeamType team);
 
  private:
   static TeamConfig *singleton_instance;
@@ -48,5 +47,6 @@ class TeamConfig {
   bool checkTeamOrder();
   int indexForTeam(proto::TeamInfo_TeamType team);
   void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
+  std::vector<proto::TeamInfo_TeamType> teamsForSide(proto::ScreenSide side);
 };
 }  // namespace cszb_scoreboard
