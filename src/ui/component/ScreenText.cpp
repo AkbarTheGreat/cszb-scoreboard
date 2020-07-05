@@ -60,7 +60,8 @@ ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
   ScreenText* screen_text = new ScreenText(parent, size);
   std::vector<ScreenTextSide*> text_sides;
 
-  wxSize split_size = splitScreenSize(size.x, size.y, sides.size());
+  wxSize split_size =
+      splitScreenSize(size.x, size.y, preview->text_sides.size());
 
   for (auto source_text_side : preview->text_sides) {
     text_sides.push_back(
