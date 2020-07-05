@@ -74,6 +74,7 @@ class ScreenText : public wxPanel {
   void initializeSides(std::vector<ScreenTextSide*> text_sides);
   void singleDisplay();
   void splitDisplays();
+  static wxSize splitScreenSize(int x, int y, int number_of_splits);
 };
 
 }  // namespace cszb_scoreboard

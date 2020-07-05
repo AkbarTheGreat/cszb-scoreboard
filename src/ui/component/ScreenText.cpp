@@ -39,7 +39,7 @@ ScreenText* ScreenText::getPreview(wxWindow* parent, wxString initial_text,
   ScreenText* screen_text = new ScreenText(parent, size);
   std::vector<ScreenTextSide*> text_sides;
 
-  wxSize split_size(size.x / sides.size(), size.y);
+  wxSize split_size = splitScreenSize(size.x, size.y, sides.size());
 
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
     for (auto side : sides) {
@@ -60,7 +60,7 @@ ScreenText* ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
   ScreenText* screen_text = new ScreenText(parent, size);
   std::vector<ScreenTextSide*> text_sides;
 
-  wxSize split_size(size.x / preview->text_sides.size(), size.y);
+  wxSize split_size = splitScreenSize(size.x, size.y, sides.size());
 
   for (auto source_text_side : preview->text_sides) {
     text_sides.push_back(
@@ -192,12 +192,19 @@ void ScreenText::splitDisplays() {
   if (text_sides.size() < 2) {
     return;
   }
-  wxSize split_size(GetSize().x / text_sides.size(), GetSize().y);
-  text_sides[0]->setSize(split_size);
+  text_sides[0]->setSize(
+      splitScreenSize(GetSize().x, GetSize().y, text_sides.size()));
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->Show();
   }
   Update();
+}
+
+wxSize ScreenText::splitScreenSize(int x, int y, int number_of_splits) {
+  if (number_of_splits > 0) {
+    x = x / number_of_splits;
+  }
+  return wxSize(x, y);
 }
 
 void ScreenText::setAll(const ScreenText& source) {
