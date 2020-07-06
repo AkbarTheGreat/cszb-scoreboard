@@ -41,7 +41,12 @@ ScreenText* ScreenText::getPreview(wxWindow* parent, wxString initial_text,
 
   wxSize split_size = splitScreenSize(size.x, size.y, sides.size());
 
-  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+  std::vector<proto::TeamInfo_TeamType> screen_order =
+      TeamConfig::getInstance()->singleScreenOrder();
+  // Add the error value to the back, so it can still be created if needed
+  screen_order.push_back(proto::TeamInfo_TeamType_TEAM_ERROR);
+
+  for (auto team : screen_order) {
     for (auto side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
         text_sides.push_back(
