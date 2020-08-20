@@ -20,7 +20,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/home/akbar/other_src/osxcross/target/toolchain.cma
 # So rebuild wxwidgets for osx?  This requires getting all of the submodules: git submodule update --init
 # Then, cmake in a new subdirectory:  mkdir osxcross; cd osxcross; cmake -DCMAKE_TOOLCHAIN_FILE=/home/akbar/other_src/osxcross/target/toolchain.cmake ..
 # You'll need to edit the config (ccmake) to set Release on and shaerd off.  Also change the install root.
-#
+#  I edited include/wx/osx/private/available.h because the builtin checks were passing spuriously and I was getting an undefined symbol.  Rebuilt wxWidgets and now it sort of runs.
 #
 #
 #

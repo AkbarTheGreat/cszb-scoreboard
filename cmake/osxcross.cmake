@@ -25,10 +25,12 @@ set(OSX_FRAMEWORKS
 	"-framework OpenGL"
 	)
 
+if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+	message(FATAL_ERROR "Must define CMAKE_OSX_DEPLOYMENT_TARGET")
+endif()
+
 set(wxWidgets_LINK_FLAGS
-	# This ignores this symbol being undefined.  It's gross and I hate it.
-	-Wl,-U,___isOSVersionAtLeast
-	-mmacosx-version-min=10.10
+	-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}
 	${OSX_FRAMEWORKS}
 	)
 

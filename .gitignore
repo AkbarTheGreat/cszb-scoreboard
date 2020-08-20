@@ -3,6 +3,6 @@
 ################################################################################
 
 /.vs
-/out/build
+/out
 /CMakeSettings.json
 /etc/scripts/release_token
