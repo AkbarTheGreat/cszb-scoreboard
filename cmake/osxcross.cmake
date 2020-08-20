@@ -1,20 +1,43 @@
-# Add stuff here.
+# cmake/osxcross.cmake : Cmake configuration for cross-compiling the scoreboard
+# for MacOS via osxcross.
+# 
+# Copyright 2020 Tracy Beck
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-#set(wx_root "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/Library/Frameworks/wxWidgets.framework/Versions/wxWidgets/3.1") 
-set(wx_root "${OSXCROSS_TARGET_DIR}")
-set(wxWidgets_LIB_DIR ${wx_root}/wxwidgets/lib)
-set(macports_lib_dir ${wx_root}/macports/pkgs/opt/local/lib)
+if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+	message(FATAL_ERROR "Must define CMAKE_OSX_DEPLOYMENT_TARGET")
+endif()
 
-message("Including OSXCROSS specific wxWidgets")
+if(NOT OSXCROSS_TARGET_DIR)
+	message(FATAL_ERROR "Must define OSXCROSS_TARGET_DIR")
+endif()
 
-# wxWidgets auto-discovery doesn't work at all here, so we'll manually reproduce it.  I don't love it.  We may only need this for dynamic libs
+# I don't know exactly how to make this work better, but it's kind of fragile.
+# TODO: Find this cmake file dynamically.
+set(wxWidgets_USE_FILE /usr/share/cmake-3.16/Modules/UsewxWidgets.cmake)
 
-#if(LINKING_TYPE MATCHES "static")
-#else()
-#endif()
+set(wx_root "${OSXCROSS_TARGET_DIR}/wxwidgets")
+set(wxWidgets_LIB_DIR ${wx_root}/lib)
+set(macports_lib_dir ${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib)
+
+message("Including OSXCROSS specific wxWidgets configuration.")
+
+# wxWidgets auto-discovery doesn't work at all here, so we'll manually
+# reproduce it.  I don't love it, but it is what it is.
+
 set(wxWidgets_FOUND TRUE)
-#set(wxWidgets_DEFINITIONS WXUSINGDLL __WXOSX_COCOA__)
-#set(wxWidgets_DEFINITIONS_DEBUG)
+set(wxWidgets_DEFINITIONS __WXOSX_COCOA__)
 
 set(OSX_FRAMEWORKS
 	"-framework IOKit"
@@ -25,29 +48,25 @@ set(OSX_FRAMEWORKS
 	"-framework OpenGL"
 	)
 
-if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-	message(FATAL_ERROR "Must define CMAKE_OSX_DEPLOYMENT_TARGET")
-endif()
-
 set(wxWidgets_LINK_FLAGS
 	-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}
 	${OSX_FRAMEWORKS}
 	)
 
-set(wxWidgets_USE_FILE /usr/share/cmake-3.16/Modules/UsewxWidgets.cmake)
 
-#set(wxWidgets_INCLUDE_DIRS ${wx_root}/lib/wx/include/osx_cocoa-unicode-3.1 ${wx_root}/include/wx-3.1)
 set(wxWidgets_INCLUDE_DIRS
-	${wx_root}/wxwidgets/lib/wx/include/osx_cocoa-unicode-static-3.1
-	${wx_root}/wxwidgets/include/wx-3.1
+	${wx_root}/lib/wx/include/osx_cocoa-unicode-static-3.1
+	${wx_root}/include/wx-3.1
 	)
+
 set(wxWidgets_LIBRARY_DIRS ${wx_root}/lib)
+
+# There are likely a bunch of libraries in here we don't need.  The plan is to pare down this list.
 set(wxWidgets_LIBRARIES
 	${wxWidgets_LIB_DIR}/libwx_baseu-3.1.a
 	${wxWidgets_LIB_DIR}/libwx_baseu_net-3.1.a
 	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-3.1.a
 	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_aui-3.1.a
-	#${wxWidgets_LIB_DIR}/libxar.a
 	${wxWidgets_LIB_DIR}/libwxjpeg-3.1.a
 	${wxWidgets_LIB_DIR}/libwxpng-3.1.a
 	${wxWidgets_LIB_DIR}/libwxtiff-3.1.a
@@ -55,11 +74,6 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libiconv.a
 	${macports_lib_dir}/libpsl.a
 	${macports_lib_dir}/libunistring.a
-	#${wxWidgets_LIB_DIR}/lib/jpeg.a
-	#${wxWidgets_LIB_DIR}/lib/libpng16.a
-	#${wxWidgets_LIB_DIR}/lib/lzma.a
-	#${wxWidgets_LIB_DIR}/lib/tiff.a
-	#${wxWidgets_LIB_DIR}/lib/zlib.a
 
 	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-3.1.a
 	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_propgrid-3.1.a
