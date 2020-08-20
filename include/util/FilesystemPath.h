@@ -19,7 +19,9 @@ limitations under the License.
 */
 #pragma once
 
-#ifndef __APPLE__
+#ifdef __APPLE__
+#include <string>
+#else
 #include <filesystem>
 #endif
 
@@ -27,10 +29,34 @@ namespace cszb_scoreboard {
 
 #ifdef __APPLE__
 class FilesystemPath {
-  // TODO: Put OSX implementation of our class here.
  public:
-  static bool remove(const FilesystemPath& p) {}
-  static void rename(const FilesystemPath& a, const FilesystemPath& b) {}
+  FilesystemPath();
+  FilesystemPath(const std::string& str);
+
+  static bool remove(const FilesystemPath& p);
+  static void rename(const FilesystemPath& a, const FilesystemPath& b);
+
+  const FilesystemPath filename();
+  const FilesystemPath pathname();
+  void replace_filename(const std::string new_filename);
+  const std::string string() const {return path_string;}
+  const char* c_str() const {return path_string.c_str();}
+
+  const int compare(const FilesystemPath& b) const;
+
+  friend bool operator< (const FilesystemPath& a, const FilesystemPath& b){
+    return a.compare(b) < 0;
+  }
+  friend bool operator==(const FilesystemPath& a, const FilesystemPath& b){
+    return a.compare(b) == 0;
+  }
+  friend bool operator> (const FilesystemPath& a, const FilesystemPath& b){ return b < a; }
+  friend bool operator<=(const FilesystemPath& a, const FilesystemPath& b){ return !(a > b); }
+  friend bool operator>=(const FilesystemPath& a, const FilesystemPath& b){ return !(a < b); }
+  friend bool operator!=(const FilesystemPath& a, const FilesystemPath& b){ return !(a == b); }
+
+ private:
+  std::string path_string;
 };
 #else
 // Simply alias to std::filesystem::path for non-Mac platforms.
@@ -45,6 +71,7 @@ class FilesystemPath : public std::filesystem::path {
 
   static void rename(const FilesystemPath& a, const FilesystemPath& b) {
     std::filesystem::rename(a, b);
+
   }
 };
 #endif

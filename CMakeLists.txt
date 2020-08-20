@@ -18,6 +18,16 @@ cmake_minimum_required(VERSION 3.9.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
 
+if(OSXCROSS_HOST)
+	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/osxcross.cmake)
+endif()
+
+if(MSVC OR OSXCROSS_HOST)
+	set(LINKING_TYPE "static")
+else()
+	set(LINKING_TYPE "dynamic")
+endif()
+
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
 
@@ -27,18 +37,19 @@ set (Protobuf_MSVC_STATIC_RUNTIME ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
-if(MSVC)
-	set(LINKING_TYPE "static")
-else()
-	set(LINKING_TYPE "dynamic")
-endif()
-
 find_package(Protobuf REQUIRED)
 find_package(GTest REQUIRED)
 find_package(jsoncpp REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
 initialize_vcpkg_code()
+
+if(NOT wxWidgets_LIBRARIES)
+   find_package(wxWidgets REQUIRED COMPONENTS net core base aui)
+   include(${wxWidgets_USE_FILE})
+endif()
+
+message("CONFIG: ${wxWidgets_CONFIG_EXECUTABLE}")
 
 if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_definitions(-DwxDEBUG_LEVEL=0)
