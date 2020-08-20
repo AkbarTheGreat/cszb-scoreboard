@@ -18,16 +18,6 @@ cmake_minimum_required(VERSION 3.9.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
 
-if(OSXCROSS_HOST)
-	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/osxcross.cmake)
-endif()
-
-if(MSVC OR OSXCROSS_HOST)
-	set(LINKING_TYPE "static")
-else()
-	set(LINKING_TYPE "dynamic")
-endif()
-
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
 
@@ -36,6 +26,18 @@ set (Protobuf_BUILD_SHARED_LIBS OFF)
 set (Protobuf_MSVC_STATIC_RUNTIME ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+
+if(MSVC OR OSXCROSS_HOST)
+	set(LINKING_TYPE "static")
+else()
+	set(LINKING_TYPE "dynamic")
+endif()
+
+message("LINKING TYPE: ${LINKING_TYPE}")
+
+if(OSXCROSS_HOST)
+	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/osxcross.cmake)
+endif()
 
 find_package(Protobuf REQUIRED)
 find_package(GTest REQUIRED)
