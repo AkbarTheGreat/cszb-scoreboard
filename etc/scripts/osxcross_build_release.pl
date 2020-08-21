@@ -1,5 +1,27 @@
 #!/usr/bin/perl
 
+=pod
+
+This script builds a MacOS app bundle of the scoreboard using osxcross on a
+Linux machine.
+
+Copyright 2020 Tracy Beck
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+=cut
+
+
 use 5.030;
 use Cwd;
 use File::Copy;
@@ -27,11 +49,12 @@ sub build_release {
   setup_env();
   mkpath $BUILD_PATH;
   chdir $BUILD_PATH;
-  system 'cmake' .
-    ' -DCMAKE_OSX_DEPLOYMENT_TARGET=' . $OSX_VERSION .
-    ' -DCMAKE_TOOLCHAIN_FILE=' . $ENV{'OSXCROSS_TARGET_DIR'} .  '/toolchain.cmake' .
-    ' -DCMAKE_BUILD_TYPE=Release' .
-    ' ../..';
+  system 'cmake'
+    . ' -DCMAKE_OSX_DEPLOYMENT_TARGET=' . $OSX_VERSION
+    . ' -DCMAKE_TOOLCHAIN_FILE=' . $ENV{'OSXCROSS_TARGET_DIR'}
+                                 . '/toolchain.cmake'
+    . ' -DCMAKE_BUILD_TYPE=Release'
+    . ' ../..';
   system 'make cszb-scoreboard';
 }
 
@@ -65,25 +88,32 @@ sub plist_content {
 }
 
 sub fix_dylibs {
-  my ($target_binary, @processed_libs) = @_;
+  my ($process_binary, @processed_libs) = @_;
 
   # Avoid doubling back, because that way lies infinite recursion.
-  next if any {$_ eq $target_binary} @processed_libs;
-  push @processed_libs, $target_binary;
+  next if any {$_ eq $process_binary} @processed_libs;
+  push @processed_libs, $process_binary;
 
-  my $otool = $ENV{'OSXCROSS_TARGET_DIR'} . '/bin/' . $ENV{'OSXCROSS_HOST'} . '-otool';
-  my $install_name_tool = $ENV{'OSXCROSS_TARGET_DIR'} . '/bin/' . $ENV{'OSXCROSS_HOST'} . '-install_name_tool';
+  my $otool = $ENV{'OSXCROSS_TARGET_DIR'} . '/bin/' . $ENV{'OSXCROSS_HOST'}
+    . '-otool';
+  my $install_name_tool = $ENV{'OSXCROSS_TARGET_DIR'} . '/bin/'
+    . $ENV{'OSXCROSS_HOST'} . '-install_name_tool';
+  my $source_lib = $ENV{'OSXCROSS_TARGET_DIR'} . '/macports/pkgs/opt/local/lib/'
+    . $lib;
+  my $target_lib = $APP_BIN . q{/} . $lib;
 
-  my @libraries = `$otool -L $target_binary`;
+  my @libraries = `$otool -L $process_binary`;
   for my $lib (@libraries) {
     chomp($lib);
     next unless $lib =~ s#^\s+/opt/local/lib/##;
     $lib =~ s/\s+\(.*//;
     unless (-e $APP_BIN . q{/} . $lib) {
-      copy($ENV{'OSXCROSS_TARGET_DIR'} . '/macports/pkgs/opt/local/lib/' . $lib, $APP_BIN . q{/} . $lib) or die 'Copy of library ' . $lib . ' failed: ' . $!;
+      copy($source_lib, $target_lib)
+        or die 'Copy of library ' . $lib . ' failed: ' . $!;
     }
-    system($install_name_tool . ' -change /opt/local/lib/' . $lib . ' @executable_path/' . $lib . q{ } . $target_binary);
-    fix_dylibs($APP_BIN . q{/} . $lib, @processed_libs);
+    system($install_name_tool . ' -change /opt/local/lib/' . $lib
+      . ' @executable_path/' . $lib . q{ } . $process_binary);
+    fix_dylibs($target_lib, @processed_libs);
   }
 
 }
@@ -99,7 +129,8 @@ sub create_app_package {
   mkpath $APP_RESOURCES;
   open my $out_fh, '>', $APP_CONTAINER . '/Info.plist';
   print {$out_fh} plist_content($version);
-  copy('./cszb-scoreboard', $APP_BIN . '/cszb-scoreboard') or die 'Copy of binary failed: ' . $!;
+  copy('./cszb-scoreboard', $APP_BIN . '/cszb-scoreboard')
+    or die 'Copy of binary failed: ' . $!;
   chmod 0777, $APP_BIN . '/cszb-scoreboard';
   copy_libraries();
 }
