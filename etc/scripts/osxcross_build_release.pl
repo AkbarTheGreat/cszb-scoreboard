@@ -98,15 +98,17 @@ sub fix_dylibs {
     . '-otool';
   my $install_name_tool = $ENV{'OSXCROSS_TARGET_DIR'} . '/bin/'
     . $ENV{'OSXCROSS_HOST'} . '-install_name_tool';
-  my $source_lib = $ENV{'OSXCROSS_TARGET_DIR'} . '/macports/pkgs/opt/local/lib/'
-    . $lib;
-  my $target_lib = $APP_BIN . q{/} . $lib;
 
   my @libraries = `$otool -L $process_binary`;
   for my $lib (@libraries) {
     chomp($lib);
     next unless $lib =~ s#^\s+/opt/local/lib/##;
     $lib =~ s/\s+\(.*//;
+
+    my $source_lib = $ENV{'OSXCROSS_TARGET_DIR'}
+      . '/macports/pkgs/opt/local/lib/' . $lib;
+    my $target_lib = $APP_BIN . q{/} . $lib;
+
     unless (-e $APP_BIN . q{/} . $lib) {
       copy($source_lib, $target_lib)
         or die 'Copy of library ' . $lib . ' failed: ' . $!;
