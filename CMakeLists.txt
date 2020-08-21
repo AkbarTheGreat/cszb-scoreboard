@@ -33,8 +33,6 @@ else()
 	set(LINKING_TYPE "dynamic")
 endif()
 
-message("LINKING TYPE: ${LINKING_TYPE}")
-
 if(OSXCROSS_HOST)
 	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/osxcross.cmake)
 endif()

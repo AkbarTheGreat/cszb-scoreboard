@@ -39,11 +39,11 @@ const int FilesystemPath::compare(const FilesystemPath& p) const {
 bool FilesystemPath::remove(const FilesystemPath& p) {
   if (p.path_string == "") return false;
   // cstdio remove returns 0 for success, so return the negation of it's result
-  return !remove(p.path_string);
+  return !std::remove(p.path_string.c_str());
 }
 
 void FilesystemPath::rename(const FilesystemPath& a, const FilesystemPath& b) {
-  rename(a.path_string, b.path_string);
+  std::rename(a.path_string.c_str(), b.path_string.c_str());
 }
 
 const FilesystemPath FilesystemPath::filename() {
