@@ -50,6 +50,7 @@ class AutoUpdate {
  public:
   static AutoUpdate *getInstance();
   bool checkForUpdate(const std::string current_version);
+  bool updateIsDownloadable() { return update_size > 0; }
   bool downloadUpdate(std::vector<char> &update_data);
   void removeOldUpdate();
   bool updateInPlace();

@@ -33,6 +33,16 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+#ifdef _WIN32
+const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
+#else
+#ifdef __APPLE__
+const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS";
+#else
+const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
+#endif  // ifdef __APPLE__
+#endif  // ifdef _WIN32
+
 const char *AUTO_UPDATE_BACKUP_NAME = "old_version_to_be_deleted";
 
 const char *LATEST_VERSION_URL =
@@ -141,12 +151,17 @@ bool AutoUpdate::checkForUpdate(const std::string current_version) {
 
   update_available = false;
   if (new_version > old_version) {
-    Json::Value download_url = root["assets"][0]["browser_download_url"];
     Json::Value assets = root.get("assets", {});
-    Json::Value asset_zero = assets.get((Json::Value::ArrayIndex)0, "");
-    update_size = asset_zero.get("size", "0").asInt();
-    new_binary_url = asset_zero.get("browser_download_url", "").asString();
-    update_available = true;
+    for (const auto &asset : assets) {
+      std::string platform_name = asset.get("label", "").asString();
+      update_size = 0;
+      update_available = true;
+      if (platform_name == AUTO_UPDATE_PLATFORM_NAME) {
+        update_size = asset.get("size", "0").asInt();
+        new_binary_url = asset.get("browser_download_url", "").asString();
+        break;
+      }
+    }
   }
   return update_available;
 }

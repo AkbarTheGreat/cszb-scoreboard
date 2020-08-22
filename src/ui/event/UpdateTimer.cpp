@@ -39,20 +39,20 @@ void UpdateTimer::Notify() {
   bool new_version_available =
       AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version_available) {
-#ifdef _WIN32
-    main_view->SetStatusText("New version found, downloading...");
-    if (AutoUpdate::getInstance()->updateInPlace()) {
-      main_view->SetStatusText(
-          "Auto-update downloaded.  Please restart to apply.");
+    if (AutoUpdate::getInstance()->updateIsDownloadable()) {
+      main_view->SetStatusText("New version found, downloading...");
+      if (AutoUpdate::getInstance()->updateInPlace()) {
+        main_view->SetStatusText(
+            "Auto-update downloaded.  Please restart to apply.");
+      } else {
+        main_view->SetStatusText(
+            "Auto-update failed!  Please manually update scoreboard.");
+      }
     } else {
       main_view->SetStatusText(
-          "Auto-update failed!  Please manually update scoreboard.");
+          "New version found, please go to "
+          "github.com/AkbarTheGreat/cszb-scoreboard to update.");
     }
-#else
-    main_view->SetStatusText(
-        "New version found, please go to "
-        "github.com/AkbarTheGreat/cszb-scoreboard to update.");
-#endif
   }
 
   // If called as a one-shot, we need to establish this as a periodic event.
