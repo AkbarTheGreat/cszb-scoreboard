@@ -27,18 +27,19 @@ limitations under the License.
 
 use 5.030;
 use strict;
-use File::Basename qw{dirname};
+
 use File::Path qw{make_path rmtree};
 use Getopt::Long qw{GetOptions};
-use HTTP::Tiny;
-use JSON;
+
+use FindBin;
+use lib "$FindBin::RealBin";
+
+# Project local libraries
+use GitHub;
 
 our $TEMP_ROOT = 'C:/temp';
 our $GIT_REPO = 'git@github.com:AkbarTheGreat/cszb-scoreboard.git';
 our $VERSION_FILE = '/include/ScoreboardCommon.h';
-
-# This needs to be populated with a valid Github token.  Mine is not checked in for obvious reasons.
-our $GIT_TOKEN = read_token();
 
 # These should be the parts that are very specific to my machine
 our $VCPKG_CMAKE = 'C:/Users/akbar/Software/vcpkg/scripts/buildsystems/vcpkg.cmake',
@@ -49,7 +50,7 @@ our $CTEST_CMD = $CMAKE_ROOT . 'ctest.exe';
 
 my ($opt_help, $opt_version, $opt_dry_run, $opt_keep_dir, $opt_skip_git);
 
-my ($repo_path, $upload_url);
+my $repo_path;
 
 my %options = (
     'help|?'    => {'val'=>\$opt_help,'help'=>'This help'},
@@ -86,12 +87,6 @@ sub run_cmd {
         return $?;
 	}
     return 0;
-}
-
-sub read_token{
-    my $token_file = dirname($0) . '/release_token';
-    open my $fh, '<', $token_file or die 'Cannot open ' . $token_file . ' for read: ' . $!;
-    return <$fh>;
 }
 
 sub get_repo {
@@ -169,70 +164,6 @@ sub commit_and_tag {
     return run_cmd($GIT_CMD, 'push');
 }
 
-sub create_release {
-    die 'Incorrect number of arguments to create_release' if (@_ != 0);
-
-	my $json = encode_json {
-        'tag_name' => 'release_' . $opt_version,
-        'name' => $opt_version,
-        'body' => "Released via script.  No better description yet.",
-        'draft' => $JSON::true,
-        'prerelease' => $JSON::false,
-    };
-
-    my $http = HTTP::Tiny->new(
-        default_headers => {
-        'Authorization' => 'Token ' . $GIT_TOKEN,
-        'Content-Type' => 'application/json',
-    });
-
-    my $response = $http->post(
-        'https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases' => {
-        content => $json,
-    });
-
-    if ($response->{'success'} && $response->{'reason'} eq 'Created') {
-        my $content =  decode_json $response->{'content'} ;
-        $upload_url = $content->{'upload_url'};
-        return 0;
-	}
-    $? = $response->{'reason'};
-    return 1;
-}
-sub upload_binary {
-    die 'Incorrect number of arguments to upload_binary' if (@_ != 0);
-
-    my $url = $upload_url;
-    my $binary;
-
-    $url =~ s/\{\?name,label}/?name=cszb-scoreboard.exe&label=Win64/;
-
-    open my ($fh), '<:raw', $repo_path . '/out/build/Release/cszb-scoreboard.exe';
-    for (<$fh>) {$binary .= $_;}
-    close $fh;
-
-    open my ($out_fh), '>:raw', $repo_path . '/out/build/Release/copy_test.exe';
-    print {$out_fh} $binary;
-    close $out_fh;
-
-    my $http = HTTP::Tiny->new(
-        default_headers => {
-        'Authorization' => 'Token ' . $GIT_TOKEN,
-        'Content-Type' => 'application/octet-stream',
-    });
-
-    my $response = $http->post(
-        $url => {
-        content => $binary,
-    });
-
-    if ($response->{'success'} && $response->{'reason'} eq 'Created') {
-        return 0;
-	}
-    $? = $response->{'reason'};
-    return 1;
-}
-
 sub main {
     parse_options();
     $repo_path = $TEMP_ROOT . '/' . $$;
@@ -257,11 +188,18 @@ sub main {
 			die 'Error updating repo: ' . $!;
 		}
     }
-    if (create_release() != 0) {
+
+    my $upload_path = GitHub::create_release($opt_version);
+    unless ($upload_path) {
         die 'Error creating release at Github: ' . $!;
 	}
-    if (upload_binary() != 0) {
-        die 'Error adding file to release at Github: ' . $!;
+    if (GitHub::upload_binary(
+        $upload_path,
+        'cszb-scoreboard.exe',
+        'Win64',
+        $repo_path . '/out/build/Release/cszb-scoreboard.exe',
+        $repo_path . '/out/build/Release/copy_test.exe') != 0) {
+          die 'Error adding file to release at Github: ' . $!;
 	}
     
     # Clean up now that we're done.
