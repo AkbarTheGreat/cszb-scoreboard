@@ -37,7 +37,10 @@ namespace cszb_scoreboard {
 const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
 #else
 #ifdef __APPLE__
-const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS";
+// Autoupdate disabled for MacOS for now, some work needs to happen to download
+// and unzip the release, which is more complicated than a Windows install. Once
+// the mechanism is in place, remove -autoupdatedisabled- below.
+const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
 #else
 const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
