@@ -16,9 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Set the platform to always be Windows, to make multi-platform testing stable.
-#define SCOREBOARD_AUTO_UPDATE_PLATFORM "Win64"
-
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -66,7 +63,7 @@ TEST(AutoUpdateTest, NoNewVersionFound) {
 TEST(AutoUpdateTest, VersionDownloads) {
   // We need to ask for an update before it'll ever work anyway, so assert on it
   // in case it goes wrong, although NewVersionFound properly tests this.
-  EXPECT_TRUE(AutoUpdate::getInstance()->checkForUpdate("0.0.0"));
+  EXPECT_TRUE(AutoUpdate::getInstance()->checkForUpdate("0.0.0", "Win64"));
   std::vector<char> update_data;
   EXPECT_TRUE(AutoUpdate::getInstance()->downloadUpdate(update_data));
   EXPECT_GT(update_data.size(), 4000);

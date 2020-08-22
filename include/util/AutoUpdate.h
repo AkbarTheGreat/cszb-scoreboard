@@ -26,6 +26,8 @@ limitations under the License.
 #include <string>
 #include <vector>
 
+#include "ScoreboardCommon.h"
+
 namespace cszb_scoreboard {
 
 class Version {
@@ -54,6 +56,9 @@ class AutoUpdate {
   bool downloadUpdate(std::vector<char> &update_data);
   void removeOldUpdate();
   bool updateInPlace();
+
+PUBLIC_TEST_ONLY
+  bool checkForUpdate(const std::string current_version, std::string platform_name);
 
  private:
   static AutoUpdate *singleton_instance;

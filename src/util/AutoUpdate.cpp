@@ -33,24 +33,18 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-// SCOREBOARD_AUTO_UPDATE_PLATFORM is settalbe to allow overriding the platform,
-// for testing.
-#ifdef SCOREBOARD_AUTO_UPDATE_PLATFORM
-const char *AUTO_UPDATE_PLATFORM_NAME = SCOREBOARD_AUTO_UPDATE_PLATFORM;
-#else
 #ifdef _WIN32
 const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
-#else
+#else // ifdef _WIN32
 #ifdef __APPLE__
 // Autoupdate disabled for MacOS for now, some work needs to happen to download
 // and unzip the release, which is more complicated than a Windows install. Once
 // the mechanism is in place, remove -autoupdatedisabled- below.
 const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
-#else
+#else // ifdef __APPLE__
 const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
 #endif  // ifdef _WIN32
-#endif  // ifdef SCOREBOARD_AUTO_UPDATE_PLATFORM
 
 const char *AUTO_UPDATE_BACKUP_NAME = "old_version_to_be_deleted";
 
@@ -138,7 +132,9 @@ FilesystemPath backupPath() {
   return backup_path;
 }
 
-bool AutoUpdate::checkForUpdate(const std::string current_version) {
+bool AutoUpdate::checkForUpdate(const std::string current_version) { return checkForUpdate(current_version, AUTO_UPDATE_PLATFORM_NAME); }
+
+bool AutoUpdate::checkForUpdate(const std::string current_version, std::string platform_name) {
   std::vector<char> raw_json;
 
   CURLcode curl_response = curlRead(LATEST_VERSION_URL, raw_json);
@@ -165,7 +161,7 @@ bool AutoUpdate::checkForUpdate(const std::string current_version) {
       std::string platform_name = asset.get("label", "").asString();
       update_size = 0;
       update_available = true;
-      if (platform_name == AUTO_UPDATE_PLATFORM_NAME) {
+      if (platform_name == platform_name) {
         update_size = asset.get("size", "0").asInt();
         new_binary_url = asset.get("browser_download_url", "").asString();
         break;
