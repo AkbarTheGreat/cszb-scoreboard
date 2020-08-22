@@ -100,7 +100,7 @@ sub get_repo {
 }
 
 sub update_version {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    die 'Incorrect number of arguments to update_version' if (@_ != 0);
 
     return 0 if $opt_dry_run;
 
@@ -122,7 +122,7 @@ sub update_version {
 }
 
 sub cmake {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    die 'Incorrect number of arguments to cmake' if (@_ != 0);
 
     unless ($opt_dry_run) {
         make_path($repo_path . '/out/build');
@@ -143,19 +143,19 @@ sub cmake {
 }
 
 sub make {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    die 'Incorrect number of arguments to make' if (@_ != 0);
     
     return run_cmd($CMAKE_CMD, '--build', '.', '--config', 'Release')
 }
 
 sub test {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    die 'Incorrect number of arguments to test' if (@_ != 0);
     
     return run_cmd($CTEST_CMD);
 }
 
 sub commit_and_tag {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    die 'Incorrect number of arguments to commit_and_tag' if (@_ != 0);
     
     my $retval = run_cmd($GIT_CMD, 'add', $repo_path . $VERSION_FILE);
     return $retval if $retval;
@@ -170,7 +170,7 @@ sub commit_and_tag {
 }
 
 sub create_release {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    die 'Incorrect number of arguments to create_release' if (@_ != 0);
 
 	my $json = encode_json {
         'tag_name' => 'release_' . $opt_version,
@@ -200,7 +200,7 @@ sub create_release {
     return 1;
 }
 sub upload_binary {
-    die 'Incorrect number of arguments to get_repo' if (@_ != 0);
+    die 'Incorrect number of arguments to upload_binary' if (@_ != 0);
 
     my $url = $upload_url;
     my $binary;
