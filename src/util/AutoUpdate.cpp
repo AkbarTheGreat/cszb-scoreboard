@@ -35,13 +35,13 @@ namespace cszb_scoreboard {
 
 #ifdef _WIN32
 const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
-#else // ifdef _WIN32
+#else  // ifdef _WIN32
 #ifdef __APPLE__
 // Autoupdate disabled for MacOS for now, some work needs to happen to download
 // and unzip the release, which is more complicated than a Windows install. Once
 // the mechanism is in place, remove -autoupdatedisabled- below.
 const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
-#else // ifdef __APPLE__
+#else   // ifdef __APPLE__
 const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
 #endif  // ifdef _WIN32
@@ -132,9 +132,12 @@ FilesystemPath backupPath() {
   return backup_path;
 }
 
-bool AutoUpdate::checkForUpdate(const std::string current_version) { return checkForUpdate(current_version, AUTO_UPDATE_PLATFORM_NAME); }
+bool AutoUpdate::checkForUpdate(const std::string current_version) {
+  return checkForUpdate(current_version, AUTO_UPDATE_PLATFORM_NAME);
+}
 
-bool AutoUpdate::checkForUpdate(const std::string current_version, std::string platform_name) {
+bool AutoUpdate::checkForUpdate(const std::string current_version,
+                                std::string platform_name) {
   std::vector<char> raw_json;
 
   CURLcode curl_response = curlRead(LATEST_VERSION_URL, raw_json);

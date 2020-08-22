@@ -58,7 +58,8 @@ class AutoUpdate {
   bool updateInPlace();
 
 PUBLIC_TEST_ONLY
-  bool checkForUpdate(const std::string current_version, std::string platform_name);
+  bool checkForUpdate(const std::string current_version,
+                      std::string platform_name);
 
  private:
   static AutoUpdate *singleton_instance;
