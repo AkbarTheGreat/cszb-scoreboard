@@ -16,6 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Set the platform to always be Windows, to make multi-platform testing stable.
+#define SCOREBOARD_AUTO_UPDATE_PLATFORM "Win64"
+
 #include <vector>
 
 #include "gtest/gtest.h"

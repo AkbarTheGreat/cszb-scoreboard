@@ -33,6 +33,11 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+// SCOREBOARD_AUTO_UPDATE_PLATFORM is settalbe to allow overriding the platform,
+// for testing.
+#ifdef SCOREBOARD_AUTO_UPDATE_PLATFORM
+const char *AUTO_UPDATE_PLATFORM_NAME = SCOREBOARD_AUTO_UPDATE_PLATFORM;
+#else
 #ifdef _WIN32
 const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
 #else
@@ -45,6 +50,7 @@ const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
 const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
 #endif  // ifdef _WIN32
+#endif  // ifdef SCOREBOARD_AUTO_UPDATE_PLATFORM
 
 const char *AUTO_UPDATE_BACKUP_NAME = "old_version_to_be_deleted";
 
