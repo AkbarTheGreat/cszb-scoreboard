@@ -26,7 +26,7 @@ package GitHub {
 
 use 5.030;
 
-use File::Basename qw{dirname};
+use FindBin;
 use HTTP::Tiny;
 use JSON;
 
@@ -68,7 +68,7 @@ sub create_release {
 sub read_token{
     die 'Incorrect number of arguments to release_token' if (@_ != 0);
 
-    my $token_file = dirname($0) . '/release_token';
+    my $token_file = $FindBin::RealBin . '/release_token';
     open my $fh, '<', $token_file or die 'Cannot open ' . $token_file . ' for read: ' . $!;
     return <$fh>;
 }
