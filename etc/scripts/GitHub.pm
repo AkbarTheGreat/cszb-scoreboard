@@ -55,7 +55,6 @@ sub create_release {
         'https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases' => {
         content => $json,
     });
-    say $response;
 
     if ($response->{'success'} && $response->{'reason'} eq 'Created') {
         my $content =  decode_json $response->{'content'} ;
@@ -64,6 +63,37 @@ sub create_release {
     $? = $response->{'reason'};
     return undef;
 }
+
+sub find_existing_release {
+    die 'Incorrect number of arguments to find_existing_release' if (@_ != 1);
+    my ($version) = @_;
+
+    my $http = HTTP::Tiny->new(
+        default_headers => {
+        'Authorization' => 'Token ' . $GIT_TOKEN,
+        'Content-Type' => 'application/json',
+    });
+
+    my $response = $http->get(
+        'https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases' 
+    );
+
+    unless ($response->{'success'} && $response->{'reason'} eq 'OK') {
+      $? = $response->{'reason'};
+      return undef;
+    }
+
+    my $content =  decode_json $response->{'content'} ;
+
+    for my $release (@{$content}) {
+      if ($release->{'name'} eq $version) {
+        return $release->{'upload_url'};
+      }
+    }
+
+    return undef;
+}
+
 
 sub read_token{
     die 'Incorrect number of arguments to release_token' if (@_ != 0);

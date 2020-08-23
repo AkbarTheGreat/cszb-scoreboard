@@ -29,6 +29,12 @@ use File::Path qw(mkpath);
 use File::Which;
 use List::AllUtils qw(any);
 
+use FindBin;
+use lib "$FindBin::RealBin";
+
+# Project local libraries
+use GitHub;
+
 our $BUILD_PATH = 'out/osxcross';
 our $BASE_DIR = Cwd::cwd();
 our $OSX_VERSION = '10.12';
@@ -137,11 +143,39 @@ sub create_app_package {
   copy_libraries();
 }
 
+sub zip_package {
+  chdir $BUILD_PATH;
+  system 'zip -r CszbScoreboard CszbScoreboard.app';
+}
+
+sub upload_to_github {
+  my ($version) = @_;
+
+  chdir $BUILD_PATH;
+
+  my $upload_path = GitHub::find_existing_release($version);
+  unless ($upload_path) {
+    die 'Error finding release from Github: ' . $!;
+  }
+  if (GitHub::upload_binary(
+      $upload_path,
+      'CszbScoreboard.zip',
+      'MacOS',
+      './CszbScoreboard.zip') != 0) {
+    die 'Error adding file to release at Github: ' . $!;
+  }
+}
+
 sub main {
   my ($version) = @_;
   build_release();
   create_app_package($version);
-  say 'Release ' . $version . ' created.';
+  say 'Release ' . $version . ' created, uploading to GitHub';
+
+  zip_package();
+  upload_to_github($version);
+
+  say 'Process complete.';
 }
 
 die 'Requires exactly one argument, the version' unless @ARGV == 1;
