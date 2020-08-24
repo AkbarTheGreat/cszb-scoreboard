@@ -49,6 +49,9 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
   AddPage(controllers.back(), "Text");
 
   bindEvents();
+
+  // Force proper initialization of the preview at application start.
+  controllers[0]->updatePreview();
 }
 
 void ControlPanel::bindEvents() {
