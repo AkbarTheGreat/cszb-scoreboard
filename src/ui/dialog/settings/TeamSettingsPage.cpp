@@ -44,11 +44,32 @@ bool TeamSettingsPage::validateSettings() {
 }
 
 void TeamSettingsPage::saveSettings() {
+  bool restart_warning = false;
   std::vector<proto::TeamInfo_TeamType> team_order;
+  std::vector<proto::TeamInfo_TeamType> previous_team_order =
+      TeamConfig::getInstance()->singleScreenOrder();
+
+  if (previous_team_order.size() != team_settings_panels.size()) {
+    restart_warning = true;
+  }
+
   for (auto panel : team_settings_panels) {
     TeamConfig::getInstance()->setColor(panel->team(), panel->teamColor());
+
+    if (restart_warning || previous_team_order.size() <= team_order.size() ||
+        panel->team() != previous_team_order[team_order.size()]) {
+      restart_warning = true;
+    }
+
     team_order.push_back(panel->team());
   }
+
+  if (restart_warning) {
+    wxMessageBox(
+        "WARNING: You have changed team ordering.  To see this take "
+        "effect, you must restart the application.");
+  }
+
   TeamConfig::getInstance()->setSingleScreenOrder(team_order);
   TeamConfig::getInstance()->saveSettings();
 }
