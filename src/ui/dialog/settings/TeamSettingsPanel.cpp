@@ -26,8 +26,8 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string ARROW_TOOL_TIP =
-    "Change the order of teams appear when two teams share the same screen.  "
-    "Requires a restart to take effect.";
+    "Change the order of teams appear on the same screen and in score "
+    "controls.  Requires a restart to take effect.";
 
 TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index,
                                      proto::TeamInfo_TeamType team)

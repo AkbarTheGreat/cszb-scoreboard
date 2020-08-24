@@ -37,6 +37,8 @@ class ScoreControl : public ScreenTextController {
  private:
   ScoreControl(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenTextController(preview_panel, parent) {}
+  void addHomeAwayWidgetPair(wxSizer *sizer, wxWindow *home_widget,
+                             wxWindow *away_widget);
   void addToEntry(wxTextCtrl *entry, int amount);
   void awayUpdated(wxKeyEvent &event);
   void awayNameUpdated(wxKeyEvent &event);

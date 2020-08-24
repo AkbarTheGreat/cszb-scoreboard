@@ -129,36 +129,45 @@ void ScoreControl::bindEvents() {
                           this);
 }
 
+/* Since the conrol panel alternates between home and away buttons to make
+ * columns, this method adds them in the correct order to mirror the
+ * single-window positioning. */
+void ScoreControl::addHomeAwayWidgetPair(wxSizer *sizer, wxWindow *home_widget,
+                                         wxWindow *away_widget) {
+  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+    if (team == proto::TeamInfo_TeamType_HOME_TEAM) {
+      sizer->Add(home_widget, 0, wxALL, BORDER_SIZE);
+    } else if (team == proto::TeamInfo_TeamType_AWAY_TEAM) {
+      sizer->Add(away_widget, 0, wxALL, BORDER_SIZE);
+    }
+  }
+}
+
 void ScoreControl::positionWidgets(wxPanel *control_panel) {
   wxSizer *team_control_sizer = UiUtil::sizer(0, 2);
 
-  team_control_sizer->Add(home_score_label, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(away_score_label, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(home_color_picker, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(away_color_picker, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(home_name_entry, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(away_name_entry, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(home_score_entry, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(away_score_entry, 0, wxALL, BORDER_SIZE);
+  addHomeAwayWidgetPair(team_control_sizer, home_score_label, away_score_label);
+  addHomeAwayWidgetPair(team_control_sizer, home_color_picker,
+                        away_color_picker);
+  addHomeAwayWidgetPair(team_control_sizer, home_name_entry, away_name_entry);
+  addHomeAwayWidgetPair(team_control_sizer, home_score_entry, away_score_entry);
 
   wxSizer *home_panel_sizer = UiUtil::sizer(1, 0);
   home_panel_sizer->Add(home_plus_1, 0, wxALL, BORDER_SIZE);
   home_panel_sizer->Add(home_plus_5, 0, wxALL, BORDER_SIZE);
   home_panel_sizer->Add(home_minus_1, 0, wxALL, BORDER_SIZE);
   home_button_panel->SetSizerAndFit(home_panel_sizer);
-  team_control_sizer->Add(home_button_panel, 0, wxALL, BORDER_SIZE);
 
   wxSizer *away_panel_sizer = UiUtil::sizer(1, 0);
   away_panel_sizer->Add(away_plus_1, 0, wxALL, BORDER_SIZE);
   away_panel_sizer->Add(away_plus_5, 0, wxALL, BORDER_SIZE);
   away_panel_sizer->Add(away_minus_1, 0, wxALL, BORDER_SIZE);
   away_button_panel->SetSizerAndFit(away_panel_sizer);
-  team_control_sizer->Add(away_button_panel, 0, wxALL, BORDER_SIZE);
 
-  team_control_sizer->Add(home_logo_label, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(away_logo_label, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(home_logo_button, 0, wxALL, BORDER_SIZE);
-  team_control_sizer->Add(away_logo_button, 0, wxALL, BORDER_SIZE);
+  addHomeAwayWidgetPair(team_control_sizer, home_button_panel,
+                        away_button_panel);
+  addHomeAwayWidgetPair(team_control_sizer, home_logo_label, away_logo_label);
+  addHomeAwayWidgetPair(team_control_sizer, home_logo_button, away_logo_button);
 
   team_controls_panel->SetSizerAndFit(team_control_sizer);
 
