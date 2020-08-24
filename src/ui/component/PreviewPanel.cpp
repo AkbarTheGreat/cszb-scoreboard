@@ -158,8 +158,9 @@ void PreviewPanel::updatePreviewsFromSettings() {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
         DisplayConfig::getInstance()->displayDetails(i);
-    if (display_info.side().error() || display_info.side().home() ||
-        display_info.side().away()) {
+    if (screen_index < screens.size() &&
+        (display_info.side().error() || display_info.side().home() ||
+         display_info.side().away())) {
       screens[screen_index++]->resetFromSettings(i);
     }
   }
