@@ -39,6 +39,7 @@ class ProtoUtil {
   static proto::ScreenSide awaySide();
   static proto::ScreenSide allSide();
   static proto::ScreenSide noSide();
+  static proto::ScreenSide teamSide(proto::TeamInfo_TeamType team);
   static bool sideContains(proto::ScreenSide side,
                            proto::TeamInfo_TeamType team);
 };

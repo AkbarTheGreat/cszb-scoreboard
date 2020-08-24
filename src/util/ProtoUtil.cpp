@@ -106,6 +106,19 @@ proto::ScreenSide ProtoUtil::noSide() {
   return side;
 }
 
+proto::ScreenSide ProtoUtil::teamSide(proto::TeamInfo_TeamType team) {
+  switch (team) {
+    case proto::TeamInfo_TeamType_HOME_TEAM:
+      return homeSide();
+    case proto::TeamInfo_TeamType_AWAY_TEAM:
+      return awaySide();
+    case proto::TeamInfo_TeamType_EXTRA_TEAM: // Extra isn't implemented yet
+    case proto::TeamInfo_TeamType_TEAM_ERROR:
+    default:
+      return noSide();
+  }
+}
+
 bool ProtoUtil::sideContains(proto::ScreenSide side,
                              proto::TeamInfo_TeamType team) {
   switch (team) {

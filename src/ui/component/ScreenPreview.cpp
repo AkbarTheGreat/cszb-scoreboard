@@ -23,6 +23,7 @@ limitations under the License.
 #include "config/TeamConfig.h"
 #include "ui/UiUtil.h"
 #include "ui/component/ScreenText.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -86,8 +87,14 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
   current_widget->SetSize(previewSize(monitor_number));
   proto::ScreenSide side =
       DisplayConfig::getInstance()->displayDetails(monitor_number).side();
-  current_widget->setBackground(TeamConfig::getInstance()->teamColor(side)[0],
-                                side);
+  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+    if (ProtoUtil::sideContains(side, team)) {
+      proto::ScreenSide effective_side = ProtoUtil::teamSide(team);
+      current_widget->setBackground(
+          TeamConfig::getInstance()->teamColor(effective_side)[0],
+          effective_side);
+    }
+  }
   current_widget->Refresh();
 }
 
