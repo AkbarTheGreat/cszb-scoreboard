@@ -102,13 +102,13 @@ wxTextCtrl *TextEntry::textField() { return text_entry; }
 void TextEntry::updatePreview() {
   // Send the combined text to both previews
   if (screen_selection->allSelected()) {
-    previewPanel()->setTextForPreview(all_text, all_font_size, all_color, false,
+    previewPanel()->setTextForPreview(all_text, all_font_size, all_color, true,
                                       ProtoUtil::allSide());
   } else {
     previewPanel()->setTextForPreview(home_text, home_font_size, home_color,
-                                      false, ProtoUtil::homeSide());
+                                      true, ProtoUtil::homeSide());
     previewPanel()->setTextForPreview(away_text, away_font_size, away_color,
-                                      false, ProtoUtil::awaySide());
+                                      true, ProtoUtil::awaySide());
   }
 }
 
