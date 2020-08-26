@@ -27,6 +27,7 @@ use Cwd;
 use File::Copy;
 use File::Path qw(mkpath);
 use File::Which;
+use Getopt::Long qw{GetOptions};
 use List::AllUtils qw(any);
 
 use FindBin;
@@ -41,6 +42,33 @@ our $OSX_VERSION = '10.12';
 our $APP_CONTAINER = 'CszbScoreboard.app/Contents';
 our $APP_BIN = $APP_CONTAINER . '/MacOS';
 our $APP_RESOURCES = $APP_CONTAINER .  '/Resources';
+
+my ($opt_help, $opt_version, $opt_dry_run);
+
+my %options = (
+    'help|?'    => {'val'=>\$opt_help,'help'=>'This help'},
+    'version=s' => {'val'=>\$opt_version,'help'=>'Version to release (required)'},
+    'dry_run'   => {'val'=>\$opt_dry_run,'help'=>'Dry run only. (do not upload to git)'},
+);
+
+sub usage {
+    say $0 . ': Release the Kraken!  Err, scoreboard.';
+    for my $opt (keys %options) {
+        say "\t" . $opt . ': ' . $options{$opt}{'help'};
+	}
+    exit 0;
+}
+
+sub parse_options {
+    my %parseable_options;
+    for my $key (keys %options) {
+        $parseable_options{$key} = $options{$key}{'val'};
+	}
+    GetOptions(%parseable_options) or usage();
+    usage() if $opt_help;
+    usage unless $opt_version;
+}
+
 
 sub setup_env {
   my $osxcross_path = which 'osxcross';
@@ -79,7 +107,7 @@ sub plist_content {
   <key>CFBundleName</key>
   <string>cszb-scoreboard</string>
   <key>CFBundleIconFile</key>
-  <string>scoreboard.icns</string>
+  <string>scoreboard</string>
   <key>CFBundleShortVersionString</key>
   <string>};
   my $plist_suffix = q{</string>
@@ -139,6 +167,8 @@ sub create_app_package {
   print {$out_fh} plist_content($version);
   copy('./cszb-scoreboard', $APP_BIN . '/cszb-scoreboard')
     or die 'Copy of binary failed: ' . $!;
+  copy('../../resources/scoreboard.icns', $APP_RESOURCES . '/scoreboard.icns')
+    or die 'Copy of icon failed: ' . $!;
   chmod 0777, $APP_BIN . '/cszb-scoreboard';
   copy_libraries();
 }
@@ -155,31 +185,33 @@ sub upload_to_github {
 
   my $upload_path = GitHub::find_existing_release($version);
   unless ($upload_path) {
-    die 'Error finding release from Github: ' . $!;
+    die 'Error finding release from GitHub ' . $!;
   }
   if (GitHub::upload_binary(
       $upload_path,
       'CszbScoreboard.zip',
       'MacOS',
       './CszbScoreboard.zip') != 0) {
-    die 'Error adding file to release at Github: ' . $!;
+    die 'Error adding file to release at GitHub ' . $!;
   }
 }
 
 sub main {
-  my ($version) = @_;
+  parse_options();
   build_release();
-  create_app_package($version);
-  say 'Release ' . $version . ' created, uploading to GitHub';
+  create_app_package($opt_version);
+  say 'Release ' . $opt_version . ' created';
 
-  zip_package();
-  upload_to_github($version);
+  if ($opt_dry_run) {
+    say 'Dry run enabled, skipping upload to GitHub.';
+  } else {
+    say 'Uploading to GitHub.';
+    zip_package();
+    upload_to_github($opt_version);
+  }
 
   say 'Process complete.';
 }
 
-die 'Requires exactly one argument, the version' unless @ARGV == 1;
-
-my $version = shift;
-main($version);
+main();
 
