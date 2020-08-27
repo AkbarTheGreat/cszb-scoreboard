@@ -49,6 +49,7 @@ class EditImageLibraryDialog : public wxPropertySheetDialog {
   void nameUpdated(wxKeyEvent& event);
   void positionWidgets();
   void saveSettings();
+  void tagDeleted(wxListEvent& event);
   void tagsUpdated(wxListEvent& event);
   bool validateSettings();
 };

@@ -76,6 +76,8 @@ void EditImageLibraryDialog::bindEvents() {
   name_entry->Bind(wxEVT_KEY_UP, &EditImageLibraryDialog::nameUpdated, this);
   tag_list->Bind(wxEVT_LIST_END_LABEL_EDIT,
                  &EditImageLibraryDialog::tagsUpdated, this);
+  tag_list->Bind(wxEVT_LIST_DELETE_ITEM, &EditImageLibraryDialog::tagDeleted,
+                 this);
 }
 
 void EditImageLibraryDialog::onOk(wxCommandEvent& event) {
@@ -108,7 +110,10 @@ void EditImageLibraryDialog::saveSettings() {
   for (auto filename : file_list->getFilenames()) {
     std::vector<std::string> tags;
     for (auto tag : images[filename].tags()) {
-      tags.push_back(tag);
+      // Strip out empty tags that're left by accident.
+      if (tag != "") {
+        tags.push_back(tag);
+      }
     }
     ImageLibrary::getInstance()->addImage(filename, images[filename].name(),
                                           tags);
@@ -130,6 +135,21 @@ void EditImageLibraryDialog::fileSelected(wxListEvent& event) {
 
 void EditImageLibraryDialog::nameUpdated(wxKeyEvent& event) {
   images[file_list->selectedFilename()].set_name(name_entry->GetValue());
+}
+
+void EditImageLibraryDialog::tagDeleted(wxListEvent& event) {
+  wxArrayString tags;
+  tag_list->GetStrings(tags);
+
+  tags.RemoveAt(event.GetIndex(), 1);
+
+  tag_list->SetStrings(tags);
+
+  FilesystemPath filename = file_list->selectedFilename();
+  images[filename].clear_tags();
+  for (auto tag : tags) {
+    images[filename].add_tags(tag);
+  }
 }
 
 void EditImageLibraryDialog::tagsUpdated(wxListEvent& event) {
