@@ -135,7 +135,12 @@ void EditImageLibraryDialog::nameUpdated(wxKeyEvent& event) {
 void EditImageLibraryDialog::tagsUpdated(wxListEvent& event) {
   wxArrayString tags;
   tag_list->GetStrings(tags);
-  tags.Add(event.GetText());
+  int index = event.GetIndex();
+  if (index >= tags.size()) {
+    tags.Add(event.GetText());
+  } else {
+    tags[index] = event.GetText();
+  }
   tag_list->SetStrings(tags);
 
   FilesystemPath filename = file_list->selectedFilename();
