@@ -53,7 +53,7 @@ ImageLibrary testLibrary() {
   image = library.add_images();
   image->set_name("bathroom");
   image->set_file_path(
-      "/test/but-why.jpg");  // Because we can us stall for partial matches
+      "/test/but-why.jpg");  // Because we can use (s)tall for partial matches
   image->add_tags("gender");
   image->add_tags("neutral");
   image->add_tags("stall");
@@ -148,9 +148,8 @@ TEST(ImageLibraryTest, PartialWordSearches) {
 
   // Empty search returns everything
   result = library.search("");
-  ASSERT_STR_VECTOR(
-      result.matchedTags(),
-      {"cute", "dog", "gender", "neutral", "rodent", "short", "stall", "tall"});
+  ASSERT_STR_VECTOR(result.matchedTags(), {"cute", "dog", "gender", "neutral",
+                                           "rodent", "short", "stall", "tall"});
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/corgi.jpg", "/test/great_dane.jpg",
                       "/test/capy.jpg", "/test/but-why.jpg"});
@@ -159,6 +158,17 @@ TEST(ImageLibraryTest, PartialWordSearches) {
   result = library.search("notgonnafindit");
   ASSERT_STR_VECTOR(result.matchedTags(), {});
   ASSERT_PATH_VECTOR(result.filenames(), {});
+}
+
+// Makes sure that the de-duplication logic works correctly
+TEST(ImageLibraryTest, DeduplicatingSearches) {
+  ImageLibrary library = testLibrary();
+  // This single-letter search should match 3/4 images
+  auto result = library.search("o");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"dog", "rodent", "short"});
+  ASSERT_PATH_VECTOR(
+      result.filenames(),
+      {"/test/corgi.jpg", "/test/great_dane.jpg", "/test/capy.jpg"});
 }
 
 }  // namespace test

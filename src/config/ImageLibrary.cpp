@@ -147,8 +147,8 @@ ImageSearchResults ImageLibrary::partialMatchSearch(std::string query) {
   std::vector<proto::ImageInfo> matched_images;
   std::vector<std::string> matched_tags;
   for (auto image : library.images()) {
+    bool image_matched = false;
     for (auto tag : image.tags()) {
-      bool image_matched = false;
       if (std::search(tag.begin(), tag.end(), query.begin(), query.end()) !=
           tag.end()) {
         if (!image_matched) {
