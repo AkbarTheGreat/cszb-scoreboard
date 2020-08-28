@@ -90,6 +90,10 @@ CURLcode curlRead(const char *url, std::vector<char> &response_buffer) {
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response_buffer);
   curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
+#ifdef __APPLE__
+  curl_easy_setopt(curl_handle, CURLOPT_CAINFO, std::getenv("SSL_CERT_FILE"));
+#endif
+
   // Actual HTTP request
   CURLcode curl_response = curl_easy_perform(curl_handle);
 
@@ -161,10 +165,10 @@ bool AutoUpdate::checkForUpdate(const std::string current_version,
   if (new_version > old_version) {
     Json::Value assets = root.get("assets", {});
     for (const auto &asset : assets) {
-      std::string platform_name = asset.get("label", "").asString();
+      std::string asset_platform_name = asset.get("label", "").asString();
       update_size = 0;
       update_available = true;
-      if (platform_name == platform_name) {
+      if (asset_platform_name == platform_name) {
         update_size = asset.get("size", "0").asInt();
         new_binary_url = asset.get("browser_download_url", "").asString();
         break;

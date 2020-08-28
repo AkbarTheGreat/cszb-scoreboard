@@ -88,7 +88,7 @@ sub build_release {
     . ' -DCMAKE_TOOLCHAIN_FILE=' . $ENV{'OSXCROSS_TARGET_DIR'}
                                  . '/toolchain.cmake'
     . ' -DCMAKE_BUILD_TYPE=Release'
-    . ' ../..';
+    . ' ' . $BASE_DIR;
   system 'make cszb-scoreboard';
 }
 
@@ -101,7 +101,7 @@ sub plist_content {
   <key>CFBundleGetInfoString</key>
   <string>ComedySportz Scoreboard</string>
   <key>CFBundleExecutable</key>
-  <string>cszb-scoreboard</string>
+  <string>scoreboard.sh</string>
   <key>CFBundleIdentifier</key>
   <string>dev.akbar.cszb-scoreboard</string>
   <key>CFBundleName</key>
@@ -167,9 +167,15 @@ sub create_app_package {
   print {$out_fh} plist_content($version);
   copy('./cszb-scoreboard', $APP_BIN . '/cszb-scoreboard')
     or die 'Copy of binary failed: ' . $!;
-  copy('../../resources/scoreboard.icns', $APP_RESOURCES . '/scoreboard.icns')
+  copy($BASE_DIR . '/resources/scoreboard.icns', $APP_RESOURCES . '/scoreboard.icns')
     or die 'Copy of icon failed: ' . $!;
+  copy($BASE_DIR . '/resources/app_package/scoreboard.sh', $APP_BIN . '/scoreboard.sh')
+    or die 'Copy of bootstrap script failed: ' . $!;
+  copy($ENV{'OSXCROSS_TARGET_DIR'} . '/macports/pkgs/opt/local/share/curl/curl-ca-bundle.crt', 
+    $APP_BIN . '/cert.pem')
+    or die 'Copy of SSL certs failed: ' . $!;
   chmod 0777, $APP_BIN . '/cszb-scoreboard';
+  chmod 0777, $APP_BIN . '/scoreboard.sh';
   copy_libraries();
 }
 
