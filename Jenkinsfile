@@ -49,6 +49,13 @@ make all'''
           }
         }
 
+        stage('MacOS Build') {
+          steps {
+            sh '''cd out/build/osxcross
+make all'''
+          }
+        }
+
       }
     }
 
