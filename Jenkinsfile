@@ -24,7 +24,7 @@ pipeline {
             OSXCROSS_TARGET_DIR = '/opt/osxcross'
           }
           steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release'
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
             cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=${env.OSX_VERSION} -DCMAKE_TOOLCHAIN_FILE=${env.OSXCROSS_TARGET_DIR}/toolchain.cmake'
             )
           }
