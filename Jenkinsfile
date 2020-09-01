@@ -15,6 +15,22 @@ pipeline {
           }
         }
 
+        stage('MacOS Cmake Generation') {
+          environment {
+            OSXCROSS_SDK = 'darwin19'
+            OSXCROSS_TARGET = 'darwin19'
+            OSXCROSS_HOST = 'x86_64-apple-darwin19'
+            OSX_VERSION = 10.12
+            OSXCROSS_TARGET_DIR = '/opt/osxcross'
+          }
+          steps {
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release'
+            cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=${env.OSX_VERSION} -DCMAKE_TOOLCHAIN_FILE=${env.OSXCROSS_TARGET_DIR}/toolchain.cmake'
+            )
+          }
+        }
+
+
       }
     }
 
