@@ -60,6 +60,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/lib/wxmsw31ud_aui.lib
 			${wxWidgets_LIB_DIR}/lib/wxmsw31ud_core.lib
 			${wxWidgets_LIB_DIR}/lib/wxbase31ud.lib
+			${wxWidgets_LIB_DIR}/lib/wxregexud.lib
 			${wxWidgets_LIB_DIR}/lib/jpegd.lib
 			${wxWidgets_LIB_DIR}/lib/libpng16d.lib
 			${wxWidgets_LIB_DIR}/lib/lzmad.lib
@@ -89,6 +90,7 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 			${wxWidgets_LIB_DIR}/lib/wxmsw31u_aui.lib
 			${wxWidgets_LIB_DIR}/lib/wxmsw31u_core.lib
 			${wxWidgets_LIB_DIR}/lib/wxbase31u.lib
+			${wxWidgets_LIB_DIR}/lib/wxregexu.lib
 			${wxWidgets_LIB_DIR}/lib/jpeg.lib
 			${wxWidgets_LIB_DIR}/lib/libpng16.lib
 			${wxWidgets_LIB_DIR}/lib/lzma.lib
