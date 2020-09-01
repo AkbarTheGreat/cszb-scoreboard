@@ -72,25 +72,35 @@ class ScreenTextSideTest : public testing::Test {
 TEST_F(ScreenTextSideTest, getExtents) {
   wxClientDC dc(screenText());
 
-  // Single line text
   wxSize size = screenText()->getTextExtent(dc, "Test Text");
-  ASSERT_EQ(size.GetWidth(), 46) << "Single line text width does not match";
-  ASSERT_EQ(size.GetHeight(), 15) << "Single line text height does not match";
+  int line_width = size.GetWidth();
+  int line_height = size.GetHeight();
+
+  // Single line text -- we can't guarantee pixel sizes per-platform, so let's
+  // get a baseline here.
+  ASSERT_GT(line_width, 35) << "Single line text width looks unrealistic";
+  ASSERT_GT(line_height, 10) << "Single line text height looks unrealistic";
 
   // Multi-line Text, with something on every line
   size = screenText()->getTextExtent(dc, "Test Text\n.\n.\nEnd");
-  ASSERT_EQ(size.GetWidth(), 46) << "Multi-line text with non-empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), 60) << "Multi-line text with non-empty lines height does not match";
+  ASSERT_EQ(size.GetWidth(), line_width)
+      << "Multi-line text with non-empty lines width does not match";
+  ASSERT_EQ(size.GetHeight(), line_height*4)
+      << "Multi-line text with non-empty lines height does not match";
 
   // Multi-line Text, with blank lines
   size = screenText()->getTextExtent(dc, "Test Text\n\n\nEnd");
-  ASSERT_EQ(size.GetWidth(), 46) << "Multi-line text with empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), 60) << "Multi-line text with empty lines height does not match";
+  ASSERT_EQ(size.GetWidth(), line_width)
+      << "Multi-line text with empty lines width does not match";
+  ASSERT_EQ(size.GetHeight(), line_height*4)
+      << "Multi-line text with empty lines height does not match";
 
   // Multi-line Text, with trailing blank lines
-  size = screenText()->getTextExtent(dc, "Test Text\n\n\n");
-  ASSERT_EQ(size.GetWidth(), 46) << "Multi-line text with trailing empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), 60) << "Multi-line text with trailing empty lines height does not match";
+  size = screenText()->getTextExtent(dc, "Test Text\n\n\n\n");
+  ASSERT_EQ(size.GetWidth(), line_width)
+      << "Multi-line text with trailing empty lines width does not match";
+  ASSERT_EQ(size.GetHeight(), line_height*5)
+      << "Multi-line text with trailing empty lines height does not match";
 }
 
 }  // namespace test
