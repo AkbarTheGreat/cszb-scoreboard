@@ -25,6 +25,7 @@ limitations under the License.
 #include <optional>
 #include <vector>
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "ui/graphics/Color.h"
 
@@ -59,6 +60,9 @@ class ScreenTextSide : public wxPanel {
   void setSize(const wxSize& size);
   bool isSide(proto::ScreenSide side);
 
+  PUBLIC_TEST_ONLY
+  wxSize getTextExtent(wxDC& dc, wxString text);
+
  private:
   bool auto_fit_text;
   wxImage blackout_image;
@@ -79,7 +83,6 @@ class ScreenTextSide : public wxPanel {
   wxPoint centerText(wxDC& dc, wxString text);
   void createBlackout();
   void initializeForColor(wxSize size, Color color);
-  wxSize getTextExtent(wxDC& dc, wxString text);
   wxPoint positionText(wxDC& dc, proto::RenderableText text);
   float ratio(const wxSize& size);
   void renderBackground(wxDC& dc);

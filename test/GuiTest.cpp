@@ -21,22 +21,16 @@ limitations under the License.
 
 #include "test/GuiTest.h"
 
+#include "test/TestUtil.h"
+
 namespace cszb_scoreboard {
 namespace test {
 
-const int TEST_ARGC = 1;
-const char *TEST_BIN_NAME = "scoreboardUnitTest.exe";
-const char *TEST_ARGV[TEST_ARGC] = {TEST_BIN_NAME};
 const int TEXT_ENTRY_TAB_INDEX = 4;
 
 void GuiTest::SetUp() {
   app = new Scoreboard();
-  wxApp::SetInstance(app);
-  // Argument to wxEntryStart cannot be const, so copy to a non-const before
-  // calling
-  int argc = TEST_ARGC;
-  wxEntryStart(argc, (char **)TEST_ARGV);
-  app->OnInit();
+  TestUtil::startApp(app);
   mainView()->Update();
 }
 
@@ -51,7 +45,8 @@ MainView *GuiTest::mainView() {
 
 TextEntry *GuiTest::textEntry() {
   mainView()->controlPanel()->SetSelection(TEXT_ENTRY_TAB_INDEX);
-  return (TextEntry *)mainView()->controlPanel()->textController(TEXT_ENTRY_TAB_INDEX);
+  return (TextEntry *)mainView()->controlPanel()->textController(
+      TEXT_ENTRY_TAB_INDEX);
 }
 
 ScreenPreview *GuiTest::firstPreview() {

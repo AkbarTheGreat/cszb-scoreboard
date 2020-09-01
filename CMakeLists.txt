@@ -84,7 +84,7 @@ finalize_vcpkg_code(${PROJECT_NAME})
 
 list(APPEND TEST_ONLY_SRC
     "test/GuiTest.cpp"
-    "test/GuiTest.h"
+    "test/TestUtil.cpp"
 )
 
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
@@ -125,4 +125,5 @@ package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/Imag
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp src/util/ProtoUtil.cpp src/ui/graphics/Color.cpp)
 package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
+package_add_ui_test(ScreenTextSideTest  test/ScreenTextSideTest.cpp)
 

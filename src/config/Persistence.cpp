@@ -30,10 +30,10 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-// TODO: This is currently writing and reading binary files, I'd rather
-// read/write textproto as that's easier for a person to inspect if weird things
-// happen.
-// #define TEXT_CONFIGURATION_FILES
+#ifdef SCOREBOARD_TESTING
+// For testing, do not read/write to disk.
+#define FAKE_CONFIGURATION_FILES
+#endif
 
 const char* CONFIG_FILE = "scoreboard.config";
 const char* IMAGE_LIBRARY_FILE = "image_library.data";
@@ -49,26 +49,16 @@ Persistence* Persistence::getInstance() {
   return singleton_instance;
 }
 
-#ifdef TEXT_CONFIGURATION_FILES
-int openFileForWrite(const char* filename) {
-  int descriptor;
-  errno_t error = _sopen_s(&descriptor, filename, _O_CREAT | _O_TRUNC,
-                           _SH_DENYWR, _S_IREAD | _S_IWRITE);
-  return descriptor;
-}
-
-void closeFile(int descriptor) { _close(descriptor); }
-#endif
-
 void Persistence::loadConfigFromDisk() {
+#ifdef FAKE_CONFIGURATION_FILES
+  // Reset config to default proto.
+  full_config = proto::ScoreboardConfig();
+#else
   if (CommandArgs::getInstance()->resetConfig()) {
     wxLogDebug(
         "Reset config argument passed, so all configuration data reset.");
     return;
   }
-#ifdef TEXT_CONFIGURATION_FILES
-  // TODO: Write code to load text files
-#else
   std::fstream input(CONFIG_FILE, std::ios::in | std::ios::binary);
   if (!input) {
     wxLogDebug("%s: File not found. Creating a default config.", CONFIG_FILE);
@@ -79,14 +69,8 @@ void Persistence::loadConfigFromDisk() {
 }
 
 void Persistence::saveConfigToDisk() {
-#ifdef TEXT_CONFIGURATION_FILES
-  int descriptor = openFileForWrite(CONFIG_FILE);
-  google::protobuf::io::FileOutputStream* fout =
-      new google::protobuf::io::FileOutputStream(descriptor);
-  bool print_status = google::protobuf::TextFormat::Print(full_config, fout);
-  delete fout;
-  closeFile(descriptor);
-#else
+#ifndef FAKE_CONFIGURATION_FILES
+  //  Do not save if we're doing faked data
   std::fstream output(CONFIG_FILE,
                       std::ios::out | std::ios::trunc | std::ios::binary);
   if (!full_config.SerializeToOstream(&output)) {
@@ -96,6 +80,11 @@ void Persistence::saveConfigToDisk() {
 }
 
 void Persistence::loadImageLibraryFromDisk() {
+#ifdef FAKE_CONFIGURATION_FILES
+  // Create an empty image library.  In the future, we may want to populate test
+  // data here.
+  image_library = proto::ImageLibrary();
+#else
   std::fstream input(IMAGE_LIBRARY_FILE, std::ios::in | std::ios::binary);
   if (!input) {
     wxLogDebug("%s: File not found. Creating an empty library.",
@@ -103,14 +92,18 @@ void Persistence::loadImageLibraryFromDisk() {
   } else if (!image_library.ParseFromIstream(&input)) {
     wxLogDebug("Failure parsing image library file %s.", IMAGE_LIBRARY_FILE);
   }
+#endif
 }
 
 void Persistence::saveImageLibraryToDisk() {
+#ifndef FAKE_CONFIGURATION_FILES
+  //  Do not save if we're doing faked data
   std::fstream output(IMAGE_LIBRARY_FILE,
                       std::ios::out | std::ios::trunc | std::ios::binary);
   if (!image_library.SerializeToOstream(&output)) {
     wxLogDebug("Failed to write image library file %s.", IMAGE_LIBRARY_FILE);
   }
+#endif
 }
 
 proto::DisplayConfig Persistence::loadDisplays() {
