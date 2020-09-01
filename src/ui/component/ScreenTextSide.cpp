@@ -324,16 +324,21 @@ void ScreenTextSide::renderAllText(wxDC& dc) {
 }
 
 wxSize ScreenTextSide::getTextExtent(wxDC& dc, wxString text) {
-  wxStringTokenizer tokens(text, "\n\r");
+  wxStringTokenizer tokens(text, "\n\r", wxTOKEN_RET_EMPTY_ALL);
   int width = 0;
   int height = 0;
-  wxString token = tokens.GetNextToken();
-  while (!token.IsEmpty()) {
+  while (tokens.HasMoreTokens()) {
+    wxString token = tokens.GetNextToken();
+    if (token.IsEmpty()) {
+      // If the line is empty, the vertical extent reads as 0, when it should be
+      // the constant height of a character.  So put a thin character here to
+      // get the correct vertical extent.
+      token = "|";
+    }
     int line_width, line_height;
     dc.GetTextExtent(token, &line_width, &line_height);
     if (line_width > width) width = line_width;
     height += line_height;
-    token = tokens.GetNextToken();
   }
 
   return wxSize(width, height);

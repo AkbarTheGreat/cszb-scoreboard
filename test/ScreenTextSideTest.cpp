@@ -78,14 +78,19 @@ TEST_F(ScreenTextSideTest, getExtents) {
   ASSERT_EQ(size.GetHeight(), 15) << "Single line text height does not match";
 
   // Multi-line Text, with something on every line
-  size = screenText()->getTextExtent(dc, "Test Text\n.\n.\n.End");
+  size = screenText()->getTextExtent(dc, "Test Text\n.\n.\nEnd");
   ASSERT_EQ(size.GetWidth(), 46) << "Multi-line text with non-empty lines width does not match";
   ASSERT_EQ(size.GetHeight(), 60) << "Multi-line text with non-empty lines height does not match";
 
   // Multi-line Text, with blank lines
-  size = screenText()->getTextExtent(dc, "Test Text\n\n\n.End");
-  ASSERT_EQ(size.GetWidth(), 46) << "Multi-line text with empy lines width does not match";
-  ASSERT_EQ(size.GetHeight(), 60) << "Multi-line text with empy lines height does not match";
+  size = screenText()->getTextExtent(dc, "Test Text\n\n\nEnd");
+  ASSERT_EQ(size.GetWidth(), 46) << "Multi-line text with empty lines width does not match";
+  ASSERT_EQ(size.GetHeight(), 60) << "Multi-line text with empty lines height does not match";
+
+  // Multi-line Text, with trailing blank lines
+  size = screenText()->getTextExtent(dc, "Test Text\n\n\n");
+  ASSERT_EQ(size.GetWidth(), 46) << "Multi-line text with trailing empty lines width does not match";
+  ASSERT_EQ(size.GetHeight(), 60) << "Multi-line text with trailing empty lines height does not match";
 }
 
 }  // namespace test
