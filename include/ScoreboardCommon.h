@@ -31,7 +31,7 @@ const std::string IMAGE_SELECTION_STRING =
 
 const std::string LOGO_SELECTION_STRING = "Logo files (png)|*.png";
 
-#define SCOREBOARD_VERSION "0.9.0"
+#define SCOREBOARD_VERSION "0.9.1"
 
 // Evaluates to public: in a test environment, private: in non-test code, to
 // hide dependencies as tightly as possible
