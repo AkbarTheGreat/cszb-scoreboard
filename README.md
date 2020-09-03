@@ -1,6 +1,6 @@
 # CSZB Scoreboard
 
-[User Manual](doc/users)  ---    [Developer Guide](doc/developers)
+[User Manual](doc/users.md)  ---    [Developer Guide](doc/developers.md)
 
 ## Elevator Pitch
 Cszb-scoreboard is an application to manage scoreboards for theatrical
