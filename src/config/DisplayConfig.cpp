@@ -50,13 +50,11 @@ void DisplayConfig::detectDisplays() {
   // otherwise, we'll re-initialize them.  In the future, we may get fancier
   // with trying to save the state of existing displays if new ones are added,
   // or something similar.
-#ifndef SCOREBOARD_TESTING
   if (numscreens == display_config.displays_size()) {
     wxLogDebug("Screen count did not change from %d, using saved config",
                numscreens);
     return;
   }
-#endif
 
   wxLogDebug("Screen count changed from %d to %d, reconfiguring",
              display_config.displays_size(), numscreens);
