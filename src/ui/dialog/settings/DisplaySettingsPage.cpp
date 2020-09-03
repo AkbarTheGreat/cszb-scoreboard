@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
+#include "config/CommandArgs.h"
 #include "ui/UiUtil.h"
 
 namespace cszb_scoreboard {
@@ -45,21 +46,12 @@ bool DisplaySettingsPage::validateSettings() {
   for (auto display_panel : display_settings_panels) {
     proto::ScreenSide side = display_panel->getSide();
     if (side.control()) {
-      // Two controls, that's problematic.
-      if (has_control) {
-        wxMessageBox(
-            "ERROR: Only one window may be selected as a Booth Monitor.");
-        return false;
-      }
       has_control = true;
-      if (side.home() || side.away() || side.extra()) {
-// This can't be checked in debug, because we break this rule often in debug
-// mode.
-#ifndef WXDEBUG
+      if (!CommandArgs::getInstance()->windowedMode() &&
+          (side.home() || side.away() || side.extra())) {
         wxMessageBox(
             "ERROR: The Booth Monitor display may not also be a team display.");
         return false;
-#endif
       }
     }
   }

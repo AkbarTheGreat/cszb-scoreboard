@@ -8,7 +8,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,20 +27,22 @@ namespace cszb_scoreboard {
 
 class DisplayConfig {
  public:
-  static DisplayConfig *getInstance();
+  static DisplayConfig* getInstance();
   void detectDisplays();
   proto::DisplayInfo displayDetails(int index);
   int numberOfDisplays();
-  bool isPrimaryDisplay(proto::DisplayInfo *display_info);
+  bool isPrimaryDisplay(proto::DisplayInfo* display_info);
   void saveSettings();
-  // Set the display id to the given monitor index.  Returns true if this was an
-  // effective change, false if the values were identical already.
+  // Set the display id to the given monitor index.  Returns true if this
+  // was an effective change, false if the values were identical already.
   bool setDisplayId(int index, int id);
   void setSide(int index, proto::ScreenSide side);
 
  private:
-  static DisplayConfig *singleton_instance;
+  static DisplayConfig* singleton_instance;
   proto::DisplayConfig display_config;
   DisplayConfig();
+  void detectExternalMonitors();
+  void setupWindowedMode();
 };
 }  // namespace cszb_scoreboard

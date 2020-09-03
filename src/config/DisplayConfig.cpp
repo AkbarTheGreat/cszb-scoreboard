@@ -38,11 +38,15 @@ DisplayConfig *DisplayConfig::getInstance() {
 }
 
 void DisplayConfig::detectDisplays() {
-  int numscreens = wxDisplay::GetCount();
-
   if (CommandArgs::getInstance()->windowedMode()) {
-    numscreens = CommandArgs::getInstance()->numWindows();
+    setupWindowedMode();
+  } else {
+    detectExternalMonitors();
   }
+}
+
+void DisplayConfig::detectExternalMonitors() {
+  int numscreens = wxDisplay::GetCount();
 
   display_config = Persistence::getInstance()->loadDisplays();
 
@@ -55,55 +59,74 @@ void DisplayConfig::detectDisplays() {
                numscreens);
     return;
   }
-
   wxLogDebug("Screen count changed from %d to %d, reconfiguring",
              display_config.displays_size(), numscreens);
+
   display_config.clear_displays();
   bool set_home = true;
 
   for (int i = 0; i < numscreens; i++) {
     proto::DisplayInfo *display_info = display_config.add_displays();
     display_info->set_id(i);
-    if (CommandArgs::getInstance()->windowedMode()) {
-      // If we're in windowed mode, just do a reasonably sized window.
-      ProtoUtil::protoRct(wxRect(0, 0, 1024, 768),
-                          display_info->mutable_dimensions());
-    } else {
-      wxDisplay display(i);
-      ProtoUtil::protoRct(display.GetGeometry(),
-                          display_info->mutable_dimensions());
-    }
-    if (!CommandArgs::getInstance()->windowedMode() &&
-        isPrimaryDisplay(display_info)) {
+    wxDisplay display(i);
+    ProtoUtil::protoRct(display.GetGeometry(),
+                        display_info->mutable_dimensions());
+    if (isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);
-#ifdef WXDEBUG
-      if (numscreens < 3 && !CommandArgs::getInstance()->windowedMode()) {
-        // For debugging, we display home as if it was a second monitor.  That
-        // way we can either test a single display setup with no second monitor,
-        // or a two display setup with only one extra monitor.
-        display_info->mutable_side()->set_home(true);
-        set_home = false;
-      }
-#else
       if (numscreens == 1) {
         // Create an error "screen" to let the user know we don't expect this to
-        // work, unless we're debugging.
+        // work.
         display_info->mutable_side()->set_error(true);
       }
-#endif
     } else {
-      // The lowest monitor will default to home, the highest away, aside from
-      // the primary.  If we have 4 or more monitors, we don't yet support that
-      // (despite the proto having some ideas about that baked in).  We also
-      // don't auto-attempt to do a split-screen view at the moment, but that
-      // should be possible if there are only two monitors, auto-config the
-      // second monitor to be home + away.
+      // The lowest monitor will default to home, all others default to away,
+      // aside from the primary.  This can lead to some funky setups for two
+      // monitor setups and 4+ monitor setups, but that's easily fixed in
+      // settings after startup.
       if (set_home) {
         display_info->mutable_side()->set_home(true);
         set_home = false;
       } else {
         display_info->mutable_side()->set_away(true);
       }
+    }
+  }
+
+  saveSettings();
+}
+
+void DisplayConfig::setupWindowedMode() {
+  int numscreens = CommandArgs::getInstance()->numWindows();
+
+  display_config = Persistence::getInstance()->loadDisplays();
+
+  // Re-initialize the windows if the number of requested windows has changed.
+  // This has similar caveats to the external monitor version, but is less
+  // severe of a problem, IMHO.
+  if (numscreens == display_config.displays_size()) {
+    wxLogDebug("Screen count did not change from %d, using saved config",
+               numscreens);
+    return;
+  }
+  wxLogDebug("Screen count changed from %d to %d, reconfiguring",
+             display_config.displays_size(), numscreens);
+
+  display_config.clear_displays();
+
+  for (int i = 0; i < numscreens; i++) {
+    proto::DisplayInfo *display_info = display_config.add_displays();
+    display_info->set_id(i);
+    // If we're in windowed mode, just do a reasonably sized window.
+    ProtoUtil::protoRct(wxRect(0, 0, 1024, 768),
+                        display_info->mutable_dimensions());
+
+    // The lowest monitor will be set to control + home, all others set to away
+    // as defaults.
+    if (i == 0) {
+      display_info->mutable_side()->set_control(true);
+      display_info->mutable_side()->set_home(true);
+    } else {
+      display_info->mutable_side()->set_away(true);
     }
   }
   saveSettings();
