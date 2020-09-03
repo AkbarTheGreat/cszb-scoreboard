@@ -1,5 +1,7 @@
 # CSZB Scoreboard
 
+[User Manual](doc/users)  ---    [Developer Guide](doc/developers)
+
 ## Elevator Pitch
 Cszb-scoreboard is an application to manage scoreboards for theatrical
 sports-themed events.  Notably, this application was inspired to be used in a
@@ -57,20 +59,20 @@ serialization engines lack.
 The following features are planned for inclusion in the scoreboard, where
 possible I've noted which ones are considered gating for a 1.0 release.
 
-* Support for both a single monitor for a scoreboard as well as a dual monitor
-  setup. [Gating for release]
+* ~~Support for both a single monitor for a scoreboard as well as a dual monitor
+  setup. [Gating for release]~~
 * Scoreboard may display:
-  * Current score. [Gating for release]
-  * Saved images. [Gating for release]
-  * Images from clipboard.
+  * ~~Current score. [Gating for release]~~
+  * ~~Saved images. [Gating for release]~~
+  * ~~Images from clipboard.~~
   * Images from a Google image search.
   * Gifs from a Giphy search.
-* List mode for managing a guessing game like 5 Things. [Gating for release]
+* ~~List mode for managing a guessing game like 5 Things. [Gating for release]~~
 * Support for a third external monitor for additional information or a third
   team. 
-* A saved image library with support for tags and filtering.
+* ~~A saved image library with support for tags and filtering.~~
 * Hotkey support for queueing up pre-set images or text.
-* Hotkey support for increasing scores rapidly.
+* ~~Hotkey support for increasing scores rapidly.~~
 * A countdown timer.
 * Slide-show functionality for pre-show slides.
 * Transition animation support.
