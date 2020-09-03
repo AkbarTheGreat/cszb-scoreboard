@@ -1,0 +1,10 @@
+# Default to Google style
+BasedOnStyle: Google
+
+---
+Language: Cpp
+---
+
+---
+Language: Proto
+---
