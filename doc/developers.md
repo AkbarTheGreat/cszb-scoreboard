@@ -60,6 +60,11 @@ get the 64 bit static versions of all of these libraries.
 * [GoogleTest](https://github.com/google/googletest) - Google's C++ unit
   testing framework.
 
+If you're using vcpkg, the following command should get all four in one go:
+```SHELL
+vcpkg install curl:x64-windows-static gtest:x64-windows-static jsoncpp:x64-windows-static protobuf:x64-windows-static wxwidgets:x64-windows-static
+```
+
 ## Initial Setup
 
 If you’re using Visual Studio, you’ll want to clone the project into a new
