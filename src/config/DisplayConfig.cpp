@@ -38,17 +38,40 @@ DisplayConfig *DisplayConfig::getInstance() {
 }
 
 void DisplayConfig::detectDisplays() {
+  display_config = Persistence::getInstance()->loadDisplays();
+
+  // Force-reset our display configuration if windowed mode has changed.
+  if (display_config.enable_windowed_mode() ^
+      CommandArgs::getInstance()->windowedMode()) {
+    display_config.clear_displays();
+  }
+
   if (CommandArgs::getInstance()->windowedMode()) {
+    display_config.set_enable_windowed_mode(true);
+    display_config.set_window_count(CommandArgs::getInstance()->windowedMode());
+  } else {
+    display_config.set_enable_windowed_mode(false);
+  }
+
+  // If we're in windowed mode, default to a reasonably sized window.
+  if (!display_config.window_size().width()) {
+    display_config.mutable_window_size()->set_x(0);
+    display_config.mutable_window_size()->set_y(0);
+    display_config.mutable_window_size()->set_width(1024);
+    display_config.mutable_window_size()->set_height(768);
+  }
+
+  if (display_config.enable_windowed_mode()) {
     setupWindowedMode();
   } else {
     detectExternalMonitors();
   }
+
+  saveSettings();
 }
 
 void DisplayConfig::detectExternalMonitors() {
   int numscreens = wxDisplay::GetCount();
-
-  display_config = Persistence::getInstance()->loadDisplays();
 
   // Currently, don't re-detect displays if it matches our saved state,
   // otherwise, we'll re-initialize them.  In the future, we may get fancier
@@ -91,14 +114,10 @@ void DisplayConfig::detectExternalMonitors() {
       }
     }
   }
-
-  saveSettings();
 }
 
 void DisplayConfig::setupWindowedMode() {
   int numscreens = CommandArgs::getInstance()->numWindows();
-
-  display_config = Persistence::getInstance()->loadDisplays();
 
   // Re-initialize the windows if the number of requested windows has changed.
   // This has similar caveats to the external monitor version, but is less
@@ -116,9 +135,9 @@ void DisplayConfig::setupWindowedMode() {
   for (int i = 0; i < numscreens; i++) {
     proto::DisplayInfo *display_info = display_config.add_displays();
     display_info->set_id(i);
-    // If we're in windowed mode, just do a reasonably sized window.
-    ProtoUtil::protoRct(wxRect(0, 0, 1024, 768),
-                        display_info->mutable_dimensions());
+
+    // Set our size to the configured size.
+    display_info->mutable_dimensions()->CopyFrom(display_config.window_size());
 
     // The lowest monitor will be set to control + home, all others set to away
     // as defaults.
@@ -129,7 +148,6 @@ void DisplayConfig::setupWindowedMode() {
       display_info->mutable_side()->set_away(true);
     }
   }
-  saveSettings();
 }
 
 void DisplayConfig::setSide(int index, proto::ScreenSide side) {
@@ -169,6 +187,10 @@ bool DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) {
     return true;
   }
   return false;
+}
+
+bool DisplayConfig::windowedMode() {
+  return display_config.enable_windowed_mode();
 }
 
 }  // namespace cszb_scoreboard

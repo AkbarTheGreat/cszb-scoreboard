@@ -33,14 +33,11 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
     : wxFrame(NULL, wxID_ANY, "Scoreboard", wxDefaultPosition, wxDefaultSize) {
   this->monitor_number = monitor_number;
 
-  if (CommandArgs::getInstance()->windowedMode()) {
+  if (DisplayConfig::getInstance()->windowedMode()) {
     Show(true);
   } else {
-#ifndef WXDEBUG
-    // Set external monitors to be always on top, unless we're debugging, since
-    // sometimes we use one monitor to debug
+    // Set external monitors to be always on top.
     SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
-#endif
     ShowFullScreen(true);
   }
 

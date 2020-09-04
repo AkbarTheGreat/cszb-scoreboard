@@ -72,6 +72,9 @@ message DisplayInfo {
 
 message DisplayConfig {
 	repeated DisplayInfo displays = 1;
+	bool enable_windowed_mode = 2;
+	int32 window_count = 3;
+	Rectangle window_size = 4;
 }
 
 message TeamInfo {

@@ -37,6 +37,7 @@ class DisplayConfig {
   // was an effective change, false if the values were identical already.
   bool setDisplayId(int index, int id);
   void setSide(int index, proto::ScreenSide side);
+  bool windowedMode();
 
  private:
   static DisplayConfig* singleton_instance;

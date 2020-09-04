@@ -47,7 +47,7 @@ bool DisplaySettingsPage::validateSettings() {
     proto::ScreenSide side = display_panel->getSide();
     if (side.control()) {
       has_control = true;
-      if (!CommandArgs::getInstance()->windowedMode() &&
+      if (!DisplayConfig::getInstance()->windowedMode() &&
           (side.home() || side.away() || side.extra())) {
         wxMessageBox(
             "ERROR: The Booth Monitor display may not also be a team display.");
