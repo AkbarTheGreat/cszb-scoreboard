@@ -19,8 +19,9 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
-#include "config/CommandArgs.h"
+#include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
+#include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -28,13 +29,81 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
     : SettingsPage(parent) {
-  wxSizer* sizer = UiUtil::sizer(0, 1);
+  createControls();
+  positionWidgets();
+}
 
+void DisplaySettingsPage::createControls() {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     DisplaySettingsPanel* display_panel = new DisplaySettingsPanel(this, i);
     display_settings_panels.push_back(display_panel);
-    sizer->Add(display_panel, 0, wxALL, BORDER_SIZE);
   }
+
+  separator_line = new wxStaticLine(this);
+  window_mode_panel = new wxPanel(this);
+
+#ifdef ENABLE_WINDOW_MODE_OPTION
+  line1_buffer1 = new wxStaticText(window_mode_panel, wxID_ANY, "");
+  line1_buffer2 = new wxStaticText(window_mode_panel, wxID_ANY, "");
+  line1_buffer3 = new wxStaticText(window_mode_panel, wxID_ANY, "");
+  line2_buffer1 = new wxStaticText(window_mode_panel, wxID_ANY, "");
+  line2_buffer2 = new wxStaticText(window_mode_panel, wxID_ANY, "");
+
+  enable_window_mode =
+      new wxCheckBox(window_mode_panel, wxID_ANY, "Enable Window Mode");
+  enable_window_mode->SetValue(DisplayConfig::getInstance()->windowedMode());
+
+  number_of_windows_label =
+      new wxStaticText(window_mode_panel, wxID_ANY, "# of Windows");
+  number_of_windows =
+      new wxTextCtrl(window_mode_panel, wxID_ANY,
+                     StringUtil::intToString(
+                         DisplayConfig::getInstance()->numberOfDisplays()));
+
+  window_size_label =
+      new wxStaticText(window_mode_panel, wxID_ANY, "Window Size");
+  window_width = new wxTextCtrl(
+      window_mode_panel, wxID_ANY,
+      StringUtil::intToString(DisplayConfig::getInstance()->windowWidth()));
+  window_size_separator_label =
+      new wxStaticText(window_mode_panel, wxID_ANY, "x");
+  window_height = new wxTextCtrl(
+      window_mode_panel, wxID_ANY,
+      StringUtil::intToString(DisplayConfig::getInstance()->windowHeight()));
+#endif
+}
+
+void DisplaySettingsPage::positionWidgets() {
+#ifdef ENABLE_WINDOW_MODE_OPTION
+  wxSizer* window_mode_sizer = UiUtil::sizer(0, 4);
+  window_mode_sizer->Add(enable_window_mode, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(line1_buffer1, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(line1_buffer2, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(line1_buffer3, 0, wxALL, BORDER_SIZE);
+
+  window_mode_sizer->Add(number_of_windows_label, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(number_of_windows, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(line2_buffer1, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(line2_buffer2, 0, wxALL, BORDER_SIZE);
+
+  window_mode_sizer->Add(window_size_label, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(window_width, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(window_size_separator_label, 0, wxALL, BORDER_SIZE);
+  window_mode_sizer->Add(window_height, 0, wxALL, BORDER_SIZE);
+
+  window_mode_panel->SetSizerAndFit(window_mode_sizer);
+#endif
+
+  wxSizer* sizer = UiUtil::sizer(0, 1);
+
+  for (auto panel : display_settings_panels) {
+    sizer->Add(panel, 0, wxALL, BORDER_SIZE);
+  }
+
+#ifdef ENABLE_WINDOW_MODE_OPTION
+  sizer->Add(separator_line, 0, wxALL | wxGROW, BORDER_SIZE);
+  sizer->Add(window_mode_panel, 0, wxALL, BORDER_SIZE);
+#endif
 
   SetSizerAndFit(sizer);
 }

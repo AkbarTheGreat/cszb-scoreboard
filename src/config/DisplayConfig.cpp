@@ -193,4 +193,32 @@ bool DisplayConfig::windowedMode() {
   return display_config.enable_windowed_mode();
 }
 
+void DisplayConfig::setWindowedMode(bool mode) {
+  display_config.set_enable_windowed_mode(mode);
+}
+
+int DisplayConfig::windowedModeNumberOfWindows() {
+  return display_config.window_count();
+}
+
+void DisplayConfig::windowedModeNumberOfWindows(int num) {
+  display_config.set_window_count(num);
+}
+
+int DisplayConfig::windowWidth() {
+  return display_config.window_size().width();
+}
+
+void DisplayConfig::setWindowWidth(int width) {
+  display_config.mutable_window_size()->set_width(width);
+}
+
+int DisplayConfig::windowHeight() {
+  return display_config.window_size().height();
+}
+
+void DisplayConfig::setWindowHeight(int height) {
+  display_config.mutable_window_size()->set_height(height);
+}
+
 }  // namespace cszb_scoreboard

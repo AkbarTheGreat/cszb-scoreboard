@@ -18,6 +18,7 @@ limitations under the License.
 */
 #pragma once
 
+#include <wx/statline.h>
 #include <wx/wx.h>
 
 #include "config.pb.h"
@@ -32,10 +33,21 @@ class DisplaySettingsPage : public SettingsPage {
   DisplaySettingsPage(wxWindow *parent);
   void saveSettings() override;
   bool validateSettings() override;
-  void swapDisplays(int a, int b) ;
+  void swapDisplays(int a, int b);
 
  private:
+  void createControls();
+  void positionWidgets();
+
   std::vector<DisplaySettingsPanel *> display_settings_panels;
+  wxPanel *window_mode_panel;
+  wxStaticText *line1_buffer1, *line1_buffer2, *line1_buffer3, *line2_buffer1,
+      *line2_buffer2;
+  wxStaticText *number_of_windows_label, *window_size_label,
+      *window_size_separator_label;
+  wxCheckBox *enable_window_mode;
+  wxTextCtrl *number_of_windows, *window_width, *window_height;
+  wxStaticLine *separator_line;
 };
 
 }  // namespace cszb_scoreboard
