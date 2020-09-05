@@ -32,6 +32,7 @@ DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
     : SettingsPage(parent) {
   createControls();
   positionWidgets();
+  bindEvents();
 }
 
 void DisplaySettingsPage::createControls() {
@@ -44,12 +45,6 @@ void DisplaySettingsPage::createControls() {
   window_mode_panel = new wxPanel(this);
 
 #ifdef ENABLE_WINDOW_MODE_OPTION
-  line1_buffer1 = new wxStaticText(window_mode_panel, wxID_ANY, "");
-  line1_buffer2 = new wxStaticText(window_mode_panel, wxID_ANY, "");
-  line1_buffer3 = new wxStaticText(window_mode_panel, wxID_ANY, "");
-  line2_buffer1 = new wxStaticText(window_mode_panel, wxID_ANY, "");
-  line2_buffer2 = new wxStaticText(window_mode_panel, wxID_ANY, "");
-
   enable_window_mode =
       new wxCheckBox(window_mode_panel, wxID_ANY, "Enable Window Mode");
   enable_window_mode->SetValue(DisplayConfig::getInstance()->windowedMode());
@@ -71,6 +66,8 @@ void DisplaySettingsPage::createControls() {
   window_height = new wxTextCtrl(
       window_mode_panel, wxID_ANY,
       StringUtil::intToString(DisplayConfig::getInstance()->windowHeight()));
+
+  windowModeChanged(wxCommandEvent());
 #endif
 }
 
@@ -104,6 +101,13 @@ void DisplaySettingsPage::positionWidgets() {
   SetSizerAndFit(sizer);
 }
 
+void DisplaySettingsPage::bindEvents() {
+#ifdef ENABLE_WINDOW_MODE_OPTION
+  enable_window_mode->Bind(wxEVT_CHECKBOX,
+                           &DisplaySettingsPage::windowModeChanged, this);
+#endif
+}
+
 /* Returns true if the display settings are allowable, presents a warning dialog
  * if not (and returns false). */
 bool DisplaySettingsPage::validateSettings() {
@@ -124,6 +128,26 @@ bool DisplaySettingsPage::validateSettings() {
     wxMessageBox("ERROR: One window must be selected as a Booth Monitor.");
     return false;
   }
+
+#ifdef ENABLE_WINDOW_MODE_OPTION
+  if (enable_window_mode->GetValue()) {
+    if (StringUtil::stringToInt(number_of_windows->GetValue()) < 1) {
+      wxMessageBox(
+          "ERROR: If enabling windows mode, at least one window must be "
+          "created.");
+      return false;
+    }
+
+    if (StringUtil::stringToInt(window_width->GetValue()) < 1 ||
+        StringUtil::stringToInt(window_height->GetValue()) < 1) {
+      wxMessageBox(
+          "ERROR: If enabling windows mode, window resolution must be larger "
+          "than 0x0.");
+      return false;
+    }
+  }
+#endif
+
   return true;
 }
 
@@ -142,6 +166,18 @@ void DisplaySettingsPage::saveSettings() {
         i, display_settings_panels[i]->getSide());
   }
   DisplayConfig::getInstance()->saveSettings();
+}
+
+void DisplaySettingsPage::windowModeChanged(wxCommandEvent& event) {
+  if (enable_window_mode->GetValue()) {
+    number_of_windows->Enable();
+    window_width->Enable();
+    window_height->Enable();
+  } else {
+    number_of_windows->Disable();
+    window_width->Disable();
+    window_height->Disable();
+  }
 }
 
 void DisplaySettingsPage::swapDisplays(int a, int b) {

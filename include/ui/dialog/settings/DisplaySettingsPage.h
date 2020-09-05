@@ -36,13 +36,13 @@ class DisplaySettingsPage : public SettingsPage {
   void swapDisplays(int a, int b);
 
  private:
+  void bindEvents();
   void createControls();
   void positionWidgets();
+  void windowModeChanged(wxCommandEvent &event);
 
   std::vector<DisplaySettingsPanel *> display_settings_panels;
   wxPanel *window_mode_panel;
-  wxStaticText *line1_buffer1, *line1_buffer2, *line1_buffer3, *line2_buffer1,
-      *line2_buffer2;
   wxStaticText *number_of_windows_label, *window_size_label,
       *window_size_separator_label;
   wxCheckBox *enable_window_mode;
