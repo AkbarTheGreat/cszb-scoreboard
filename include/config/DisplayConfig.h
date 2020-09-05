@@ -44,7 +44,7 @@ class DisplayConfig {
   int windowHeight();
 
   void setWindowedMode(bool mode);
-  void windowedModeNumberOfWindows(int num);
+  void setWindowedModeNumberOfWindows(int num);
   void setWindowWidth(int width);
   void setWindowHeight(int height);
 

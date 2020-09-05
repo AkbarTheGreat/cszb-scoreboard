@@ -19,7 +19,6 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
-#include "config/CommandArgs.h"
 #include "config/Persistence.h"
 #include "ui/frame/FrameList.h"
 #include "util/ProtoUtil.h"
@@ -39,19 +38,6 @@ DisplayConfig *DisplayConfig::getInstance() {
 
 void DisplayConfig::detectDisplays() {
   display_config = Persistence::getInstance()->loadDisplays();
-
-  // Force-reset our display configuration if windowed mode has changed.
-  if (display_config.enable_windowed_mode() ^
-      CommandArgs::getInstance()->windowedMode()) {
-    display_config.clear_displays();
-  }
-
-  if (CommandArgs::getInstance()->windowedMode()) {
-    display_config.set_enable_windowed_mode(true);
-    display_config.set_window_count(CommandArgs::getInstance()->windowedMode());
-  } else {
-    display_config.set_enable_windowed_mode(false);
-  }
 
   // If we're in windowed mode, default to a reasonably sized window.
   if (!display_config.window_size().width()) {
@@ -117,7 +103,7 @@ void DisplayConfig::detectExternalMonitors() {
 }
 
 void DisplayConfig::setupWindowedMode() {
-  int numscreens = CommandArgs::getInstance()->numWindows();
+  int numscreens = display_config.window_count();
 
   // Re-initialize the windows if the number of requested windows has changed.
   // This has similar caveats to the external monitor version, but is less
@@ -201,7 +187,7 @@ int DisplayConfig::windowedModeNumberOfWindows() {
   return display_config.window_count();
 }
 
-void DisplayConfig::windowedModeNumberOfWindows(int num) {
+void DisplayConfig::setWindowedModeNumberOfWindows(int num) {
   display_config.set_window_count(num);
 }
 

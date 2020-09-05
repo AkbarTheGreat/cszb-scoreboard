@@ -44,7 +44,6 @@ void DisplaySettingsPage::createControls() {
   separator_line = new wxStaticLine(this);
   window_mode_panel = new wxPanel(this);
 
-#ifdef ENABLE_WINDOW_MODE_OPTION
   enable_window_mode =
       new wxCheckBox(window_mode_panel, wxID_ANY, "Enable Window Mode");
   enable_window_mode->SetValue(DisplayConfig::getInstance()->windowedMode());
@@ -68,11 +67,9 @@ void DisplaySettingsPage::createControls() {
       StringUtil::intToString(DisplayConfig::getInstance()->windowHeight()));
 
   windowModeChanged(wxCommandEvent());
-#endif
 }
 
 void DisplaySettingsPage::positionWidgets() {
-#ifdef ENABLE_WINDOW_MODE_OPTION
   wxGridBagSizer* window_mode_sizer = new wxGridBagSizer();
   UiUtil::addToGridBag(window_mode_sizer, enable_window_mode, 0, 0, 1, 2);
 
@@ -85,7 +82,6 @@ void DisplaySettingsPage::positionWidgets() {
   UiUtil::addToGridBag(window_mode_sizer, window_height, 2, 3);
 
   window_mode_panel->SetSizerAndFit(window_mode_sizer);
-#endif
 
   wxSizer* sizer = UiUtil::sizer(0, 1);
 
@@ -93,19 +89,15 @@ void DisplaySettingsPage::positionWidgets() {
     sizer->Add(panel, 0, wxALL, BORDER_SIZE);
   }
 
-#ifdef ENABLE_WINDOW_MODE_OPTION
   sizer->Add(separator_line, 0, wxALL | wxGROW, BORDER_SIZE);
   sizer->Add(window_mode_panel, 0, wxALL, BORDER_SIZE);
-#endif
 
   SetSizerAndFit(sizer);
 }
 
 void DisplaySettingsPage::bindEvents() {
-#ifdef ENABLE_WINDOW_MODE_OPTION
   enable_window_mode->Bind(wxEVT_CHECKBOX,
                            &DisplaySettingsPage::windowModeChanged, this);
-#endif
 }
 
 /* Returns true if the display settings are allowable, presents a warning dialog
@@ -129,7 +121,6 @@ bool DisplaySettingsPage::validateSettings() {
     return false;
   }
 
-#ifdef ENABLE_WINDOW_MODE_OPTION
   if (enable_window_mode->GetValue()) {
     if (StringUtil::stringToInt(number_of_windows->GetValue()) < 1) {
       wxMessageBox(
@@ -146,13 +137,13 @@ bool DisplaySettingsPage::validateSettings() {
       return false;
     }
   }
-#endif
 
   return true;
 }
 
 void DisplaySettingsPage::saveSettings() {
   bool warnedAboutOrderChange = false;
+
   for (int i = 0; i < display_settings_panels.size(); ++i) {
     if (DisplayConfig::getInstance()->setDisplayId(
             i, display_settings_panels[i]->getDisplayId()) &&
@@ -165,6 +156,29 @@ void DisplaySettingsPage::saveSettings() {
     DisplayConfig::getInstance()->setSide(
         i, display_settings_panels[i]->getSide());
   }
+
+  // If any of the windowed settings have chagned, re-detect display settings.
+  if ((DisplayConfig::getInstance()->windowedMode() !=
+       enable_window_mode->GetValue()) ||
+      (DisplayConfig::getInstance()->windowedModeNumberOfWindows() !=
+       StringUtil::stringToInt(number_of_windows->GetValue())) ||
+      (DisplayConfig::getInstance()->windowWidth() !=
+       StringUtil::stringToInt(window_width->GetValue())) ||
+      (DisplayConfig::getInstance()->windowHeight() !=
+       StringUtil::stringToInt(window_height->GetValue()))) {
+    wxMessageBox(
+        "WARNING: Changes to windowed mode will require an application restart "
+        "to take effect.");
+  }
+
+  DisplayConfig::getInstance()->setWindowedMode(enable_window_mode->GetValue());
+  DisplayConfig::getInstance()->setWindowedModeNumberOfWindows(
+      StringUtil::stringToInt(number_of_windows->GetValue()));
+  DisplayConfig::getInstance()->setWindowWidth(
+      StringUtil::stringToInt(window_width->GetValue()));
+  DisplayConfig::getInstance()->setWindowHeight(
+      StringUtil::stringToInt(window_height->GetValue()));
+
   DisplayConfig::getInstance()->saveSettings();
 }
 
