@@ -21,11 +21,18 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-wxSizer *UiUtil::sizer(long rows, long columns) {
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(rows, columns, 0, 0);
+wxSizer* UiUtil::sizer(long rows, long columns) {
+  wxFlexGridSizer* sizer = new wxFlexGridSizer(rows, columns, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   return sizer;
+}
+
+void UiUtil::addToGridBag(wxGridBagSizer* sizer, wxWindow* item, int row,
+                          int column, int row_span, int column_span,
+                          int border_size) {
+  sizer->Add(item, wxGBPosition(row, column), wxGBSpan(row_span, column_span),
+             wxALL, border_size);
 }
 
 }  // namespace cszb_scoreboard

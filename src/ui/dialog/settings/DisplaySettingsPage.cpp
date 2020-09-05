@@ -22,6 +22,7 @@ limitations under the License.
 #include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
 #include "util/StringUtil.h"
+#include "wx/gbsizer.h"
 
 namespace cszb_scoreboard {
 
@@ -75,21 +76,16 @@ void DisplaySettingsPage::createControls() {
 
 void DisplaySettingsPage::positionWidgets() {
 #ifdef ENABLE_WINDOW_MODE_OPTION
-  wxSizer* window_mode_sizer = UiUtil::sizer(0, 4);
-  window_mode_sizer->Add(enable_window_mode, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(line1_buffer1, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(line1_buffer2, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(line1_buffer3, 0, wxALL, BORDER_SIZE);
+  wxGridBagSizer* window_mode_sizer = new wxGridBagSizer();
+  UiUtil::addToGridBag(window_mode_sizer, enable_window_mode, 0, 0, 1, 2);
 
-  window_mode_sizer->Add(number_of_windows_label, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(number_of_windows, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(line2_buffer1, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(line2_buffer2, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(window_mode_sizer, number_of_windows_label, 1, 0);
+  UiUtil::addToGridBag(window_mode_sizer, number_of_windows, 1, 1);
 
-  window_mode_sizer->Add(window_size_label, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(window_width, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(window_size_separator_label, 0, wxALL, BORDER_SIZE);
-  window_mode_sizer->Add(window_height, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(window_mode_sizer, window_size_label, 2, 0);
+  UiUtil::addToGridBag(window_mode_sizer, window_width, 2, 1);
+  UiUtil::addToGridBag(window_mode_sizer, window_size_separator_label, 2, 2);
+  UiUtil::addToGridBag(window_mode_sizer, window_height, 2, 3);
 
   window_mode_panel->SetSizerAndFit(window_mode_sizer);
 #endif
