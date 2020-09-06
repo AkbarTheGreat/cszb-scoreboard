@@ -32,7 +32,7 @@ void UiUtil::addToGridBag(wxGridBagSizer* sizer, wxWindow* item, int row,
                           int column, int row_span, int column_span,
                           int border_size) {
   sizer->Add(item, wxGBPosition(row, column), wxGBSpan(row_span, column_span),
-             wxALL, border_size);
+             wxALL | wxGROW, border_size);
 }
 
 }  // namespace cszb_scoreboard
