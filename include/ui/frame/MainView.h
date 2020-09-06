@@ -25,6 +25,7 @@ limitations under the License.
 #include "ui/component/ControlPanel.h"
 #include "ui/component/Menu.h"
 #include "ui/component/PreviewPanel.h"
+#include "ui/component/QuickStatePanel.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/control/TextEntry.h"
 #include "ui/dialog/SettingsDialog.h"
@@ -44,10 +45,6 @@ class MainView : public wxFrame {
 #endif
 
  private:
-  ControlPanel* control_panel;
-  SettingsDialog* settings_dialog;
-  PreviewPanel* preview_panel;
-  UpdateTimer* update_timer;
   void bindEvents();
   void createMenu();
   wxNotebook* createControlNotebook();
@@ -58,6 +55,12 @@ class MainView : public wxFrame {
   void onSettingsChange(wxCommandEvent& event);
   void positionWidgets();
   void showSettings(wxCommandEvent& event);
+
+  ControlPanel* control_panel;
+  SettingsDialog* settings_dialog;
+  PreviewPanel* preview_panel;
+  QuickStatePanel* quick_state;
+  UpdateTimer* update_timer;
 };
 
 }  // namespace cszb_scoreboard
