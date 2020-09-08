@@ -70,7 +70,7 @@ IF(WIN32)
     SET(SCOREBOARD_SRC ${SCOREBOARD_SRC} "resources/scoreboard.rc")
 ENDIF(WIN32)
 
-include((${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
 add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCES})
