@@ -58,7 +58,7 @@ class ScoreControl : public ScreenTextController {
   void toggleIntroMode(wxCommandEvent &event);
   std::vector<proto::RenderableText> introLines(bool isHome);
   std::vector<proto::RenderableText> scoreLines(bool isHome);
-  void updatePreview() override;
+  void updateScreenText(ScreenText *screen_text) override;
 
   wxTextCtrl *alpha_ctrl, *size_ctrl;
   wxToggleButton *team_intro_button;

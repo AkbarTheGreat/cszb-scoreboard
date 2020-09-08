@@ -31,10 +31,13 @@ namespace cszb_scoreboard {
 // initializeWidgets() on the newly created pointer.
 class ScreenTextController : public wxPanel {
  public:
-  /* Called externally to request an update to the preview panel currently
-   * selected.  All internally triggered updates to previews should filter
-   * through here, for consistency.  */
-  virtual void updatePreview() = 0;
+  /* Called externally to request an update to the given panel.  All internally
+   * triggered updates to previews should filter  through here, for consistency.
+   */
+  virtual void updateScreenText(ScreenText *screen_text) = 0;
+
+  /* May be used to select the current preview panel*/
+  void updatePreview();
 
  protected:
   /* Populate this control_panel in child classes with whatever controls this

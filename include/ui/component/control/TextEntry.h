@@ -57,7 +57,7 @@ PUBLIC_TEST_ONLY
   Color all_color;
 
   TextEntry(PreviewPanel *preview_panel, wxWindow *parent);
-  void updatePreview() override;
+  void updateScreenText(ScreenText *screen_text) override;
   void createControls(wxPanel *control_panel) override;
 
   void bindEvents();

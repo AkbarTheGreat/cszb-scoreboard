@@ -99,16 +99,16 @@ void TextEntry::bindEvents() {
 
 wxTextCtrl *TextEntry::textField() { return text_entry; }
 
-void TextEntry::updatePreview() {
+void TextEntry::updateScreenText(ScreenText *screen_text) {
   // Send the combined text to both previews
   if (screen_selection->allSelected()) {
-    previewPanel()->setTextForPreview(all_text, all_font_size, all_color, true,
-                                      ProtoUtil::allSide());
+    screen_text->setAllText(all_text, all_font_size, all_color, true,
+                            ProtoUtil::allSide());
   } else {
-    previewPanel()->setTextForPreview(home_text, home_font_size, home_color,
-                                      true, ProtoUtil::homeSide());
-    previewPanel()->setTextForPreview(away_text, away_font_size, away_color,
-                                      true, ProtoUtil::awaySide());
+    screen_text->setAllText(home_text, home_font_size, home_color, true,
+                            ProtoUtil::homeSide());
+    screen_text->setAllText(away_text, away_font_size, away_color, true,
+                            ProtoUtil::awaySide());
   }
 }
 

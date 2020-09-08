@@ -44,8 +44,10 @@ class ScreenText : public wxPanel {
   void addText(proto::RenderableText text, const proto::ScreenSide& side);
   void blackout();
   void resetAllText(const proto::ScreenSide& side);
-  void setImage(const wxImage& image, bool is_scaled,
-                const proto::ScreenSide& side);
+  void setImage(const wxImage& image, const proto::ScreenSide& side) {
+    setImage(image, true, side);
+    Refresh();
+  }
   void setBackground(const Color& color, const proto::ScreenSide& side);
   void setBackgroundOverlay(const wxImage& overlay,
                             double overlay_screen_percentage,
@@ -54,8 +56,17 @@ class ScreenText : public wxPanel {
                             const proto::ScreenSide& side);
   void setDefaultBackground(const proto::ScreenSide& side);
   void setFontColor(proto::Font* font, const proto::ScreenSide& side);
-  void setText(const wxString& text, int font_size,
-               const proto::ScreenSide& side);
+  // Resets text fully for screen updates
+  void setAllText(wxString text, int font_size, const Color& background,
+                         bool auto_fit, const proto::ScreenSide& side);
+  void setAllText(std::vector<proto::RenderableText> lines,
+                  const Color& background, bool auto_fit,
+                  const proto::ScreenSide& side);
+  void setAllText(std::vector<proto::RenderableText> lines,
+                  const Color& background, bool auto_fit,
+                  const wxImage& logo_overlay, double overlay_screen_percentage,
+                  unsigned char logo_alpha, OverlayScreenPosition logo_position,
+                  const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
 
@@ -73,6 +84,10 @@ class ScreenText : public wxPanel {
   void autosplitDisplays(proto::ScreenSide side);
   void initializeSides(std::vector<ScreenTextSide*> text_sides);
   void singleDisplay();
+  void setImage(const wxImage& image, bool is_scaled,
+                const proto::ScreenSide& side);
+  void setText(const wxString& text, int font_size,
+               const proto::ScreenSide& side);
   void splitDisplays();
   static wxSize splitScreenSize(int x, int y, int number_of_splits);
 };

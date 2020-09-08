@@ -44,27 +44,24 @@ void ScreenImageController::bindEvents() {
                          &ScreenImageController::screenChanged, this);
 }
 
-void ScreenImageController::updatePreview() {
+void ScreenImageController::updateScreenText(ScreenText *screen_text) {
   if (screen_selection->allSelected() && all_screen_image.IsOk()) {
     // Send the image to both screens
-    previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                      ProtoUtil::allSide());
-    previewPanel()->setImageForPreview(all_screen_image, ProtoUtil::allSide());
+    screen_text->setAllText("", 1, Color("Black"), false, ProtoUtil::allSide());
+    screen_text->setImage(all_screen_image, ProtoUtil::allSide());
   } else {
     if (home_screen_image.IsOk()) {
-      previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                        ProtoUtil::homeSide());
-      previewPanel()->setImageForPreview(home_screen_image,
-                                         ProtoUtil::homeSide());
+      screen_text->setAllText("", 1, Color("Black"), false,
+                              ProtoUtil::homeSide());
+      screen_text->setImage(home_screen_image, ProtoUtil::homeSide());
     }
     if (away_screen_image.IsOk()) {
-      previewPanel()->setTextForPreview("", 1, Color("Black"), false,
-                                        ProtoUtil::awaySide());
-      previewPanel()->setImageForPreview(away_screen_image,
-                                         ProtoUtil::awaySide());
+      screen_text->setAllText("", 1, Color("Black"), false,
+                              ProtoUtil::awaySide());
+      screen_text->setImage(away_screen_image, ProtoUtil::awaySide());
     }
   }
-}  // namespace cszb_scoreboard
+}
 
 void ScreenImageController::screenChanged(wxCommandEvent &event) {
   if (screen_selection->allSelected()) {

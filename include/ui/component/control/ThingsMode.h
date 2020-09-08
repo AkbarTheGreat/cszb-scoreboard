@@ -34,7 +34,7 @@ class ThingsMode : public ScreenTextController {
  public:
   static ThingsMode *Create(PreviewPanel *preview_panel, wxWindow *parent);
   void textUpdated(wxKeyEvent &event);
-  void updatePreview() override;
+  void updateScreenText(ScreenText *screen_text) override;
 
  private:
   wxPanel *button_panel;

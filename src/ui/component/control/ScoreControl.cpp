@@ -274,7 +274,7 @@ namespace cszb_scoreboard {
 		return update;
 	}
 
-	void ScoreControl::updatePreview() {
+  void ScoreControl::updateScreenText(ScreenText *screen_text) {
 		home_color_picker->SetColour(
 			TeamColors::getInstance()->getColor(ProtoUtil::homeSide()));
 		away_color_picker->SetColour(
@@ -297,22 +297,22 @@ namespace cszb_scoreboard {
 		}
 
 		if (home_logo.has_value()) {
-			previewPanel()->setTextForPreview(
+			screen_text->setAllText(
 				home_update, home_color_picker->GetColour(), true, *home_logo,
 				LOGO_OVERLAY_SCALE, LOGO_ALPHA, logo_position, ProtoUtil::homeSide());
 		}
 		else {
-			previewPanel()->setTextForPreview(home_update,
+			screen_text->setAllText(home_update,
 				home_color_picker->GetColour(), true,
 				ProtoUtil::homeSide());
 		}
 		if (away_logo.has_value()) {
-			previewPanel()->setTextForPreview(
+			screen_text->setAllText(
 				away_update, away_color_picker->GetColour(), true, *away_logo,
 				LOGO_OVERLAY_SCALE, LOGO_ALPHA, logo_position, ProtoUtil::awaySide());
 		}
 		else {
-			previewPanel()->setTextForPreview(away_update,
+			screen_text->setAllText(away_update,
 				away_color_picker->GetColour(), true,
 				ProtoUtil::awaySide());
 		}

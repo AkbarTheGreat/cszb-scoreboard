@@ -65,4 +65,10 @@ void ScreenTextController::updateClicked(wxCommandEvent &event) {
   preview_panel->updatePresenters();
 }
 
+void ScreenTextController::updatePreview() {
+  for (auto screen : previewPanel()->all_screens()) {
+    updateScreenText(screen->widget());
+  }
+}
+
 }  // namespace cszb_scoreboard

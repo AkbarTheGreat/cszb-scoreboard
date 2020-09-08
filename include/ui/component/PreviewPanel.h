@@ -36,19 +36,7 @@ class PreviewPanel : public wxPanel {
  public:
   PreviewPanel(wxWindow* parent);
   void blackout(wxCommandEvent& event);
-  void setImageForPreview(const wxImage& image, const proto::ScreenSide& side);
-  void setTextForPreview(wxString text, int font_size, const Color& background,
-                         bool auto_fit, const proto::ScreenSide& side);
-  void setTextForPreview(std::vector<proto::RenderableText> lines,
-                         const Color& background, bool auto_fit,
-                         const proto::ScreenSide& side);
-  void setTextForPreview(std::vector<proto::RenderableText> lines,
-                         const Color& background, bool auto_fit,
-                         const wxImage& logo_overlay,
-                         double overlay_screen_percentage,
-                         unsigned char logo_alpha,
-                         OverlayScreenPosition logo_position,
-                         const proto::ScreenSide& side);
+  inline const std::vector<ScreenPreview*> all_screens() { return screens; }
   void updatePresenters();
   void updatePreviewsFromSettings();
 

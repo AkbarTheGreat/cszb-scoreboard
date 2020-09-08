@@ -123,6 +123,49 @@ void ScreenText::setText(const wxString& text, int font_size,
   }
 }
 
+void ScreenText::setAllText(wxString text, int font_size,
+                            const Color& background, bool auto_fit,
+                            const proto::ScreenSide& side) {
+  setAutoFit(auto_fit, side);
+  setBackground(background, side);
+  setText(text, font_size, side);
+  Refresh();
+}
+
+void ScreenText::setAllText(std::vector<proto::RenderableText> lines,
+                            const Color& background, bool auto_fit,
+                            const proto::ScreenSide& side) {
+  setAutoFit(auto_fit, side);
+  resetAllText(side);
+  setBackground(background, side);
+  for (auto line : lines) {
+    ProtoUtil::validateFont(line.mutable_font());
+    setFontColor(line.mutable_font(), side);
+    addText(line, side);
+    Refresh();
+  }
+}
+
+void ScreenText::setAllText(std::vector<proto::RenderableText> lines,
+                            const Color& background, bool auto_fit,
+                            const wxImage& logo_overlay,
+                            double overlay_screen_percentage,
+                            unsigned char logo_alpha,
+                            OverlayScreenPosition logo_position,
+                            const proto::ScreenSide& side) {
+  setAutoFit(auto_fit, side);
+  resetAllText(side);
+  setBackground(background, side);
+  setBackgroundOverlay(logo_overlay, overlay_screen_percentage, logo_alpha,
+                       logo_position, side);
+  for (auto line : lines) {
+    ProtoUtil::validateFont(line.mutable_font());
+    setFontColor(line.mutable_font(), side);
+    addText(line, side);
+    Refresh();
+  }
+}
+
 void ScreenText::setFontColor(proto::Font* font,
                               const proto::ScreenSide& side) {
   autosplitDisplays(side);

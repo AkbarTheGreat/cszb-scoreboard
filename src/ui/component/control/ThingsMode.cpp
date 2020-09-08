@@ -105,7 +105,7 @@ void ThingsMode::bindEvents() {
                             &ThingsMode::presentedListChanged, this);
 }
 
-void ThingsMode::updatePreview() {
+void ThingsMode::updateScreenText(ScreenText *screen_text) {
   ActivityPanel *selected_panel = all_activities_panel;
   if (screen_selection->allSelected()) {
     // Do nothing, already set
@@ -133,8 +133,8 @@ void ThingsMode::updatePreview() {
         selected_panel->replacementPanel()->previewText(DEFAULT_FONT_SIZE);
   }
 
-  previewPanel()->setTextForPreview(screen_lines, screen_color, true,
-                                    ProtoUtil::allSide());
+  screen_text->setAllText(screen_lines, screen_color, true,
+                          ProtoUtil::allSide());
 }
 
 void ThingsMode::textUpdated(wxKeyEvent &event) { updatePreview(); }

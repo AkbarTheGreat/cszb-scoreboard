@@ -44,7 +44,7 @@ class ScreenImageController : public ScreenTextController {
   void createControls(wxPanel *control_panel) override;
   virtual void positionWidgets(wxPanel *control_panel) = 0;
   void screenChanged(wxCommandEvent &event);
-  void updatePreview() override;
+  void updateScreenText(ScreenText *screen_text) override;
 };
 
 }  // namespace cszb_scoreboard
