@@ -33,6 +33,7 @@ namespace cszb_scoreboard {
 class ControlPanel : public wxAuiNotebook {
  public:
   ControlPanel(wxWindow* parent, PreviewPanel* preview_panel);
+  void updateScreenTextFromSelected(ScreenText* screen_text);
 
 #ifdef SCOREBOARD_TESTING
   ScreenTextController* textController(int index) { return controllers[index]; }

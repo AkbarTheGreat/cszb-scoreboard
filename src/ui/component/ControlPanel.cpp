@@ -62,4 +62,8 @@ void ControlPanel::tabChanged(wxAuiNotebookEvent& event) {
   controllers[event.GetSelection()]->updatePreview();
 }
 
+void ControlPanel::updateScreenTextFromSelected(ScreenText* screen_text) {
+  controllers[GetSelection()]->updateScreenText(screen_text);
+}
+
 }  // namespace cszb_scoreboard

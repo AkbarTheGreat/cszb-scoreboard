@@ -58,7 +58,7 @@ class ScreenText : public wxPanel {
   void setFontColor(proto::Font* font, const proto::ScreenSide& side);
   // Resets text fully for screen updates
   void setAllText(wxString text, int font_size, const Color& background,
-                         bool auto_fit, const proto::ScreenSide& side);
+                  bool auto_fit, const proto::ScreenSide& side);
   void setAllText(std::vector<proto::RenderableText> lines,
                   const Color& background, bool auto_fit,
                   const proto::ScreenSide& side);
@@ -69,9 +69,10 @@ class ScreenText : public wxPanel {
                   const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
+  const std::vector<ScreenTextSide*> sides() { return text_sides; }
 
 #ifdef SCOREBOARD_TESTING
-  wxPanel* sidePanel(int index) { return text_sides[index]; }
+  wxPanel* sidePanel(int index) { return sides()[index]; }
 #endif
 
  private:

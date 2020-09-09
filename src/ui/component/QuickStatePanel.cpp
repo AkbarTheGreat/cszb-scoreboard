@@ -19,6 +19,7 @@ limitations under the License.
 #include "ui/component/QuickStatePanel.h"
 
 #include "ui/UiUtil.h"
+#include "ui/frame/MainView.h"
 #include "util/ProtoUtil.h"
 #include "wx/gbsizer.h"
 
@@ -58,6 +59,26 @@ void QuickStatePanel::positionWidgets() {
   SetSizerAndFit(sizer);
 }
 
-void QuickStatePanel::bindEvents() {}
+void QuickStatePanel::bindEvents() {
+  for (auto screen : screen_texts) {
+    for (auto side : screen->sides()) {
+      side->Bind(wxEVT_RIGHT_UP, &QuickStatePanel::setShortcut, this);
+      side->Bind(wxEVT_LEFT_UP, &QuickStatePanel::executeShortcut, this);
+    }
+  }
+}
+
+void QuickStatePanel::executeShortcut(wxMouseEvent& event) {
+  setShortcut(event);
+  event.Skip();
+}
+
+void QuickStatePanel::setShortcut(wxMouseEvent& event) {
+  ScreenTextSide* side = (ScreenTextSide*)event.GetEventObject();
+  ScreenText* screen = (ScreenText*)side->GetParent();
+  MainView* main = (MainView*)GetParent();
+  main->controlPanel()->updateScreenTextFromSelected(screen);
+  event.Skip();
+}
 
 }  // namespace cszb_scoreboard

@@ -34,6 +34,8 @@ class QuickStatePanel : public wxPanel {
   ~QuickStatePanel();
   void bindEvents();
   void positionWidgets();
+  void executeShortcut(wxMouseEvent& event);
+  void setShortcut(wxMouseEvent& event);
 
   std::vector<ScreenText*> screen_texts;
 };

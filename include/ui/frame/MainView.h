@@ -36,12 +36,10 @@ namespace cszb_scoreboard {
 class MainView : public wxFrame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
-  void setTextForPreview(wxString text, int font_size, proto::ScreenSide side);
-  void updatePresenters(proto::ScreenSide side);
+  ControlPanel* controlPanel() { return control_panel; }
 
 #ifdef SCOREBOARD_TESTING
   inline PreviewPanel* previewPanel() { return preview_panel; }
-  ControlPanel* controlPanel() { return control_panel; }
 #endif
 
  private:
