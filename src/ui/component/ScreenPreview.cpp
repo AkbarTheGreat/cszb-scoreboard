@@ -98,10 +98,12 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
   current_widget->Refresh();
 }
 
-void ScreenPreview::sendToPresenter() {
-  presenter->widget()->setAll(*current_widget);
-  thumbnail->widget()->setAll(*current_widget);
+void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
+  presenter->widget()->setAll(*screen_text);
+  thumbnail->widget()->setAll(*screen_text);
 }
+
+void ScreenPreview::sendToPresenter() { sendToPresenter(current_widget); }
 
 void ScreenPreview::blackoutPresenter() {
   presenter->widget()->blackout();

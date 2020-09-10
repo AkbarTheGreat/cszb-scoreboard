@@ -62,6 +62,9 @@ void QuickStatePanel::positionWidgets() {
 void QuickStatePanel::bindEvents() {
   for (auto screen : screen_texts) {
     for (auto side : screen->sides()) {
+      // You have to bind events directly to the ScreenTextSide, as mouse events
+      // don't propagate up to parent widgets (even if the child widget doesn't
+      // have a handler bound for that event, apparently.)
       side->Bind(wxEVT_RIGHT_UP, &QuickStatePanel::setShortcut, this);
       side->Bind(wxEVT_LEFT_UP, &QuickStatePanel::executeShortcut, this);
     }
@@ -69,8 +72,10 @@ void QuickStatePanel::bindEvents() {
 }
 
 void QuickStatePanel::executeShortcut(wxMouseEvent& event) {
-  setShortcut(event);
-  event.Skip();
+  ScreenTextSide* side = (ScreenTextSide*)event.GetEventObject();
+  ScreenText* screen = (ScreenText*)side->GetParent();
+  MainView* main = (MainView*)GetParent();
+  main->previewPanel()->setToPresenters(screen);
 }
 
 void QuickStatePanel::setShortcut(wxMouseEvent& event) {
@@ -78,7 +83,6 @@ void QuickStatePanel::setShortcut(wxMouseEvent& event) {
   ScreenText* screen = (ScreenText*)side->GetParent();
   MainView* main = (MainView*)GetParent();
   main->controlPanel()->updateScreenTextFromSelected(screen);
-  event.Skip();
 }
 
 }  // namespace cszb_scoreboard

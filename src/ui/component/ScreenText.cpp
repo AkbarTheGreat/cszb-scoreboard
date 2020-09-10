@@ -257,15 +257,18 @@ wxSize ScreenText::splitScreenSize(int x, int y, int number_of_splits) {
 }
 
 void ScreenText::setAll(const ScreenText& source) {
-  // TODO: This assumes both have the same number of sides, and may not be
-  // safe long-term
   if (source.is_single_view) {
     singleDisplay();
   } else {
     splitDisplays();
   }
-  for (int i = 0; i < text_sides.size(); i++) {
-    this->text_sides[i]->setAll(source.text_sides[i]);
+
+  for (auto target_side : text_sides) {
+    for (auto source_side : source.text_sides) {
+      if (target_side->isSide(source_side->side())) {
+        target_side->setAll(source_side);
+      }
+    }
   }
 }
 

@@ -82,6 +82,12 @@ ScreenPreview* PreviewPanel::preview(int index) {
   return screens[index];
 }
 
+void PreviewPanel::setToPresenters(ScreenText* screen_text) {
+  for (auto preview : screens) {
+    preview->sendToPresenter(screen_text);
+  }
+}
+
 void PreviewPanel::updatePresenters() {
   for (auto preview : screens) {
     preview->sendToPresenter();

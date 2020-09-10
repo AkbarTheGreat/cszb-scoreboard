@@ -31,6 +31,7 @@ class ScreenPreview {
   ScreenPreview(wxWindow* parent, std::vector<proto::ScreenSide> sides,
                 int monitor_number);
   ScreenText* widget();
+  void sendToPresenter(ScreenText* screen_text);
   void sendToPresenter();
   void blackoutPresenter();
   wxPanel* controlPane();

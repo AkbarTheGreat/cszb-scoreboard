@@ -58,6 +58,7 @@ class ScreenTextSide : public wxPanel {
   void setAll(const ScreenTextSide* source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
   void setSize(const wxSize& size);
+  const proto::ScreenSide& side() { return screen_side; }
   bool isSide(proto::ScreenSide side);
 
   PUBLIC_TEST_ONLY

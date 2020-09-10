@@ -37,10 +37,7 @@ class MainView : public wxFrame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
   ControlPanel* controlPanel() { return control_panel; }
-
-#ifdef SCOREBOARD_TESTING
-  inline PreviewPanel* previewPanel() { return preview_panel; }
-#endif
+  PreviewPanel* previewPanel() { return preview_panel; }
 
  private:
   void bindEvents();

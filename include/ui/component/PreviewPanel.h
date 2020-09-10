@@ -37,6 +37,7 @@ class PreviewPanel : public wxPanel {
   PreviewPanel(wxWindow* parent);
   void blackout(wxCommandEvent& event);
   inline const std::vector<ScreenPreview*> all_screens() { return screens; }
+  void setToPresenters(ScreenText* screen_text);
   void updatePresenters();
   void updatePreviewsFromSettings();
 
