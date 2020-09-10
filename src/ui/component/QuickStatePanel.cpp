@@ -28,40 +28,45 @@ namespace cszb_scoreboard {
 const int PREVIEW_WIDTH = 85;  // a thumbnail-sized 4x3 display
 const int PREVIEW_HEIGHT = 64;
 
+QuickStateEntry::QuickStateEntry(wxPanel* parent) {
+  screen_text = ScreenText::getPreview(
+      parent, "", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
+      wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
+
+  screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
+  screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+}
+
 QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
-  // std::vector<proto::ScreenSide> = {ProtoUtil::allSide()}
   for (int i = 0; i < 10; ++i) {
-    ScreenText* screen_text = ScreenText::getPreview(
-        this, "X", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
-        wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
-    screen_text->blackout();
-    screen_texts.push_back(screen_text);
+    QuickStateEntry* entry = new QuickStateEntry(this);
+    entries.push_back(entry);
   }
   positionWidgets();
   bindEvents();
 }
 
 QuickStatePanel::~QuickStatePanel() {
-  for (auto screen_text : screen_texts) {
-    screen_text->Destroy();
+  for (auto entry : entries) {
+    entry->screen()->Destroy();
   }
 
-  screen_texts.clear();
+  entries.clear();
 }
 
 void QuickStatePanel::positionWidgets() {
   wxGridBagSizer* sizer = new wxGridBagSizer();
 
-  for (int i = 0; i < screen_texts.size(); i++) {
-    UiUtil::addToGridBag(sizer, screen_texts[i], i, 0);
+  for (int i = 0; i < entries.size(); i++) {
+    UiUtil::addToGridBag(sizer, entries[i]->screen(), i, 0);
   }
 
   SetSizerAndFit(sizer);
 }
 
 void QuickStatePanel::bindEvents() {
-  for (auto screen : screen_texts) {
-    for (auto side : screen->sides()) {
+  for (auto entry : entries) {
+    for (auto side : entry->screen()->sides()) {
       // You have to bind events directly to the ScreenTextSide, as mouse events
       // don't propagate up to parent widgets (even if the child widget doesn't
       // have a handler bound for that event, apparently.)

@@ -26,6 +26,18 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+class QuickStateEntry {
+ public:
+  QuickStateEntry(wxPanel* parent);
+  void initialize() { initialized = true; }
+  bool isInitialized() { return initialized; }
+  ScreenText* screen() { return screen_text; }
+
+ private:
+  ScreenText* screen_text;
+  bool initialized = false;
+};
+
 class QuickStatePanel : public wxPanel {
  public:
   QuickStatePanel(wxWindow* parent);
@@ -37,7 +49,7 @@ class QuickStatePanel : public wxPanel {
   void executeShortcut(wxMouseEvent& event);
   void setShortcut(wxMouseEvent& event);
 
-  std::vector<ScreenText*> screen_texts;
+  std::vector<QuickStateEntry*> entries;
 };
 
 }  // namespace cszb_scoreboard
