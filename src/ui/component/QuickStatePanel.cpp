@@ -39,8 +39,7 @@ QuickStateEntry::QuickStateEntry(wxPanel* parent) {
 
 QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
   for (int i = 0; i < 10; ++i) {
-    QuickStateEntry* entry = new QuickStateEntry(this);
-    entries.push_back(entry);
+    entries.push_back(new QuickStateEntry(this));
   }
   positionWidgets();
   bindEvents();
@@ -76,10 +75,22 @@ void QuickStatePanel::bindEvents() {
   }
 }
 
+QuickStateEntry* QuickStatePanel::entryForScreen(ScreenText* screen) {
+  for (auto entry : entries) {
+    if (entry->screen() == screen) {
+      return entry;
+    }
+  }
+  return nullptr;
+}
+
 void QuickStatePanel::executeShortcut(wxMouseEvent& event) {
   ScreenTextSide* side = (ScreenTextSide*)event.GetEventObject();
   ScreenText* screen = (ScreenText*)side->GetParent();
   MainView* main = (MainView*)GetParent();
+  if (!entryForScreen(screen)->isInitialized()) {
+    return;
+  }
   main->previewPanel()->setToPresenters(screen);
 }
 
@@ -88,6 +99,7 @@ void QuickStatePanel::setShortcut(wxMouseEvent& event) {
   ScreenText* screen = (ScreenText*)side->GetParent();
   MainView* main = (MainView*)GetParent();
   main->controlPanel()->updateScreenTextFromSelected(screen);
+  entryForScreen(screen)->initialize();
 }
 
 }  // namespace cszb_scoreboard

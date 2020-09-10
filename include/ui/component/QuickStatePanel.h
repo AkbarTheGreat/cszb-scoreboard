@@ -46,6 +46,7 @@ class QuickStatePanel : public wxPanel {
   ~QuickStatePanel();
   void bindEvents();
   void positionWidgets();
+  QuickStateEntry* entryForScreen(ScreenText* screen);
   void executeShortcut(wxMouseEvent& event);
   void setShortcut(wxMouseEvent& event);
 
