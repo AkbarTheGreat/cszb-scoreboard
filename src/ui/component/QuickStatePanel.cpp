@@ -19,6 +19,7 @@ limitations under the License.
 #include "ui/component/QuickStatePanel.h"
 
 #include "ui/UiUtil.h"
+#include "ui/frame/HotkeyTable.h"
 #include "ui/frame/MainView.h"
 #include "util/ProtoUtil.h"
 #include "wx/gbsizer.h"
@@ -28,18 +29,63 @@ namespace cszb_scoreboard {
 const int PREVIEW_WIDTH = 85;  // a thumbnail-sized 4x3 display
 const int PREVIEW_HEIGHT = 64;
 
-QuickStateEntry::QuickStateEntry(wxPanel* parent) {
+QuickStateEntry::QuickStateEntry(wxPanel* parent, int id) {
   screen_text = ScreenText::getPreview(
       parent, "", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
       wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
 
   screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
   screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+
+  // These two buttons are always hidden and exist only to add hotkey support
+  set_button = new wxButton(parent, wxID_ANY);
+  execute_button = new wxButton(parent, wxID_ANY);
+  set_button->Hide();
+  execute_button->Hide();
+
+  bindEvents(id);
+}
+
+void QuickStateEntry::bindEvents(int id) {
+  QuickStatePanel* parent = (QuickStatePanel*)screen()->GetParent();
+  for (auto side : screen()->sides()) {
+    // You have to bind events directly to the ScreenTextSide, as mouse events
+    // don't propagate up to parent widgets (even if the child widget doesn't
+    // have a handler bound for that event, apparently.)
+    side->Bind(wxEVT_RIGHT_UP, &QuickStateEntry::setShortcutFromPanel, this);
+    side->Bind(wxEVT_LEFT_UP, &QuickStateEntry::executeShortcutFromPanel, this);
+  }
+  execute_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                       &QuickStateEntry::executeShortcutFromButton, this);
+  set_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                   &QuickStateEntry::setShortcutFromButton, this);
+  char command_button = 0x31 + id;
+  if (id >= 9) {
+    command_button = 0x30;
+  }
+  HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, command_button,
+                                        execute_button->GetId());
+  HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL | wxACCEL_ALT,
+                                        command_button, set_button->GetId());
+}
+
+void QuickStateEntry::executeShortcut() {
+  if (!initialized) {
+    return;
+  }
+  QuickStatePanel* parent = (QuickStatePanel*)screen()->GetParent();
+  parent->executeShortcut(screen());
+}
+
+void QuickStateEntry::setShortcut() {
+  initialized = true;
+  QuickStatePanel* parent = (QuickStatePanel*)screen()->GetParent();
+  parent->setShortcut(screen());
 }
 
 QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
   for (int i = 0; i < 10; ++i) {
-    entries.push_back(new QuickStateEntry(this));
+    entries.push_back(new QuickStateEntry(this, i));
   }
   positionWidgets();
   bindEvents();
@@ -63,43 +109,16 @@ void QuickStatePanel::positionWidgets() {
   SetSizerAndFit(sizer);
 }
 
-void QuickStatePanel::bindEvents() {
-  for (auto entry : entries) {
-    for (auto side : entry->screen()->sides()) {
-      // You have to bind events directly to the ScreenTextSide, as mouse events
-      // don't propagate up to parent widgets (even if the child widget doesn't
-      // have a handler bound for that event, apparently.)
-      side->Bind(wxEVT_RIGHT_UP, &QuickStatePanel::setShortcut, this);
-      side->Bind(wxEVT_LEFT_UP, &QuickStatePanel::executeShortcut, this);
-    }
-  }
-}
+void QuickStatePanel::bindEvents() {}
 
-QuickStateEntry* QuickStatePanel::entryForScreen(ScreenText* screen) {
-  for (auto entry : entries) {
-    if (entry->screen() == screen) {
-      return entry;
-    }
-  }
-  return nullptr;
-}
-
-void QuickStatePanel::executeShortcut(wxMouseEvent& event) {
-  ScreenTextSide* side = (ScreenTextSide*)event.GetEventObject();
-  ScreenText* screen = (ScreenText*)side->GetParent();
+void QuickStatePanel::executeShortcut(ScreenText* screen) {
   MainView* main = (MainView*)GetParent();
-  if (!entryForScreen(screen)->isInitialized()) {
-    return;
-  }
   main->previewPanel()->setToPresenters(screen);
 }
 
-void QuickStatePanel::setShortcut(wxMouseEvent& event) {
-  ScreenTextSide* side = (ScreenTextSide*)event.GetEventObject();
-  ScreenText* screen = (ScreenText*)side->GetParent();
+void QuickStatePanel::setShortcut(ScreenText* screen) {
   MainView* main = (MainView*)GetParent();
   main->controlPanel()->updateScreenTextFromSelected(screen);
-  entryForScreen(screen)->initialize();
 }
 
 }  // namespace cszb_scoreboard

@@ -28,27 +28,34 @@ namespace cszb_scoreboard {
 
 class QuickStateEntry {
  public:
-  QuickStateEntry(wxPanel* parent);
-  void initialize() { initialized = true; }
-  bool isInitialized() { return initialized; }
+  QuickStateEntry(wxPanel* parent, int id);
   ScreenText* screen() { return screen_text; }
 
  private:
+  void bindEvents(int id);
+  void executeShortcut();
+  void setShortcut();
+
+  void executeShortcutFromButton(wxCommandEvent& event) { executeShortcut(); }
+  void executeShortcutFromPanel(wxMouseEvent& event) { executeShortcut(); }
+  void setShortcutFromButton(wxCommandEvent& event) { setShortcut(); }
+  void setShortcutFromPanel(wxMouseEvent& event) { setShortcut(); }
+
   ScreenText* screen_text;
+  wxButton *set_button, *execute_button;
   bool initialized = false;
 };
 
 class QuickStatePanel : public wxPanel {
  public:
   QuickStatePanel(wxWindow* parent);
+  void executeShortcut(ScreenText* screen);
+  void setShortcut(ScreenText* screen);
 
  private:
   ~QuickStatePanel();
   void bindEvents();
   void positionWidgets();
-  QuickStateEntry* entryForScreen(ScreenText* screen);
-  void executeShortcut(wxMouseEvent& event);
-  void setShortcut(wxMouseEvent& event);
 
   std::vector<QuickStateEntry*> entries;
 };
