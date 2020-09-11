@@ -35,7 +35,10 @@ class QuickStateEntry {
   void bindEvents(int id);
   void executeShortcut();
   void setShortcut();
+  std::string tooltipText(char command_character);
 
+  // Thin wrappers just to include the appropriate event objects in the
+  // signatures.
   void executeShortcutFromButton(wxCommandEvent& event) { executeShortcut(); }
   void executeShortcutFromPanel(wxMouseEvent& event) { executeShortcut(); }
   void setShortcutFromButton(wxCommandEvent& event) { setShortcut(); }
@@ -54,7 +57,6 @@ class QuickStatePanel : public wxPanel {
 
  private:
   ~QuickStatePanel();
-  void bindEvents();
   void positionWidgets();
 
   std::vector<QuickStateEntry*> entries;

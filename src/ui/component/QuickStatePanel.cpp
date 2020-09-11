@@ -18,6 +18,8 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
+#include <string>
+
 #include "ui/UiUtil.h"
 #include "ui/frame/HotkeyTable.h"
 #include "ui/frame/MainView.h"
@@ -48,21 +50,27 @@ QuickStateEntry::QuickStateEntry(wxPanel* parent, int id) {
 
 void QuickStateEntry::bindEvents(int id) {
   QuickStatePanel* parent = (QuickStatePanel*)screen()->GetParent();
+
+  char command_button = 0x31 + id;
+  if (id >= 9) {
+    command_button = 0x30;
+  }
+  std::string tooltip = tooltipText(command_button);
+
   for (auto side : screen()->sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
     side->Bind(wxEVT_RIGHT_UP, &QuickStateEntry::setShortcutFromPanel, this);
     side->Bind(wxEVT_LEFT_UP, &QuickStateEntry::executeShortcutFromPanel, this);
+    side->SetToolTip(tooltip);
   }
+
   execute_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                        &QuickStateEntry::executeShortcutFromButton, this);
   set_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                    &QuickStateEntry::setShortcutFromButton, this);
-  char command_button = 0x31 + id;
-  if (id >= 9) {
-    command_button = 0x30;
-  }
+
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, command_button,
                                         execute_button->GetId());
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL | wxACCEL_ALT,
@@ -83,12 +91,20 @@ void QuickStateEntry::setShortcut() {
   parent->setShortcut(screen());
 }
 
+std::string QuickStateEntry::tooltipText(char command_character) {
+  std::unique_ptr<char[]> buffer(new char[100]);
+  int size = snprintf(buffer.get(), 100,
+                      "Right Click (Ctrl+Alt+%c) to set\nLeft Click (Ctrl+%c) "
+                      "to send to monitors",
+                      command_character, command_character);
+  return std::string(buffer.get(), buffer.get() + size);
+}
+
 QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
   for (int i = 0; i < 10; ++i) {
     entries.push_back(new QuickStateEntry(this, i));
   }
   positionWidgets();
-  bindEvents();
 }
 
 QuickStatePanel::~QuickStatePanel() {
@@ -108,8 +124,6 @@ void QuickStatePanel::positionWidgets() {
 
   SetSizerAndFit(sizer);
 }
-
-void QuickStatePanel::bindEvents() {}
 
 void QuickStatePanel::executeShortcut(ScreenText* screen) {
   MainView* main = (MainView*)GetParent();

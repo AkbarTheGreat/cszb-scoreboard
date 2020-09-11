@@ -40,9 +40,7 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 
   preview_panel = new PreviewPanel(this);
   control_panel = new ControlPanel(this, preview_panel);
-#ifdef ENABLE_QUICK_STATE
   quick_state = new QuickStatePanel(this);
-#endif
 
   positionWidgets();
   bindEvents();
@@ -89,9 +87,7 @@ void MainView::positionWidgets() {
   wxGridBagSizer* sizer = new wxGridBagSizer();
   UiUtil::addToGridBag(sizer, preview_panel, 0, 0);
   UiUtil::addToGridBag(sizer, control_panel, 1, 0);
-#ifdef ENABLE_QUICK_STATE
   UiUtil::addToGridBag(sizer, quick_state, 0, 1, 2, 1);
-#endif
 
   SetSizerAndFit(sizer);
 }
