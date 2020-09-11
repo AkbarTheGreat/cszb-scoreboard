@@ -35,7 +35,7 @@ For MacOS and Linux, the application will detect when a new release has been rel
 When you first start the application, the main (or booth, or control) window should look something like the following, depending on how many monitors it detects connected to your system:
 
 ![alt](img/startup.png "Window startup")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 Of special note are the status bar (along the bottom of the window), the screen previews (the larger blue and red boxes),  the screen thumbnanils (the smaller blue and red boxes),  and the "Send to Monitors" button (at the bottom of the controls at the bottom).
 
@@ -62,14 +62,14 @@ The scoreboard begins with the score control tab selected, but each control tab'
 ### Score
 
 ![alt](img/scores.png "Score Control")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 The controls for score are in two columns, one for each team.  The columns reflect the team order configured in the settings menu.  This means if your theater has away on stage right and home on stage left, changing the settings in the menu will change these controls so that they reflect your physical setup.  Hotkeys also reflect this arrangement (where the left team is controlled by q/a/z and the right team by w/s/x).  The controls, from top to bottom, set the team color, team name, score, quick score updates, and team logo.  See the section below for team logo guidelines.
 
 Additionally, to the right, there is a button which toggles the "Introduce teams" mode, which shows the team names in a large, full-screen format, as below.  To return to the traditional score display, press the button again (which will now be labelled "Show Scores")
 
 ![alt](img/team_intro.png "Introduce Teams")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 #### Team Logo Guidelines
 
@@ -82,12 +82,12 @@ The image library allows you to save a collection of images in a searchable data
 The arrow buttons above the images can be used to scroll through images.  The Team selector at the top selects which team's monitors will display the given image.
 
 ![alt](img/image_library.png "Image Library")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 All images in the library may have tags, and the search box allows easy searching of those tags.  As tags are matched, all matching tags are shown below the search box.  If a tag matches exactly, it's the only tag shown.  A grey box indicates that no additional images are found.
 
 ![alt](img/image_library_search.png "Image Library Searches")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 **Notes**
 
@@ -103,7 +103,7 @@ Just in case something goes wrong, image_library.data contains the image library
 ### Load Image
 
 ![alt](img/load_image_clipboard.png "Load Image")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 Load Image is the tab you want when you have an image that's not in your image library.  The browse button will open a file browser for supported image types (bmp/gif/jpeg/png).
 
@@ -112,7 +112,7 @@ The "Load from clipboard" button attempts to load image data directly from the c
 ### 5/6 Things
 
 ![alt](img/5_things.png "5/6 Things")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 The 5/6 Things tab is useful for displaying lists of items for guessing games, in particular 5 Things or 6 Things, where there are multiple items and multiple substitutions for items.  It defaults to five activities with two substitutions per activity.
 
@@ -125,9 +125,18 @@ An important note is that each team's list is a separate list (as well as the co
 ### Text
 
 ![alt](img/text.png "Text")
-_(image taken in version 0.9.2, some visuals may have changed)_
+_(image taken in version 0.9.1, some visuals may have changed)_
 
 This tab is pretty straight-forward.  You type in text to be shown and it displays.  The font size is a relative font, so it's less important to know what 10 or 20 means other than 20 is twice as large as 10.  Additionally, if the text outgrows a screen, it will be auto-scaled down, so the font size is the maximum font size.
+
+## Quick States
+
+![alt](img/quick_state.png "Quick States")
+_(image taken in version 0.9.3, some visuals may have changed)_
+
+Along the right-hand side of the window are 10 settable quick-states, for queuing up items to be displayed quickly.  Note that these are snapshots of a control's state, so, for instance, setting one of these to score will always show the score as of the time of the snapshotting (it will not update as the score changes).  This can be useful for flipping back and forth between a set 5 things list or setting up game displays ahead of time.  Whatever is convenient for your show.
+
+Right click on any of the (initially gray) boxes to set the quick state to the current screen preview state.  Left clicking any populated quick state will send that state immediately to the monitors (leaving the current preview alone).  Additionally there are hotkeys for each state, Ctrl + [1-0] will use the currently set state, Ctrl + Alt + [1-0] will set the state to the current preview state.
 
 ## Hotkeys
 
@@ -141,3 +150,5 @@ This tab is pretty straight-forward.  You type in text to be shown and it displa
 * Ctrl+w - Right team score +5
 * Ctrl+s - Right team score +1
 * Ctrl+x - Right team score -1
+* Ctrl+_number_ - Display quick state _number_ to the monitors.  (1 is the first display, 9 is next-to-last, 0 is last)
+* Ctrl+Alt+_number_ - Set quick state _number_ to the current preview state.
