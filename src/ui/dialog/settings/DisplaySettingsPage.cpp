@@ -66,7 +66,8 @@ void DisplaySettingsPage::createControls() {
       window_mode_panel, wxID_ANY,
       StringUtil::intToString(DisplayConfig::getInstance()->windowHeight()));
 
-  windowModeChanged(wxCommandEvent());
+  std::unique_ptr<wxCommandEvent> event(new wxCommandEvent());
+  windowModeChanged(*event);
 }
 
 void DisplaySettingsPage::positionWidgets() {
