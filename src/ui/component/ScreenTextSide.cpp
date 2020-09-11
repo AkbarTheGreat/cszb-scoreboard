@@ -88,7 +88,10 @@ void ScreenTextSide::setAutoFit(bool auto_fit, const proto::ScreenSide& side) {
 void ScreenTextSide::addText(proto::RenderableText text,
                              const proto::ScreenSide& side) {
   if (isSide(side)) {
-    texts.push_back(text);
+    proto::RenderableText mutable_text(text);
+    ProtoUtil::validateFont(mutable_text.mutable_font());
+    setFontColor(mutable_text.mutable_font(), side);
+    texts.push_back(mutable_text);
   }
 }
 
