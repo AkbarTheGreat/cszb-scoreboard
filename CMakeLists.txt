@@ -29,8 +29,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
 if(MSVC OR OSXCROSS_HOST)
 	set(LINKING_TYPE "static")
+    set(JSON_CPP_LIB "jsoncpp_static")
 else()
 	set(LINKING_TYPE "dynamic")
+    set(JSON_CPP_LIB "jsoncpp_lib")
 endif()
 
 if(OSXCROSS_HOST)
@@ -76,7 +78,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl)
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 protobuf_generate(TARGET ${PROJECT_NAME})
 
@@ -97,7 +99,7 @@ macro(package_add_test TESTNAME)
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} jsoncpp_lib CURL::libcurl
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl
                       ${GTEST_BOTH_LIBRARIES})
     protobuf_generate(TARGET ${TESTNAME})
     # gtest_discover_tests replaces gtest_add_tests,
