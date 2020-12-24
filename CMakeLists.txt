@@ -80,13 +80,15 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 # Clang tidy piece adapted from https://gitlab.kitware.com/cmake/cmake/-/issues/18926
 find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
-if(CLANG_TIDY_COMMAND)
-    set(CLANG_TIDY_CHECKS "-*,google-*,modernize-*,readability-*,portability-*,performance-*")
-    if(CLANG_TIDY_ERRORS)
-        set(CLANG_TIDY_ERROR_CHECK ";-warnings-as-errors=*")
-    endif()
-    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
-endif()
+if(NOT OSXCROSS_HOST)
+    if(CLANG_TIDY_COMMAND)
+        set(CLANG_TIDY_CHECKS "-*,google-*,modernize-*,readability-*,portability-*,performance-*")
+        if(CLANG_TIDY_ERRORS)
+            set(CLANG_TIDY_ERROR_CHECK ";-warnings-as-errors=*")
+        endif()
+        set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
+    endif() # CLANG_TIDY_COMMAND
+endif() # OSXCROSS_HOST
 
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
 add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCES})
