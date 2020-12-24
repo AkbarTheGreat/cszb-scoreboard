@@ -41,6 +41,7 @@ endif()
 
 if(OSXCROSS_HOST)
 	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/osxcross.cmake)
+	set(SKIP_LINT true)
 endif()
 
 find_package(Protobuf REQUIRED)
@@ -79,8 +80,8 @@ ENDIF(WIN32)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 # Clang tidy piece adapted from https://gitlab.kitware.com/cmake/cmake/-/issues/18926
-find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
-if(NOT OSXCROSS_HOST)
+if(NOT SKIP_LINT)
+    find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
     if(CLANG_TIDY_COMMAND)
         set(CLANG_TIDY_CHECKS "-*,google-*,modernize-*,readability-*,portability-*,performance-*")
         if(CLANG_TIDY_ERRORS)

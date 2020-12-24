@@ -6,12 +6,14 @@ pipeline {
         stage('Debug Cmake Generation') {
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug')
+            cmakeArgs: '-DSKIP_LINT=true'
           }
         }
 
         stage('Release Cmake Generation') {
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release')
+            cmakeArgs: '-DSKIP_LINT=true'
           }
         }
 
