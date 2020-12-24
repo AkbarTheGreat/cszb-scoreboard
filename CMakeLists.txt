@@ -85,7 +85,7 @@ if(CLANG_TIDY_COMMAND)
     if(CLANG_TIDY_ERRORS)
         set(CLANG_TIDY_ERROR_CHECK ";-warnings-as-errors=*")
     endif()
-    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS};-header-filter='${CMAKE_SOURCE_DIR}/include/*'${CLANG_TIDY_ERROR_CHECK}")
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
 endif()
 
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
