@@ -46,7 +46,7 @@ auto Scoreboard::OnInit() -> bool {
 
 void Scoreboard::OnInitCmdLine(wxCmdLineParser& parser) {
   wxApp::OnInitCmdLine(parser);
-  parser.SetDesc(ARG_LIST);
+  parser.SetDesc(ARG_LIST.data());
   // If we ever want '/' as a path separator to work in Windows, we have to
   // ignore / as a flag start, unfortunately.  Not an issue yet, but may be in
   // the future.   If we need it, set via parser.SetSwitchChars(wxT("-"));

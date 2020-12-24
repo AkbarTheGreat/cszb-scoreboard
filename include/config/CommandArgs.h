@@ -20,38 +20,39 @@ limitations under the License.
 
 #include <wx/cmdline.h>
 
+#include <array>
+
 #include "util/FilesystemPath.h"
 
 namespace cszb_scoreboard {
 
 // Used in cszb-scoreboard, but defiend here to keep places to edit to a minimum
 // when new flags are added.
-static const wxCmdLineEntryDesc ARG_LIST[] = {
-    {wxCMD_LINE_SWITCH, "n", "noupdate", "no automatic update checks"},
-    {wxCMD_LINE_SWITCH, "r", "resetconfig",
-     "reset all configuration to defaults"},
-    {wxCMD_LINE_NONE}};
+static const std::array<wxCmdLineEntryDesc, 3> ARG_LIST{
+    {{wxCMD_LINE_SWITCH, "n", "noupdate", "no automatic update checks"},
+     {wxCMD_LINE_SWITCH, "r", "resetconfig",
+      "reset all configuration to defaults"},
+     {wxCMD_LINE_NONE}}};
 
 class CommandArgs {
  public:
-  static CommandArgs *getInstance();
+  static auto getInstance() -> CommandArgs *;
   /* parse must be called before getInstance, or an exception is thrown. */
-  static bool process_args(const wxCmdLineParser &parser, int argc,
-                           const wxCmdLineArgsArray &argv);
+  static auto process_args(const wxCmdLineParser &parser, int argc,
+                           const wxCmdLineArgsArray &argv) -> bool;
 
   // flag getters
-  bool autoUpdate();
-  bool resetConfig();
-  FilesystemPath commandPath();
+  [[nodiscard]] auto autoUpdate() const -> bool;
+  [[nodiscard]] auto resetConfig() const -> bool;
+  auto commandPath() -> FilesystemPath;
 
  private:
   static CommandArgs *singleton_instance;
   bool auto_update, reset_config;
-  long num_windows;
   FilesystemPath command_path;
 
   CommandArgs();
-  bool process_args_internal(const wxCmdLineParser &parser, int argc,
-                             const wxCmdLineArgsArray &argv);
+  auto process_args_internal(const wxCmdLineParser &parser, int argc,
+                             const wxCmdLineArgsArray &argv) -> bool;
 };
 }  // namespace cszb_scoreboard

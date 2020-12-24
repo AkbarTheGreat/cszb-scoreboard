@@ -27,7 +27,7 @@ namespace cszb_scoreboard {
 
 CommandArgs *CommandArgs::singleton_instance = nullptr;
 
-CommandArgs *CommandArgs::getInstance() {
+auto CommandArgs::getInstance() -> CommandArgs * {
   if (singleton_instance == nullptr) {
     throw new std::runtime_error(
         "Cannot call getInstance on an unparsed CommandArgs object");
@@ -35,8 +35,8 @@ CommandArgs *CommandArgs::getInstance() {
   return singleton_instance;
 }
 
-bool CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
-                               const wxCmdLineArgsArray &argv) {
+auto CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
+                               const wxCmdLineArgsArray &argv) -> bool {
   if (singleton_instance != nullptr) {
     throw new std::runtime_error(
         "Cannot call process_args on an initialized CommandArgs object");
@@ -45,12 +45,13 @@ bool CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
   return singleton_instance->process_args_internal(parser, argc, argv);
 }
 
-bool CommandArgs::process_args_internal(const wxCmdLineParser &parser, int argc,
-                                        const wxCmdLineArgsArray &argv) {
-  // TODO: This is always an absolute path on Windows, but may be a relative
-  // path on Linux.  An update to always get an absolute path is probably
-  // worthwhile.
-  command_path = FilesystemPath((const char *)argv[0].c_str());
+auto CommandArgs::process_args_internal(const wxCmdLineParser &parser, int argc,
+                                        const wxCmdLineArgsArray &argv)
+    -> bool {
+  // TODO(akbar): This is always an absolute path on Windows, but may be a
+  // relative path on Linux.  An update to always get an absolute path is
+  // probably worthwhile.
+  command_path = FilesystemPath(static_cast<const char *>(argv[0].c_str()));
   auto_update = !parser.Found(wxT("n"));
   reset_config = parser.Found(wxT("r"));
 
@@ -64,8 +65,8 @@ CommandArgs::CommandArgs() {
   reset_config = false;
 }
 
-bool CommandArgs::autoUpdate() { return auto_update; }
-bool CommandArgs::resetConfig() { return reset_config; }
-FilesystemPath CommandArgs::commandPath() { return command_path; }
+auto CommandArgs::autoUpdate() const -> bool { return auto_update; }
+auto CommandArgs::resetConfig() const -> bool { return reset_config; }
+auto CommandArgs::commandPath() -> FilesystemPath { return command_path; }
 
 }  // namespace cszb_scoreboard
