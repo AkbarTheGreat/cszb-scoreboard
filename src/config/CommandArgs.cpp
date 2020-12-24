@@ -25,14 +25,14 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-CommandArgs *CommandArgs::singleton_instance = nullptr;
+std::unique_ptr<CommandArgs> CommandArgs::singleton_instance;
 
 auto CommandArgs::getInstance() -> CommandArgs * {
-  if (singleton_instance == nullptr) {
+  if (!singleton_instance) {
     throw new std::runtime_error(
         "Cannot call getInstance on an unparsed CommandArgs object");
   }
-  return singleton_instance;
+  return singleton_instance.get();
 }
 
 auto CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
@@ -41,7 +41,7 @@ auto CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
     throw new std::runtime_error(
         "Cannot call process_args on an initialized CommandArgs object");
   }
-  singleton_instance = new CommandArgs();
+  singleton_instance = std::make_unique<CommandArgs>(Token{});
   return singleton_instance->process_args_internal(parser, argc, argv);
 }
 
@@ -58,7 +58,7 @@ auto CommandArgs::process_args_internal(const wxCmdLineParser &parser, int argc,
   return true;
 }
 
-CommandArgs::CommandArgs() {
+CommandArgs::CommandArgs(Token t) {
   // These defaults should never matter, as they're always set during
   // process_args.
   auto_update = true;

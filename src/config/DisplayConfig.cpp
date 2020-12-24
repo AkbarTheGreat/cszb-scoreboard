@@ -25,26 +25,25 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-DisplayConfig *DisplayConfig::singleton_instance = nullptr;
+static const int DEFAULT_WIDTH = 1024;
+static const int DEFAULT_HEIGHT = 768;
 
 DisplayConfig::DisplayConfig() { detectDisplays(); }
 
-DisplayConfig *DisplayConfig::getInstance() {
-  if (singleton_instance == nullptr) {
-    singleton_instance = new DisplayConfig();
-  }
-  return singleton_instance;
+auto DisplayConfig::getInstance() -> DisplayConfig * {
+  static DisplayConfig singleton;
+  return &singleton;
 }
 
 void DisplayConfig::detectDisplays() {
   display_config = Persistence::getInstance()->loadDisplays();
 
   // If we're in windowed mode, default to a reasonably sized window.
-  if (!display_config.window_size().width()) {
+  if (display_config.window_size().width() == 0) {
     display_config.mutable_window_size()->set_x(0);
     display_config.mutable_window_size()->set_y(0);
-    display_config.mutable_window_size()->set_width(1024);
-    display_config.mutable_window_size()->set_height(768);
+    display_config.mutable_window_size()->set_width(DEFAULT_WIDTH);
+    display_config.mutable_window_size()->set_height(DEFAULT_HEIGHT);
   }
 
   if (display_config.enable_windowed_mode()) {
@@ -137,12 +136,14 @@ void DisplayConfig::setupWindowedMode() {
 }
 
 void DisplayConfig::setSide(int index, proto::ScreenSide side) {
-  proto::ScreenSide *side_copy = new proto::ScreenSide(side);
+  // Allocated with new, since display_config will take ownership of it when
+  // set.
+  auto *side_copy = new proto::ScreenSide(std::move(side));
   display_config.mutable_displays(index)->clear_side();
   display_config.mutable_displays(index)->set_allocated_side(side_copy);
 }
 
-bool DisplayConfig::setDisplayId(int index, int id) {
+auto DisplayConfig::setDisplayId(int index, int id) -> bool {
   if (display_config.mutable_displays(index)->id() == id) {
     return false;
   }
@@ -154,28 +155,27 @@ void DisplayConfig::saveSettings() {
   Persistence::getInstance()->saveDisplays(display_config);
 }
 
-int DisplayConfig::numberOfDisplays() { return display_config.displays_size(); }
+auto DisplayConfig::numberOfDisplays() -> int {
+  return display_config.displays_size();
+}
 
-proto::DisplayInfo DisplayConfig::displayDetails(int index) {
+auto DisplayConfig::displayDetails(int index) -> proto::DisplayInfo {
   assert(index < display_config.displays_size() && index >= 0);
   return display_config.displays(index);
 }
 
 // Determines which display currently houses the main control window.
-bool DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) {
+auto DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool {
   wxFrame *main_view = FrameList::getInstance()->getMainView();
   if (main_view == nullptr) {
-    return 0;  // Guess that screen 0 is our primary, as we haven't created our
-               // main window yet.
+    return true;  // Guess that screen 0 is our primary, as we haven't created
+                  // our main window yet.
   }
   wxPoint main_size = main_view->GetPosition();
-  if (ProtoUtil::wxRct(display_info->dimensions()).Contains(main_size)) {
-    return true;
-  }
-  return false;
+  return (ProtoUtil::wxRct(display_info->dimensions()).Contains(main_size));
 }
 
-bool DisplayConfig::windowedMode() {
+auto DisplayConfig::windowedMode() -> bool {
   return display_config.enable_windowed_mode();
 }
 
@@ -183,7 +183,7 @@ void DisplayConfig::setWindowedMode(bool mode) {
   display_config.set_enable_windowed_mode(mode);
 }
 
-int DisplayConfig::windowedModeNumberOfWindows() {
+auto DisplayConfig::windowedModeNumberOfWindows() -> int {
   return display_config.window_count();
 }
 
@@ -191,7 +191,7 @@ void DisplayConfig::setWindowedModeNumberOfWindows(int num) {
   display_config.set_window_count(num);
 }
 
-int DisplayConfig::windowWidth() {
+auto DisplayConfig::windowWidth() -> int {
   return display_config.window_size().width();
 }
 
@@ -199,7 +199,7 @@ void DisplayConfig::setWindowWidth(int width) {
   display_config.mutable_window_size()->set_width(width);
 }
 
-int DisplayConfig::windowHeight() {
+auto DisplayConfig::windowHeight() -> int {
   return display_config.window_size().height();
 }
 

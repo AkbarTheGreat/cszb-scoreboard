@@ -27,21 +27,21 @@ namespace cszb_scoreboard {
 
 class DisplayConfig {
  public:
-  static DisplayConfig* getInstance();
+  static auto getInstance() -> DisplayConfig*;
+  static auto isPrimaryDisplay(proto::DisplayInfo* display_info) -> bool;
   void detectDisplays();
-  proto::DisplayInfo displayDetails(int index);
-  int numberOfDisplays();
-  bool isPrimaryDisplay(proto::DisplayInfo* display_info);
+  auto displayDetails(int index) -> proto::DisplayInfo;
+  auto numberOfDisplays() -> int;
   void saveSettings();
   // Set the display id to the given monitor index.  Returns true if this
   // was an effective change, false if the values were identical already.
-  bool setDisplayId(int index, int id);
+  auto setDisplayId(int index, int id) -> bool;
   void setSide(int index, proto::ScreenSide side);
 
-  bool windowedMode();
-  int windowedModeNumberOfWindows();
-  int windowWidth();
-  int windowHeight();
+  auto windowedMode() -> bool;
+  auto windowedModeNumberOfWindows() -> int;
+  auto windowWidth() -> int;
+  auto windowHeight() -> int;
 
   void setWindowedMode(bool mode);
   void setWindowedModeNumberOfWindows(int num);
@@ -49,7 +49,6 @@ class DisplayConfig {
   void setWindowHeight(int height);
 
  private:
-  static DisplayConfig* singleton_instance;
   proto::DisplayConfig display_config;
   DisplayConfig();
   void detectExternalMonitors();

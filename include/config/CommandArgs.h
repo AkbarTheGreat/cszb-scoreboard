@@ -35,7 +35,18 @@ static const std::array<wxCmdLineEntryDesc, 3> ARG_LIST{
      {wxCMD_LINE_NONE}}};
 
 class CommandArgs {
+  // Using the passkey idiom from https://abseil.io/tips/134 to avoid adding
+  // abseil as a project dependency.  If enough uses of abseil pop up, this can
+  // be changed to simply using WrapUnique for singelton construction.
+ private:
+  class Token {
+   private:
+    Token() = default;
+    friend CommandArgs;
+  };
+
  public:
+  explicit CommandArgs(Token t);
   static auto getInstance() -> CommandArgs *;
   /* parse must be called before getInstance, or an exception is thrown. */
   static auto process_args(const wxCmdLineParser &parser, int argc,
@@ -47,11 +58,10 @@ class CommandArgs {
   auto commandPath() -> FilesystemPath;
 
  private:
-  static CommandArgs *singleton_instance;
+  static std::unique_ptr<CommandArgs> singleton_instance;
   bool auto_update, reset_config;
   FilesystemPath command_path;
 
-  CommandArgs();
   auto process_args_internal(const wxCmdLineParser &parser, int argc,
                              const wxCmdLineArgsArray &argv) -> bool;
 };

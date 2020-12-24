@@ -26,12 +26,12 @@ wxIMPLEMENT_APP(cszb_scoreboard::Scoreboard);
 
 namespace cszb_scoreboard {
 
-auto Scoreboard::OnInit() -> bool {
-  const int START_X = 50;
-  const int START_Y = 50;
-  const int START_WIDTH = 700;
-  const int START_HEIGHT = 500;
+static const int START_X = 50;
+static const int START_Y = 50;
+static const int START_WIDTH = 700;
+static const int START_HEIGHT = 500;
 
+auto Scoreboard::OnInit() -> bool {
   if (!wxApp::OnInit()) {
     return false;
   }
