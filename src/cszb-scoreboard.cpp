@@ -26,15 +26,20 @@ wxIMPLEMENT_APP(cszb_scoreboard::Scoreboard);
 
 namespace cszb_scoreboard {
 
-bool Scoreboard::OnInit() {
+auto Scoreboard::OnInit() -> bool {
+  const int START_X = 50;
+  const int START_Y = 50;
+  const int START_WIDTH = 700;
+  const int START_HEIGHT = 500;
+
   if (!wxApp::OnInit()) {
     return false;
   }
-
   wxInitAllImageHandlers();
   wxLogDebug(wxT("Starting up main loop"));
-  main_window = new MainView("ComedySportz Scoreboard", wxPoint(50, 50),
-                             wxSize(700, 500));
+  main_window =
+      new MainView("ComedySportz Scoreboard", wxPoint(START_X, START_Y),
+                   wxSize(START_WIDTH, START_HEIGHT));
   main_window->Show(true);
   return true;
 }
@@ -47,7 +52,7 @@ void Scoreboard::OnInitCmdLine(wxCmdLineParser& parser) {
   // the future.   If we need it, set via parser.SetSwitchChars(wxT("-"));
 }
 
-bool Scoreboard::OnCmdLineParsed(wxCmdLineParser& parser) {
+auto Scoreboard::OnCmdLineParsed(wxCmdLineParser& parser) -> bool {
   if (!CommandArgs::process_args(parser, argc, argv)) {
     return false;
   }

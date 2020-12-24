@@ -26,11 +26,12 @@ limitations under the License.
 namespace cszb_scoreboard {
 class Scoreboard : public wxApp {
  public:
-  virtual bool OnInit();
+  auto OnInit() -> bool final;
 
  private:
+  // Raw pointer, wxWidgets will take care of collecting the MainView.
   MainView* main_window;
-  virtual void OnInitCmdLine(wxCmdLineParser& parser);
-  virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+  void OnInitCmdLine(wxCmdLineParser& parser) final;
+  auto OnCmdLineParsed(wxCmdLineParser& parser) -> bool final;
 };
 }  // namespace cszb_scoreboard
