@@ -29,24 +29,24 @@ namespace cszb_scoreboard {
 
 class TeamConfig {
  public:
-  static TeamConfig *getInstance();
-  int numberOfTeams();
+  static auto getInstance() -> TeamConfig *;
+  auto numberOfTeams() -> int;
   void saveSettings();
-  void setColor(proto::TeamInfo_TeamType team, Color color);
-  void setSingleScreenOrder(std::vector<proto::TeamInfo_TeamType> order);
-  std::vector<proto::TeamInfo_TeamType> singleScreenOrder();
-  Color teamColor(proto::TeamInfo_TeamType team);
-  std::vector<Color> teamColor(proto::ScreenSide side);
-  wxString teamName(proto::TeamInfo_TeamType team);
+  void setColor(proto::TeamInfo_TeamType team, const Color &color);
+  void setSingleScreenOrder(const std::vector<proto::TeamInfo_TeamType> &order);
+  auto singleScreenOrder() -> std::vector<proto::TeamInfo_TeamType>;
+  auto teamColor(proto::TeamInfo_TeamType team) -> Color;
+  auto teamColor(const proto::ScreenSide &side) -> std::vector<Color>;
+  auto teamName(proto::TeamInfo_TeamType team) -> wxString;
 
  private:
-  static TeamConfig *singleton_instance;
   proto::TeamConfig team_config;
+  static void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
+  static auto teamsForSide(const proto::ScreenSide &side)
+      -> std::vector<proto::TeamInfo_TeamType>;
   TeamConfig();
-  bool checkTeamConfig();
-  bool checkTeamOrder();
-  int indexForTeam(proto::TeamInfo_TeamType team);
-  void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
-  std::vector<proto::TeamInfo_TeamType> teamsForSide(proto::ScreenSide side);
+  auto checkTeamConfig() -> bool;
+  auto checkTeamOrder() -> bool;
+  auto indexForTeam(proto::TeamInfo_TeamType team) -> int;
 };
 }  // namespace cszb_scoreboard

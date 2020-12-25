@@ -27,21 +27,25 @@ namespace cszb_scoreboard {
 
 class ProtoUtil {
  public:
-  static proto::Rectangle *protoRct(wxRect input, proto::Rectangle *output);
-  static wxRect wxRct(proto::Rectangle input);
-  static proto::Color *protoClr(Color input, proto::Color *output);
-  static Color wxClr(proto::Color input);
-  static wxFont wxScaledFont(proto::Font input, wxSize scale_size);
-  static void setFontColor(proto::Font *font, Color color);
+  static auto protoRct(const wxRect &input, proto::Rectangle *output)
+      -> proto::Rectangle *;
+  static auto wxRct(const proto::Rectangle &input) -> wxRect;
+  static auto protoClr(const Color &input, proto::Color *output)
+      -> proto::Color *;
+  static auto wxClr(const proto::Color &input) -> Color;
+  static auto wxScaledFont(const proto::Font &input, const wxSize &scale_size)
+      -> wxFont;
+  static void setFontColor(proto::Font *font, const Color &color);
   static void defaultFont(proto::Font *font);
   static void validateFont(proto::Font *font);
-  static proto::ScreenSide homeSide();
-  static proto::ScreenSide awaySide();
-  static proto::ScreenSide allSide();
-  static proto::ScreenSide noSide();
-  static proto::ScreenSide teamSide(proto::TeamInfo_TeamType team);
-  static bool sideContains(proto::ScreenSide side,
-                           proto::TeamInfo_TeamType team);
+  static auto homeSide() -> proto::ScreenSide;
+  static auto awaySide() -> proto::ScreenSide;
+  static auto allSide() -> proto::ScreenSide;
+  static auto noSide() -> proto::ScreenSide;
+  static auto teamSide(const proto::TeamInfo_TeamType &team)
+      -> proto::ScreenSide;
+  static auto sideContains(const proto::ScreenSide &side,
+                           const proto::TeamInfo_TeamType &team) -> bool;
 };
 
 }  // namespace cszb_scoreboard

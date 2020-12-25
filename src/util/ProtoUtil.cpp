@@ -22,8 +22,10 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const float DEFAULT_FONT_SIZE = 10;
+const int SCALE_FACTOR = 75;
 
-proto::Rectangle *ProtoUtil::protoRct(wxRect input, proto::Rectangle *output) {
+auto ProtoUtil::protoRct(const wxRect &input, proto::Rectangle *output)
+    -> proto::Rectangle * {
   output->set_x(input.GetX());
   output->set_y(input.GetY());
   output->set_width(input.GetWidth());
@@ -31,20 +33,24 @@ proto::Rectangle *ProtoUtil::protoRct(wxRect input, proto::Rectangle *output) {
   return output;
 }
 
-wxRect ProtoUtil::wxRct(proto::Rectangle input) {
+auto ProtoUtil::wxRct(const proto::Rectangle &input) -> wxRect {
   wxRect rect(input.x(), input.y(), input.width(), input.height());
   return rect;
 }
 
-proto::Color *ProtoUtil::protoClr(Color input, proto::Color *output) {
+auto ProtoUtil::protoClr(const Color &input, proto::Color *output)
+    -> proto::Color * {
   output->set_rgb(input.GetRGB());
   return output;
 }
 
-Color ProtoUtil::wxClr(proto::Color input) { return Color(input.rgb()); }
+auto ProtoUtil::wxClr(const proto::Color &input) -> Color {
+  return Color(input.rgb());
+}
 
-wxFont ProtoUtil::wxScaledFont(proto::Font input, wxSize scale_size) {
-  int scaled_size = scale_size.GetHeight() * input.size() / 75;
+auto ProtoUtil::wxScaledFont(const proto::Font &input, const wxSize &scale_size)
+    -> wxFont {
+  int scaled_size = scale_size.GetHeight() * input.size() / SCALE_FACTOR;
 
   wxFontInfo font_info(scaled_size);
 
@@ -62,7 +68,7 @@ wxFont ProtoUtil::wxScaledFont(proto::Font input, wxSize scale_size) {
   return font_info.AntiAliased();
 }
 
-void ProtoUtil::setFontColor(proto::Font *font, Color color) {
+void ProtoUtil::setFontColor(proto::Font *font, const Color &color) {
   protoClr(color, font->mutable_color());
 }
 
@@ -81,19 +87,19 @@ void ProtoUtil::validateFont(proto::Font *font) {
   }
 }
 
-proto::ScreenSide ProtoUtil::homeSide() {
+auto ProtoUtil::homeSide() -> proto::ScreenSide {
   proto::ScreenSide side;
   side.set_home(true);
   return side;
 }
 
-proto::ScreenSide ProtoUtil::awaySide() {
+auto ProtoUtil::awaySide() -> proto::ScreenSide {
   proto::ScreenSide side;
   side.set_away(true);
   return side;
 }
 
-proto::ScreenSide ProtoUtil::allSide() {
+auto ProtoUtil::allSide() -> proto::ScreenSide {
   proto::ScreenSide side;
   side.set_home(true);
   side.set_away(true);
@@ -101,26 +107,27 @@ proto::ScreenSide ProtoUtil::allSide() {
   return side;
 }
 
-proto::ScreenSide ProtoUtil::noSide() {
+auto ProtoUtil::noSide() -> proto::ScreenSide {
   proto::ScreenSide side;
   return side;
 }
 
-proto::ScreenSide ProtoUtil::teamSide(proto::TeamInfo_TeamType team) {
+auto ProtoUtil::teamSide(const proto::TeamInfo_TeamType &team)
+    -> proto::ScreenSide {
   switch (team) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
       return homeSide();
     case proto::TeamInfo_TeamType_AWAY_TEAM:
       return awaySide();
-    case proto::TeamInfo_TeamType_EXTRA_TEAM: // Extra isn't implemented yet
+    case proto::TeamInfo_TeamType_EXTRA_TEAM:  // Extra isn't implemented yet
     case proto::TeamInfo_TeamType_TEAM_ERROR:
     default:
       return noSide();
   }
 }
 
-bool ProtoUtil::sideContains(proto::ScreenSide side,
-                             proto::TeamInfo_TeamType team) {
+auto ProtoUtil::sideContains(const proto::ScreenSide &side,
+                             const proto::TeamInfo_TeamType &team) -> bool {
   switch (team) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
       return side.home();

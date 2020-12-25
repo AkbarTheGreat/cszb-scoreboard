@@ -27,8 +27,8 @@ namespace cszb_scoreboard {
 
 class ImageSearchResults {
  public:
-  std::vector<FilesystemPath> filenames();
-  std::vector<std::string> matchedTags();
+  auto filenames() -> std::vector<FilesystemPath>;
+  auto matchedTags() -> std::vector<std::string>;
 
  private:
   ImageSearchResults(const std::vector<proto::ImageInfo> &matched_images,
@@ -42,33 +42,32 @@ class ImageSearchResults {
 
 class ImageLibrary {
  public:
-  static ImageLibrary *getInstance();
+  static auto getInstance() -> ImageLibrary *;
   // Returns all unique tags, sorted
-  std::vector<FilesystemPath> allFilenames();
-  std::vector<std::string> allTags();
-  std::map<FilesystemPath, proto::ImageInfo> imageMap();
-  std::string name(FilesystemPath filename);
-  void addImage(FilesystemPath file, std::string name,
-                              std::vector<std::string> tags);
+  auto allFilenames() -> std::vector<FilesystemPath>;
+  auto allTags() -> std::vector<std::string>;
+  auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
+  auto name(const FilesystemPath &filename) -> std::string;
+  void addImage(const FilesystemPath &file, const std::string &name,
+                const std::vector<std::string> &tags);
   void clearLibrary();
   void saveLibrary();
-  ImageSearchResults search(std::string query);
-  std::vector<std::string> tags(FilesystemPath filename);
+  auto search(const std::string &query) -> ImageSearchResults;
+  auto tags(const FilesystemPath &filename) -> std::vector<std::string>;
 
   PUBLIC_TEST_ONLY
   // Test-available constructor which initializes this object from an in-memory
   // proto.
-  ImageLibrary(proto::ImageLibrary library);
+  explicit ImageLibrary(proto::ImageLibrary library);
 
  private:
-  static ImageLibrary *singleton_instance;
   proto::ImageLibrary library;
   ImageLibrary()
       : ImageLibrary(Persistence::getInstance()->loadImageLibrary()) {}
-  ImageSearchResults emptySearch();
-  ImageSearchResults exactMatchSearch(std::string query);
-  proto::ImageInfo infoByFile(FilesystemPath filename);
-  ImageSearchResults partialMatchSearch(std::string query);
+  auto emptySearch() -> ImageSearchResults;
+  auto exactMatchSearch(const std::string &query) -> ImageSearchResults;
+  auto infoByFile(const FilesystemPath &filename) -> proto::ImageInfo;
+  auto partialMatchSearch(const std::string &query) -> ImageSearchResults;
 };
 
 }  // namespace cszb_scoreboard

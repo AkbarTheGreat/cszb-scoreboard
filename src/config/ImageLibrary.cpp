@@ -21,54 +21,50 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-ImageLibrary *ImageLibrary::singleton_instance = nullptr;
-
 // Simple helper method which will insert a string into a sorted vector of
 // strings, ignoring it if it's a duplicate.
-void insertIntoSortedVector(std::vector<std::string> &vect, std::string entry) {
-  auto insertion_point = std::upper_bound(vect.begin(), vect.end(), entry);
-  auto existing_element = std::lower_bound(vect.begin(), vect.end(), entry);
-  if (existing_element == vect.end() || *existing_element != entry) {
-    vect.insert(insertion_point, entry);
+void insertIntoSortedVector(std::vector<std::string> *vect,
+                            const std::string &entry) {
+  auto insertion_point = std::upper_bound(vect->begin(), vect->end(), entry);
+  auto existing_element = std::lower_bound(vect->begin(), vect->end(), entry);
+  if (existing_element == vect->end() || *existing_element != entry) {
+    vect->insert(insertion_point, entry);
   }
 }
 
 ImageLibrary::ImageLibrary(proto::ImageLibrary library) {
-  this->library = library;
+  this->library = std::move(library);
 }
 
-ImageLibrary *ImageLibrary::getInstance() {
-  if (singleton_instance == nullptr) {
-    singleton_instance = new ImageLibrary();
-    singleton_instance->library =
-        Persistence::getInstance()->loadImageLibrary();
-  }
-  return singleton_instance;
+auto ImageLibrary::getInstance() -> ImageLibrary * {
+  static ImageLibrary singleton;
+  return &singleton;
 }
 
-std::vector<FilesystemPath> ImageLibrary::allFilenames() {
+auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
   return search("").filenames();
 }
 
-std::vector<std::string> ImageLibrary::allTags() {
+auto ImageLibrary::allTags() -> std::vector<std::string> {
   std::vector<std::string> tags;
-  for (auto image : library.images()) {
-    for (auto tag : image.tags()) {
-      insertIntoSortedVector(tags, tag);
+  for (const auto &image : library.images()) {
+    for (const auto &tag : image.tags()) {
+      insertIntoSortedVector(&tags, tag);
     }
   }
   return tags;
 }
 
-std::map<FilesystemPath, proto::ImageInfo> ImageLibrary::imageMap() {
+auto ImageLibrary::imageMap() -> std::map<FilesystemPath, proto::ImageInfo> {
   std::map<FilesystemPath, proto::ImageInfo> image_map;
-  for (auto image : library.images()) {
+  for (const auto &image : library.images()) {
     image_map.emplace(FilesystemPath(image.file_path()), image);
   }
   return image_map;
 }
 
-proto::ImageInfo ImageLibrary::infoByFile(FilesystemPath filename) {
+auto ImageLibrary::infoByFile(const FilesystemPath &filename)
+    -> proto::ImageInfo {
   for (auto image : library.images()) {
     if (image.file_path() == filename) {
       return image;
@@ -77,25 +73,26 @@ proto::ImageInfo ImageLibrary::infoByFile(FilesystemPath filename) {
   return proto::ImageInfo();
 }
 
-std::string ImageLibrary::name(FilesystemPath filename) {
+auto ImageLibrary::name(const FilesystemPath &filename) -> std::string {
   return infoByFile(filename).name();
 }
 
-std::vector<std::string> ImageLibrary::tags(FilesystemPath filename) {
+auto ImageLibrary::tags(const FilesystemPath &filename)
+    -> std::vector<std::string> {
   proto::ImageInfo image = infoByFile(filename);
   std::vector<std::string> tags;
-  for (auto tag : image.tags()) {
-    insertIntoSortedVector(tags, tag);
+  for (const auto &tag : image.tags()) {
+    insertIntoSortedVector(&tags, tag);
   }
   return tags;
 }
 
-void ImageLibrary::addImage(FilesystemPath file, std::string name,
-                            std::vector<std::string> tags) {
+void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
+                            const std::vector<std::string> &tags) {
   proto::ImageInfo *new_image = library.add_images();
   new_image->set_file_path(file.string());
   new_image->set_name(name);
-  for (auto tag : tags) {
+  for (const auto &tag : tags) {
     new_image->add_tags(tag);
   }
 }
@@ -106,8 +103,8 @@ void ImageLibrary::saveLibrary() {
   Persistence::getInstance()->saveImageLibrary(library);
 }
 
-ImageSearchResults ImageLibrary::search(std::string query) {
-  if (query == "") {
+auto ImageLibrary::search(const std::string &query) -> ImageSearchResults {
+  if (query.empty()) {
     // Empty search is a special case where we just return all
     return emptySearch();
   }
@@ -115,47 +112,49 @@ ImageSearchResults ImageLibrary::search(std::string query) {
   auto tags = allTags();
   if (binary_search(tags.begin(), tags.end(), query)) {
     return exactMatchSearch(query);
-  } else {
-    return partialMatchSearch(query);
   }
+  return partialMatchSearch(query);
 }
 
-ImageSearchResults ImageLibrary::emptySearch() {
+auto ImageLibrary::emptySearch() -> ImageSearchResults {
   std::vector<proto::ImageInfo> matched_images;
-  for (auto image : library.images()) {
+  for (const auto &image : library.images()) {
     matched_images.push_back(image);
   }
   return ImageSearchResults(matched_images, "", allTags());
 }
 
-ImageSearchResults ImageLibrary::exactMatchSearch(std::string query) {
+auto ImageLibrary::exactMatchSearch(const std::string &query)
+    -> ImageSearchResults {
   std::vector<proto::ImageInfo> matched_images;
-  for (auto image : library.images()) {
+  for (const auto &image : library.images()) {
     if (std::find(image.tags().begin(), image.tags().end(), query) !=
         image.tags().end()) {
       matched_images.push_back(image);
     }
   }
-  if (matched_images.size() > 0) {
+  if (matched_images.empty()) {
     return ImageSearchResults(matched_images, query,
-                              std::vector<std::string>({query}));
+                              std::vector<std::string>());
   }
-  return ImageSearchResults(matched_images, query, std::vector<std::string>());
+  return ImageSearchResults(matched_images, query,
+                            std::vector<std::string>({query}));
 }
 
-ImageSearchResults ImageLibrary::partialMatchSearch(std::string query) {
+auto ImageLibrary::partialMatchSearch(const std::string &query)
+    -> ImageSearchResults {
   std::vector<proto::ImageInfo> matched_images;
   std::vector<std::string> matched_tags;
-  for (auto image : library.images()) {
+  for (const auto &image : library.images()) {
     bool image_matched = false;
-    for (auto tag : image.tags()) {
+    for (const auto &tag : image.tags()) {
       if (std::search(tag.begin(), tag.end(), query.begin(), query.end()) !=
           tag.end()) {
         if (!image_matched) {
           matched_images.push_back(image);
         }
         image_matched = true;
-        insertIntoSortedVector(matched_tags, tag);
+        insertIntoSortedVector(&matched_tags, tag);
       }
     }
   }
@@ -171,17 +170,17 @@ ImageSearchResults::ImageSearchResults(
   this->matched_tag_list = matched_tag_list;
 }
 
-std::vector<FilesystemPath> ImageSearchResults::filenames() {
+auto ImageSearchResults::filenames() -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> files;
-  for (auto image : matched_images) {
-    files.push_back(FilesystemPath(image.file_path()));
+  for (const auto &image : matched_images) {
+    files.emplace_back(FilesystemPath(image.file_path()));
   }
   return files;
 }
 
-std::vector<std::string> ImageSearchResults::matchedTags() {
+auto ImageSearchResults::matchedTags() -> std::vector<std::string> {
   std::vector<std::string> tags;
-  for (auto tag : matched_tag_list) {
+  for (const auto &tag : matched_tag_list) {
     tags.push_back(tag);
   }
   return tags;

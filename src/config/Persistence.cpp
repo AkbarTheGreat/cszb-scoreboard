@@ -38,15 +38,14 @@ namespace cszb_scoreboard {
 const char* CONFIG_FILE = "scoreboard.config";
 const char* IMAGE_LIBRARY_FILE = "image_library.data";
 
-Persistence* Persistence::singleton_instance = nullptr;
+auto Persistence::getInstance() -> Persistence* {
+  static Persistence singleton;
+  return &singleton;
+}
 
-Persistence* Persistence::getInstance() {
-  if (singleton_instance == nullptr) {
-    singleton_instance = new Persistence();
-    singleton_instance->loadConfigFromDisk();
-    singleton_instance->loadImageLibraryFromDisk();
-  }
-  return singleton_instance;
+Persistence::Persistence() {
+  loadConfigFromDisk();
+  loadImageLibraryFromDisk();
 }
 
 void Persistence::loadConfigFromDisk() {
@@ -106,7 +105,7 @@ void Persistence::saveImageLibraryToDisk() {
 #endif
 }
 
-proto::DisplayConfig Persistence::loadDisplays() {
+auto Persistence::loadDisplays() -> proto::DisplayConfig {
   // We don't actually have a way to reload after initialization at this point,
   // but that should be fine, as this should still represent what's written out.
   return full_config.display_config();
@@ -120,7 +119,7 @@ void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
   saveConfigToDisk();
 }
 
-proto::TeamConfig Persistence::loadTeams() {
+auto Persistence::loadTeams() -> proto::TeamConfig {
   // We don't actually have a way to reload after initialization at this point,
   // but that should be fine, as this should still represent what's written out.
   return full_config.team_config();
@@ -133,7 +132,7 @@ void Persistence::saveTeams(const proto::TeamConfig& team_config) {
   saveConfigToDisk();
 }
 
-proto::ImageLibrary Persistence::loadImageLibrary() {
+auto Persistence::loadImageLibrary() -> proto::ImageLibrary {
   // There's currently no route to reload from disk and any attempt to save to
   // disk updates this variable, so for now this is sufficient.
   return image_library;

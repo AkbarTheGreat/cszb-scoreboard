@@ -25,18 +25,18 @@ namespace cszb_scoreboard {
 
 class Persistence {
  public:
-  static Persistence* getInstance();
-  proto::DisplayConfig loadDisplays();
+  static auto getInstance() -> Persistence* ;
+  auto loadDisplays() -> proto::DisplayConfig;
   void saveDisplays(const proto::DisplayConfig& display_config);
-  proto::TeamConfig loadTeams();
+  auto loadTeams() -> proto::TeamConfig;
   void saveTeams(const proto::TeamConfig& team_config);
-  proto::ImageLibrary loadImageLibrary();
+  auto loadImageLibrary() -> proto::ImageLibrary;
   void saveImageLibrary(const proto::ImageLibrary& library);
 
  private:
-  static Persistence* singleton_instance;
   proto::ScoreboardConfig full_config;
   proto::ImageLibrary image_library;
+  Persistence();
   void loadConfigFromDisk();
   void saveConfigToDisk();
   void loadImageLibraryFromDisk();

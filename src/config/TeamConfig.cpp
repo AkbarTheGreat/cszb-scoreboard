@@ -1,4 +1,5 @@
 /*
+/*
 config/TeamConfig.cpp: This class is a configuration singleton which
 represents the team specific configuration pieces.
 
@@ -23,13 +24,9 @@ limitations under the License.
 #include "util/ProtoUtil.h"
 namespace cszb_scoreboard {
 
-TeamConfig *TeamConfig::singleton_instance = nullptr;
-
-TeamConfig *TeamConfig::getInstance() {
-  if (singleton_instance == nullptr) {
-    singleton_instance = new TeamConfig();
-  }
-  return singleton_instance;
+auto TeamConfig::getInstance() -> TeamConfig * {
+  static TeamConfig singleton;
+  return &singleton;
 }
 
 TeamConfig::TeamConfig() {
@@ -44,7 +41,7 @@ TeamConfig::TeamConfig() {
   }
 }
 
-bool TeamConfig::checkTeamConfig() {
+auto TeamConfig::checkTeamConfig() -> bool {
   bool teams_updated = false;
 
   // Since the team config is usually pretty small, establish defaults
@@ -67,15 +64,15 @@ bool TeamConfig::checkTeamConfig() {
     teams_updated = true;
   }
 
-  // TODO: Add support for "Extra" team
+  // TODO(akbar): Add support for "Extra" team
 
   return teams_updated;
 }
 
-bool TeamConfig::checkTeamOrder() {
+auto TeamConfig::checkTeamOrder() -> bool {
   bool order_updated = false;
 
-  // TODO: Check for and remove duplicates.
+  // TODO(akbar): Check for and remove duplicates.
 
   if (team_config.single_screen_order_size() < 2) {
     bool home_present = false;
@@ -100,7 +97,7 @@ bool TeamConfig::checkTeamOrder() {
     }
   }
 
-  // TODO: Add support for "Extra" team;
+  // TODO(akbar): Add support for "Extra" team;
   return order_updated;
 }
 
@@ -121,23 +118,23 @@ void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {
 }
 
 void TeamConfig::setSingleScreenOrder(
-    std::vector<proto::TeamInfo_TeamType> order) {
+    const std::vector<proto::TeamInfo_TeamType> &order) {
   team_config.clear_single_screen_order();
   for (auto item : order) {
     team_config.add_single_screen_order(item);
   }
 }
 
-std::vector<proto::TeamInfo_TeamType> TeamConfig::singleScreenOrder() {
+auto TeamConfig::singleScreenOrder() -> std::vector<proto::TeamInfo_TeamType> {
   std::vector<proto::TeamInfo_TeamType> order;
   for (auto config_entry : team_config.single_screen_order()) {
-    order.push_back((proto::TeamInfo_TeamType)config_entry);
+    order.push_back(static_cast<proto::TeamInfo_TeamType>(config_entry));
   }
   return order;
 }
 
-std::vector<proto::TeamInfo_TeamType> TeamConfig::teamsForSide(
-    proto::ScreenSide side) {
+auto TeamConfig::teamsForSide(const proto::ScreenSide &side)
+    -> std::vector<proto::TeamInfo_TeamType> {
   std::vector<proto::TeamInfo_TeamType> team_list;
   if (side.home()) {
     team_list.push_back(proto::TeamInfo_TeamType_HOME_TEAM);
@@ -151,7 +148,7 @@ std::vector<proto::TeamInfo_TeamType> TeamConfig::teamsForSide(
   return team_list;
 }
 
-int TeamConfig::indexForTeam(proto::TeamInfo_TeamType team) {
+auto TeamConfig::indexForTeam(proto::TeamInfo_TeamType team) -> int {
   for (int i = 0; i < team_config.teams_size(); ++i) {
     if (team_config.teams(i).team_type() == team) {
       return i;
@@ -160,11 +157,12 @@ int TeamConfig::indexForTeam(proto::TeamInfo_TeamType team) {
   return 0;  // Not a great default, but we can live with it.
 }
 
-Color TeamConfig::teamColor(proto::TeamInfo_TeamType team) {
+auto TeamConfig::teamColor(proto::TeamInfo_TeamType team) -> Color {
   return ProtoUtil::wxClr(team_config.teams(indexForTeam(team)).team_color());
 }
 
-std::vector<Color> TeamConfig::teamColor(proto::ScreenSide side) {
+auto TeamConfig::teamColor(const proto::ScreenSide &side)
+    -> std::vector<Color> {
   std::vector<Color> colors;
   for (auto team : teamsForSide(side)) {
     colors.push_back(teamColor(team));
@@ -172,7 +170,7 @@ std::vector<Color> TeamConfig::teamColor(proto::ScreenSide side) {
   return colors;
 }
 
-wxString TeamConfig::teamName(proto::TeamInfo_TeamType team) {
+auto TeamConfig::teamName(proto::TeamInfo_TeamType team) -> wxString {
   switch (team_config.teams(indexForTeam(team)).team_type()) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
       return wxT("Home");
@@ -183,9 +181,9 @@ wxString TeamConfig::teamName(proto::TeamInfo_TeamType team) {
   }
 }
 
-int TeamConfig::numberOfTeams() { return team_config.teams_size(); }
+auto TeamConfig::numberOfTeams() -> int { return team_config.teams_size(); }
 
-void TeamConfig::setColor(proto::TeamInfo_TeamType team, Color color) {
+void TeamConfig::setColor(proto::TeamInfo_TeamType team, const Color &color) {
   proto::TeamInfo *team_info = team_config.mutable_teams(indexForTeam(team));
   proto::Color *proto_color = team_info->mutable_team_color();
   ProtoUtil::protoClr(color, proto_color);
