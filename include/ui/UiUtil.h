@@ -29,7 +29,7 @@ class UiUtil {
  public:
   // If making a new sizer, prefer using a wxGridBagSizer directly (it has a
   // simple constructor, so it doesn't need this helper method at all)
-  static wxSizer *sizer(long rows, long columns);
+  static auto sizer(int32_t rows, int32_t columns) -> wxSizer *;
   static void addToGridBag(wxGridBagSizer *sizer, wxWindow *item, int row,
                            int column, int row_span = 1, int column_span = 1,
                            int border_size = DEFAULT_BORDER_SIZE);
