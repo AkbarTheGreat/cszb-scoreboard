@@ -20,18 +20,19 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-wxString StringUtil::intToString(int value) {
+auto StringUtil::intToString(int value) -> wxString {
   wxString string;
   string.Printf(wxT("%d"), value);
   return string;
 }
 
-long StringUtil::stringToInt(wxString string, int default_value) {
-  long value = default_value;
+auto StringUtil::stringToInt(const wxString &string, int default_value) -> int32_t {
+  long value = default_value;  // NOLINT(google-runtime-int) Must be long to
+                               // match string.ToLong() below.
   if (string.IsNumber()) {
     string.ToLong(&value);
   }
-  return (int)value;
+  return value;
 }
 
 }  // namespace cszb_scoreboard

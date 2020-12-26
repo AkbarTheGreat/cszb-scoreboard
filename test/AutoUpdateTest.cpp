@@ -65,7 +65,7 @@ TEST(AutoUpdateTest, VersionDownloads) {
   // in case it goes wrong, although NewVersionFound properly tests this.
   EXPECT_TRUE(AutoUpdate::getInstance()->checkForUpdate("0.0.0", "Win64"));
   std::vector<char> update_data;
-  EXPECT_TRUE(AutoUpdate::getInstance()->downloadUpdate(update_data));
+  EXPECT_TRUE(AutoUpdate::getInstance()->downloadUpdate(&update_data));
   EXPECT_GT(update_data.size(), 4000);
 }
 

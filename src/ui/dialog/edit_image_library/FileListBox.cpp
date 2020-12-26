@@ -42,7 +42,7 @@ void FileListBox::newPressed(wxCommandEvent& event) {
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   std::vector<FilesystemPath> filenames = getFilenames();
   if (dialog.ShowModal() != wxID_CANCEL) {
-    FilesystemPath new_file = (std::string)dialog.GetPath();
+    FilesystemPath new_file = FilesystemPath((std::string)dialog.GetPath());
     // Insert the new file after the currently selected one.
     long new_index = selectedIndex() + 1;
     if (selectedIndex() >= listSize()) {

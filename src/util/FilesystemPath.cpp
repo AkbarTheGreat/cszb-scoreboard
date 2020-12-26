@@ -32,21 +32,24 @@ FilesystemPath::FilesystemPath() { path_string = ""; }
 
 FilesystemPath::FilesystemPath(const std::string& str) { path_string = str; }
 
-const int FilesystemPath::compare(const FilesystemPath& p) const {
+auto FilesystemPath::compare(const FilesystemPath& p) const -> int {
   return path_string.compare(p.path_string);
 }
 
-bool FilesystemPath::remove(const FilesystemPath& p) {
-  if (p.path_string == "") return false;
-  // cstdio remove returns 0 for success, so return the negation of it's result
-  return !std::remove(p.path_string.c_str());
+auto FilesystemPath::remove(const FilesystemPath& p) -> bool {
+  if (p.path_string.empty()) {
+    return false;
+  }
+  // cstdio remove returns 0 for success, so we return equality to 0 as a
+  // success metric.
+  return (std::remove(p.path_string.c_str()) == 0);
 }
 
 void FilesystemPath::rename(const FilesystemPath& a, const FilesystemPath& b) {
   std::rename(a.path_string.c_str(), b.path_string.c_str());
 }
 
-const FilesystemPath FilesystemPath::filename() {
+auto FilesystemPath::filename() -> FilesystemPath {
   std::size_t separator = path_string.rfind('/');
   std::string filename = path_string;
   if (separator != -1) {
@@ -55,7 +58,7 @@ const FilesystemPath FilesystemPath::filename() {
   return FilesystemPath(filename);
 }
 
-const FilesystemPath FilesystemPath::pathname() {
+auto FilesystemPath::pathname() -> FilesystemPath {
   std::size_t separator = path_string.rfind('/');
   std::string pathname = path_string;
   if (separator != -1) {
@@ -64,7 +67,7 @@ const FilesystemPath FilesystemPath::pathname() {
   return FilesystemPath(pathname);
 }
 
-void FilesystemPath::replace_filename(const std::string new_filename) {
+void FilesystemPath::replace_filename(const std::string& new_filename) {
   path_string = pathname().string() + '/' + new_filename;
 }
 

@@ -32,17 +32,17 @@ namespace cszb_scoreboard {
 
 class Version {
  public:
-  Version(std::string version_string);
-  int major();
-  int minor();
-  int subminor();
+  explicit Version(const std::string &version_string);
+  [[nodiscard]] auto major() const -> int { return major_component; }
+  [[nodiscard]] auto minor() const -> int { return minor_component; }
+  [[nodiscard]] auto subminor() const -> int { return subminor_component; }
 
-  bool operator==(const Version &b) const;
-  bool operator!=(const Version &b) const;
-  bool operator<(const Version &b) const;
-  bool operator>(const Version &b) const;
-  bool operator<=(const Version &b) const;
-  bool operator>=(const Version &b) const;
+  auto operator==(const Version &b) const -> bool;
+  auto operator!=(const Version &b) const -> bool;
+  auto operator<(const Version &b) const -> bool;
+  auto operator>(const Version &b) const -> bool;
+  auto operator<=(const Version &b) const -> bool;
+  auto operator>=(const Version &b) const -> bool;
 
  private:
   int major_component, minor_component, subminor_component;
@@ -50,24 +50,26 @@ class Version {
 
 class AutoUpdate {
  public:
-  static AutoUpdate *getInstance();
-  bool checkForUpdate(const std::string current_version);
-  bool updateIsDownloadable() { return update_size > 0; }
-  bool downloadUpdate(std::vector<char> &update_data);
-  void removeOldUpdate();
-  bool updateInPlace();
+  static auto getInstance() -> AutoUpdate *;
+  auto checkForUpdate(const std::string &current_version) -> bool;
+  [[nodiscard]] auto updateIsDownloadable() const -> bool {
+    return update_size > 0;
+  }
+  auto downloadUpdate(std::vector<char> *update_data) -> bool;
+  static void removeOldUpdate();
+  auto updateInPlace() -> bool;
 
-PUBLIC_TEST_ONLY
-  bool checkForUpdate(const std::string current_version,
-                      std::string platform_name);
+  PUBLIC_TEST_ONLY
+  auto checkForUpdate(const std::string &current_version,
+                      const std::string &platform_name) -> bool;
 
  private:
-  static AutoUpdate *singleton_instance;
   std::string new_binary_url;
   bool update_available;
   int update_size;
-  bool downloadUpdate(const std::string &url, std::vector<char> &update_data,
-                      int redirect_depth = 0);
+  AutoUpdate() = default;
+  auto downloadUpdate(const std::string &url, std::vector<char> *update_data,
+                      int redirect_depth = 0) -> bool;
 };
 
 }  // namespace cszb_scoreboard

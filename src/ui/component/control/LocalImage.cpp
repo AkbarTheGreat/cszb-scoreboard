@@ -82,7 +82,8 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
   wxFileDialog dialog(this, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() != wxID_CANCEL) {
-    FilesystemPath selected_file = (std::string)dialog.GetPath();
+    FilesystemPath selected_file =
+        FilesystemPath((std::string)dialog.GetPath());
     if (screen_selection->allSelected()) {
       all_screen_image = wxImage(selected_file.c_str());
       all_screen_image_name = selected_file.filename().string();
