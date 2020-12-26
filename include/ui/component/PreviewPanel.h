@@ -34,22 +34,23 @@ namespace cszb_scoreboard {
 
 class PreviewPanel : public wxPanel {
  public:
-  PreviewPanel(wxWindow* parent);
-  void blackout(wxCommandEvent& event);
-  inline const std::vector<ScreenPreview*> all_screens() { return screens; }
+  explicit PreviewPanel(wxWindow* parent);
+  void blackout(wxCommandEvent& event); // NOLINT(google-runtime-references) wxWidgets callback.
+  inline auto all_screens() -> std::vector<ScreenPreview*> { return screens; }
   void setToPresenters(ScreenText* screen_text);
   void updatePresenters();
   void updatePreviewsFromSettings();
 
   PUBLIC_TEST_ONLY
-  ScreenPreview* preview(int index);
+  auto preview(int index) -> ScreenPreview*;
 
  private:
-  ~PreviewPanel();
+  ~PreviewPanel() override;
   wxAuiManager aui_manager;
+  // Contains a view of the screens, does not own the screens themselves.
   std::vector<ScreenPreview*> screens;
   void bindEvents();
-  int numPreviews();
+  auto numPreviews() -> int;
   void positionWidgets();
 };
 

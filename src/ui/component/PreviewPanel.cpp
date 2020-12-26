@@ -33,19 +33,19 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
         DisplayConfig::getInstance()->displayDetails(i);
     std::vector<proto::ScreenSide> sides;
     if (display_info.side().error()) {
-      sides.push_back(proto::ScreenSide());
+      sides.emplace_back(proto::ScreenSide());
       sides.back().set_error(true);
     }
     if (display_info.side().home()) {
-      sides.push_back(proto::ScreenSide());
+      sides.emplace_back(proto::ScreenSide());
       sides.back().set_home(true);
     }
     if (display_info.side().away()) {
-      sides.push_back(proto::ScreenSide());
+      sides.emplace_back(proto::ScreenSide());
       sides.back().set_away(true);
     }
-    if (sides.size()) {
-      screens.push_back(new ScreenPreview(this, sides, display_info.id()));
+    if (!sides.empty()) {
+      screens.emplace_back(new ScreenPreview(this, sides, display_info.id()));
     }
   }
 
@@ -60,11 +60,9 @@ void PreviewPanel::positionWidgets() {
   pane_style.CenterPane();
   pane_style.Top();
   pane_style.CloseButton(false);
-  for (auto screen : screens) {
+  for (auto* screen : screens) {
     wxPanel* pane = screen->controlPane();
     pane_style.MinSize(pane->GetSize());
-    // TODO: write something like pane_style.Position(screen.position()) to
-    // allow users to change the order of monitors.
     aui_manager.AddPane(pane, pane_style);
   }
   aui_manager.Update();
@@ -75,21 +73,21 @@ void PreviewPanel::bindEvents() {
                     DISPLAY_BLACK_OUT);
 }
 
-int PreviewPanel::numPreviews() { return screens.size(); }
+auto PreviewPanel::numPreviews() -> int { return screens.size(); }
 
-ScreenPreview* PreviewPanel::preview(int index) {
+auto PreviewPanel::preview(int index) -> ScreenPreview* {
   assert(index >= 0 && index < screens.size());
   return screens[index];
 }
 
 void PreviewPanel::setToPresenters(ScreenText* screen_text) {
-  for (auto preview : screens) {
+  for (auto* preview : screens) {
     preview->sendToPresenter(screen_text);
   }
 }
 
 void PreviewPanel::updatePresenters() {
-  for (auto preview : screens) {
+  for (auto* preview : screens) {
     preview->sendToPresenter();
   }
 }
@@ -112,7 +110,7 @@ void PreviewPanel::updatePreviewsFromSettings() {
 }
 
 void PreviewPanel::blackout(wxCommandEvent& event) {
-  for (auto preview : screens) {
+  for (auto* preview : screens) {
     preview->blackoutPresenter();
   }
 }

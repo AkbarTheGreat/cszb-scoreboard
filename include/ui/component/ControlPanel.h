@@ -36,12 +36,17 @@ class ControlPanel : public wxAuiNotebook {
   void updateScreenTextFromSelected(ScreenText* screen_text);
 
 #ifdef SCOREBOARD_TESTING
-  ScreenTextController* textController(int index) { return controllers[index]; }
+  auto textController(int index) -> ScreenTextController* {
+    return controllers[index];
+  }
 #endif
 
  private:
   void bindEvents();
-  void tabChanged(wxAuiNotebookEvent& event);
+  void tabChanged(
+      wxAuiNotebookEvent& event);  // NOLINT(google-runtime-references)
+                                   // wxWidgets callback.
+  // Holds a view to these controllers, does not own them.
   std::vector<ScreenTextController*> controllers;
 };
 
