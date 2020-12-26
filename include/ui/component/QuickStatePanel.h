@@ -29,20 +29,37 @@ namespace cszb_scoreboard {
 class QuickStateEntry {
  public:
   QuickStateEntry(wxPanel* parent, int id);
-  ScreenText* screen() { return screen_text; }
+  auto screen() -> ScreenText* { return screen_text; }
+  ~QuickStateEntry();
 
  private:
+  static auto tooltipText(char command_character) -> std::string;
   void bindEvents(int id);
   void executeShortcut();
   void setShortcut();
-  std::string tooltipText(char command_character);
 
   // Thin wrappers just to include the appropriate event objects in the
   // signatures.
-  void executeShortcutFromButton(wxCommandEvent& event) { executeShortcut(); }
-  void executeShortcutFromPanel(wxMouseEvent& event) { executeShortcut(); }
-  void setShortcutFromButton(wxCommandEvent& event) { setShortcut(); }
-  void setShortcutFromPanel(wxMouseEvent& event) { setShortcut(); }
+  void executeShortcutFromButton(
+      wxCommandEvent&
+          event) {  // NOLINT(google-runtime-references) wxWidgets callback.
+    executeShortcut();
+  }
+  void executeShortcutFromPanel(
+      wxMouseEvent& event) {  // NOLINT(google-runtime-references)
+                              // wxWidgets callback.
+    executeShortcut();
+  }
+  void setShortcutFromButton(
+      wxCommandEvent& event) {  // NOLINT(google-runtime-references)
+                                // wxWidgets callback.
+    setShortcut();
+  }
+  void setShortcutFromPanel(
+      wxMouseEvent& event) {  // NOLINT(google-runtime-references)
+                              // wxWidgets callback.
+    setShortcut();
+  }
 
   ScreenText* screen_text;
   wxButton *set_button, *execute_button;
@@ -51,15 +68,14 @@ class QuickStateEntry {
 
 class QuickStatePanel : public wxPanel {
  public:
-  QuickStatePanel(wxWindow* parent);
+  explicit QuickStatePanel(wxWindow* parent);
   void executeShortcut(ScreenText* screen);
   void setShortcut(ScreenText* screen);
 
  private:
-  ~QuickStatePanel();
   void positionWidgets();
 
-  std::vector<QuickStateEntry*> entries;
+  std::vector<std::unique_ptr<QuickStateEntry>> entries;
 };
 
 }  // namespace cszb_scoreboard

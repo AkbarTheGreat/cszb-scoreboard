@@ -35,7 +35,8 @@ namespace cszb_scoreboard {
 class PreviewPanel : public wxPanel {
  public:
   explicit PreviewPanel(wxWindow* parent);
-  void blackout(wxCommandEvent& event); // NOLINT(google-runtime-references) wxWidgets callback.
+  void blackout(wxCommandEvent& event);  // NOLINT(google-runtime-references)
+                                         // wxWidgets callback.
   inline auto all_screens() -> std::vector<ScreenPreview*> { return screens; }
   void setToPresenters(ScreenText* screen_text);
   void updatePresenters();

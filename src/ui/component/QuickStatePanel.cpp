@@ -30,6 +30,9 @@ namespace cszb_scoreboard {
 
 const int PREVIEW_WIDTH = 85;  // a thumbnail-sized 4x3 display
 const int PREVIEW_HEIGHT = 64;
+// If this is increased over 10 without updating hotkey logic, bad things may
+// happen.
+const int NUMBER_OF_QUICK_PANELS = 10;
 
 QuickStateEntry::QuickStateEntry(wxPanel* parent, int id) {
   screen_text = ScreenText::getPreview(
@@ -48,16 +51,19 @@ QuickStateEntry::QuickStateEntry(wxPanel* parent, int id) {
   bindEvents(id);
 }
 
-void QuickStateEntry::bindEvents(int id) {
-  QuickStatePanel* parent = (QuickStatePanel*)screen()->GetParent();
+QuickStateEntry::~QuickStateEntry() { screen()->Destroy(); }
 
-  char command_button = 0x31 + id;
-  if (id >= 9) {
-    command_button = 0x30;
+void QuickStateEntry::bindEvents(int id) {
+  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
+
+  char command_button = '1' + id;
+  if (id >= 9) {  // NOLINT(readability-magic-numbers) 9 is the highest single
+                  // digit number.
+    command_button = '0';
   }
   std::string tooltip = tooltipText(command_button);
 
-  for (auto side : screen()->sides()) {
+  for (auto* side : screen()->sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
@@ -81,42 +87,40 @@ void QuickStateEntry::executeShortcut() {
   if (!initialized) {
     return;
   }
-  QuickStatePanel* parent = (QuickStatePanel*)screen()->GetParent();
+  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
   parent->executeShortcut(screen());
 }
 
 void QuickStateEntry::setShortcut() {
   initialized = true;
-  QuickStatePanel* parent = (QuickStatePanel*)screen()->GetParent();
+  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
   parent->setShortcut(screen());
 }
 
-std::string QuickStateEntry::tooltipText(char command_character) {
-  std::unique_ptr<char[]> buffer(new char[100]);
-  int size = snprintf(buffer.get(), 100,
-                      "Right Click (Ctrl+Alt+%c) to set\nLeft Click (Ctrl+%c) "
-                      "to send to monitors",
-                      command_character, command_character);
-  return std::string(buffer.get(), buffer.get() + size);
+auto QuickStateEntry::tooltipText(char command_character) -> std::string {
+  std::string string_template =
+      "Right Click (Ctrl+Alt+%c) to set\nLeft Click (Ctrl+%c) to send to "
+      "monitors";
+  std::string buffer;
+
+  size_t size = string_template.length() + 2;
+  buffer.reserve(size + 1);
+  buffer.resize(size);
+
+  snprintf(&buffer[0], size + 1, string_template.c_str(), command_character,
+           command_character);
+  return buffer;
 }
 
 QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
-  for (int i = 0; i < 10; ++i) {
-    entries.push_back(new QuickStateEntry(this, i));
+  for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
+    entries.push_back(std::move(std::make_unique<QuickStateEntry>(this, i)));
   }
   positionWidgets();
 }
 
-QuickStatePanel::~QuickStatePanel() {
-  for (auto entry : entries) {
-    entry->screen()->Destroy();
-  }
-
-  entries.clear();
-}
-
 void QuickStatePanel::positionWidgets() {
-  wxGridBagSizer* sizer = new wxGridBagSizer();
+  auto* sizer = new wxGridBagSizer();
 
   for (int i = 0; i < entries.size(); i++) {
     UiUtil::addToGridBag(sizer, entries[i]->screen(), i, 0);
@@ -126,12 +130,12 @@ void QuickStatePanel::positionWidgets() {
 }
 
 void QuickStatePanel::executeShortcut(ScreenText* screen) {
-  MainView* main = (MainView*)GetParent();
+  auto* main = dynamic_cast<MainView*>(GetParent());
   main->previewPanel()->setToPresenters(screen);
 }
 
 void QuickStatePanel::setShortcut(ScreenText* screen) {
-  MainView* main = (MainView*)GetParent();
+  auto* main = dynamic_cast<MainView*>(GetParent());
   main->controlPanel()->updateScreenTextFromSelected(screen);
 }
 
