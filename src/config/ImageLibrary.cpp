@@ -66,7 +66,7 @@ auto ImageLibrary::imageMap() -> std::map<FilesystemPath, proto::ImageInfo> {
 auto ImageLibrary::infoByFile(const FilesystemPath &filename)
     -> proto::ImageInfo {
   for (auto image : library.images()) {
-    if (image.file_path() == filename) {
+    if (image.file_path() == filename.string()) {
       return image;
     }
   }
