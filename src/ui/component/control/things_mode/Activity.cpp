@@ -71,20 +71,22 @@ Activity::~Activity() {
 void Activity::bindEvents() {
   activity_selector->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
                           &ActivityPanel::selectionChanged,
-                          (ActivityPanel *)parent);
+                          dynamic_cast<ActivityPanel *>(parent));
 
   up_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Activity::moveButton, this);
   down_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Activity::moveButton, this);
 
   remove_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                &ActivityPanel::deleteActivity,
-                               (ActivityPanel *)parent);
+                               dynamic_cast<ActivityPanel *>(parent));
   activity_text->Bind(wxEVT_KEY_UP, &ActivityPanel::textUpdated,
-                      (ActivityPanel *)parent);
+                      dynamic_cast<ActivityPanel *>(parent));
 }
 
 void Activity::positionWidgets() {
-  wxSizer *sizer = UiUtil::sizer(0, 5);
+  wxSizer *sizer = UiUtil::sizer(
+      0, 5);  // NOLINT(readability-magic-numbers) Matches the number of columns
+              // for the items listed below this line.
   sizer->Add(activity_selector, 0, wxALL, BORDER_SIZE);
   sizer->Add(activity_text, 0, wxALL, BORDER_SIZE);
   sizer->Add(up_button, 0, wxALL, BORDER_SIZE);
@@ -95,9 +97,9 @@ void Activity::positionWidgets() {
 
 void Activity::moveButton(wxCommandEvent &event) {
   if (event.GetEventObject() == up_button) {
-    ((ActivityPanel *)parent)->swapActivities(index, index - 1);
+    dynamic_cast<ActivityPanel *>(parent)->swapActivities(index, index - 1);
   } else if (event.GetEventObject() == down_button) {
-    ((ActivityPanel *)parent)->swapActivities(index, index + 1);
+    dynamic_cast<ActivityPanel *>(parent)->swapActivities(index, index + 1);
   }
 }
 
@@ -106,22 +108,21 @@ void Activity::select() {
     activity_selector->SetValue(true);
     wxCommandEvent event;
     event.SetEventObject(activity_selector);
-    ((ActivityPanel *)parent)->selectionChanged(event);
+    dynamic_cast<ActivityPanel *>(parent)->selectionChanged(event);
   }
 }
 
 void Activity::unselect() { activity_selector->SetValue(false); }
 
-bool Activity::isSelected() { return activity_selector->GetValue(); }
+auto Activity::isSelected() -> bool { return activity_selector->GetValue(); }
 
-bool Activity::resolveSelection(wxObject *selected_object) {
+auto Activity::resolveSelection(wxObject *selected_object) -> bool {
   if (activity_selector == selected_object) {
     select();
     return true;
-  } else {
-    unselect();
-    return false;
   }
+  unselect();
+  return false;
 }
 
 void Activity::setIndex(int index, int max_index) {
@@ -138,20 +139,16 @@ void Activity::setIndex(int index, int max_index) {
   }
 }
 
-bool Activity::containsDeleteButton(wxObject *delete_button) {
-  if (delete_button == remove_activity_button) {
-    return true;
-  } else {
-    return false;
-  }
+auto Activity::containsDeleteButton(wxObject *delete_button) -> bool {
+  return (delete_button == remove_activity_button);
 }
 
 void Activity::selectionChanged(wxCommandEvent &event) {
-  ((ActivityPanel *)parent)->selectionChanged(event);
+  dynamic_cast<ActivityPanel *>(parent)->selectionChanged(event);
 }
 
-std::string Activity::previewText() {
-  if (activity_text->GetValue() == "") {
+auto Activity::previewText() -> std::string {
+  if (activity_text->GetValue().empty()) {
     return " ";
   }
   return activity_text->GetValue().ToStdString();

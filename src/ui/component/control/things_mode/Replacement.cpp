@@ -57,11 +57,11 @@ void Replacement::copyFrom(Replacement *other) {
 void Replacement::bindEvents() {
   remove_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                   &ReplacementPanel::deleteReplacement,
-                                  (ReplacementPanel *)parent);
+                                  dynamic_cast<ReplacementPanel *>(parent));
   replaceable->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
-                    (ReplacementPanel *)parent);
+                    dynamic_cast<ReplacementPanel *>(parent));
   replacement->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
-                    (ReplacementPanel *)parent);
+                    dynamic_cast<ReplacementPanel *>(parent));
 }
 
 void Replacement::positionWidgets() {
@@ -73,16 +73,12 @@ void Replacement::positionWidgets() {
   control_pane->SetSizerAndFit(sizer);
 }
 
-bool Replacement::containsDeleteButton(wxObject *delete_button) {
-  if (delete_button == remove_replacement_button) {
-    return true;
-  } else {
-    return false;
-  }
+auto Replacement::containsDeleteButton(wxObject *delete_button) -> bool {
+  return (delete_button == remove_replacement_button);
 }
 
-std::string Replacement::previewText() {
-  if (replaceable->GetValue() == "" && replacement->GetValue() == "") {
+auto Replacement::previewText() -> std::string {
+  if (replaceable->GetValue().empty() && replacement->GetValue().empty()) {
     return " ";
   }
   return "• " + replaceable->GetValue().ToStdString() + " - " +

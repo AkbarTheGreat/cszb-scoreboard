@@ -32,15 +32,15 @@ ScreenThumbnail::ScreenThumbnail(wxWindow* parent, int monitor_number,
       ScreenText::getPresenter(parent, widget, thumbnailSize(monitor_number));
 }
 
-wxSize ScreenThumbnail::thumbnailSize(int monitor_number) {
+auto ScreenThumbnail::thumbnailSize(int monitor_number) -> wxSize {
   proto::DisplayInfo display_info =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
 
   float ratio = 4 / 3;
 
   if (!display_info.side().error()) {
-    proto::Rectangle dimensions = display_info.dimensions();
-    ratio = (float)dimensions.width() / dimensions.height();
+    const proto::Rectangle& dimensions = display_info.dimensions();
+    ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
   return wxSize(THUMBNAIL_HEIGHT * ratio, THUMBNAIL_HEIGHT);
 }

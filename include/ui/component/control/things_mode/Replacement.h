@@ -29,13 +29,13 @@ limitations under the License.
 namespace cszb_scoreboard {
 class Replacement {
  public:
-  Replacement(wxWindow *parent);
+  explicit Replacement(wxWindow *parent);
   ~Replacement();
   void copyFrom(Replacement *other);
-  bool containsDeleteButton(wxObject *delete_button);
-  wxPanel *controlPane() { return control_pane; }
-  wxButton *deleteButton() { return remove_replacement_button; }
-  std::string previewText();
+  auto containsDeleteButton(wxObject *delete_button) -> bool;
+  auto controlPane() -> wxPanel * { return control_pane; }
+  auto deleteButton() -> wxButton * { return remove_replacement_button; }
+  auto previewText() -> std::string;
 
  private:
   wxPanel *control_pane;

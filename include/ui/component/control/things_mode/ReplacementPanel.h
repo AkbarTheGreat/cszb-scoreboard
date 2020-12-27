@@ -30,16 +30,17 @@ namespace cszb_scoreboard {
 class ReplacementPanel : public wxPanel {
  public:
   ReplacementPanel(wxWindow *parent, wxWindow *activity_panel);
-  ~ReplacementPanel();
   void copyFrom(ReplacementPanel *other);
   void addReplacement();
-  void deleteReplacement(wxCommandEvent &event);
-  std::vector<proto::RenderableText> previewText(int font_size);
-  void textUpdated(wxKeyEvent &event);
+  void deleteReplacement(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                                                  // wxWidgets callback.
+  auto previewText(int font_size) -> std::vector<proto::RenderableText>;
+  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
+                                        // wxWidgets callback.
 
  private:
   wxWindow *activity_panel;
-  std::vector<Replacement *> replacements;
+  std::vector<std::shared_ptr<Replacement>> replacements;
 
   void bindEvents();
   void positionWidgets();

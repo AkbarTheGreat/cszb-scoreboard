@@ -43,7 +43,9 @@ class ScreenImageController : public ScreenTextController {
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
   virtual void positionWidgets(wxPanel *control_panel) = 0;
-  void screenChanged(wxCommandEvent &event);
+  void screenChanged(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                               // wxWidgets callback.
   void updateScreenText(ScreenText *screen_text) override;
 };
 

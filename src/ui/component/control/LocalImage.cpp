@@ -31,8 +31,9 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const std::string CLIPBOARD_IMAGE_MESSAGE = "<Image Loaded From Clipboard>";
 
-LocalImage *LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent) {
-  LocalImage *local_image = new LocalImage(preview_panel, parent);
+auto LocalImage::Create(PreviewPanel *preview_panel, wxWindow *parent)
+    -> LocalImage * {
+  auto *local_image = new LocalImage(preview_panel, parent);
   local_image->initializeWidgets();
   local_image->updatePreview();
   return local_image;
@@ -83,7 +84,7 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() != wxID_CANCEL) {
     FilesystemPath selected_file =
-        FilesystemPath((std::string)dialog.GetPath());
+        FilesystemPath(std::string(dialog.GetPath()));
     if (screen_selection->allSelected()) {
       all_screen_image = wxImage(selected_file.c_str());
       all_screen_image_name = selected_file.filename().string();

@@ -27,11 +27,11 @@ namespace cszb_scoreboard {
 
 class TeamSelector : public wxRadioBox {
  public:
-  TeamSelector(wxWindow *parent);
-  TeamSelector(wxWindow *parent, proto::ScreenSide initial_side);
-  bool allSelected();
-  bool awaySelected();
-  bool homeSelected();
+  explicit TeamSelector(wxWindow *parent);
+  TeamSelector(wxWindow *parent, const proto::ScreenSide &initial_side);
+  auto allSelected() -> bool;
+  auto awaySelected() -> bool;
+  auto homeSelected() -> bool;
 };
 
 }  // namespace cszb_scoreboard

@@ -29,8 +29,9 @@ namespace cszb_scoreboard {
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-TextEntry *TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent) {
-  TextEntry *entry = new TextEntry(preview_panel, parent);
+auto TextEntry::Create(PreviewPanel *preview_panel, wxWindow *parent)
+    -> TextEntry * {
+  auto *entry = new TextEntry(preview_panel, parent);
   entry->initializeWidgets();
   entry->updatePreview();
   return entry;
@@ -97,7 +98,7 @@ void TextEntry::bindEvents() {
                      this);
 }
 
-wxTextCtrl *TextEntry::textField() { return text_entry; }
+auto TextEntry::textField() -> wxTextCtrl * { return text_entry; }
 
 void TextEntry::updateScreenText(ScreenText *screen_text) {
   // Send the combined text to both previews
@@ -162,9 +163,9 @@ void TextEntry::doScreenChanged() {
   updatePreview();
 }
 
-int TextEntry::enteredFontSize() {
-  return (int)StringUtil::stringToInt(font_size_entry->GetValue(),
-                                      DEFAULT_FONT_SIZE);
+auto TextEntry::enteredFontSize() -> int {
+  return static_cast<int>(
+      StringUtil::stringToInt(font_size_entry->GetValue(), DEFAULT_FONT_SIZE));
 }
 
 }  // namespace cszb_scoreboard

@@ -32,8 +32,10 @@ namespace cszb_scoreboard {
 
 class ThingsMode : public ScreenTextController {
  public:
-  static ThingsMode *Create(PreviewPanel *preview_panel, wxWindow *parent);
-  void textUpdated(wxKeyEvent &event);
+  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+      -> ThingsMode *;
+  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
+                                        // wxWidgets callback.
   void updateScreenText(ScreenText *screen_text) override;
 
  private:
@@ -53,13 +55,17 @@ class ThingsMode : public ScreenTextController {
 
   void createControls(wxPanel *control_panel) override;
 
-  void addActivity(wxCommandEvent &event);
-  void addReplacement(wxCommandEvent &event);
   void bindEvents();
   void positionWidgets(wxPanel *control_panel);
-  void presentedListChanged(wxCommandEvent &event);
-  void screenChanged(wxCommandEvent &event);
   void updateActivityPanel();
+  // wxWidgets callbacks, waive linting error for references.
+  void addActivity(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void addReplacement(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void presentedListChanged(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void screenChanged(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

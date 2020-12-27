@@ -32,33 +32,36 @@ namespace cszb_scoreboard {
 class ActivityPanel : public wxPanel {
  public:
   ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller,
-                proto::ScreenSide side);
-  ~ActivityPanel();
+                const proto::ScreenSide &side);
   void addActivity(wxPanel *parent_panel);
   void addReplacement();
-  void deleteActivity(wxCommandEvent &event);
-  Color getColor();
-  std::vector<proto::RenderableText> previewText(int font_size);
+  auto getColor() -> Color;
+  auto previewText(int font_size) -> std::vector<proto::RenderableText>;
   void refreshSizers();
-  ReplacementPanel *replacementPanel();
-  void selectionChanged(wxCommandEvent &event);
-  std::string selectedActivityText();
+  auto replacementPanel() -> ReplacementPanel *;
+  auto selectedActivityText() -> std::string;
   void swapActivities(int a, int b);
-  void textUpdated(wxKeyEvent &event);
   void updateNotify();
+  // wxWidgets callbacks, waive linting error for references.
+  void deleteActivity(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void selectionChanged(
+      wxCommandEvent &event);           // NOLINT(google-runtime-references)
+  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
 
  private:
   wxPanel *activity_half;
   wxColourPickerCtrl *color_picker;
   wxPanel *replacement_half;
   proto::ScreenSide side;
-  std::vector<Activity *> activities;
+  std::vector<std::shared_ptr<Activity>> activities;
   ScreenTextController *owning_controller;
   wxWindow *parent;
 
   void bindEvents();
   void positionWidgets();
-  void colorChanged(wxColourPickerEvent &event);
+  void colorChanged(wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
+                                                  // wxWidgets callback.
   void resetActivityMoveButtons();
 };
 }  // namespace cszb_scoreboard

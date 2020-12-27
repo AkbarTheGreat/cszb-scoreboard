@@ -25,7 +25,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const std::string DEFAULT_PREVIEW_COLOR = "Grey";
-// const Color DEFAULT_PREVIEW_COLOR("Grey");
+const int BITMAP_DEPTH = 32;
 
 ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
@@ -38,12 +38,13 @@ void ImagePreview::bindEvents() {
   Bind(wxEVT_PAINT, &ImagePreview::paintEvent, this);
 }
 
-void ImagePreview::renderImage(wxDC& dc) {
+void ImagePreview::renderImage(wxDC* dc) {
   wxImage scaled_image = image;
   wxSize image_size = scaled_image.GetSize();
   float screen_ratio = ratio(size);
   float image_ratio = ratio(image_size);
-  int image_height, image_width;
+  int image_height;
+  int image_width;
   if (screen_ratio > image_ratio) {
     // Screen is wider than image, so make the heights match
     image_height = size.GetHeight();
@@ -59,17 +60,17 @@ void ImagePreview::renderImage(wxDC& dc) {
   int x = (size.GetWidth() - image_width) / 2;
   int y = (size.GetHeight() - image_height) / 2;
 
-  dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
 }
 
-void ImagePreview::paintEvent(wxPaintEvent& evt) {
+void ImagePreview::paintEvent(wxPaintEvent& event) {
   wxPaintDC dc(this);
-  renderImage(dc);
+  renderImage(&dc);
 }
 
-float ImagePreview::ratio(const wxSize& size) {
+auto ImagePreview::ratio(const wxSize& size) -> float {
   float ratio = 4 / 3;
-  ratio = (float)size.GetWidth() / size.GetHeight();
+  ratio = static_cast<float>(size.GetWidth()) / size.GetHeight();
   return ratio;
 }
 
@@ -79,7 +80,9 @@ void ImagePreview::clearImage() {
   Refresh();
 }
 
-std::optional<FilesystemPath> ImagePreview::getFilename() { return filename; }
+auto ImagePreview::getFilename() -> std::optional<FilesystemPath> {
+  return filename;
+}
 
 void ImagePreview::setImage(const FilesystemPath& filename) {
   this->filename = filename;

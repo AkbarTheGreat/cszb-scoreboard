@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/ThingsMode.h"
 
+#include <array>
+
 #include "config/TeamConfig.h"
 #include "ui/UiUtil.h"
 #include "util/ProtoUtil.h"
@@ -28,12 +30,14 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-const int NUMBER_OF_PRESENTER_OPTIONS = 2;
-const wxString PRESENTER_OPTIONS[NUMBER_OF_PRESENTER_OPTIONS] = {
-    wxT("Activity List"), wxT("Replacements")};
+const std::array<wxString, 2> PRESENTER_OPTIONS{
+    {{"Activity List"}, {"Replacements"}}};
+const int SCROLL_X_STEP = 0;
+const int SCROLL_Y_STEP = 20;
 
-ThingsMode *ThingsMode::Create(PreviewPanel *preview_panel, wxWindow *parent) {
-  ThingsMode *entry = new ThingsMode(preview_panel, parent);
+auto ThingsMode::Create(PreviewPanel *preview_panel, wxWindow *parent)
+    -> ThingsMode * {
+  auto *entry = new ThingsMode(preview_panel, parent);
   entry->initializeWidgets();
   return entry;
 }
@@ -47,7 +51,7 @@ void ThingsMode::createControls(wxPanel *control_panel) {
   screen_selection = new TeamSelector(button_panel);
   presenter_selection = new wxRadioBox(
       button_panel, wxID_ANY, wxT("Present"), wxDefaultPosition, wxDefaultSize,
-      NUMBER_OF_PRESENTER_OPTIONS, PRESENTER_OPTIONS, 1, wxRA_SPECIFY_COLS);
+      PRESENTER_OPTIONS.size(), PRESENTER_OPTIONS.data(), 1, wxRA_SPECIFY_COLS);
   presenter_selection->SetSelection(0);
 
   new_activity_button = new wxButton(button_panel, wxID_ANY, "New Activity");
@@ -122,7 +126,7 @@ void ThingsMode::updateScreenText(ScreenText *screen_text) {
   scrollable_panel->SetSizer(scrollable_panel->GetSizer());
   scrollable_panel->FitInside();
   scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
-  scrollable_panel->SetScrollRate(0, 20);
+  scrollable_panel->SetScrollRate(SCROLL_X_STEP, SCROLL_Y_STEP);
 
   std::vector<proto::RenderableText> screen_lines;
 

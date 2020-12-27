@@ -31,7 +31,7 @@ const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 
 ActivityPanel::ActivityPanel(wxWindow *parent,
                              ScreenTextController *owning_controller,
-                             proto::ScreenSide side)
+                             const proto::ScreenSide &side)
     : wxPanel(parent) {
   assert(INITIAL_NUMBER_OF_ACTIVITIES >= ACTIVITIES_FOR_SIZING);
   this->owning_controller = owning_controller;
@@ -46,8 +46,8 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   // for.
   bool is_first = true;
   for (int i = 0; i < ACTIVITIES_FOR_SIZING; i++) {
-    activities.push_back(
-        new Activity(this, activity_half, replacement_half, i, is_first));
+    activities.push_back(std::make_shared<Activity>(
+        this, activity_half, replacement_half, i, is_first));
     is_first = false;
   }
   bindEvents();
@@ -55,8 +55,8 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
 
   // Add the activities which we don't size the scrollbar for.
   for (int i = ACTIVITIES_FOR_SIZING; i < INITIAL_NUMBER_OF_ACTIVITIES; i++) {
-    activities.push_back(
-        new Activity(this, activity_half, replacement_half, i, is_first));
+    activities.push_back(std::make_shared<Activity>(
+        this, activity_half, replacement_half, i, is_first));
     is_first = false;
     activity_half->GetSizer()->Add(activities.back()->controlPane(), 0, wxALL,
                                    BORDER_SIZE);
@@ -65,12 +65,6 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
     activities.back()->replacementPanel()->Hide();
   }
   resetActivityMoveButtons();
-}
-
-ActivityPanel::~ActivityPanel() {
-  for (auto activity : activities) {
-    delete activity;
-  }
 }
 
 void ActivityPanel::bindEvents() {
@@ -82,7 +76,7 @@ void ActivityPanel::positionWidgets() {
   wxSizer *activity_sizer = UiUtil::sizer(0, 1);
   wxSizer *replacement_sizer = UiUtil::sizer(0, 1);
 
-  for (auto activity : activities) {
+  for (const auto &activity : activities) {
     activity_sizer->Add(activity->controlPane(), 0, wxALL, BORDER_SIZE);
     replacement_sizer->Add(activity->replacementPanel(), 0, wxALL, BORDER_SIZE);
     if (!activity->isSelected()) {
@@ -102,8 +96,8 @@ void ActivityPanel::positionWidgets() {
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
-  activities.push_back(new Activity(this, activity_half, replacement_half,
-                                    activities.size(), is_first));
+  activities.push_back(std::make_shared<Activity>(
+      this, activity_half, replacement_half, activities.size(), is_first));
   activity_half->GetSizer()->Add(activities.back()->controlPane(), 0, wxALL,
                                  BORDER_SIZE);
   replacement_half->GetSizer()->Add(activities.back()->replacementPanel(), 0,
@@ -124,7 +118,7 @@ void ActivityPanel::addReplacement() {
 void ActivityPanel::deleteActivity(wxCommandEvent &event) {
   wxObject *event_object = event.GetEventObject();
   int offset = 0;
-  for (auto activity : activities) {
+  for (const auto &activity : activities) {
     if (activity->containsDeleteButton(event_object)) {
       if (activity->isSelected()) {
         if (activities.size() > 1) {
@@ -135,7 +129,6 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
           }
         }
       }
-      delete activity;
       activities.erase(activities.begin() + offset);
       resetActivityMoveButtons();
       updateNotify();
@@ -147,7 +140,7 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
 
 void ActivityPanel::selectionChanged(wxCommandEvent &event) {
   wxObject *event_object = event.GetEventObject();
-  for (auto activity : activities) {
+  for (const auto &activity : activities) {
     if (activity->resolveSelection(event_object)) {
       activity->replacementPanel()->Show();
     } else {
@@ -178,8 +171,8 @@ void ActivityPanel::refreshSizers() {
 
 void ActivityPanel::swapActivities(int a, int b) {
   Activity temp(this, activity_half, replacement_half, 0, false);
-  temp.copyFrom(activities[a]);
-  activities[a]->copyFrom(activities[b]);
+  temp.copyFrom(activities[a].get());
+  activities[a]->copyFrom(activities[b].get());
   activities[b]->copyFrom(&temp);
 
   if (activities[a]->isSelected()) {
@@ -193,17 +186,17 @@ void ActivityPanel::swapActivities(int a, int b) {
   updateNotify();
 }
 
-Color ActivityPanel::getColor() {
+auto ActivityPanel::getColor() -> Color {
   color_picker->SetColour(TeamColors::getInstance()->getColor(side));
   return TeamColors::getInstance()->getColor(side);
 }
 
-ReplacementPanel *ActivityPanel::replacementPanel() {
+auto ActivityPanel::replacementPanel() -> ReplacementPanel * {
   if (activities.empty()) {
     return nullptr;
   }
 
-  for (auto activity : activities) {
+  for (const auto &activity : activities) {
     if (activity->isSelected()) {
       return activity->replacementPanel();
     }
@@ -213,8 +206,8 @@ ReplacementPanel *ActivityPanel::replacementPanel() {
   return activities[0]->replacementPanel();
 }
 
-std::string ActivityPanel::selectedActivityText() {
-  for (auto activity : activities) {
+auto ActivityPanel::selectedActivityText() -> std::string {
+  for (const auto &activity : activities) {
     if (activity->isSelected()) {
       return activity->previewText();
     }
@@ -222,13 +215,14 @@ std::string ActivityPanel::selectedActivityText() {
   return " ";
 }
 
-std::vector<proto::RenderableText> ActivityPanel::previewText(int font_size) {
+auto ActivityPanel::previewText(int font_size)
+    -> std::vector<proto::RenderableText> {
   std::string preview_text;
-  for (auto activity : activities) {
+  for (const auto &activity : activities) {
     preview_text += "• " + activity->previewText() + "\n";
   }
   std::vector<proto::RenderableText> return_vector;
-  return_vector.push_back(proto::RenderableText());
+  return_vector.emplace_back(proto::RenderableText());
   return_vector.back().set_text(preview_text);
   return_vector.back().mutable_font()->set_size(font_size);
   return return_vector;

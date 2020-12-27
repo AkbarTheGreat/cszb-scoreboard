@@ -41,15 +41,15 @@ const std::string NO_LOGO_MESSAGE = "<No Logo Selected>";
 const std::string INTRO_MODE_LABEL = "Introduce Teams";
 const std::string SCORE_MODE_LABEL = "Show Scores";
 
-ScoreControl* ScoreControl::Create(PreviewPanel* preview_panel,
-                                   wxWindow* parent) {
-  ScoreControl* control = new ScoreControl(preview_panel, parent);
+auto ScoreControl::Create(PreviewPanel* preview_panel, wxWindow* parent)
+    -> ScoreControl* {
+  auto* control = new ScoreControl(preview_panel, parent);
   control->initializeWidgets();
   return control;
 }
 
 void ScoreControl::createControls(wxPanel* control_panel) {
-  // TODO: Populate the team names from settings-based defaults
+  // TODO(akbar): Populate the team names from settings-based defaults
 
   team_controls_panel = new wxPanel(control_panel);
 
@@ -214,7 +214,7 @@ void ScoreControl::selectLogo(wxCommandEvent& event) {
                       LOGO_SELECTION_STRING, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() != wxID_CANCEL) {
     FilesystemPath selected_file =
-        FilesystemPath((std::string)dialog.GetPath());
+        FilesystemPath(std::string(dialog.GetPath()));
     if (event.GetEventObject() == home_logo_button) {
       home_logo = wxImage(selected_file.c_str());
       home_logo_label->SetLabelText(selected_file.filename().c_str());
@@ -228,7 +228,8 @@ void ScoreControl::selectLogo(wxCommandEvent& event) {
   updatePreview();
 }
 
-std::vector<proto::RenderableText> ScoreControl::scoreLines(bool isHome) {
+auto ScoreControl::scoreLines(bool isHome)
+    -> std::vector<proto::RenderableText> {
   std::vector<proto::RenderableText> update;
 
   wxTextCtrl* score_entry = away_score_entry;
@@ -239,10 +240,10 @@ std::vector<proto::RenderableText> ScoreControl::scoreLines(bool isHome) {
     name_entry = home_name_entry;
   }
 
-  update.push_back(proto::RenderableText());
+  update.emplace_back(proto::RenderableText());
   update.back().set_text(score_entry->GetValue());
   update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
-  update.push_back(proto::RenderableText());
+  update.emplace_back(proto::RenderableText());
   update.back().set_text(name_entry->GetValue());
   update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
   update.back().set_position(
@@ -251,7 +252,8 @@ std::vector<proto::RenderableText> ScoreControl::scoreLines(bool isHome) {
   return update;
 }
 
-std::vector<proto::RenderableText> ScoreControl::introLines(bool isHome) {
+auto ScoreControl::introLines(bool isHome)
+    -> std::vector<proto::RenderableText> {
   std::vector<proto::RenderableText> update;
 
   wxTextCtrl* name_entry = away_name_entry;
@@ -262,10 +264,10 @@ std::vector<proto::RenderableText> ScoreControl::introLines(bool isHome) {
     intro_text = "Home";
   }
 
-  update.push_back(proto::RenderableText());
+  update.emplace_back(proto::RenderableText());
   update.back().set_text(name_entry->GetValue());
   update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
-  update.push_back(proto::RenderableText());
+  update.emplace_back(proto::RenderableText());
   update.back().set_text(intro_text);
   update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
   update.back().set_position(
@@ -340,7 +342,7 @@ void ScoreControl::toggleIntroMode(wxCommandEvent& event) {
 }
 
 void ScoreControl::addToEntry(wxTextCtrl* entry, int amount) {
-  long current_score = StringUtil::stringToInt(entry->GetValue());
+  int32_t current_score = StringUtil::stringToInt(entry->GetValue());
   entry->SetValue(StringUtil::intToString(current_score + amount));
   updatePreview();
 }
@@ -350,7 +352,8 @@ void ScoreControl::homeAddOne(wxCommandEvent& event) {
 }
 
 void ScoreControl::homeAddFive(wxCommandEvent& event) {
-  addToEntry(home_score_entry, 5);
+  addToEntry(home_score_entry, 5);  // NOLINT(readability-magic-numbers) Nothing
+                                    // else could make sense in "Add Five."
 }
 
 void ScoreControl::homeMinusOne(wxCommandEvent& event) {
@@ -362,7 +365,8 @@ void ScoreControl::awayAddOne(wxCommandEvent& event) {
 }
 
 void ScoreControl::awayAddFive(wxCommandEvent& event) {
-  addToEntry(away_score_entry, 5);
+  addToEntry(away_score_entry, 5);  // NOLINT(readability-magic-numbers) Nothing
+                                    // else could make sense in "Add Five."
 }
 
 void ScoreControl::awayMinusOne(wxCommandEvent& event) {

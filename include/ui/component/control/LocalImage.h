@@ -28,7 +28,8 @@ namespace cszb_scoreboard {
 
 class LocalImage : public ScreenImageController {
  public:
-  static LocalImage *Create(PreviewPanel *preview_panel, wxWindow *parent);
+  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+      -> LocalImage *;
 
  private:
   wxButton *browse_button;
@@ -39,10 +40,13 @@ class LocalImage : public ScreenImageController {
   LocalImage(PreviewPanel *preview_panel, wxWindow *parent)
       : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
-  void browsePressed(wxCommandEvent &event);
   void createControls(wxPanel *control_panel) override;
-  void pastePressed(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel) override;
+  // wxWidgets callbacks, waive linting error for references.
+  void browsePressed(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void pastePressed(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

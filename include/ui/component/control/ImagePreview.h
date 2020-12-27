@@ -30,14 +30,15 @@ class ImagePreview : public wxPanel {
   ImagePreview(wxWindow* parent, const wxSize& size);
 
   void clearImage();
-  std::optional<FilesystemPath> getFilename();
+  auto getFilename() -> std::optional<FilesystemPath>;
   void setImage(const FilesystemPath& filename);
 
  private:
   void bindEvents();
-  void paintEvent(wxPaintEvent& evt);
-  float ratio(const wxSize& size);
-  void renderImage(wxDC& dc);
+  void paintEvent(wxPaintEvent& event);  // NOLINT(google-runtime-references)
+                                         // wxWidgets callback.
+  static auto ratio(const wxSize& size) -> float;
+  void renderImage(wxDC* dc);
 
   std::optional<FilesystemPath> filename;
   wxImage image;

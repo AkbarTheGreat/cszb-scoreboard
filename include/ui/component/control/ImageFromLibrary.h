@@ -34,11 +34,14 @@ namespace cszb_scoreboard {
 
 class ImageFromLibrary : public ScreenImageController {
  public:
-  static ImageFromLibrary *Create(PreviewPanel *preview_panel,
-                                  wxWindow *parent);
+  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+      -> ImageFromLibrary *;
 
  private:
   int current_image_page = 0;
+  // All of the following pointer types are references to wxWidgets elements
+  // that wxWidgets maintains.  They are raw pointers as wxWidgets will handle
+  // destruction of them at shutdown.
   wxButton *left_button, *right_button, *configure_button;
   wxSearchCtrl *search_box;
   wxPanel *main_panel, *search_panel, *image_preview_panel;
@@ -51,12 +54,13 @@ class ImageFromLibrary : public ScreenImageController {
       : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
-  void doSearch(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel) override;
-  void selectImage(wxMouseEvent &event);
-  void setImages(wxString search, unsigned int page_number = 0);
-  void editButton(wxCommandEvent &event);
-  void pageChange(wxCommandEvent &event);
+  void setImages(const wxString &search, unsigned int page_number = 0);
+  // wxWidgets callbacks, waive linting error for references.
+  void doSearch(wxCommandEvent &event);    // NOLINT(google-runtime-references)
+  void selectImage(wxMouseEvent &event);   // NOLINT(google-runtime-references)
+  void editButton(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void pageChange(wxCommandEvent &event);  // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

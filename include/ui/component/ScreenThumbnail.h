@@ -27,10 +27,11 @@ namespace cszb_scoreboard {
 class ScreenThumbnail {
  public:
   ScreenThumbnail(wxWindow* parent, int monitor_number, ScreenText* widget);
-  inline ScreenText* widget() { return screen_text; }
+  inline auto widget() -> ScreenText* { return screen_text; }
 
  private:
+  // Just holding a pointer to this wxWidget, this object does not own it.
   ScreenText* screen_text;
-  wxSize thumbnailSize(int monitor_number);
+  static auto thumbnailSize(int monitor_number) -> wxSize;
 };
 }  // namespace cszb_scoreboard

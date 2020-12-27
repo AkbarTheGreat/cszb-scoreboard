@@ -31,9 +31,9 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int NUM_PREVIEWS = 5;
 const wxSize PREVIEW_SIZE(160, 90);
 
-ImageFromLibrary *ImageFromLibrary::Create(PreviewPanel *preview_panel,
-                                           wxWindow *parent) {
-  ImageFromLibrary *library = new ImageFromLibrary(preview_panel, parent);
+auto ImageFromLibrary::Create(PreviewPanel *preview_panel, wxWindow *parent)
+    -> ImageFromLibrary * {
+  auto *library = new ImageFromLibrary(preview_panel, parent);
   library->initializeWidgets();
   library->updatePreview();
   return library;
@@ -59,7 +59,6 @@ void ImageFromLibrary::createControls(wxPanel *control_panel) {
   tag_list_label = new wxStaticText(search_panel, wxID_ANY, "");
 
   for (int i = 0; i < NUM_PREVIEWS; i++) {
-    // TODO: Populate this with images from an actual library.
     image_previews.push_back(
         new ImagePreview(image_preview_panel, PREVIEW_SIZE));
     image_names.push_back(
@@ -91,11 +90,11 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   main_sizer->Add(image_preview_panel, 0, wxALL, BORDER_SIZE);
   main_sizer->Add(configure_button, 0, wxALL, BORDER_SIZE);
 
-  for (auto preview : image_previews) {
+  for (auto *preview : image_previews) {
     image_preview_sizer->Add(preview, 0, wxALL, BORDER_SIZE);
   }
 
-  for (auto name : image_names) {
+  for (auto *name : image_names) {
     image_preview_sizer->Add(name, 0, wxALL, BORDER_SIZE);
   }
 
@@ -113,7 +112,7 @@ void ImageFromLibrary::bindEvents() {
                     this);
   right_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                      &ImageFromLibrary::pageChange, this);
-  for (auto preview : image_previews) {
+  for (auto *preview : image_previews) {
     preview->Bind(wxEVT_LEFT_DOWN, &ImageFromLibrary::selectImage, this);
   }
 }
@@ -141,9 +140,12 @@ void ImageFromLibrary::pageChange(wxCommandEvent &event) {
 
 void ImageFromLibrary::selectImage(wxMouseEvent &event) {
   std::optional<FilesystemPath> filename =
-      ((ImagePreview *)event.GetEventObject())->getFilename();
+      dynamic_cast<ImagePreview *>(event.GetEventObject())->getFilename();
 
-  if (!filename) return;  // do nothing if someone clicked a gray box
+  // do nothing if someone clicked a gray box
+  if (!filename) {
+    return;
+  }
 
   if (screen_selection->allSelected()) {
     all_screen_image = wxImage(filename->string());
@@ -163,19 +165,22 @@ void ImageFromLibrary::selectImage(wxMouseEvent &event) {
   updatePreview();
 }
 
-void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
+void ImageFromLibrary::setImages(const wxString &search,
+                                 unsigned int page_number) {
   current_image_page = page_number;
 
   ImageSearchResults results =
       ImageLibrary::getInstance()->search(std::string(search));
 
-  if (search == "") {
+  if (search.empty()) {
     tag_list_label->SetLabel("");
   } else {
     std::string tag_string;
     bool first = true;
-    for (auto tag : results.matchedTags()) {
-      if (!first) tag_string += ", ";
+    for (const auto &tag : results.matchedTags()) {
+      if (!first) {
+        tag_string += ", ";
+      }
       tag_string += tag;
       first = false;
     }
@@ -183,7 +188,7 @@ void ImageFromLibrary::setImages(wxString search, unsigned int page_number) {
   }
 
   std::vector<FilesystemPath> files = results.filenames();
-  if (files.size() == 0) {
+  if (files.empty()) {
     current_image_page = 0;
     return;
   }

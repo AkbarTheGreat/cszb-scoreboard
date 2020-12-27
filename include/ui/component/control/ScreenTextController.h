@@ -47,7 +47,7 @@ class ScreenTextController : public wxPanel {
    * Defaults to all screens, may be overridden for more control. */
   ScreenTextController(PreviewPanel *preview_panel, wxWindow *parent);
   void initializeWidgets();
-  PreviewPanel *previewPanel();
+  auto previewPanel() -> PreviewPanel *;
   wxPanel *control_panel;
 
  private:
@@ -56,7 +56,9 @@ class ScreenTextController : public wxPanel {
 
   void bindEvents();
   void positionWidgets();
-  void updateClicked(wxCommandEvent &event);
+  void updateClicked(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                               // wxWidgets callback.
 };
 
 }  // namespace cszb_scoreboard

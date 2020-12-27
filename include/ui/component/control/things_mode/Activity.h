@@ -34,13 +34,13 @@ class Activity {
            wxPanel *replacement_frame, int index, bool is_first);
   ~Activity();
   void copyFrom(Activity *other);
-  wxPanel *controlPane() { return control_pane; }
-  bool containsDeleteButton(wxObject *delete_button);
-  std::string previewText();
-  ReplacementPanel *replacementPanel() { return replacement_panel; }
-  bool resolveSelection(wxObject *selected_object);
+  auto controlPane() -> wxPanel * { return control_pane; }
+  auto containsDeleteButton(wxObject *delete_button) -> bool;
+  auto previewText() -> std::string;
+  auto replacementPanel() -> ReplacementPanel * { return replacement_panel; }
+  auto resolveSelection(wxObject *selected_object) -> bool;
   void setIndex(int index, int max_index);
-  bool isSelected();
+  auto isSelected() -> bool;
   void select();
   void unselect();
 
@@ -57,8 +57,10 @@ class Activity {
 
   void bindEvents();
   void positionWidgets();
-  void moveButton(wxCommandEvent &event);
-  void selectionChanged(wxCommandEvent &event);
+  void moveButton(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                                           // wxWidgets callback.
+  void selectionChanged(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                                                 // wxWidgets callback.
 };
 
 }  // namespace cszb_scoreboard

@@ -31,11 +31,13 @@ namespace cszb_scoreboard {
 
 class TextEntry : public ScreenTextController {
  public:
-  static TextEntry *Create(PreviewPanel *preview_panel, wxWindow *parent);
-  wxTextCtrl *textField();
-  void textUpdated(wxKeyEvent &event);
+  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+      -> TextEntry *;
+  auto textField() -> wxTextCtrl *;
+  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
+                                        // wxWidgets callback.
 
-PUBLIC_TEST_ONLY
+  PUBLIC_TEST_ONLY
   void selectTeam(int index);
 
  private:
@@ -61,11 +63,14 @@ PUBLIC_TEST_ONLY
   void createControls(wxPanel *control_panel) override;
 
   void bindEvents();
-  void colorChanged(wxColourPickerEvent &event);
-  int enteredFontSize();
+  auto enteredFontSize() -> int;
   void positionWidgets(wxPanel *control_panel);
-  void screenChanged(wxCommandEvent &event);
   void doScreenChanged();
+  // wxWidgets callbacks, waive linting error for references.
+  void colorChanged(
+      wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
+  void screenChanged(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

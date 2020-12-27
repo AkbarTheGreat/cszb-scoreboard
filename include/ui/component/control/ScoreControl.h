@@ -32,7 +32,8 @@ namespace cszb_scoreboard {
 
 class ScoreControl : public ScreenTextController {
  public:
-  static ScoreControl *Create(PreviewPanel *preview_panel, wxWindow *parent);
+  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+      -> ScoreControl *;
 
  private:
   ScoreControl(PreviewPanel *preview_panel, wxWindow *parent)
@@ -40,26 +41,34 @@ class ScoreControl : public ScreenTextController {
   void addHomeAwayWidgetPair(wxSizer *sizer, wxWindow *home_widget,
                              wxWindow *away_widget);
   void addToEntry(wxTextCtrl *entry, int amount);
-  void awayUpdated(wxKeyEvent &event);
-  void awayNameUpdated(wxKeyEvent &event);
-  void awayAddOne(wxCommandEvent &event);
-  void awayAddFive(wxCommandEvent &event);
-  void awayMinusOne(wxCommandEvent &event);
   void bindEvents();
-  void colorChanged(wxColourPickerEvent &event);
   void createControls(wxPanel *control_panel) override;
-  void homeUpdated(wxKeyEvent &event);
-  void homeNameUpdated(wxKeyEvent &event);
-  void homeAddOne(wxCommandEvent &event);
-  void homeAddFive(wxCommandEvent &event);
-  void homeMinusOne(wxCommandEvent &event);
   void positionWidgets(wxPanel *control_panel);
-  void selectLogo(wxCommandEvent &event);
-  void toggleIntroMode(wxCommandEvent &event);
-  std::vector<proto::RenderableText> introLines(bool isHome);
-  std::vector<proto::RenderableText> scoreLines(bool isHome);
+  auto introLines(bool isHome) -> std::vector<proto::RenderableText>;
+  auto scoreLines(bool isHome) -> std::vector<proto::RenderableText>;
   void updateScreenText(ScreenText *screen_text) override;
+  // wxWidgets callbacks, waive linting error for references.
+  void awayUpdated(wxKeyEvent &event);      // NOLINT(google-runtime-references)
+  void awayNameUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
+  void awayAddOne(wxCommandEvent &event);   // NOLINT(google-runtime-references)
+  void awayAddFive(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void awayMinusOne(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void colorChanged(
+      wxColourPickerEvent &event);          // NOLINT(google-runtime-references)
+  void homeUpdated(wxKeyEvent &event);      // NOLINT(google-runtime-references)
+  void homeNameUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
+  void homeAddOne(wxCommandEvent &event);   // NOLINT(google-runtime-references)
+  void homeAddFive(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void homeMinusOne(
+      wxCommandEvent &event);              // NOLINT(google-runtime-references)
+  void selectLogo(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void toggleIntroMode(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
 
+  std::optional<wxImage> home_logo, away_logo;
+  // All of the following raw pointers are to wxWidgets objects which wxWidgets
+  // will own and handle destruction of.
   wxTextCtrl *alpha_ctrl, *size_ctrl;
   wxToggleButton *team_intro_button;
   wxPanel *team_controls_panel;
@@ -72,7 +81,6 @@ class ScoreControl : public ScreenTextController {
   wxButton *away_plus_1, *away_plus_5, *away_minus_1;
   wxButton *home_logo_button, *away_logo_button;
   wxStaticText *home_logo_label, *away_logo_label;
-  std::optional<wxImage> home_logo, away_logo;
 };
 
 }  // namespace cszb_scoreboard
