@@ -64,24 +64,26 @@ void ScreenPreview::positionWidgets() {
   control_pane->SetSizerAndFit(sizer);
 }
 
-wxSize ScreenPreview::previewSize(int monitor_number) {
+auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
   proto::DisplayInfo display_info =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
 
   float ratio = 4 / 3;
 
   if (!display_info.side().error()) {
-    proto::Rectangle dimensions = display_info.dimensions();
-    ratio = (float)dimensions.width() / dimensions.height();
+    const proto::Rectangle& dimensions = display_info.dimensions();
+    ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
   return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
 }
 
-wxPanel* ScreenPreview::controlPane() { return control_pane; }
+auto ScreenPreview::controlPane() -> wxPanel* { return control_pane; }
 
-ScreenText* ScreenPreview::widget() { return current_widget; }
+auto ScreenPreview::widget() -> ScreenText* { return current_widget; }
 
-ScreenText* ScreenPreview::thumbnailWidget() { return thumbnail->widget(); }
+auto ScreenPreview::thumbnailWidget() -> ScreenText* {
+  return thumbnail->widget();
+}
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
   current_widget->SetSize(previewSize(monitor_number));

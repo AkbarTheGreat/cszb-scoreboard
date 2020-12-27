@@ -30,13 +30,13 @@ class ScreenPreview {
  public:
   ScreenPreview(wxWindow* parent, std::vector<proto::ScreenSide> sides,
                 int monitor_number);
-  ScreenText* widget();
+  auto widget() -> ScreenText*;
   void sendToPresenter(ScreenText* screen_text);
   void sendToPresenter();
   void blackoutPresenter();
-  wxPanel* controlPane();
+  auto controlPane() -> wxPanel*;
   void resetFromSettings(int monitor_number);
-  ScreenText* thumbnailWidget();
+  auto thumbnailWidget() -> ScreenText*;
 
  private:
   wxPanel* control_pane;
@@ -44,7 +44,7 @@ class ScreenPreview {
   const wxWindow* parent;
   ScreenPresenter* presenter;
   ScreenThumbnail* thumbnail;
+  static auto previewSize(int monitor_number) -> wxSize;
   void positionWidgets();
-  wxSize previewSize(int monitor_number);
 };
 }  // namespace cszb_scoreboard

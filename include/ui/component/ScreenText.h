@@ -34,14 +34,15 @@ class ScreenText : public wxPanel {
  public:
   // These two methods are really just light wrappers around constructors, but
   // they help document the use each constructor is intended to fill.
-  static ScreenText* getPreview(wxWindow* parent, wxString initial_text,
-                                std::vector<proto::ScreenSide> sides,
-                                wxSize size);
+  static auto getPreview(wxWindow* parent, const wxString& initial_text,
+                         const std::vector<proto::ScreenSide>& sides,
+                         wxSize size) -> ScreenText*;
 
-  static ScreenText* getPresenter(wxWindow* parent, ScreenText* preview,
-                                  wxSize size);
+  static auto getPresenter(wxWindow* parent, ScreenText* preview, wxSize size)
+      -> ScreenText*;
 
-  void addText(proto::RenderableText text, const proto::ScreenSide& side);
+  void addText(const proto::RenderableText& text,
+               const proto::ScreenSide& side);
   void blackout();
   void resetAllText(const proto::ScreenSide& side);
   void setImage(const wxImage& image, const proto::ScreenSide& side) {
@@ -57,22 +58,22 @@ class ScreenText : public wxPanel {
   void setDefaultBackground(const proto::ScreenSide& side);
   void setFontColor(proto::Font* font, const proto::ScreenSide& side);
   // Resets text fully for screen updates
-  void setAllText(wxString text, int font_size, const Color& background,
+  void setAllText(const wxString& text, int font_size, const Color& background,
                   bool auto_fit, const proto::ScreenSide& side);
-  void setAllText(std::vector<proto::RenderableText> lines,
+  void setAllText(const std::vector<proto::RenderableText>& lines,
                   const Color& background, bool auto_fit,
                   const proto::ScreenSide& side);
-  void setAllText(std::vector<proto::RenderableText> lines,
+  void setAllText(const std::vector<proto::RenderableText>& lines,
                   const Color& background, bool auto_fit,
                   const wxImage& logo_overlay, double overlay_screen_percentage,
                   unsigned char logo_alpha, OverlayScreenPosition logo_position,
                   const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
-  const std::vector<ScreenTextSide*> sides() { return text_sides; }
+  auto sides() -> std::vector<ScreenTextSide*> { return text_sides; }
 
 #ifdef SCOREBOARD_TESTING
-  wxPanel* sidePanel(int index) { return sides()[index]; }
+  auto sidePanel(int index) -> wxPanel* { return sides()[index]; }
 #endif
 
  private:
@@ -82,15 +83,15 @@ class ScreenText : public wxPanel {
   ScreenText(wxWindow* parent, wxSize size)
       : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {}
 
-  void autosplitDisplays(proto::ScreenSide side);
-  void initializeSides(std::vector<ScreenTextSide*> text_sides);
+  void autosplitDisplays(const proto::ScreenSide& side);
+  void initializeSides(const std::vector<ScreenTextSide*>& text_sides);
   void singleDisplay();
   void setImage(const wxImage& image, bool is_scaled,
                 const proto::ScreenSide& side);
   void setText(const wxString& text, int font_size,
                const proto::ScreenSide& side);
   void splitDisplays();
-  static wxSize splitScreenSize(int x, int y, int number_of_splits);
+  static auto splitScreenSize(int x, int y, int number_of_splits) -> wxSize;
 };
 
 }  // namespace cszb_scoreboard

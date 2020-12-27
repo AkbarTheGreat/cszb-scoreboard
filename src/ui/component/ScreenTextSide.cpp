@@ -31,11 +31,15 @@ namespace cszb_scoreboard {
 
 // Margin for the top or bottom, as a percentage
 const float TOP_OR_BOTTOM_MARGIN = 2;
+const float TOP_OR_BOTTOM_RATIO = TOP_OR_BOTTOM_MARGIN / 100;
+const int BITMAP_DEPTH = 32;
+const float BOTTOM_CORNER_OVERLAY_SCALE = 0.30;
+const float AUTOFIT_FONT_ADJUSTMENT = 0.5;
 
 ScreenTextSide::ScreenTextSide(wxWindow* parent, ScreenTextSide* source_side,
                                wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  for (auto new_text : source_side->texts) {
+  for (const auto& new_text : source_side->texts) {
     this->texts.push_back(new_text);
   }
   this->image = source_side->image;
@@ -49,7 +53,7 @@ ScreenTextSide::ScreenTextSide(wxWindow* parent, ScreenTextSide* source_side,
 }
 
 ScreenTextSide::ScreenTextSide(wxWindow* parent, const wxString& initial_text,
-                               proto::ScreenSide side, wxSize size)
+                               const proto::ScreenSide& side, wxSize size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
   proto::RenderableText default_text;
   default_text.set_text(initial_text);
@@ -85,7 +89,7 @@ void ScreenTextSide::setAutoFit(bool auto_fit, const proto::ScreenSide& side) {
   }
 }
 
-void ScreenTextSide::addText(proto::RenderableText text,
+void ScreenTextSide::addText(const proto::RenderableText& text,
                              const proto::ScreenSide& side) {
   if (isSide(side)) {
     proto::RenderableText mutable_text(text);
@@ -158,14 +162,14 @@ void ScreenTextSide::blackout() {
   Refresh();
 }
 
-void ScreenTextSide::renderScaledBackground(wxDC& dc) {
+void ScreenTextSide::renderScaledBackground(wxDC* dc) {
   wxImage scaled_image = scaleImage(image, GetSize());
   int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
   int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
-  dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
 }
 
-void ScreenTextSide::renderOverlay(wxDC& dc) {
+void ScreenTextSide::renderOverlay(wxDC* dc) {
   if (!background_overlay.has_value()) {
     return;
   }
@@ -177,51 +181,53 @@ void ScreenTextSide::renderOverlay(wxDC& dc) {
   }
 }
 
-void ScreenTextSide::renderOverlayBottomCorner(wxDC& dc) {
-  wxImage scaled_image = scaleImage(*background_overlay, GetSize() * 0.30);
+void ScreenTextSide::renderOverlayBottomCorner(wxDC* dc) {
+  wxImage scaled_image =
+      scaleImage(*background_overlay, GetSize() * BOTTOM_CORNER_OVERLAY_SCALE);
   Color font_color("White");
-  if (texts.size()) {
+  if (!texts.empty()) {
     font_color = ProtoUtil::wxClr(texts[0].font().color());
   }
-  adjustOverlayColorAndAlpha(scaled_image, font_color);
+  adjustOverlayColorAndAlpha(&scaled_image, font_color);
 
   int x = TOP_OR_BOTTOM_MARGIN;
   int y = GetSize().GetHeight() - scaled_image.GetSize().GetHeight() -
           TOP_OR_BOTTOM_MARGIN;
-  dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
 }
 
-void ScreenTextSide::renderOverlayCentered(wxDC& dc) {
+void ScreenTextSide::renderOverlayCentered(wxDC* dc) {
   wxImage scaled_image =
       scaleImage(*background_overlay, GetSize() * overlay_percentage);
 
   Color font_color("White");
-  if (texts.size()) {
+  if (!texts.empty()) {
     font_color = ProtoUtil::wxClr(texts[0].font().color());
   }
-  adjustOverlayColorAndAlpha(scaled_image, font_color);
+  adjustOverlayColorAndAlpha(&scaled_image, font_color);
 
   int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
   int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
-  dc.DrawBitmap(wxBitmap(scaled_image, 32), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
 }
 
-void ScreenTextSide::renderBackground(wxDC& dc) {
+void ScreenTextSide::renderBackground(wxDC* dc) {
   if (image_is_scaled) {
     renderScaledBackground(dc);
   } else {
-    dc.DrawBitmap(wxBitmap(image, 32), 0, 0, false);
+    dc->DrawBitmap(wxBitmap(image, BITMAP_DEPTH), 0, 0, false);
   }
   renderOverlay(dc);
 }
 
-wxImage ScreenTextSide::scaleImage(const wxImage& image,
-                                   const wxSize& target_size) {
+auto ScreenTextSide::scaleImage(const wxImage& image, const wxSize& target_size)
+    -> wxImage {
   wxImage scaled_image = image;
   wxSize image_size = scaled_image.GetSize();
   float screen_ratio = ratio(target_size);
   float image_ratio = ratio(image_size);
-  int image_height, image_width;
+  int image_height;
+  int image_width;
   if (screen_ratio > image_ratio) {
     // Screen is wider than image, so make the heights match
     image_height = target_size.GetHeight();
@@ -237,14 +243,14 @@ wxImage ScreenTextSide::scaleImage(const wxImage& image,
   return scaled_image;
 }
 
-void ScreenTextSide::adjustOverlayColorAndAlpha(wxImage& image,
-                                                const Color& color) {
+void ScreenTextSide::adjustOverlayColorAndAlpha(wxImage* image,
+                                                const Color& color) const {
   // We presume that the overlay is predominantly black, so subtracting it from
   // the font color should give us that color most of the time.
-  wxRect dimensions(wxPoint(0, 0), image.GetSize());
-  image.SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
-  unsigned char* alpha = image.GetAlpha();
-  for (int i = 0; i < image.GetSize().GetWidth() * image.GetSize().GetHeight();
+  wxRect dimensions(wxPoint(0, 0), image->GetSize());
+  image->SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
+  unsigned char* alpha = image->GetAlpha();
+  for (int i = 0; i < image->GetSize().GetWidth() * image->GetSize().GetHeight();
        i++) {
     if (alpha[i] > overlay_alpha) {
       alpha[i] = overlay_alpha;
@@ -252,50 +258,51 @@ void ScreenTextSide::adjustOverlayColorAndAlpha(wxImage& image,
   }
 }
 
-void ScreenTextSide::autoFitText(wxDC& dc, proto::RenderableText& text) {
-  proto::Font* font = text.mutable_font();
+void ScreenTextSide::autoFitText(wxDC* dc, proto::RenderableText* text) {
+  proto::Font* font = text->mutable_font();
   wxSize screen_size = GetSize();
 
-  dc.SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
-  wxSize text_extent = getTextExtent(dc, text.text());
+  dc->SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
+  wxSize text_extent = getTextExtent(dc, text->text());
 
   while (text_extent.GetWidth() > screen_size.GetWidth() && font->size() > 0) {
-    font->set_size(font->size() - .5);
-    dc.SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
-    text_extent = getTextExtent(dc, text.text());
+    font->set_size(font->size() - AUTOFIT_FONT_ADJUSTMENT);
+    dc->SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    text_extent = getTextExtent(dc, text->text());
   }
 
   while (text_extent.GetHeight() > screen_size.GetHeight() &&
          font->size() > 0) {
-    font->set_size(font->size() - .5);
-    dc.SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
-    text_extent = getTextExtent(dc, text.text());
+    font->set_size(font->size() - AUTOFIT_FONT_ADJUSTMENT);
+    dc->SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    text_extent = getTextExtent(dc, text->text());
   }
 }
 
-wxPoint ScreenTextSide::bottomText(wxDC& dc, wxString text) {
+auto ScreenTextSide::bottomText(wxDC* dc, const wxString& text) -> wxPoint {
   wxSize text_extent = getTextExtent(dc, text);
   int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
-  int margin = GetSize().GetHeight() * (TOP_OR_BOTTOM_MARGIN / 100);
+  int margin = GetSize().GetHeight() * TOP_OR_BOTTOM_RATIO;
   int y = GetSize().GetHeight() - text_extent.GetHeight() - margin;
   return wxPoint(x, y);
 }
 
-wxPoint ScreenTextSide::centerText(wxDC& dc, wxString text) {
+auto ScreenTextSide::centerText(wxDC* dc, const wxString& text) -> wxPoint {
   wxSize text_extent = getTextExtent(dc, text);
   int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
   int y = (GetSize().GetHeight() - text_extent.GetHeight()) / 2;
   return wxPoint(x, y);
 }
 
-wxPoint ScreenTextSide::topText(wxDC& dc, wxString text) {
+auto ScreenTextSide::topText(wxDC* dc, const wxString& text) -> wxPoint {
   wxSize text_extent = getTextExtent(dc, text);
   int x = (GetSize().GetWidth() - text_extent.GetWidth()) / 2;
-  int y = GetSize().GetHeight() * (TOP_OR_BOTTOM_MARGIN / 100);
+  int y = GetSize().GetHeight() * TOP_OR_BOTTOM_RATIO;
   return wxPoint(x, y);
 }
 
-wxPoint ScreenTextSide::positionText(wxDC& dc, proto::RenderableText text) {
+auto ScreenTextSide::positionText(wxDC* dc, const proto::RenderableText& text)
+    -> wxPoint {
   switch (text.position()) {
     case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_BOTTOM:
       return bottomText(dc, text.text());
@@ -310,23 +317,23 @@ wxPoint ScreenTextSide::positionText(wxDC& dc, proto::RenderableText text) {
   }
 }
 
-void ScreenTextSide::renderText(wxDC& dc, proto::RenderableText& text) {
+void ScreenTextSide::renderText(wxDC* dc, proto::RenderableText* text) {
   if (auto_fit_text) {
     autoFitText(dc, text);
   }
-  dc.SetFont(ProtoUtil::wxScaledFont(text.font(), GetSize()));
-  dc.SetTextForeground(ProtoUtil::wxClr(text.font().color()));
-  wxPoint placement = positionText(dc, text);
-  dc.DrawText(text.text(), placement.x, placement.y);
+  dc->SetFont(ProtoUtil::wxScaledFont(text->font(), GetSize()));
+  dc->SetTextForeground(ProtoUtil::wxClr(text->font().color()));
+  wxPoint placement = positionText(dc, *text);
+  dc->DrawText(text->text(), placement.x, placement.y);
 }
 
-void ScreenTextSide::renderAllText(wxDC& dc) {
+void ScreenTextSide::renderAllText(wxDC* dc) {
   for (auto& text : texts) {
-    renderText(dc, text);
+    renderText(dc, &text);
   }
 }
 
-wxSize ScreenTextSide::getTextExtent(wxDC& dc, wxString text) {
+auto ScreenTextSide::getTextExtent(wxDC* dc, const wxString& text) -> wxSize {
   wxStringTokenizer tokens(text, "\n\r", wxTOKEN_RET_EMPTY_ALL);
   int width = 0;
   int height = 0;
@@ -338,19 +345,22 @@ wxSize ScreenTextSide::getTextExtent(wxDC& dc, wxString text) {
       // get the correct vertical extent.
       token = "|";
     }
-    int line_width, line_height;
-    dc.GetTextExtent(token, &line_width, &line_height);
-    if (line_width > width) width = line_width;
+    int line_width;
+    int line_height;
+    dc->GetTextExtent(token, &line_width, &line_height);
+    if (line_width > width) {
+      width = line_width;
+    }
     height += line_height;
   }
 
   return wxSize(width, height);
 }
 
-void ScreenTextSide::paintEvent(wxPaintEvent& evt) {
+void ScreenTextSide::paintEvent(wxPaintEvent& event) {
   wxPaintDC dc(this);
-  renderBackground(dc);
-  renderAllText(dc);
+  renderBackground(&dc);
+  renderAllText(&dc);
 }
 
 void ScreenTextSide::setImage(const wxImage& image, bool is_scaled,
@@ -412,27 +422,26 @@ void ScreenTextSide::setAll(const ScreenTextSide* source) {
   }
 
   resetAllText(this->screen_side);
-  for (auto new_text : source->texts) {
+  for (const auto& new_text : source->texts) {
     addText(new_text, this->screen_side);
   }
 
   Refresh();
 }
 
-bool ScreenTextSide::isSide(proto::ScreenSide side) {
+auto ScreenTextSide::isSide(const proto::ScreenSide& side) -> bool {
   if (screen_side.home() && side.home()) {
     return true;
-  } else if (screen_side.away() && side.away()) {
-    return true;
-  } else if (screen_side.extra() && side.extra()) {
+  }
+  if (screen_side.away() && side.away()) {
     return true;
   }
-  return false;
+  return (screen_side.extra() && side.extra());
 }
 
-float ScreenTextSide::ratio(const wxSize& size) {
+auto ScreenTextSide::ratio(const wxSize& size) -> float {
   float ratio = 4 / 3;
-  ratio = (float)size.GetWidth() / size.GetHeight();
+  ratio = static_cast<float>(size.GetWidth()) / size.GetHeight();
   return ratio;
 }
 

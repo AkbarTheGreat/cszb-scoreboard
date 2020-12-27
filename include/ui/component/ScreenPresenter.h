@@ -26,7 +26,7 @@ namespace cszb_scoreboard {
 class ScreenPresenter : public wxFrame {
  public:
   ScreenPresenter(int monitor_number, ScreenText *widget);
-  inline ScreenText *widget() { return screen_text; }
+  inline auto widget() -> ScreenText * { return screen_text; }
 
  private:
   int monitor_number;

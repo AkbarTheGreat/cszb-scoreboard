@@ -72,7 +72,7 @@ class ScreenTextSideTest : public testing::Test {
 TEST_F(ScreenTextSideTest, getExtents) {
   wxClientDC dc(screenText());
 
-  wxSize size = screenText()->getTextExtent(dc, "Test Text");
+  wxSize size = screenText()->getTextExtent(&dc, "Test Text");
   int line_width = size.GetWidth();
   int line_height = size.GetHeight();
 
@@ -82,21 +82,21 @@ TEST_F(ScreenTextSideTest, getExtents) {
   ASSERT_GT(line_height, 10) << "Single line text height looks unrealistic";
 
   // Multi-line Text, with something on every line
-  size = screenText()->getTextExtent(dc, "Test Text\n.\n.\nEnd");
+  size = screenText()->getTextExtent(&dc, "Test Text\n.\n.\nEnd");
   ASSERT_EQ(size.GetWidth(), line_width)
       << "Multi-line text with non-empty lines width does not match";
   ASSERT_EQ(size.GetHeight(), line_height*4)
       << "Multi-line text with non-empty lines height does not match";
 
   // Multi-line Text, with blank lines
-  size = screenText()->getTextExtent(dc, "Test Text\n\n\nEnd");
+  size = screenText()->getTextExtent(&dc, "Test Text\n\n\nEnd");
   ASSERT_EQ(size.GetWidth(), line_width)
       << "Multi-line text with empty lines width does not match";
   ASSERT_EQ(size.GetHeight(), line_height*4)
       << "Multi-line text with empty lines height does not match";
 
   // Multi-line Text, with trailing blank lines
-  size = screenText()->getTextExtent(dc, "Test Text\n\n\n\n");
+  size = screenText()->getTextExtent(&dc, "Test Text\n\n\n\n");
   ASSERT_EQ(size.GetWidth(), line_width)
       << "Multi-line text with trailing empty lines width does not match";
   ASSERT_EQ(size.GetHeight(), line_height*5)
