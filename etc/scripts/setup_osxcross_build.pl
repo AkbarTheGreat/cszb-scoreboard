@@ -59,6 +59,8 @@ The following dylibs wind up being required anyway, so we bundle them with our a
 That said, macports protobuf installs the latest protobuf, and the apt version of protobuf will be several versions old, so we do need to rebuild protobuf anyway, to make the protoc/lib versions match, see https://github.com/protocolbuffers/protobuf/blob/master/src/README.md
 When you clone protobuf, be sure to checkout the tag which matches the version in osxcross (which can be found with 'x86_64-apple-darwin19-pkg-config --modversion protobuf')
 
+copy osxcross/target to /opt/osxcross for use in Jenkins (and to have a shorter path)
+
 To build the scoreboard:
 setenv OSXCROSS_HOST x86_64-apple-darwin19 ; setenv OSXCROSS_TARGET_DIR /home/akbar/other_src/osxcross/target/ ; setenv OSXCROSS_TARGET darwin19 ; setenv OSXCROSS_SDK darwin19 
 cmake -DCMAKE_TOOLCHAIN_FILE=/home/akbar/other_src/osxcross/target/toolchain.cmake ../..
