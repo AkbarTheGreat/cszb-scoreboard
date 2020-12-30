@@ -1,5 +1,4 @@
 /*
-/*
 config/TeamConfig.cpp: This class is a configuration singleton which
 represents the team specific configuration pieces.
 
