@@ -1,7 +1,7 @@
 /*
-ui/frame/FrameList.cpp: This class is a singleton which holds a list to all active
-frames (or windows) in the current application.  This is primarily to manage
-destroying all frames when the application is shut down.
+ui/frame/FrameList.cpp: This class is a singleton which holds a list to all
+active frames (or windows) in the current application.  This is primarily to
+manage destroying all frames when the application is shut down.
 
 Copyright 2019-2020 Tracy Beck
 
@@ -22,18 +22,14 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-FrameList* FrameList::singleton_instance;
-
-FrameList* FrameList::getInstance() {
-  if (singleton_instance == nullptr) {
-      singleton_instance = new FrameList();
-  }
-  return singleton_instance;
+auto FrameList::getInstance() -> FrameList * {
+  static FrameList singleton;
+  return &singleton;
 }
 
 void FrameList::exitFrames() {
-  for (auto frame : frames) {
-	wxLogDebug(wxT("Destroying a frame"));
+  for (auto *frame : frames) {
+    wxLogDebug(wxT("Destroying a frame"));
     frame->Destroy();
   }
 }

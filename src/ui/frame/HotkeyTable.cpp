@@ -20,20 +20,16 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-HotkeyTable *HotkeyTable::singleton_instance;
-
-HotkeyTable *HotkeyTable::getInstance() {
-  if (singleton_instance == nullptr) {
-    singleton_instance = new HotkeyTable();
-  }
-  return singleton_instance;
+auto HotkeyTable::getInstance() -> HotkeyTable * {
+  static HotkeyTable singleton;
+  return &singleton;
 }
 
-HotkeyTable::HotkeyTable() {}
+HotkeyTable::HotkeyTable() = default;
 
 void HotkeyTable::addHotkey(int modifier_flags, int key_code,
                             wxWindowID widget_id) {
-  accel_entries.push_back(wxAcceleratorEntry());
+  accel_entries.emplace_back(wxAcceleratorEntry());
   accel_entries.back().Set(modifier_flags, key_code, widget_id);
 }
 
