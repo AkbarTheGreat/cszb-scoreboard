@@ -23,20 +23,26 @@ limitations under the License.
 namespace cszb_scoreboard {
 class Color : public wxColour {
  public:
-  Color() : wxColour() {}
+  Color() = default;
   Color(unsigned char red, unsigned char green, unsigned char blue,
         unsigned char alpha = wxALPHA_OPAQUE)
       : wxColour(red, green, blue, alpha) {}
-  Color(const char *colorName) : wxColour(wxString(colorName)) {}
-  Color(const wxString &colorName) : wxColour(colorName) {}
-  Color(unsigned long colRGB) : wxColour(colRGB) {}
-  Color(const wxColour &color) : wxColour(color) {}
+  explicit Color(const char *colorName) : wxColour(wxString(colorName)) {}
+  explicit Color(const wxString &colorName) : wxColour(colorName) {}
+  explicit Color(uint32_t colRGB) : wxColour(colRGB) {}
+  explicit Color(const wxColour &color) : wxColour(color) {}
 
-  inline unsigned char red() { return GetRGB() & 0xFF; }
-  inline unsigned char green() { return (GetRGB() >> 8) & 0xFF; }
-  inline unsigned char blue() { return (GetRGB() >> 16) & 0xFF; }
+  // Get red by anding by a full byte.
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  inline auto red() -> unsigned char { return GetRGB() & 0xFF; }
+  // Get green by shifting one byte and anding by a full byte.
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  inline auto green() -> unsigned char { return (GetRGB() >> 8) & 0xFF; }
+  // Get blue by shifting two bytes and anding by a full byte.
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  inline auto blue() -> unsigned char { return (GetRGB() >> 16) & 0xFF; }
   // Returns a good contrasting color for text over this background
-  Color contrastColor();
+  auto contrastColor() -> Color;
 };
 
 }  // namespace cszb_scoreboard

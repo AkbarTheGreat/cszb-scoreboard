@@ -24,13 +24,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-TeamColors* TeamColors::singleton_instance;
-
-TeamColors* TeamColors::getInstance() {
-  if (singleton_instance == nullptr) {
-    singleton_instance = new TeamColors();
-  }
-  return singleton_instance;
+auto TeamColors::getInstance() -> TeamColors* {
+  static TeamColors singleton;
+  return &singleton;
 }
 
 TeamColors::TeamColors() {
@@ -42,21 +38,22 @@ TeamColors::TeamColors() {
   all_color = Color("Black");
 }
 
-Color TeamColors::getColor(const proto::ScreenSide& side) {
+auto TeamColors::getColor(const proto::ScreenSide& side) -> Color {
   if (side.home() && side.away() && side.extra()) {
     return all_color;
-  } else if (side.home()) {
-    return home_color;
-  } else if (side.away()) {
-    return away_color;
-  } else {
-    wxLogDebug(
-        "Attempting to get a color to a non-home, non-away, non-all side.");
-    return Color("Black");
   }
+  if (side.home()) {
+    return home_color;
+  }
+  if (side.away()) {
+    return away_color;
+  }
+  wxLogDebug(
+      "Attempting to get a color to a non-home, non-away, non-all side.");
+  return Color("Black");
 }
 
-void TeamColors::setColor(const proto::ScreenSide& side, Color color) {
+void TeamColors::setColor(const proto::ScreenSide& side, const Color& color) {
   if (side.home() && side.away() && side.extra()) {
     all_color = color;
   } else if (side.home()) {
