@@ -95,6 +95,7 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libcharset.a
 	${macports_lib_dir}/libcrypto.a
 	${macports_lib_dir}/libcurl.a
+	${macports_lib_dir}/libzstd.a
 	${macports_lib_dir}/libcurses.a
 	${macports_lib_dir}/libedit.a
 	${macports_lib_dir}/libexpat.a
