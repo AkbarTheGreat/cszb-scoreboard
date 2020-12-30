@@ -33,18 +33,19 @@ extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
 
 class SettingsDialog : public wxPropertySheetDialog {
  public:
-  bool Create(wxWindow *parent);
+  auto Create(wxWindow *parent) -> bool;
 
  private:
-  void addPage(SettingsPage *page, std::string name);
+  void addPage(SettingsPage *page, const std::string &name);
   void bindEvents();
-  void onOk(wxCommandEvent &event);
-  void onCancel(wxCommandEvent &event);
-  void onClose(wxCloseEvent &event);
   void saveSettings();
-  bool validateSettings();
+  auto validateSettings() -> bool;
   std::vector<SettingsPage *> pages;
   wxWindow *parent;
+  // wxWidgets callbacks, waive linting error for references.
+  void onOk(wxCommandEvent &event);      // NOLINT(google-runtime-references)
+  void onCancel(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void onClose(wxCloseEvent &event);     // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

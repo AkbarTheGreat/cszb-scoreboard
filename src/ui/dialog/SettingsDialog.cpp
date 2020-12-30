@@ -32,7 +32,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 
-bool SettingsDialog::Create(wxWindow* parent) {
+auto SettingsDialog::Create(wxWindow* parent) -> bool {
   this->parent = parent;
   if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Scoreboard Settings")) {
     return false;
@@ -45,7 +45,7 @@ bool SettingsDialog::Create(wxWindow* parent) {
   return true;
 }
 
-void SettingsDialog::addPage(SettingsPage* page, std::string name) {
+void SettingsDialog::addPage(SettingsPage* page, const std::string& name) {
   pages.push_back(page);
   GetBookCtrl()->AddPage(page, name);
 }
@@ -84,8 +84,8 @@ void SettingsDialog::onClose(wxCloseEvent& event) {
   local_parent->SetFocus();
 }
 
-bool SettingsDialog::validateSettings() {
-  for (auto page : pages) {
+auto SettingsDialog::validateSettings() -> bool {
+  for (auto* page : pages) {
     if (!page->validateSettings()) {
       return false;
     }
@@ -94,7 +94,7 @@ bool SettingsDialog::validateSettings() {
 }
 
 void SettingsDialog::saveSettings() {
-  for (auto page : pages) {
+  for (auto* page : pages) {
     page->saveSettings();
   }
 }

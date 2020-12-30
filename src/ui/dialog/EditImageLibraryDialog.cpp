@@ -30,7 +30,7 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-bool EditImageLibraryDialog::Create(wxWindow* parent) {
+auto EditImageLibraryDialog::Create(wxWindow* parent) -> bool {
   this->parent = parent;
   if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Edit Image Library")) {
     return false;
@@ -103,15 +103,15 @@ void EditImageLibraryDialog::onClose(wxCloseEvent& event) {
   local_parent->SetFocus();
 }
 
-bool EditImageLibraryDialog::validateSettings() { return true; }
+auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
   ImageLibrary::getInstance()->clearLibrary();
-  for (auto filename : file_list->getFilenames()) {
+  for (const auto& filename : file_list->getFilenames()) {
     std::vector<std::string> tags;
-    for (auto tag : images[filename].tags()) {
+    for (const auto& tag : images[filename].tags()) {
       // Strip out empty tags that're left by accident.
-      if (tag != "") {
+      if (!tag.empty()) {
         tags.push_back(tag);
       }
     }
@@ -126,7 +126,7 @@ void EditImageLibraryDialog::fileSelected(wxListEvent& event) {
 
   name_entry->SetValue(images[filename].name());
   wxArrayString tags;
-  for (auto tag : images[filename].tags()) {
+  for (const auto& tag : images[filename].tags()) {
     tags.Add(tag);
   }
   tag_list->SetStrings(tags);
@@ -147,7 +147,7 @@ void EditImageLibraryDialog::tagDeleted(wxListEvent& event) {
 
   FilesystemPath filename = file_list->selectedFilename();
   images[filename].clear_tags();
-  for (auto tag : tags) {
+  for (const auto& tag : tags) {
     images[filename].add_tags(tag);
   }
 }
@@ -165,7 +165,7 @@ void EditImageLibraryDialog::tagsUpdated(wxListEvent& event) {
 
   FilesystemPath filename = file_list->selectedFilename();
   images[filename].clear_tags();
-  for (auto tag : tags) {
+  for (const auto& tag : tags) {
     images[filename].add_tags(tag);
   }
 }

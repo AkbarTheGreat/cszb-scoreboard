@@ -25,11 +25,11 @@ namespace cszb_scoreboard {
 class SettingsPage : public wxPanel {
  public:
   virtual void saveSettings() = 0;
-  virtual bool validateSettings() = 0;
+  virtual auto validateSettings() -> bool = 0;
 
  protected:
-  SettingsPage(wxWindow *parent) : wxPanel(parent) {}
-  virtual ~SettingsPage() {}
+  explicit SettingsPage(wxWindow *parent) : wxPanel(parent)  {}
+  ~SettingsPage() override = default;
 };
 
 }  // namespace cszb_scoreboard

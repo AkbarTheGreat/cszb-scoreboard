@@ -33,8 +33,8 @@ class TeamSettingsPanel : public wxPanel {
   TeamSettingsPanel(wxPanel *parent, int team_index,
                     proto::TeamInfo_TeamType team);
   void copyFrom(TeamSettingsPanel *other);
-  Color teamColor();
-  proto::TeamInfo_TeamType team() { return team_type; }
+  auto teamColor() -> Color;
+  auto team() -> proto::TeamInfo_TeamType { return team_type; }
 
  private:
   int index;
@@ -45,7 +45,8 @@ class TeamSettingsPanel : public wxPanel {
   wxButton *down_button;
   wxButton *up_button;
   void createButtonPanel();
-  void moveTeam(wxCommandEvent &event);
+  void moveTeam(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                                         // wxWidgets callback.
 };
 
 }  // namespace cszb_scoreboard

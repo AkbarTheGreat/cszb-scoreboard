@@ -29,10 +29,10 @@ namespace cszb_scoreboard {
 
 class TeamSettingsPage : public SettingsPage {
  public:
-  TeamSettingsPage(wxWindow *parent);
+  explicit TeamSettingsPage(wxWindow *parent);
   void saveSettings() override;
   void swapTeams(int a, int b);
-  bool validateSettings() override;
+  auto validateSettings() -> bool override;
 
  private:
   std::vector<TeamSettingsPanel *> team_settings_panels;

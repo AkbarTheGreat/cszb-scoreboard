@@ -37,7 +37,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int index)
   this->display_id = display_info.id();
   wxSizer* sizer = UiUtil::sizer(0, 1);
 
-  proto::ScreenSide screen_side = display_info.side();
+  const proto::ScreenSide& screen_side = display_info.side();
   // Label for this display
   display_label = new wxStaticText(this, wxID_ANY, "");
   wxFont font = display_label->GetFont();
@@ -117,7 +117,7 @@ void DisplaySettingsPanel::createButtonPanel() {
   button_panel->SetSizerAndFit(sizer);
 }
 
-proto::ScreenSide DisplaySettingsPanel::getSide() {
+auto DisplaySettingsPanel::getSide() -> proto::ScreenSide {
   proto::ScreenSide side;
   side.set_control(control_checkbox->GetValue());
   side.set_home(home_checkbox->GetValue());
@@ -126,7 +126,7 @@ proto::ScreenSide DisplaySettingsPanel::getSide() {
 }
 
 void DisplaySettingsPanel::moveDisplay(wxCommandEvent& event) {
-  DisplaySettingsPage* parent_page = (DisplaySettingsPage*)GetParent();
+  auto* parent_page = dynamic_cast<DisplaySettingsPage*>(GetParent());
   if (event.GetEventObject() == up_button) {
     parent_page->swapDisplays(index, index - 1);
   } else if (event.GetEventObject() == down_button) {

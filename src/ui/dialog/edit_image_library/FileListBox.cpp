@@ -26,7 +26,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 FileListBox::FileListBox(wxWindow* parent, wxWindowID id, const wxString& label,
-                         const wxPoint& pos, const wxSize& size, long style,
+                         const wxPoint& pos, const wxSize& size, int32_t style,
                          const wxString& name)
     : wxEditableListBox(parent, id, label, pos, size, style, name) {
   updateStrings(ImageLibrary::getInstance()->allFilenames());
@@ -42,9 +42,9 @@ void FileListBox::newPressed(wxCommandEvent& event) {
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   std::vector<FilesystemPath> filenames = getFilenames();
   if (dialog.ShowModal() != wxID_CANCEL) {
-    FilesystemPath new_file = FilesystemPath((std::string)dialog.GetPath());
+    FilesystemPath new_file = FilesystemPath(std::string(dialog.GetPath()));
     // Insert the new file after the currently selected one.
-    long new_index = selectedIndex() + 1;
+    int32_t new_index = selectedIndex() + 1;
     if (selectedIndex() >= listSize()) {
       new_index = listSize();
     }
@@ -53,35 +53,35 @@ void FileListBox::newPressed(wxCommandEvent& event) {
   }
 }
 
-std::vector<FilesystemPath> FileListBox::getFilenames() {
+auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
   wxArrayString strings;
   GetStrings(strings);
   std::vector<FilesystemPath> filenames;
 
-  for (auto entry : strings) {
-    if (entry != "") {
-      filenames.push_back(FilesystemPath(std::string(entry)));
+  for (const auto& entry : strings) {
+    if (!entry.empty()) {
+      filenames.emplace_back(FilesystemPath(std::string(entry)));
     }
   }
 
   return filenames;
 }
 
-long FileListBox::listSize() {
+auto FileListBox::listSize() -> int32_t {
   wxArrayString strings;
   GetStrings(strings);
   return strings.GetCount();
 }
 
-FilesystemPath FileListBox::selectedFilename() {
-  long index = selectedIndex();
+auto FileListBox::selectedFilename() -> FilesystemPath {
+  int32_t index = selectedIndex();
   if (index == -1 || index >= listSize()) {
     return FilesystemPath();
   }
   return getFilenames()[index];
 }
 
-long FileListBox::selectedIndex() {
+auto FileListBox::selectedIndex() -> int32_t {
   if (listSize() == 0) {
     return -1;
   }
@@ -89,9 +89,9 @@ long FileListBox::selectedIndex() {
 }
 
 void FileListBox::updateStrings(const std::vector<FilesystemPath>& filenames,
-                                long select_index) {
+                                int32_t select_index) {
   wxArrayString strings;
-  for (auto file : filenames) {
+  for (const auto& file : filenames) {
     strings.Add(file.c_str());
   }
   SetStrings(strings);
@@ -101,7 +101,7 @@ void FileListBox::updateStrings(const std::vector<FilesystemPath>& filenames,
   }
 }
 
-void FileListBox::selectItem(long select_index) {
+void FileListBox::selectItem(int32_t select_index) {
   if (listSize() <= select_index) {
     select_index = 0;
   }
