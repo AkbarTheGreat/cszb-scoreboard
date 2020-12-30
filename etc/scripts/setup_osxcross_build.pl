@@ -30,6 +30,7 @@ limitations under the License.
 For setup, install osxcross, run ./build and add osxcross to your path.  Then run macports for:
 setenv MACOSX_DEPLOYMENT_TARGET 10.7
 osxcross-macports install gtest curl expat 
+osxcross-macports install zlib gtest libiconv ncurses gettext libunistring libidn2 libffi bzip2 libedit pcre glib2 libpsl openssl curl-ca-bundle curl expat jsoncpp-devel
 
 These two appear to only have dylibs.  So we may need to build them ourselves.
 
@@ -51,8 +52,12 @@ Then you have to fix up Curl by adding cmake files for CURL and setting .so exte
 
 cp -R /usr/local/lib/cmake/CURL other_src/osxcross/target/macports/pkgs/opt/local/lib/cmake/CURL
 vim CURLTargets-noconfig.cmake
+(change .so file endings to .a)
 
-I had to build protobuf from github to match the macports version.  Honestly, if we have to build it for osxcross, we just have to build it for both.
+The following dylibs wind up being required anyway, so we bundle them with our application:  libcrypto.1.1.dylib  libjsoncpp.24.dylib  libprotobuf.23.dylib  libssl.1.1.dylib  libz.1.dylib
+
+That said, macports protobuf installs the latest protobuf, and the apt version of protobuf will be several versions old, so we do need to rebuild protobuf anyway, to make the protoc/lib versions match, see https://github.com/protocolbuffers/protobuf/blob/master/src/README.md
+When you clone protobuf, be sure to checkout the tag which matches the version in osxcross (which can be found with 'x86_64-apple-darwin19-pkg-config --modversion protobuf')
 
 To build the scoreboard:
 setenv OSXCROSS_HOST x86_64-apple-darwin19 ; setenv OSXCROSS_TARGET_DIR /home/akbar/other_src/osxcross/target/ ; setenv OSXCROSS_TARGET darwin19 ; setenv OSXCROSS_SDK darwin19 

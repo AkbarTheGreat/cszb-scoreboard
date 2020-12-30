@@ -56,8 +56,6 @@ if(NOT wxWidgets_LIBRARIES)
    include(${wxWidgets_USE_FILE})
 endif()
 
-message("CONFIG: ${wxWidgets_CONFIG_EXECUTABLE}")
-
 if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_definitions(-DwxDEBUG_LEVEL=0)
 endif()

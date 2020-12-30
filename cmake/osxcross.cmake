@@ -31,8 +31,6 @@ set(wx_root "${OSXCROSS_TARGET_DIR}/wxwidgets")
 set(wxWidgets_LIB_DIR ${wx_root}/lib)
 set(macports_lib_dir ${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib)
 
-message("Including OSXCROSS specific wxWidgets configuration.")
-
 # wxWidgets auto-discovery doesn't work at all here, so we'll manually
 # reproduce it.  I don't love it, but it is what it is.
 
