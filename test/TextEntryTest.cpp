@@ -20,12 +20,11 @@ limitations under the License.
 #include "test/GuiTest.h"
 #include "ui/component/control/TextEntry.h"
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard ::test {
 
 class TextEntryTest : public GuiTest {
  protected:
-  void enterTextIndirect(const char *text) {
+  static void enterTextIndirect(const char *text) {
     TextEntry *entry = textEntry();
     WX_A(entry->textField()->SetFocus());
     WX_A(entry->textField()->Clear());
@@ -41,7 +40,7 @@ class TextEntryTest : public GuiTest {
     WX_A(act.Text(text));
   }
 
-  void enterText(const char *text) {
+  static void enterText(const char *text) {
     // wxUIActionSimulator has problems described at
     // http://trac.wxwidgets.org/ticket/17400 which implies that there are
     // issues in some unkown circumstances? Maybe we're better off avoiding it
@@ -53,7 +52,7 @@ class TextEntryTest : public GuiTest {
 #endif
   }
 
-  ImageAnalysis getAnalysis() {
+  static auto getAnalysis() -> ImageAnalysis {
     // Always assume we're dealing with the left (home) view, which is 0 in most
     // cases, but may also be an error screen in release, so this will fail for
     // release at the moment.
@@ -81,5 +80,4 @@ TEST_F(TextEntryTest, TypingTest) {
   ASSERT_LT(initial_text_ratio, new_text_ratio);
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test

@@ -298,20 +298,20 @@ void ScoreControl::updateScreenText(ScreenText* screen_text) {
   }
 
   if (home_logo.has_value()) {
-    screen_text->setAllText(home_update, home_color_picker->GetColour(), true,
-                            *home_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
+    screen_text->setAllText(home_update, Color(home_color_picker->GetColour()),
+                            true, *home_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::homeSide());
   } else {
-    screen_text->setAllText(home_update, home_color_picker->GetColour(), true,
-                            ProtoUtil::homeSide());
+    screen_text->setAllText(home_update, Color(home_color_picker->GetColour()),
+                            true, ProtoUtil::homeSide());
   }
   if (away_logo.has_value()) {
-    screen_text->setAllText(away_update, away_color_picker->GetColour(), true,
-                            *away_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
+    screen_text->setAllText(away_update, Color(away_color_picker->GetColour()),
+                            true, *away_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::awaySide());
   } else {
-    screen_text->setAllText(away_update, away_color_picker->GetColour(), true,
-                            ProtoUtil::awaySide());
+    screen_text->setAllText(away_update, Color(away_color_picker->GetColour()),
+                            true, ProtoUtil::awaySide());
   }
 }
 
@@ -325,9 +325,9 @@ void ScoreControl::awayNameUpdated(wxKeyEvent& event) { updatePreview(); }
 
 void ScoreControl::colorChanged(wxColourPickerEvent& event) {
   TeamColors::getInstance()->setColor(ProtoUtil::homeSide(),
-                                      home_color_picker->GetColour());
+                                      Color(home_color_picker->GetColour()));
   TeamColors::getInstance()->setColor(ProtoUtil::awaySide(),
-                                      away_color_picker->GetColour());
+                                      Color(away_color_picker->GetColour()));
 
   updatePreview();
 }

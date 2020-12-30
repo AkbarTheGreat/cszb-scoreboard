@@ -74,12 +74,9 @@ auto curlCallback(void *new_content, size_t byte_size, size_t size,
 
   page_vector->resize(old_size + grow_size);
 
-  memcpy(
-      &(page_vector->data()[old_size -
-                            1]),  // NOLINT(readability-simplify-subscript-expr)
-                                  // call to data() is needed here
-                                  // to properly fill via memcpy.
-      new_content, grow_size);
+  // Call to data() is needed here to properly fill via memcpy.
+  // NOLINTNEXTLINE(readability-simplify-subscript-expr)
+  memcpy(&(page_vector->data()[old_size - 1]), new_content, grow_size);
 
   (*page_vector)[page_vector->size() - 1] = '\0';
 

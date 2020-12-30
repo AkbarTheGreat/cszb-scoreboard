@@ -24,17 +24,19 @@ limitations under the License.
 #include "ui/component/ScreenTextSide.h"
 #include "util/ProtoUtil.h"
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard ::test {
+
+static const int STARTING_WIDTH = 50;
+static const int STARTING_HEIGHT = 50;
 
 class TestFrame : public wxFrame {
  public:
   ScreenTextSide *screen_text_side;
 
- public:
-  TestFrame() : wxFrame(NULL, wxID_ANY, "ScreenTextSideTest") {
+  TestFrame() : wxFrame(nullptr, wxID_ANY, "ScreenTextSideTest") {
     screen_text_side =
-        new ScreenTextSide(this, "Text", ProtoUtil::homeSide(), wxSize(50, 50));
+        new ScreenTextSide(this, "Text", ProtoUtil::homeSide(),
+                           wxSize(STARTING_WIDTH, STARTING_HEIGHT));
     wxSizer *sizer = new wxFlexGridSizer(1, 1, 0, 0);
     sizer->Add(screen_text_side);
     this->SetSizerAndFit(sizer);
@@ -45,7 +47,7 @@ class TestApp : public wxApp {
  public:
   TestFrame *frame;
 
-  virtual bool OnInit() {
+  auto OnInit() -> bool override {
     frame = new TestFrame();
     frame->Show(true);
     return true;
@@ -56,14 +58,14 @@ class ScreenTextSideTest : public testing::Test {
  protected:
   TestApp *app;
 
-  ScreenTextSide *screenText() { return app->frame->screen_text_side; }
+  auto screenText() -> ScreenTextSide * { return app->frame->screen_text_side; }
 
-  virtual void SetUp() override {
+  void SetUp() override {
     app = new TestApp();
     TestUtil::startApp(app);
   }
 
-  virtual void TearDown() {
+  void TearDown() override {
     app->OnExit();
     wxEntryCleanup();
   }
@@ -72,7 +74,7 @@ class ScreenTextSideTest : public testing::Test {
 TEST_F(ScreenTextSideTest, getExtents) {
   wxClientDC dc(screenText());
 
-  wxSize size = screenText()->getTextExtent(&dc, "Test Text");
+  wxSize size = ScreenTextSide::getTextExtent(&dc, "Test Text");
   int line_width = size.GetWidth();
   int line_height = size.GetHeight();
 
@@ -82,26 +84,25 @@ TEST_F(ScreenTextSideTest, getExtents) {
   ASSERT_GT(line_height, 10) << "Single line text height looks unrealistic";
 
   // Multi-line Text, with something on every line
-  size = screenText()->getTextExtent(&dc, "Test Text\n.\n.\nEnd");
+  size = ScreenTextSide::getTextExtent(&dc, "Test Text\n.\n.\nEnd");
   ASSERT_EQ(size.GetWidth(), line_width)
       << "Multi-line text with non-empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), line_height*4)
+  ASSERT_EQ(size.GetHeight(), line_height * 4)
       << "Multi-line text with non-empty lines height does not match";
 
   // Multi-line Text, with blank lines
-  size = screenText()->getTextExtent(&dc, "Test Text\n\n\nEnd");
+  size = ScreenTextSide::getTextExtent(&dc, "Test Text\n\n\nEnd");
   ASSERT_EQ(size.GetWidth(), line_width)
       << "Multi-line text with empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), line_height*4)
+  ASSERT_EQ(size.GetHeight(), line_height * 4)
       << "Multi-line text with empty lines height does not match";
 
   // Multi-line Text, with trailing blank lines
-  size = screenText()->getTextExtent(&dc, "Test Text\n\n\n\n");
+  size = ScreenTextSide::getTextExtent(&dc, "Test Text\n\n\n\n");
   ASSERT_EQ(size.GetWidth(), line_width)
       << "Multi-line text with trailing empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), line_height*5)
+  ASSERT_EQ(size.GetHeight(), line_height * 5)
       << "Multi-line text with trailing empty lines height does not match";
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test

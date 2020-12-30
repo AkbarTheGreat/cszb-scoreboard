@@ -19,8 +19,7 @@ limitations under the License.
 #include "config/DisplayConfig.h"
 #include "test/GuiTest.h"
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard::test {
 
 TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
@@ -47,5 +46,4 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   }
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test
