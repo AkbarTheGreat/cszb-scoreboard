@@ -30,15 +30,15 @@ BackgroundImage::BackgroundImage(wxSize size, Color color)
   SetRGB(fullMask, color.red(), color.green(), color.blue());
 }
 
-BackgroundImage BackgroundImage::errorImage(wxSize size) {
+auto BackgroundImage::errorImage(wxSize size) -> BackgroundImage {
   BackgroundImage error(size, Color("Red"));
   int square_size = size.GetHeight() / NUMBER_OF_SQUARES_HIGH;
   Color white("White");
   bool is_red = true;
   for (int x = 0; x < size.GetWidth(); ++x) {
-    bool x_toggle = (x / square_size) & 1;
+    bool x_toggle = static_cast<bool>((x / square_size) & 1);
     for (int y = 0; y < size.GetHeight(); ++y) {
-      bool y_toggle = (y / square_size) & 1;
+      bool y_toggle = static_cast<bool>((y / square_size) & 1);
       if (x_toggle ^ y_toggle) {
         error.SetRGB(x, y, white.red(), white.green(), white.blue());
       }

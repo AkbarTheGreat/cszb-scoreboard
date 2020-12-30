@@ -26,27 +26,28 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const long FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
+const int32_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
 class FileListBox : public wxEditableListBox {
  public:
   FileListBox(wxWindow* parent, wxWindowID id, const wxString& label,
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize,
-              long style = FILE_LIST_BOX_DEFAULT_STYLE,
+              int32_t style = FILE_LIST_BOX_DEFAULT_STYLE,
               const wxString& name = wxEditableListBoxNameStr);
 
-  std::vector<FilesystemPath> getFilenames();
-  FilesystemPath selectedFilename();
+  auto getFilenames() -> std::vector<FilesystemPath>;
+  auto selectedFilename() -> FilesystemPath;
 
  protected:
   void bindEvents();
-  long listSize();
-  void newPressed(wxCommandEvent& event);
-  void selectItem(long select_index);
-  long selectedIndex();
+  auto listSize() -> int32_t;
+  void newPressed(wxCommandEvent& event);  // NOLINT(google-runtime-references)
+                                           // wxWidgets callback.
+  void selectItem(int32_t select_index);
+  auto selectedIndex() -> int32_t;
   void updateStrings(const std::vector<FilesystemPath>& filenames,
-                     long select_index = 0);
+                     int32_t select_index = 0);
 };
 
 }  // namespace cszb_scoreboard

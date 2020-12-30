@@ -115,11 +115,11 @@ void TextEntry::updateScreenText(ScreenText *screen_text) {
 
 void TextEntry::colorChanged(wxColourPickerEvent &event) {
   if (screen_selection->allSelected()) {
-    all_color = event.GetColour();
+    all_color = Color(event.GetColour());
   } else if (screen_selection->homeSelected()) {
-    home_color = event.GetColour();
+    home_color = Color(event.GetColour());
   } else if (screen_selection->awaySelected()) {
-    away_color = event.GetColour();
+    away_color = Color(event.GetColour());
   }
   updatePreview();
 }

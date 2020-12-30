@@ -20,17 +20,18 @@ limitations under the License.
 #include "gtest/gtest.h"
 #include "util/ProtoUtil.h"
 
-extern wxColourDatabase *wxTheColourDatabase;
+// extern wxColourDatabase *wxTheColourDatabase;
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard::test {
 
 class ProtoUtilTest : public testing::Test {
  protected:
-  virtual void SetUp() override {
+  void SetUp() override {
     // Wx doesn't initialize this database just by using wxColour, so we'll
     // initialize it here for testing if needed.
-    if (!wxTheColourDatabase) wxTheColourDatabase = new wxColourDatabase();
+    if (wxTheColourDatabase == nullptr) {
+      wxTheColourDatabase = new wxColourDatabase();
+    }
   }
 };
 
@@ -38,34 +39,34 @@ TEST_F(ProtoUtilTest, ConvertsARectangleCorrectly) {
   proto::Rectangle known;
   known.set_x(2);
   known.set_y(3);
-  known.set_width(10);
-  known.set_height(20);
+  known.set_width(10);   // NOLINT(readability-magic-numbers)
+  known.set_height(20);  // NOLINT(readability-magic-numbers)
   wxRect converted = ProtoUtil::wxRct(known);
   EXPECT_EQ(converted.GetX(), 2);
   EXPECT_EQ(converted.GetY(), 3);
-  EXPECT_EQ(converted.GetWidth(), 10);
-  EXPECT_EQ(converted.GetHeight(), 20);
+  EXPECT_EQ(converted.GetWidth(), 10);   // NOLINT(readability-magic-numbers)
+  EXPECT_EQ(converted.GetHeight(), 20);  // NOLINT(readability-magic-numbers)
 }
 
 TEST_F(ProtoUtilTest, ConvertsAWxRectCorrectly) {
-  wxRect known(2, 3, 10, 20);
+  wxRect known(2, 3, 10, 20);  // NOLINT(readability-magic-numbers)
   proto::Rectangle converted;
   ProtoUtil::protoRct(known, &converted);
   EXPECT_EQ(converted.x(), 2);
   EXPECT_EQ(converted.y(), 3);
-  EXPECT_EQ(converted.width(), 10);
-  EXPECT_EQ(converted.height(), 20);
+  EXPECT_EQ(converted.width(), 10);   // NOLINT(readability-magic-numbers)
+  EXPECT_EQ(converted.height(), 20);  // NOLINT(readability-magic-numbers)
 }
 
 TEST_F(ProtoUtilTest, CovertsAWxColorCorrectly) {
   Color wx_white("White");
-  unsigned int white_rgb = 0xFFFFFF;
+  unsigned int white_rgb = 0xFFFFFF;  // NOLINT(readability-magic-numbers)
 
   Color wx_red("Red");
-  unsigned int red_rgb = 0x0000FF;
+  unsigned int red_rgb = 0x0000FF;  // NOLINT(readability-magic-numbers)
 
   Color wx_black("Black");
-  unsigned int black_rgb = 0x000000;
+  unsigned int black_rgb = 0x000000;  // NOLINT(readability-magic-numbers)
 
   proto::Color converted_white;
   ProtoUtil::protoClr(wx_white, &converted_white);
@@ -83,15 +84,15 @@ TEST_F(ProtoUtilTest, CovertsAWxColorCorrectly) {
 TEST_F(ProtoUtilTest, CovertsAProtoColorCorrectly) {
   Color wx_white("White");
   proto::Color proto_white;
-  proto_white.set_rgb(0xFFFFFF);
+  proto_white.set_rgb(0xFFFFFF);  // NOLINT(readability-magic-numbers)
 
   Color wx_red("Red");
   proto::Color proto_red;
-  proto_red.set_rgb(0x0000FF);
+  proto_red.set_rgb(0x0000FF);  // NOLINT(readability-magic-numbers)
 
   Color wx_black("Black");
   proto::Color proto_black;
-  proto_black.set_rgb(0x000000);
+  proto_black.set_rgb(0x000000);  // NOLINT(readability-magic-numbers)
 
   Color converted_white = ProtoUtil::wxClr(proto_white);
   EXPECT_EQ(converted_white, wx_white);
@@ -145,5 +146,4 @@ TEST_F(ProtoUtilTest, SideContainsTests) {
                                        proto::TeamInfo_TeamType_TEAM_ERROR));
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test

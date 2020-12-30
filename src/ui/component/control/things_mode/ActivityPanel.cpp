@@ -158,7 +158,7 @@ void ActivityPanel::updateNotify() {
 }
 
 void ActivityPanel::colorChanged(wxColourPickerEvent &event) {
-  TeamColors::getInstance()->setColor(side, color_picker->GetColour());
+  TeamColors::getInstance()->setColor(side, Color(color_picker->GetColour()));
 
   owning_controller->updatePreview();
 }

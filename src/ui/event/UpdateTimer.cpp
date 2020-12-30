@@ -26,14 +26,12 @@ namespace cszb_scoreboard {
 // Retry every six hours to look for an update.
 const int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
 
-UpdateTimer::UpdateTimer(wxFrame *main_view) : wxTimer() {
-  this->main_view = main_view;
-}
+UpdateTimer::UpdateTimer(wxFrame *main_view) { this->main_view = main_view; }
 
 void UpdateTimer::Notify() {
   if (IsOneShot()) {
     // First time through, remove an old auto-update.
-    AutoUpdate::getInstance()->removeOldUpdate();
+    AutoUpdate::removeOldUpdate();
   }
 
   bool new_version_available =

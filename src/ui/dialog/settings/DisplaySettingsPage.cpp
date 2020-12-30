@@ -37,7 +37,7 @@ DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
 
 void DisplaySettingsPage::createControls() {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
-    DisplaySettingsPanel* display_panel = new DisplaySettingsPanel(this, i);
+    auto* display_panel = new DisplaySettingsPanel(this, i);
     display_settings_panels.push_back(display_panel);
   }
 
@@ -71,7 +71,7 @@ void DisplaySettingsPage::createControls() {
 }
 
 void DisplaySettingsPage::positionWidgets() {
-  wxGridBagSizer* window_mode_sizer = new wxGridBagSizer();
+  auto* window_mode_sizer = new wxGridBagSizer();
   UiUtil::addToGridBag(window_mode_sizer, enable_window_mode, 0, 0, 1, 2);
 
   UiUtil::addToGridBag(window_mode_sizer, number_of_windows_label, 1, 0);
@@ -86,7 +86,7 @@ void DisplaySettingsPage::positionWidgets() {
 
   wxSizer* sizer = UiUtil::sizer(0, 1);
 
-  for (auto panel : display_settings_panels) {
+  for (auto* panel : display_settings_panels) {
     sizer->Add(panel, 0, wxALL, BORDER_SIZE);
   }
 
@@ -103,9 +103,9 @@ void DisplaySettingsPage::bindEvents() {
 
 /* Returns true if the display settings are allowable, presents a warning dialog
  * if not (and returns false). */
-bool DisplaySettingsPage::validateSettings() {
+auto DisplaySettingsPage::validateSettings() -> bool {
   bool has_control = false;
-  for (auto display_panel : display_settings_panels) {
+  for (auto* display_panel : display_settings_panels) {
     proto::ScreenSide side = display_panel->getSide();
     if (side.control()) {
       has_control = true;

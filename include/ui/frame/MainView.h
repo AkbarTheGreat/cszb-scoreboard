@@ -36,20 +36,23 @@ namespace cszb_scoreboard {
 class MainView : public wxFrame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
-  ControlPanel* controlPanel() { return control_panel; }
-  PreviewPanel* previewPanel() { return preview_panel; }
+  auto controlPanel() -> ControlPanel* { return control_panel; }
+  auto previewPanel() -> PreviewPanel* { return preview_panel; }
 
  private:
   void bindEvents();
   void createMenu();
-  wxNotebook* createControlNotebook();
+  auto createControlNotebook() -> wxNotebook*;
   void createStatusBar();
-  void onExit(wxCommandEvent& event);
-  void onAbout(wxCommandEvent& event);
-  void onClose(wxCloseEvent& event);
-  void onSettingsChange(wxCommandEvent& event);
   void positionWidgets();
-  void showSettings(wxCommandEvent& event);
+  // wxWidgets callbacks, waive linting error for references.
+  void onExit(wxCommandEvent& event);   // NOLINT(google-runtime-references)
+  void onAbout(wxCommandEvent& event);  // NOLINT(google-runtime-references)
+  void onClose(wxCloseEvent& event);    // NOLINT(google-runtime-references)
+  void onSettingsChange(
+      wxCommandEvent& event);  // NOLINT(google-runtime-references)
+  void showSettings(
+      wxCommandEvent& event);  // NOLINT(google-runtime-references)
 
   ControlPanel* control_panel;
   SettingsDialog* settings_dialog;

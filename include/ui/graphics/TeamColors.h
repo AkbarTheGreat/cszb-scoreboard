@@ -25,13 +25,12 @@ limitations under the License.
 namespace cszb_scoreboard {
 class TeamColors {
  public:
-  static TeamColors* getInstance();
-  Color getColor(const proto::ScreenSide& side);
-  void setColor(const proto::ScreenSide& side, Color color);
+  static auto getInstance() -> TeamColors*;
+  auto getColor(const proto::ScreenSide& side) -> Color;
+  void setColor(const proto::ScreenSide& side, const Color& color);
 
  private:
   TeamColors();
-  static TeamColors* singleton_instance;
   Color home_color;
   Color away_color;
   Color all_color;

@@ -21,13 +21,11 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard ::test {
 
 class TestUtil {
  public:
   static void startApp(wxApp *app);
 };
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test

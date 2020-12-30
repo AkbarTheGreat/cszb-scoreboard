@@ -21,8 +21,7 @@ limitations under the License.
 #include "gtest/gtest.h"
 #include "util/AutoUpdate.h"
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard::test {
 
 TEST(AutoUpdateTest, VersionComparisons) {
   EXPECT_EQ(Version("1.2.3"), Version("1.2.3"));
@@ -69,5 +68,4 @@ TEST(AutoUpdateTest, VersionDownloads) {
   EXPECT_GT(update_data.size(), 4000);
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test

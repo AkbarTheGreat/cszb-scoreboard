@@ -30,7 +30,7 @@ TeamSettingsPage::TeamSettingsPage(wxWindow* parent) : SettingsPage(parent) {
 
   int i = 0;
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
-    TeamSettingsPanel* team_panel = new TeamSettingsPanel(this, i++, team);
+    auto* team_panel = new TeamSettingsPanel(this, i++, team);
     team_settings_panels.push_back(team_panel);
     sizer->Add(team_panel, 0, wxALL, BORDER_SIZE);
   }
@@ -38,7 +38,7 @@ TeamSettingsPage::TeamSettingsPage(wxWindow* parent) : SettingsPage(parent) {
   SetSizerAndFit(sizer);
 }
 
-bool TeamSettingsPage::validateSettings() {
+auto TeamSettingsPage::validateSettings() -> bool {
   // At present, nothing to validate
   return true;
 }
@@ -53,7 +53,7 @@ void TeamSettingsPage::saveSettings() {
     restart_warning = true;
   }
 
-  for (auto panel : team_settings_panels) {
+  for (auto* panel : team_settings_panels) {
     TeamConfig::getInstance()->setColor(panel->team(), panel->teamColor());
 
     if (restart_warning || previous_team_order.size() <= team_order.size() ||

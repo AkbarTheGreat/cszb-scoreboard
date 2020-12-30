@@ -35,7 +35,7 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index,
   index = team_index;
   team_type = team;
 
-  wxGridSizer* sizer = new wxGridSizer(0, 2, 0, 0);
+  auto* sizer = new wxGridSizer(0, 2, 0, 0);
 
   // Label for this display
   label = new wxStaticText(this, wxID_ANY,
@@ -92,13 +92,13 @@ void TeamSettingsPanel::createButtonPanel() {
   button_panel->SetSizerAndFit(sizer);
 }
 
-Color TeamSettingsPanel::teamColor() {
+auto TeamSettingsPanel::teamColor() -> Color {
   wxColour wx_color = color_picker->GetColour();
   return Color(wx_color);
 }
 
 void TeamSettingsPanel::moveTeam(wxCommandEvent& event) {
-  TeamSettingsPage* parent_page = (TeamSettingsPage*)GetParent();
+  auto* parent_page = dynamic_cast<TeamSettingsPage*>(GetParent());
   if (event.GetEventObject() == up_button) {
     parent_page->swapTeams(index, index - 1);
   } else if (event.GetEventObject() == down_button) {

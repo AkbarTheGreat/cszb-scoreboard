@@ -30,7 +30,7 @@ namespace cszb_scoreboard {
 
 class EditImageLibraryDialog : public wxPropertySheetDialog {
  public:
-  bool Create(wxWindow* parent);
+  auto Create(wxWindow* parent) -> bool;
 
  private:
   FileListBox* file_list;
@@ -42,16 +42,17 @@ class EditImageLibraryDialog : public wxPropertySheetDialog {
   wxWindow* parent;
 
   void bindEvents();
-  void fileSelected(wxListEvent& event);
-  void onOk(wxCommandEvent& event);
-  void onCancel(wxCommandEvent& event);
-  void onClose(wxCloseEvent& event);
-  void nameUpdated(wxKeyEvent& event);
   void positionWidgets();
   void saveSettings();
-  void tagDeleted(wxListEvent& event);
-  void tagsUpdated(wxListEvent& event);
-  bool validateSettings();
+  static auto validateSettings() -> bool;
+  // wxWidgets callbacks, waive linting error for references.
+  void fileSelected(wxListEvent& event);  // NOLINT(google-runtime-references)
+  void onOk(wxCommandEvent& event);       // NOLINT(google-runtime-references)
+  void onCancel(wxCommandEvent& event);   // NOLINT(google-runtime-references)
+  void onClose(wxCloseEvent& event);      // NOLINT(google-runtime-references)
+  void nameUpdated(wxKeyEvent& event);    // NOLINT(google-runtime-references)
+  void tagDeleted(wxListEvent& event);    // NOLINT(google-runtime-references)
+  void tagsUpdated(wxListEvent& event);   // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

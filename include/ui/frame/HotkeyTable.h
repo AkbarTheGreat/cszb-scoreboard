@@ -26,12 +26,11 @@ namespace cszb_scoreboard {
 
 class HotkeyTable {
  public:
-  static HotkeyTable* getInstance();
+  static auto getInstance() -> HotkeyTable*;
   void addHotkey(int modifier_flags, int key_code, wxWindowID widget_id);
   void installHotkeys(wxFrame* main_window);
 
  private:
-  static HotkeyTable* singleton_instance;
   std::vector<wxAcceleratorEntry> accel_entries;
   HotkeyTable();
 };

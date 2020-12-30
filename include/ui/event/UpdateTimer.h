@@ -24,11 +24,11 @@ namespace cszb_scoreboard {
 
 class UpdateTimer : public wxTimer {
  public:
-  UpdateTimer(wxFrame *main_view);
+  explicit UpdateTimer(wxFrame *main_view);
 
  private:
   wxFrame *main_view;
-  void Notify();
+  void Notify() override;
 };
 
 }  // namespace cszb_scoreboard

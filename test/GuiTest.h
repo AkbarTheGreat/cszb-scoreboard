@@ -34,8 +34,7 @@ limitations under the License.
 #include "ui/frame/FrameList.h"
 #include "ui/frame/MainView.h"
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard::test {
 
 /* Performs an action against the wxWidgets UI, and yields to allow it to
  * execute */
@@ -55,13 +54,14 @@ enum ImageAnalysisMode {
 /* Checking if images are correct or not is tricky, so we have this to help */
 class ImageAnalysis {
  public:
-  ImageAnalysis(wxWindow *widget) : ImageAnalysis(widget, IA_MODE_FULL_SCAN) {}
+  explicit ImageAnalysis(wxWindow *widget)
+      : ImageAnalysis(widget, IA_MODE_FULL_SCAN) {}
   // Create an ImageAnalysis object where only x% of the pixels are sampled for
   // color counts, for speed.
   ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode);
-  float colorPercentage(wxColour color);
-  float colorAmount(wxColour color);
-  std::vector<int> colorList();
+  auto colorPercentage(const wxColour &color) -> float;
+  auto colorAmount(const wxColour &color) -> float;
+  auto colorList() -> std::vector<int>;
 
  private:
   std::map<unsigned int, int> color_counts;
@@ -77,14 +77,13 @@ class GuiTest : public testing::Test {
   Scoreboard *app;
   wxUIActionSimulator act;
 
-  virtual void SetUp() override;
-  virtual void TearDown() override;
+  void SetUp() override;
+  void TearDown() override;
   /* Convenience method to get various UI components, for testing purposes. */
-  MainView *mainView();
-  TextEntry *textEntry();
+  static auto mainView() -> MainView *;
+  static auto textEntry() -> TextEntry *;
   /* Simply makes getting the first preview pane shorter in test code. */
-  ScreenPreview *firstPreview();
+  static auto firstPreview() -> ScreenPreview *;
 };
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test

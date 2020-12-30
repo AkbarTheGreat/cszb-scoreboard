@@ -27,9 +27,9 @@ namespace cszb_scoreboard {
 
 class FrameList {
  public:
-  static FrameList *getInstance();
+  static auto getInstance() -> FrameList *;
   inline void setMainView(wxFrame *frame) { main_view = frame; }
-  inline wxFrame *getMainView() { return main_view; }
+  inline auto getMainView() -> wxFrame * { return main_view; }
   inline void addFrame(wxFrame *frame) { frames.insert(frame); }
   inline void delFrame(wxFrame *frame) { frames.erase(frame); }
   void exitFrames();
@@ -37,8 +37,7 @@ class FrameList {
  private:
   wxFrame *main_view = nullptr;
   std::set<wxFrame *> frames;
-  static FrameList *singleton_instance;
-  FrameList(){};
+  FrameList() = default;
 };
 
 }  // namespace cszb_scoreboard

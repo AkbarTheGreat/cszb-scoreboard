@@ -32,7 +32,7 @@ const int BORDER_SIZE = 0;
 
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
-    : wxFrame(NULL, wxID_ANY, title, pos, size) {
+    : wxFrame(nullptr, wxID_ANY, title, pos, size) {
   FrameList::getInstance()->setMainView(this);
 
   createMenu();
@@ -57,17 +57,17 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 }
 
 void MainView::createMenu() {
-  wxMenu* menu_general = new wxMenu;
+  auto* menu_general = new wxMenu;
   menu_general->Append(GENERAL_SETTINGS, "&Settings",
                        "Configure the scoreboard");
   menu_general->AppendSeparator();
   menu_general->Append(wxID_EXIT);
-  wxMenu* menu_display = new wxMenu;
+  auto* menu_display = new wxMenu;
   menu_display->Append(DISPLAY_BLACK_OUT, "&Black Out\tCtrl-B",
                        "Black out both screens");
-  wxMenu* menu_help = new wxMenu;
+  auto* menu_help = new wxMenu;
   menu_help->Append(wxID_ABOUT);
-  wxMenuBar* menu_bar = new wxMenuBar;
+  auto* menu_bar = new wxMenuBar;
   menu_bar->Append(menu_general, "&General");
   menu_bar->Append(menu_display, "&Display");
   menu_bar->Append(menu_help, "&Help");
@@ -84,7 +84,7 @@ void MainView::createStatusBar() {
 }
 
 void MainView::positionWidgets() {
-  wxGridBagSizer* sizer = new wxGridBagSizer();
+  auto* sizer = new wxGridBagSizer();
   UiUtil::addToGridBag(sizer, preview_panel, 0, 0);
   UiUtil::addToGridBag(sizer, control_panel, 1, 0);
   UiUtil::addToGridBag(sizer, quick_state, 0, 1, 2, 1);
@@ -104,7 +104,10 @@ void MainView::bindEvents() {
 
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
 
-void MainView::onAbout(wxCommandEvent& event) {
+void MainView::onAbout(
+    wxCommandEvent&
+        event) {  // NOLINT(readability-convert-member-functions-to-static)
+                  // callbacks cannot be static
   wxString about_string;
   about_string.Printf(
       "cszb-scoreboard: The ComedySportz Scoreboard.  Version %s.  Copyright "

@@ -31,13 +31,14 @@ class DisplaySettingsPanel : public wxPanel {
  public:
   DisplaySettingsPanel(wxPanel *parent, int index);
   void copyFrom(DisplaySettingsPanel *other);
-  proto::ScreenSide getSide();
-  int getDisplayId() { return display_id; }
+  auto getSide() -> proto::ScreenSide;
+  [[nodiscard]] auto getDisplayId() const -> int { return display_id; }
 
  private:
-  void copyCheckbox(wxCheckBox *source, wxCheckBox *target);
+  static void copyCheckbox(wxCheckBox *source, wxCheckBox *target);
   void createButtonPanel();
-  void moveDisplay(wxCommandEvent &event);
+  void moveDisplay(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                                            // wxWidgets callback.
   void updateLabel();
 
   int display_id;

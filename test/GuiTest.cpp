@@ -23,8 +23,7 @@ limitations under the License.
 
 #include "test/TestUtil.h"
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard::test {
 
 const int TEXT_ENTRY_TAB_INDEX = 4;
 
@@ -39,17 +38,17 @@ void GuiTest::TearDown() {
   wxEntryCleanup();
 }
 
-MainView *GuiTest::mainView() {
-  return (MainView *)FrameList::getInstance()->getMainView();
+auto GuiTest::mainView() -> MainView * {
+  return dynamic_cast<MainView *>(FrameList::getInstance()->getMainView());
 }
 
-TextEntry *GuiTest::textEntry() {
+auto GuiTest::textEntry() -> TextEntry * {
   mainView()->controlPanel()->SetSelection(TEXT_ENTRY_TAB_INDEX);
-  return (TextEntry *)mainView()->controlPanel()->textController(
-      TEXT_ENTRY_TAB_INDEX);
+  return dynamic_cast<TextEntry *>(
+      mainView()->controlPanel()->textController(TEXT_ENTRY_TAB_INDEX));
 }
 
-ScreenPreview *GuiTest::firstPreview() {
+auto GuiTest::firstPreview() -> ScreenPreview * {
   return mainView()->previewPanel()->preview(0);
 }
 
@@ -66,7 +65,7 @@ ImageAnalysis::ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode) {
       break;
     case IA_MODE_QUARTER_SCAN:
       countQuarterScanlinePixels(dc, dimensions);
-      total = dimensions.GetWidth() * 5;
+      total = dimensions.GetWidth() * 5;  // NOLINT(readability-magic-numbers)
       break;
     default:
       countAllPixels(dc, dimensions);
@@ -76,7 +75,9 @@ ImageAnalysis::ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode) {
   for (auto iterator : color_counts) {
     unsigned int color_rgb = iterator.first;
     float count = iterator.second;
-    color_percentages[color_rgb] = count * 100 / total;
+    color_percentages[color_rgb] =
+        count * 100 / total;  // NOLINT(readability-magic-numbers) 100 isn't
+                              // that magic to calculate a percentage.
   }
 }
 
@@ -128,18 +129,21 @@ void ImageAnalysis::countCenterlinePixels(const wxClientDC &dc,
   }
 }
 
-float ImageAnalysis::colorPercentage(wxColour color) {
-  if (color_percentages.find(color.GetRGB()) == color_percentages.end())
+auto ImageAnalysis::colorPercentage(const wxColour &color) -> float {
+  if (color_percentages.find(color.GetRGB()) == color_percentages.end()) {
     return 0;
+  }
   return color_percentages[color.GetRGB()];
 }
 
-float ImageAnalysis::colorAmount(wxColour color) {
-  if (color_counts.find(color.GetRGB()) == color_counts.end()) return 0;
+auto ImageAnalysis::colorAmount(const wxColour &color) -> float {
+  if (color_counts.find(color.GetRGB()) == color_counts.end()) {
+    return 0;
+  }
   return color_counts[color.GetRGB()];
 }
 
-std::vector<int> ImageAnalysis::colorList() {
+auto ImageAnalysis::colorList() -> std::vector<int> {
   std::vector<int> color_list;
   for (auto iterator = color_counts.begin(); iterator != color_counts.end();
        iterator++) {
@@ -148,5 +152,4 @@ std::vector<int> ImageAnalysis::colorList() {
   return color_list;
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test

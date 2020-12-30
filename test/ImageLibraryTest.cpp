@@ -19,10 +19,9 @@ limitations under the License.
 #include "config/ImageLibrary.h"
 #include "gtest/gtest.h"
 
-namespace cszb_scoreboard {
-namespace test {
+namespace cszb_scoreboard::test {
 
-ImageLibrary testLibrary() {
+auto testLibrary() -> ImageLibrary {
   proto::ImageLibrary library;
 
   // Add a corgi
@@ -70,9 +69,11 @@ ImageLibrary testLibrary() {
 
 // Predicate for asserting against two arbitrary vectors.
 template <typename T, typename A>
-::testing::AssertionResult assertVectorEquality(
-    const char* actual_expression, const char* expected_expression,
-    std::vector<T, A> const& actual, std::vector<T, A> const& expected) {
+auto assertVectorEquality(const char* actual_expression,
+                          const char* expected_expression,
+                          std::vector<T, A> const& actual,
+                          std::vector<T, A> const& expected)
+    -> ::testing::AssertionResult {
   if (actual.size() != expected.size()) {
     return ::testing::AssertionFailure()
            << actual_expression << " and " << expected_expression
@@ -93,11 +94,11 @@ template <typename T, typename A>
 }
 
 // Quick and easy cast of a list of strings to a list of paths
-std::vector<FilesystemPath> filesystemPathVector(
-    const std::vector<std::string>& in) {
+auto filesystemPathVector(const std::vector<std::string>& in)
+    -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> out;
-  for (auto i : in) {
-    out.push_back(FilesystemPath(i));
+  for (const auto& i : in) {
+    out.emplace_back(FilesystemPath(i));
   }
   return out;
 }
@@ -171,5 +172,4 @@ TEST(ImageLibraryTest, DeduplicatingSearches) {
       {"/test/corgi.jpg", "/test/great_dane.jpg", "/test/capy.jpg"});
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test
