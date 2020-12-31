@@ -13,6 +13,7 @@ pipeline {
         stage('Release Cmake Generation') {
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
+            cmakeArgs: '-DSKIP_LINT=true'
             )
           }
         }
@@ -40,21 +41,21 @@ pipeline {
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
-make -j4 all'''
+make -j3 all'''
           }
         }
 
         stage('Release Build') {
           steps {
             sh '''cd out/build/Release
-make -j4 all'''
+make -j2 all'''
           }
         }
 
         stage('MacOS Build') {
           steps {
             sh '''cd out/build/osxcross
-make -j4 cszb-scoreboard'''
+make cszb-scoreboard'''
           }
         }
 
