@@ -14,7 +14,9 @@ pipeline {
             }
           }
           steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',)
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
+            cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true'
+            )
           }
         }
 
@@ -55,6 +57,18 @@ pipeline {
 
     stage('Build') {
       parallel {
+        stage('Lint Build') {
+          when {
+            expression {
+              return isJobStartedByTimer()
+            }
+          }
+          steps {
+            sh '''cd out/build/Linter
+make all'''
+          }
+        }
+
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
