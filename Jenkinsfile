@@ -1,14 +1,31 @@
 pipeline {
   agent any
+  triggers {
+    cron('00 02 * * *') //run at 2 am
+  }
+
   stages {
     stage('Cmake Generation') {
       parallel {
+        stage('Lint Build Cmake Generation') {
+          when {
+            expression {
+              return isJobStartedByTimer()
+            }
+          }
+          steps {
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',)
+          }
+        }
+
         stage('Debug Cmake Generation') {
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',
+            cmakeArgs: '-DSKIP_LINT=true'
             )
           }
         }
+
 
         stage('Release Cmake Generation') {
           steps {
@@ -41,7 +58,7 @@ pipeline {
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
-make -j3 all'''
+make -j2 all'''
           }
         }
 
@@ -146,3 +163,26 @@ make cszb-scoreboard'''
 
   }
 }
+
+// Suggested by https://stackoverflow.com/a/58624083 to determine when a job is started by a timer.
+@NonCPS
+def isJobStartedByTimer() {
+    def startedByTimer = false
+    try {
+        def buildCauses = currentBuild.getBuildCauses()
+        for ( buildCause in buildCauses ) {
+            if (buildCause != null) {
+                def causeDescription = buildCause.shortDescription
+                echo "shortDescription: ${causeDescription}"
+                if (causeDescription.contains("Started by timer")) {
+                    startedByTimer = true
+                }
+            }
+        }
+    } catch(theError) {
+        echo "Error getting build cause"
+    }
+
+    return startedByTimer
+}
+
