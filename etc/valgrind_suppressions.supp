@@ -1,0 +1,21 @@
+{
+   <gtk_css>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:gtk_css_provider_load_from_*
+}
+
+{
+   <libcairo>
+   Memcheck:Leak
+   ...
+   obj:*/libcairo*
+}
+
+{
+   <libpango>
+   Memcheck:Leak
+   ...
+   obj:*/libpango*
+}
