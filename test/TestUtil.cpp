@@ -23,12 +23,12 @@ limitations under the License.
 
 namespace cszb_scoreboard ::test {
 
-const std::array<char *, 1> TEST_ARGV = {{{"scoreboard_testing.exe"}}};
+const std::array<const char *, 1> TEST_ARGV = {{{"scoreboard_testing.exe"}}};
 
 void TestUtil::startApp(wxApp *app) {
   wxApp::SetInstance(app);
   // Argument to wxEntryStart cannot be const, so copy to a non-const before
-  // calling
+  // calling.
   int argc = TEST_ARGV.size();
   wxEntryStart(argc, const_cast<char **>(TEST_ARGV.data()));
   app->OnInit();
