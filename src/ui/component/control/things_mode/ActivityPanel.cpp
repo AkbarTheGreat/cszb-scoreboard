@@ -28,6 +28,7 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int ACTIVITIES_FOR_SIZING = 3;
 const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
+static const char *BULLET = "\u2022";
 
 ActivityPanel::ActivityPanel(wxWindow *parent,
                              ScreenTextController *owning_controller,
@@ -219,7 +220,7 @@ auto ActivityPanel::previewText(int font_size)
     -> std::vector<proto::RenderableText> {
   std::string preview_text;
   for (const auto &activity : activities) {
-    preview_text += "• " + activity->previewText() + "\n";
+    preview_text += std::string(BULLET) + " " + activity->previewText() + "\n";
   }
   std::vector<proto::RenderableText> return_vector;
   return_vector.emplace_back(proto::RenderableText());

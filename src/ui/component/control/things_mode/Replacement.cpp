@@ -29,6 +29,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+static const char *BULLET = "\u2022";
 
 Replacement::Replacement(wxWindow *parent) {
   this->parent = parent;
@@ -81,8 +82,8 @@ auto Replacement::previewText() -> std::string {
   if (replaceable->GetValue().empty() && replacement->GetValue().empty()) {
     return " ";
   }
-  return "• " + replaceable->GetValue().ToStdString() + " - " +
-         replacement->GetValue().ToStdString();
+  return std::string(BULLET) + " " + replaceable->GetValue().ToStdString() +
+         " - " + replacement->GetValue().ToStdString();
 }
 
 }  // namespace cszb_scoreboard
