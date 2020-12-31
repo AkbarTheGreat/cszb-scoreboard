@@ -145,9 +145,8 @@ auto ImageAnalysis::colorAmount(const wxColour &color) -> float {
 
 auto ImageAnalysis::colorList() -> std::vector<int> {
   std::vector<int> color_list;
-  for (auto iterator = color_counts.begin(); iterator != color_counts.end();
-       iterator++) {
-    color_list.push_back(iterator->first);
+  for (auto count : color_counts) {
+    color_list.push_back(count.first);
   }
   return color_list;
 }
