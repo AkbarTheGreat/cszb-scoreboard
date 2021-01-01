@@ -77,6 +77,8 @@ ENDIF(WIN32)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
+set(LINT_OPTION, "")
+
 # Clang tidy piece adapted from https://gitlab.kitware.com/cmake/cmake/-/issues/18926
 if(NOT SKIP_LINT)
     find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
@@ -85,17 +87,21 @@ if(NOT SKIP_LINT)
         if(CLANG_TIDY_ERRORS)
             set(CLANG_TIDY_ERROR_CHECK ";-warnings-as-errors=*")
         endif()
-        set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
+	set(LINT_OPTION "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
     endif() # CLANG_TIDY_COMMAND
 endif() # OSXCROSS_HOST
 
+add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
+set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
+protobuf_generate(TARGET scoreboard_proto)
+
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
-add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} ${SCOREBOARD_PROTO_SOURCES})
+add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} $<TARGET_OBJECTS:scoreboard_proto>)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
-
-protobuf_generate(TARGET ${PROJECT_NAME})
 
 finalize_vcpkg_code(${PROJECT_NAME})
 
@@ -109,14 +115,13 @@ list(APPEND TEST_ONLY_SRC
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
 macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
-    add_executable(${TESTNAME} ${SCOREBOARD_PROTO_SOURCES} ${ARGN})
+    add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN})
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl
                       ${GTEST_BOTH_LIBRARIES})
-    protobuf_generate(TARGET ${TESTNAME})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
     gtest_discover_tests(${TESTNAME}
@@ -124,7 +129,7 @@ macro(package_add_test TESTNAME)
         WORKING_DIRECTORY ${PROJECT_DIR}
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
     )
-    set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
+    set_target_properties(${TESTNAME} PROPERTIES FOLDER test CXX_CLANG_TIDY "${LINT_OPTION}")
 endmacro()
 
 macro(package_add_ui_test TESTNAME)
