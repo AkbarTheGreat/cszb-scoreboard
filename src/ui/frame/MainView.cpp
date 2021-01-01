@@ -104,10 +104,9 @@ void MainView::bindEvents() {
 
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
 
-void MainView::onAbout(
-    wxCommandEvent&
-        event) {  // NOLINT(readability-convert-member-functions-to-static)
-                  // callbacks cannot be static
+// Callbacks cannot be static.
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+void MainView::onAbout(wxCommandEvent& event) {
   wxString about_string;
   about_string.Printf(
       "cszb-scoreboard: The ComedySportz Scoreboard.  Version %s.  Copyright "
