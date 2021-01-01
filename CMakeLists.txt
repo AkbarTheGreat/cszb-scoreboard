@@ -60,8 +60,28 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_definitions(-DwxDEBUG_LEVEL=0)
 endif()
 
-file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
+set(LINT_OPTION, "")
+
+# Clang tidy piece adapted from https://gitlab.kitware.com/cmake/cmake/-/issues/18926
+if(NOT SKIP_LINT)
+    find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
+    if(CLANG_TIDY_COMMAND)
+        set(CLANG_TIDY_CHECKS "-*,google-*,modernize-*,readability-*,portability-*,performance-*")
+        if(CLANG_TIDY_ERRORS)
+            set(CLANG_TIDY_ERROR_CHECK ";-warnings-as-errors=*")
+        endif()
+	set(LINT_OPTION "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
+    endif() # CLANG_TIDY_COMMAND
+endif() # OSXCROSS_HOST
+
 include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
+
+# Protobuf files
+file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
+add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
+set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
+protobuf_generate(TARGET scoreboard_proto)
+
 
 file(GLOB SCOREBOARD_SRC
     "src/*.cpp"
@@ -77,26 +97,13 @@ ENDIF(WIN32)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
-set(LINT_OPTION, "")
-
-# Clang tidy piece adapted from https://gitlab.kitware.com/cmake/cmake/-/issues/18926
-if(NOT SKIP_LINT)
-    find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
-    if(CLANG_TIDY_COMMAND)
-        set(CLANG_TIDY_CHECKS "-*,google-*,modernize-*,readability-*,portability-*,performance-*")
-        if(CLANG_TIDY_ERRORS)
-            set(CLANG_TIDY_ERROR_CHECK ";-warnings-as-errors=*")
-        endif()
-	set(LINT_OPTION "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
-    endif() # CLANG_TIDY_COMMAND
-endif() # OSXCROSS_HOST
-
-add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
-set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
-protobuf_generate(TARGET scoreboard_proto)
+add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
+set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 # Is this WIN32 bad for cross-platform?  Maybe?  It's untested
-add_executable(${PROJECT_NAME} WIN32 ${SCOREBOARD_SRC} $<TARGET_OBJECTS:scoreboard_proto>)
+add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 
@@ -111,6 +118,12 @@ list(APPEND TEST_ONLY_SRC
     "test/GuiTest.cpp"
     "test/TestUtil.cpp"
 )
+
+add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
+set_target_properties(scoreboard_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_compile_definitions(scoreboard_test_classes PUBLIC SCOREBOARD_TESTING)
+target_link_libraries(scoreboard_test_classes PRIVATE ${wxWidgets_LIBRARIES}
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
 macro(package_add_test TESTNAME)
@@ -133,7 +146,7 @@ macro(package_add_test TESTNAME)
 endmacro()
 
 macro(package_add_ui_test TESTNAME)
-    package_add_test(${TESTNAME} ${ARGN} ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
+	package_add_test(${TESTNAME} ${ARGN} $<TARGET_OBJECTS:scoreboard_test_classes> )
 endmacro()
 
 
