@@ -96,7 +96,7 @@ auto assertVectorEquality(const char* actual_expression,
 // Quick and easy cast of a list of strings to a list of paths
 auto filesystemPathVector(const std::vector<std::string>& in)
     -> std::vector<FilesystemPath> {
-  std::vector<FilesystemPath> out;
+  std::vector<FilesystemPath> out(in.size());
   for (const auto& i : in) {
     out.emplace_back(FilesystemPath(i));
   }
