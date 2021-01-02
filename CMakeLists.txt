@@ -162,7 +162,7 @@ package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/Imag
                  src/util/FilesystemPath.cpp
                  )
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp src/util/ProtoUtil.cpp src/ui/graphics/Color.cpp)
-#package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
+package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
 package_add_ui_test(ScreenTextSideTest  test/ScreenTextSideTest.cpp)
 
