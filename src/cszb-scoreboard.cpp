@@ -22,7 +22,7 @@ limitations under the License.
 
 #ifndef SCOREBOARD_TESTING
 // NOLINTNEXTLINE(modernize-use-trailing-return-type)
-wxIMPLEMENT_APP(cszb_scoreboard::Scoreboard); 
+wxIMPLEMENT_APP(cszb_scoreboard::Scoreboard);
 #endif
 
 namespace cszb_scoreboard {
