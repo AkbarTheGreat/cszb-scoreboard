@@ -30,11 +30,11 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 // Margin for the top or bottom, as a percentage
-const float TOP_OR_BOTTOM_MARGIN = 2;
+const float TOP_OR_BOTTOM_MARGIN = 2.0F;
 const float TOP_OR_BOTTOM_RATIO = TOP_OR_BOTTOM_MARGIN / 100;
 const int BITMAP_DEPTH = 32;
-const float BOTTOM_CORNER_OVERLAY_SCALE = 0.30;
-const float AUTOFIT_FONT_ADJUSTMENT = 0.5;
+const float BOTTOM_CORNER_OVERLAY_SCALE = 0.30F;
+const float AUTOFIT_FONT_ADJUSTMENT = 0.5F;
 
 ScreenTextSide::ScreenTextSide(wxWindow* parent, ScreenTextSide* source_side,
                                wxSize size)
