@@ -1,9 +1,5 @@
 pipeline {
   agent any
-  triggers {
-    cron('00 02 * * *') //run at 2 am
-  }
-
   stages {
     stage('Cmake Generation') {
       parallel {
@@ -12,28 +8,22 @@ pipeline {
             expression {
               return isJobStartedByTimer()
             }
+
           }
           steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
-            cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true'
-            )
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug', cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true')
           }
         }
 
         stage('Debug Cmake Generation') {
           steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',
-            cmakeArgs: '-DSKIP_LINT=true'
-            )
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug', cmakeArgs: '-DSKIP_LINT=true')
           }
         }
 
-
         stage('Release Cmake Generation') {
           steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
-            cmakeArgs: '-DSKIP_LINT=true'
-            )
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release', cmakeArgs: '-DSKIP_LINT=true')
           }
         }
 
@@ -45,12 +35,9 @@ pipeline {
             OSXCROSS_TARGET_DIR = '/opt/osxcross'
           }
           steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
-            cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake'
-            )
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release', cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake')
           }
         }
-
 
       }
     }
@@ -62,6 +49,7 @@ pipeline {
             expression {
               return isJobStartedByTimer()
             }
+
           }
           steps {
             sh '''cd out/build/Linter
@@ -116,87 +104,36 @@ make cszb-scoreboard'''
 
       }
     }
-    stage('Valgrind') {
+
+    stage('Coverage') {
       steps {
-        wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-          runValgrind (
-            childSilentAfterFork: false,
-            excludePattern: 'donotexcludeanything',
-            generateSuppressions: true,
-            ignoreExitCode: true,
-            includePattern: 'out/build/Debug/*Test',
-            outputDirectory: 'out/build/Debug',
-            outputFileEnding: '.memcheck',
-            programOptions: ' ',
-            removeOldReports: true,
-            suppressionFiles: 'etc/valgrind_suppressions.supp',
-            tool: [$class: 'ValgrindToolMemcheck',
-              leakCheckLevel: 'full',
-              showReachable: true,
-              trackOrigins: true,
-              undefinedValueErrors: true],
-            traceChildren: true,
-            valgrindExecutable: '/usr/bin/valgrind',
-            valgrindOptions: ' ',
-            workingDirectory: 'out/build/Debug'
-          )
-        }
-    
-        publishValgrind (
-          failBuildOnInvalidReports: false,
-          failBuildOnMissingReports: false,
-          failThresholdDefinitelyLost: '',
-          failThresholdInvalidReadWrite: '',
-          failThresholdTotal: '',
-          pattern: 'out/build/Debug/*.memcheck',
-          publishResultsForAbortedBuilds: false,
-          publishResultsForFailedBuilds: false,
-          sourceSubstitutionPaths: '',
-          unstableThresholdDefinitelyLost: '',
-          unstableThresholdInvalidReadWrite: '',
-          unstableThresholdTotal: ''
-        )
+        cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Coverage', buildType: 'Debug', cleanBuild: true, cmakeArgs: '-DENABLE_CODE_COVERAGE=true')
+        sh '''sh \'\'\'cd out/build/osxcross
+make cszb-scoreboard-xml-coverage\'\'\'
+'''
+        cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage')
       }
     }
+
   }
   post {
     always {
       archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
       xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
-          skipped(failureThreshold: '0'),
-          failed(failureThreshold: '0')
-        ], tools: [CTest(
-          pattern: 'out/build/*/Testing/**/*.xml',
-          deleteOutputFiles: true,
-          failIfNotNew: false,
-          skipNoTestFiles: true,
-          stopProcessingIfError: true
-        )])
-      deleteDir()
-    }
-
-  }
-}
-
-// Suggested by https://stackoverflow.com/a/58624083 to determine when a job is started by a timer.
-@NonCPS
-def isJobStartedByTimer() {
-    def startedByTimer = false
-    try {
-        def buildCauses = currentBuild.getBuildCauses()
-        for ( buildCause in buildCauses ) {
-            if (buildCause != null) {
-                def causeDescription = buildCause.shortDescription
-                echo "shortDescription: ${causeDescription}"
-                if (causeDescription.contains("Started by timer")) {
-                    startedByTimer = true
-                }
-            }
+                  skipped(failureThreshold: '0'),
+                  failed(failureThreshold: '0')
+                ], tools: [CTest(
+                    pattern: 'out/build/*/Testing/**/*.xml',
+                    deleteOutputFiles: true,
+                    failIfNotNew: false,
+                    skipNoTestFiles: true,
+                    stopProcessingIfError: true
+                  )])
+          deleteDir()
         }
-    } catch(theError) {
-        echo "Error getting build cause"
+
+      }
+      triggers {
+        cron('00 02 * * *')
+      }
     }
-
-    return startedByTimer
-}
-
