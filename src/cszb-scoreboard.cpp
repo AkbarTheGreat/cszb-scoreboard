@@ -21,7 +21,8 @@ limitations under the License.
 #include "config/CommandArgs.h"
 
 #ifndef SCOREBOARD_TESTING
-wxIMPLEMENT_APP(cszb_scoreboard::Scoreboard); // NOLINT(modernize-use-trailing-return-type)
+wxIMPLEMENT_APP(
+    cszb_scoreboard::Scoreboard);  // NOLINT(modernize-use-trailing-return-type)
 #endif
 
 namespace cszb_scoreboard {
