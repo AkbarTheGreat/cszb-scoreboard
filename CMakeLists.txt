@@ -16,6 +16,7 @@
 
 cmake_minimum_required(VERSION 3.9.0)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
 
 SET(PROJECT_NAME "cszb-scoreboard")
@@ -161,7 +162,14 @@ package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/Imag
                  src/util/FilesystemPath.cpp
                  )
 package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp src/util/ProtoUtil.cpp src/ui/graphics/Color.cpp)
-package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
+#package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
 package_add_ui_test(ScreenTextSideTest  test/ScreenTextSideTest.cpp)
+
+if (ENABLE_CODE_COVERAGE)
+    include(CodeCoverage)
+    append_coverage_compiler_flags()
+    setup_target_for_coverage_gcovr_html(NAME ${PROJECT_NAME}-coverage EXECUTABLE ctest BASE_DIRECTORY "${PROJECT_DIR}/src")
+    setup_target_for_coverage_gcovr_xml(NAME ${PROJECT_NAME}-xml-coverage EXECUTABLE ctest BASE_DIRECTORY "${PROJECT_DIR}/src")
+endif()
 
