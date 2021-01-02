@@ -76,13 +76,6 @@ endif() # OSXCROSS_HOST
 
 include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
-# Protobuf files
-file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
-add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
-set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
-protobuf_generate(TARGET scoreboard_proto)
-
-
 file(GLOB SCOREBOARD_SRC
     "src/*.cpp"
     "src/*/*.cpp"
@@ -96,6 +89,14 @@ IF(WIN32)
 ENDIF(WIN32)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
+
+# Protobuf files
+file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
+add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
+set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
+protobuf_generate(TARGET scoreboard_proto)
+target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
+
 
 add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
 set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
