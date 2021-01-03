@@ -28,7 +28,6 @@ pipeline {
           }
         }
 
-
         stage('Release Cmake Generation') {
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
@@ -141,7 +140,7 @@ make cszb-scoreboard'''
             workingDirectory: 'out/build/Debug'
           )
         }
-    
+        
         publishValgrind (
           failBuildOnInvalidReports: false,
           failBuildOnMissingReports: false,
@@ -158,6 +157,30 @@ make cszb-scoreboard'''
         )
       }
     }
+    stage('Coverage') {
+      when {
+        expression {
+          return isJobStartedByTimer()
+        }
+      }
+      steps {
+        cmakeBuild(
+          installation: 'AutoInstall',
+          buildDir: 'out/build/Coverage',
+          buildType: 'Debug',
+          cleanBuild: true,
+          cmakeArgs: '-DENABLE_CODE_COVERAGE=true')
+        retry(count: 3) {
+          wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
+            sh '''cd out/build/Coverage
+                  make -j2 all cszb-scoreboard-xml-coverage
+               '''
+          }
+        }
+        cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage')
+      }
+    }
+    
   }
   post {
     always {
