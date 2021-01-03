@@ -155,7 +155,7 @@ endmacro()
 enable_testing()
 
 package_add_test(AutoUpdateTest  test/AutoUpdateTest.cpp src/util/AutoUpdate.cpp
-                 src/config/CommandArgs.cpp src/util/StringUtil.cpp)
+	src/config/CommandArgs.cpp src/util/StringUtil.cpp)
 package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/ImageLibrary.cpp
                  src/config/CommandArgs.cpp
                  src/config/Persistence.cpp
@@ -165,11 +165,24 @@ package_add_test(ProtoUtilTest test/ProtoUtilTest.cpp src/util/ProtoUtil.cpp src
 package_add_ui_test(ScreenPreviewTest  test/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest  test/TextEntryTest.cpp)
 package_add_ui_test(ScreenTextSideTest  test/ScreenTextSideTest.cpp)
-
+ 
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)
     append_coverage_compiler_flags()
-    setup_target_for_coverage_gcovr_html(NAME ${PROJECT_NAME}-coverage EXECUTABLE ctest BASE_DIRECTORY "${PROJECT_DIR}/src")
-    setup_target_for_coverage_gcovr_xml(NAME ${PROJECT_NAME}-xml-coverage EXECUTABLE ctest BASE_DIRECTORY "${PROJECT_DIR}/src")
+    file(RELATIVE_PATH BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+    list(APPEND COVERAGE_EXCLUDES "${BUILD_DIR}/*")
+    list(APPEND COVERAGE_EXCLUDES "out/*")
+    setup_target_for_coverage_gcovr_html(
+	    NAME ${PROJECT_NAME}-coverage
+	    EXECUTABLE ctest
+	    BASE_DIRECTORY "${PROJECT_DIR}/src" 
+	    EXCLUDE ${COVERAGE_EXCLUDES}
+	    )
+    setup_target_for_coverage_gcovr_xml(
+	    NAME ${PROJECT_NAME}-xml-coverage
+	    EXECUTABLE ctest
+	    BASE_DIRECTORY "${PROJECT_DIR}/src" 
+	    EXCLUDE ${COVERAGE_EXCLUDES}
+	    )
 endif()
 
