@@ -10,7 +10,7 @@ pipeline {
         stage('Lint Build Cmake Generation') {
           when {
             expression {
-              return isJobStartedByTimer()
+              return runFullPipeline()
             }
           }
           steps {
@@ -59,7 +59,7 @@ pipeline {
         stage('Lint Build') {
           when {
             expression {
-              return isJobStartedByTimer()
+              return runFullPipeline()
             }
           }
           steps {
@@ -160,7 +160,7 @@ make cszb-scoreboard'''
     stage('Coverage') {
       when {
         expression {
-          return isJobStartedByTimer()
+          return runFullPipeline()
         }
       }
       steps {
@@ -201,10 +201,10 @@ make cszb-scoreboard'''
   }
 }
 
-// Suggested by https://stackoverflow.com/a/58624083 to determine when a job is started by a timer.
+// Originally suggested by https://stackoverflow.com/a/58624083 to determine when a job is started by a timer, expanded to cover all cases where we want to run a full pipeline.
 @NonCPS
-def isJobStartedByTimer() {
-    def startedByTimer = false
+def runFullPipeline() {
+    def runFull = false
     try {
         def buildCauses = currentBuild.getBuildCauses()
         for ( buildCause in buildCauses ) {
@@ -212,7 +212,10 @@ def isJobStartedByTimer() {
                 def causeDescription = buildCause.shortDescription
                 echo "shortDescription: ${causeDescription}"
                 if (causeDescription.contains("Started by timer")) {
-                    startedByTimer = true
+                    runFull = true
+                }
+                if (causeDescription.contains("Started by user")) {
+                    runFull = true
                 }
             }
         }
@@ -220,6 +223,6 @@ def isJobStartedByTimer() {
         echo "Error getting build cause"
     }
 
-    return startedByTimer
+    return runFull
 }
 
