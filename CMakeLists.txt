@@ -155,7 +155,7 @@ endmacro()
 enable_testing()
 
 package_add_test(AutoUpdateTest  test/AutoUpdateTest.cpp src/util/AutoUpdate.cpp
-	src/config/CommandArgs.cpp src/util/StringUtil.cpp)
+                 src/config/CommandArgs.cpp src/util/StringUtil.cpp)
 package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/ImageLibrary.cpp
                  src/config/CommandArgs.cpp
                  src/config/Persistence.cpp
