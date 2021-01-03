@@ -91,7 +91,7 @@ ENDIF(WIN32)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
-# Protobuf files
+# Protobuf files.
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
 add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
 set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
@@ -104,7 +104,7 @@ set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTIO
 target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
-# Is this WIN32 bad for cross-platform?  Maybe?  It's untested
+# Is this WIN32 bad for cross-platform?  Maybe?  It's untested.
 add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
@@ -114,7 +114,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
 
 finalize_vcpkg_code(${PROJECT_NAME})
 
-# Testing specific code follows
+# Testing specific code follows.
 
 list(APPEND TEST_ONLY_SRC
     "test/GuiTest.cpp"
