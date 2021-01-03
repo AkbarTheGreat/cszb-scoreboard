@@ -177,7 +177,7 @@ make cszb-scoreboard'''
                '''
           }
         }
-        cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage')
+        cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
       }
     }
     
