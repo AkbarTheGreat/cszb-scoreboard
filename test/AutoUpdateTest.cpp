@@ -28,7 +28,7 @@ using ::testing::Return;
 
 namespace cszb_scoreboard::test {
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, VersionComparisons) {
   EXPECT_EQ(Version("1.2.3"), Version("1.2.3"));
   EXPECT_NE(Version("1.2.3"), Version("3.2.1"));
@@ -57,7 +57,7 @@ TEST(AutoUpdateTest, VersionComparisons) {
   EXPECT_LT(Version("1.2.0"), Version("1.2.3_extra_text"));
 }
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, NewVersionFound) {
   std::string json = R"({
 "name":   "1.2.3",
@@ -79,7 +79,7 @@ TEST(AutoUpdateTest, NewVersionFound) {
   EXPECT_TRUE(updater->checkForUpdate("0.3.3"));
 }
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, NoNewVersionFound) {
   std::string json = R"({
 "name":   "1.2.3",
@@ -101,7 +101,7 @@ TEST(AutoUpdateTest, NoNewVersionFound) {
   EXPECT_FALSE(updater->checkForUpdate("1.3.0"));
 }
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, VersionDownloads) {
   std::string json = R"({
 "name":   "1.2.3",
@@ -113,8 +113,8 @@ TEST(AutoUpdateTest, VersionDownloads) {
    }
 ]
 })";
-  std::vector<char> fake_data(256); //NOLINT(readability-magic-numbers)
-  for (int i = 0; i < 256; i++) { //NOLINT(readability-magic-numbers)
+  std::vector<char> fake_data(256);  // NOLINT(readability-magic-numbers)
+  for (int i = 0; i < 256; i++) {    // NOLINT(readability-magic-numbers)
     fake_data.emplace_back(i);
   }
   HttpResponse versionReturn{"", std::vector(json.begin(), json.end())};
@@ -135,8 +135,9 @@ TEST(AutoUpdateTest, VersionDownloads) {
 }
 
 #ifdef SCOREBOARD_INTEGRATION_TEST
-// This tests that communication with github actually works, so we should test it sparingly.
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// This tests that communication with github actually works, so we should test
+// it sparingly.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, LiveServerTest) {
   // We need to ask for an update before it'll ever work anyway, so assert on it
   // in case it goes wrong, although NewVersionFound properly tests this.
@@ -145,6 +146,6 @@ TEST(AutoUpdateTest, LiveServerTest) {
   EXPECT_TRUE(AutoUpdate::getInstance()->downloadUpdate(&update_data));
   EXPECT_GT(update_data.size(), 4000);
 }
-#endif // SCOREBOARD_INTEGRATION_TEST
+#endif  // SCOREBOARD_INTEGRATION_TEST
 
 }  // namespace cszb_scoreboard::test

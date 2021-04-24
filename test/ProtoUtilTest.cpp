@@ -35,7 +35,7 @@ class ProtoUtilTest : public testing::Test {
   }
 };
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ProtoUtilTest, ConvertsARectangleCorrectly) {
   proto::Rectangle known;
   known.set_x(2);
@@ -49,7 +49,7 @@ TEST_F(ProtoUtilTest, ConvertsARectangleCorrectly) {
   EXPECT_EQ(converted.GetHeight(), 20);  // NOLINT(readability-magic-numbers)
 }
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ProtoUtilTest, ConvertsAWxRectCorrectly) {
   wxRect known(2, 3, 10, 20);  // NOLINT(readability-magic-numbers)
   proto::Rectangle converted;
@@ -60,7 +60,7 @@ TEST_F(ProtoUtilTest, ConvertsAWxRectCorrectly) {
   EXPECT_EQ(converted.height(), 20);  // NOLINT(readability-magic-numbers)
 }
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ProtoUtilTest, CovertsAWxColorCorrectly) {
   Color wx_white("White");
   unsigned int white_rgb = 0xFFFFFF;  // NOLINT(readability-magic-numbers)
@@ -84,7 +84,7 @@ TEST_F(ProtoUtilTest, CovertsAWxColorCorrectly) {
   EXPECT_EQ(converted_black.rgb(), black_rgb);
 }
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ProtoUtilTest, CovertsAProtoColorCorrectly) {
   Color wx_white("White");
   proto::Color proto_white;
@@ -108,7 +108,7 @@ TEST_F(ProtoUtilTest, CovertsAProtoColorCorrectly) {
   EXPECT_EQ(converted_black, wx_black);
 }
 
-//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ProtoUtilTest, SideContainsTests) {
   // Test all sides
   EXPECT_TRUE(ProtoUtil::sideContains(ProtoUtil::allSide(),
