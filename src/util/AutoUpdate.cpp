@@ -19,7 +19,6 @@ limitations under the License.
 
 #include "util/AutoUpdate.h"
 
-#include <curl/curl.h>
 #include <json/json.h>
 #include <json/reader.h>
 #include <wx/wx.h>
@@ -41,7 +40,7 @@ const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
 // and unzip the release, which is more complicated than a Windows install. Once
 // the mechanism is in place, remove -autoupdatedisabled- below.
 const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
-#else   // ifdef __APPLE__
+#else  // ifdef __APPLE__
 const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
 #endif  // ifdef _WIN32
@@ -59,53 +58,6 @@ const int MAX_REDIRECT_ATTEMPTS = 5;
 auto AutoUpdate::getInstance() -> AutoUpdate * {
   static AutoUpdate singleton;
   return &singleton;
-}
-
-auto curlCallback(void *new_content, size_t byte_size, size_t size,
-                  void *page_content) -> size_t {
-  size_t grow_size = byte_size * size;
-  auto *page_vector = static_cast<std::vector<char> *>(page_content);
-
-  if (page_vector->empty()) {
-    page_vector->push_back('\0');
-  }
-
-  size_t old_size = page_vector->size();
-
-  page_vector->resize(old_size + grow_size);
-
-  // Call to data() is needed here to properly fill via memcpy.
-  // NOLINTNEXTLINE(readability-simplify-subscript-expr)
-  memcpy(&(page_vector->data()[old_size - 1]), new_content, grow_size);
-
-  (*page_vector)[page_vector->size() - 1] = '\0';
-
-  return grow_size;
-}
-
-auto curlRead(const char *url, std::vector<char> *response_buffer) -> CURLcode {
-  curl_global_init(CURL_GLOBAL_ALL);
-
-  // setup curl junk
-  CURL *curl_handle = curl_easy_init();
-  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, curlCallback);
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA,
-                   static_cast<void *>(response_buffer));
-  curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-#ifdef __APPLE__
-  curl_easy_setopt(curl_handle, CURLOPT_CAINFO, std::getenv("SSL_CERT_FILE"));
-#endif
-
-  // Actual HTTP request
-  CURLcode curl_response = curl_easy_perform(curl_handle);
-
-  // cleanup curl junk
-  curl_easy_cleanup(curl_handle);
-  curl_global_cleanup();
-
-  return curl_response;
 }
 
 auto getHref(const std::string &html) -> std::string {
@@ -150,21 +102,20 @@ auto AutoUpdate::checkForUpdate(const std::string &current_version) -> bool {
 
 auto AutoUpdate::checkForUpdate(const std::string &current_version,
                                 const std::string &platform_name) -> bool {
-  std::vector<char> raw_json;
-
-  CURLcode curl_response = curlRead(LATEST_VERSION_URL, &raw_json);
-  if (curl_response != CURLE_OK) {
+  HttpResponse http_response = httpReader->read(LATEST_VERSION_URL);
+  if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
-    wxLogDebug("Curl failure checking for update: %s",
-               curl_easy_strerror(curl_response));
+    wxLogDebug("Curl failure checking for update: %s", http_response.error);
     return false;
   }
 
   Json::Value root;
   std::string errors;
   Json::CharReader *json_reader = Json::CharReaderBuilder().newCharReader();
-  json_reader->parse(raw_json.data(), raw_json.data() + raw_json.size(), &root,
-                     &errors);
+  json_reader->parse(
+      http_response.response.data(),
+      http_response.response.data() + http_response.response.size(), &root,
+      &errors);
 
   Version new_version(root.get("name", current_version).asString());
   Version old_version(current_version);
@@ -194,32 +145,34 @@ auto AutoUpdate::downloadUpdate(const std::string &url,
     return false;
   }
 
-  CURLcode curl_response = curlRead(url.c_str(), update_data);
-  if (curl_response != CURLE_OK) {
+  HttpResponse http_response = httpReader->read(url.c_str());
+  if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
-    wxLogDebug("Curl failure checking for update: %s",
-               curl_easy_strerror(curl_response));
+    wxLogDebug("Curl failure checking for update: %s", http_response.error);
     return false;
   }
 
-  std::string redirect = isRedirect(*update_data);
+  std::string redirect = isRedirect(http_response.response);
 
   if (!redirect.empty()) {
     update_data->resize(0);
     return downloadUpdate(redirect, update_data, ++redirect_depth);
   }
 
+  if (http_response.response.size() - 1 != update_size) {
+    wxLogDebug("Problem with update!  Expected %d bytes, but got %d.",
+               update_size,
+               static_cast<int>(http_response.response.size() - 1));
+    wxLogDebug("Data: %s.", http_response.response.data());
+    return false;
+  }
+
+  *update_data = http_response.response;
+
   // Presuming that this is binary, we've added a null at the end we now need to
   // shed.
   if (update_data->size() > 1) {
     update_data->resize(update_data->size() - 1);
-  }
-
-  if (update_data->size() != update_size) {
-    wxLogDebug("Problem with update!  Expected %d bytes, but got %d.",
-               update_size, static_cast<int>(update_data->size()));
-    wxLogDebug("Data: %s.", update_data->data());
-    return false;
   }
 
   return true;

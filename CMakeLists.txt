@@ -46,7 +46,8 @@ if(OSXCROSS_HOST)
 endif()
 
 find_package(Protobuf REQUIRED)
-find_package(GTest REQUIRED)
+find_package(GTest REQUIRED CONFIG)
+include(GoogleTest)
 find_package(jsoncpp REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
@@ -132,11 +133,14 @@ macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
     add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN})
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
+    if (INTEGRATION_TEST)
+        target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_INTEGRATION_TEST)
+    endif()
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl
-                      ${GTEST_BOTH_LIBRARIES})
+                      ${GTEST_BOTH_LIBRARIES} GTest::gmock GTest::gmock_main)
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
     gtest_discover_tests(${TESTNAME}
@@ -155,7 +159,7 @@ endmacro()
 enable_testing()
 
 package_add_test(AutoUpdateTest  test/AutoUpdateTest.cpp src/util/AutoUpdate.cpp
-                 src/config/CommandArgs.cpp src/util/StringUtil.cpp)
+                 src/config/CommandArgs.cpp src/util/StringUtil.cpp src/util/HttpReader.cpp test/mocks/MockHttpReader.h)
 package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/ImageLibrary.cpp
                  src/config/CommandArgs.cpp
                  src/config/Persistence.cpp

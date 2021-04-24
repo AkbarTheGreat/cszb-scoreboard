@@ -23,6 +23,11 @@
           "name": "CMAKE_BUILD_TYPE",
           "type": "STRING",
           "value": "Debug"
+        },
+        {
+          "name": "INTEGRATION_TEST",
+          "type": "BOOL",
+          "value": "True"
         }
       ]
     },

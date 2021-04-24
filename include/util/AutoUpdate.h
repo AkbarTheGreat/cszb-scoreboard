@@ -16,16 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Here's the command line way to download the .exe.  Figure out how to make
-// this work right in C++ curl - s
-// https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases/latest |
-// grep browser_download_url | cut -d : -f 2,3 | tr -d \" | wget -qi -
-
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
+#include "HttpReader.h"
 #include "ScoreboardCommon.h"
 
 namespace cszb_scoreboard {
@@ -62,12 +59,16 @@ class AutoUpdate {
   PUBLIC_TEST_ONLY
   auto checkForUpdate(const std::string &current_version,
                       const std::string &platform_name) -> bool;
+  explicit AutoUpdate(std::unique_ptr<HttpReader> reader) {
+    httpReader = std::move(reader);
+  }
 
  private:
   std::string new_binary_url;
   bool update_available;
   int update_size;
-  AutoUpdate() = default;
+  std::unique_ptr<HttpReader> httpReader;
+  AutoUpdate() : AutoUpdate(std::move(std::make_unique<HttpReader>())){};
   auto downloadUpdate(const std::string &url, std::vector<char> *update_data,
                       int redirect_depth = 0) -> bool;
 };
