@@ -21,13 +21,13 @@ limitations under the License.
 
 #include <json/json.h>
 #include <json/reader.h>
-#include <wx/wx.h>
 
 #include <fstream>
 #include <regex>
 
 #include "config/CommandArgs.h"
 #include "util/FilesystemPath.h"
+#include "util/Log.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
@@ -105,7 +105,7 @@ auto AutoUpdate::checkForUpdate(const std::string &current_version,
   HttpResponse http_response = httpReader->read(LATEST_VERSION_URL);
   if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
-    wxLogDebug("Curl failure checking for update: %s", http_response.error);
+    LogDebug("Curl failure checking for update: %s", http_response.error);
     return false;
   }
 
@@ -141,14 +141,14 @@ auto AutoUpdate::downloadUpdate(const std::string &url,
                                 std::vector<char> *update_data,
                                 int redirect_depth) -> bool {
   if (redirect_depth > MAX_REDIRECT_ATTEMPTS) {
-    wxLogDebug("Too many redirects.  Cancelling update.");
+    LogDebug("Too many redirects.  Cancelling update.");
     return false;
   }
 
   HttpResponse http_response = httpReader->read(url.c_str());
   if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
-    wxLogDebug("Curl failure checking for update: %s", http_response.error);
+    LogDebug("Curl failure checking for update: %s", http_response.error);
     return false;
   }
 
@@ -160,10 +160,9 @@ auto AutoUpdate::downloadUpdate(const std::string &url,
   }
 
   if (http_response.response.size() - 1 != update_size) {
-    wxLogDebug("Problem with update!  Expected %d bytes, but got %d.",
-               update_size,
-               static_cast<int>(http_response.response.size() - 1));
-    wxLogDebug("Data: %s.", http_response.response.data());
+    LogDebug("Problem with update!  Expected %d bytes, but got %d.",
+             update_size, static_cast<int>(http_response.response.size() - 1));
+    LogDebug("Data: %s.", http_response.response.data());
     return false;
   }
 
@@ -188,8 +187,8 @@ auto AutoUpdate::updateInPlace() -> bool {
   if (!downloadUpdate(&data_response)) {
     return false;
   }
-  wxLogDebug("Writing auto-update to %s",
-             CommandArgs::getInstance()->commandPath().string());
+  LogDebug("Writing auto-update to %s",
+           CommandArgs::getInstance()->commandPath().string());
 
   FilesystemPath executable_path = CommandArgs::getInstance()->commandPath();
   FilesystemPath backup_path = backupPath();

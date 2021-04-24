@@ -21,12 +21,12 @@ limitations under the License.
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
-#include <wx/wx.h>
 
 #include <fstream>
 #include <iostream>
 
 #include "config/CommandArgs.h"
+#include "util/Log.h"
 
 namespace cszb_scoreboard {
 
@@ -54,15 +54,14 @@ void Persistence::loadConfigFromDisk() {
   full_config = proto::ScoreboardConfig();
 #else
   if (CommandArgs::getInstance()->resetConfig()) {
-    wxLogDebug(
-        "Reset config argument passed, so all configuration data reset.");
+    LogDebug("Reset config argument passed, so all configuration data reset.");
     return;
   }
   std::fstream input(CONFIG_FILE, std::ios::in | std::ios::binary);
   if (!input) {
-    wxLogDebug("%s: File not found. Creating a default config.", CONFIG_FILE);
+    LogDebug("%s: File not found. Creating a default config.", CONFIG_FILE);
   } else if (!full_config.ParseFromIstream(&input)) {
-    wxLogDebug("Failure parsing configuration file %s.", CONFIG_FILE);
+    LogDebug("Failure parsing configuration file %s.", CONFIG_FILE);
   }
 #endif
 }
@@ -73,7 +72,7 @@ void Persistence::saveConfigToDisk() {
   std::fstream output(CONFIG_FILE,
                       std::ios::out | std::ios::trunc | std::ios::binary);
   if (!full_config.SerializeToOstream(&output)) {
-    wxLogDebug("Failed to write configuration file %s.", CONFIG_FILE);
+    LogDebug("Failed to write configuration file %s.", CONFIG_FILE);
   }
 #endif
 }
@@ -86,10 +85,10 @@ void Persistence::loadImageLibraryFromDisk() {
 #else
   std::fstream input(IMAGE_LIBRARY_FILE, std::ios::in | std::ios::binary);
   if (!input) {
-    wxLogDebug("%s: File not found. Creating an empty library.",
-               IMAGE_LIBRARY_FILE);
+    LogDebug("%s: File not found. Creating an empty library.",
+             IMAGE_LIBRARY_FILE);
   } else if (!image_library.ParseFromIstream(&input)) {
-    wxLogDebug("Failure parsing image library file %s.", IMAGE_LIBRARY_FILE);
+    LogDebug("Failure parsing image library file %s.", IMAGE_LIBRARY_FILE);
   }
 #endif
 }
@@ -100,7 +99,7 @@ void Persistence::saveImageLibraryToDisk() {
   std::fstream output(IMAGE_LIBRARY_FILE,
                       std::ios::out | std::ios::trunc | std::ios::binary);
   if (!image_library.SerializeToOstream(&output)) {
-    wxLogDebug("Failed to write image library file %s.", IMAGE_LIBRARY_FILE);
+    LogDebug("Failed to write image library file %s.", IMAGE_LIBRARY_FILE);
   }
 #endif
 }

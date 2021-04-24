@@ -19,6 +19,7 @@ limitations under the License.
 #include "cszb-scoreboard.h"
 
 #include "config/CommandArgs.h"
+#include "util/Log.h"
 
 #ifndef SCOREBOARD_TESTING
 // NOLINTNEXTLINE(modernize-use-trailing-return-type)
@@ -37,7 +38,7 @@ auto Scoreboard::OnInit() -> bool {
     return false;
   }
   wxInitAllImageHandlers();
-  wxLogDebug(wxT("Starting up main loop"));
+  LogDebug(wxT("Starting up main loop"));
   main_window =
       new MainView("ComedySportz Scoreboard", wxPoint(START_X, START_Y),
                    wxSize(START_WIDTH, START_HEIGHT));

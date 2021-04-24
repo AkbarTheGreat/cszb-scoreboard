@@ -23,6 +23,7 @@ limitations under the License.
 #include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
 #include "ui/frame/FrameList.h"
+#include "util/Log.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -30,7 +31,8 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = 0;
 
 ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
-    : wxFrame(nullptr, wxID_ANY, "Scoreboard", wxDefaultPosition, wxDefaultSize) {
+    : wxFrame(nullptr, wxID_ANY, "Scoreboard", wxDefaultPosition,
+              wxDefaultSize) {
   this->monitor_number = monitor_number;
 
   if (DisplayConfig::getInstance()->windowedMode()) {
@@ -51,8 +53,8 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
 
   screen_text = ScreenText::getPresenter(this, widget, screen.GetSize());
   screen_text->SetSize(screen.GetSize());
-  wxLogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
-             screen.y, screen.width, screen.height);
+  LogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
+           screen.y, screen.width, screen.height);
   FrameList::getInstance()->addFrame(this);
 
   positionWidgets();

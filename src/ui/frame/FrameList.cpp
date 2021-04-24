@@ -20,6 +20,8 @@ limitations under the License.
 
 #include "ui/frame/FrameList.h"
 
+#include "util/Log.h"
+
 namespace cszb_scoreboard {
 
 auto FrameList::getInstance() -> FrameList * {
@@ -29,7 +31,7 @@ auto FrameList::getInstance() -> FrameList * {
 
 void FrameList::exitFrames() {
   for (auto *frame : frames) {
-    wxLogDebug(wxT("Destroying a frame"));
+    LogDebug(wxT("Destroying a frame"));
     frame->Destroy();
   }
 }

@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "config/Persistence.h"
 #include "ui/frame/FrameList.h"
+#include "util/Log.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -63,12 +64,12 @@ void DisplayConfig::detectExternalMonitors() {
   // with trying to save the state of existing displays if new ones are added,
   // or something similar.
   if (numscreens == display_config.displays_size()) {
-    wxLogDebug("Screen count did not change from %d, using saved config",
-               numscreens);
+    LogDebug("Screen count did not change from %d, using saved config",
+             numscreens);
     return;
   }
-  wxLogDebug("Screen count changed from %d to %d, reconfiguring",
-             display_config.displays_size(), numscreens);
+  LogDebug("Screen count changed from %d to %d, reconfiguring",
+           display_config.displays_size(), numscreens);
 
   display_config.clear_displays();
   bool set_home = true;
@@ -108,12 +109,12 @@ void DisplayConfig::setupWindowedMode() {
   // This has similar caveats to the external monitor version, but is less
   // severe of a problem, IMHO.
   if (numscreens == display_config.displays_size()) {
-    wxLogDebug("Screen count did not change from %d, using saved config",
-               numscreens);
+    LogDebug("Screen count did not change from %d, using saved config",
+             numscreens);
     return;
   }
-  wxLogDebug("Screen count changed from %d to %d, reconfiguring",
-             display_config.displays_size(), numscreens);
+  LogDebug("Screen count changed from %d to %d, reconfiguring",
+           display_config.displays_size(), numscreens);
 
   display_config.clear_displays();
 

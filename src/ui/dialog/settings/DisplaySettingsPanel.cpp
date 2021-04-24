@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "ui/UiUtil.h"
 #include "ui/dialog/settings/DisplaySettingsPage.h"
+#include "util/Log.h"
 
 namespace cszb_scoreboard {
 
@@ -132,7 +133,7 @@ void DisplaySettingsPanel::moveDisplay(wxCommandEvent& event) {
   } else if (event.GetEventObject() == down_button) {
     parent_page->swapDisplays(index, index + 1);
   } else {
-    wxLogDebug("Button clicked, but not the up or down button.  That's weird.");
+    LogDebug("Button clicked, but not the up or down button.  That's weird.");
   }
 }
 

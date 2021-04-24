@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/graphics/TeamColors.h"
 
 #include "config/TeamConfig.h"
+#include "util/Log.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -48,8 +49,7 @@ auto TeamColors::getColor(const proto::ScreenSide& side) -> Color {
   if (side.away()) {
     return away_color;
   }
-  wxLogDebug(
-      "Attempting to get a color to a non-home, non-away, non-all side.");
+  LogDebug("Attempting to get a color to a non-home, non-away, non-all side.");
   return Color("Black");
 }
 
@@ -61,7 +61,7 @@ void TeamColors::setColor(const proto::ScreenSide& side, const Color& color) {
   } else if (side.away()) {
     away_color = color;
   } else {
-    wxLogDebug("Attempting to save a color to a non-home, non-away side.");
+    LogDebug("Attempting to save a color to a non-home, non-away side.");
   }
 }
 
