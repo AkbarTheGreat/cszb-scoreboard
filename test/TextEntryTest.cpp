@@ -61,6 +61,7 @@ class TextEntryTest : public GuiTest {
   }
 };
 
+//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(TextEntryTest, TypingTest) {
   if (DisplayConfig::getInstance()->displayDetails(0).side().error()) {
     // We can't hope to meaningfully test text entry with no screens that can

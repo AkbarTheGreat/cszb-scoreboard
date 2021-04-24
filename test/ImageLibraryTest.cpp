@@ -106,6 +106,7 @@ auto filesystemPathVector(const std::vector<std::string>& in)
   return out;
 }
 
+//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
   ImageLibrary library = testLibrary();
   std::vector<std::string> tags = library.allTags();
@@ -115,6 +116,7 @@ TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
 }
 
 // Searches for full single words match the relevant tag if it exists.
+//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, FullWordSearches) {
   ImageLibrary library = testLibrary();
 
@@ -136,6 +138,7 @@ TEST(ImageLibraryTest, FullWordSearches) {
 }
 
 // Searches for words that are not a tag return all partially matching tags.
+//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, PartialWordSearches) {
   ImageLibrary library = testLibrary();
   // Simple search works
@@ -165,6 +168,7 @@ TEST(ImageLibraryTest, PartialWordSearches) {
 }
 
 // Makes sure that the de-duplication logic works correctly
+//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, DeduplicatingSearches) {
   ImageLibrary library = testLibrary();
   // This single-letter search should match 3/4 images
