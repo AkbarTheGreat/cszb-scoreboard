@@ -113,8 +113,8 @@ TEST(AutoUpdateTest, VersionDownloads) {
    }
 ]
 })";
-  std::vector<char> fake_data;
-  for (int i = 0; i < 256; i++) {
+  std::vector<char> fake_data(256); //NOLINT(readability-magic-numbers)
+  for (int i = 0; i < 256; i++) { //NOLINT(readability-magic-numbers)
     fake_data.emplace_back(i);
   }
   HttpResponse versionReturn{"", std::vector(json.begin(), json.end())};
