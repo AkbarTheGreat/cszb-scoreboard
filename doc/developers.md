@@ -81,9 +81,11 @@ I've also developed on Ubuntu.  Here's what I did to get things compiling on Ubu
 
 ### Packages you’ll need to install
 
-sudo apt install cmake cmake-curses-gui ninja-build g++ libprotobuf-dev protobuf-compiler libgtest-dev libjsoncpp-dev libwxgtk3.0-dev
+sudo apt install cmake cmake-curses-gui ninja-build g++ libprotobuf-dev protobuf-compiler libjsoncpp-dev libwxgtk3.0-dev
 
 libcurl -- For libcurl I had to clone the repo from github for curl and run cmake && make all && sudo make install to get it to work correctly.  I also had to install libssl-dev via apt in order to get it to build properly.
 
 wxWidgets -- for libwx, I also had to build this myself.  I cloned the github repo, configured cmake for Debug, gtk3, and non-stripped release.  Then I ran cmake && make all && sudo make install.  I also had to install libx11-dev, libgtk-3-dev, libcairo2-dev, libjpeg-dev, libpng-dev, libexpat1-dev, libtiff-dev, libsecret-1-dev, libsoup2.4-dev, libmspack-dev, libsdl-dev, libsdl2-dev, and libnotify-dev via apt.
+
+googletest -- In order to get GMock working correctly, I had to build this from source, because the built-in cmake files for gtest don't find gmock correctly.  This is a straight-forward clone/cmake/make all/make install with no real configuration needed.
 
