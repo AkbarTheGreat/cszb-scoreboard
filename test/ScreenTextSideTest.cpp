@@ -71,6 +71,7 @@ class ScreenTextSideTest : public testing::Test {
   }
 };
 
+//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ScreenTextSideTest, getExtents) {
   wxClientDC dc(screenText());
 

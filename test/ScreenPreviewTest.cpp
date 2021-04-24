@@ -21,6 +21,7 @@ limitations under the License.
 
 namespace cszb_scoreboard::test {
 
+//NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
   WX_A(mainView()->SetFocus());
