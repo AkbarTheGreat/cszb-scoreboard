@@ -3,7 +3,7 @@ ui/frame/FrameList.h: This class is a singleton which holds a list to all active
 frames (or windows) in the current application.  This is primarily to manage
 destroying all frames when the application is shut down.
 
-Copyright 2019-2020 Tracy Beck
+Copyright 2019-2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

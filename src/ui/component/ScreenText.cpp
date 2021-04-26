@@ -2,7 +2,7 @@
 ui/component/ScreenText.cpp: Represents a text presentation on a ScreenPresenter
 or a ScreenPreview.
 
-Copyright 2019-2020 Tracy Beck
+Copyright 2019-2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

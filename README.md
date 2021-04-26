@@ -80,7 +80,7 @@ possible I've noted which ones are considered gating for a 1.0 release.
 
 ## License
 
-Copyright 2019 Tracy Beck
+Copyright 2019-2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -4,7 +4,7 @@ monitor in the main window.  In addition, the preview owns the ScreenPresenter
 which displays to the actual monitor, dispatching the updated view when
 necessary.
 
-Copyright 2019-2020 Tracy Beck
+Copyright 2019-2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

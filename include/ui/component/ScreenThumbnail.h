@@ -3,7 +3,7 @@ ui/component/ScreenThumbnail.h: Represents a very small view of exactly what's
 on the matching ScreenPresenter, in case there's not a great view from the booth
 to all monitors.
 
-Copyright 2019-2020 Tracy Beck
+Copyright 2019-2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

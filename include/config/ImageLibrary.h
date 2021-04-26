@@ -2,7 +2,7 @@
 config/ImageLibrary.h: A singleton which represents a library of images, tagged
 by the user and quickly searchable.
 
-Copyright 2020 Tracy Beck
+Copyright 2020-2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
