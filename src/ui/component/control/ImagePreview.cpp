@@ -25,7 +25,6 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const std::string DEFAULT_PREVIEW_COLOR = "Grey";
-const int BITMAP_DEPTH = 32;
 
 ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
@@ -60,7 +59,7 @@ void ImagePreview::renderImage(wxDC* dc) {
   int x = (size.GetWidth() - image_width) / 2;
   int y = (size.GetHeight() - image_height) / 2;
 
-  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
 }
 
 void ImagePreview::paintEvent(wxPaintEvent& event) {
