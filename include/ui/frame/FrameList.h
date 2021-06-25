@@ -21,22 +21,23 @@ limitations under the License.
 
 #include <set>
 
-#include "ui/swx/Frame.h"
+#include "ui/frame/MainView.h"
+#include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
 
 class FrameList {
  public:
   static auto getInstance() -> FrameList *;
-  inline void setMainView(SwxFrame *frame) { main_view = frame; }
-  inline auto getMainView() -> SwxFrame * { return main_view; }
-  inline void addFrame(SwxFrame *frame) { frames.insert(frame); }
-  inline void delFrame(SwxFrame *frame) { frames.erase(frame); }
+  inline void setMainView(MainView *mv) { main_view = mv; }
+  inline auto getMainView() -> MainView * { return main_view; }
+  inline void addFrame(Frame *frame) { frames.insert(frame); }
+  inline void delFrame(Frame *frame) { frames.erase(frame); }
   void exitFrames();
 
  private:
-  SwxFrame *main_view = nullptr;
-  std::set<SwxFrame *> frames;
+  MainView *main_view = nullptr;
+  std::set<Frame *> frames;
   FrameList() = default;
 };
 

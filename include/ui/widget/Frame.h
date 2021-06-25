@@ -1,5 +1,5 @@
 /*
-ui/swx/Frame.h: A wrapper around wxFrame
+ui/widget/Frame.h: A wrapper around wxFrame
 
 Copyright 2021 Tracy Beck
 
@@ -19,19 +19,18 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include "ui/widget/swx/Frame.h"
 
 namespace cszb_scoreboard {
 
-class SwxFrame {
+class Frame {
  public:
-  SwxFrame(wxWindowID id, const wxString &title,
+  Frame(const wxString &title,
            const wxPoint &pos = wxDefaultPosition,
-           const wxSize &size = wxDefaultSize,
-           long style = wxDEFAULT_FRAME_STYLE,
-           const wxString &name = wxFrameNameStr) {
-    wx = new wxFrame(nullptr, id, title, pos, size, style, name);
+           const wxSize &size = wxDefaultSize) {
+    wx = new swx::Frame(nullptr, wxID_ANY, title, pos, size);
   }
-  virtual ~SwxFrame() { wx->Destroy(); }
+  virtual ~Frame() { wx->Destroy(); }
 
   virtual bool Close(bool force) { return wx->Close(force); }
   virtual bool Destroy() { return wx->Destroy(); }
@@ -60,7 +59,7 @@ class SwxFrame {
   // TODO(akbar):  Once everything is a unique_ptr, FrameList should be less
   // useful and we can remove it and change this to private.
  protected:
-  wxFrame *wx;
+  swx::Frame *wx;
 };
 
 }  // namespace cszb_scoreboard

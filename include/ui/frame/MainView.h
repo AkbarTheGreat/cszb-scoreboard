@@ -22,7 +22,7 @@ limitations under the License.
 
 #include <vector>
 
-#include "ui/swx/Frame.h"
+#include "ui/widget/Frame.h"
 #include "ui/component/ControlPanel.h"
 #include "ui/component/Menu.h"
 #include "ui/component/PreviewPanel.h"
@@ -34,7 +34,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class MainView : public SwxFrame {
+class MainView : public Frame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
   auto controlPanel() -> ControlPanel* { return control_panel; }

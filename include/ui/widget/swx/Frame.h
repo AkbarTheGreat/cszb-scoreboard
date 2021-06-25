@@ -1,8 +1,7 @@
 /*
-ui/ScreenPresenter.h: This class manages any content which is being
-displayed on an external screen.
+ui/widget/swx/Frame.h: A wrapper around wxFrame
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,23 +15,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 #pragma once
 
 #include <wx/wx.h>
 
-#include "ui/component/ScreenText.h"
-#include "ui/widget/Frame.h"
+namespace cszb_scoreboard::swx {
 
-namespace cszb_scoreboard {
-class ScreenPresenter : public Frame {
+class Frame : public wxFrame {
  public:
-  ScreenPresenter(int monitor_number, ScreenText *widget);
-  inline auto widget() -> ScreenText * { return screen_text; }
-
- private:
-  int monitor_number;
-  ScreenText *screen_text;
-  void positionWidgets();
+  Frame(wxWindow *parent, wxWindowID id, const wxString &title,
+        const wxPoint &pos = wxDefaultPosition,
+        const wxSize &size = wxDefaultSize, long style = wxDEFAULT_FRAME_STYLE,
+        const wxString &name = wxFrameNameStr)
+      : wxFrame(parent, id, title, pos, size, style, name){};
 };
 
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::swx

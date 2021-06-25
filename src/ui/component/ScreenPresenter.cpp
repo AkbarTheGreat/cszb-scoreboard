@@ -31,8 +31,7 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = 0;
 
 ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
-    : SwxFrame( wxID_ANY, "Scoreboard", wxDefaultPosition,
-              wxDefaultSize) {
+    : Frame("Scoreboard", wxDefaultPosition, wxDefaultSize) {
   this->monitor_number = monitor_number;
 
   if (DisplayConfig::getInstance()->windowedMode()) {

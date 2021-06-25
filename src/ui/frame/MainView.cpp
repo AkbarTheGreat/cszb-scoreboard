@@ -32,7 +32,7 @@ const int BORDER_SIZE = 0;
 
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
-    : SwxFrame(wxID_ANY, title, pos, size) {
+    : Frame(title, pos, size) {
   FrameList::getInstance()->setMainView(this);
 
   createMenu();
