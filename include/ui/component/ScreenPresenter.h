@@ -21,9 +21,10 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "ui/component/ScreenText.h"
+#include "ui/swx/Frame.h"
 
 namespace cszb_scoreboard {
-class ScreenPresenter : public wxFrame {
+class ScreenPresenter : public SwxFrame {
  public:
   ScreenPresenter(int monitor_number, ScreenText *widget);
   inline auto widget() -> ScreenText * { return screen_text; }

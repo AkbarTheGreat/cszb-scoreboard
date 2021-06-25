@@ -19,24 +19,24 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-
 #include <set>
+
+#include "ui/swx/Frame.h"
 
 namespace cszb_scoreboard {
 
 class FrameList {
  public:
   static auto getInstance() -> FrameList *;
-  inline void setMainView(wxFrame *frame) { main_view = frame; }
-  inline auto getMainView() -> wxFrame * { return main_view; }
-  inline void addFrame(wxFrame *frame) { frames.insert(frame); }
-  inline void delFrame(wxFrame *frame) { frames.erase(frame); }
+  inline void setMainView(SwxFrame *frame) { main_view = frame; }
+  inline auto getMainView() -> SwxFrame * { return main_view; }
+  inline void addFrame(SwxFrame *frame) { frames.insert(frame); }
+  inline void delFrame(SwxFrame *frame) { frames.erase(frame); }
   void exitFrames();
 
  private:
-  wxFrame *main_view = nullptr;
-  std::set<wxFrame *> frames;
+  SwxFrame *main_view = nullptr;
+  std::set<SwxFrame *> frames;
   FrameList() = default;
 };
 

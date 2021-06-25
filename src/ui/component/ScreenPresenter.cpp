@@ -31,7 +31,7 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = 0;
 
 ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
-    : wxFrame(nullptr, wxID_ANY, "Scoreboard", wxDefaultPosition,
+    : SwxFrame( wxID_ANY, "Scoreboard", wxDefaultPosition,
               wxDefaultSize) {
   this->monitor_number = monitor_number;
 
@@ -51,7 +51,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
       DisplayConfig::getInstance()->displayDetails(monitor_number);
   wxRect screen = ProtoUtil::wxRct(display.dimensions());
 
-  screen_text = ScreenText::getPresenter(this, widget, screen.GetSize());
+  screen_text = ScreenText::getPresenter(wx, widget, screen.GetSize());
   screen_text->SetSize(screen.GetSize());
   LogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
            screen.y, screen.width, screen.height);

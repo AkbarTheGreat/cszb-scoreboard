@@ -22,7 +22,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class SwxFrame  {
+class SwxFrame {
  public:
   SwxFrame(wxWindowID id, const wxString &title,
            const wxPoint &pos = wxDefaultPosition,
@@ -36,6 +36,7 @@ class SwxFrame  {
   virtual bool Close(bool force) { return wx->Close(force); }
   virtual bool Destroy() { return wx->Destroy(); }
   virtual wxStatusBar *CreateStatusBar() { return wx->CreateStatusBar(); }
+  virtual wxPoint GetPosition() { return wx->GetPosition(); }
   virtual long GetWindowStyle() { return wx->GetWindowStyle(); }
   virtual void Iconize() { wx->Iconize(); }
   virtual void SetMenuBar(wxMenuBar *menuBar) { wx->SetMenuBar(menuBar); }

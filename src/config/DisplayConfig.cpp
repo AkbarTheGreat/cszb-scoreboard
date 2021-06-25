@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "config/Persistence.h"
 #include "ui/frame/FrameList.h"
+#include "ui/swx/Frame.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
 
@@ -167,7 +168,7 @@ auto DisplayConfig::displayDetails(int index) -> proto::DisplayInfo {
 
 // Determines which display currently houses the main control window.
 auto DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool {
-  wxFrame *main_view = FrameList::getInstance()->getMainView();
+  SwxFrame *main_view = FrameList::getInstance()->getMainView();
   if (main_view == nullptr) {
     return true;  // Guess that screen 0 is our primary, as we haven't created
                   // our main window yet.

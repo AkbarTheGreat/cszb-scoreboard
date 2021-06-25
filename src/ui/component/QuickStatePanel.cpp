@@ -21,6 +21,7 @@ limitations under the License.
 #include <string>
 
 #include "ui/UiUtil.h"
+#include "ui/frame/FrameList.h"
 #include "ui/frame/HotkeyTable.h"
 #include "ui/frame/MainView.h"
 #include "util/ProtoUtil.h"
@@ -130,12 +131,12 @@ void QuickStatePanel::positionWidgets() {
 }
 
 void QuickStatePanel::executeShortcut(ScreenText* screen) {
-  auto* main = dynamic_cast<MainView*>(GetParent());
+  auto* main = dynamic_cast<MainView*>(FrameList::getInstance()->getMainView());
   main->previewPanel()->setToPresenters(screen);
 }
 
 void QuickStatePanel::setShortcut(ScreenText* screen) {
-  auto* main = dynamic_cast<MainView*>(GetParent());
+  auto* main = dynamic_cast<MainView*>(FrameList::getInstance()->getMainView());
   main->controlPanel()->updateScreenTextFromSelected(screen);
 }
 
