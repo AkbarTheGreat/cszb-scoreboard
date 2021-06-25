@@ -32,28 +32,28 @@ const int BORDER_SIZE = 0;
 
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
-    : wxFrame(nullptr, wxID_ANY, title, pos, size) {
-  FrameList::getInstance()->setMainView(this);
+    : SwxFrame(wxID_ANY, title, pos, size) {
+  FrameList::getInstance()->setMainView(this->wx);
 
   createMenu();
   createStatusBar();
 
-  preview_panel = new PreviewPanel(this);
-  control_panel = new ControlPanel(this, preview_panel);
-  quick_state = new QuickStatePanel(this);
+  preview_panel = new PreviewPanel(this->wx);
+  control_panel = new ControlPanel(this->wx, preview_panel);
+  quick_state = new QuickStatePanel(this->wx);
 
   positionWidgets();
   bindEvents();
 
   if (CommandArgs::getInstance()->autoUpdate()) {
-    update_timer = new UpdateTimer(this);
+    update_timer = new UpdateTimer(this->wx);
     update_timer->Start(1, true);
   }
 
   // Set focus to the control_panel so that tab movement works correctly without
   // an initial click.
   control_panel->SetFocus();
-  HotkeyTable::getInstance()->installHotkeys(this);
+  HotkeyTable::getInstance()->installHotkeys(this->wx);
 }
 
 void MainView::createMenu() {
@@ -93,13 +93,22 @@ void MainView::positionWidgets() {
 }
 
 void MainView::bindEvents() {
-  Bind(wxEVT_CLOSE_WINDOW, &MainView::onClose, this);
+  Bind(wxEVT_CLOSE_WINDOW,
+       [this](wxCloseEvent& event) -> void { this->onClose(event); });
   // Menu events bind against the frame itself, so a bare Bind() is useful
   // here.
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::showSettings, this,
-       GENERAL_SETTINGS);
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onExit, this, wxID_EXIT);
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onAbout, this, wxID_ABOUT);
+  Bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [this](wxCommandEvent& event) -> void { this->showSettings(event); },
+      GENERAL_SETTINGS);
+  Bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [this](wxCommandEvent& event) -> void { this->onExit(event); },
+      wxID_EXIT);
+  Bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [this](wxCommandEvent& event) -> void { this->onAbout(event); },
+      wxID_ABOUT);
 }
 
 void MainView::onExit(wxCommandEvent& event) { Close(true); }
@@ -117,9 +126,11 @@ void MainView::onAbout(wxCommandEvent& event) {
 
 void MainView::showSettings(wxCommandEvent& event) {
   settings_dialog = new SettingsDialog();
-  settings_dialog->Create(this);
+  settings_dialog->Create(this->wx);
   settings_dialog->Show();
-  settings_dialog->Bind(SETTINGS_UPDATED, &MainView::onSettingsChange, this);
+  settings_dialog->Bind(
+      SETTINGS_UPDATED,
+      [this](wxCommandEvent& event) -> void { this->onSettingsChange(event); });
 }
 
 void MainView::onSettingsChange(wxCommandEvent& event) {
