@@ -32,7 +32,6 @@ namespace cszb_scoreboard {
 // Margin for the top or bottom, as a percentage
 const float TOP_OR_BOTTOM_MARGIN = 2.0F;
 const float TOP_OR_BOTTOM_RATIO = TOP_OR_BOTTOM_MARGIN / 100;
-const int BITMAP_DEPTH = 32;
 const float BOTTOM_CORNER_OVERLAY_SCALE = 0.30F;
 const float AUTOFIT_FONT_ADJUSTMENT = 0.5F;
 
@@ -166,7 +165,7 @@ void ScreenTextSide::renderScaledBackground(wxDC* dc) {
   wxImage scaled_image = scaleImage(image, GetSize());
   int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
   int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
-  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
 }
 
 void ScreenTextSide::renderOverlay(wxDC* dc) {
@@ -193,7 +192,7 @@ void ScreenTextSide::renderOverlayBottomCorner(wxDC* dc) {
   int x = TOP_OR_BOTTOM_MARGIN;
   int y = GetSize().GetHeight() - scaled_image.GetSize().GetHeight() -
           TOP_OR_BOTTOM_MARGIN;
-  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
 }
 
 void ScreenTextSide::renderOverlayCentered(wxDC* dc) {
@@ -208,14 +207,14 @@ void ScreenTextSide::renderOverlayCentered(wxDC* dc) {
 
   int x = (GetSize().GetWidth() - scaled_image.GetSize().GetWidth()) / 2;
   int y = (GetSize().GetHeight() - scaled_image.GetSize().GetHeight()) / 2;
-  dc->DrawBitmap(wxBitmap(scaled_image, BITMAP_DEPTH), x, y, false);
+  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
 }
 
 void ScreenTextSide::renderBackground(wxDC* dc) {
   if (image_is_scaled) {
     renderScaledBackground(dc);
   } else {
-    dc->DrawBitmap(wxBitmap(image, BITMAP_DEPTH), 0, 0, false);
+    dc->DrawBitmap(wxBitmap(image), 0, 0, false);
   }
   renderOverlay(dc);
 }
@@ -250,8 +249,8 @@ void ScreenTextSide::adjustOverlayColorAndAlpha(wxImage* image,
   wxRect dimensions(wxPoint(0, 0), image->GetSize());
   image->SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
   unsigned char* alpha = image->GetAlpha();
-  for (int i = 0; i < image->GetSize().GetWidth() * image->GetSize().GetHeight();
-       i++) {
+  for (int i = 0;
+       i < image->GetSize().GetWidth() * image->GetSize().GetHeight(); i++) {
     if (alpha[i] > overlay_alpha) {
       alpha[i] = overlay_alpha;
     }
