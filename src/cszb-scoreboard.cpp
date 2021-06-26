@@ -19,6 +19,8 @@ limitations under the License.
 #include "cszb-scoreboard.h"
 
 #include "config/CommandArgs.h"
+#include "ui/frame/FrameManager.h"
+#include "ui/frame/MainView.h"
 #include "util/Log.h"
 
 #ifndef SCOREBOARD_TESTING
@@ -39,10 +41,10 @@ auto Scoreboard::OnInit() -> bool {
   }
   wxInitAllImageHandlers();
   LogDebug(wxT("Starting up main loop"));
-  main_window =
-      new MainView("ComedySportz Scoreboard", wxPoint(START_X, START_Y),
-                   wxSize(START_WIDTH, START_HEIGHT));
-  main_window->Show(true);
+  FrameManager::getInstance()
+      ->createMainView("ComedySportz Scoreboard", wxPoint(START_X, START_Y),
+                       wxSize(START_WIDTH, START_HEIGHT))
+      ->Show(true);
   return true;
 }
 

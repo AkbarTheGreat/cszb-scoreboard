@@ -23,6 +23,7 @@ limitations under the License.
 #include "config/TeamConfig.h"
 #include "ui/UiUtil.h"
 #include "ui/component/ScreenText.h"
+#include "ui/frame/FrameManager.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -51,7 +52,8 @@ ScreenPreview::ScreenPreview(wxWindow* parent,
 
   thumbnail = new ScreenThumbnail(control_pane, monitor_number, current_widget);
   if (!sides[0].error()) {
-    presenter = new ScreenPresenter(monitor_number, current_widget);
+    presenter = FrameManager::getInstance()->createScreenPresenter(
+        monitor_number, current_widget);
   }
 
   positionWidgets();

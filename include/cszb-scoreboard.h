@@ -21,16 +21,12 @@ limitations under the License.
 #include <wx/cmdline.h>
 #include <wx/wx.h>
 
-#include "ui/frame/MainView.h"
-
 namespace cszb_scoreboard {
 class Scoreboard : public wxApp {
  public:
   auto OnInit() -> bool final;
 
  private:
-  // Raw pointer, wxWidgets will take care of collecting the MainView.
-  MainView* main_window;
   void OnInitCmdLine(wxCmdLineParser& parser) final;
   auto OnCmdLineParsed(wxCmdLineParser& parser) -> bool final;
 };

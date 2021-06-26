@@ -1,5 +1,6 @@
 /*
-ui/widget/Frame.h: A wrapper around wxFrame
+ui/widget/Frame.h: A frame represents a free-standing window that is not a
+dialog.
 
 Copyright 2021 Tracy Beck
 
@@ -19,21 +20,23 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+
+#include "ui/widget/Container.h"
 #include "ui/widget/swx/Frame.h"
 
 namespace cszb_scoreboard {
 
-class Frame {
+class Frame  {
  public:
-  Frame(const wxString &title,
-           const wxPoint &pos = wxDefaultPosition,
-           const wxSize &size = wxDefaultSize) {
-    wx = new swx::Frame(nullptr, wxID_ANY, title, pos, size);
-  }
+  explicit Frame(const wxString &title, const wxPoint &pos = wxDefaultPosition,
+                 const wxSize &size = wxDefaultSize)
+      : Frame(new swx::Frame(nullptr, wxID_ANY, title, pos, size)) {}
+  // Injectable constructor, for testing.
+  explicit Frame(swx::Frame *frame) { wx = frame; }
   virtual ~Frame() { wx->Destroy(); }
 
-  virtual bool Close(bool force) { return wx->Close(force); }
-  virtual bool Destroy() { return wx->Destroy(); }
+  void closeWindow() { wx->Close(true); }
+
   virtual wxStatusBar *CreateStatusBar() { return wx->CreateStatusBar(); }
   virtual wxPoint GetPosition() { return wx->GetPosition(); }
   virtual long GetWindowStyle() { return wx->GetWindowStyle(); }

@@ -21,7 +21,7 @@ limitations under the License.
 #include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
-#include "ui/frame/FrameList.h"
+#include "ui/frame/FrameManager.h"
 #include "ui/frame/HotkeyTable.h"
 #include "util/StringUtil.h"
 #include "wx/gbsizer.h"
@@ -33,8 +33,6 @@ const int BORDER_SIZE = 0;
 MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
     : Frame(title, pos, size) {
-  FrameList::getInstance()->setMainView(this);
-
   createMenu();
   createStatusBar();
 
@@ -111,7 +109,7 @@ void MainView::bindEvents() {
       wxID_ABOUT);
 }
 
-void MainView::onExit(wxCommandEvent& event) { Close(true); }
+void MainView::onExit(wxCommandEvent& event) { closeWindow(); }
 
 // Callbacks cannot be static.
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
@@ -138,8 +136,9 @@ void MainView::onSettingsChange(wxCommandEvent& event) {
 }
 
 void MainView::onClose(wxCloseEvent& event) {
-  FrameList::getInstance()->exitFrames();
-  Destroy();
+  // The following call deletes the pointer to this object, so should always be
+  // done last.
+  FrameManager::getInstance()->exitFrames();
 }
 
 }  // namespace cszb_scoreboard

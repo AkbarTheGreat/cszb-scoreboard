@@ -22,7 +22,6 @@ limitations under the License.
 
 #include <vector>
 
-#include "ui/widget/Frame.h"
 #include "ui/component/ControlPanel.h"
 #include "ui/component/Menu.h"
 #include "ui/component/PreviewPanel.h"
@@ -31,6 +30,7 @@ limitations under the License.
 #include "ui/component/control/TextEntry.h"
 #include "ui/dialog/SettingsDialog.h"
 #include "ui/event/UpdateTimer.h"
+#include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
 
