@@ -21,7 +21,6 @@ limitations under the License.
 
 #include <wx/wx.h>
 
-#include "ui/widget/Container.h"
 #include "ui/widget/swx/Frame.h"
 
 namespace cszb_scoreboard {
