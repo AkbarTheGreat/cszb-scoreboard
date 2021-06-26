@@ -55,8 +55,8 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
            screen.y, screen.width, screen.height);
 
   positionWidgets();
-  SetPosition(screen.GetPosition());
   SetSize(screen.GetSize());
+  SetPosition(screen.GetPosition());
 }
 
 void ScreenPresenter::positionWidgets() {
