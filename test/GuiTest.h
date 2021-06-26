@@ -31,7 +31,6 @@ limitations under the License.
 #include "cszb-scoreboard.h"
 #include "ui/component/ControlPanel.h"
 #include "ui/component/ScreenPreview.h"
-#include "ui/frame/FrameList.h"
 #include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard::test {

@@ -25,7 +25,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class Frame  {
+class Frame {
  public:
   explicit Frame(const wxString &title, const wxPoint &pos = wxDefaultPosition,
                  const wxSize &size = wxDefaultSize)
@@ -48,6 +48,7 @@ class Frame  {
   virtual void SetWindowStyle(long style) { wx->SetWindowStyle(style); }
   virtual bool Show(bool show) { return wx->Show(show); }
   virtual bool ShowFullScreen(bool show) { return wx->ShowFullScreen(show); }
+  virtual void Update() { wx->Update(); }
   virtual void Bind(const wxEventTypeTag<wxCommandEvent> &eventType,
                     const std::function<void(wxCommandEvent &)> &lambda,
                     int id) {

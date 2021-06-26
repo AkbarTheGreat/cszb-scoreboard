@@ -22,6 +22,7 @@ limitations under the License.
 #include "test/GuiTest.h"
 
 #include "test/TestUtil.h"
+#include "ui/frame/FrameManager.h"
 
 namespace cszb_scoreboard::test {
 
@@ -39,7 +40,7 @@ void GuiTest::TearDown() {
 }
 
 auto GuiTest::mainView() -> MainView * {
-  return dynamic_cast<MainView *>(FrameList::getInstance()->getMainView());
+  return dynamic_cast<MainView *>(FrameManager::getInstance()->mainView());
 }
 
 auto GuiTest::textEntry() -> TextEntry * {
