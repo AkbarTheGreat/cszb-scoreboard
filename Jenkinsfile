@@ -1,8 +1,9 @@
 pipeline {
   agent any
-  triggers {
-    cron('00 02 * * *') //run at 2 am
-  }
+  // Re-enable this upon merge -- disabled for branch
+  //triggers {
+    //cron('00 02 * * *') //run at 2 am
+  //}
 
   stages {
     stage('Cmake Generation') {
