@@ -26,7 +26,7 @@ namespace cszb_scoreboard {
 // Retry every six hours to look for an update.
 const int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
 
-UpdateTimer::UpdateTimer(wxFrame *main_view) { this->main_view = main_view; }
+UpdateTimer::UpdateTimer(Frame *main_view) { this->main_view = main_view; }
 
 void UpdateTimer::Notify() {
   if (IsOneShot()) {
@@ -38,16 +38,16 @@ void UpdateTimer::Notify() {
       AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version_available) {
     if (AutoUpdate::getInstance()->updateIsDownloadable()) {
-      main_view->SetStatusText("New version found, downloading...");
+      main_view->setStatusBar("New version found, downloading...");
       if (AutoUpdate::getInstance()->updateInPlace()) {
-        main_view->SetStatusText(
+        main_view->setStatusBar(
             "Auto-update downloaded.  Please restart to apply.");
       } else {
-        main_view->SetStatusText(
+        main_view->setStatusBar(
             "Auto-update failed!  Please manually update scoreboard.");
       }
     } else {
-      main_view->SetStatusText(
+      main_view->setStatusBar(
           "New version found, please go to "
           "github.com/AkbarTheGreat/cszb-scoreboard to update.");
     }

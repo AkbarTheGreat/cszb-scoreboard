@@ -35,8 +35,9 @@ class Frame {
   virtual ~Frame() { wx->Destroy(); }
 
   void closeWindow() { wx->Close(true); }
+  void setStatusBar(const wxString &text);
+  void focus() { wx->SetFocus(); };
 
-  virtual wxStatusBar *CreateStatusBar() { return wx->CreateStatusBar(); }
   virtual wxPoint GetPosition() { return wx->GetPosition(); }
   virtual long GetWindowStyle() { return wx->GetWindowStyle(); }
   virtual void Iconize() { wx->Iconize(); }
@@ -44,7 +45,6 @@ class Frame {
   virtual void SetPosition(const wxPoint &pt) { wx->SetPosition(pt); }
   virtual void SetSize(const wxRect &rect) { wx->SetSize(rect); }
   virtual void SetSizerAndFit(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
-  virtual void SetStatusText(const wxString &text) { wx->SetStatusText(text); }
   virtual void SetWindowStyle(long style) { wx->SetWindowStyle(style); }
   virtual bool Show(bool show) { return wx->Show(show); }
   virtual bool ShowFullScreen(bool show) { return wx->ShowFullScreen(show); }
@@ -63,6 +63,9 @@ class Frame {
   // useful and we can remove it and change this to private.
  protected:
   swx::Frame *wx;
+
+ private:
+  bool hasStatusBar = false;
 };
 
 }  // namespace cszb_scoreboard

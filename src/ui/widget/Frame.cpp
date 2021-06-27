@@ -1,7 +1,8 @@
 /*
-ui/event/UpdateTimer.h: A timer which periodically checks for updates.
+ui/widget/Frame.cpp: A frame represents a free-standing window that is not a
+dialog.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,19 +19,16 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-
 #include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
 
-class UpdateTimer : public wxTimer {
- public:
-  explicit UpdateTimer(Frame *main_view);
-
- private:
-  Frame *main_view;
-  void Notify() override;
-};
+void Frame::setStatusBar(const wxString &text) {
+  if (!hasStatusBar) {
+    hasStatusBar = true;
+    wx->CreateStatusBar();
+  }
+  wx->SetStatusText(text);
+}
 
 }  // namespace cszb_scoreboard

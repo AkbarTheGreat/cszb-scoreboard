@@ -24,7 +24,6 @@ limitations under the License.
 #include "ui/frame/FrameManager.h"
 #include "ui/frame/HotkeyTable.h"
 #include "util/StringUtil.h"
-#include "wx/gbsizer.h"
 
 namespace cszb_scoreboard {
 
@@ -34,7 +33,10 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
                    const wxSize& size)
     : Frame(title, pos, size) {
   createMenu();
-  createStatusBar();
+  setStatusBar("Welcome to ComedySportz Scoreboard, " +
+               StringUtil::intToString(
+                   DisplayConfig::getInstance()->numberOfDisplays()) +
+               " displays found.");
 
   preview_panel = new PreviewPanel(this->wx);
   control_panel = new ControlPanel(this->wx, preview_panel);
@@ -44,7 +46,7 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
   bindEvents();
 
   if (CommandArgs::getInstance()->autoUpdate()) {
-    update_timer = new UpdateTimer(this->wx);
+    update_timer = new UpdateTimer(this);
     update_timer->Start(1, true);
   }
 
@@ -70,15 +72,6 @@ void MainView::createMenu() {
   menu_bar->Append(menu_display, "&Display");
   menu_bar->Append(menu_help, "&Help");
   SetMenuBar(menu_bar);
-}
-
-void MainView::createStatusBar() {
-  CreateStatusBar();
-  wxString status_text = "Welcome to ComedySportz Scoreboard, ";
-  status_text +=
-      StringUtil::intToString(DisplayConfig::getInstance()->numberOfDisplays());
-  status_text += " displays found.";
-  SetStatusText(status_text);
 }
 
 void MainView::positionWidgets() {
