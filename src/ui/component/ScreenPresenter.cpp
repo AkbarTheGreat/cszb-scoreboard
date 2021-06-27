@@ -34,15 +34,15 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
   this->monitor_number = monitor_number;
 
   if (DisplayConfig::getInstance()->windowedMode()) {
-    Show(true);
+    show(true);
   } else {
-    // Set external monitors to be always on top.
-    SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
-    ShowFullScreen(true);
+    // Set external monitors to be always on top, fullscreen.
+    alwaysOnTop(true);
+    fullScreen(true);
   }
 
 #ifdef SCOREBOARD_TESTING
-  Iconize();
+  minimize();
 #endif
 
   proto::DisplayInfo display =

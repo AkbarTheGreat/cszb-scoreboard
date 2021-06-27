@@ -23,6 +23,15 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+void Frame::alwaysOnTop(bool isOnTop) {
+  if (isOnTop) {
+    wx->SetWindowStyle(wx->GetWindowStyle() | wxSTAY_ON_TOP);
+  } else {
+    long styleMask = 0L ^ wxSTAY_ON_TOP;
+    wx->SetWindowStyle(wx->GetWindowStyle() & styleMask);
+  }
+}
+
 void Frame::setStatusBar(const wxString &text) {
   if (!hasStatusBar) {
     hasStatusBar = true;

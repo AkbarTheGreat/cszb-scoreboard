@@ -31,7 +31,7 @@ const int TEXT_ENTRY_TAB_INDEX = 4;
 void GuiTest::SetUp() {
   app = new Scoreboard();
   TestUtil::startApp(app);
-  mainView()->Update();
+  mainView()->updateWindow();
 }
 
 void GuiTest::TearDown() {

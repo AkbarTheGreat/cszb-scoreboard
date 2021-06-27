@@ -44,7 +44,7 @@ auto Scoreboard::OnInit() -> bool {
   FrameManager::getInstance()
       ->createMainView("ComedySportz Scoreboard", wxPoint(START_X, START_Y),
                        wxSize(START_WIDTH, START_HEIGHT))
-      ->Show(true);
+      ->show(true);
   return true;
 }
 

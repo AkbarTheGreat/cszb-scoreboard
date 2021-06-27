@@ -34,21 +34,22 @@ class Frame {
   explicit Frame(swx::Frame *frame) { wx = frame; }
   virtual ~Frame() { wx->Destroy(); }
 
-  void closeWindow() { wx->Close(true); }
-  void setStatusBar(const wxString &text);
   void focus() { wx->SetFocus(); };
+  auto position() -> wxPoint { return wx->GetPosition(); }
+  void setStatusBar(const wxString &text);
+  auto show(bool show) -> bool { return wx->Show(show); }
+  void updateWindow() { wx->Update(); }
 
-  virtual wxPoint GetPosition() { return wx->GetPosition(); }
-  virtual long GetWindowStyle() { return wx->GetWindowStyle(); }
-  virtual void Iconize() { wx->Iconize(); }
+ protected:
+  void alwaysOnTop(bool isOnTop);
+  void closeWindow() { wx->Close(true); }
+  void fullScreen(bool show) { wx->ShowFullScreen(show); }
+  void minimize() { wx->Iconize(); }
+
   virtual void SetMenuBar(wxMenuBar *menuBar) { wx->SetMenuBar(menuBar); }
   virtual void SetPosition(const wxPoint &pt) { wx->SetPosition(pt); }
   virtual void SetSize(const wxRect &rect) { wx->SetSize(rect); }
   virtual void SetSizerAndFit(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
-  virtual void SetWindowStyle(long style) { wx->SetWindowStyle(style); }
-  virtual bool Show(bool show) { return wx->Show(show); }
-  virtual bool ShowFullScreen(bool show) { return wx->ShowFullScreen(show); }
-  virtual void Update() { wx->Update(); }
   virtual void Bind(const wxEventTypeTag<wxCommandEvent> &eventType,
                     const std::function<void(wxCommandEvent &)> &lambda,
                     int id) {
@@ -59,9 +60,6 @@ class Frame {
     wx->Bind(eventType, lambda);
   }
 
-  // TODO(akbar):  Once everything is a unique_ptr, FrameList should be less
-  // useful and we can remove it and change this to private.
- protected:
   swx::Frame *wx;
 
  private:

@@ -37,11 +37,11 @@ namespace cszb_scoreboard::test {
 
 /* Performs an action against the wxWidgets UI, and yields to allow it to
  * execute */
-#define WX_A(action)      \
-  {                       \
-    action;               \
-    wxYield();            \
-    mainView()->Update(); \
+#define WX_A(action)            \
+  {                             \
+    action;                     \
+    wxYield();                  \
+    mainView()->updateWindow(); \
   }
 
 enum ImageAnalysisMode {
