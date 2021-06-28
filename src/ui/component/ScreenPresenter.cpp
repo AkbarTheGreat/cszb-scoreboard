@@ -49,19 +49,18 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
       DisplayConfig::getInstance()->displayDetails(monitor_number);
   wxRect screen = ProtoUtil::wxRct(display.dimensions());
 
-  screen_text = ScreenText::getPresenter(wx, widget, screen.GetSize());
+  screen_text = ScreenText::getPresenter(this->wx, widget, screen.GetSize());
   screen_text->SetSize(screen.GetSize());
   LogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
            screen.y, screen.width, screen.height);
 
   positionWidgets();
-  SetSize(screen.GetSize());
-  SetPosition(screen.GetPosition());
+  setDimensions(screen);
 }
 
 void ScreenPresenter::positionWidgets() {
-  wxSizer* sizer = UiUtil::sizer(0, 2);
-  sizer->Add(screen_text, 1, wxEXPAND | wxALL, BORDER_SIZE);
-  SetSizerAndFit(sizer);
+  auto* sizer = new wxGridBagSizer();
+  UiUtil::addToGridBag(sizer, screen_text, 0, 0);
+  setSizer(sizer);
 }
 }  // namespace cszb_scoreboard

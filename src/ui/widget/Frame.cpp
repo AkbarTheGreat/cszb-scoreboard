@@ -17,8 +17,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
-
 #include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
@@ -30,6 +28,19 @@ void Frame::alwaysOnTop(bool isOnTop) {
     long styleMask = 0L ^ wxSTAY_ON_TOP;
     wx->SetWindowStyle(wx->GetWindowStyle() & styleMask);
   }
+}
+
+void Frame::menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu) {
+  auto menu_bar = new wxMenuBar();
+  for (auto item : menu) {
+    menu_bar->Append(item.first, item.second);
+  }
+  wx->SetMenuBar(menu_bar);
+}
+
+void Frame::setDimensions(const wxRect &dim) {
+  wx->SetSize(dim.GetSize());
+  wx->SetPosition(dim.GetPosition());
 }
 
 void Frame::setStatusBar(const wxString &text) {

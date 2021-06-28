@@ -33,9 +33,8 @@ void HotkeyTable::addHotkey(int modifier_flags, int key_code,
   accel_entries.back().Set(modifier_flags, key_code, widget_id);
 }
 
-void HotkeyTable::installHotkeys(wxFrame *main_window) {
-  main_window->SetAcceleratorTable(
-      wxAcceleratorTable(accel_entries.size(), accel_entries.data()));
+void HotkeyTable::installHotkeys(Frame *main_window) {
+  main_window->installHotkeys(accel_entries);
 }
 
 }  // namespace cszb_scoreboard

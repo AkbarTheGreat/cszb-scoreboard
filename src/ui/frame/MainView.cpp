@@ -18,6 +18,8 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
+#include <vector>
+
 #include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
@@ -67,11 +69,12 @@ void MainView::createMenu() {
                        "Black out both screens");
   auto* menu_help = new wxMenu;
   menu_help->Append(wxID_ABOUT);
-  auto* menu_bar = new wxMenuBar;
-  menu_bar->Append(menu_general, "&General");
-  menu_bar->Append(menu_display, "&Display");
-  menu_bar->Append(menu_help, "&Help");
-  SetMenuBar(menu_bar);
+
+  std::vector<std::pair<wxMenu*, std::string>> menu;
+  menu.emplace_back(std::pair<wxMenu*, std::string>{menu_general, "&General"});
+  menu.emplace_back(std::pair<wxMenu*, std::string>{menu_display, "&Display"});
+  menu.emplace_back(std::pair<wxMenu*, std::string>{menu_help, "&Help"});
+  menuBar(menu);
 }
 
 void MainView::positionWidgets() {
@@ -79,24 +82,23 @@ void MainView::positionWidgets() {
   UiUtil::addToGridBag(sizer, preview_panel, 0, 0);
   UiUtil::addToGridBag(sizer, control_panel, 1, 0);
   UiUtil::addToGridBag(sizer, quick_state, 0, 1, 2, 1);
-
-  SetSizerAndFit(sizer);
+  setSizer(sizer);
 }
 
 void MainView::bindEvents() {
-  Bind(wxEVT_CLOSE_WINDOW,
+  bind(wxEVT_CLOSE_WINDOW,
        [this](wxCloseEvent& event) -> void { this->onClose(event); });
   // Menu events bind against the frame itself, so a bare Bind() is useful
   // here.
-  Bind(
+  bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent& event) -> void { this->showSettings(event); },
       GENERAL_SETTINGS);
-  Bind(
+  bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent& event) -> void { this->onExit(event); },
       wxID_EXIT);
-  Bind(
+  bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent& event) -> void { this->onAbout(event); },
       wxID_ABOUT);

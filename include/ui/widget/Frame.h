@@ -21,6 +21,8 @@ limitations under the License.
 
 #include <wx/wx.h>
 
+#include <vector>
+
 #include "ui/widget/swx/Frame.h"
 
 namespace cszb_scoreboard {
@@ -35,6 +37,9 @@ class Frame {
   virtual ~Frame() { wx->Destroy(); }
 
   void focus() { wx->SetFocus(); };
+  void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
+    wx->SetAcceleratorTable(wxAcceleratorTable(keys.size(), keys.data()));
+  }
   auto position() -> wxPoint { return wx->GetPosition(); }
   void setStatusBar(const wxString &text);
   auto show(bool show) -> bool { return wx->Show(show); }
@@ -45,21 +50,21 @@ class Frame {
   void closeWindow() { wx->Close(true); }
   void fullScreen(bool show) { wx->ShowFullScreen(show); }
   void minimize() { wx->Iconize(); }
+  void menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu);
+  void setDimensions(const wxRect &dim);
+  void setSizer(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
 
-  virtual void SetMenuBar(wxMenuBar *menuBar) { wx->SetMenuBar(menuBar); }
-  virtual void SetPosition(const wxPoint &pt) { wx->SetPosition(pt); }
-  virtual void SetSize(const wxRect &rect) { wx->SetSize(rect); }
-  virtual void SetSizerAndFit(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
-  virtual void Bind(const wxEventTypeTag<wxCommandEvent> &eventType,
-                    const std::function<void(wxCommandEvent &)> &lambda,
-                    int id) {
+  void bind(const wxEventTypeTag<wxCommandEvent> &eventType,
+            const std::function<void(wxCommandEvent &)> &lambda, int id) {
     wx->Bind(eventType, lambda, id);
   }
-  virtual void Bind(const wxEventTypeTag<wxCloseEvent> &eventType,
-                    const std::function<void(wxCloseEvent &)> &lambda) {
+  void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
+            const std::function<void(wxCloseEvent &)> &lambda) {
     wx->Bind(eventType, lambda);
   }
 
+  // TODO(akbar): make this private once construction is all moved away from
+  // passing wx widgets along.
   swx::Frame *wx;
 
  private:
