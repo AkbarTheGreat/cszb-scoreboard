@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/component/ScreenPresenter.h"
 
+#include <wx/gbsizer.h>
+
 #include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
@@ -60,7 +62,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
 
 void ScreenPresenter::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
-  UiUtil::addToGridBag(sizer, screen_text, 0, 0);
+  screen_text->addToSizer(sizer, 0, 0);
   setSizer(sizer);
 }
 }  // namespace cszb_scoreboard

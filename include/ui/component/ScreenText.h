@@ -27,10 +27,11 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/ScreenTextSide.h"
 #include "ui/graphics/Color.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
-class ScreenText : public wxPanel {
+class ScreenText : public Panel {
  public:
   // These two methods are really just light wrappers around constructors, but
   // they help document the use each constructor is intended to fill.
@@ -80,8 +81,7 @@ class ScreenText : public wxPanel {
   std::vector<ScreenTextSide*> text_sides;
   bool is_single_view = false;
 
-  ScreenText(wxWindow* parent, wxSize size)
-      : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {}
+  ScreenText(wxWindow* parent, wxSize size) : Panel(parent, size) {}
 
   void autosplitDisplays(const proto::ScreenSide& side);
   void initializeSides(const std::vector<ScreenTextSide*>& text_sides);

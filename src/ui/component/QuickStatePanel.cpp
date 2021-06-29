@@ -124,7 +124,7 @@ void QuickStatePanel::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
 
   for (int i = 0; i < entries.size(); i++) {
-    UiUtil::addToGridBag(sizer, entries[i]->screen(), i, 0);
+    entries[i]->screen()->addToSizer(sizer, i, 0);
   }
 
   SetSizerAndFit(sizer);

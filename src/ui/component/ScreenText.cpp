@@ -50,7 +50,7 @@ auto ScreenText::getPreview(wxWindow* parent, const wxString& initial_text,
     for (const auto& side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
         text_sides.push_back(
-            new ScreenTextSide(screen_text, initial_text, side, split_size));
+            new ScreenTextSide(screen_text->wx, initial_text, side, split_size));
         break;
       }
     }
@@ -70,7 +70,7 @@ auto ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
 
   for (auto* source_text_side : preview->text_sides) {
     text_sides.push_back(
-        new ScreenTextSide(screen_text, source_text_side, split_size));
+        new ScreenTextSide(screen_text->wx, source_text_side, split_size));
   }
 
   screen_text->initializeSides(text_sides);

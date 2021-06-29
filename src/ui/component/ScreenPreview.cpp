@@ -19,6 +19,8 @@ limitations under the License.
 */
 #include "ui/component/ScreenPreview.h"
 
+#include <wx/gbsizer.h>
+
 #include "config/DisplayConfig.h"
 #include "config/TeamConfig.h"
 #include "ui/UiUtil.h"
@@ -60,9 +62,10 @@ ScreenPreview::ScreenPreview(wxWindow* parent,
 }
 
 void ScreenPreview::positionWidgets() {
-  wxSizer* sizer = UiUtil::sizer(2, 1);
-  sizer->Add(thumbnail->widget(), 1, wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
-  sizer->Add(current_widget, 1, wxALL, BORDER_SIZE);
+  auto* sizer = new wxGridBagSizer();
+  thumbnail->widget()->addToSizer(sizer, 0, 0, 1, 1, DEFAULT_BORDER_SIZE,
+                                  wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
+  current_widget->addToSizer(sizer, 1, 0, 1, 1, BORDER_SIZE, wxALL);
   control_pane->SetSizerAndFit(sizer);
 }
 
