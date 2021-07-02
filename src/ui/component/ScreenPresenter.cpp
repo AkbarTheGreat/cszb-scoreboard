@@ -51,7 +51,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
       DisplayConfig::getInstance()->displayDetails(monitor_number);
   wxRect screen = ProtoUtil::wxRct(display.dimensions());
 
-  screen_text = new ScreenText(childPanel());
+  screen_text = std::make_unique<ScreenText>(childPanel());
   screen_text->setupPresenter(widget, screen.GetSize());
   screen_text->SetSize(screen.GetSize());
   LogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,

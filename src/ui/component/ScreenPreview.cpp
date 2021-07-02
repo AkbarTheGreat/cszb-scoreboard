@@ -108,14 +108,14 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
 }
 
 void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
-  presenter->widget()->setAll(*screen_text);
+  presenter->setAll(*screen_text);
   thumbnail->widget()->setAll(*screen_text);
 }
 
 void ScreenPreview::sendToPresenter() { sendToPresenter(current_widget); }
 
 void ScreenPreview::blackoutPresenter() {
-  presenter->widget()->blackout();
+  presenter->blackout();
   thumbnail->widget()->blackout();
 }
 
