@@ -48,13 +48,14 @@ ScreenPreview::ScreenPreview(wxWindow* parent,
     initial_text = WELCOME_MESSAGE;
   }
 
-  control_pane = new wxPanel(parent);
+  control_pane = new Panel(new swx::Panel(parent));
 
-  current_widget = new ScreenText(new swx::Panel(control_pane));
+  current_widget = new ScreenText(new swx::Panel(control_pane->wx));
   current_widget->setupPreview(initial_text, sides,
                                previewSize(monitor_number));
 
-  thumbnail = new ScreenThumbnail(control_pane, monitor_number, current_widget);
+  thumbnail = std::make_unique<ScreenThumbnail>(control_pane->childPanel(), monitor_number,
+                                                current_widget);
   if (!sides[0].error()) {
     presenter = FrameManager::getInstance()->createScreenPresenter(
         monitor_number, current_widget);
@@ -65,8 +66,8 @@ ScreenPreview::ScreenPreview(wxWindow* parent,
 
 void ScreenPreview::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
-  thumbnail->widget()->addToSizer(sizer, 0, 0, 1, 1, DEFAULT_BORDER_SIZE,
-                                  wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
+  thumbnail->addToSizer(sizer, 0, 0, 1, 1, DEFAULT_BORDER_SIZE,
+                        wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
   current_widget->addToSizer(sizer, 1, 0, 1, 1, BORDER_SIZE, wxALL);
   control_pane->SetSizerAndFit(sizer);
 }
@@ -84,13 +85,11 @@ auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
   return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
 }
 
-auto ScreenPreview::controlPane() -> wxPanel* { return control_pane; }
+auto ScreenPreview::controlPane() -> wxPanel* { return control_pane->wx; }
 
 auto ScreenPreview::widget() -> ScreenText* { return current_widget; }
 
-auto ScreenPreview::thumbnailWidget() -> ScreenText* {
-  return thumbnail->widget();
-}
+auto ScreenPreview::thumbnailWidget() -> ScreenText* { return thumbnail.get(); }
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
   current_widget->SetSize(previewSize(monitor_number));
@@ -109,14 +108,14 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
 
 void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
   presenter->setAll(*screen_text);
-  thumbnail->widget()->setAll(*screen_text);
+  thumbnail->setAll(*screen_text);
 }
 
 void ScreenPreview::sendToPresenter() { sendToPresenter(current_widget); }
 
 void ScreenPreview::blackoutPresenter() {
   presenter->blackout();
-  thumbnail->widget()->blackout();
+  thumbnail->blackout();
 }
 
 }  // namespace cszb_scoreboard

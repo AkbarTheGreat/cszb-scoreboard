@@ -39,11 +39,11 @@ class ScreenPreview {
   auto thumbnailWidget() -> ScreenText*;
 
  private:
-  wxPanel* control_pane;
+  Panel* control_pane;
   ScreenText* current_widget;
   const wxWindow* parent;
   ScreenPresenter* presenter;
-  ScreenThumbnail* thumbnail;
+  std::unique_ptr<ScreenThumbnail> thumbnail;
   static auto previewSize(int monitor_number) -> wxSize;
   void positionWidgets();
 };

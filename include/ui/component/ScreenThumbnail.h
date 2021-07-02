@@ -24,14 +24,11 @@ limitations under the License.
 #include "ui/component/ScreenText.h"
 
 namespace cszb_scoreboard {
-class ScreenThumbnail {
+class ScreenThumbnail : public ScreenText {
  public:
-  ScreenThumbnail(wxWindow* parent, int monitor_number, ScreenText* widget);
-  inline auto widget() -> ScreenText* { return screen_text; }
+  ScreenThumbnail(swx::Panel* wx, int monitor_number, ScreenText* widget);
 
  private:
-  // Just holding a pointer to this wxWidget, this object does not own it.
-  ScreenText* screen_text;
   static auto thumbnailSize(int monitor_number) -> wxSize;
 };
 }  // namespace cszb_scoreboard

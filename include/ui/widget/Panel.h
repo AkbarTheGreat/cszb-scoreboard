@@ -36,10 +36,18 @@ class Panel {
   void addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span = 1,
                   int column_span = 1, int border_size = DEFAULT_BORDER_SIZE,
                   int flag = wxALL | wxGROW);
+  auto childPanel(wxWindowID id = wxID_ANY,
+                  const wxPoint &pos = wxDefaultPosition,
+                  const wxSize &size = wxDefaultSize,
+                  long style = wxTAB_TRAVERSAL,
+                  const wxString &name = wxPanelNameStr) -> swx::Panel * {
+    return new swx::Panel(wx, id, pos, size, style, name);
+  }
 
   void Refresh() { wx->Refresh(); }
   void SetSize(const wxSize &size) { wx->SetSize(size); }
   void Destroy() { wx->Destroy(); }
+  void SetSizerAndFit(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
@@ -49,7 +57,6 @@ class Panel {
   wxWindow *GetParent() { return wx->GetParent(); }
 
  protected:
-  void SetSizerAndFit(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
   void Update() { wx->Update(); }
   wxSize GetSize() { return wx->GetSize(); }
 };
