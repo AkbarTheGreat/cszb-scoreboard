@@ -33,10 +33,10 @@ namespace cszb_scoreboard {
 const float TOP_OR_BOTTOM_MARGIN = 2;
 const int BORDER_SIZE = 0;
 
-auto ScreenText::getPreview(wxWindow* parent, const wxString& initial_text,
-                            const std::vector<proto::ScreenSide>& sides,
-                            wxSize size) -> ScreenText* {
-  auto* screen_text = new ScreenText(parent, size);
+void ScreenText::setupPreview(const wxString& initial_text,
+                              const std::vector<proto::ScreenSide>& sides,
+                              wxSize size) {
+  SetSize(size);
   std::vector<ScreenTextSide*> text_sides;
 
   wxSize split_size = splitScreenSize(size.x, size.y, sides.size());
@@ -50,31 +50,27 @@ auto ScreenText::getPreview(wxWindow* parent, const wxString& initial_text,
     for (const auto& side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
         text_sides.push_back(
-            new ScreenTextSide(screen_text->wx, initial_text, side, split_size));
+            new ScreenTextSide(wx, initial_text, side, split_size));
         break;
       }
     }
   }
 
-  screen_text->initializeSides(text_sides);
-  return screen_text;
+  initializeSides(text_sides);
 }
 
-auto ScreenText::getPresenter(wxWindow* parent, ScreenText* preview,
-                              wxSize size) -> ScreenText* {
-  auto* screen_text = new ScreenText(parent, size);
+void ScreenText::setupPresenter(ScreenText* preview, wxSize size) {
+  SetSize(size);
   std::vector<ScreenTextSide*> text_sides;
 
   wxSize split_size =
       splitScreenSize(size.x, size.y, preview->text_sides.size());
 
   for (auto* source_text_side : preview->text_sides) {
-    text_sides.push_back(
-        new ScreenTextSide(screen_text->wx, source_text_side, split_size));
+    text_sides.push_back(new ScreenTextSide(wx, source_text_side, split_size));
   }
 
-  screen_text->initializeSides(text_sides);
-  return screen_text;
+  initializeSides(text_sides);
 }
 
 void ScreenText::initializeSides(

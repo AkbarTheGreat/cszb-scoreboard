@@ -21,6 +21,7 @@ limitations under the License.
 #include "ui/component/ScreenThumbnail.h"
 
 #include "config/DisplayConfig.h"
+#include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
 
@@ -28,8 +29,8 @@ const int THUMBNAIL_HEIGHT = 64;
 
 ScreenThumbnail::ScreenThumbnail(wxWindow* parent, int monitor_number,
                                  ScreenText* widget) {
-  screen_text =
-      ScreenText::getPresenter(parent, widget, thumbnailSize(monitor_number));
+  screen_text = new ScreenText(new swx::Panel(parent));
+  screen_text->setupPresenter(widget, thumbnailSize(monitor_number));
 }
 
 auto ScreenThumbnail::thumbnailSize(int monitor_number) -> wxSize {

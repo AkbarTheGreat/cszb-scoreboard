@@ -24,13 +24,12 @@ namespace cszb_scoreboard::swx {
 
 class Panel : public wxPanel {
  public:
-  Panel(wxWindow *parent, wxWindowID id = wxID_ANY,
-        const wxPoint &pos = wxDefaultPosition,
-        const wxSize &size = wxDefaultSize, long style = wxTAB_TRAVERSAL,
-        const wxString &name = wxPanelNameStr)
+  explicit Panel(wxWindow *parent, wxWindowID id = wxID_ANY,
+                 const wxPoint &pos = wxDefaultPosition,
+                 const wxSize &size = wxDefaultSize,
+                 long style = wxTAB_TRAVERSAL,
+                 const wxString &name = wxPanelNameStr)
       : wxPanel(parent, id, pos, size, style, name) {}
-  Panel(wxWindow *parent, const wxSize &size)
-      : Panel(parent, wxID_ANY, wxDefaultPosition, size) {}
 };
 
 }  // namespace cszb_scoreboard::swx

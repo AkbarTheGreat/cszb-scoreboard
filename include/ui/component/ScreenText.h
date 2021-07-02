@@ -33,14 +33,11 @@ namespace cszb_scoreboard {
 
 class ScreenText : public Panel {
  public:
-  // These two methods are really just light wrappers around constructors, but
-  // they help document the use each constructor is intended to fill.
-  static auto getPreview(wxWindow* parent, const wxString& initial_text,
-                         const std::vector<proto::ScreenSide>& sides,
-                         wxSize size) -> ScreenText*;
+  ScreenText(swx::Panel* wx) : Panel(wx) {}
+  void setupPreview(const wxString& initial_text,
+                    const std::vector<proto::ScreenSide>& sides, wxSize size);
 
-  static auto getPresenter(wxWindow* parent, ScreenText* preview, wxSize size)
-      -> ScreenText*;
+  void setupPresenter(ScreenText* preview, wxSize size);
 
   void addText(const proto::RenderableText& text,
                const proto::ScreenSide& side);
@@ -80,8 +77,6 @@ class ScreenText : public Panel {
  private:
   std::vector<ScreenTextSide*> text_sides;
   bool is_single_view = false;
-
-  ScreenText(wxWindow* parent, wxSize size) : Panel(parent, size) {}
 
   void autosplitDisplays(const proto::ScreenSide& side);
   void initializeSides(const std::vector<ScreenTextSide*>& text_sides);

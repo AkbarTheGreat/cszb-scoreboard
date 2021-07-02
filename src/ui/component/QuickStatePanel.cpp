@@ -24,6 +24,7 @@ limitations under the License.
 #include "ui/frame/FrameManager.h"
 #include "ui/frame/HotkeyTable.h"
 #include "ui/frame/MainView.h"
+#include "ui/widget/swx/Panel.h"
 #include "util/ProtoUtil.h"
 #include "wx/gbsizer.h"
 
@@ -36,9 +37,9 @@ const int PREVIEW_HEIGHT = 64;
 const int NUMBER_OF_QUICK_PANELS = 10;
 
 QuickStateEntry::QuickStateEntry(wxPanel* parent, int id) {
-  screen_text = ScreenText::getPreview(
-      parent, "", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
-      wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
+  screen_text = new ScreenText(new swx::Panel(parent));
+  screen_text->setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
+                            wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
 
   screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
   screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());

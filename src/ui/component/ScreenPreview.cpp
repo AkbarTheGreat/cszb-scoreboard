@@ -26,6 +26,7 @@ limitations under the License.
 #include "ui/UiUtil.h"
 #include "ui/component/ScreenText.h"
 #include "ui/frame/FrameManager.h"
+#include "ui/widget/swx/Panel.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -49,8 +50,9 @@ ScreenPreview::ScreenPreview(wxWindow* parent,
 
   control_pane = new wxPanel(parent);
 
-  current_widget = ScreenText::getPreview(control_pane, initial_text, sides,
-                                          previewSize(monitor_number));
+  current_widget = new ScreenText(new swx::Panel(control_pane));
+  current_widget->setupPreview(initial_text, sides,
+                               previewSize(monitor_number));
 
   thumbnail = new ScreenThumbnail(control_pane, monitor_number, current_widget);
   if (!sides[0].error()) {

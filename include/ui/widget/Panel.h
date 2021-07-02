@@ -31,10 +31,6 @@ namespace cszb_scoreboard {
 
 class Panel {
  public:
-  explicit Panel(wxWindow *parent) : Panel(new swx::Panel(parent)) {}
-  explicit Panel(wxWindow *parent, const wxSize &size)
-      : Panel(new swx::Panel(parent, size)) {}
-  // Injectable constructor, for testing.
   explicit Panel(swx::Panel *panel) { wx = panel; }
 
   void addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span = 1,

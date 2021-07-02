@@ -24,6 +24,7 @@ limitations under the License.
 #include <vector>
 
 #include "ui/widget/swx/Frame.h"
+#include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
 
@@ -61,6 +62,14 @@ class Frame {
   void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
             const std::function<void(wxCloseEvent &)> &lambda) {
     wx->Bind(eventType, lambda);
+  }
+
+  auto childPanel(wxWindowID id = wxID_ANY,
+                  const wxPoint &pos = wxDefaultPosition,
+                  const wxSize &size = wxDefaultSize,
+                  long style = wxTAB_TRAVERSAL,
+                  const wxString &name = wxPanelNameStr) -> swx::Panel * {
+    return new swx::Panel(wx, id, pos, size, style, name);
   }
 
   // TODO(akbar): make this private once construction is all moved away from
