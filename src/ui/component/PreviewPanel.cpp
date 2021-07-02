@@ -45,7 +45,8 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
       sides.back().set_away(true);
     }
     if (!sides.empty()) {
-      screens.emplace_back(new ScreenPreview(this, sides, display_info.id()));
+      screens.emplace_back(
+          new ScreenPreview(new swx::Panel(this), sides, display_info.id()));
     }
   }
 

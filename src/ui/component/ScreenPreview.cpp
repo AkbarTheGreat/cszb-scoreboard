@@ -36,9 +36,10 @@ const char* WELCOME_MESSAGE = "Hello";
 const char* ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
 const int PREVIEW_HEIGHT = 320;
 
-ScreenPreview::ScreenPreview(wxWindow* parent,
+ScreenPreview::ScreenPreview(swx::Panel* wx,
                              std::vector<proto::ScreenSide> sides,
-                             int monitor_number) {
+                             int monitor_number)
+    : Panel(wx) {
   this->parent = parent;
 
   wxString initial_text;
@@ -48,17 +49,14 @@ ScreenPreview::ScreenPreview(wxWindow* parent,
     initial_text = WELCOME_MESSAGE;
   }
 
-  control_pane = new Panel(new swx::Panel(parent));
+  screen_text = std::make_unique<ScreenText>(childPanel());
+  screen_text->setupPreview(initial_text, sides, previewSize(monitor_number));
 
-  current_widget = new ScreenText(new swx::Panel(control_pane->wx));
-  current_widget->setupPreview(initial_text, sides,
-                               previewSize(monitor_number));
-
-  thumbnail = std::make_unique<ScreenThumbnail>(control_pane->childPanel(), monitor_number,
-                                                current_widget);
+  thumbnail =
+      std::make_unique<ScreenThumbnail>(childPanel(), monitor_number, widget());
   if (!sides[0].error()) {
     presenter = FrameManager::getInstance()->createScreenPresenter(
-        monitor_number, current_widget);
+        monitor_number, widget());
   }
 
   positionWidgets();
@@ -68,8 +66,8 @@ void ScreenPreview::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
   thumbnail->addToSizer(sizer, 0, 0, 1, 1, DEFAULT_BORDER_SIZE,
                         wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
-  current_widget->addToSizer(sizer, 1, 0, 1, 1, BORDER_SIZE, wxALL);
-  control_pane->SetSizerAndFit(sizer);
+  screen_text->addToSizer(sizer, 1, 0, 1, 1, BORDER_SIZE, wxALL);
+  SetSizerAndFit(sizer);
 }
 
 auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
@@ -85,25 +83,25 @@ auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
   return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
 }
 
-auto ScreenPreview::controlPane() -> wxPanel* { return control_pane->wx; }
+auto ScreenPreview::controlPane() -> wxPanel* { return wx; }
 
-auto ScreenPreview::widget() -> ScreenText* { return current_widget; }
+auto ScreenPreview::widget() -> ScreenText* { return screen_text.get(); }
 
 auto ScreenPreview::thumbnailWidget() -> ScreenText* { return thumbnail.get(); }
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
-  current_widget->SetSize(previewSize(monitor_number));
+  screen_text->SetSize(previewSize(monitor_number));
   proto::ScreenSide side =
       DisplayConfig::getInstance()->displayDetails(monitor_number).side();
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
     if (ProtoUtil::sideContains(side, team)) {
       proto::ScreenSide effective_side = ProtoUtil::teamSide(team);
-      current_widget->setBackground(
+      screen_text->setBackground(
           TeamConfig::getInstance()->teamColor(effective_side)[0],
           effective_side);
     }
   }
-  current_widget->Refresh();
+  screen_text->Refresh();
 }
 
 void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
@@ -111,7 +109,7 @@ void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
   thumbnail->setAll(*screen_text);
 }
 
-void ScreenPreview::sendToPresenter() { sendToPresenter(current_widget); }
+void ScreenPreview::sendToPresenter() { sendToPresenter(widget()); }
 
 void ScreenPreview::blackoutPresenter() {
   presenter->blackout();

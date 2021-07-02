@@ -24,11 +24,12 @@ limitations under the License.
 
 #include "ui/component/ScreenPresenter.h"
 #include "ui/component/ScreenThumbnail.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
-class ScreenPreview {
+class ScreenPreview : public Panel {
  public:
-  ScreenPreview(wxWindow* parent, std::vector<proto::ScreenSide> sides,
+  ScreenPreview(swx::Panel* wx, std::vector<proto::ScreenSide> sides,
                 int monitor_number);
   auto widget() -> ScreenText*;
   void sendToPresenter(ScreenText* screen_text);
@@ -39,8 +40,7 @@ class ScreenPreview {
   auto thumbnailWidget() -> ScreenText*;
 
  private:
-  Panel* control_pane;
-  ScreenText* current_widget;
+  std::unique_ptr<ScreenText> screen_text;
   const wxWindow* parent;
   ScreenPresenter* presenter;
   std::unique_ptr<ScreenThumbnail> thumbnail;

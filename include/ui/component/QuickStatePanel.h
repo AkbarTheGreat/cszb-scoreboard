@@ -26,10 +26,10 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class QuickStateEntry {
+class QuickStateEntry : public ScreenText {
  public:
-  QuickStateEntry(wxPanel* parent, int id);
-  auto screen() -> ScreenText* { return screen_text; }
+  QuickStateEntry(swx::Panel* wx, int id);
+  auto screen() -> ScreenText* { return this; }
   ~QuickStateEntry();
 
  private:
@@ -61,7 +61,6 @@ class QuickStateEntry {
     setShortcut();
   }
 
-  ScreenText* screen_text;
   wxButton *set_button, *execute_button;
   bool initialized = false;
 };

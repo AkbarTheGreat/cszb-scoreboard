@@ -36,17 +36,16 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(wxPanel* parent, int id) {
-  screen_text = new ScreenText(new swx::Panel(parent));
-  screen_text->setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
-                            wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
+QuickStateEntry::QuickStateEntry(swx::Panel* wx, int id) : ScreenText(wx) {
+  setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
+               wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
 
-  screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
-  screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+  setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
+  setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
 
   // These two buttons are always hidden and exist only to add hotkey support
-  set_button = new wxButton(parent, wxID_ANY);
-  execute_button = new wxButton(parent, wxID_ANY);
+  set_button = new wxButton(wx, wxID_ANY);
+  execute_button = new wxButton(wx, wxID_ANY);
   set_button->Hide();
   execute_button->Hide();
 
@@ -116,7 +115,7 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
 
 QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
-    entries.push_back(std::move(std::make_unique<QuickStateEntry>(this, i)));
+    entries.push_back(std::move(std::make_unique<QuickStateEntry>(new swx::Panel(this), i)));
   }
   positionWidgets();
 }
