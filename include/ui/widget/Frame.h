@@ -25,8 +25,12 @@ limitations under the License.
 
 #include "ui/widget/swx/Frame.h"
 #include "ui/widget/swx/Panel.h"
+#include "ui/widget/swx/Notebook.h"
 
 namespace cszb_scoreboard {
+
+const int DEFAULT_NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
+                                   wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;
 
 class Frame {
  public:
@@ -70,6 +74,12 @@ class Frame {
                   long style = wxTAB_TRAVERSAL,
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
     return new swx::Panel(wx, id, pos, size, style, name);
+  }
+  auto childNotebook(wxWindowID id = wxID_ANY,
+                     const wxPoint &pos = wxDefaultPosition,
+                     const wxSize &size = wxDefaultSize,
+                     long style = DEFAULT_NOTEBOOK_STYLE) -> swx::Notebook * {
+    return new swx::Notebook(wx, id, pos, size, style);
   }
 
   // TODO(akbar): make this private once construction is all moved away from

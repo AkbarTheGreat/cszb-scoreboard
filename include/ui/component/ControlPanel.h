@@ -19,7 +19,6 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/aui/aui.h>
 #include <wx/wx.h>
 
 #include <vector>
@@ -27,12 +26,14 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/control/ScreenTextController.h"
+#include "ui/widget/Notebook.h"
+#include "ui/widget/swx/Notebook.h"
 
 namespace cszb_scoreboard {
 
-class ControlPanel : public wxAuiNotebook {
+class ControlPanel : public Notebook {
  public:
-  ControlPanel(wxWindow* parent, PreviewPanel* preview_panel);
+  ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel);
   void updateScreenTextFromSelected(ScreenText* screen_text);
 
 #ifdef SCOREBOARD_TESTING

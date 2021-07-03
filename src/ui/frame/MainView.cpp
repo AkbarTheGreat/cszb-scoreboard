@@ -41,7 +41,7 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
                " displays found.");
 
   preview_panel = std::make_unique<PreviewPanel>(childPanel());
-  control_panel = new ControlPanel(this->wx, preview_panel.get());
+  control_panel = std::make_unique<ControlPanel>(childNotebook(), preview_panel.get());
   quick_state = new QuickStatePanel(this->wx);
 
   positionWidgets();
@@ -54,7 +54,7 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
 
   // Set focus to the control_panel so that tab movement works correctly without
   // an initial click.
-  control_panel->SetFocus();
+  control_panel->focus();
   HotkeyTable::getInstance()->installHotkeys(this);
 }
 
@@ -80,7 +80,7 @@ void MainView::createMenu() {
 void MainView::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
   preview_panel->addToSizer(sizer, 0, 0);
-  UiUtil::addToGridBag(sizer, control_panel, 1, 0);
+  control_panel->addToSizer(sizer,  1, 0);
   UiUtil::addToGridBag(sizer, quick_state, 0, 1, 2, 1);
   setSizer(sizer);
 }

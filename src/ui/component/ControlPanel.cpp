@@ -27,25 +27,21 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const int NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
-                           wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;
-
-ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
-    : wxAuiNotebook(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                    NOTEBOOK_STYLE) {
-  controllers.push_back(ScoreControl::Create(preview_panel, this));
+ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
+    : Notebook(wx) {
+  controllers.push_back(ScoreControl::Create(preview_panel, wx));
   AddPage(controllers.back(), "Score");
 
-  controllers.push_back(ImageFromLibrary::Create(preview_panel, this));
+  controllers.push_back(ImageFromLibrary::Create(preview_panel, wx));
   AddPage(controllers.back(), "Image Library");
 
-  controllers.push_back(LocalImage::Create(preview_panel, this));
+  controllers.push_back(LocalImage::Create(preview_panel, wx));
   AddPage(controllers.back(), "Load Image");
 
-  controllers.push_back(ThingsMode::Create(preview_panel, this));
+  controllers.push_back(ThingsMode::Create(preview_panel, wx));
   AddPage(controllers.back(), "5/6 Things");
 
-  controllers.push_back(TextEntry::Create(preview_panel, this));
+  controllers.push_back(TextEntry::Create(preview_panel, wx));
   AddPage(controllers.back(), "Text");
 
   bindEvents();
@@ -55,7 +51,8 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
 }
 
 void ControlPanel::bindEvents() {
-  Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &ControlPanel::tabChanged, this);
+  bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED,
+       [this](wxAuiNotebookEvent& event) -> void { this->tabChanged(event); });
 }
 
 void ControlPanel::tabChanged(wxAuiNotebookEvent& event) {

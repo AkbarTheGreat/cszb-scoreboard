@@ -37,7 +37,7 @@ namespace cszb_scoreboard {
 class MainView : public Frame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
-  auto controlPanel() -> ControlPanel* { return control_panel; }
+  auto controlPanel() -> ControlPanel* { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel* { return preview_panel.get(); }
 
  private:
@@ -55,7 +55,7 @@ class MainView : public Frame {
   void showSettings(
       wxCommandEvent& event);  // NOLINT(google-runtime-references)
 
-  ControlPanel* control_panel;
+  std::unique_ptr<ControlPanel> control_panel;
   SettingsDialog* settings_dialog;
   std::unique_ptr<PreviewPanel> preview_panel;
   QuickStatePanel* quick_state;
