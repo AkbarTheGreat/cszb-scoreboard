@@ -37,7 +37,7 @@ class FrameManager {
   static auto getInstance() -> FrameManager *;
   auto createMainView(const wxString &title, const wxPoint &pos,
                       const wxSize &size) -> MainView *;
-  auto createScreenPresenter(int monitor_number, ScreenText *widget)
+  auto createScreenPresenter(int monitor_number, const ScreenText &preview)
       -> ScreenPresenter *;
   inline auto mainView() -> MainView * { return main_view.get(); }
   void exitFrames();

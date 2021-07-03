@@ -32,9 +32,10 @@ auto FrameManager::createMainView(const wxString &title, const wxPoint &pos,
   return main_view.get();
 }
 
-auto FrameManager::createScreenPresenter(int monitor_number, ScreenText *widget)
+auto FrameManager::createScreenPresenter(int monitor_number,
+                                         const ScreenText &preview)
     -> ScreenPresenter * {
-  auto presenter = std::make_unique<ScreenPresenter>(monitor_number, widget);
+  auto presenter = std::make_unique<ScreenPresenter>(monitor_number, preview);
   ScreenPresenter *temporary = presenter.get();
   frames.emplace(std::move(presenter));
   return temporary;

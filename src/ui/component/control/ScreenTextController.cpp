@@ -68,8 +68,8 @@ void ScreenTextController::updateClicked(wxCommandEvent &event) {
 }
 
 void ScreenTextController::updatePreview() {
-  for (auto *screen : previewPanel()->all_screens()) {
-    updateScreenText(screen->widget());
+  for (auto *preview : previewPanel()->all_screens()) {
+    updateScreenText(preview->screen());
   }
 }
 

@@ -52,10 +52,10 @@ QuickStateEntry::QuickStateEntry(swx::Panel* wx, int id) : ScreenText(wx) {
   bindEvents(id);
 }
 
-QuickStateEntry::~QuickStateEntry() { screen()->Destroy(); }
+QuickStateEntry::~QuickStateEntry() { Destroy(); }
 
 void QuickStateEntry::bindEvents(int id) {
-  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
+  auto* parent = dynamic_cast<QuickStatePanel*>(GetParent());
 
   char command_button = '1' + id;
   if (id >= 9) {  // NOLINT(readability-magic-numbers) 9 is the highest single
@@ -64,7 +64,7 @@ void QuickStateEntry::bindEvents(int id) {
   }
   std::string tooltip = tooltipText(command_button);
 
-  for (auto* side : screen()->sides()) {
+  for (auto* side : sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
@@ -88,14 +88,14 @@ void QuickStateEntry::executeShortcut() {
   if (!initialized) {
     return;
   }
-  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
-  parent->executeShortcut(screen());
+  auto* parent = dynamic_cast<QuickStatePanel*>(GetParent());
+  parent->executeShortcut(this);
 }
 
 void QuickStateEntry::setShortcut() {
   initialized = true;
-  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
-  parent->setShortcut(screen());
+  auto* parent = dynamic_cast<QuickStatePanel*>(GetParent());
+  parent->setShortcut(this);
 }
 
 auto QuickStateEntry::tooltipText(char command_character) -> std::string {
@@ -124,22 +124,22 @@ void QuickStatePanel::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
 
   for (int i = 0; i < entries.size(); i++) {
-    entries[i]->screen()->addToSizer(sizer, i, 0);
+    entries[i]->addToSizer(sizer, i, 0);
   }
 
   SetSizerAndFit(sizer);
 }
 
-void QuickStatePanel::executeShortcut(ScreenText* screen) {
+void QuickStatePanel::executeShortcut(QuickStateEntry* entry) {
   FrameManager::getInstance()->mainView()->previewPanel()->setToPresenters(
-      screen);
+      entry);
 }
 
-void QuickStatePanel::setShortcut(ScreenText* screen) {
+void QuickStatePanel::setShortcut(QuickStateEntry* entry) {
   FrameManager::getInstance()
       ->mainView()
       ->controlPanel()
-      ->updateScreenTextFromSelected(screen);
+      ->updateScreenTextFromSelected(entry);
 }
 
 }  // namespace cszb_scoreboard

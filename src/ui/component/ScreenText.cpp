@@ -59,14 +59,14 @@ void ScreenText::setupPreview(const wxString& initial_text,
   initializeSides(text_sides);
 }
 
-void ScreenText::setupPresenter(ScreenText* preview, wxSize size) {
+void ScreenText::setupPresenter(const ScreenText& preview, wxSize size) {
   SetSize(size);
   std::vector<ScreenTextSide*> text_sides;
 
   wxSize split_size =
-      splitScreenSize(size.x, size.y, preview->text_sides.size());
+      splitScreenSize(size.x, size.y, preview.text_sides.size());
 
-  for (auto* source_text_side : preview->text_sides) {
+  for (auto* source_text_side : preview.text_sides) {
     text_sides.push_back(new ScreenTextSide(wx, source_text_side, split_size));
   }
 

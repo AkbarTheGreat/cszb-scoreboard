@@ -26,7 +26,8 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenThumbnail : public ScreenText {
  public:
-  ScreenThumbnail(swx::Panel* wx, int monitor_number, ScreenText* widget);
+  ScreenThumbnail(swx::Panel* wx, int monitor_number,
+                  const ScreenText& preview);
 
  private:
   static auto thumbnailSize(int monitor_number) -> wxSize;

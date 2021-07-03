@@ -52,11 +52,11 @@ ScreenPreview::ScreenPreview(swx::Panel* wx,
   screen_text = std::make_unique<ScreenText>(childPanel());
   screen_text->setupPreview(initial_text, sides, previewSize(monitor_number));
 
-  thumbnail =
-      std::make_unique<ScreenThumbnail>(childPanel(), monitor_number, widget());
+  thumbnail = std::make_unique<ScreenThumbnail>(childPanel(), monitor_number,
+                                                *screen_text);
   if (!sides[0].error()) {
     presenter = FrameManager::getInstance()->createScreenPresenter(
-        monitor_number, widget());
+        monitor_number, *screen_text);
   }
 
   positionWidgets();
@@ -85,8 +85,6 @@ auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
 
 auto ScreenPreview::controlPane() -> wxPanel* { return wx; }
 
-auto ScreenPreview::widget() -> ScreenText* { return screen_text.get(); }
-
 auto ScreenPreview::thumbnailWidget() -> ScreenText* { return thumbnail.get(); }
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
@@ -109,7 +107,7 @@ void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
   thumbnail->setAll(*screen_text);
 }
 
-void ScreenPreview::sendToPresenter() { sendToPresenter(widget()); }
+void ScreenPreview::sendToPresenter() { sendToPresenter(screen_text.get()); }
 
 void ScreenPreview::blackoutPresenter() {
   presenter->blackout();

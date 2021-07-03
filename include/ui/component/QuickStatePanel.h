@@ -29,7 +29,6 @@ namespace cszb_scoreboard {
 class QuickStateEntry : public ScreenText {
  public:
   QuickStateEntry(swx::Panel* wx, int id);
-  auto screen() -> ScreenText* { return this; }
   ~QuickStateEntry();
 
  private:
@@ -68,8 +67,8 @@ class QuickStateEntry : public ScreenText {
 class QuickStatePanel : public wxPanel {
  public:
   explicit QuickStatePanel(wxWindow* parent);
-  void executeShortcut(ScreenText* screen);
-  void setShortcut(ScreenText* screen);
+  void executeShortcut(QuickStateEntry* entry);
+  void setShortcut(QuickStateEntry* entry);
 
  private:
   void positionWidgets();

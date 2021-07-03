@@ -28,9 +28,9 @@ namespace cszb_scoreboard {
 const int THUMBNAIL_HEIGHT = 64;
 
 ScreenThumbnail::ScreenThumbnail(swx::Panel* wx, int monitor_number,
-                                 ScreenText* widget)
+                                 const ScreenText& preview)
     : ScreenText(wx) {
-  setupPresenter(widget, thumbnailSize(monitor_number));
+  setupPresenter(preview, thumbnailSize(monitor_number));
 }
 
 auto ScreenThumbnail::thumbnailSize(int monitor_number) -> wxSize {

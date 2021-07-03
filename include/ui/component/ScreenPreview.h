@@ -31,13 +31,36 @@ class ScreenPreview : public Panel {
  public:
   ScreenPreview(swx::Panel* wx, std::vector<proto::ScreenSide> sides,
                 int monitor_number);
-  auto widget() -> ScreenText*;
   void sendToPresenter(ScreenText* screen_text);
   void sendToPresenter();
   void blackoutPresenter();
   auto controlPane() -> wxPanel*;
   void resetFromSettings(int monitor_number);
+  auto screen() -> ScreenText* { return screen_text.get(); }
   auto thumbnailWidget() -> ScreenText*;
+
+  void setAllText(const wxString& text, int font_size, const Color& background,
+                  bool auto_fit, const proto::ScreenSide& side) {
+    screen_text->setAllText(text, font_size, background, auto_fit, side);
+  }
+  void setAllText(const std::vector<proto::RenderableText>& lines,
+                  const Color& background, bool auto_fit,
+                  const proto::ScreenSide& side) {
+    screen_text->setAllText(lines, background, auto_fit, side);
+  }
+  void setAllText(const std::vector<proto::RenderableText>& lines,
+                  const Color& background, bool auto_fit,
+                  const wxImage& logo_overlay, double overlay_screen_percentage,
+                  unsigned char logo_alpha, OverlayScreenPosition logo_position,
+                  const proto::ScreenSide& side) {
+    screen_text->setAllText(lines, background, auto_fit, logo_overlay,
+                            overlay_screen_percentage, logo_alpha,
+                            logo_position, side);
+  }
+  void setAll(const ScreenText& source) { screen_text->setAll(source); }
+  void setImage(const wxImage& image, const proto::ScreenSide& side) {
+    screen_text->setImage(image, side);
+  }
 
  private:
   std::unique_ptr<ScreenText> screen_text;

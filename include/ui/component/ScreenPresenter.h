@@ -26,7 +26,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenPresenter : public Frame {
  public:
-  ScreenPresenter(int monitor_number, ScreenText* widget);
+  ScreenPresenter(int monitor_number, const ScreenText& preview);
   void blackout() { screen_text->blackout(); }
   void setAll(const ScreenText& source) { screen_text->setAll(source); }
 

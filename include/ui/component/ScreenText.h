@@ -37,7 +37,7 @@ class ScreenText : public Panel {
   void setupPreview(const wxString& initial_text,
                     const std::vector<proto::ScreenSide>& sides, wxSize size);
 
-  void setupPresenter(ScreenText* preview, wxSize size);
+  void setupPresenter(const ScreenText& preview, wxSize size);
 
   void addText(const proto::RenderableText& text,
                const proto::ScreenSide& side);
