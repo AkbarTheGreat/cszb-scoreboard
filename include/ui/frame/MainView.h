@@ -38,7 +38,7 @@ class MainView : public Frame {
  public:
   MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
   auto controlPanel() -> ControlPanel* { return control_panel; }
-  auto previewPanel() -> PreviewPanel* { return preview_panel; }
+  auto previewPanel() -> PreviewPanel* { return preview_panel.get(); }
 
  private:
   void bindEvents();
@@ -57,7 +57,7 @@ class MainView : public Frame {
 
   ControlPanel* control_panel;
   SettingsDialog* settings_dialog;
-  PreviewPanel* preview_panel;
+  std::unique_ptr<PreviewPanel> preview_panel;
   QuickStatePanel* quick_state;
   UpdateTimer* update_timer;
 };

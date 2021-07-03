@@ -26,8 +26,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
-  aui_manager.SetManagedWindow(this);
+PreviewPanel::PreviewPanel(swx::Panel* wx) : Panel(wx) {
+  aui_manager.SetManagedWindow(wx);
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
         DisplayConfig::getInstance()->displayDetails(i);
@@ -46,7 +46,7 @@ PreviewPanel::PreviewPanel(wxWindow* parent) : wxPanel(parent) {
     }
     if (!sides.empty()) {
       screens.emplace_back(
-          new ScreenPreview(new swx::Panel(this), sides, display_info.id()));
+          new ScreenPreview(childPanel(), sides, display_info.id()));
     }
   }
 

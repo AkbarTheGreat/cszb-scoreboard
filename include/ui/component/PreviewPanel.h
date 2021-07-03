@@ -29,12 +29,15 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/ScreenTextSide.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
-class PreviewPanel : public wxPanel {
+class PreviewPanel : public Panel {
  public:
-  explicit PreviewPanel(wxWindow* parent);
+  explicit PreviewPanel(swx::Panel* wx);
+  ~PreviewPanel();
+
   void blackout(wxCommandEvent& event);  // NOLINT(google-runtime-references)
                                          // wxWidgets callback.
   inline auto all_screens() -> std::vector<ScreenPreview*> { return screens; }
@@ -46,7 +49,6 @@ class PreviewPanel : public wxPanel {
   auto preview(int index) -> ScreenPreview*;
 
  private:
-  ~PreviewPanel() override;
   wxAuiManager aui_manager;
   // Contains a view of the screens, does not own the screens themselves.
   std::vector<ScreenPreview*> screens;
