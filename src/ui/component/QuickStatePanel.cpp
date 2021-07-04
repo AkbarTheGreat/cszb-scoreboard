@@ -52,8 +52,6 @@ QuickStateEntry::QuickStateEntry(swx::Panel* wx, int id) : ScreenText(wx) {
   bindEvents(id);
 }
 
-QuickStateEntry::~QuickStateEntry() { Destroy(); }
-
 void QuickStateEntry::bindEvents(int id) {
   auto* parent = dynamic_cast<QuickStatePanel*>(GetParent());
 
@@ -128,7 +126,7 @@ void QuickStatePanel::positionWidgets() {
     entries[i]->addToSizer(sizer, i, 0);
   }
 
-  SetSizerAndFit(sizer);
+  setSizer(sizer);
 }
 
 void QuickStatePanel::executeShortcut(QuickStateEntry* entry) {

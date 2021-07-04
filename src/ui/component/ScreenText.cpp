@@ -36,7 +36,7 @@ const int BORDER_SIZE = 0;
 void ScreenText::setupPreview(const wxString& initial_text,
                               const std::vector<proto::ScreenSide>& sides,
                               wxSize size) {
-  SetSize(size);
+  setSize(size);
   std::vector<ScreenTextSide*> text_sides;
 
   wxSize split_size = splitScreenSize(size.x, size.y, sides.size());
@@ -60,7 +60,7 @@ void ScreenText::setupPreview(const wxString& initial_text,
 }
 
 void ScreenText::setupPresenter(const ScreenText& preview, wxSize size) {
-  SetSize(size);
+  setSize(size);
   std::vector<ScreenTextSide*> text_sides;
 
   wxSize split_size =
@@ -85,7 +85,7 @@ void ScreenText::initializeSides(
     this->text_sides.push_back(text_side);
     sizer->Add(text_side, 0, wxALL, BORDER_SIZE);
   }
-  SetSizerAndFit(sizer);
+  setSizer(sizer);
 }
 
 void ScreenText::resetAllText(const proto::ScreenSide& side) {
@@ -124,7 +124,7 @@ void ScreenText::setAllText(const wxString& text, int font_size,
   setAutoFit(auto_fit, side);
   setBackground(background, side);
   setText(text, font_size, side);
-  Refresh();
+  refresh();
 }
 
 void ScreenText::setAllText(const std::vector<proto::RenderableText>& lines,
@@ -137,7 +137,7 @@ void ScreenText::setAllText(const std::vector<proto::RenderableText>& lines,
     ProtoUtil::validateFont(line.mutable_font());
     setFontColor(line.mutable_font(), side);
     addText(line, side);
-    Refresh();
+    refresh();
   }
 }
 
@@ -157,7 +157,7 @@ void ScreenText::setAllText(const std::vector<proto::RenderableText>& lines,
     ProtoUtil::validateFont(line.mutable_font());
     setFontColor(line.mutable_font(), side);
     addText(line, side);
-    Refresh();
+    refresh();
   }
 }
 
@@ -224,11 +224,11 @@ void ScreenText::singleDisplay() {
   if (text_sides.size() < 2) {
     return;
   }
-  text_sides[0]->setSize(GetSize());
+  text_sides[0]->setSize(size());
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->Hide();
   }
-  Update();
+  update();
 }
 
 void ScreenText::splitDisplays() {
@@ -237,11 +237,11 @@ void ScreenText::splitDisplays() {
     return;
   }
   text_sides[0]->setSize(
-      splitScreenSize(GetSize().x, GetSize().y, text_sides.size()));
+      splitScreenSize(size().x, size().y, text_sides.size()));
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->Show();
   }
-  Update();
+  update();
 }
 
 auto ScreenText::splitScreenSize(int x, int y, int number_of_splits) -> wxSize {

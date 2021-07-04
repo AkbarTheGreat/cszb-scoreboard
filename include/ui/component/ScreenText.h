@@ -33,7 +33,7 @@ namespace cszb_scoreboard {
 
 class ScreenText : public Panel {
  public:
-  ScreenText(swx::Panel* wx) : Panel(wx) {}
+  explicit ScreenText(swx::Panel* wx) : Panel(wx) {}
   void setupPreview(const wxString& initial_text,
                     const std::vector<proto::ScreenSide>& sides, wxSize size);
 
@@ -45,7 +45,7 @@ class ScreenText : public Panel {
   void resetAllText(const proto::ScreenSide& side);
   void setImage(const wxImage& image, const proto::ScreenSide& side) {
     setImage(image, true, side);
-    Refresh();
+    refresh();
   }
   void setBackground(const Color& color, const proto::ScreenSide& side);
   void setBackgroundOverlay(const wxImage& overlay,

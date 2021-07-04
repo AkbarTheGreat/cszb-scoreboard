@@ -67,7 +67,7 @@ void ScreenPreview::positionWidgets() {
   thumbnail->addToSizer(sizer, 0, 0, 1, 1, DEFAULT_BORDER_SIZE,
                         wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
   screen_text->addToSizer(sizer, 1, 0, 1, 1, BORDER_SIZE, wxALL);
-  SetSizerAndFit(sizer);
+  setSizer(sizer);
 }
 
 auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
@@ -88,7 +88,7 @@ auto ScreenPreview::controlPane() -> wxPanel* { return wx; }
 auto ScreenPreview::thumbnailWidget() -> ScreenText* { return thumbnail.get(); }
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
-  screen_text->SetSize(previewSize(monitor_number));
+  screen_text->setSize(previewSize(monitor_number));
   proto::ScreenSide side =
       DisplayConfig::getInstance()->displayDetails(monitor_number).side();
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
@@ -99,7 +99,7 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
           effective_side);
     }
   }
-  screen_text->Refresh();
+  screen_text->refresh();
 }
 
 void ScreenPreview::sendToPresenter(ScreenText* screen_text) {

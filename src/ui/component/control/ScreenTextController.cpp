@@ -51,7 +51,7 @@ void ScreenTextController::positionWidgets() {
   sizer->Add(control_panel, 0, wxALL, BORDER_SIZE);
   sizer->Add(update_screens, 0, wxALL, BORDER_SIZE);
 
-  SetSizerAndFit(sizer);
+  setSizer(sizer);
 }
 
 void ScreenTextController::bindEvents() {

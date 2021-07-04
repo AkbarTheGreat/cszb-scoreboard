@@ -30,7 +30,6 @@ namespace cszb_scoreboard {
 class QuickStateEntry : public ScreenText {
  public:
   QuickStateEntry(swx::Panel* wx, int id);
-  ~QuickStateEntry();
 
  private:
   static auto tooltipText(char command_character) -> std::string;
