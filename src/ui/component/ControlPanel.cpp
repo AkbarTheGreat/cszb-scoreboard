@@ -29,12 +29,17 @@ namespace cszb_scoreboard {
 
 ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
     : Notebook(wx) {
-  addController(ScoreControl::Create(preview_panel, childPanel()), "Score");
-  addController(ImageFromLibrary::Create(preview_panel, childPanel()),
-                "Image Library");
-  addController(LocalImage::Create(preview_panel, childPanel()), "Load Image");
-  addController(ThingsMode::Create(preview_panel, childPanel()), "5/6 Things");
-  addController(TextEntry::Create(preview_panel, childPanel()), "Text");
+  addController(std::move(ScoreControl::Create(preview_panel, childPanel())),
+                "Score");
+  addController(
+      std::move(ImageFromLibrary::Create(preview_panel, childPanel())),
+      "Image Library");
+  addController(std::move(LocalImage::Create(preview_panel, childPanel())),
+                "Load Image");
+  addController(std::move(ThingsMode::Create(preview_panel, childPanel())),
+                "5/6 Things");
+  addController(std::move(TextEntry::Create(preview_panel, childPanel())),
+                "Text");
 
   bindEvents();
 
@@ -42,10 +47,10 @@ ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
   controllers[0]->updatePreview();
 }
 
-void ControlPanel::addController(ScreenTextController* tab,
+void ControlPanel::addController(std::unique_ptr<ScreenTextController> tab,
                                  const std::string& name) {
-  controllers.push_back(tab);
   addTab(tab->wx, name);
+  controllers.push_back(std::move(tab));
 }
 
 void ControlPanel::bindEvents() {

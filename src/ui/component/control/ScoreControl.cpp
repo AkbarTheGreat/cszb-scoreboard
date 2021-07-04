@@ -42,8 +42,8 @@ const std::string INTRO_MODE_LABEL = "Introduce Teams";
 const std::string SCORE_MODE_LABEL = "Show Scores";
 
 auto ScoreControl::Create(PreviewPanel* preview_panel, swx::Panel* wx)
-    -> ScoreControl* {
-  auto* control = new ScoreControl(preview_panel, wx);
+    -> std::unique_ptr<ScoreControl> {
+  auto control = std::make_unique<ScoreControl>(preview_panel, wx);
   control->initializeWidgets();
   return control;
 }

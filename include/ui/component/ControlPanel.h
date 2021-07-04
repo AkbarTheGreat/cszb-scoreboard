@@ -38,18 +38,19 @@ class ControlPanel : public Notebook {
 
 #ifdef SCOREBOARD_TESTING
   auto textController(int index) -> ScreenTextController* {
-    return controllers[index];
+    return controllers[index].get();
   }
 #endif
 
  private:
-  void addController(ScreenTextController* tab, const std::string& name);
+  void addController(std::unique_ptr<ScreenTextController> tab,
+                     const std::string& name);
   void bindEvents();
   void tabChanged(
       wxAuiNotebookEvent& event);  // NOLINT(google-runtime-references)
                                    // wxWidgets callback.
   // Holds a view to these controllers, does not own them.
-  std::vector<ScreenTextController*> controllers;
+  std::vector<std::unique_ptr<ScreenTextController>> controllers;
 };
 
 }  // namespace cszb_scoreboard

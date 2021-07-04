@@ -32,8 +32,10 @@ namespace cszb_scoreboard {
 
 class ThingsMode : public ScreenTextController {
  public:
+  ThingsMode(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenTextController(preview_panel, wx) {}
   static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
-      -> ThingsMode *;
+      -> std::unique_ptr<ThingsMode>;
   void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
                                         // wxWidgets callback.
   void updateScreenText(ScreenText *screen_text) override;
@@ -49,9 +51,6 @@ class ThingsMode : public ScreenTextController {
   ActivityPanel *home_activities_panel;
   ActivityPanel *away_activities_panel;
   ActivityPanel *all_activities_panel;
-
-  ThingsMode(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenTextController(preview_panel, wx) {}
 
   void createControls(wxPanel *control_panel) override;
 

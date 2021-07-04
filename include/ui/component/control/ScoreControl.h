@@ -32,12 +32,12 @@ namespace cszb_scoreboard {
 
 class ScoreControl : public ScreenTextController {
  public:
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
-      -> ScoreControl *;
-
- private:
   ScoreControl(PreviewPanel *preview_panel, swx::Panel *wx)
       : ScreenTextController(preview_panel, wx) {}
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
+      -> std::unique_ptr<ScoreControl>;
+
+ private:
   void addHomeAwayWidgetPair(wxSizer *sizer, wxWindow *home_widget,
                              wxWindow *away_widget);
   void addToEntry(wxTextCtrl *entry, int amount);

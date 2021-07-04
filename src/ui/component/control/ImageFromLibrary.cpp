@@ -32,8 +32,8 @@ const int NUM_PREVIEWS = 5;
 const wxSize PREVIEW_SIZE(160, 90);
 
 auto ImageFromLibrary::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> ImageFromLibrary * {
-  auto *library = new ImageFromLibrary(preview_panel, wx);
+    -> std::unique_ptr<ImageFromLibrary> {
+  auto library = std::make_unique<ImageFromLibrary>(preview_panel, wx);
   library->initializeWidgets();
   library->updatePreview();
   return library;

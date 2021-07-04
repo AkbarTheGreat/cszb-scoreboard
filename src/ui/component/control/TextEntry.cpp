@@ -30,8 +30,8 @@ const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 auto TextEntry::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> TextEntry * {
-  auto *entry = new TextEntry(preview_panel, wx);
+    -> std::unique_ptr<TextEntry> {
+  auto entry = std::make_unique<TextEntry>(preview_panel, wx);
   entry->initializeWidgets();
   entry->updatePreview();
   return entry;

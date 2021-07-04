@@ -36,8 +36,8 @@ const int SCROLL_X_STEP = 0;
 const int SCROLL_Y_STEP = 20;
 
 auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> ThingsMode * {
-  auto *entry = new ThingsMode(preview_panel, wx);
+    -> std::unique_ptr<ThingsMode> {
+  auto entry = std::make_unique<ThingsMode>(preview_panel, wx);
   entry->initializeWidgets();
   return entry;
 }
