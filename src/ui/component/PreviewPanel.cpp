@@ -22,6 +22,7 @@ limitations under the License.
 #include "config/DisplayConfig.h"
 #include "config/TeamConfig.h"
 #include "ui/component/Menu.h"
+#include "ui/frame/FrameManager.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -51,7 +52,6 @@ PreviewPanel::PreviewPanel(swx::Panel* wx) : Panel(wx) {
   }
 
   positionWidgets();
-  bindEvents();
 }
 
 PreviewPanel::~PreviewPanel() { aui_manager.UnInit(); }
@@ -67,11 +67,6 @@ void PreviewPanel::positionWidgets() {
     aui_manager.AddPane(pane, pane_style);
   }
   aui_manager.Update();
-}
-
-void PreviewPanel::bindEvents() {
-  GetParent()->Bind(wxEVT_COMMAND_MENU_SELECTED, &PreviewPanel::blackout, this,
-                    DISPLAY_BLACK_OUT);
 }
 
 auto PreviewPanel::numPreviews() -> int { return screens.size(); }

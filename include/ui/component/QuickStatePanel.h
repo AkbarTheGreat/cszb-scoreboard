@@ -27,9 +27,11 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+class QuickStatePanel;
+
 class QuickStateEntry : public ScreenText {
  public:
-  QuickStateEntry(swx::Panel* wx, int id);
+  QuickStateEntry(swx::Panel* wx, QuickStatePanel* parent, int id);
 
  private:
   static auto tooltipText(char command_character) -> std::string;
@@ -60,6 +62,7 @@ class QuickStateEntry : public ScreenText {
     setShortcut();
   }
 
+  QuickStatePanel* parent; // unowned pointer to the parent of this object.
   wxButton *set_button, *execute_button;
   bool initialized = false;
 };

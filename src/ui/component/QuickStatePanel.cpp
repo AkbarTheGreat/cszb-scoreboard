@@ -36,7 +36,8 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(swx::Panel* wx, int id) : ScreenText(wx) {
+QuickStateEntry::QuickStateEntry(swx::Panel* wx, QuickStatePanel* parent, int id) : ScreenText(wx) {
+  this->parent = parent;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
                wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
 
@@ -53,8 +54,6 @@ QuickStateEntry::QuickStateEntry(swx::Panel* wx, int id) : ScreenText(wx) {
 }
 
 void QuickStateEntry::bindEvents(int id) {
-  auto* parent = dynamic_cast<QuickStatePanel*>(GetParent());
-
   char command_button = '1' + id;
   if (id >= 9) {  // NOLINT(readability-magic-numbers) 9 is the highest single
                   // digit number.
@@ -86,13 +85,11 @@ void QuickStateEntry::executeShortcut() {
   if (!initialized) {
     return;
   }
-  auto* parent = dynamic_cast<QuickStatePanel*>(GetParent());
   parent->executeShortcut(this);
 }
 
 void QuickStateEntry::setShortcut() {
   initialized = true;
-  auto* parent = dynamic_cast<QuickStatePanel*>(GetParent());
   parent->setShortcut(this);
 }
 
@@ -114,7 +111,7 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
 QuickStatePanel::QuickStatePanel(swx::Panel* wx) : Panel(wx) {
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
     entries.push_back(
-        std::move(std::make_unique<QuickStateEntry>(childPanel(), i)));
+        std::move(std::make_unique<QuickStateEntry>(childPanel(), this, i)));
   }
   positionWidgets();
 }

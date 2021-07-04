@@ -54,12 +54,9 @@ class Panel {
   // passing wx widgets along.
   swx::Panel *wx;
 
-  //  This is also a temporary hack while things are being reworked
-  wxWindow *GetParent() const { return wx->GetParent(); }
-
  protected:
   void update() const { wx->Update(); }
-  wxSize size() const { return wx->GetSize(); }
+  auto size() const -> wxSize { return wx->GetSize(); }
 };
 
 }  // namespace cszb_scoreboard

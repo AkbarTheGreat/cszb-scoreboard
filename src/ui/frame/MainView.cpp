@@ -103,6 +103,12 @@ void MainView::bindEvents() {
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent& event) -> void { this->onAbout(event); },
       wxID_ABOUT);
+  bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [this](wxCommandEvent& event) -> void {
+        this->preview_panel->blackout(event);
+      },
+      DISPLAY_BLACK_OUT);
 }
 
 void MainView::onExit(wxCommandEvent& event) { closeWindow(); }

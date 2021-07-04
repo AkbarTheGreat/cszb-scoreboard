@@ -52,7 +52,6 @@ class PreviewPanel : public Panel {
   wxAuiManager aui_manager;
   // Contains a view of the screens, does not own the screens themselves.
   std::vector<ScreenPreview*> screens;
-  void bindEvents();
   auto numPreviews() -> int;
   void positionWidgets();
 };

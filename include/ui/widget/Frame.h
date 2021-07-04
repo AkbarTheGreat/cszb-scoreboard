@@ -24,8 +24,8 @@ limitations under the License.
 #include <vector>
 
 #include "ui/widget/swx/Frame.h"
-#include "ui/widget/swx/Panel.h"
 #include "ui/widget/swx/Notebook.h"
+#include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
 
@@ -40,6 +40,15 @@ class Frame {
   // Injectable constructor, for testing.
   explicit Frame(swx::Frame *frame) { wx = frame; }
   virtual ~Frame() { wx->Destroy(); }
+
+  void bind(const wxEventTypeTag<wxCommandEvent> &eventType,
+            const std::function<void(wxCommandEvent &)> &lambda, int id) {
+    wx->Bind(eventType, lambda, id);
+  }
+  void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
+            const std::function<void(wxCloseEvent &)> &lambda) {
+    wx->Bind(eventType, lambda);
+  }
 
   void focus() { wx->SetFocus(); };
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
@@ -58,15 +67,6 @@ class Frame {
   void menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu);
   void setDimensions(const wxRect &dim);
   void setSizer(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
-
-  void bind(const wxEventTypeTag<wxCommandEvent> &eventType,
-            const std::function<void(wxCommandEvent &)> &lambda, int id) {
-    wx->Bind(eventType, lambda, id);
-  }
-  void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
-            const std::function<void(wxCloseEvent &)> &lambda) {
-    wx->Bind(eventType, lambda);
-  }
 
   auto childPanel(wxWindowID id = wxID_ANY,
                   const wxPoint &pos = wxDefaultPosition,
