@@ -44,7 +44,7 @@ auto GuiTest::mainView() -> MainView * {
 }
 
 auto GuiTest::textEntry() -> TextEntry * {
-  mainView()->controlPanel()->SetSelection(TEXT_ENTRY_TAB_INDEX);
+  mainView()->controlPanel()->setSelection(TEXT_ENTRY_TAB_INDEX);
   return dynamic_cast<TextEntry *>(
       mainView()->controlPanel()->textController(TEXT_ENTRY_TAB_INDEX));
 }

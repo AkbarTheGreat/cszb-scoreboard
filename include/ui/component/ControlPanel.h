@@ -43,6 +43,7 @@ class ControlPanel : public Notebook {
 #endif
 
  private:
+  void addController(ScreenTextController* tab, const std::string& name);
   void bindEvents();
   void tabChanged(
       wxAuiNotebookEvent& event);  // NOLINT(google-runtime-references)

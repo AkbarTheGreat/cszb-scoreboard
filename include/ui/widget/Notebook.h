@@ -30,22 +30,21 @@ namespace cszb_scoreboard {
 class Notebook {
  public:
   explicit Notebook(swx::Notebook *notebook) { wx = notebook; }
-  void focus() { wx->SetFocus(); };
+  void addTab(wxWindow *tab, const std::string &name) const {
+    wx->AddPage(tab, name);
+  }
   void addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span = 1,
                   int column_span = 1, int border_size = DEFAULT_BORDER_SIZE,
                   int flag = wxALL | wxGROW);
   void bind(const wxEventTypeTag<wxAuiNotebookEvent> &eventType,
-            const std::function<void(wxAuiNotebookEvent &)> &lambda) {
+            const std::function<void(wxAuiNotebookEvent &)> &lambda) const {
     wx->Bind(eventType, lambda);
   }
+  void focus() const { wx->SetFocus(); };
+  [[nodiscard]] auto selection() const -> int { return wx->GetSelection(); }
+  void setSelection(int selection) { wx->SetSelection(selection); }
 
-  void AddPage(wxWindow *page, const wxString &caption) {
-    wx->AddPage(page, caption);
-  }
-  int GetSelection() { return wx->GetSelection(); }
-
-  // TODO(akbar): make this private once construction is all moved away from
-  // passing wx widgets along.
+ private:
   swx::Notebook *wx;
 };
 

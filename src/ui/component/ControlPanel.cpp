@@ -29,25 +29,22 @@ namespace cszb_scoreboard {
 
 ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
     : Notebook(wx) {
-  controllers.push_back(ScoreControl::Create(preview_panel, wx));
-  AddPage(controllers.back(), "Score");
-
-  controllers.push_back(ImageFromLibrary::Create(preview_panel, wx));
-  AddPage(controllers.back(), "Image Library");
-
-  controllers.push_back(LocalImage::Create(preview_panel, wx));
-  AddPage(controllers.back(), "Load Image");
-
-  controllers.push_back(ThingsMode::Create(preview_panel, wx));
-  AddPage(controllers.back(), "5/6 Things");
-
-  controllers.push_back(TextEntry::Create(preview_panel, wx));
-  AddPage(controllers.back(), "Text");
+  addController(ScoreControl::Create(preview_panel, wx), "Score");
+  addController(ImageFromLibrary::Create(preview_panel, wx), "Image Library");
+  addController(LocalImage::Create(preview_panel, wx), "Load Image");
+  addController(ThingsMode::Create(preview_panel, wx), "5/6 Things");
+  addController(TextEntry::Create(preview_panel, wx), "Text");
 
   bindEvents();
 
   // Force proper initialization of the preview at application start.
   controllers[0]->updatePreview();
+}
+
+void ControlPanel::addController(ScreenTextController* tab,
+                                 const std::string& name) {
+  controllers.push_back(tab);
+  addTab(tab, name);
 }
 
 void ControlPanel::bindEvents() {
@@ -60,7 +57,7 @@ void ControlPanel::tabChanged(wxAuiNotebookEvent& event) {
 }
 
 void ControlPanel::updateScreenTextFromSelected(ScreenText* screen_text) {
-  controllers[GetSelection()]->updateScreenText(screen_text);
+  controllers[selection()]->updateScreenText(screen_text);
 }
 
 }  // namespace cszb_scoreboard
