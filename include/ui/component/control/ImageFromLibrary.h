@@ -34,7 +34,7 @@ namespace cszb_scoreboard {
 
 class ImageFromLibrary : public ScreenImageController {
  public:
-  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
       -> ImageFromLibrary *;
 
  private:
@@ -50,8 +50,8 @@ class ImageFromLibrary : public ScreenImageController {
   std::vector<wxStaticText *> image_names;
   EditImageLibraryDialog *edit_dialog;
 
-  ImageFromLibrary(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenImageController(preview_panel, parent) {}
+  ImageFromLibrary(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenImageController(preview_panel, wx) {}
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
   void positionWidgets(wxPanel *control_panel) override;

@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/gbsizer.h>
 
 #include "ScoreboardCommon.h"
+#include "ui/widget/Panel.h"
 #include "ui/widget/swx/Notebook.h"
 #include "ui/widget/swx/Panel.h"
 
@@ -39,6 +40,13 @@ class Notebook {
   void bind(const wxEventTypeTag<wxAuiNotebookEvent> &eventType,
             const std::function<void(wxAuiNotebookEvent &)> &lambda) const {
     wx->Bind(eventType, lambda);
+  }
+  auto childPanel(wxWindowID id = wxID_ANY,
+                  const wxPoint &pos = wxDefaultPosition,
+                  const wxSize &size = wxDefaultSize,
+                  long style = wxTAB_TRAVERSAL,
+                  const wxString &name = wxPanelNameStr) -> swx::Panel * {
+    return new swx::Panel(wx, id, pos, size, style, name);
   }
   void focus() const { wx->SetFocus(); };
   [[nodiscard]] auto selection() const -> int { return wx->GetSelection(); }

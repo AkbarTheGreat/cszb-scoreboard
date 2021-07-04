@@ -28,7 +28,7 @@ namespace cszb_scoreboard {
 
 class LocalImage : public ScreenImageController {
  public:
-  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
       -> LocalImage *;
 
  private:
@@ -37,8 +37,8 @@ class LocalImage : public ScreenImageController {
   wxButton *paste_button;
   wxPanel *inner_panel;
 
-  LocalImage(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenImageController(preview_panel, parent) {}
+  LocalImage(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenImageController(preview_panel, wx) {}
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
   void positionWidgets(wxPanel *control_panel) override;

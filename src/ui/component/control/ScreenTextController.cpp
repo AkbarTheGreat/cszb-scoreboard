@@ -29,17 +29,17 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
-                                           wxWindow *parent)
-    : wxPanel(parent) {
+                                           swx::Panel *wx)
+    : Panel(wx) {
   this->preview_panel = preview_panel;
 }
 
 void ScreenTextController::initializeWidgets() {
-  update_screens = new wxButton(this, wxID_ANY, "Send to Monitors");
+  update_screens = new wxButton(wx, wxID_ANY, "Send to Monitors");
   update_screens->SetToolTip("Ctrl+Space");
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, WXK_SPACE,
                                         update_screens->GetId());
-  control_panel = new wxPanel(this);
+  control_panel = new wxPanel(wx);
   createControls(control_panel);
   positionWidgets();
   bindEvents();

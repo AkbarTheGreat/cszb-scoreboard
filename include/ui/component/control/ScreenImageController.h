@@ -38,8 +38,8 @@ class ScreenImageController : public ScreenTextController {
       away_screen_image_name;
   TeamSelector *screen_selection;
 
-  ScreenImageController(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenTextController(preview_panel, parent) {}
+  ScreenImageController(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenTextController(preview_panel, wx) {}
   void bindEvents();
   void createControls(wxPanel *control_panel) override;
   virtual void positionWidgets(wxPanel *control_panel) = 0;

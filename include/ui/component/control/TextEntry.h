@@ -31,7 +31,7 @@ namespace cszb_scoreboard {
 
 class TextEntry : public ScreenTextController {
  public:
-  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
       -> TextEntry *;
   auto textField() -> wxTextCtrl *;
   void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
@@ -58,7 +58,7 @@ class TextEntry : public ScreenTextController {
   Color away_color;
   Color all_color;
 
-  TextEntry(PreviewPanel *preview_panel, wxWindow *parent);
+  TextEntry(PreviewPanel *preview_panel, swx::Panel *wx);
   void updateScreenText(ScreenText *screen_text) override;
   void createControls(wxPanel *control_panel) override;
 

@@ -29,11 +29,12 @@ namespace cszb_scoreboard {
 
 ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
     : Notebook(wx) {
-  addController(ScoreControl::Create(preview_panel, wx), "Score");
-  addController(ImageFromLibrary::Create(preview_panel, wx), "Image Library");
-  addController(LocalImage::Create(preview_panel, wx), "Load Image");
-  addController(ThingsMode::Create(preview_panel, wx), "5/6 Things");
-  addController(TextEntry::Create(preview_panel, wx), "Text");
+  addController(ScoreControl::Create(preview_panel, childPanel()), "Score");
+  addController(ImageFromLibrary::Create(preview_panel, childPanel()),
+                "Image Library");
+  addController(LocalImage::Create(preview_panel, childPanel()), "Load Image");
+  addController(ThingsMode::Create(preview_panel, childPanel()), "5/6 Things");
+  addController(TextEntry::Create(preview_panel, childPanel()), "Text");
 
   bindEvents();
 
@@ -44,7 +45,7 @@ ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
 void ControlPanel::addController(ScreenTextController* tab,
                                  const std::string& name) {
   controllers.push_back(tab);
-  addTab(tab, name);
+  addTab(tab->wx, name);
 }
 
 void ControlPanel::bindEvents() {

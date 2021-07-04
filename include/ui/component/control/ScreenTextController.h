@@ -24,12 +24,13 @@ limitations under the License.
 
 #include "config.pb.h"
 #include "ui/component/PreviewPanel.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
 // Subclasses should create members via a Create static method which calls
 // initializeWidgets() on the newly created pointer.
-class ScreenTextController : public wxPanel {
+class ScreenTextController : public Panel {
  public:
   /* Called externally to request an update to the given panel.  All internally
    * triggered updates to previews should filter  through here, for consistency.
@@ -45,7 +46,7 @@ class ScreenTextController : public wxPanel {
   virtual void createControls(wxPanel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
    * Defaults to all screens, may be overridden for more control. */
-  ScreenTextController(PreviewPanel *preview_panel, wxWindow *parent);
+  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx);
   void initializeWidgets();
   auto previewPanel() -> PreviewPanel *;
   wxPanel *control_panel;

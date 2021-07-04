@@ -41,9 +41,9 @@ const std::string NO_LOGO_MESSAGE = "<No Logo Selected>";
 const std::string INTRO_MODE_LABEL = "Introduce Teams";
 const std::string SCORE_MODE_LABEL = "Show Scores";
 
-auto ScoreControl::Create(PreviewPanel* preview_panel, wxWindow* parent)
+auto ScoreControl::Create(PreviewPanel* preview_panel, swx::Panel* wx)
     -> ScoreControl* {
-  auto* control = new ScoreControl(preview_panel, parent);
+  auto* control = new ScoreControl(preview_panel, wx);
   control->initializeWidgets();
   return control;
 }
@@ -210,8 +210,8 @@ void ScoreControl::positionWidgets(wxPanel* control_panel) {
 }
 
 void ScoreControl::selectLogo(wxCommandEvent& event) {
-  wxFileDialog dialog(this, _("Select Logo Image"), "", "",
-                      LOGO_SELECTION_STRING, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  wxFileDialog dialog(wx, _("Select Logo Image"), "", "", LOGO_SELECTION_STRING,
+                      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() != wxID_CANCEL) {
     FilesystemPath selected_file =
         FilesystemPath(std::string(dialog.GetPath()));

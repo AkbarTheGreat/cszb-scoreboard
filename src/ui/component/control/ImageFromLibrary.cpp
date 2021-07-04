@@ -31,9 +31,9 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int NUM_PREVIEWS = 5;
 const wxSize PREVIEW_SIZE(160, 90);
 
-auto ImageFromLibrary::Create(PreviewPanel *preview_panel, wxWindow *parent)
+auto ImageFromLibrary::Create(PreviewPanel *preview_panel, swx::Panel *wx)
     -> ImageFromLibrary * {
-  auto *library = new ImageFromLibrary(preview_panel, parent);
+  auto *library = new ImageFromLibrary(preview_panel, wx);
   library->initializeWidgets();
   library->updatePreview();
   return library;
@@ -123,7 +123,7 @@ void ImageFromLibrary::doSearch(wxCommandEvent &event) {
 
 void ImageFromLibrary::editButton(wxCommandEvent &event) {
   edit_dialog = new EditImageLibraryDialog();
-  edit_dialog->Create(this);
+  edit_dialog->Create(wx);
   edit_dialog->Show();
   setImages(search_box->GetValue());
 }
