@@ -58,7 +58,7 @@ class MainView : public Frame {
   std::unique_ptr<ControlPanel> control_panel;
   SettingsDialog* settings_dialog;
   std::unique_ptr<PreviewPanel> preview_panel;
-  QuickStatePanel* quick_state;
+  std::unique_ptr<QuickStatePanel> quick_state;
   UpdateTimer* update_timer;
 };
 

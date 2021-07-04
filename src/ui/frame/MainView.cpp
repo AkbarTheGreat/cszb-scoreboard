@@ -41,8 +41,9 @@ MainView::MainView(const wxString& title, const wxPoint& pos,
                " displays found.");
 
   preview_panel = std::make_unique<PreviewPanel>(childPanel());
-  control_panel = std::make_unique<ControlPanel>(childNotebook(), preview_panel.get());
-  quick_state = new QuickStatePanel(this->wx);
+  control_panel =
+      std::make_unique<ControlPanel>(childNotebook(), preview_panel.get());
+  quick_state = std::make_unique<QuickStatePanel>(childPanel());
 
   positionWidgets();
   bindEvents();
@@ -80,8 +81,8 @@ void MainView::createMenu() {
 void MainView::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
   preview_panel->addToSizer(sizer, 0, 0);
-  control_panel->addToSizer(sizer,  1, 0);
-  UiUtil::addToGridBag(sizer, quick_state, 0, 1, 2, 1);
+  control_panel->addToSizer(sizer, 1, 0);
+  quick_state->addToSizer(sizer, 0, 1, 2, 1);
   setSizer(sizer);
 }
 

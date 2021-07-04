@@ -113,9 +113,10 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
   return buffer;
 }
 
-QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
+QuickStatePanel::QuickStatePanel(swx::Panel* wx) : Panel(wx) {
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
-    entries.push_back(std::move(std::make_unique<QuickStateEntry>(new swx::Panel(this), i)));
+    entries.push_back(
+        std::move(std::make_unique<QuickStateEntry>(childPanel(), i)));
   }
   positionWidgets();
 }

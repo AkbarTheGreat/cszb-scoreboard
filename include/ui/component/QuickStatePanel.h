@@ -23,6 +23,7 @@ limitations under the License.
 #include <vector>
 
 #include "ui/component/ScreenText.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
@@ -64,9 +65,9 @@ class QuickStateEntry : public ScreenText {
   bool initialized = false;
 };
 
-class QuickStatePanel : public wxPanel {
+class QuickStatePanel : public Panel {
  public:
-  explicit QuickStatePanel(wxWindow* parent);
+  explicit QuickStatePanel(swx::Panel* wx);
   void executeShortcut(QuickStateEntry* entry);
   void setShortcut(QuickStateEntry* entry);
 
