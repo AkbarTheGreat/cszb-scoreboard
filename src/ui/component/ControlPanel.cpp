@@ -49,7 +49,7 @@ ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
 
 void ControlPanel::addController(std::unique_ptr<ScreenTextController> tab,
                                  const std::string& name) {
-  addTab(tab->wx, name);
+  addTab(*tab, name);
   controllers.push_back(std::move(tab));
 }
 

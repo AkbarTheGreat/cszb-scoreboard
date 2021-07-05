@@ -31,8 +31,8 @@ namespace cszb_scoreboard {
 class Notebook {
  public:
   explicit Notebook(swx::Notebook *notebook) { wx = notebook; }
-  void addTab(wxWindow *tab, const std::string &name) const {
-    wx->AddPage(tab, name);
+  void addTab(const Panel &tab, const std::string &name) const {
+    wx->AddPage(tab.wx, name);
   }
   void addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span = 1,
                   int column_span = 1, int border_size = DEFAULT_BORDER_SIZE,
