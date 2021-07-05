@@ -60,6 +60,12 @@ void DisplayConfig::detectDisplays() {
 void DisplayConfig::detectExternalMonitors() {
   int numscreens = wxDisplay::GetCount();
 
+#ifdef SCOREBOARD_TESTING
+  // Force this to be 1 screen for tests, as all of our testing assumed that to
+  // be the case anyway.
+  numscreens = 1;
+#endif
+
   // Currently, don't re-detect displays if it matches our saved state,
   // otherwise, we'll re-initialize them.  In the future, we may get fancier
   // with trying to save the state of existing displays if new ones are added,
