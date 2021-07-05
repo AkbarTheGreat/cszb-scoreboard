@@ -32,7 +32,7 @@ namespace cszb_scoreboard {
 class Panel {
  public:
   explicit Panel(swx::Panel *panel) { wx = panel; }
-  virtual ~Panel() { wx->Destroy(); }
+  virtual ~Panel();
 
   void addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span = 1,
                   int column_span = 1, int border_size = DEFAULT_BORDER_SIZE,
@@ -56,7 +56,10 @@ class Panel {
 
  protected:
   void update() const { wx->Update(); }
-  auto size() const -> wxSize { return wx->GetSize(); }
+  [[nodiscard]] auto size() const -> wxSize { return wx->GetSize(); }
+  // If true, this panel will destory its own wxPanel object rather than rely on
+  // the parent wxWidget to do it for us.
+  bool should_self_delete = false;
 };
 
 }  // namespace cszb_scoreboard

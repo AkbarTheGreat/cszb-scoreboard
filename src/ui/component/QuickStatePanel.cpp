@@ -36,8 +36,11 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(swx::Panel* wx, QuickStatePanel* parent, int id) : ScreenText(wx) {
+QuickStateEntry::QuickStateEntry(swx::Panel* wx, QuickStatePanel* parent,
+                                 int id)
+    : ScreenText(wx) {
   this->parent = parent;
+  should_self_delete = true;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
                wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
 

@@ -21,9 +21,16 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+Panel::~Panel() {
+  if (should_self_delete) {
+    wx->Destroy();
+  }
+}
+
 void Panel::addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span,
                        int column_span, int border_size, int flag) {
   sizer->Add(wx, wxGBPosition(row, column), wxGBSpan(row_span, column_span),
              flag, border_size);
 }
+
 }  // namespace cszb_scoreboard
