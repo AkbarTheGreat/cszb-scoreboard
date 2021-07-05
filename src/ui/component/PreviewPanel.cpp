@@ -46,8 +46,8 @@ PreviewPanel::PreviewPanel(swx::Panel* wx) : Panel(wx) {
       sides.back().set_away(true);
     }
     if (!sides.empty()) {
-      screens.emplace_back(
-          new ScreenPreview(childPanel(), sides, display_info.id()));
+      screens.emplace_back(std::move(std::make_unique<ScreenPreview>(
+          childPanel(), sides, display_info.id())));
     }
   }
 
@@ -61,7 +61,7 @@ void PreviewPanel::positionWidgets() {
   pane_style.CenterPane();
   pane_style.Top();
   pane_style.CloseButton(false);
-  for (auto* screen : screens) {
+  for (const auto& screen : screens) {
     wxPanel* pane = screen->controlPane();
     pane_style.MinSize(pane->GetSize());
     aui_manager.AddPane(pane, pane_style);
@@ -73,19 +73,25 @@ auto PreviewPanel::numPreviews() -> int { return screens.size(); }
 
 auto PreviewPanel::preview(int index) -> ScreenPreview* {
   assert(index >= 0 && index < screens.size());
-  return screens[index];
+  return screens[index].get();
+}
+
+void PreviewPanel::forAllScreens(
+    const std::function<void(ScreenPreview*)>& lambda) {
+  for (const auto& preview : screens) {
+    lambda(preview.get());
+  }
 }
 
 void PreviewPanel::setToPresenters(ScreenText* screen_text) {
-  for (auto* preview : screens) {
+  forAllScreens([screen_text](ScreenPreview* preview) -> void {
     preview->sendToPresenter(screen_text);
-  }
+  });
 }
 
 void PreviewPanel::updatePresenters() {
-  for (auto* preview : screens) {
-    preview->sendToPresenter();
-  }
+  forAllScreens(
+      [](ScreenPreview* preview) -> void { preview->sendToPresenter(); });
 }
 
 void PreviewPanel::updatePreviewsFromSettings() {
@@ -106,9 +112,8 @@ void PreviewPanel::updatePreviewsFromSettings() {
 }
 
 void PreviewPanel::blackout(wxCommandEvent& event) {
-  for (auto* preview : screens) {
-    preview->blackoutPresenter();
-  }
+  forAllScreens(
+      [](ScreenPreview* preview) -> void { preview->blackoutPresenter(); });
 }
 
 }  // namespace cszb_scoreboard

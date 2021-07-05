@@ -40,7 +40,9 @@ class PreviewPanel : public Panel {
 
   void blackout(wxCommandEvent& event);  // NOLINT(google-runtime-references)
                                          // wxWidgets callback.
-  inline auto all_screens() -> std::vector<ScreenPreview*> { return screens; }
+  // inline auto all_screens() -> std::vector<ScreenPreview*> { return screens;
+  // }
+  void forAllScreens(const std::function<void(ScreenPreview*)>& lambda);
   void setToPresenters(ScreenText* screen_text);
   void updatePresenters();
   void updatePreviewsFromSettings();
@@ -51,7 +53,7 @@ class PreviewPanel : public Panel {
  private:
   wxAuiManager aui_manager;
   // Contains a view of the screens, does not own the screens themselves.
-  std::vector<ScreenPreview*> screens;
+  std::vector<std::unique_ptr<ScreenPreview>> screens;
   auto numPreviews() -> int;
   void positionWidgets();
 };
