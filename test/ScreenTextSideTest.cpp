@@ -16,12 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <wx/gbsizer.h>
 #include <wx/wx.h>
 
 #include "config/TeamConfig.h"
 #include "gtest/gtest.h"
 #include "test/TestUtil.h"
+#include "ui/UiUtil.h"
 #include "ui/component/ScreenTextSide.h"
+#include "ui/widget/Frame.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard ::test {
@@ -29,17 +32,17 @@ namespace cszb_scoreboard ::test {
 static const int STARTING_WIDTH = 50;
 static const int STARTING_HEIGHT = 50;
 
-class TestFrame : public wxFrame {
+class TestFrame : public Frame {
  public:
   ScreenTextSide *screen_text_side;
 
-  TestFrame() : wxFrame(nullptr, wxID_ANY, "ScreenTextSideTest") {
+  TestFrame() : Frame("ScreenTextSideTest") {
     screen_text_side =
-        new ScreenTextSide(this, "Text", ProtoUtil::homeSide(),
+        new ScreenTextSide(childPanel(), "Text", ProtoUtil::homeSide(),
                            wxSize(STARTING_WIDTH, STARTING_HEIGHT));
-    wxSizer *sizer = new wxFlexGridSizer(1, 1, 0, 0);
-    sizer->Add(screen_text_side);
-    this->SetSizerAndFit(sizer);
+    auto *sizer = new wxGridBagSizer();
+    screen_text_side->addToSizer(sizer, 0, 0);
+    this->setSizer(sizer);
   }
 };
 
@@ -49,7 +52,7 @@ class TestApp : public wxApp {
 
   auto OnInit() -> bool override {
     frame = new TestFrame();
-    frame->Show(true);
+    frame->show(true);
     return true;
   }
 };
@@ -73,7 +76,7 @@ class ScreenTextSideTest : public testing::Test {
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ScreenTextSideTest, getExtents) {
-  wxClientDC dc(screenText());
+  wxClientDC dc(screenText()->wx);
 
   wxSize size = ScreenTextSide::getTextExtent(&dc, "Test Text");
   int line_width = size.GetWidth();

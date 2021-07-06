@@ -68,9 +68,13 @@ void QuickStateEntry::bindEvents(int id) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
-    side->Bind(wxEVT_RIGHT_UP, &QuickStateEntry::setShortcutFromPanel, this);
-    side->Bind(wxEVT_LEFT_UP, &QuickStateEntry::executeShortcutFromPanel, this);
-    side->SetToolTip(tooltip);
+    side->bind(wxEVT_RIGHT_UP, [this](wxMouseEvent& event) -> void {
+      this->setShortcutFromPanel(event);
+    });
+    side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent& event) -> void {
+      this->executeShortcutFromPanel(event);
+    });
+    side->toolTip(tooltip);
   }
 
   execute_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,

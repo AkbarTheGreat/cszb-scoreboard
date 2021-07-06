@@ -45,10 +45,20 @@ class Panel {
       -> swx::Panel * {
     return new swx::Panel(wx, id, pos, size, style, name);
   }
-
+  void bind(const wxEventTypeTag<wxMouseEvent> &eventType,
+            const std::function<void(wxMouseEvent &)> &lambda) const {
+    wx->Bind(eventType, lambda);
+  }
+  void bind(const wxEventTypeTag<wxPaintEvent> &eventType,
+            const std::function<void(wxPaintEvent &)> &lambda) const {
+    wx->Bind(eventType, lambda);
+  }
+  void hide() { wx->Hide(); }
   void refresh() const { wx->Refresh(); }
   void setSize(const wxSize &size) const { wx->SetSize(size); }
   void setSizer(wxSizer *sizer) const { wx->SetSizerAndFit(sizer); }
+  void show() { wx->Show(); }
+  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.

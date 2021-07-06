@@ -28,16 +28,17 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "ui/graphics/Color.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
 enum class OverlayScreenPosition { Centered, BottomLeft };
 
-class ScreenTextSide : public wxPanel {
+class ScreenTextSide : public Panel {
  public:
-  ScreenTextSide(wxWindow* parent, const wxString& initial_text,
+  ScreenTextSide(swx::Panel* wx, const wxString& initial_text,
                  const proto::ScreenSide& side, wxSize size);
-  ScreenTextSide(wxWindow* parent, ScreenTextSide* source_side, wxSize size);
+  ScreenTextSide(swx::Panel* wx, ScreenTextSide* source_side, wxSize size);
 
   void addText(const proto::RenderableText& text,
                const proto::ScreenSide& side);

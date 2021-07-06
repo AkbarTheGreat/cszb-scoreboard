@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "ui/component/ScreenText.h"
 
+#include <wx/gbsizer.h>
 #include <wx/image.h>
 #include <wx/tokenzr.h>
 
@@ -49,8 +50,9 @@ void ScreenText::setupPreview(const wxString& initial_text,
   for (auto team : screen_order) {
     for (const auto& side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
-        text_sides.push_back(
-            new ScreenTextSide(wx, initial_text, side, split_size));
+        text_sides.push_back(new ScreenTextSide(
+            childPanel(wxID_ANY, wxDefaultPosition, split_size), initial_text,
+            side, split_size));
         break;
       }
     }
@@ -67,7 +69,9 @@ void ScreenText::setupPresenter(const ScreenText& preview, wxSize size) {
       splitScreenSize(size.x, size.y, preview.text_sides.size());
 
   for (auto* source_text_side : preview.text_sides) {
-    text_sides.push_back(new ScreenTextSide(wx, source_text_side, split_size));
+    text_sides.push_back(
+        new ScreenTextSide(childPanel(wxID_ANY, wxDefaultPosition, split_size),
+                           source_text_side, split_size));
   }
 
   initializeSides(text_sides);
@@ -80,10 +84,11 @@ void ScreenText::initializeSides(
   }
   this->text_sides.clear();
 
-  wxSizer* sizer = UiUtil::sizer(1, 0);
+  auto* sizer = new wxGridBagSizer();
+  int col = 0;
   for (auto* text_side : text_sides) {
-    this->text_sides.push_back(text_side);
-    sizer->Add(text_side, 0, wxALL, BORDER_SIZE);
+    this->text_sides.emplace_back(text_side);
+    text_side->addToSizer(sizer, 0, col++, 1, 1, BORDER_SIZE);
   }
   setSizer(sizer);
 }
@@ -226,7 +231,7 @@ void ScreenText::singleDisplay() {
   }
   text_sides[0]->setSize(size());
   for (int i = 1; i < text_sides.size(); i++) {
-    text_sides[i]->Hide();
+    text_sides[i]->hide();
   }
   update();
 }
@@ -239,7 +244,7 @@ void ScreenText::splitDisplays() {
   text_sides[0]->setSize(
       splitScreenSize(size().x, size().y, text_sides.size()));
   for (int i = 1; i < text_sides.size(); i++) {
-    text_sides[i]->Show();
+    text_sides[i]->show();
   }
   update();
 }

@@ -71,7 +71,7 @@ class ScreenText : public Panel {
   auto sides() -> std::vector<ScreenTextSide*> { return text_sides; }
 
 #ifdef SCOREBOARD_TESTING
-  auto sidePanel(int index) -> wxPanel* { return sides()[index]; }
+  auto sidePanel(int index) -> ScreenTextSide* { return sides()[index]; }
 #endif
 
  private:
