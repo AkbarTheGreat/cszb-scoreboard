@@ -32,6 +32,7 @@ limitations under the License.
 #include "ui/component/ControlPanel.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/frame/MainView.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard::test {
 
@@ -53,11 +54,11 @@ enum ImageAnalysisMode {
 /* Checking if images are correct or not is tricky, so we have this to help */
 class ImageAnalysis {
  public:
-  explicit ImageAnalysis(wxWindow *widget)
-      : ImageAnalysis(widget, IA_MODE_FULL_SCAN) {}
+  explicit ImageAnalysis(Panel *panel)
+      : ImageAnalysis(panel, IA_MODE_FULL_SCAN) {}
   // Create an ImageAnalysis object where only x% of the pixels are sampled for
   // color counts, for speed.
-  ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode);
+  ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode);
   auto colorPercentage(const wxColour &color) -> float;
   auto colorAmount(const wxColour &color) -> float;
   auto colorList() -> std::vector<int>;

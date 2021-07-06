@@ -53,7 +53,8 @@ auto GuiTest::firstPreview() -> ScreenPreview * {
   return mainView()->previewPanel()->preview(0);
 }
 
-ImageAnalysis::ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode) {
+ImageAnalysis::ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode) {
+  wxWindow *widget = panel->wx;
   wxClientDC dc(widget);
   wxRect dimensions = widget->GetRect();
 
