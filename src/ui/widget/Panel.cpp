@@ -27,4 +27,25 @@ Panel::~Panel() {
   }
 }
 
+auto Panel::button(const std::string &label) const -> std::unique_ptr<Button> {
+  return std::make_unique<Button>(new swx::Button(wx, wxID_ANY, label));
+}
+
+auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {
+  return std::make_unique<Label>(new swx::StaticText(wx, wxID_ANY, text));
+}
+
+auto Panel::panel() const -> std::unique_ptr<Panel> {
+  return std::make_unique<Panel>(childPanel());
+}
+
+auto Panel::searchBox(const std::string &initial_text) const
+    -> std::unique_ptr<SearchBox> {
+  auto search_box = std::make_unique<SearchBox>(
+      new swx::SearchCtrl(wx, wxID_ANY), initial_text);
+  search_box->showSearchButton(false);
+  search_box->showCancelButton(true);
+  return search_box;
+}
+
 }  // namespace cszb_scoreboard

@@ -41,28 +41,24 @@ auto ImageFromLibrary::Create(PreviewPanel *preview_panel, swx::Panel *wx)
 
 void ImageFromLibrary::createControls(Panel *control_panel) {
   ScreenImageController::createControls(control_panel);
-  main_panel = new wxPanel(control_panel->wx);
-  image_preview_panel = new wxPanel(control_panel->wx);
-  search_panel = new wxPanel(main_panel);
+  main_panel = control_panel->panel();
+  image_preview_panel = control_panel->panel();
+  search_panel = main_panel->panel();
 
   // Reparent our screen_selection to position it into inner_panel, for layout.
-  screen_selection->Reparent(main_panel);
+  screen_selection->Reparent(main_panel->wx);
 
-  left_button = new wxButton(main_panel, wxID_ANY, "<");
-  right_button = new wxButton(main_panel, wxID_ANY, ">");
-  configure_button = new wxButton(control_panel->wx, wxID_ANY, "Edit Library");
+  left_button = main_panel->button("<");
+  right_button = main_panel->button(">");
+  configure_button = control_panel->button("Edit Library");
 
-  search_box = new wxSearchCtrl(search_panel, wxID_ANY);
-  search_box->SetDescriptiveText("Find by tag/name");
-  search_box->ShowSearchButton(false);
-  search_box->ShowCancelButton(true);
-  tag_list_label = new wxStaticText(search_panel, wxID_ANY, "");
+  search_box = search_panel->searchBox("Find by tag/name");
+  tag_list_label = search_panel->label("");
 
   for (int i = 0; i < NUM_PREVIEWS; i++) {
     image_previews.push_back(
-        new ImagePreview(image_preview_panel, PREVIEW_SIZE));
-    image_names.push_back(
-        new wxStaticText(image_preview_panel, wxID_ANY, "          "));
+        new ImagePreview(image_preview_panel->wx, PREVIEW_SIZE));
+    image_names.emplace_back(image_preview_panel->label("          "));
   }
 
   setImages("");
@@ -72,69 +68,75 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
 }
 
 void ImageFromLibrary::positionWidgets(Panel *control_panel) {
-  // wxSizer *main_sizer = UiUtil::sizer(0, 1);
-  wxSizer *main_panel_sizer = UiUtil::sizer(0, 2);
-  wxSizer *search_panel_sizer = UiUtil::sizer(0, 1);
-  wxSizer *image_preview_sizer = UiUtil::sizer(0, NUM_PREVIEWS);
+  search_panel->addWidget(search_box.get(), 0, 0, DEFAULT_BORDER_SIZE, wxALL);
+  search_panel->addWidget(tag_list_label.get(), 1, 0, DEFAULT_BORDER_SIZE,
+                          wxALL);
 
-  search_panel_sizer->Add(search_box, 0, wxALL, BORDER_SIZE);
-  search_panel_sizer->Add(tag_list_label, 0, wxALL, BORDER_SIZE);
-
-  main_panel_sizer->Add(search_panel, 0, wxALL, BORDER_SIZE);
-  main_panel_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
-  main_panel_sizer->Add(left_button, 0, wxALL, BORDER_SIZE);
-  main_panel_sizer->Add(right_button, 0, wxALL, BORDER_SIZE);
+  main_panel->addWidgetWithSpan(search_panel.get(), 0, 0, 1, 2);
+  UiUtil::addToGridBag(main_panel->sizer(), screen_selection, 0, 2);
+  main_panel->addWidget(left_button.get(), 1, 0, DEFAULT_BORDER_SIZE,
+                        wxALL | wxALIGN_LEFT);
+  main_panel->addWidget(right_button.get(), 1, 1, DEFAULT_BORDER_SIZE,
+                        wxALL | wxALIGN_LEFT);
 
   UiUtil::addToGridBag(control_panel->sizer(), current_image_label, 0, 0);
-  UiUtil::addToGridBag(control_panel->sizer(), main_panel, 1, 0);
-  UiUtil::addToGridBag(control_panel->sizer(), image_preview_panel, 2, 0);
-  UiUtil::addToGridBag(control_panel->sizer(), configure_button, 3, 0, 1, 1, DEFAULT_BORDER_SIZE, wxSTRETCH_NOT);
+  control_panel->addWidget(main_panel.get(), 1, 0);
+  control_panel->addWidget(image_preview_panel.get(), 2, 0);
+  control_panel->addWidget(configure_button.get(), 3, 0, DEFAULT_BORDER_SIZE,
+                           wxALL);
 
+  int col = 0;
   for (auto *preview : image_previews) {
-    image_preview_sizer->Add(preview, 0, wxALL, BORDER_SIZE);
+    UiUtil::addToGridBag(image_preview_panel->sizer(), preview, 0, col++);
   }
 
-  for (auto *name : image_names) {
-    image_preview_sizer->Add(name, 0, wxALL, BORDER_SIZE);
+  col = 0;
+  for (const auto &name : image_names) {
+    image_preview_panel->addWidget(name.get(), 1, col++);
   }
 
-  search_panel->SetSizerAndFit(search_panel_sizer);
-  main_panel->SetSizerAndFit(main_panel_sizer);
-  image_preview_panel->SetSizerAndFit(image_preview_sizer);
+  search_panel->runSizer();
+  main_panel->runSizer();
+  image_preview_panel->runSizer();
   control_panel->runSizer();
 }
 
 void ImageFromLibrary::bindEvents() {
-  configure_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                         &ImageFromLibrary::editButton, this);
-  search_box->Bind(wxEVT_TEXT, &ImageFromLibrary::doSearch, this);
-  left_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ImageFromLibrary::pageChange,
-                    this);
-  right_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                     &ImageFromLibrary::pageChange, this);
+  configure_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->editButton(event); });
+  search_box->bind(wxEVT_TEXT, [this](wxCommandEvent &event) -> void {
+    this->doSearch(event);
+  });
+  left_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->pageChange(false); });
+  right_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->pageChange(true); });
   for (auto *preview : image_previews) {
     preview->Bind(wxEVT_LEFT_DOWN, &ImageFromLibrary::selectImage, this);
   }
 }
 
 void ImageFromLibrary::doSearch(wxCommandEvent &event) {
-  setImages(search_box->GetValue());
+  setImages(search_box->value());
 }
 
 void ImageFromLibrary::editButton(wxCommandEvent &event) {
   edit_dialog = new EditImageLibraryDialog();
   edit_dialog->Create(wx);
   edit_dialog->Show();
-  setImages(search_box->GetValue());
+  setImages(search_box->value());
 }
 
-void ImageFromLibrary::pageChange(wxCommandEvent &event) {
-  if (event.GetEventObject() == left_button) {
-    if (current_image_page > 0) {
-      setImages(search_box->GetValue(), current_image_page - 1);
-    }
+void ImageFromLibrary::pageChange(bool forward) {
+  if (forward) {
+    setImages(search_box->value(), current_image_page + 1);
   } else {
-    setImages(search_box->GetValue(), current_image_page + 1);
+    if (current_image_page > 0) {
+      setImages(search_box->value(), current_image_page - 1);
+    }
   }
 }
 
@@ -173,7 +175,7 @@ void ImageFromLibrary::setImages(const wxString &search,
       ImageLibrary::getInstance()->search(std::string(search));
 
   if (search.empty()) {
-    tag_list_label->SetLabel("");
+    tag_list_label->set("");
   } else {
     std::string tag_string;
     bool first = true;
@@ -184,7 +186,7 @@ void ImageFromLibrary::setImages(const wxString &search,
       tag_string += tag;
       first = false;
     }
-    tag_list_label->SetLabel(tag_string);
+    tag_list_label->set(tag_string);
   }
 
   std::vector<FilesystemPath> files = results.filenames();
@@ -206,13 +208,13 @@ void ImageFromLibrary::setImages(const wxString &search,
 
   for (int i = start_num; i < stop_num; i++) {
     image_previews[i - start_num]->setImage(files[i]);
-    image_names[i - start_num]->SetLabelText(
+    image_names[i - start_num]->set(
         ImageLibrary::getInstance()->name(files[i]));
   }
 
   for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {
     image_previews[i]->clearImage();
-    image_names[i]->SetLabelText("");
+    image_names[i]->set("");
   }
 }
 

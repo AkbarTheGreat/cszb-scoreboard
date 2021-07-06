@@ -29,6 +29,9 @@ limitations under the License.
 #include "ui/component/control/ImagePreview.h"
 #include "ui/component/control/ScreenImageController.h"
 #include "ui/dialog/EditImageLibraryDialog.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/Label.h"
+#include "ui/widget/SearchBox.h"
 
 namespace cszb_scoreboard {
 
@@ -44,12 +47,12 @@ class ImageFromLibrary : public ScreenImageController {
   // All of the following pointer types are references to wxWidgets elements
   // that wxWidgets maintains.  They are raw pointers as wxWidgets will handle
   // destruction of them at shutdown.
-  wxButton *left_button, *right_button, *configure_button;
-  wxSearchCtrl *search_box;
-  wxPanel *main_panel, *search_panel, *image_preview_panel;
-  wxStaticText *tag_list_label;
+  std::unique_ptr<Button> left_button, right_button, configure_button;
+  std::unique_ptr<SearchBox> search_box;
+  std::unique_ptr<Panel> main_panel, search_panel, image_preview_panel;
+  std::unique_ptr<Label> tag_list_label;
   std::vector<ImagePreview *> image_previews;
-  std::vector<wxStaticText *> image_names;
+  std::vector<std::unique_ptr<Label>> image_names;
   EditImageLibraryDialog *edit_dialog;
 
   void bindEvents();
@@ -60,7 +63,7 @@ class ImageFromLibrary : public ScreenImageController {
   void doSearch(wxCommandEvent &event);    // NOLINT(google-runtime-references)
   void selectImage(wxMouseEvent &event);   // NOLINT(google-runtime-references)
   void editButton(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void pageChange(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void pageChange(bool forward);
 };
 
 }  // namespace cszb_scoreboard
