@@ -20,10 +20,9 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-
 #include "config.pb.h"
 #include "ui/component/PreviewPanel.h"
+#include "ui/widget/Button.h"
 #include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
@@ -43,23 +42,22 @@ class ScreenTextController : public Panel {
  protected:
   /* Populate this control_panel in child classes with whatever controls this
    * ScreenTextController would like to populate to the window. */
-  virtual void createControls(wxPanel *control_panel) = 0;
+  virtual void createControls(Panel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
    * Defaults to all screens, may be overridden for more control. */
   ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx);
   void initializeWidgets();
   auto previewPanel() -> PreviewPanel *;
-  wxPanel *control_panel;
+  std::unique_ptr<Panel> control_panel;
 
  private:
+  // Weak reference to the global PreviewPanel, which this object does not own.
   PreviewPanel *preview_panel;
-  wxButton *update_screens;
+  std::unique_ptr<Button> update_screens;
 
   void bindEvents();
   void positionWidgets();
-  void updateClicked(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                               // wxWidgets callback.
+  void updateClicked();
 };
 
 }  // namespace cszb_scoreboard

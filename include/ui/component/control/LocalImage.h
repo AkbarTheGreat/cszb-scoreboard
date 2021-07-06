@@ -40,8 +40,8 @@ class LocalImage : public ScreenImageController {
   wxPanel *inner_panel;
 
   void bindEvents();
-  void createControls(wxPanel *control_panel) override;
-  void positionWidgets(wxPanel *control_panel) override;
+  void createControls(Panel *control_panel) override;
+  void positionWidgets(Panel *control_panel) override;
   // wxWidgets callbacks, waive linting error for references.
   void browsePressed(
       wxCommandEvent &event);  // NOLINT(google-runtime-references)

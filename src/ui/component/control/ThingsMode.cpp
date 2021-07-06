@@ -42,9 +42,9 @@ auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)
   return entry;
 }
 
-void ThingsMode::createControls(wxPanel *control_panel) {
+void ThingsMode::createControls(Panel *control_panel) {
   scrollable_panel = new wxScrolledWindow(
-      control_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
+      control_panel->wx, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
 
   button_panel = new wxPanel(scrollable_panel);
 
@@ -71,9 +71,8 @@ void ThingsMode::createControls(wxPanel *control_panel) {
   wxSize scrollable_size = scrollable_panel->GetSize();
 }
 
-void ThingsMode::positionWidgets(wxPanel *control_panel) {
+void ThingsMode::positionWidgets(Panel *control_panel) {
   wxSizer *button_sizer = UiUtil::sizer(0, 2);
-  wxSizer *outer_sizer = UiUtil::sizer(0, 1);
   wxSizer *scrollable_sizer = UiUtil::sizer(0, 1);
 
   button_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
@@ -94,8 +93,8 @@ void ThingsMode::positionWidgets(wxPanel *control_panel) {
   scrollable_panel->FitInside();
   scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
 
-  outer_sizer->Add(scrollable_panel, 0, wxALL, BORDER_SIZE);
-  control_panel->SetSizerAndFit(outer_sizer);
+  UiUtil::addToGridBag(control_panel->sizer(), scrollable_panel, 0, 0);
+  control_panel->runSizer();
 }
 
 void ThingsMode::bindEvents() {

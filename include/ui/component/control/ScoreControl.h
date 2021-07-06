@@ -42,8 +42,8 @@ class ScoreControl : public ScreenTextController {
                              wxWindow *away_widget);
   void addToEntry(wxTextCtrl *entry, int amount);
   void bindEvents();
-  void createControls(wxPanel *control_panel) override;
-  void positionWidgets(wxPanel *control_panel);
+  void createControls(Panel *control_panel) override;
+  void positionWidgets(Panel *control_panel);
   auto introLines(bool isHome) -> std::vector<proto::RenderableText>;
   auto scoreLines(bool isHome) -> std::vector<proto::RenderableText>;
   void updateScreenText(ScreenText *screen_text) override;

@@ -32,7 +32,8 @@ class UiUtil {
   static auto sizer(int32_t rows, int32_t columns) -> wxSizer *;
   static void addToGridBag(wxGridBagSizer *sizer, wxWindow *item, int row,
                            int column, int row_span = 1, int column_span = 1,
-                           int border_size = DEFAULT_BORDER_SIZE);
+                           int border_size = DEFAULT_BORDER_SIZE,
+                           int flags = wxALL | wxGROW);
 };
 
 }  // namespace cszb_scoreboard

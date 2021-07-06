@@ -51,13 +51,13 @@ TextEntry::TextEntry(PreviewPanel *preview_panel, swx::Panel *wx)
   all_color = Color("Black");
 }
 
-void TextEntry::createControls(wxPanel *control_panel) {
-  text_label = new wxStaticText(control_panel, wxID_ANY, wxT("Text"));
+void TextEntry::createControls(Panel *control_panel) {
+  text_label = new wxStaticText(control_panel->wx, wxID_ANY, wxT("Text"));
   text_entry =
-      new wxTextCtrl(control_panel, wxID_ANY, all_text, wxDefaultPosition,
+      new wxTextCtrl(control_panel->wx, wxID_ANY, all_text, wxDefaultPosition,
                      wxSize(-1, -1), wxTE_MULTILINE);
 
-  inner_panel = new wxPanel(control_panel);
+  inner_panel = new wxPanel(control_panel->wx);
 
   font_size_label = new wxStaticText(inner_panel, wxID_ANY, wxT("Font Size"));
   font_size_entry = new wxTextCtrl(inner_panel, wxID_ANY,
@@ -71,14 +71,14 @@ void TextEntry::createControls(wxPanel *control_panel) {
   bindEvents();
 }
 
-void TextEntry::positionWidgets(wxPanel *control_panel) {
+void TextEntry::positionWidgets(Panel *control_panel) {
   wxSizer *outer_sizer = UiUtil::sizer(0, 3);
   wxSizer *inner_sizer = UiUtil::sizer(0, 2);
 
   // Outer sizer holds text label and inner_panel
-  outer_sizer->Add(text_label, 0, wxALL, BORDER_SIZE);
-  outer_sizer->Add(text_entry, 0, wxALL, BORDER_SIZE);
-  outer_sizer->Add(inner_panel, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(control_panel->sizer(), text_label, 0, 0);
+  UiUtil::addToGridBag(control_panel->sizer(), text_entry, 0, 1);
+  UiUtil::addToGridBag(control_panel->sizer(), inner_panel, 0, 2);
 
   inner_sizer->Add(font_size_label, 0, wxALL, BORDER_SIZE);
   inner_sizer->Add(font_size_entry, 0, wxALL, BORDER_SIZE);
@@ -86,7 +86,7 @@ void TextEntry::positionWidgets(wxPanel *control_panel) {
   inner_sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
 
   inner_panel->SetSizerAndFit(inner_sizer);
-  control_panel->SetSizerAndFit(outer_sizer);
+  control_panel->runSizer();
 }
 
 void TextEntry::bindEvents() {

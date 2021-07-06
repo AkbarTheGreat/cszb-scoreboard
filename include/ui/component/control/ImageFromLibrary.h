@@ -53,8 +53,8 @@ class ImageFromLibrary : public ScreenImageController {
   EditImageLibraryDialog *edit_dialog;
 
   void bindEvents();
-  void createControls(wxPanel *control_panel) override;
-  void positionWidgets(wxPanel *control_panel) override;
+  void createControls(Panel *control_panel) override;
+  void positionWidgets(Panel *control_panel) override;
   void setImages(const wxString &search, unsigned int page_number = 0);
   // wxWidgets callbacks, waive linting error for references.
   void doSearch(wxCommandEvent &event);    // NOLINT(google-runtime-references)

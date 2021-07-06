@@ -39,9 +39,9 @@ auto LocalImage::Create(PreviewPanel *preview_panel, swx::Panel *wx)
   return local_image;
 }
 
-void LocalImage::createControls(wxPanel *control_panel) {
+void LocalImage::createControls(Panel *control_panel) {
   ScreenImageController::createControls(control_panel);
-  inner_panel = new wxPanel(control_panel);
+  inner_panel = new wxPanel(control_panel->wx);
 
   // Reparent our screen_selection to position it into inner_panel, for layout.
   screen_selection->Reparent(inner_panel);
@@ -53,8 +53,7 @@ void LocalImage::createControls(wxPanel *control_panel) {
   bindEvents();
 }
 
-void LocalImage::positionWidgets(wxPanel *control_panel) {
-  wxSizer *outer_sizer = UiUtil::sizer(0, 1);
+void LocalImage::positionWidgets(Panel *control_panel) {
   wxSizer *inner_sizer = UiUtil::sizer(0, 2);
   wxSizer *button_sizer = UiUtil::sizer(2, 0);
 
@@ -68,10 +67,11 @@ void LocalImage::positionWidgets(wxPanel *control_panel) {
 
   inner_panel->SetSizerAndFit(inner_sizer);
 
-  outer_sizer->Add(current_image_label, 0, wxALL, BORDER_SIZE);
-  outer_sizer->Add(inner_panel, 0, wxALL, 0);
+  //wxSizer *outer_sizer = UiUtil::sizer(0, 1);
+  UiUtil::addToGridBag(control_panel->sizer(), current_image_label, 0, 0);
+  UiUtil::addToGridBag(control_panel->sizer(), inner_panel, 1, 0, 1, 1, 0);
 
-  control_panel->SetSizerAndFit(outer_sizer);
+  control_panel->runSizer();
 }
 
 void LocalImage::bindEvents() {
@@ -98,7 +98,7 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
     current_image_label->SetLabelText(selected_file.filename().c_str());
   }
 
-  control_panel->Update();
+  control_panel->update();
   updatePreview();
 }
 
@@ -130,7 +130,7 @@ void LocalImage::pastePressed(wxCommandEvent &event) {
   }
   current_image_label->SetLabelText(CLIPBOARD_IMAGE_MESSAGE);
 
-  control_panel->Update();
+  control_panel->update();
   updatePreview();
 }
 

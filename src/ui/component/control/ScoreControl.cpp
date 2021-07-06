@@ -48,10 +48,10 @@ auto ScoreControl::Create(PreviewPanel* preview_panel, swx::Panel* wx)
   return control;
 }
 
-void ScoreControl::createControls(wxPanel* control_panel) {
+void ScoreControl::createControls(Panel* control_panel) {
   // TODO(akbar): Populate the team names from settings-based defaults
 
-  team_controls_panel = new wxPanel(control_panel);
+  team_controls_panel = new wxPanel(control_panel->wx);
 
   home_score_label =
       new wxStaticText(team_controls_panel, wxID_ANY, wxT("Home"));
@@ -97,7 +97,7 @@ void ScoreControl::createControls(wxPanel* control_panel) {
   away_logo_button = new wxButton(team_controls_panel, wxID_ANY, "Choose Logo");
 
   team_intro_button =
-      new wxToggleButton(control_panel, wxID_ANY, INTRO_MODE_LABEL);
+      new wxToggleButton(control_panel->wx, wxID_ANY, INTRO_MODE_LABEL);
 
   positionWidgets(control_panel);
   bindEvents();
@@ -174,7 +174,7 @@ void ScoreControl::addHomeAwayWidgetPair(wxSizer* sizer, wxWindow* home_widget,
   }
 }
 
-void ScoreControl::positionWidgets(wxPanel* control_panel) {
+void ScoreControl::positionWidgets(Panel* control_panel) {
   wxSizer* team_control_sizer = UiUtil::sizer(0, 2);
 
   addHomeAwayWidgetPair(team_control_sizer, home_score_label, away_score_label);
@@ -202,11 +202,12 @@ void ScoreControl::positionWidgets(wxPanel* control_panel) {
 
   team_controls_panel->SetSizerAndFit(team_control_sizer);
 
-  wxSizer* outer_sizer = UiUtil::sizer(0, 2);
-  outer_sizer->Add(team_controls_panel, 0, wxALL, BORDER_SIZE);
-  outer_sizer->Add(team_intro_button, 0, wxALL | wxALIGN_CENTRE_VERTICAL,
-                   BORDER_SIZE);
-  control_panel->SetSizerAndFit(outer_sizer);
+  // wxSizer* outer_sizer = UiUtil::sizer(0, 2);
+  UiUtil::addToGridBag(control_panel->sizer(), team_controls_panel, 0, 0, 1, 1,
+                       BORDER_SIZE);
+  UiUtil::addToGridBag(control_panel->sizer(), team_intro_button, 0, 1, 1, 1,
+                       BORDER_SIZE, wxALL | wxALIGN_CENTER_VERTICAL);
+  control_panel->runSizer();
 }
 
 void ScoreControl::selectLogo(wxCommandEvent& event) {
@@ -224,7 +225,7 @@ void ScoreControl::selectLogo(wxCommandEvent& event) {
       away_logo_label->SetLabelText(selected_file.filename().c_str());
     }
   }
-  control_panel->Update();
+  control_panel->update();
   updatePreview();
 }
 

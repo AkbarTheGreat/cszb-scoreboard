@@ -60,11 +60,11 @@ class TextEntry : public ScreenTextController {
   Color all_color;
 
   void updateScreenText(ScreenText *screen_text) override;
-  void createControls(wxPanel *control_panel) override;
+  void createControls(Panel *control_panel) override;
 
   void bindEvents();
   auto enteredFontSize() -> int;
-  void positionWidgets(wxPanel *control_panel);
+  void positionWidgets(Panel *control_panel);
   void doScreenChanged();
   // wxWidgets callbacks, waive linting error for references.
   void colorChanged(

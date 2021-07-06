@@ -53,9 +53,11 @@ class Widget {
   }
   void runSizer() { _wx()->SetSizerAndFit(sizer()); }
 
+  // This should be moved to protected when the conversion is complete.
+  auto sizer() -> swx::Sizer *;
+
  protected:
   virtual wxWindow *_wx() = 0;
-  auto sizer() -> swx::Sizer *;
 
  private:
   // wxWidget will clean up our sizer for us, so keep it as an unmanaged

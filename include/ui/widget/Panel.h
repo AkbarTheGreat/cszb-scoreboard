@@ -25,7 +25,9 @@ limitations under the License.
 #include <vector>
 
 #include "ScoreboardCommon.h"
+#include "ui/widget/Button.h"
 #include "ui/widget/Widget.h"
+#include "ui/widget/swx/Button.h"
 #include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
@@ -35,6 +37,11 @@ class Panel : public Widget {
   explicit Panel(swx::Panel *panel) { wx = panel; }
   virtual ~Panel();
 
+  // Creates a button in this Panel.
+  [[nodiscard]] auto button(const std::string &label) const
+      -> std::unique_ptr<Button> {
+    return std::make_unique<Button>(new swx::Button(wx, wxID_ANY, label));
+  }
   [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,
                                 const wxPoint &pos = wxDefaultPosition,
                                 const wxSize &size = wxDefaultSize,
@@ -43,24 +50,24 @@ class Panel : public Widget {
       -> swx::Panel * {
     return new swx::Panel(wx, id, pos, size, style, name);
   }
-  void hide() { wx->Hide(); }
+  void hide() const { wx->Hide(); }
   void refresh() const { wx->Refresh(); }
   void setSize(const wxSize &size) const { wx->SetSize(size); }
-  void show() { wx->Show(); }
-  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
+  void show() const { wx->Show(); }
+  void toolTip(const std::string &tip) const { wx->SetToolTip(tip); }
+  void update() const { wx->Update(); }
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
   swx::Panel *wx;
 
  protected:
-  void update() const { wx->Update(); }
   [[nodiscard]] auto size() const -> wxSize { return wx->GetSize(); }
   // If true, this panel will destory its own wxPanel object rather than rely on
   // the parent wxWidget to do it for us.
   bool should_self_delete = false;
 
-  auto _wx() -> wxWindow * { return wx; }
+  auto _wx() -> wxWindow * override { return wx; }
 };
 
 }  // namespace cszb_scoreboard

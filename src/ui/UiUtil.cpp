@@ -25,7 +25,7 @@ namespace cszb_scoreboard {
 // don't bother with unique_ptr here.  But be careful if you ever need a sizer
 // and _don't_ pass it on to a window.
 auto UiUtil::sizer(int32_t rows, int32_t columns) -> wxSizer* {
-  auto *sizer = new wxFlexGridSizer(rows, columns, 0, 0);
+  auto* sizer = new wxFlexGridSizer(rows, columns, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   return sizer;
@@ -33,9 +33,9 @@ auto UiUtil::sizer(int32_t rows, int32_t columns) -> wxSizer* {
 
 void UiUtil::addToGridBag(wxGridBagSizer* sizer, wxWindow* item, int row,
                           int column, int row_span, int column_span,
-                          int border_size) {
+                          int border_size, int flags) {
   sizer->Add(item, wxGBPosition(row, column), wxGBSpan(row_span, column_span),
-             wxALL | wxGROW, border_size);
+             flags, border_size);
 }
 
 }  // namespace cszb_scoreboard

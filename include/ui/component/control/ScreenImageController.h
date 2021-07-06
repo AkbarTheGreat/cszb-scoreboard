@@ -41,8 +41,8 @@ class ScreenImageController : public ScreenTextController {
   ScreenImageController(PreviewPanel *preview_panel, swx::Panel *wx)
       : ScreenTextController(preview_panel, wx) {}
   void bindEvents();
-  void createControls(wxPanel *control_panel) override;
-  virtual void positionWidgets(wxPanel *control_panel) = 0;
+  void createControls(Panel *control_panel) override;
+  virtual void positionWidgets(Panel *control_panel) = 0;
   void screenChanged(
       wxCommandEvent &event);  // NOLINT(google-runtime-references)
                                // wxWidgets callback.

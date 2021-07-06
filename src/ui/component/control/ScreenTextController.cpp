@@ -35,12 +35,12 @@ ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
 }
 
 void ScreenTextController::initializeWidgets() {
-  update_screens = new wxButton(wx, wxID_ANY, "Send to Monitors");
-  update_screens->SetToolTip("Ctrl+Space");
+  update_screens = button("Send to Monitors");
+  update_screens->toolTip("Ctrl+Space");
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, WXK_SPACE,
-                                        update_screens->GetId());
-  control_panel = new wxPanel(wx);
-  createControls(control_panel);
+                                        update_screens->id());
+  control_panel = std::make_unique<Panel>(childPanel());
+  createControls(control_panel.get());
   positionWidgets();
   bindEvents();
 }
@@ -48,22 +48,23 @@ void ScreenTextController::initializeWidgets() {
 void ScreenTextController::positionWidgets() {
   // control_panel spans two columns so that update_screens isn't forced to
   // stretch the the width of whatever the control_panel is.
-  UiUtil::addToGridBag(sizer(), control_panel, 0, 0, 1, 2, BORDER_SIZE);
-  UiUtil::addToGridBag(sizer(), update_screens, 1, 0, 1, 1, BORDER_SIZE);
+  addWidget(control_panel.get(), 0, 0, 1, 2);
+  addWidget(update_screens.get(), 1, 0);
 
   runSizer();
 }
 
 void ScreenTextController::bindEvents() {
-  update_screens->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                       &ScreenTextController::updateClicked, this);
+  update_screens->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->updateClicked(); });
 }
 
 auto ScreenTextController::previewPanel() -> PreviewPanel * {
   return preview_panel;
 }
 
-void ScreenTextController::updateClicked(wxCommandEvent &event) {
+void ScreenTextController::updateClicked() {
   preview_panel->updatePresenters();
 }
 

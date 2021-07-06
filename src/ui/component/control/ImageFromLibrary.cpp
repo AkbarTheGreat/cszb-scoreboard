@@ -39,10 +39,10 @@ auto ImageFromLibrary::Create(PreviewPanel *preview_panel, swx::Panel *wx)
   return library;
 }
 
-void ImageFromLibrary::createControls(wxPanel *control_panel) {
+void ImageFromLibrary::createControls(Panel *control_panel) {
   ScreenImageController::createControls(control_panel);
-  main_panel = new wxPanel(control_panel);
-  image_preview_panel = new wxPanel(control_panel);
+  main_panel = new wxPanel(control_panel->wx);
+  image_preview_panel = new wxPanel(control_panel->wx);
   search_panel = new wxPanel(main_panel);
 
   // Reparent our screen_selection to position it into inner_panel, for layout.
@@ -50,7 +50,7 @@ void ImageFromLibrary::createControls(wxPanel *control_panel) {
 
   left_button = new wxButton(main_panel, wxID_ANY, "<");
   right_button = new wxButton(main_panel, wxID_ANY, ">");
-  configure_button = new wxButton(control_panel, wxID_ANY, "Edit Library");
+  configure_button = new wxButton(control_panel->wx, wxID_ANY, "Edit Library");
 
   search_box = new wxSearchCtrl(search_panel, wxID_ANY);
   search_box->SetDescriptiveText("Find by tag/name");
@@ -71,8 +71,8 @@ void ImageFromLibrary::createControls(wxPanel *control_panel) {
   bindEvents();
 }
 
-void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
-  wxSizer *main_sizer = UiUtil::sizer(0, 1);
+void ImageFromLibrary::positionWidgets(Panel *control_panel) {
+  // wxSizer *main_sizer = UiUtil::sizer(0, 1);
   wxSizer *main_panel_sizer = UiUtil::sizer(0, 2);
   wxSizer *search_panel_sizer = UiUtil::sizer(0, 1);
   wxSizer *image_preview_sizer = UiUtil::sizer(0, NUM_PREVIEWS);
@@ -85,10 +85,10 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   main_panel_sizer->Add(left_button, 0, wxALL, BORDER_SIZE);
   main_panel_sizer->Add(right_button, 0, wxALL, BORDER_SIZE);
 
-  main_sizer->Add(current_image_label, 0, wxALL, BORDER_SIZE);
-  main_sizer->Add(main_panel, 0, wxALL, BORDER_SIZE);
-  main_sizer->Add(image_preview_panel, 0, wxALL, BORDER_SIZE);
-  main_sizer->Add(configure_button, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(control_panel->sizer(), current_image_label, 0, 0);
+  UiUtil::addToGridBag(control_panel->sizer(), main_panel, 1, 0);
+  UiUtil::addToGridBag(control_panel->sizer(), image_preview_panel, 2, 0);
+  UiUtil::addToGridBag(control_panel->sizer(), configure_button, 3, 0, 1, 1, DEFAULT_BORDER_SIZE, wxSTRETCH_NOT);
 
   for (auto *preview : image_previews) {
     image_preview_sizer->Add(preview, 0, wxALL, BORDER_SIZE);
@@ -101,7 +101,7 @@ void ImageFromLibrary::positionWidgets(wxPanel *control_panel) {
   search_panel->SetSizerAndFit(search_panel_sizer);
   main_panel->SetSizerAndFit(main_panel_sizer);
   image_preview_panel->SetSizerAndFit(image_preview_sizer);
-  control_panel->SetSizerAndFit(main_sizer);
+  control_panel->runSizer();
 }
 
 void ImageFromLibrary::bindEvents() {
@@ -161,7 +161,7 @@ void ImageFromLibrary::selectImage(wxMouseEvent &event) {
     current_image_label->SetLabelText(home_screen_image_name);
   }
 
-  control_panel->Update();
+  control_panel->update();
   updatePreview();
 }
 

@@ -52,10 +52,10 @@ class ThingsMode : public ScreenTextController {
   ActivityPanel *away_activities_panel;
   ActivityPanel *all_activities_panel;
 
-  void createControls(wxPanel *control_panel) override;
+  void createControls(Panel *control_panel) override;
 
   void bindEvents();
-  void positionWidgets(wxPanel *control_panel);
+  void positionWidgets(Panel *control_panel);
   void updateActivityPanel();
   // wxWidgets callbacks, waive linting error for references.
   void addActivity(wxCommandEvent &event);  // NOLINT(google-runtime-references)

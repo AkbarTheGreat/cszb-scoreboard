@@ -32,10 +32,10 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string NO_IMAGE_MESSAGE =
     "<No Image Selected>                               ";
 
-void ScreenImageController::createControls(wxPanel *control_panel) {
-  screen_selection = new TeamSelector(control_panel, ProtoUtil::allSide());
+void ScreenImageController::createControls(Panel *control_panel) {
+  screen_selection = new TeamSelector(control_panel->wx, ProtoUtil::allSide());
   current_image_label =
-      new wxStaticText(control_panel, wxID_ANY, NO_IMAGE_MESSAGE);
+      new wxStaticText(control_panel->wx, wxID_ANY, NO_IMAGE_MESSAGE);
   bindEvents();
 }
 
@@ -84,7 +84,7 @@ void ScreenImageController::screenChanged(wxCommandEvent &event) {
     }
   }
 
-  control_panel->Update();
+  control_panel->update();
   updatePreview();
 }
 
