@@ -46,12 +46,12 @@ void ScreenTextController::initializeWidgets() {
 }
 
 void ScreenTextController::positionWidgets() {
-  wxSizer *sizer = UiUtil::sizer(0, 1);
+  // control_panel spans two columns so that update_screens isn't forced to
+  // stretch the the width of whatever the control_panel is.
+  UiUtil::addToGridBag(sizer(), control_panel, 0, 0, 1, 2, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), update_screens, 1, 0, 1, 1, BORDER_SIZE);
 
-  sizer->Add(control_panel, 0, wxALL, BORDER_SIZE);
-  sizer->Add(update_screens, 0, wxALL, BORDER_SIZE);
-
-  setSizer(sizer);
+  runSizer();
 }
 
 void ScreenTextController::bindEvents() {

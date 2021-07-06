@@ -1,6 +1,6 @@
 /*
-ui/widget/Panel.cpp: A panel represents an interior panel container that is held
-within other frames or panels.
+ui/widget/swx/Sizer.h: A wrapper around wxGridBagSizer, for use as a default
+sizer.
 
 Copyright 2021 Tracy Beck
 
@@ -17,14 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/widget/Panel.h"
+#pragma once
 
-namespace cszb_scoreboard {
+#include <wx/gbsizer.h>
+#include <wx/wx.h>
 
-Panel::~Panel() {
-  if (should_self_delete) {
-    wx->Destroy();
-  }
-}
+namespace cszb_scoreboard::swx {
 
-}  // namespace cszb_scoreboard
+class Sizer : public wxGridBagSizer {
+ public:
+  Sizer(int vgap = 0, int hgap = 0) : wxGridBagSizer(vgap, hgap) {}
+};
+
+}  // namespace cszb_scoreboard::swx

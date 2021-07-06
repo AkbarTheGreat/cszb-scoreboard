@@ -25,18 +25,16 @@ limitations under the License.
 #include <vector>
 
 #include "ScoreboardCommon.h"
+#include "ui/widget/Widget.h"
 #include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
 
-class Panel {
+class Panel : public Widget {
  public:
   explicit Panel(swx::Panel *panel) { wx = panel; }
   virtual ~Panel();
 
-  void addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span = 1,
-                  int column_span = 1, int border_size = DEFAULT_BORDER_SIZE,
-                  int flag = wxALL | wxGROW);
   [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,
                                 const wxPoint &pos = wxDefaultPosition,
                                 const wxSize &size = wxDefaultSize,
@@ -45,18 +43,9 @@ class Panel {
       -> swx::Panel * {
     return new swx::Panel(wx, id, pos, size, style, name);
   }
-  void bind(const wxEventTypeTag<wxMouseEvent> &eventType,
-            const std::function<void(wxMouseEvent &)> &lambda) const {
-    wx->Bind(eventType, lambda);
-  }
-  void bind(const wxEventTypeTag<wxPaintEvent> &eventType,
-            const std::function<void(wxPaintEvent &)> &lambda) const {
-    wx->Bind(eventType, lambda);
-  }
   void hide() { wx->Hide(); }
   void refresh() const { wx->Refresh(); }
   void setSize(const wxSize &size) const { wx->SetSize(size); }
-  void setSizer(wxSizer *sizer) const { wx->SetSizerAndFit(sizer); }
   void show() { wx->Show(); }
   void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
 
@@ -70,6 +59,8 @@ class Panel {
   // If true, this panel will destory its own wxPanel object rather than rely on
   // the parent wxWidget to do it for us.
   bool should_self_delete = false;
+
+  auto _wx() -> wxWindow * { return wx; }
 };
 
 }  // namespace cszb_scoreboard

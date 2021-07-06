@@ -1,6 +1,5 @@
 /*
-ui/widget/Notebook.cpp: A notebook is a panel that holds other panels in a tab
-navigation style.
+ui/widget/Widget.cpp: Methods common to all of our widgets.
 
 Copyright 2021 Tracy Beck
 
@@ -17,15 +16,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/widget/Notebook.h"
+#include "ui/widget/Widget.h"
 
 namespace cszb_scoreboard {
 
-void Notebook::addToSizer(wxGridBagSizer *sizer, int row, int column,
-                          int row_span, int column_span, int border_size,
-                          int flag) {
-  sizer->Add(wx, wxGBPosition(row, column), wxGBSpan(row_span, column_span),
-             flag, border_size);
+void Widget::addWidget(Widget *widget, int row, int column, int row_span,
+                       int column_span, int border_size, int flag) {
+  sizer()->Add(widget->_wx(), wxGBPosition(row, column),
+               wxGBSpan(row_span, column_span), flag, border_size);
+}
+
+auto Widget::sizer() -> swx::Sizer * {
+  if (window_sizer == nullptr) {
+    window_sizer = new swx::Sizer();
+  }
+  return window_sizer;
 }
 
 }  // namespace cszb_scoreboard

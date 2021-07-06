@@ -79,11 +79,10 @@ void MainView::createMenu() {
 }
 
 void MainView::positionWidgets() {
-  auto* sizer = new wxGridBagSizer();
-  preview_panel->addToSizer(sizer, 0, 0);
-  control_panel->addToSizer(sizer, 1, 0);
-  quick_state->addToSizer(sizer, 0, 1, 2, 1);
-  setSizer(sizer);
+  addWidget(preview_panel.get(), 0, 0);
+  addWidget(control_panel.get(), 1, 0);
+  addWidget(quick_state.get(), 0, 1, 2, 1);
+  runSizer();
 }
 
 void MainView::bindEvents() {

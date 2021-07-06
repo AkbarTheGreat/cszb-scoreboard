@@ -23,12 +23,13 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"
 #include "ui/widget/Panel.h"
+#include "ui/widget/Widget.h"
 #include "ui/widget/swx/Notebook.h"
 #include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
 
-class Notebook {
+class Notebook : public Widget {
  public:
   explicit Notebook(swx::Notebook *notebook) { wx = notebook; }
   void addTab(const Panel &tab, const std::string &name) const {
@@ -51,6 +52,9 @@ class Notebook {
   void focus() const { wx->SetFocus(); };
   [[nodiscard]] auto selection() const -> int { return wx->GetSelection(); }
   void setSelection(int selection) { wx->SetSelection(selection); }
+
+ protected:
+  auto _wx() -> wxWindow * { return wx; }
 
  private:
   swx::Notebook *wx;

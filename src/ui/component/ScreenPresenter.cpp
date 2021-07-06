@@ -62,8 +62,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText& preview)
 }
 
 void ScreenPresenter::positionWidgets() {
-  auto* sizer = new wxGridBagSizer();
-  screen_text->addToSizer(sizer, 0, 0);
-  setSizer(sizer);
+  addWidget(screen_text.get(), 0, 0);
+  runSizer();
 }
 }  // namespace cszb_scoreboard

@@ -34,15 +34,14 @@ static const int STARTING_HEIGHT = 50;
 
 class TestFrame : public Frame {
  public:
-  ScreenTextSide *screen_text_side;
+  std::unique_ptr<ScreenTextSide> screen_text_side;
 
   TestFrame() : Frame("ScreenTextSideTest") {
-    screen_text_side =
-        new ScreenTextSide(childPanel(), "Text", ProtoUtil::homeSide(),
-                           wxSize(STARTING_WIDTH, STARTING_HEIGHT));
-    auto *sizer = new wxGridBagSizer();
-    screen_text_side->addToSizer(sizer, 0, 0);
-    this->setSizer(sizer);
+    screen_text_side = std::make_unique<ScreenTextSide>(
+        childPanel(), "Text", ProtoUtil::homeSide(),
+        wxSize(STARTING_WIDTH, STARTING_HEIGHT));
+    addWidget(screen_text_side.get(), 0, 0);
+    runSizer();
   }
 };
 
@@ -61,7 +60,7 @@ class ScreenTextSideTest : public testing::Test {
  protected:
   TestApp *app;
 
-  auto screenText() -> ScreenTextSide * { return app->frame->screen_text_side; }
+  auto screenText() -> ScreenTextSide * { return app->frame->screen_text_side.get(); }
 
   void SetUp() override {
     app = new TestApp();

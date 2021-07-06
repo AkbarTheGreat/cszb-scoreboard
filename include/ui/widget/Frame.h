@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <vector>
 
+#include "ui/widget/Widget.h"
 #include "ui/widget/swx/Frame.h"
 #include "ui/widget/swx/Notebook.h"
 #include "ui/widget/swx/Panel.h"
@@ -32,7 +33,7 @@ namespace cszb_scoreboard {
 const int DEFAULT_NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
                                    wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;
 
-class Frame {
+class Frame : public Widget {
  public:
   explicit Frame(const wxString &title, const wxPoint &pos = wxDefaultPosition,
                  const wxSize &size = wxDefaultSize)
@@ -40,15 +41,6 @@ class Frame {
   // Injectable constructor, for testing.
   explicit Frame(swx::Frame *frame) { wx = frame; }
   virtual ~Frame() { wx->Destroy(); }
-
-  void bind(const wxEventTypeTag<wxCommandEvent> &eventType,
-            const std::function<void(wxCommandEvent &)> &lambda, int id) {
-    wx->Bind(eventType, lambda, id);
-  }
-  void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
-            const std::function<void(wxCloseEvent &)> &lambda) {
-    wx->Bind(eventType, lambda);
-  }
 
   void focus() { wx->SetFocus(); };
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
@@ -66,7 +58,6 @@ class Frame {
   void minimize() { wx->Iconize(); }
   void menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu);
   void setDimensions(const wxRect &dim);
-  void setSizer(wxSizer *sizer) { wx->SetSizerAndFit(sizer); }
 
   auto childPanel(wxWindowID id = wxID_ANY,
                   const wxPoint &pos = wxDefaultPosition,
@@ -82,6 +73,7 @@ class Frame {
     return new swx::Notebook(wx, id, pos, size, style);
   }
 
+  auto _wx() -> wxWindow * { return wx; }
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
   swx::Frame *wx;

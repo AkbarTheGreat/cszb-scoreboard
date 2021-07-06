@@ -63,11 +63,10 @@ ScreenPreview::ScreenPreview(swx::Panel* wx,
 }
 
 void ScreenPreview::positionWidgets() {
-  auto* sizer = new wxGridBagSizer();
-  thumbnail->addToSizer(sizer, 0, 0, 1, 1, DEFAULT_BORDER_SIZE,
-                        wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
-  screen_text->addToSizer(sizer, 1, 0, 1, 1, BORDER_SIZE, wxALL);
-  setSizer(sizer);
+  addWidget(thumbnail.get(), 0, 0, 1, 1, DEFAULT_BORDER_SIZE,
+            wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
+  addWidget(screen_text.get(), 1, 0, 1, 1, BORDER_SIZE, wxALL);
+  runSizer();
 }
 
 auto ScreenPreview::previewSize(int monitor_number) -> wxSize {

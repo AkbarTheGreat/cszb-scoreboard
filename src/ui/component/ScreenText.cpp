@@ -84,13 +84,12 @@ void ScreenText::initializeSides(
   }
   this->text_sides.clear();
 
-  auto* sizer = new wxGridBagSizer();
   int col = 0;
   for (auto* text_side : text_sides) {
     this->text_sides.emplace_back(text_side);
-    text_side->addToSizer(sizer, 0, col++, 1, 1, BORDER_SIZE);
+    addWidget(text_side, 0, col++, 1, 1, BORDER_SIZE);
   }
-  setSizer(sizer);
+  runSizer();
 }
 
 void ScreenText::resetAllText(const proto::ScreenSide& side) {
