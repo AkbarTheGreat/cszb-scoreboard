@@ -48,8 +48,8 @@ void ScreenTextController::initializeWidgets() {
 void ScreenTextController::positionWidgets() {
   // control_panel spans two columns so that update_screens isn't forced to
   // stretch the the width of whatever the control_panel is.
-  addWidget(control_panel.get(), 0, 0, NO_BORDER);
-  addWidget(update_screens.get(), 1, 0, DEFAULT_BORDER_SIZE, wxTOP);
+  addWidget(*control_panel, 0, 0, NO_BORDER);
+  addWidget(*update_screens, 1, 0, DEFAULT_BORDER_SIZE, wxTOP);
 
   runSizer();
 }

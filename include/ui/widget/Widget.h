@@ -30,15 +30,15 @@ const int NO_BORDER = 0;
 
 class Widget {
  public:
-  void addWidget(Widget *widget, int row, int column,
+  void addWidget(const Widget &widget, int row, int column,
                  int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
     addWidgetWithSpan(widget, row, column, 1, 1, border_size, flag);
   }
-  void addWidgetWithSpan(Widget *widget, int row, int column, int row_span = 1,
-                         int column_span = 1,
+  void addWidgetWithSpan(const Widget &widget, int row, int column,
+                         int row_span = 1, int column_span = 1,
                          int border_size = DEFAULT_BORDER_SIZE,
-                         int flag = wxALL | wxGROW) ;
+                         int flag = wxALL | wxGROW);
   void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
             const std::function<void(wxCloseEvent &)> &lambda,
             int id = wxID_ANY) {

@@ -79,9 +79,9 @@ void MainView::createMenu() {
 }
 
 void MainView::positionWidgets() {
-  addWidget(preview_panel.get(), 0, 0);
-  addWidget(control_panel.get(), 1, 0);
-  addWidgetWithSpan(quick_state.get(), 0, 1, 2, 1);
+  addWidget(*preview_panel, 0, 0);
+  addWidget(*control_panel, 1, 0);
+  addWidgetWithSpan(*quick_state, 0, 1, 2, 1);
   runSizer();
 }
 

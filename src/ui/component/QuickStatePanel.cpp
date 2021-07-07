@@ -127,7 +127,7 @@ void QuickStatePanel::positionWidgets() {
   auto* sizer = new wxGridBagSizer();
 
   for (int i = 0; i < entries.size(); i++) {
-    addWidget(entries[i].get(), i, 0);
+    addWidget(*entries[i], i, 0);
   }
 
   runSizer();

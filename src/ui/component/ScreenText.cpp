@@ -87,7 +87,7 @@ void ScreenText::initializeSides(
   int col = 0;
   for (auto* text_side : text_sides) {
     this->text_sides.emplace_back(text_side);
-    addWidget(text_side, 0, col++, BORDER_SIZE);
+    addWidget(*text_side, 0, col++, BORDER_SIZE);
   }
   runSizer();
 }

@@ -54,18 +54,14 @@ void LocalImage::createControls(Panel *control_panel) {
 }
 
 void LocalImage::positionWidgets(Panel *control_panel) {
-  // wxSizer *inner_sizer = UiUtil::sizer(0, 2);
-  // wxSizer *button_sizer = UiUtil::sizer(2, 0);
+  button_panel->addWidget(*browse_button, 0, 0);
+  button_panel->addWidget(*paste_button, 1, 0);
 
-  button_panel->addWidget(browse_button.get(), 0, 0);
-  button_panel->addWidget(paste_button.get(), 1, 0);
+  inner_panel->addWidget(*button_panel, 0, 0);
+  inner_panel->addWidget(*screen_selection, 0, 1);
 
-  inner_panel->addWidget(button_panel.get(), 0, 0);
-  inner_panel->addWidget(screen_selection.get(), 0, 1);
-
-  // wxSizer *outer_sizer = UiUtil::sizer(0, 1);
-  control_panel->addWidget(current_image_label.get(), 0, 0);
-  control_panel->addWidget(inner_panel.get(), 1, 0, NO_BORDER);
+  control_panel->addWidget(*current_image_label, 0, 0);
+  control_panel->addWidget(*inner_panel, 1, 0, NO_BORDER);
 
   button_panel->runSizer();
   inner_panel->runSizer();

@@ -69,31 +69,31 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
 }
 
 void ImageFromLibrary::positionWidgets(Panel *control_panel) {
-  search_panel->addWidget(search_box.get(), 0, 0, DEFAULT_BORDER_SIZE, wxALL);
-  search_panel->addWidget(tag_list_label.get(), 1, 0, DEFAULT_BORDER_SIZE,
+  search_panel->addWidget(*search_box, 0, 0, DEFAULT_BORDER_SIZE, wxALL);
+  search_panel->addWidget(*tag_list_label, 1, 0, DEFAULT_BORDER_SIZE,
                           wxALL);
 
-  main_panel->addWidgetWithSpan(search_panel.get(), 0, 0, 1, 2);
-  main_panel->addWidget(screen_selection.get(), 0, 2);
-  main_panel->addWidget(left_button.get(), 1, 0, DEFAULT_BORDER_SIZE,
+  main_panel->addWidgetWithSpan(*search_panel, 0, 0, 1, 2);
+  main_panel->addWidget(*screen_selection, 0, 2);
+  main_panel->addWidget(*left_button, 1, 0, DEFAULT_BORDER_SIZE,
                         wxALL | wxALIGN_LEFT);
-  main_panel->addWidget(right_button.get(), 1, 1, DEFAULT_BORDER_SIZE,
+  main_panel->addWidget(*right_button, 1, 1, DEFAULT_BORDER_SIZE,
                         wxALL | wxALIGN_LEFT);
 
-  control_panel->addWidget(current_image_label.get(), 0, 0);
-  control_panel->addWidget(main_panel.get(), 1, 0);
-  control_panel->addWidget(image_preview_panel.get(), 2, 0);
-  control_panel->addWidget(configure_button.get(), 3, 0, DEFAULT_BORDER_SIZE,
+  control_panel->addWidget(*current_image_label, 0, 0);
+  control_panel->addWidget(*main_panel, 1, 0);
+  control_panel->addWidget(*image_preview_panel, 2, 0);
+  control_panel->addWidget(*configure_button, 3, 0, DEFAULT_BORDER_SIZE,
                            wxALL);
 
   int col = 0;
   for (const auto &preview : image_previews) {
-    image_preview_panel->addWidget(preview.get(), 0, col++);
+    image_preview_panel->addWidget(*preview, 0, col++);
   }
 
   col = 0;
   for (const auto &name : image_names) {
-    image_preview_panel->addWidget(name.get(), 1, col++);
+    image_preview_panel->addWidget(*name, 1, col++);
   }
 
   search_panel->runSizer();

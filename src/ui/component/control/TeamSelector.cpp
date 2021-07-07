@@ -27,7 +27,7 @@ TeamSelector::TeamSelector(swx::Panel* wx) : Panel(wx) {
   selector = std::make_unique<Radio>(new swx::RadioBox(
       _wx(), wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
       CHOICES.size(), CHOICES.data(), 0, wxRA_SPECIFY_ROWS));
-  addWidget(selector.get(), 0, 0, NO_BORDER);
+  addWidget(*selector, 0, 0, NO_BORDER);
   runSizer();
 }
 

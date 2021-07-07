@@ -40,7 +40,7 @@ class TestFrame : public Frame {
     screen_text_side = std::make_unique<ScreenTextSide>(
         childPanel(), "Text", ProtoUtil::homeSide(),
         wxSize(STARTING_WIDTH, STARTING_HEIGHT));
-    addWidget(screen_text_side.get(), 0, 0);
+    addWidget(*screen_text_side, 0, 0);
     runSizer();
   }
 };

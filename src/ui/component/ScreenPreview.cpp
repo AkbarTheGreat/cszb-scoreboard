@@ -63,9 +63,9 @@ ScreenPreview::ScreenPreview(swx::Panel* wx,
 }
 
 void ScreenPreview::positionWidgets() {
-  addWidget(thumbnail.get(), 0, 0, DEFAULT_BORDER_SIZE,
+  addWidget(*thumbnail, 0, 0, DEFAULT_BORDER_SIZE,
             wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
-  addWidget(screen_text.get(), 1, 0, BORDER_SIZE, wxALL);
+  addWidget(*screen_text, 1, 0, BORDER_SIZE, wxALL);
   runSizer();
 }
 

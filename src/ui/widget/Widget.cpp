@@ -20,10 +20,10 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-void Widget::addWidgetWithSpan(Widget *widget, int row, int column,
+void Widget::addWidgetWithSpan(const Widget &widget, int row, int column,
                                int row_span, int column_span, int border_size,
                                int flag) {
-  sizer()->Add(widget->_wx(), wxGBPosition(row, column),
+  sizer()->Add(widget._wx(), wxGBPosition(row, column),
                wxGBSpan(row_span, column_span), flag, border_size);
 }
 
