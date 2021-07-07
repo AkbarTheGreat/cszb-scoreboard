@@ -28,10 +28,10 @@ namespace cszb_scoreboard {
 
 class ImagePreview : public Panel {
  public:
-  ImagePreview(swx::Panel* wx);
+  explicit ImagePreview(swx::Panel* wx);
 
   void clearImage();
-  auto getFilename() const -> std::optional<FilesystemPath>;
+  [[nodiscard]] auto getFilename() const -> std::optional<FilesystemPath>;
   void setImage(const FilesystemPath& filename);
 
  private:
