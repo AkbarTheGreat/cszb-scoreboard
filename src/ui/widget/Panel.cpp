@@ -59,8 +59,13 @@ auto Panel::searchBox(const std::string &initial_text) const
   return search_box;
 }
 
-auto Panel::text(const std::string &initial_text) const
+auto Panel::text(const std::string &initial_text, bool multiLine) const
     -> std::unique_ptr<Text> {
+  if (multiLine) {
+    return std::make_unique<Text>(
+        new swx::TextCtrl(wx, wxID_ANY, initial_text, wxDefaultPosition,
+                          wxSize(-1, -1), wxTE_MULTILINE));
+  }
   return std::make_unique<Text>(new swx::TextCtrl(wx, wxID_ANY, initial_text));
 }
 

@@ -26,17 +26,16 @@ class TextEntryTest : public GuiTest {
  protected:
   static void enterTextIndirect(const char *text) {
     TextEntry *entry = textEntry();
-    WX_A(entry->textField()->SetFocus());
-    WX_A(entry->textField()->Clear());
-    WX_A(entry->textField()->WriteText(text));
-    wxKeyEvent event;
-    WX_A(entry->textUpdated(event));
+    WX_A(entry->textField()->focus());
+    WX_A(entry->textField()->clear());
+    WX_A(entry->textField()->setValue(text));
+    WX_A(entry->textUpdated());
   }
 
   void enterTextDirect(const char *text) {
     TextEntry *entry = textEntry();
-    WX_A(entry->textField()->SetFocus());
-    WX_A(entry->textField()->Clear());
+    WX_A(entry->textField()->focus());
+    WX_A(entry->textField()->clear());
     WX_A(act.Text(text));
   }
 

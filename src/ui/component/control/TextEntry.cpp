@@ -39,9 +39,9 @@ auto TextEntry::Create(PreviewPanel *preview_panel, swx::Panel *wx)
 
 TextEntry::TextEntry(PreviewPanel *preview_panel, swx::Panel *wx)
     : ScreenTextController(preview_panel, wx) {
-  home_text = wxT("Home Team");
-  away_text = wxT("Away Team");
-  all_text = wxT("Enter Text");
+  home_text = "Home Team";
+  away_text = "Away Team";
+  all_text = "Enter Text";
 
   home_font_size = away_font_size = all_font_size = DEFAULT_FONT_SIZE;
 
@@ -52,55 +52,55 @@ TextEntry::TextEntry(PreviewPanel *preview_panel, swx::Panel *wx)
 }
 
 void TextEntry::createControls(Panel *control_panel) {
-  text_label = new wxStaticText(control_panel->wx, wxID_ANY, wxT("Text"));
-  text_entry =
-      new wxTextCtrl(control_panel->wx, wxID_ANY, all_text, wxDefaultPosition,
-                     wxSize(-1, -1), wxTE_MULTILINE);
+  text_label = control_panel->label("Text");
+  text_entry = control_panel->text(all_text, true);
 
-  inner_panel = new wxPanel(control_panel->wx);
+  inner_panel = control_panel->panel();
 
-  font_size_label = new wxStaticText(inner_panel, wxID_ANY, wxT("Font Size"));
-  font_size_entry = new wxTextCtrl(inner_panel, wxID_ANY,
-                                   StringUtil::intToString(DEFAULT_FONT_SIZE));
+  font_size_label = inner_panel->label("Font Size");
+  font_size_entry =
+      inner_panel->text(StringUtil::intToString(DEFAULT_FONT_SIZE));
 
-  screen_selection =
-      new TeamSelector(new swx::Panel(inner_panel), ProtoUtil::allSide());
+  screen_selection = std::make_unique<TeamSelector>(inner_panel->childPanel(),
+                                                    ProtoUtil::allSide());
 
-  color_picker = new wxColourPickerCtrl(inner_panel, wxID_ANY, all_color);
+  color_picker = inner_panel->colorPicker(all_color);
 
   positionWidgets(control_panel);
   bindEvents();
 }
 
 void TextEntry::positionWidgets(Panel *control_panel) {
-  wxSizer *outer_sizer = UiUtil::sizer(0, 3);
-  wxSizer *inner_sizer = UiUtil::sizer(0, 2);
+  // wxSizer *inner_sizer = UiUtil::sizer(0, 2);
 
-  // Outer sizer holds text label and inner_panel
-  UiUtil::addToGridBag(control_panel->sizer(), text_label, 0, 0);
-  UiUtil::addToGridBag(control_panel->sizer(), text_entry, 0, 1);
-  UiUtil::addToGridBag(control_panel->sizer(), inner_panel, 0, 2);
+  control_panel->addWidget(*text_label, 0, 0);
+  control_panel->addWidget(*text_entry, 0, 1);
+  control_panel->addWidget(*inner_panel, 0, 2);
 
-  inner_sizer->Add(font_size_label, 0, wxALL, BORDER_SIZE);
-  inner_sizer->Add(font_size_entry, 0, wxALL, BORDER_SIZE);
-  inner_sizer->Add(screen_selection->wx, 0, wxALL, BORDER_SIZE);
-  inner_sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
+  inner_panel->addWidget(*font_size_label, 0, 0);
+  inner_panel->addWidget(*font_size_entry, 0, 1);
+  inner_panel->addWidget(*screen_selection, 1, 0);
+  inner_panel->addWidget(*color_picker, 1, 1);
 
-  inner_panel->SetSizerAndFit(inner_sizer);
+  inner_panel->runSizer();
   control_panel->runSizer();
 }
 
 void TextEntry::bindEvents() {
-  text_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
-  font_size_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
+  text_entry->bind(wxEVT_KEY_UP,
+                   [this](wxKeyEvent &event) -> void { this->textUpdated(); });
+  font_size_entry->bind(
+      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->textUpdated(); });
   screen_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
       [this](wxCommandEvent &event) -> void { this->screenChanged(); });
-  color_picker->Bind(wxEVT_COLOURPICKER_CHANGED, &TextEntry::colorChanged,
-                     this);
+  color_picker->bind(wxEVT_COLOURPICKER_CHANGED,
+                     [this](wxColourPickerEvent &event) -> void {
+                       this->colorChanged(event);
+                     });
 }
 
-auto TextEntry::textField() -> wxTextCtrl * { return text_entry; }
+auto TextEntry::textField() -> Text * { return text_entry.get(); }
 
 void TextEntry::updateScreenText(ScreenText *screen_text) {
   // Send the combined text to both previews
@@ -115,7 +115,7 @@ void TextEntry::updateScreenText(ScreenText *screen_text) {
   }
 }
 
-void TextEntry::colorChanged(wxColourPickerEvent &event) {
+void TextEntry::colorChanged(const wxColourPickerEvent &event) {
   if (screen_selection->allSelected()) {
     all_color = Color(event.GetColour());
   } else if (screen_selection->homeSelected()) {
@@ -126,15 +126,15 @@ void TextEntry::colorChanged(wxColourPickerEvent &event) {
   updatePreview();
 }
 
-void TextEntry::textUpdated(wxKeyEvent &event) {
+void TextEntry::textUpdated() {
   if (screen_selection->allSelected()) {
-    all_text = text_entry->GetValue();
+    all_text = text_entry->value();
     all_font_size = enteredFontSize();
   } else if (screen_selection->homeSelected()) {
-    home_text = text_entry->GetValue();
+    home_text = text_entry->value();
     home_font_size = enteredFontSize();
   } else if (screen_selection->awaySelected()) {
-    away_text = text_entry->GetValue();
+    away_text = text_entry->value();
     away_font_size = enteredFontSize();
   }
   updatePreview();
@@ -147,17 +147,17 @@ void TextEntry::selectTeam(int index) {
 
 void TextEntry::screenChanged() {
   if (screen_selection->allSelected()) {
-    text_entry->SetValue(all_text);
-    font_size_entry->SetValue(StringUtil::intToString(all_font_size));
-    color_picker->SetColour(all_color);
+    text_entry->setValue(all_text);
+    font_size_entry->setValue(StringUtil::intToString(all_font_size));
+    color_picker->setColor(all_color);
   } else if (screen_selection->homeSelected()) {
-    text_entry->SetValue(home_text);
-    font_size_entry->SetValue(StringUtil::intToString(home_font_size));
-    color_picker->SetColour(home_color);
+    text_entry->setValue(home_text);
+    font_size_entry->setValue(StringUtil::intToString(home_font_size));
+    color_picker->setColor(home_color);
   } else if (screen_selection->awaySelected()) {
-    text_entry->SetValue(away_text);
-    font_size_entry->SetValue(StringUtil::intToString(away_font_size));
-    color_picker->SetColour(away_color);
+    text_entry->setValue(away_text);
+    font_size_entry->setValue(StringUtil::intToString(away_font_size));
+    color_picker->setColor(away_color);
   }
 
   updatePreview();
@@ -165,7 +165,7 @@ void TextEntry::screenChanged() {
 
 auto TextEntry::enteredFontSize() -> int {
   return static_cast<int>(
-      StringUtil::stringToInt(font_size_entry->GetValue(), DEFAULT_FONT_SIZE));
+      StringUtil::stringToInt(font_size_entry->value(), DEFAULT_FONT_SIZE));
 }
 
 }  // namespace cszb_scoreboard

@@ -51,7 +51,8 @@ class Panel : public Widget {
       -> std::unique_ptr<Label>;
   [[nodiscard]] auto searchBox(const std::string &initial_text) const
       -> std::unique_ptr<SearchBox>;
-  [[nodiscard]] auto text(const std::string &initial_text) const
+  [[nodiscard]] auto text(const std::string &initial_text,
+                          bool multiLine = false) const
       -> std::unique_ptr<Text>;
   [[nodiscard]] auto toggle(const std::string &label) const
       -> std::unique_ptr<Toggle>;

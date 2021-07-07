@@ -19,13 +19,16 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clrpicker.h>
 #include <wx/wx.h>
 
 #include "ScoreboardCommon.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/TeamSelector.h"
+#include "ui/widget/ColorPicker.h"
+#include "ui/widget/Label.h"
+#include "ui/widget/Panel.h"
+#include "ui/widget/Text.h"
 
 namespace cszb_scoreboard {
 
@@ -34,30 +37,21 @@ class TextEntry : public ScreenTextController {
   TextEntry(PreviewPanel *preview_panel, swx::Panel *wx);
   static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
       -> std::unique_ptr<TextEntry>;
-  auto textField() -> wxTextCtrl *;
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
-                                        // wxWidgets callback.
+  auto textField() -> Text *;
+  void textUpdated();
 
-  PUBLIC_TEST_ONLY
+PUBLIC_TEST_ONLY
   void selectTeam(int index);
 
  private:
-  wxColourPickerCtrl *color_picker;
-  wxStaticText *font_size_label;
-  wxPanel *inner_panel;
-  wxTextCtrl *font_size_entry;
-  TeamSelector *screen_selection;
-  wxStaticText *text_label;
-  wxTextCtrl *text_entry;
-  wxString home_text;
-  wxString away_text;
-  wxString all_text;
-  int home_font_size;
-  int away_font_size;
-  int all_font_size;
-  Color home_color;
-  Color away_color;
-  Color all_color;
+  std::unique_ptr<ColorPicker> color_picker;
+  std::unique_ptr<Label> font_size_label, text_label;
+  std::unique_ptr<Panel> inner_panel;
+  std::unique_ptr<Text> font_size_entry, text_entry;
+  std::unique_ptr<TeamSelector> screen_selection;
+  std::string home_text, away_text, all_text;
+  int home_font_size, away_font_size, all_font_size;
+  Color home_color, away_color, all_color;
 
   void updateScreenText(ScreenText *screen_text) override;
   void createControls(Panel *control_panel) override;
@@ -67,8 +61,7 @@ class TextEntry : public ScreenTextController {
   void positionWidgets(Panel *control_panel);
   void screenChanged();
   // wxWidgets callbacks, waive linting error for references.
-  void colorChanged(
-      wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
+  void colorChanged(const wxColourPickerEvent &event);
 };
 
 }  // namespace cszb_scoreboard

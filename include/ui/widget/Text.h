@@ -29,6 +29,8 @@ class Text : public Widget {
 
   void setValue(const std::string &value) { wx->SetValue(value); }
   auto value() -> std::string { return wx->GetValue(); }
+  void focus() { wx->SetFocus(); }
+  void clear() { wx->Clear(); }
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }
