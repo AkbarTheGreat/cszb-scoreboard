@@ -73,13 +73,13 @@ void ImageFromLibrary::positionWidgets(Panel *control_panel) {
                           wxALL);
 
   main_panel->addWidgetWithSpan(search_panel.get(), 0, 0, 1, 2);
-  main_panel->addWidget(screen_selection, 0, 2);
+  main_panel->addWidget(screen_selection.get(), 0, 2);
   main_panel->addWidget(left_button.get(), 1, 0, DEFAULT_BORDER_SIZE,
                         wxALL | wxALIGN_LEFT);
   main_panel->addWidget(right_button.get(), 1, 1, DEFAULT_BORDER_SIZE,
                         wxALL | wxALIGN_LEFT);
 
-  UiUtil::addToGridBag(control_panel->sizer(), current_image_label, 0, 0);
+  control_panel->addWidget(current_image_label.get(), 0, 0);
   control_panel->addWidget(main_panel.get(), 1, 0);
   control_panel->addWidget(image_preview_panel.get(), 2, 0);
   control_panel->addWidget(configure_button.get(), 3, 0, DEFAULT_BORDER_SIZE,
@@ -152,15 +152,15 @@ void ImageFromLibrary::selectImage(wxMouseEvent &event) {
   if (screen_selection->allSelected()) {
     all_screen_image = wxImage(filename->string());
     all_screen_image_name = ImageLibrary::getInstance()->name(*filename);
-    current_image_label->SetLabelText(all_screen_image_name);
+    current_image_label->set(all_screen_image_name);
   } else if (screen_selection->awaySelected()) {
     away_screen_image = wxImage(filename->string());
     away_screen_image_name = ImageLibrary::getInstance()->name(*filename);
-    current_image_label->SetLabelText(away_screen_image_name);
+    current_image_label->set(away_screen_image_name);
   } else {
     home_screen_image = wxImage(filename->string());
     home_screen_image_name = ImageLibrary::getInstance()->name(*filename);
-    current_image_label->SetLabelText(home_screen_image_name);
+    current_image_label->set(home_screen_image_name);
   }
 
   control_panel->update();

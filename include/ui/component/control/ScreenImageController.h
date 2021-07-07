@@ -33,11 +33,11 @@ namespace cszb_scoreboard {
 
 class ScreenImageController : public ScreenTextController {
  protected:
-  wxStaticText *current_image_label;
+  std::unique_ptr<Label> current_image_label;
+  std::unique_ptr<TeamSelector> screen_selection;
   wxImage all_screen_image, home_screen_image, away_screen_image;
   std::string all_screen_image_name, home_screen_image_name,
       away_screen_image_name;
-  TeamSelector *screen_selection;
 
   ScreenImageController(PreviewPanel *preview_panel, swx::Panel *wx)
       : ScreenTextController(preview_panel, wx) {}

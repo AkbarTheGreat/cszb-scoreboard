@@ -33,9 +33,9 @@ const std::string NO_IMAGE_MESSAGE =
     "<No Image Selected>                               ";
 
 void ScreenImageController::createControls(Panel *control_panel) {
-  screen_selection = new TeamSelector(childPanel(), ProtoUtil::allSide());
-  current_image_label =
-      new wxStaticText(control_panel->wx, wxID_ANY, NO_IMAGE_MESSAGE);
+  screen_selection =
+      std::make_unique<TeamSelector>(childPanel(), ProtoUtil::allSide());
+  current_image_label = control_panel->label(NO_IMAGE_MESSAGE);
   bindEvents();
 }
 
@@ -67,21 +67,21 @@ void ScreenImageController::updateScreenText(ScreenText *screen_text) {
 void ScreenImageController::screenChanged() {
   if (screen_selection->allSelected()) {
     if (all_screen_image_name.empty()) {
-      current_image_label->SetLabelText(NO_IMAGE_MESSAGE);
+      current_image_label->set(NO_IMAGE_MESSAGE);
     } else {
-      current_image_label->SetLabelText(all_screen_image_name);
+      current_image_label->set(all_screen_image_name);
     }
   } else if (screen_selection->homeSelected()) {
     if (home_screen_image_name.empty()) {
-      current_image_label->SetLabelText(NO_IMAGE_MESSAGE);
+      current_image_label->set(NO_IMAGE_MESSAGE);
     } else {
-      current_image_label->SetLabelText(home_screen_image_name);
+      current_image_label->set(home_screen_image_name);
     }
   } else if (screen_selection->awaySelected()) {
     if (away_screen_image_name.empty()) {
-      current_image_label->SetLabelText(NO_IMAGE_MESSAGE);
+      current_image_label->set(NO_IMAGE_MESSAGE);
     } else {
-      current_image_label->SetLabelText(away_screen_image_name);
+      current_image_label->set(away_screen_image_name);
     }
   }
 

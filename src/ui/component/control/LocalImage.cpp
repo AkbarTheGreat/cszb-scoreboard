@@ -61,10 +61,10 @@ void LocalImage::positionWidgets(Panel *control_panel) {
   button_panel->addWidget(paste_button.get(), 1, 0);
 
   inner_panel->addWidget(button_panel.get(), 0, 0);
-  inner_panel->addWidget(screen_selection, 0, 1);
+  inner_panel->addWidget(screen_selection.get(), 0, 1);
 
   // wxSizer *outer_sizer = UiUtil::sizer(0, 1);
-  UiUtil::addToGridBag(control_panel->sizer(), current_image_label, 0, 0);
+  control_panel->addWidget(current_image_label.get(), 0, 0);
   control_panel->addWidget(inner_panel.get(), 1, 0, NO_BORDER);
 
   button_panel->runSizer();
@@ -97,7 +97,7 @@ void LocalImage::browsePressed() {
       home_screen_image = wxImage(selected_file.c_str());
       home_screen_image_name = selected_file.filename().string();
     }
-    current_image_label->SetLabelText(selected_file.filename().c_str());
+    current_image_label->set(selected_file.filename().string());
   }
 
   control_panel->update();
@@ -130,7 +130,7 @@ void LocalImage::pastePressed() {
     home_screen_image = clipboard_image;
     home_screen_image_name = CLIPBOARD_IMAGE_MESSAGE;
   }
-  current_image_label->SetLabelText(CLIPBOARD_IMAGE_MESSAGE);
+  current_image_label->set(CLIPBOARD_IMAGE_MESSAGE);
 
   control_panel->update();
   updatePreview();
