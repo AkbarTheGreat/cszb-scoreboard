@@ -32,8 +32,6 @@ const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::array<wxString, 2> PRESENTER_OPTIONS{
     {{"Activity List"}, {"Replacements"}}};
-const int SCROLL_X_STEP = 0;
-const int SCROLL_Y_STEP = 20;
 
 auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)
     -> std::unique_ptr<ThingsMode> {
@@ -43,10 +41,9 @@ auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)
 }
 
 void ThingsMode::createControls(Panel *control_panel) {
-  scrollable_panel = new wxScrolledWindow(
-      control_panel->wx, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
+  scrollable_panel = control_panel->scrollingPanel(wxVSCROLL);
 
-  button_panel = std::make_unique<Panel>(new swx::Panel(scrollable_panel));
+  button_panel = scrollable_panel->panel();
 
   screen_selection = std::make_unique<TeamSelector>(button_panel->childPanel());
   presenter_selection = std::make_unique<Radio>(new swx::RadioBox(
@@ -58,23 +55,19 @@ void ThingsMode::createControls(Panel *control_panel) {
   new_replacement_button = button_panel->button("New Replacement");
 
   home_activities_panel =
-      new ActivityPanel(scrollable_panel, this, ProtoUtil::homeSide());
+      new ActivityPanel(scrollable_panel->wx, this, ProtoUtil::homeSide());
   away_activities_panel =
-      new ActivityPanel(scrollable_panel, this, ProtoUtil::awaySide());
+      new ActivityPanel(scrollable_panel->wx, this, ProtoUtil::awaySide());
   all_activities_panel =
-      new ActivityPanel(scrollable_panel, this, ProtoUtil::allSide());
+      new ActivityPanel(scrollable_panel->wx, this, ProtoUtil::allSide());
 
   positionWidgets(control_panel);
   bindEvents();
 
-  wxSize scrollable_size = scrollable_panel->GetSize();
+  wxSize scrollable_size = scrollable_panel->size();
 }
 
 void ThingsMode::positionWidgets(Panel *control_panel) {
-  // wxSizer *button_sizer = UiUtil::sizer(0, 2);
-  // wxSizer *scrollable_sizer = UiUtil::sizer(0, 1);
-  auto *scrollable_sizer = new wxGridBagSizer();
-
   button_panel->addWidget(*screen_selection, 0, 0);
   button_panel->addWidget(*presenter_selection, 0, 1);
   button_panel->addWidget(*new_activity_button, 1, 0);
@@ -82,18 +75,19 @@ void ThingsMode::positionWidgets(Panel *control_panel) {
 
   button_panel->runSizer();
 
-  UiUtil::addToGridBag(scrollable_sizer, button_panel->wx, 0, 0);
-  UiUtil::addToGridBag(scrollable_sizer, home_activities_panel, 1, 0);
-  UiUtil::addToGridBag(scrollable_sizer, away_activities_panel, 2, 0);
-  UiUtil::addToGridBag(scrollable_sizer, all_activities_panel, 3, 0);
+  scrollable_panel->addWidget(*button_panel, 0, 0);
+  UiUtil::addToGridBag(scrollable_panel->sizer(), home_activities_panel, 1, 0,
+                       1, 1, NO_BORDER);
+  UiUtil::addToGridBag(scrollable_panel->sizer(), away_activities_panel, 2, 0,
+                       1, 1, NO_BORDER);
+  UiUtil::addToGridBag(scrollable_panel->sizer(), all_activities_panel, 3, 0, 1,
+                       1, NO_BORDER);
 
   updateActivityPanel();
 
-  scrollable_panel->SetSizer(scrollable_sizer);
-  scrollable_panel->FitInside();
-  scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
+  scrollable_panel->runSizer();
 
-  UiUtil::addToGridBag(control_panel->sizer(), scrollable_panel, 0, 0);
+  control_panel->addWidget(*scrollable_panel, 0, 0);
 
   control_panel->runSizer();
 }
@@ -127,10 +121,7 @@ void ThingsMode::updateScreenText(ScreenText *screen_text) {
   Color screen_color = selected_panel->getColor();
 
   // Re-size for scrollable windows
-  scrollable_panel->SetSizer(scrollable_panel->GetSizer());
-  scrollable_panel->FitInside();
-  scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
-  scrollable_panel->SetScrollRate(SCROLL_X_STEP, SCROLL_Y_STEP);
+  scrollable_panel->runSizer();
 
   std::vector<proto::RenderableText> screen_lines;
 
@@ -172,11 +163,11 @@ void ThingsMode::presentedListChanged() { updatePreview(); }
 
 void ThingsMode::addActivity() {
   if (screen_selection->allSelected()) {
-    all_activities_panel->addActivity(scrollable_panel);
+    all_activities_panel->addActivity(scrollable_panel->wx);
   } else if (screen_selection->homeSelected()) {
-    home_activities_panel->addActivity(scrollable_panel);
+    home_activities_panel->addActivity(scrollable_panel->wx);
   } else if (screen_selection->awaySelected()) {
-    away_activities_panel->addActivity(scrollable_panel);
+    away_activities_panel->addActivity(scrollable_panel->wx);
   }
 }
 

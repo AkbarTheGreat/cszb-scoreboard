@@ -19,58 +19,66 @@ limitations under the License.
 
 #include "ui/widget/Panel.h"
 
+#include "ui/widget/ScrollingPanel.h"
+
 namespace cszb_scoreboard {
 
 Panel::~Panel() {
   if (should_self_delete) {
-    wx->Destroy();
+    _wx()->Destroy();
   }
 }
 
-auto Panel::button(const std::string &label, bool exactFit) const
+auto Panel::button(const std::string &label, bool exact_fit) const
     -> std::unique_ptr<Button> {
-  if (exactFit) {
+  if (exact_fit) {
     return std::make_unique<Button>(new swx::Button(
-        wx, wxID_ANY, label, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT));
+        _wx(), wxID_ANY, label, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT));
   }
-  return std::make_unique<Button>(new swx::Button(wx, wxID_ANY, label));
+  return std::make_unique<Button>(new swx::Button(_wx(), wxID_ANY, label));
 }
 
 auto Panel::colorPicker(const wxColour &initial_color) const
     -> std::unique_ptr<ColorPicker> {
   return std::make_unique<ColorPicker>(
-      new swx::ColourPickerCtrl(wx, wxID_ANY, initial_color));
+      new swx::ColourPickerCtrl(_wx(), wxID_ANY, initial_color));
 }
 
 auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {
-  return std::make_unique<Label>(new swx::StaticText(wx, wxID_ANY, text));
+  return std::make_unique<Label>(new swx::StaticText(_wx(), wxID_ANY, text));
 }
 
 auto Panel::panel() const -> std::unique_ptr<Panel> {
   return std::make_unique<Panel>(childPanel());
 }
 
+auto Panel::scrollingPanel(long scroll_style) const
+    -> std::unique_ptr<ScrollingPanel> {
+  return std::make_unique<ScrollingPanel>(new swx::ScrolledWindow(
+      _wx(), wxID_ANY, wxDefaultPosition, wxDefaultSize, scroll_style));
+}
+
 auto Panel::searchBox(const std::string &initial_text) const
     -> std::unique_ptr<SearchBox> {
   auto search_box = std::make_unique<SearchBox>(
-      new swx::SearchCtrl(wx, wxID_ANY), initial_text);
+      new swx::SearchCtrl(_wx(), wxID_ANY), initial_text);
   search_box->showSearchButton(false);
   search_box->showCancelButton(true);
   return search_box;
 }
 
-auto Panel::text(const std::string &initial_text, bool multiLine) const
+auto Panel::text(const std::string &initial_text, bool multi_line) const
     -> std::unique_ptr<Text> {
-  if (multiLine) {
+  if (multi_line) {
     return std::make_unique<Text>(
-        new swx::TextCtrl(wx, wxID_ANY, initial_text, wxDefaultPosition,
+        new swx::TextCtrl(_wx(), wxID_ANY, initial_text, wxDefaultPosition,
                           wxSize(-1, -1), wxTE_MULTILINE));
   }
-  return std::make_unique<Text>(new swx::TextCtrl(wx, wxID_ANY, initial_text));
+  return std::make_unique<Text>(new swx::TextCtrl(_wx(), wxID_ANY, initial_text));
 }
 
 auto Panel::toggle(const std::string &label) const -> std::unique_ptr<Toggle> {
-  return std::make_unique<Toggle>(new swx::ToggleButton(wx, wxID_ANY, label));
+  return std::make_unique<Toggle>(new swx::ToggleButton(_wx(), wxID_ANY, label));
 }
 
 }  // namespace cszb_scoreboard

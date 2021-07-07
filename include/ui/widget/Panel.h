@@ -36,6 +36,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+// pre-declare ScrollingPanel to avoid circular dependencies
+class ScrollingPanel;
+
 class Panel : public Widget {
  public:
   explicit Panel(swx::Panel *panel) { wx = panel; }
@@ -43,16 +46,19 @@ class Panel : public Widget {
 
   // Methods to create internal widgets, like buttons or labels.
   [[nodiscard]] auto button(const std::string &label,
-                            bool exactFit = false) const
+                            bool exact_fit = false) const
       -> std::unique_ptr<Button>;
   [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
       -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto label(const std::string &text) const
       -> std::unique_ptr<Label>;
+  [[nodiscard]] auto scrollingPanel(long scroll_style = wxHSCROLL |
+                                                        wxVSCROLL) const
+      -> std::unique_ptr<ScrollingPanel>;
   [[nodiscard]] auto searchBox(const std::string &initial_text) const
       -> std::unique_ptr<SearchBox>;
   [[nodiscard]] auto text(const std::string &initial_text,
-                          bool multiLine = false) const
+                          bool multi_line = false) const
       -> std::unique_ptr<Text>;
   [[nodiscard]] auto toggle(const std::string &label) const
       -> std::unique_ptr<Toggle>;
@@ -68,26 +74,26 @@ class Panel : public Widget {
                                 long style = wxTAB_TRAVERSAL,
                                 const wxString &name = wxPanelNameStr) const
       -> swx::Panel * {
-    return new swx::Panel(wx, id, pos, size, style, name);
+    return new swx::Panel(_wx(), id, pos, size, style, name);
   }
-  void hide() const { wx->Hide(); }
-  void refresh() const { wx->Refresh(); }
-  void setSize(const wxSize &size) const { wx->SetSize(size); }
-  void show() const { wx->Show(); }
-  void toolTip(const std::string &tip) const { wx->SetToolTip(tip); }
-  void update() const { wx->Update(); }
+  void hide() const { _wx()->Hide(); }
+  void refresh() const { _wx()->Refresh(); }
+  void setSize(const wxSize &size) const { _wx()->SetSize(size); }
+  void show() const { _wx()->Show(); }
+  [[nodiscard]] auto size() const -> wxSize { return _wx()->GetSize(); }
+  void toolTip(const std::string &tip) const { _wx()->SetToolTip(tip); }
+  void update() const { _wx()->Update(); }
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
   swx::Panel *wx;
 
  protected:
-  [[nodiscard]] auto size() const -> wxSize { return wx->GetSize(); }
   // If true, this panel will destory its own wxPanel object rather than rely on
   // the parent wxWidget to do it for us.
   bool should_self_delete = false;
 
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 };
 
 }  // namespace cszb_scoreboard

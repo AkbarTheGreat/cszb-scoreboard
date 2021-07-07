@@ -30,6 +30,7 @@ limitations under the License.
 #include "ui/widget/Button.h"
 #include "ui/widget/Panel.h"
 #include "ui/widget/Radio.h"
+#include "ui/widget/ScrollingPanel.h"
 
 namespace cszb_scoreboard {
 
@@ -48,7 +49,7 @@ class ThingsMode : public ScreenTextController {
   std::unique_ptr<Button> new_replacement_button;
   std::unique_ptr<Radio> presenter_selection;
   std::unique_ptr<TeamSelector> screen_selection;
-  wxScrolledWindow *scrollable_panel;
+  std::unique_ptr<ScrollingPanel> scrollable_panel;
 
   ActivityPanel *home_activities_panel;
   ActivityPanel *away_activities_panel;
