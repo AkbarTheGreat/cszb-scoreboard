@@ -56,8 +56,9 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
   tag_list_label = search_panel->label("");
 
   for (int i = 0; i < NUM_PREVIEWS; i++) {
-    image_previews.push_back(
-        new ImagePreview(image_preview_panel->wx, PREVIEW_SIZE));
+    image_previews.emplace_back(
+        std::make_unique<ImagePreview>(image_preview_panel->childPanel(
+            wxID_ANY, wxDefaultPosition, PREVIEW_SIZE)));
     image_names.emplace_back(image_preview_panel->label("          "));
   }
 
@@ -86,8 +87,8 @@ void ImageFromLibrary::positionWidgets(Panel *control_panel) {
                            wxALL);
 
   int col = 0;
-  for (auto *preview : image_previews) {
-    UiUtil::addToGridBag(image_preview_panel->sizer(), preview, 0, col++);
+  for (const auto &preview : image_previews) {
+    image_preview_panel->addWidget(preview.get(), 0, col++);
   }
 
   col = 0;
@@ -104,26 +105,27 @@ void ImageFromLibrary::positionWidgets(Panel *control_panel) {
 void ImageFromLibrary::bindEvents() {
   configure_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->editButton(event); });
-  search_box->bind(wxEVT_TEXT, [this](wxCommandEvent &event) -> void {
-    this->doSearch(event);
-  });
+      [this](wxCommandEvent &event) -> void { this->editButton(); });
+  search_box->bind(wxEVT_TEXT,
+                   [this](wxCommandEvent &event) -> void { this->doSearch(); });
   left_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
       [this](wxCommandEvent &event) -> void { this->pageChange(false); });
   right_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
       [this](wxCommandEvent &event) -> void { this->pageChange(true); });
-  for (auto *preview : image_previews) {
-    preview->Bind(wxEVT_LEFT_DOWN, &ImageFromLibrary::selectImage, this);
+  for (const auto &preview : image_previews) {
+    // Cast our pointer to a const reference, for the lambda capture.
+    auto arg = *preview;
+    preview->bind(wxEVT_LEFT_DOWN, [this, arg](wxMouseEvent &event) -> void {
+      this->selectImage(arg);
+    });
   }
 }
 
-void ImageFromLibrary::doSearch(wxCommandEvent &event) {
-  setImages(search_box->value());
-}
+void ImageFromLibrary::doSearch() { setImages(search_box->value()); }
 
-void ImageFromLibrary::editButton(wxCommandEvent &event) {
+void ImageFromLibrary::editButton() {
   edit_dialog = new EditImageLibraryDialog();
   edit_dialog->Create(wx);
   edit_dialog->Show();
@@ -140,9 +142,8 @@ void ImageFromLibrary::pageChange(bool forward) {
   }
 }
 
-void ImageFromLibrary::selectImage(wxMouseEvent &event) {
-  std::optional<FilesystemPath> filename =
-      dynamic_cast<ImagePreview *>(event.GetEventObject())->getFilename();
+void ImageFromLibrary::selectImage(const ImagePreview &image) {
+  std::optional<FilesystemPath> filename = image.getFilename();
 
   // do nothing if someone clicked a gray box
   if (!filename) {

@@ -26,44 +26,43 @@ namespace cszb_scoreboard {
 
 const std::string DEFAULT_PREVIEW_COLOR = "Grey";
 
-ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size)
-    : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  this->size = size;
-  this->image = BackgroundImage(size, Color(DEFAULT_PREVIEW_COLOR));
+ImagePreview::ImagePreview(swx::Panel* wx) : Panel(wx) {
+  this->image = BackgroundImage(wx->GetSize(), Color(DEFAULT_PREVIEW_COLOR));
   bindEvents();
 }
 
 void ImagePreview::bindEvents() {
-  Bind(wxEVT_PAINT, &ImagePreview::paintEvent, this);
+  bind(wxEVT_PAINT,
+       [this](wxPaintEvent& event) -> void { this->paintEvent(); });
 }
 
 void ImagePreview::renderImage(wxDC* dc) {
   wxImage scaled_image = image;
   wxSize image_size = scaled_image.GetSize();
-  float screen_ratio = ratio(size);
+  float screen_ratio = ratio(size());
   float image_ratio = ratio(image_size);
   int image_height;
   int image_width;
   if (screen_ratio > image_ratio) {
     // Screen is wider than image, so make the heights match
-    image_height = size.GetHeight();
-    image_width = size.GetHeight() * image_ratio;
+    image_height = size().GetHeight();
+    image_width = size().GetHeight() * image_ratio;
   } else {
     // Screen is either the same ratio or narrower than image, so make the
     // widths match
-    image_width = size.GetWidth();
-    image_height = size.GetWidth() / image_ratio;
+    image_width = size().GetWidth();
+    image_height = size().GetWidth() / image_ratio;
   }
 
   scaled_image.Rescale(image_width, image_height);
-  int x = (size.GetWidth() - image_width) / 2;
-  int y = (size.GetHeight() - image_height) / 2;
+  int x = (size().GetWidth() - image_width) / 2;
+  int y = (size().GetHeight() - image_height) / 2;
 
   dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
 }
 
-void ImagePreview::paintEvent(wxPaintEvent& event) {
-  wxPaintDC dc(this);
+void ImagePreview::paintEvent() {
+  wxPaintDC dc(_wx());
   renderImage(&dc);
 }
 
@@ -74,19 +73,19 @@ auto ImagePreview::ratio(const wxSize& size) -> float {
 }
 
 void ImagePreview::clearImage() {
-  image = BackgroundImage(size, Color(DEFAULT_PREVIEW_COLOR));
+  image = BackgroundImage(size(), Color(DEFAULT_PREVIEW_COLOR));
   filename.reset();
-  Refresh();
+  refresh();
 }
 
-auto ImagePreview::getFilename() -> std::optional<FilesystemPath> {
+auto ImagePreview::getFilename() const -> std::optional<FilesystemPath> {
   return filename;
 }
 
 void ImagePreview::setImage(const FilesystemPath& filename) {
   this->filename = filename;
   image = wxImage(filename.string());
-  Refresh();
+  refresh();
 }
 
 }  // namespace cszb_scoreboard

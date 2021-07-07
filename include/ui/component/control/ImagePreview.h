@@ -21,28 +21,27 @@ limitations under the License.
 
 #include <optional>
 
+#include "ui/widget/Panel.h"
 #include "util/FilesystemPath.h"
 
 namespace cszb_scoreboard {
 
-class ImagePreview : public wxPanel {
+class ImagePreview : public Panel {
  public:
-  ImagePreview(wxWindow* parent, const wxSize& size);
+  ImagePreview(swx::Panel* wx);
 
   void clearImage();
-  auto getFilename() -> std::optional<FilesystemPath>;
+  auto getFilename() const -> std::optional<FilesystemPath>;
   void setImage(const FilesystemPath& filename);
 
  private:
   void bindEvents();
-  void paintEvent(wxPaintEvent& event);  // NOLINT(google-runtime-references)
-                                         // wxWidgets callback.
+  void paintEvent();
   static auto ratio(const wxSize& size) -> float;
   void renderImage(wxDC* dc);
 
   std::optional<FilesystemPath> filename;
   wxImage image;
-  wxSize size;
 };
 
 }  // namespace cszb_scoreboard

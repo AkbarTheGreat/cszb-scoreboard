@@ -44,25 +44,24 @@ class ImageFromLibrary : public ScreenImageController {
 
  private:
   int current_image_page = 0;
-  // All of the following pointer types are references to wxWidgets elements
-  // that wxWidgets maintains.  They are raw pointers as wxWidgets will handle
-  // destruction of them at shutdown.
   std::unique_ptr<Button> left_button, right_button, configure_button;
   std::unique_ptr<SearchBox> search_box;
   std::unique_ptr<Panel> main_panel, search_panel, image_preview_panel;
   std::unique_ptr<Label> tag_list_label;
-  std::vector<ImagePreview *> image_previews;
+  std::vector<std::unique_ptr<ImagePreview>> image_previews;
   std::vector<std::unique_ptr<Label>> image_names;
+  // All of the following pointer types are references to wxWidgets elements
+  // that wxWidgets maintains.  They are raw pointers as wxWidgets will handle
+  // destruction of them at shutdown.
   EditImageLibraryDialog *edit_dialog;
 
   void bindEvents();
   void createControls(Panel *control_panel) override;
   void positionWidgets(Panel *control_panel) override;
   void setImages(const wxString &search, unsigned int page_number = 0);
-  // wxWidgets callbacks, waive linting error for references.
-  void doSearch(wxCommandEvent &event);    // NOLINT(google-runtime-references)
-  void selectImage(wxMouseEvent &event);   // NOLINT(google-runtime-references)
-  void editButton(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void doSearch();
+  void selectImage(const ImagePreview &image);
+  void editButton();
   void pageChange(bool forward);
 };
 
