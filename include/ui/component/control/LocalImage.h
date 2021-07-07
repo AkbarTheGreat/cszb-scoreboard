@@ -23,6 +23,8 @@ limitations under the License.
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenImageController.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
@@ -34,19 +36,14 @@ class LocalImage : public ScreenImageController {
       -> std::unique_ptr<LocalImage>;
 
  private:
-  wxButton *browse_button;
-  wxPanel *button_panel;
-  wxButton *paste_button;
-  wxPanel *inner_panel;
+  std::unique_ptr<Panel> button_panel, inner_panel;
+  std::unique_ptr<Button> browse_button, paste_button;
 
   void bindEvents();
   void createControls(Panel *control_panel) override;
   void positionWidgets(Panel *control_panel) override;
-  // wxWidgets callbacks, waive linting error for references.
-  void browsePressed(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void pastePressed(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void browsePressed();
+  void pastePressed();
 };
 
 }  // namespace cszb_scoreboard

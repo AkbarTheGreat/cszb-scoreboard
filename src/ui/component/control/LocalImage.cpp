@@ -41,45 +41,47 @@ auto LocalImage::Create(PreviewPanel *preview_panel, swx::Panel *wx)
 
 void LocalImage::createControls(Panel *control_panel) {
   ScreenImageController::createControls(control_panel);
-  inner_panel = new wxPanel(control_panel->wx);
+  inner_panel = control_panel->panel();
 
   // Reparent our screen_selection to position it into inner_panel, for layout.
-  screen_selection->Reparent(inner_panel);
+  screen_selection->Reparent(inner_panel->wx);
 
-  button_panel = new wxPanel(inner_panel);
-  browse_button = new wxButton(button_panel, wxID_ANY, "Browse");
-  paste_button = new wxButton(button_panel, wxID_ANY, "Load From Clipboard");
+  button_panel = inner_panel->panel();
+  browse_button = button_panel->button("Browse");
+  paste_button = button_panel->button("Load From Clipboard");
   positionWidgets(control_panel);
   bindEvents();
 }
 
 void LocalImage::positionWidgets(Panel *control_panel) {
-  wxSizer *inner_sizer = UiUtil::sizer(0, 2);
-  wxSizer *button_sizer = UiUtil::sizer(2, 0);
+  // wxSizer *inner_sizer = UiUtil::sizer(0, 2);
+  // wxSizer *button_sizer = UiUtil::sizer(2, 0);
 
-  button_sizer->Add(browse_button, 0, wxALL, BORDER_SIZE);
-  button_sizer->Add(paste_button, 0, wxALL, BORDER_SIZE);
+  button_panel->addWidget(browse_button.get(), 0, 0);
+  button_panel->addWidget(paste_button.get(), 1, 0);
 
-  button_panel->SetSizerAndFit(button_sizer);
+  inner_panel->addWidget(button_panel.get(), 0, 0);
+  UiUtil::addToGridBag(inner_panel->sizer(), screen_selection, 0, 1);
 
-  inner_sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
-  inner_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
-
-  inner_panel->SetSizerAndFit(inner_sizer);
-
-  //wxSizer *outer_sizer = UiUtil::sizer(0, 1);
+  // wxSizer *outer_sizer = UiUtil::sizer(0, 1);
   UiUtil::addToGridBag(control_panel->sizer(), current_image_label, 0, 0);
-  UiUtil::addToGridBag(control_panel->sizer(), inner_panel, 1, 0, 1, 1, 0);
+  control_panel->addWidget(inner_panel.get(), 1, 0, NO_BORDER);
 
+  button_panel->runSizer();
+  inner_panel->runSizer();
   control_panel->runSizer();
 }
 
 void LocalImage::bindEvents() {
-  browse_button->Bind(wxEVT_BUTTON, &LocalImage::browsePressed, this);
-  paste_button->Bind(wxEVT_BUTTON, &LocalImage::pastePressed, this);
+  browse_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->browsePressed();
+  });
+  paste_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->pastePressed();
+  });
 }
 
-void LocalImage::browsePressed(wxCommandEvent &event) {
+void LocalImage::browsePressed() {
   wxFileDialog dialog(wx, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() != wxID_CANCEL) {
@@ -102,7 +104,7 @@ void LocalImage::browsePressed(wxCommandEvent &event) {
   updatePreview();
 }
 
-void LocalImage::pastePressed(wxCommandEvent &event) {
+void LocalImage::pastePressed() {
   wxImage clipboard_image;
 
   if (wxTheClipboard->Open()) {
