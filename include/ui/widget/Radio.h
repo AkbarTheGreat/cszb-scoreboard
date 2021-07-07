@@ -1,8 +1,7 @@
 /*
-ui/component/control/TeamSelector.h: A group of radio buttons which selects
-which team's or teams' screen(s) to send data to.
+ui/widget/Radio.h: A collection of radio buttons.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,28 +18,27 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <wx/gbsizer.h>
 
-#include <array>
-
-#include "config.pb.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/Radio.h"
-#include "ui/widget/swx/Panel.h"
+#include "ui/widget/Widget.h"
+#include "ui/widget/swx/RadioBox.h"
 
 namespace cszb_scoreboard {
 
-class TeamSelector : public Panel {
+class Radio : public Widget {
  public:
-  TeamSelector(swx::Panel *wx);
-  TeamSelector(swx::Panel *wx, const proto::ScreenSide &side);
-  auto allSelected() -> bool;
-  auto awaySelected() -> bool;
-  auto homeSelected() -> bool;
-  void setSelection(int sel) { selector->setSelection(sel); }
+  explicit Radio(swx::RadioBox *radio) {
+    wx = radio;
+    wx->SetSelection(0);
+  }
+  auto selection() -> int { return wx->GetSelection(); }
+  void setSelection(int sel) { wx->SetSelection(sel); }
+
+ protected:
+  auto _wx() -> wxWindow * override { return wx; }
 
  private:
-  std::unique_ptr<Radio> selector;
+  swx::RadioBox *wx;
 };
 
 }  // namespace cszb_scoreboard

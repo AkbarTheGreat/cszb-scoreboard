@@ -48,7 +48,7 @@ void ThingsMode::createControls(Panel *control_panel) {
 
   button_panel = new wxPanel(scrollable_panel);
 
-  screen_selection = new TeamSelector(button_panel);
+  screen_selection = new TeamSelector(new swx::Panel(button_panel));
   presenter_selection = new wxRadioBox(
       button_panel, wxID_ANY, wxT("Present"), wxDefaultPosition, wxDefaultSize,
       PRESENTER_OPTIONS.size(), PRESENTER_OPTIONS.data(), 1, wxRA_SPECIFY_COLS);
@@ -75,7 +75,7 @@ void ThingsMode::positionWidgets(Panel *control_panel) {
   wxSizer *button_sizer = UiUtil::sizer(0, 2);
   wxSizer *scrollable_sizer = UiUtil::sizer(0, 1);
 
-  button_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  button_sizer->Add(screen_selection->wx, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(presenter_selection, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(new_activity_button, 0, wxALL, BORDER_SIZE);
   button_sizer->Add(new_replacement_button, 0, wxALL, BORDER_SIZE);
@@ -102,8 +102,9 @@ void ThingsMode::bindEvents() {
                             &ThingsMode::addActivity, this);
   new_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                &ThingsMode::addReplacement, this);
-  screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
-                         &ThingsMode::screenChanged, this);
+  screen_selection->bind(
+      wxEVT_COMMAND_RADIOBOX_SELECTED,
+      [this](wxCommandEvent &event) -> void { this->screenChanged(); });
   presenter_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
                             &ThingsMode::presentedListChanged, this);
 }
@@ -158,7 +159,7 @@ void ThingsMode::updateActivityPanel() {
   }
 }
 
-void ThingsMode::screenChanged(wxCommandEvent &event) {
+void ThingsMode::screenChanged() {
   updateActivityPanel();
   updatePreview();
 }

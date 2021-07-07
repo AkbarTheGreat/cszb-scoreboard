@@ -60,6 +60,8 @@ class Widget {
     _wx()->Bind(eventType, lambda, id);
   }
   void runSizer() { _wx()->SetSizerAndFit(sizer()); }
+  // Reparents this widget to another widget for layout purposes
+  void setParent(Widget *parent) { _wx()->Reparent(parent->_wx()); }
 
   // This should be moved to protected when the conversion is complete.
   auto sizer() -> swx::Sizer *;

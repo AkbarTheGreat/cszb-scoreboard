@@ -46,7 +46,7 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
   search_panel = main_panel->panel();
 
   // Reparent our screen_selection to position it into inner_panel, for layout.
-  screen_selection->Reparent(main_panel->wx);
+  screen_selection->setParent(main_panel.get());
 
   left_button = main_panel->button("<");
   right_button = main_panel->button(">");
@@ -73,7 +73,7 @@ void ImageFromLibrary::positionWidgets(Panel *control_panel) {
                           wxALL);
 
   main_panel->addWidgetWithSpan(search_panel.get(), 0, 0, 1, 2);
-  UiUtil::addToGridBag(main_panel->sizer(), screen_selection, 0, 2);
+  main_panel->addWidget(screen_selection, 0, 2);
   main_panel->addWidget(left_button.get(), 1, 0, DEFAULT_BORDER_SIZE,
                         wxALL | wxALIGN_LEFT);
   main_panel->addWidget(right_button.get(), 1, 1, DEFAULT_BORDER_SIZE,

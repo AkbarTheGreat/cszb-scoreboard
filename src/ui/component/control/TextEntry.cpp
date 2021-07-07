@@ -63,7 +63,8 @@ void TextEntry::createControls(Panel *control_panel) {
   font_size_entry = new wxTextCtrl(inner_panel, wxID_ANY,
                                    StringUtil::intToString(DEFAULT_FONT_SIZE));
 
-  screen_selection = new TeamSelector(inner_panel, ProtoUtil::allSide());
+  screen_selection =
+      new TeamSelector(new swx::Panel(inner_panel), ProtoUtil::allSide());
 
   color_picker = new wxColourPickerCtrl(inner_panel, wxID_ANY, all_color);
 
@@ -82,7 +83,7 @@ void TextEntry::positionWidgets(Panel *control_panel) {
 
   inner_sizer->Add(font_size_label, 0, wxALL, BORDER_SIZE);
   inner_sizer->Add(font_size_entry, 0, wxALL, BORDER_SIZE);
-  inner_sizer->Add(screen_selection, 0, wxALL, BORDER_SIZE);
+  inner_sizer->Add(screen_selection->wx, 0, wxALL, BORDER_SIZE);
   inner_sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
 
   inner_panel->SetSizerAndFit(inner_sizer);
@@ -92,8 +93,9 @@ void TextEntry::positionWidgets(Panel *control_panel) {
 void TextEntry::bindEvents() {
   text_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
   font_size_entry->Bind(wxEVT_KEY_UP, &TextEntry::textUpdated, this);
-  screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
-                         &TextEntry::screenChanged, this);
+  screen_selection->bind(
+      wxEVT_COMMAND_RADIOBOX_SELECTED,
+      [this](wxCommandEvent &event) -> void { this->screenChanged(); });
   color_picker->Bind(wxEVT_COLOURPICKER_CHANGED, &TextEntry::colorChanged,
                      this);
 }
@@ -139,13 +141,11 @@ void TextEntry::textUpdated(wxKeyEvent &event) {
 }
 
 void TextEntry::selectTeam(int index) {
-  screen_selection->SetSelection(index);
-  doScreenChanged();
+  screen_selection->setSelection(index);
+  screenChanged();
 }
 
-void TextEntry::screenChanged(wxCommandEvent &event) { doScreenChanged(); }
-
-void TextEntry::doScreenChanged() {
+void TextEntry::screenChanged() {
   if (screen_selection->allSelected()) {
     text_entry->SetValue(all_text);
     font_size_entry->SetValue(StringUtil::intToString(all_font_size));

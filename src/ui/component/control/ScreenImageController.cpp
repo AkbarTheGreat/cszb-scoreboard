@@ -33,15 +33,16 @@ const std::string NO_IMAGE_MESSAGE =
     "<No Image Selected>                               ";
 
 void ScreenImageController::createControls(Panel *control_panel) {
-  screen_selection = new TeamSelector(control_panel->wx, ProtoUtil::allSide());
+  screen_selection = new TeamSelector(childPanel(), ProtoUtil::allSide());
   current_image_label =
       new wxStaticText(control_panel->wx, wxID_ANY, NO_IMAGE_MESSAGE);
   bindEvents();
 }
 
 void ScreenImageController::bindEvents() {
-  screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
-                         &ScreenImageController::screenChanged, this);
+  screen_selection->bind(
+      wxEVT_COMMAND_RADIOBOX_SELECTED,
+      [this](wxCommandEvent &event) -> void { this->screenChanged(); });
 }
 
 void ScreenImageController::updateScreenText(ScreenText *screen_text) {
@@ -63,7 +64,7 @@ void ScreenImageController::updateScreenText(ScreenText *screen_text) {
   }
 }
 
-void ScreenImageController::screenChanged(wxCommandEvent &event) {
+void ScreenImageController::screenChanged() {
   if (screen_selection->allSelected()) {
     if (all_screen_image_name.empty()) {
       current_image_label->SetLabelText(NO_IMAGE_MESSAGE);

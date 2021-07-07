@@ -65,12 +65,10 @@ class TextEntry : public ScreenTextController {
   void bindEvents();
   auto enteredFontSize() -> int;
   void positionWidgets(Panel *control_panel);
-  void doScreenChanged();
+  void screenChanged();
   // wxWidgets callbacks, waive linting error for references.
   void colorChanged(
       wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
-  void screenChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

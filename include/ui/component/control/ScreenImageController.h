@@ -27,6 +27,7 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/TeamSelector.h"
+#include "ui/widget/Label.h"
 
 namespace cszb_scoreboard {
 
@@ -43,9 +44,7 @@ class ScreenImageController : public ScreenTextController {
   void bindEvents();
   void createControls(Panel *control_panel) override;
   virtual void positionWidgets(Panel *control_panel) = 0;
-  void screenChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                               // wxWidgets callback.
+  void screenChanged();
   void updateScreenText(ScreenText *screen_text) override;
 };
 

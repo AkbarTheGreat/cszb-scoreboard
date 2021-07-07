@@ -63,8 +63,7 @@ class ThingsMode : public ScreenTextController {
       wxCommandEvent &event);  // NOLINT(google-runtime-references)
   void presentedListChanged(
       wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void screenChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void screenChanged();
 };
 
 }  // namespace cszb_scoreboard

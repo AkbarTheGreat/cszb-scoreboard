@@ -19,39 +19,39 @@ limitations under the License.
 
 #include "ui/component/control/TeamSelector.h"
 
-#include <array>
-
 namespace cszb_scoreboard {
 
-static const std::array<wxString, 3> SCREEN_CHOICES{
-    {{"Home"}, {"Away"}, {"All"}}};
+static const std::array<wxString, 3> CHOICES{{{"Home"}, {"Away"}, {"All"}}};
 
-TeamSelector::TeamSelector(wxWindow* parent)
-    : wxRadioBox(parent, wxID_ANY, wxT("Team"), wxDefaultPosition,
-                 wxDefaultSize, SCREEN_CHOICES.size(), SCREEN_CHOICES.data(), 1,
-                 wxRA_SPECIFY_COLS) {
-  SetSelection(0);
+TeamSelector::TeamSelector(swx::Panel* wx) : Panel(wx) {
+  selector = std::make_unique<Radio>(new swx::RadioBox(
+      _wx(), wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
+      CHOICES.size(), CHOICES.data(), 0, wxRA_SPECIFY_ROWS));
+  addWidget(selector.get(), 0, 0, NO_BORDER);
+  runSizer();
 }
 
-TeamSelector::TeamSelector(wxWindow* parent, const proto::ScreenSide& side)
-    : TeamSelector(parent) {
+TeamSelector::TeamSelector(swx::Panel* wx, const proto::ScreenSide& side)
+    : TeamSelector(wx) {
   if (side.home() && side.away()) {
-    SetSelection(2);
+    selector->setSelection(2);
   } else if (side.away()) {
-    SetSelection(1);
+    selector->setSelection(1);
   } else if (side.home()) {
-    SetSelection(0);
+    selector->setSelection(0);
   }
 }
 
-auto TeamSelector::allSelected() -> bool { return (GetSelection() == 2); }
+auto TeamSelector::allSelected() -> bool {
+  return (selector->selection() == 2);
+}
 
 auto TeamSelector::awaySelected() -> bool {
-  return (GetSelection() == 1 || GetSelection() == 2);
+  return (selector->selection() == 1 || selector->selection() == 2);
 }
 
 auto TeamSelector::homeSelected() -> bool {
-  return (GetSelection() == 0 || GetSelection() == 2);
+  return (selector->selection() == 0 || selector->selection() == 2);
 }
 
 }  // namespace cszb_scoreboard

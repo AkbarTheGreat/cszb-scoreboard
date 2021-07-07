@@ -44,7 +44,7 @@ void LocalImage::createControls(Panel *control_panel) {
   inner_panel = control_panel->panel();
 
   // Reparent our screen_selection to position it into inner_panel, for layout.
-  screen_selection->Reparent(inner_panel->wx);
+  screen_selection->setParent(inner_panel.get());
 
   button_panel = inner_panel->panel();
   browse_button = button_panel->button("Browse");
@@ -61,7 +61,7 @@ void LocalImage::positionWidgets(Panel *control_panel) {
   button_panel->addWidget(paste_button.get(), 1, 0);
 
   inner_panel->addWidget(button_panel.get(), 0, 0);
-  UiUtil::addToGridBag(inner_panel->sizer(), screen_selection, 0, 1);
+  inner_panel->addWidget(screen_selection, 0, 1);
 
   // wxSizer *outer_sizer = UiUtil::sizer(0, 1);
   UiUtil::addToGridBag(control_panel->sizer(), current_image_label, 0, 0);
