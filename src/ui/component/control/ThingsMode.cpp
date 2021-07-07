@@ -46,17 +46,16 @@ void ThingsMode::createControls(Panel *control_panel) {
   scrollable_panel = new wxScrolledWindow(
       control_panel->wx, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
 
-  button_panel = new wxPanel(scrollable_panel);
+  button_panel = std::make_unique<Panel>(new swx::Panel(scrollable_panel));
 
-  screen_selection = new TeamSelector(new swx::Panel(button_panel));
-  presenter_selection = new wxRadioBox(
-      button_panel, wxID_ANY, wxT("Present"), wxDefaultPosition, wxDefaultSize,
-      PRESENTER_OPTIONS.size(), PRESENTER_OPTIONS.data(), 1, wxRA_SPECIFY_COLS);
-  presenter_selection->SetSelection(0);
+  screen_selection = std::make_unique<TeamSelector>(button_panel->childPanel());
+  presenter_selection = std::make_unique<Radio>(new swx::RadioBox(
+      button_panel->wx, wxID_ANY, wxT("Present"), wxDefaultPosition,
+      wxDefaultSize, PRESENTER_OPTIONS.size(), PRESENTER_OPTIONS.data(), 0,
+      wxRA_SPECIFY_ROWS));
 
-  new_activity_button = new wxButton(button_panel, wxID_ANY, "New Activity");
-  new_replacement_button =
-      new wxButton(button_panel, wxID_ANY, "New Replacement");
+  new_activity_button = button_panel->button("New Activity");
+  new_replacement_button = button_panel->button("New Replacement");
 
   home_activities_panel =
       new ActivityPanel(scrollable_panel, this, ProtoUtil::homeSide());
@@ -72,20 +71,21 @@ void ThingsMode::createControls(Panel *control_panel) {
 }
 
 void ThingsMode::positionWidgets(Panel *control_panel) {
-  wxSizer *button_sizer = UiUtil::sizer(0, 2);
-  wxSizer *scrollable_sizer = UiUtil::sizer(0, 1);
+  // wxSizer *button_sizer = UiUtil::sizer(0, 2);
+  // wxSizer *scrollable_sizer = UiUtil::sizer(0, 1);
+  auto *scrollable_sizer = new wxGridBagSizer();
 
-  button_sizer->Add(screen_selection->wx, 0, wxALL, BORDER_SIZE);
-  button_sizer->Add(presenter_selection, 0, wxALL, BORDER_SIZE);
-  button_sizer->Add(new_activity_button, 0, wxALL, BORDER_SIZE);
-  button_sizer->Add(new_replacement_button, 0, wxALL, BORDER_SIZE);
-  button_panel->SetSizerAndFit(button_sizer);
+  button_panel->addWidget(*screen_selection, 0, 0);
+  button_panel->addWidget(*presenter_selection, 0, 1);
+  button_panel->addWidget(*new_activity_button, 1, 0);
+  button_panel->addWidget(*new_replacement_button, 1, 1);
 
-  scrollable_sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
+  button_panel->runSizer();
 
-  scrollable_sizer->Add(home_activities_panel);
-  scrollable_sizer->Add(away_activities_panel);
-  scrollable_sizer->Add(all_activities_panel);
+  UiUtil::addToGridBag(scrollable_sizer, button_panel->wx, 0, 0);
+  UiUtil::addToGridBag(scrollable_sizer, home_activities_panel, 1, 0);
+  UiUtil::addToGridBag(scrollable_sizer, away_activities_panel, 2, 0);
+  UiUtil::addToGridBag(scrollable_sizer, all_activities_panel, 3, 0);
 
   updateActivityPanel();
 
@@ -94,19 +94,23 @@ void ThingsMode::positionWidgets(Panel *control_panel) {
   scrollable_panel->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
 
   UiUtil::addToGridBag(control_panel->sizer(), scrollable_panel, 0, 0);
+
   control_panel->runSizer();
 }
 
 void ThingsMode::bindEvents() {
-  new_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                            &ThingsMode::addActivity, this);
-  new_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                               &ThingsMode::addReplacement, this);
+  new_activity_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->addActivity(); });
+  new_replacement_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->addReplacement(); });
   screen_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
       [this](wxCommandEvent &event) -> void { this->screenChanged(); });
-  presenter_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
-                            &ThingsMode::presentedListChanged, this);
+  presenter_selection->bind(
+      wxEVT_COMMAND_RADIOBOX_SELECTED,
+      [this](wxCommandEvent &event) -> void { this->presentedListChanged(); });
 }
 
 void ThingsMode::updateScreenText(ScreenText *screen_text) {
@@ -130,7 +134,7 @@ void ThingsMode::updateScreenText(ScreenText *screen_text) {
 
   std::vector<proto::RenderableText> screen_lines;
 
-  if (presenter_selection->GetSelection() == 0) {
+  if (presenter_selection->selection() == 0) {
     screen_lines = selected_panel->previewText(DEFAULT_FONT_SIZE);
   } else {
     screen_lines =
@@ -141,7 +145,7 @@ void ThingsMode::updateScreenText(ScreenText *screen_text) {
                           ProtoUtil::allSide());
 }
 
-void ThingsMode::textUpdated(wxKeyEvent &event) { updatePreview(); }
+void ThingsMode::textUpdated() { updatePreview(); }
 
 void ThingsMode::updateActivityPanel() {
   if (screen_selection->allSelected()) {
@@ -164,11 +168,9 @@ void ThingsMode::screenChanged() {
   updatePreview();
 }
 
-void ThingsMode::presentedListChanged(wxCommandEvent &event) {
-  updatePreview();
-}
+void ThingsMode::presentedListChanged() { updatePreview(); }
 
-void ThingsMode::addActivity(wxCommandEvent &event) {
+void ThingsMode::addActivity() {
   if (screen_selection->allSelected()) {
     all_activities_panel->addActivity(scrollable_panel);
   } else if (screen_selection->homeSelected()) {
@@ -178,7 +180,7 @@ void ThingsMode::addActivity(wxCommandEvent &event) {
   }
 }
 
-void ThingsMode::addReplacement(wxCommandEvent &event) {
+void ThingsMode::addReplacement() {
   if (screen_selection->allSelected()) {
     all_activities_panel->addReplacement();
   } else if (screen_selection->homeSelected()) {

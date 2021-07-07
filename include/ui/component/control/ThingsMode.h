@@ -27,6 +27,9 @@ limitations under the License.
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/TeamSelector.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/Panel.h"
+#include "ui/widget/Radio.h"
 
 namespace cszb_scoreboard {
 
@@ -36,16 +39,15 @@ class ThingsMode : public ScreenTextController {
       : ScreenTextController(preview_panel, wx) {}
   static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
       -> std::unique_ptr<ThingsMode>;
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
-                                        // wxWidgets callback.
+  void textUpdated();
   void updateScreenText(ScreenText *screen_text) override;
 
  private:
-  wxPanel *button_panel;
-  wxButton *new_activity_button;
-  wxButton *new_replacement_button;
-  wxRadioBox *presenter_selection;
-  TeamSelector *screen_selection;
+  std::unique_ptr<Panel> button_panel;
+  std::unique_ptr<Button> new_activity_button;
+  std::unique_ptr<Button> new_replacement_button;
+  std::unique_ptr<Radio> presenter_selection;
+  std::unique_ptr<TeamSelector> screen_selection;
   wxScrolledWindow *scrollable_panel;
 
   ActivityPanel *home_activities_panel;
@@ -57,12 +59,9 @@ class ThingsMode : public ScreenTextController {
   void bindEvents();
   void positionWidgets(Panel *control_panel);
   void updateActivityPanel();
-  // wxWidgets callbacks, waive linting error for references.
-  void addActivity(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void addReplacement(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void presentedListChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void addActivity();
+  void addReplacement();
+  void presentedListChanged();
   void screenChanged();
 };
 
