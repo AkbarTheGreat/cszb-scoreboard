@@ -1,5 +1,6 @@
 /*
-ui/widget/Button.h: A simple button, nothing super fancy.
+ui/widget/ColorPicker.h: A widget which allows selecting colors from a palatte
+or from a color wheel.
 
 Copyright 2021 Tracy Beck
 
@@ -19,22 +20,27 @@ limitations under the License.
 #pragma once
 
 #include "ui/widget/Widget.h"
-#include "ui/widget/swx/Button.h"
+#include "ui/widget/swx/ColourPickerCtrl.h"
 
 namespace cszb_scoreboard {
 
-class Button : public Widget {
+class ColorPicker : public Widget {
  public:
-  explicit Button(swx::Button *button) { wx = button; }
+  explicit ColorPicker(swx::ColourPickerCtrl *picker) { wx = picker; }
 
-  auto id() -> int { return wx->GetId(); }
-  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
+  void bind(const wxEventTypeTag<wxColourPickerEvent> &eventType,
+            const std::function<void(wxColourPickerEvent &)> &lambda,
+            int id = wxID_ANY) {
+    _wx()->Bind(eventType, lambda, id);
+  }
+  auto color() -> wxColour { return wx->GetColour(); }
+  void setColor(const wxColour &color) { wx->SetColour(color); }
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }
 
  private:
-  swx::Button *wx;
+  swx::ColourPickerCtrl *wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -27,8 +27,19 @@ Panel::~Panel() {
   }
 }
 
-auto Panel::button(const std::string &label) const -> std::unique_ptr<Button> {
+auto Panel::button(const std::string &label, bool exactFit) const
+    -> std::unique_ptr<Button> {
+  if (exactFit) {
+    return std::make_unique<Button>(new swx::Button(
+        wx, wxID_ANY, label, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT));
+  }
   return std::make_unique<Button>(new swx::Button(wx, wxID_ANY, label));
+}
+
+auto Panel::colorPicker(const wxColour &initial_color) const
+    -> std::unique_ptr<ColorPicker> {
+  return std::make_unique<ColorPicker>(
+      new swx::ColourPickerCtrl(wx, wxID_ANY, initial_color));
 }
 
 auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {
@@ -46,6 +57,15 @@ auto Panel::searchBox(const std::string &initial_text) const
   search_box->showSearchButton(false);
   search_box->showCancelButton(true);
   return search_box;
+}
+
+auto Panel::text(const std::string &initial_text) const
+    -> std::unique_ptr<Text> {
+  return std::make_unique<Text>(new swx::TextCtrl(wx, wxID_ANY, initial_text));
+}
+
+auto Panel::toggle(const std::string &label) const -> std::unique_ptr<Toggle> {
+  return std::make_unique<Toggle>(new swx::ToggleButton(wx, wxID_ANY, label));
 }
 
 }  // namespace cszb_scoreboard

@@ -49,6 +49,11 @@ class Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
+  void bind(const wxEventTypeTag<wxKeyEvent> &eventType,
+            const std::function<void(wxKeyEvent &)> &lambda,
+            int id = wxID_ANY) {
+    _wx()->Bind(eventType, lambda, id);
+  }
   void bind(const wxEventTypeTag<wxMouseEvent> &eventType,
             const std::function<void(wxMouseEvent &)> &lambda,
             int id = wxID_ANY) {

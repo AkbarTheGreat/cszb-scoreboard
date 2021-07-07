@@ -1,5 +1,5 @@
 /*
-ui/widget/Button.h: A simple button, nothing super fancy.
+ui/widget/Toggle.h: A button which toggles between two states.
 
 Copyright 2021 Tracy Beck
 
@@ -19,22 +19,22 @@ limitations under the License.
 #pragma once
 
 #include "ui/widget/Widget.h"
-#include "ui/widget/swx/Button.h"
+#include "ui/widget/swx/ToggleButton.h"
 
 namespace cszb_scoreboard {
 
-class Button : public Widget {
+class Toggle : public Widget {
  public:
-  explicit Button(swx::Button *button) { wx = button; }
+  explicit Toggle(swx::ToggleButton *button) { wx = button; }
 
-  auto id() -> int { return wx->GetId(); }
-  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
+  void setLabel(const std::string &label) { wx->SetLabelText(label); }
+  auto value() -> bool { return wx->GetValue(); }
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }
 
  private:
-  swx::Button *wx;
+  swx::ToggleButton *wx;
 };
 
 }  // namespace cszb_scoreboard

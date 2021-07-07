@@ -1,5 +1,5 @@
 /*
-ui/widget/Button.h: A simple button, nothing super fancy.
+ui/widget/Text.h: A text entry box.
 
 Copyright 2021 Tracy Beck
 
@@ -19,22 +19,22 @@ limitations under the License.
 #pragma once
 
 #include "ui/widget/Widget.h"
-#include "ui/widget/swx/Button.h"
+#include "ui/widget/swx/TextCtrl.h"
 
 namespace cszb_scoreboard {
 
-class Button : public Widget {
+class Text : public Widget {
  public:
-  explicit Button(swx::Button *button) { wx = button; }
+  explicit Text(swx::TextCtrl *label) { wx = label; }
 
-  auto id() -> int { return wx->GetId(); }
-  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
+  void setValue(const std::string &value) { wx->SetValue(value); }
+  auto value() -> std::string { return wx->GetValue(); }
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }
 
  private:
-  swx::Button *wx;
+  swx::TextCtrl *wx;
 };
 
 }  // namespace cszb_scoreboard

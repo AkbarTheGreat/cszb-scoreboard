@@ -51,178 +51,182 @@ auto ScoreControl::Create(PreviewPanel* preview_panel, swx::Panel* wx)
 void ScoreControl::createControls(Panel* control_panel) {
   // TODO(akbar): Populate the team names from settings-based defaults
 
-  team_controls_panel = new wxPanel(control_panel->wx);
+  team_controls_panel = control_panel->panel();
 
-  home_score_label =
-      new wxStaticText(team_controls_panel, wxID_ANY, wxT("Home"));
-  home_color_picker = new wxColourPickerCtrl(
-      team_controls_panel, wxID_ANY,
+  home_score_label = team_controls_panel->label("Home");
+  home_color_picker = team_controls_panel->colorPicker(
       TeamColors::getInstance()->getColor(ProtoUtil::homeSide()));
-  home_name_entry =
-      new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("Home Team"));
-  home_score_entry = new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("0"));
+  home_name_entry = team_controls_panel->text("Home Team");
+  home_score_entry = team_controls_panel->text("0");
 
-  home_button_panel = new wxPanel(team_controls_panel);
-  home_plus_1 = new wxButton(home_button_panel, wxID_ANY, "+1",
-                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-  home_plus_5 = new wxButton(home_button_panel, wxID_ANY, "+5",
-                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-  home_minus_1 = new wxButton(home_button_panel, wxID_ANY, "-1",
-                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  home_button_panel = team_controls_panel->panel();
+  home_plus_1 = home_button_panel->button("+1", true);
+  home_plus_5 = home_button_panel->button("+5", true);
+  home_minus_1 = home_button_panel->button("-1", true);
 
-  home_logo_label =
-      new wxStaticText(team_controls_panel, wxID_ANY, NO_LOGO_MESSAGE);
-  home_logo_button = new wxButton(team_controls_panel, wxID_ANY, "Choose Logo");
+  home_logo_label = team_controls_panel->label(NO_LOGO_MESSAGE);
+  home_logo_button = team_controls_panel->button("Choose Logo");
 
-  away_score_label =
-      new wxStaticText(team_controls_panel, wxID_ANY, wxT("Away"));
-  away_color_picker = new wxColourPickerCtrl(
-      team_controls_panel, wxID_ANY,
+  away_score_label = team_controls_panel->label("Away");
+  away_color_picker = team_controls_panel->colorPicker(
       TeamColors::getInstance()->getColor(ProtoUtil::awaySide()));
+  away_name_entry = team_controls_panel->text("Away Team");
+  away_score_entry = team_controls_panel->text("0");
 
-  away_name_entry =
-      new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("Away Team"));
-  away_score_entry = new wxTextCtrl(team_controls_panel, wxID_ANY, wxT("0"));
+  away_button_panel = team_controls_panel->panel();
+  away_plus_1 = away_button_panel->button("+1", true);
+  away_plus_5 = away_button_panel->button("+5", true);
+  away_minus_1 = away_button_panel->button("-1", true);
 
-  away_button_panel = new wxPanel(team_controls_panel);
-  away_plus_1 = new wxButton(away_button_panel, wxID_ANY, "+1",
-                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-  away_plus_5 = new wxButton(away_button_panel, wxID_ANY, "+5",
-                             wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-  away_minus_1 = new wxButton(away_button_panel, wxID_ANY, "-1",
-                              wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  away_logo_label = team_controls_panel->label(NO_LOGO_MESSAGE);
+  away_logo_button = team_controls_panel->button("Choose Logo");
 
-  away_logo_label =
-      new wxStaticText(team_controls_panel, wxID_ANY, NO_LOGO_MESSAGE);
-  away_logo_button = new wxButton(team_controls_panel, wxID_ANY, "Choose Logo");
-
-  team_intro_button =
-      new wxToggleButton(control_panel->wx, wxID_ANY, INTRO_MODE_LABEL);
+  team_intro_button = control_panel->toggle(INTRO_MODE_LABEL);
 
   positionWidgets(control_panel);
   bindEvents();
 }
 
 void ScoreControl::bindEvents() {
-  home_score_entry->Bind(wxEVT_KEY_UP, &ScoreControl::homeUpdated, this);
-  home_name_entry->Bind(wxEVT_KEY_UP, &ScoreControl::homeNameUpdated, this);
-  away_score_entry->Bind(wxEVT_KEY_UP, &ScoreControl::awayUpdated, this);
-  away_name_entry->Bind(wxEVT_KEY_UP, &ScoreControl::awayNameUpdated, this);
-  home_plus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::homeAddOne,
-                    this);
-  home_plus_5->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::homeAddFive,
-                    this);
-  home_minus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::homeMinusOne,
-                     this);
-  away_plus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::awayAddOne,
-                    this);
-  away_plus_5->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::awayAddFive,
-                    this);
-  away_minus_1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScoreControl::awayMinusOne,
-                     this);
-  home_color_picker->Bind(wxEVT_COLOURPICKER_CHANGED,
-                          &ScoreControl::colorChanged, this);
-  away_color_picker->Bind(wxEVT_COLOURPICKER_CHANGED,
-                          &ScoreControl::colorChanged, this);
-  home_logo_button->Bind(wxEVT_BUTTON, &ScoreControl::selectLogo, this);
-  away_logo_button->Bind(wxEVT_BUTTON, &ScoreControl::selectLogo, this);
-  team_intro_button->Bind(wxEVT_TOGGLEBUTTON, &ScoreControl::toggleIntroMode,
-                          this);
+  home_score_entry->bind(
+      wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void { this->homeUpdated(); });
+  home_name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void {
+    this->homeNameUpdated();
+  });
+  away_score_entry->bind(
+      wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void { this->awayUpdated(); });
+  away_name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void {
+    this->awayNameUpdated();
+  });
+  home_plus_1->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->homeAddOne(); });
+  home_plus_5->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->homeAddFive(); });
+  home_minus_1->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->homeMinusOne(); });
+  away_plus_1->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->awayAddOne(); });
+  away_plus_5->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->awayAddFive(); });
+  away_minus_1->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->awayMinusOne(); });
+  home_color_picker->bind(
+      wxEVT_COLOURPICKER_CHANGED,
+      [this](wxColourPickerEvent& event) -> void { this->colorChanged(); });
+  away_color_picker->bind(
+      wxEVT_COLOURPICKER_CHANGED,
+      [this](wxColourPickerEvent& event) -> void { this->colorChanged(); });
+  home_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
+    this->selectLogo(true);
+  });
+  away_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
+    this->selectLogo(false);
+  });
+  team_intro_button->bind(
+      wxEVT_TOGGLEBUTTON,
+      [this](wxCommandEvent& event) -> void { this->toggleIntroMode(); });
 }
 
-/* Since the conrol panel alternates between home and away buttons to make
+/* Since the control panel alternates between home and away buttons to make
  * columns, this method adds them in the correct order to mirror the
  * single-window positioning. */
-void ScoreControl::addHomeAwayWidgetPair(wxSizer* sizer, wxWindow* home_widget,
-                                         wxWindow* away_widget) {
+void ScoreControl::addHomeAwayWidgetPair(Panel* panel, int row,
+                                         const Widget& home_widget,
+                                         const Widget& away_widget) {
   bool is_left = true;
+  int col = 0;
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
-    wxWindow* minus_1 = home_minus_1;
-    wxWindow* plus_1 = home_plus_1;
-    wxWindow* plus_5 = home_plus_5;
+    Button* minus_1 = home_minus_1.get();
+    Button* plus_1 = home_plus_1.get();
+    Button* plus_5 = home_plus_5.get();
 
     if (team == proto::TeamInfo_TeamType_HOME_TEAM) {
-      sizer->Add(home_widget, 0, wxALL, BORDER_SIZE);
-      minus_1 = home_minus_1;
-      plus_1 = home_plus_1;
-      plus_5 = home_plus_5;
+      panel->addWidget(home_widget, row, col++, BORDER_SIZE);
+      minus_1 = home_minus_1.get();
+      plus_1 = home_plus_1.get();
+      plus_5 = home_plus_5.get();
     } else if (team == proto::TeamInfo_TeamType_AWAY_TEAM) {
-      sizer->Add(away_widget, 0, wxALL, BORDER_SIZE);
-      minus_1 = away_minus_1;
-      plus_1 = away_plus_1;
-      plus_5 = away_plus_5;
+      panel->addWidget(away_widget, row, col++, BORDER_SIZE);
+      minus_1 = away_minus_1.get();
+      plus_1 = away_plus_1.get();
+      plus_5 = away_plus_5.get();
     }
 
-    if (is_left) {
-      HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'z',
-                                            minus_1->GetId());
-      minus_1->SetToolTip("Ctrl+z");
-      HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'a', plus_1->GetId());
-      plus_1->SetToolTip("Ctrl+a");
-      HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'q', plus_5->GetId());
-      plus_5->SetToolTip("Ctrl+q");
-      is_left = false;
-    } else {
-      HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'x',
-                                            minus_1->GetId());
-      minus_1->SetToolTip("Ctrl+x");
-      HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 's', plus_1->GetId());
-      plus_1->SetToolTip("Ctrl+s");
-      HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'w', plus_5->GetId());
-      plus_5->SetToolTip("Ctrl+w");
+    // Bind the hotkeys the first pass through, then skip it on subsequent runs.
+    if (row == 0) {
+      if (is_left) {
+        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'z', minus_1->id());
+        minus_1->toolTip("Ctrl+z");
+        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'a', plus_1->id());
+        plus_1->toolTip("Ctrl+a");
+        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'q', plus_5->id());
+        plus_5->toolTip("Ctrl+q");
+        is_left = false;
+      } else {
+        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'x', minus_1->id());
+        minus_1->toolTip("Ctrl+x");
+        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 's', plus_1->id());
+        plus_1->toolTip("Ctrl+s");
+        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'w', plus_5->id());
+        plus_5->toolTip("Ctrl+w");
+      }
     }
   }
 }
 
 void ScoreControl::positionWidgets(Panel* control_panel) {
-  wxSizer* team_control_sizer = UiUtil::sizer(0, 2);
+  addHomeAwayWidgetPair(team_controls_panel.get(), 0, *home_score_label,
+                        *away_score_label);
+  addHomeAwayWidgetPair(team_controls_panel.get(), 1, *home_color_picker,
+                        *away_color_picker);
+  addHomeAwayWidgetPair(team_controls_panel.get(), 2, *home_name_entry,
+                        *away_name_entry);
+  addHomeAwayWidgetPair(team_controls_panel.get(), 3, *home_score_entry,
+                        *away_score_entry);
 
-  addHomeAwayWidgetPair(team_control_sizer, home_score_label, away_score_label);
-  addHomeAwayWidgetPair(team_control_sizer, home_color_picker,
-                        away_color_picker);
-  addHomeAwayWidgetPair(team_control_sizer, home_name_entry, away_name_entry);
-  addHomeAwayWidgetPair(team_control_sizer, home_score_entry, away_score_entry);
+  home_button_panel->addWidget(*home_plus_5, 0, 0, BORDER_SIZE);
+  home_button_panel->addWidget(*home_plus_1, 0, 1, BORDER_SIZE);
+  home_button_panel->addWidget(*home_minus_1, 0, 2, BORDER_SIZE);
 
-  wxSizer* home_panel_sizer = UiUtil::sizer(1, 0);
-  home_panel_sizer->Add(home_plus_5, 0, wxALL, BORDER_SIZE);
-  home_panel_sizer->Add(home_plus_1, 0, wxALL, BORDER_SIZE);
-  home_panel_sizer->Add(home_minus_1, 0, wxALL, BORDER_SIZE);
-  home_button_panel->SetSizerAndFit(home_panel_sizer);
+  away_button_panel->addWidget(*away_plus_5, 0, 0, BORDER_SIZE);
+  away_button_panel->addWidget(*away_plus_1, 0, 1, BORDER_SIZE);
+  away_button_panel->addWidget(*away_minus_1, 0, 2, BORDER_SIZE);
 
-  wxSizer* away_panel_sizer = UiUtil::sizer(1, 0);
-  away_panel_sizer->Add(away_plus_5, 0, wxALL, BORDER_SIZE);
-  away_panel_sizer->Add(away_plus_1, 0, wxALL, BORDER_SIZE);
-  away_panel_sizer->Add(away_minus_1, 0, wxALL, BORDER_SIZE);
-  away_button_panel->SetSizerAndFit(away_panel_sizer);
+  addHomeAwayWidgetPair(team_controls_panel.get(), 4, *home_button_panel,
+                        *away_button_panel);
+  addHomeAwayWidgetPair(team_controls_panel.get(), 5, *home_logo_label,
+                        *away_logo_label);
+  addHomeAwayWidgetPair(team_controls_panel.get(), 6, *home_logo_button,
+                        *away_logo_button);
 
-  addHomeAwayWidgetPair(team_control_sizer, home_button_panel,
-                        away_button_panel);
-  addHomeAwayWidgetPair(team_control_sizer, home_logo_label, away_logo_label);
-  addHomeAwayWidgetPair(team_control_sizer, home_logo_button, away_logo_button);
+  control_panel->addWidget(*team_controls_panel, 0, 0, BORDER_SIZE);
+  control_panel->addWidget(*team_intro_button, 0, 1, BORDER_SIZE,
+                           wxALL | wxALIGN_CENTER_VERTICAL);
 
-  team_controls_panel->SetSizerAndFit(team_control_sizer);
-
-  // wxSizer* outer_sizer = UiUtil::sizer(0, 2);
-  UiUtil::addToGridBag(control_panel->sizer(), team_controls_panel, 0, 0, 1, 1,
-                       BORDER_SIZE);
-  UiUtil::addToGridBag(control_panel->sizer(), team_intro_button, 0, 1, 1, 1,
-                       BORDER_SIZE, wxALL | wxALIGN_CENTER_VERTICAL);
+  home_button_panel->runSizer();
+  away_button_panel->runSizer();
+  team_controls_panel->runSizer();
   control_panel->runSizer();
 }
 
-void ScoreControl::selectLogo(wxCommandEvent& event) {
+void ScoreControl::selectLogo(bool isHome) {
   wxFileDialog dialog(wx, _("Select Logo Image"), "", "", LOGO_SELECTION_STRING,
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() != wxID_CANCEL) {
     FilesystemPath selected_file =
         FilesystemPath(std::string(dialog.GetPath()));
-    if (event.GetEventObject() == home_logo_button) {
+    if (isHome) {
       home_logo = wxImage(selected_file.c_str());
-      home_logo_label->SetLabelText(selected_file.filename().c_str());
-    }
-    if (event.GetEventObject() == away_logo_button) {
+      home_logo_label->set(selected_file.filename().string());
+    } else {
       away_logo = wxImage(selected_file.c_str());
-      away_logo_label->SetLabelText(selected_file.filename().c_str());
+      away_logo_label->set(selected_file.filename().string());
     }
   }
   control_panel->update();
@@ -233,19 +237,19 @@ auto ScoreControl::scoreLines(bool isHome)
     -> std::vector<proto::RenderableText> {
   std::vector<proto::RenderableText> update;
 
-  wxTextCtrl* score_entry = away_score_entry;
-  wxTextCtrl* name_entry = away_name_entry;
+  Text* score_entry = away_score_entry.get();
+  Text* name_entry = away_name_entry.get();
 
   if (isHome) {
-    score_entry = home_score_entry;
-    name_entry = home_name_entry;
+    score_entry = home_score_entry.get();
+    name_entry = home_name_entry.get();
   }
 
   update.emplace_back(proto::RenderableText());
-  update.back().set_text(score_entry->GetValue());
+  update.back().set_text(score_entry->value());
   update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
   update.emplace_back(proto::RenderableText());
-  update.back().set_text(name_entry->GetValue());
+  update.back().set_text(name_entry->value());
   update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
   update.back().set_position(
       proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP);
@@ -257,16 +261,16 @@ auto ScoreControl::introLines(bool isHome)
     -> std::vector<proto::RenderableText> {
   std::vector<proto::RenderableText> update;
 
-  wxTextCtrl* name_entry = away_name_entry;
+  Text* name_entry = away_name_entry.get();
   std::string intro_text = "Visitors";
 
   if (isHome) {
-    name_entry = home_name_entry;
+    name_entry = home_name_entry.get();
     intro_text = "Home";
   }
 
   update.emplace_back(proto::RenderableText());
-  update.back().set_text(name_entry->GetValue());
+  update.back().set_text(name_entry->value());
   update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
   update.emplace_back(proto::RenderableText());
   update.back().set_text(intro_text);
@@ -278,9 +282,9 @@ auto ScoreControl::introLines(bool isHome)
 }
 
 void ScoreControl::updateScreenText(ScreenText* screen_text) {
-  home_color_picker->SetColour(
+  home_color_picker->setColor(
       TeamColors::getInstance()->getColor(ProtoUtil::homeSide()));
-  away_color_picker->SetColour(
+  away_color_picker->setColor(
       TeamColors::getInstance()->getColor(ProtoUtil::awaySide()));
 
   std::vector<proto::RenderableText> home_update;
@@ -288,7 +292,7 @@ void ScoreControl::updateScreenText(ScreenText* screen_text) {
 
   OverlayScreenPosition logo_position;
 
-  if (team_intro_button->GetValue()) {
+  if (team_intro_button->value()) {
     home_update = introLines(true);
     away_update = introLines(false);
     logo_position = OverlayScreenPosition::Centered;
@@ -299,79 +303,73 @@ void ScoreControl::updateScreenText(ScreenText* screen_text) {
   }
 
   if (home_logo.has_value()) {
-    screen_text->setAllText(home_update, Color(home_color_picker->GetColour()),
+    screen_text->setAllText(home_update, Color(home_color_picker->color()),
                             true, *home_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::homeSide());
   } else {
-    screen_text->setAllText(home_update, Color(home_color_picker->GetColour()),
+    screen_text->setAllText(home_update, Color(home_color_picker->color()),
                             true, ProtoUtil::homeSide());
   }
   if (away_logo.has_value()) {
-    screen_text->setAllText(away_update, Color(away_color_picker->GetColour()),
+    screen_text->setAllText(away_update, Color(away_color_picker->color()),
                             true, *away_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::awaySide());
   } else {
-    screen_text->setAllText(away_update, Color(away_color_picker->GetColour()),
+    screen_text->setAllText(away_update, Color(away_color_picker->color()),
                             true, ProtoUtil::awaySide());
   }
 }
 
-void ScoreControl::homeUpdated(wxKeyEvent& event) { updatePreview(); }
+void ScoreControl::homeUpdated() { updatePreview(); }
 
-void ScoreControl::homeNameUpdated(wxKeyEvent& event) { updatePreview(); }
+void ScoreControl::homeNameUpdated() { updatePreview(); }
 
-void ScoreControl::awayUpdated(wxKeyEvent& event) { updatePreview(); }
+void ScoreControl::awayUpdated() { updatePreview(); }
 
-void ScoreControl::awayNameUpdated(wxKeyEvent& event) { updatePreview(); }
+void ScoreControl::awayNameUpdated() { updatePreview(); }
 
-void ScoreControl::colorChanged(wxColourPickerEvent& event) {
+void ScoreControl::colorChanged() {
   TeamColors::getInstance()->setColor(ProtoUtil::homeSide(),
-                                      Color(home_color_picker->GetColour()));
+                                      Color(home_color_picker->color()));
   TeamColors::getInstance()->setColor(ProtoUtil::awaySide(),
-                                      Color(away_color_picker->GetColour()));
+                                      Color(away_color_picker->color()));
 
   updatePreview();
 }
 
-void ScoreControl::toggleIntroMode(wxCommandEvent& event) {
-  if (team_intro_button->GetValue()) {
-    team_intro_button->SetLabelText(SCORE_MODE_LABEL);
+void ScoreControl::toggleIntroMode() {
+  if (team_intro_button->value()) {
+    team_intro_button->setLabel(SCORE_MODE_LABEL);
   } else {
-    team_intro_button->SetLabelText(INTRO_MODE_LABEL);
+    team_intro_button->setLabel(INTRO_MODE_LABEL);
   }
   updatePreview();
 }
 
-void ScoreControl::addToEntry(wxTextCtrl* entry, int amount) {
-  int32_t current_score = StringUtil::stringToInt(entry->GetValue());
-  entry->SetValue(StringUtil::intToString(current_score + amount));
+void ScoreControl::addToEntry(Text* entry, int amount) {
+  int32_t current_score = StringUtil::stringToInt(entry->value());
+  entry->setValue(StringUtil::intToString(current_score + amount));
   updatePreview();
 }
 
-void ScoreControl::homeAddOne(wxCommandEvent& event) {
-  addToEntry(home_score_entry, 1);
+void ScoreControl::homeAddOne() { addToEntry(home_score_entry.get(), 1); }
+
+void ScoreControl::homeAddFive() {
+  addToEntry(home_score_entry.get(),
+             5);  // NOLINT(readability-magic-numbers) Nothing
+                  // else could make sense in "Add Five."
 }
 
-void ScoreControl::homeAddFive(wxCommandEvent& event) {
-  addToEntry(home_score_entry, 5);  // NOLINT(readability-magic-numbers) Nothing
-                                    // else could make sense in "Add Five."
+void ScoreControl::homeMinusOne() { addToEntry(home_score_entry.get(), -1); }
+
+void ScoreControl::awayAddOne() { addToEntry(away_score_entry.get(), 1); }
+
+void ScoreControl::awayAddFive() {
+  addToEntry(away_score_entry.get(),
+             5);  // NOLINT(readability-magic-numbers) Nothing
+                  // else could make sense in "Add Five."
 }
 
-void ScoreControl::homeMinusOne(wxCommandEvent& event) {
-  addToEntry(home_score_entry, -1);
-}
-
-void ScoreControl::awayAddOne(wxCommandEvent& event) {
-  addToEntry(away_score_entry, 1);
-}
-
-void ScoreControl::awayAddFive(wxCommandEvent& event) {
-  addToEntry(away_score_entry, 5);  // NOLINT(readability-magic-numbers) Nothing
-                                    // else could make sense in "Add Five."
-}
-
-void ScoreControl::awayMinusOne(wxCommandEvent& event) {
-  addToEntry(away_score_entry, -1);
-}
+void ScoreControl::awayMinusOne() { addToEntry(away_score_entry.get(), -1); }
 
 }  // namespace cszb_scoreboard

@@ -26,8 +26,11 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"
 #include "ui/widget/Button.h"
+#include "ui/widget/ColorPicker.h"
 #include "ui/widget/Label.h"
 #include "ui/widget/SearchBox.h"
+#include "ui/widget/Text.h"
+#include "ui/widget/Toggle.h"
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/Panel.h"
 
@@ -39,12 +42,19 @@ class Panel : public Widget {
   virtual ~Panel();
 
   // Methods to create internal widgets, like buttons or labels.
-  [[nodiscard]] auto button(const std::string &label) const
+  [[nodiscard]] auto button(const std::string &label,
+                            bool exactFit = false) const
       -> std::unique_ptr<Button>;
+  [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
+      -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto label(const std::string &text) const
       -> std::unique_ptr<Label>;
   [[nodiscard]] auto searchBox(const std::string &initial_text) const
       -> std::unique_ptr<SearchBox>;
+  [[nodiscard]] auto text(const std::string &initial_text) const
+      -> std::unique_ptr<Text>;
+  [[nodiscard]] auto toggle(const std::string &label) const
+      -> std::unique_ptr<Toggle>;
 
   // Create an anonymous Panel child for the current one, akin to button(),
   // above.
