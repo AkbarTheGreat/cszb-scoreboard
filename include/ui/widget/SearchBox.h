@@ -35,7 +35,7 @@ class SearchBox : public Widget {
   std::string value() { return wx->GetValue(); }
 
  protected:
-  auto _wx() -> wxWindow * override { return wx; }
+  auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::SearchCtrl *wx;

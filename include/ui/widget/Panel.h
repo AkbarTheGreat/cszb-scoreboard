@@ -76,7 +76,7 @@ class Panel : public Widget {
   // the parent wxWidget to do it for us.
   bool should_self_delete = false;
 
-  auto _wx() -> wxWindow * override { return wx; }
+  auto _wx() const -> wxWindow * override { return wx; }
 };
 
 }  // namespace cszb_scoreboard

@@ -54,7 +54,7 @@ class Notebook : public Widget {
   void setSelection(int selection) { wx->SetSelection(selection); }
 
  protected:
-  auto _wx() -> wxWindow * override { return wx; }
+  auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::Notebook *wx;

@@ -30,7 +30,7 @@ class Label : public Widget {
   void setWithHotkey(const std::string &label) { wx->SetLabel(label); }
 
  protected:
-  auto _wx() -> wxWindow * override { return wx; }
+  auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::StaticText *wx;

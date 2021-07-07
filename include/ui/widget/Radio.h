@@ -35,7 +35,7 @@ class Radio : public Widget {
   void setSelection(int sel) { wx->SetSelection(sel); }
 
  protected:
-  auto _wx() -> wxWindow * override { return wx; }
+  auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::RadioBox *wx;

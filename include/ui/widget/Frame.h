@@ -73,7 +73,7 @@ class Frame : public Widget {
     return new swx::Notebook(wx, id, pos, size, style);
   }
 
-  auto _wx() -> wxWindow * override { return wx; }
+  auto _wx() const -> wxWindow * override { return wx; }
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
   swx::Frame *wx;
