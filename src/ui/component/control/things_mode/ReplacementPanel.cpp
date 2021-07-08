@@ -31,7 +31,7 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int INITIAL_NUMBER_OF_REPLACEMENTS = 2;
 
-ReplacementPanel::ReplacementPanel(wxWindow *parent, wxWindow *activity_panel)
+ReplacementPanel::ReplacementPanel(wxWindow *parent, Widget *activity_panel)
     : wxPanel(parent) {
   // TODO(akbar): Research custom events and throw an event upward to propigate
   // these changes rather than a much more brittle forced-cast relationship.

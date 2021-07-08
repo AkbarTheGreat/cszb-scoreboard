@@ -29,17 +29,18 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ReplacementPanel : public wxPanel {
  public:
-  ReplacementPanel(wxWindow *parent, wxWindow *activity_panel);
+  ReplacementPanel(wxWindow *parent, Widget *activity_panel);
   void copyFrom(ReplacementPanel *other);
   void addReplacement();
-  void deleteReplacement(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                                  // wxWidgets callback.
+  void deleteReplacement(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                               // wxWidgets callback.
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;
   void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
                                         // wxWidgets callback.
 
  private:
-  wxWindow *activity_panel;
+  Widget *activity_panel;
   std::vector<std::shared_ptr<Replacement>> replacements;
 
   void bindEvents();

@@ -64,6 +64,8 @@ class Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
+  auto nextColumn() -> int { return sizer()->GetCols(); }
+  auto nextRow() -> int { return sizer()->GetRows(); }
   void runSizer() { _wx()->SetSizerAndFit(sizer()); }
   // Reparents this widget to another widget for layout purposes
   void setParent(Widget *parent) { _wx()->Reparent(parent->_wx()); }

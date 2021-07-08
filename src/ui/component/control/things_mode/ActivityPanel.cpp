@@ -30,25 +30,25 @@ const int ACTIVITIES_FOR_SIZING = 3;
 const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 static const char *BULLET = "\u2022";
 
-ActivityPanel::ActivityPanel(wxWindow *parent,
+ActivityPanel::ActivityPanel(swx::Panel *wx,
                              ScreenTextController *owning_controller,
                              const proto::ScreenSide &side)
-    : wxPanel(parent) {
+    : Panel(wx) {
   assert(INITIAL_NUMBER_OF_ACTIVITIES >= ACTIVITIES_FOR_SIZING);
   this->owning_controller = owning_controller;
   this->parent = parent;
   this->side = side;
-  activity_half = new wxPanel(this);
-  replacement_half = new wxPanel(this);
+  activity_half = panel();
+  replacement_half = panel();
   color_picker = new wxColourPickerCtrl(
-      this, wxID_ANY, TeamColors::getInstance()->getColor(side));
+      wx, wxID_ANY, TeamColors::getInstance()->getColor(side));
 
   // Add only as many activites as we want the initial pane size to be sized
   // for.
   bool is_first = true;
   for (int i = 0; i < ACTIVITIES_FOR_SIZING; i++) {
     activities.push_back(std::make_shared<Activity>(
-        this, activity_half, replacement_half, i, is_first));
+        this, activity_half.get(), replacement_half.get(), i, is_first));
     is_first = false;
   }
   bindEvents();
@@ -57,12 +57,12 @@ ActivityPanel::ActivityPanel(wxWindow *parent,
   // Add the activities which we don't size the scrollbar for.
   for (int i = ACTIVITIES_FOR_SIZING; i < INITIAL_NUMBER_OF_ACTIVITIES; i++) {
     activities.push_back(std::make_shared<Activity>(
-        this, activity_half, replacement_half, i, is_first));
+        this, activity_half.get(), replacement_half.get(), i, is_first));
     is_first = false;
-    activity_half->GetSizer()->Add(activities.back()->controlPane(), 0, wxALL,
-                                   BORDER_SIZE);
-    replacement_half->GetSizer()->Add(activities.back()->replacementPanel(), 0,
-                                      wxALL, BORDER_SIZE);
+    UiUtil::addToGridBag(activity_half->sizer(),
+                         activities.back()->controlPane(), i, 0);
+    UiUtil::addToGridBag(replacement_half->sizer(),
+                         activities.back()->replacementPanel(), i, 0);
     activities.back()->replacementPanel()->Hide();
   }
   resetActivityMoveButtons();
@@ -74,35 +74,37 @@ void ActivityPanel::bindEvents() {
 }
 
 void ActivityPanel::positionWidgets() {
-  wxSizer *activity_sizer = UiUtil::sizer(0, 1);
-  wxSizer *replacement_sizer = UiUtil::sizer(0, 1);
-
+  int row = 0;
   for (const auto &activity : activities) {
-    activity_sizer->Add(activity->controlPane(), 0, wxALL, BORDER_SIZE);
-    replacement_sizer->Add(activity->replacementPanel(), 0, wxALL, BORDER_SIZE);
+    UiUtil::addToGridBag(activity_half->sizer(), activity->controlPane(), row,
+                         0);
+    UiUtil::addToGridBag(replacement_half->sizer(),
+                         activity->replacementPanel(), row++, 0);
     if (!activity->isSelected()) {
       activity->replacementPanel()->Hide();
     }
   }
 
-  activity_half->SetSizerAndFit(activity_sizer);
-  replacement_half->SetSizerAndFit(replacement_sizer);
+  activity_half->runSizer();
+  replacement_half->runSizer();
 
-  wxSizer *outer_sizer = UiUtil::sizer(0, 2);
-  outer_sizer->Add(activity_half, 0, wxALL, BORDER_SIZE);
-  outer_sizer->Add(replacement_half, 0, wxALL, BORDER_SIZE);
-  outer_sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
-  SetSizerAndFit(outer_sizer);
+  //  wxSizer *outer_sizer = UiUtil::sizer(0, 2);
+  addWidget(*activity_half, 0, 0);
+  addWidget(*replacement_half, 0, 1);
+  UiUtil::addToGridBag(sizer(), color_picker, 1, 0);
+  runSizer();
 }
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
-  activities.push_back(std::make_shared<Activity>(
-      this, activity_half, replacement_half, activities.size(), is_first));
-  activity_half->GetSizer()->Add(activities.back()->controlPane(), 0, wxALL,
-                                 BORDER_SIZE);
-  replacement_half->GetSizer()->Add(activities.back()->replacementPanel(), 0,
-                                    wxALL, BORDER_SIZE);
+  activities.push_back(std::make_shared<Activity>(this, activity_half.get(),
+                                                  replacement_half.get(),
+                                                  activities.size(), is_first));
+  UiUtil::addToGridBag(activity_half->sizer(), activities.back()->controlPane(),
+                       activity_half->nextRow(), 0);
+  UiUtil::addToGridBag(replacement_half->sizer(),
+                       activities.back()->replacementPanel(),
+                       replacement_half->nextRow(), 0);
   activities.back()->select();
 
   resetActivityMoveButtons();
@@ -165,13 +167,13 @@ void ActivityPanel::colorChanged(wxColourPickerEvent &event) {
 }
 
 void ActivityPanel::refreshSizers() {
-  replacement_half->SetSizerAndFit(replacement_half->GetSizer());
-  activity_half->SetSizerAndFit(activity_half->GetSizer());
-  SetSizerAndFit(GetSizer());
+  replacement_half->runSizer();
+  activity_half->runSizer();
+  runSizer();
 }
 
 void ActivityPanel::swapActivities(int a, int b) {
-  Activity temp(this, activity_half, replacement_half, 0, false);
+  Activity temp(this, activity_half.get(), replacement_half.get(), 0, false);
   temp.copyFrom(activities[a].get());
   activities[a]->copyFrom(activities[b].get());
   activities[b]->copyFrom(&temp);

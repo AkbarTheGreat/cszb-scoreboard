@@ -29,9 +29,9 @@ limitations under the License.
 #include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
-class ActivityPanel : public wxPanel {
+class ActivityPanel : public Panel {
  public:
-  ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller,
+  ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
                 const proto::ScreenSide &side);
   void addActivity(wxPanel *parent_panel);
   void addReplacement();
@@ -50,9 +50,8 @@ class ActivityPanel : public wxPanel {
   void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
 
  private:
-  wxPanel *activity_half;
+  std::unique_ptr<Panel> activity_half, replacement_half;
   wxColourPickerCtrl *color_picker;
-  wxPanel *replacement_half;
   proto::ScreenSide side;
   std::vector<std::shared_ptr<Activity>> activities;
   ScreenTextController *owning_controller;
@@ -60,8 +59,9 @@ class ActivityPanel : public wxPanel {
 
   void bindEvents();
   void positionWidgets();
-  void colorChanged(wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
-                                                  // wxWidgets callback.
+  void colorChanged(
+      wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
+                                    // wxWidgets callback.
   void resetActivityMoveButtons();
 };
 }  // namespace cszb_scoreboard

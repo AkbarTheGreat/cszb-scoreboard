@@ -54,12 +54,12 @@ void ThingsMode::createControls(Panel *control_panel) {
   new_activity_button = button_panel->button("New Activity");
   new_replacement_button = button_panel->button("New Replacement");
 
-  home_activities_panel =
-      new ActivityPanel(scrollable_panel->wx, this, ProtoUtil::homeSide());
-  away_activities_panel =
-      new ActivityPanel(scrollable_panel->wx, this, ProtoUtil::awaySide());
-  all_activities_panel =
-      new ActivityPanel(scrollable_panel->wx, this, ProtoUtil::allSide());
+  home_activities_panel = new ActivityPanel(scrollable_panel->childPanel(),
+                                            this, ProtoUtil::homeSide());
+  away_activities_panel = new ActivityPanel(scrollable_panel->childPanel(),
+                                            this, ProtoUtil::awaySide());
+  all_activities_panel = new ActivityPanel(scrollable_panel->childPanel(), this,
+                                           ProtoUtil::allSide());
 
   positionWidgets(control_panel);
   bindEvents();
@@ -76,12 +76,9 @@ void ThingsMode::positionWidgets(Panel *control_panel) {
   button_panel->runSizer();
 
   scrollable_panel->addWidget(*button_panel, 0, 0);
-  UiUtil::addToGridBag(scrollable_panel->sizer(), home_activities_panel, 1, 0,
-                       1, 1, NO_BORDER);
-  UiUtil::addToGridBag(scrollable_panel->sizer(), away_activities_panel, 2, 0,
-                       1, 1, NO_BORDER);
-  UiUtil::addToGridBag(scrollable_panel->sizer(), all_activities_panel, 3, 0, 1,
-                       1, NO_BORDER);
+  scrollable_panel->addWidget(*home_activities_panel, 1, 0, NO_BORDER);
+  scrollable_panel->addWidget(*away_activities_panel, 2, 0, NO_BORDER);
+  scrollable_panel->addWidget(*all_activities_panel, 3, 0, NO_BORDER);
 
   updateActivityPanel();
 
@@ -140,17 +137,17 @@ void ThingsMode::textUpdated() { updatePreview(); }
 
 void ThingsMode::updateActivityPanel() {
   if (screen_selection->allSelected()) {
-    home_activities_panel->Hide();
-    away_activities_panel->Hide();
-    all_activities_panel->Show();
+    home_activities_panel->hide();
+    away_activities_panel->hide();
+    all_activities_panel->show();
   } else if (screen_selection->homeSelected()) {
-    away_activities_panel->Hide();
-    all_activities_panel->Hide();
-    home_activities_panel->Show();
+    away_activities_panel->hide();
+    all_activities_panel->hide();
+    home_activities_panel->show();
   } else if (screen_selection->awaySelected()) {
-    home_activities_panel->Hide();
-    all_activities_panel->Hide();
-    away_activities_panel->Show();
+    home_activities_panel->hide();
+    all_activities_panel->hide();
+    away_activities_panel->show();
   }
 }
 

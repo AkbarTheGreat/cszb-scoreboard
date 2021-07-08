@@ -26,12 +26,13 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
+#include "ui/widget/Widget.h"
 
 namespace cszb_scoreboard {
 class Activity {
  public:
-  Activity(wxWindow *parent, wxPanel *activity_frame,
-           wxPanel *replacement_frame, int index, bool is_first);
+  Activity(Widget *parent, Panel *activity_frame, Panel *replacement_frame,
+           int index, bool is_first);
   ~Activity();
   void copyFrom(Activity *other);
   auto controlPane() -> wxPanel * { return control_pane; }
@@ -50,7 +51,7 @@ class Activity {
   wxRadioButton *activity_selector;
   wxTextCtrl *activity_text;
   wxButton *down_button;
-  wxWindow *parent;
+  Widget *parent;
   wxButton *remove_activity_button;
   ReplacementPanel *replacement_panel;
   wxButton *up_button;
@@ -59,8 +60,9 @@ class Activity {
   void positionWidgets();
   void moveButton(wxCommandEvent &event);  // NOLINT(google-runtime-references)
                                            // wxWidgets callback.
-  void selectionChanged(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                                 // wxWidgets callback.
+  void selectionChanged(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                               // wxWidgets callback.
 };
 
 }  // namespace cszb_scoreboard
