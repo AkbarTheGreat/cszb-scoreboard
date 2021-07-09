@@ -79,8 +79,9 @@ void Activity::bindEvents() {
   remove_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                &ActivityPanel::deleteActivity,
                                dynamic_cast<ActivityPanel *>(parent));
-  activity_text->Bind(wxEVT_KEY_UP, &ActivityPanel::textUpdated,
-                      dynamic_cast<ActivityPanel *>(parent));
+  auto *ap = dynamic_cast<ActivityPanel *>(parent);
+  activity_text->Bind(wxEVT_KEY_UP,
+                      [ap](wxKeyEvent &event) -> void { ap->textUpdated(); });
 }
 
 void Activity::positionWidgets() {

@@ -36,12 +36,10 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
     : Panel(wx) {
   assert(INITIAL_NUMBER_OF_ACTIVITIES >= ACTIVITIES_FOR_SIZING);
   this->owning_controller = owning_controller;
-  this->parent = parent;
   this->side = side;
   activity_half = panel();
   replacement_half = panel();
-  color_picker = new wxColourPickerCtrl(
-      wx, wxID_ANY, TeamColors::getInstance()->getColor(side));
+  color_picker = colorPicker(TeamColors::getInstance()->getColor(side));
 
   // Add only as many activites as we want the initial pane size to be sized
   // for.
@@ -69,8 +67,9 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
 }
 
 void ActivityPanel::bindEvents() {
-  color_picker->Bind(wxEVT_COLOURPICKER_CHANGED, &ActivityPanel::colorChanged,
-                     this);
+  color_picker->bind(
+      wxEVT_COLOURPICKER_CHANGED,
+      [this](wxColourPickerEvent &event) -> void { this->colorChanged(); });
 }
 
 void ActivityPanel::positionWidgets() {
@@ -93,7 +92,7 @@ void ActivityPanel::positionWidgets() {
   //  wxSizer *outer_sizer = UiUtil::sizer(0, 2);
   addWidget(*activity_half, 0, 0);
   addWidget(*replacement_half, 0, 1);
-  UiUtil::addToGridBag(sizer(), color_picker, 1, 0);
+  addWidget(*color_picker, 1, 0);
   runSizer();
 }
 
@@ -155,15 +154,15 @@ void ActivityPanel::selectionChanged(wxCommandEvent &event) {
   updateNotify();
 }
 
-void ActivityPanel::textUpdated(wxKeyEvent &event) { updateNotify(); }
+void ActivityPanel::textUpdated() { updateNotify(); }
 
 void ActivityPanel::updateNotify() {
   refreshSizers();
   owning_controller->updatePreview();
 }
 
-void ActivityPanel::colorChanged(wxColourPickerEvent &event) {
-  TeamColors::getInstance()->setColor(side, Color(color_picker->GetColour()));
+void ActivityPanel::colorChanged() {
+  TeamColors::getInstance()->setColor(side, Color(color_picker->color()));
 
   owning_controller->updatePreview();
 }
@@ -190,7 +189,7 @@ void ActivityPanel::swapActivities(int a, int b) {
 }
 
 auto ActivityPanel::getColor() -> Color {
-  color_picker->SetColour(TeamColors::getInstance()->getColor(side));
+  color_picker->setColor(TeamColors::getInstance()->getColor(side));
   return TeamColors::getInstance()->getColor(side);
 }
 

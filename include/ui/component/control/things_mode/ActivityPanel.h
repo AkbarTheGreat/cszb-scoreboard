@@ -27,6 +27,8 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/control/things_mode/Activity.h"
 #include "ui/graphics/Color.h"
+#include "ui/widget/Panel.h"
+#include "ui/widget/ColorPicker.h"
 
 namespace cszb_scoreboard {
 class ActivityPanel : public Panel {
@@ -46,22 +48,19 @@ class ActivityPanel : public Panel {
   void deleteActivity(
       wxCommandEvent &event);  // NOLINT(google-runtime-references)
   void selectionChanged(
-      wxCommandEvent &event);           // NOLINT(google-runtime-references)
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void textUpdated();
 
  private:
   std::unique_ptr<Panel> activity_half, replacement_half;
-  wxColourPickerCtrl *color_picker;
+  std::unique_ptr<ColorPicker> color_picker;
   proto::ScreenSide side;
   std::vector<std::shared_ptr<Activity>> activities;
   ScreenTextController *owning_controller;
-  wxWindow *parent;
 
   void bindEvents();
   void positionWidgets();
-  void colorChanged(
-      wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
-                                    // wxWidgets callback.
+  void colorChanged();
   void resetActivityMoveButtons();
   void hideAllReplacements();
   void hideReplacement(int index);
