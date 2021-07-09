@@ -63,5 +63,8 @@ class ActivityPanel : public Panel {
       wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
                                     // wxWidgets callback.
   void resetActivityMoveButtons();
+  void hideAllReplacements();
+  void hideReplacement(int index);
+  void showReplacement(int index);
 };
 }  // namespace cszb_scoreboard

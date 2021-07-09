@@ -64,8 +64,10 @@ class Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
-  auto nextColumn() -> int { return sizer()->GetCols(); }
-  auto nextRow() -> int { return sizer()->GetRows(); }
+  // TODO: change to Widget*
+  void moveWidget(wxWindow* widget, int row, int column);
+  void removeColumnFromSizer(int column);
+  void removeRowFromSizer(int row);
   void runSizer() { _wx()->SetSizerAndFit(sizer()); }
   // Reparents this widget to another widget for layout purposes
   void setParent(Widget *parent) { _wx()->Reparent(parent->_wx()); }
@@ -80,6 +82,7 @@ class Widget {
   // wxWidget will clean up our sizer for us, so keep it as an unmanaged
   // pointer.
   swx::Sizer *window_sizer = nullptr;
+  auto Widget::widgetAtIndex(int row, int column) -> wxWindow *;
 };
 
 }  // namespace cszb_scoreboard

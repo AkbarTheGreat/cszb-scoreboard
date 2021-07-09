@@ -62,7 +62,7 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
     UiUtil::addToGridBag(activity_half->sizer(),
                          activities.back()->controlPane(), i, 0);
     UiUtil::addToGridBag(replacement_half->sizer(),
-                         activities.back()->replacementPanel(), i, 0);
+                         activities.back()->replacementPanel(), i + 1, 0);
     activities.back()->replacementPanel()->Hide();
   }
   resetActivityMoveButtons();
@@ -75,15 +75,17 @@ void ActivityPanel::bindEvents() {
 
 void ActivityPanel::positionWidgets() {
   int row = 0;
+  int first_activity = 0;
   for (const auto &activity : activities) {
+    if (activity->isSelected()) {
+      first_activity = row;
+    }
     UiUtil::addToGridBag(activity_half->sizer(), activity->controlPane(), row,
                          0);
     UiUtil::addToGridBag(replacement_half->sizer(),
-                         activity->replacementPanel(), row++, 0);
-    if (!activity->isSelected()) {
-      activity->replacementPanel()->Hide();
-    }
+                         activity->replacementPanel(), ++row, 0);
   }
+  showReplacement(first_activity);
 
   activity_half->runSizer();
   replacement_half->runSizer();
@@ -101,10 +103,10 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
                                                   replacement_half.get(),
                                                   activities.size(), is_first));
   UiUtil::addToGridBag(activity_half->sizer(), activities.back()->controlPane(),
-                       activity_half->nextRow(), 0);
+                       activities.size() - 1, 0);
   UiUtil::addToGridBag(replacement_half->sizer(),
                        activities.back()->replacementPanel(),
-                       replacement_half->nextRow(), 0);
+                       activities.size() + 1, 0);
   activities.back()->select();
 
   resetActivityMoveButtons();
@@ -132,6 +134,8 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
           }
         }
       }
+      activity_half->removeRowFromSizer(offset);
+      replacement_half->removeRowFromSizer(offset + 1);
       activities.erase(activities.begin() + offset);
       resetActivityMoveButtons();
       updateNotify();
@@ -143,11 +147,9 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
 
 void ActivityPanel::selectionChanged(wxCommandEvent &event) {
   wxObject *event_object = event.GetEventObject();
-  for (const auto &activity : activities) {
-    if (activity->resolveSelection(event_object)) {
-      activity->replacementPanel()->Show();
-    } else {
-      activity->replacementPanel()->Hide();
+  for (int i = 0; i < activities.size(); i++) {
+    if (activities[i]->resolveSelection(event_object)) {
+      showReplacement(i);
     }
   }
   updateNotify();
@@ -179,11 +181,9 @@ void ActivityPanel::swapActivities(int a, int b) {
   activities[b]->copyFrom(&temp);
 
   if (activities[a]->isSelected()) {
-    activities[a]->replacementPanel()->Show();
-    activities[b]->replacementPanel()->Hide();
+    showReplacement(a);
   } else if (activities[b]->isSelected()) {
-    activities[b]->replacementPanel()->Show();
-    activities[a]->replacementPanel()->Hide();
+    showReplacement(b);
   }
 
   updateNotify();
@@ -235,6 +235,24 @@ void ActivityPanel::resetActivityMoveButtons() {
   for (int i = 0; i < activities.size(); i++) {
     activities[i]->setIndex(i, activities.size() - 1);
   }
+}
+
+void ActivityPanel::hideAllReplacements() {
+  for (int i = 0; i < activities.size(); i++) {
+    hideReplacement(i);
+  }
+}
+
+void ActivityPanel::hideReplacement(int index) {
+  activities[index]->replacementPanel()->Hide();
+  replacement_half->moveWidget(activities[index]->replacementPanel(), index + 1,
+                               0);
+}
+
+void ActivityPanel::showReplacement(int index) {
+  hideAllReplacements();
+  replacement_half->moveWidget(activities[index]->replacementPanel(), 0, 0);
+  activities[index]->replacementPanel()->Show();
 }
 
 }  // namespace cszb_scoreboard
