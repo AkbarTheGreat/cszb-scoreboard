@@ -45,7 +45,7 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
   // for.
   bool is_first = true;
   for (int i = 0; i < ACTIVITIES_FOR_SIZING; i++) {
-    activities.push_back(std::make_shared<Activity>(
+    activities.push_back(std::make_unique<Activity>(
         this, activity_half.get(), replacement_half.get(), i, is_first));
     is_first = false;
   }
@@ -54,7 +54,7 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
 
   // Add the activities which we don't size the scrollbar for.
   for (int i = ACTIVITIES_FOR_SIZING; i < INITIAL_NUMBER_OF_ACTIVITIES; i++) {
-    activities.push_back(std::make_shared<Activity>(
+    activities.push_back(std::make_unique<Activity>(
         this, activity_half.get(), replacement_half.get(), i, is_first));
     is_first = false;
     UiUtil::addToGridBag(activity_half->sizer(),
@@ -98,7 +98,7 @@ void ActivityPanel::positionWidgets() {
 
 void ActivityPanel::addActivity(wxPanel *parent_panel) {
   bool is_first = (activities.empty());
-  activities.push_back(std::make_shared<Activity>(this, activity_half.get(),
+  activities.push_back(std::make_unique<Activity>(this, activity_half.get(),
                                                   replacement_half.get(),
                                                   activities.size(), is_first));
   UiUtil::addToGridBag(activity_half->sizer(), activities.back()->controlPane(),
@@ -237,15 +237,15 @@ void ActivityPanel::resetActivityMoveButtons() {
 }
 
 void ActivityPanel::hideAllReplacements() {
+  // Move them all way out first, then move them back to position, to avoid
+  // things getting confused.
   for (int i = 0; i < activities.size(); i++) {
-    hideReplacement(i);
+    replacement_half->moveWidget(activities[i]->replacementPanel(), i + 32, 0);
   }
-}
-
-void ActivityPanel::hideReplacement(int index) {
-  activities[index]->replacementPanel()->Hide();
-  replacement_half->moveWidget(activities[index]->replacementPanel(), index + 1,
-                               0);
+  for (int i = 0; i < activities.size(); i++) {
+    activities[i]->replacementPanel()->Hide();
+    replacement_half->moveWidget(activities[i]->replacementPanel(), i + 1, 0);
+  }
 }
 
 void ActivityPanel::showReplacement(int index) {

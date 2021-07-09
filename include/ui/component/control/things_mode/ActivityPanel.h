@@ -27,8 +27,8 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/control/things_mode/Activity.h"
 #include "ui/graphics/Color.h"
-#include "ui/widget/Panel.h"
 #include "ui/widget/ColorPicker.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 class ActivityPanel : public Panel {
@@ -55,7 +55,7 @@ class ActivityPanel : public Panel {
   std::unique_ptr<Panel> activity_half, replacement_half;
   std::unique_ptr<ColorPicker> color_picker;
   proto::ScreenSide side;
-  std::vector<std::shared_ptr<Activity>> activities;
+  std::vector<std::unique_ptr<Activity>> activities;
   ScreenTextController *owning_controller;
 
   void bindEvents();
@@ -63,7 +63,6 @@ class ActivityPanel : public Panel {
   void colorChanged();
   void resetActivityMoveButtons();
   void hideAllReplacements();
-  void hideReplacement(int index);
   void showReplacement(int index);
 };
 }  // namespace cszb_scoreboard
