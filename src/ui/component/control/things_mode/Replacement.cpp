@@ -33,7 +33,7 @@ static const char *BULLET = "\u2022";
 
 Replacement::Replacement(ReplacementPanel *parent) {
   this->parent = parent;
-  control_pane = parent->panel();
+  control_pane = parent->panel(true);
   replaceable = control_pane->text("", true);
   replacement = control_pane->text("", true);
   remove_replacement_button = control_pane->button("X", true);
