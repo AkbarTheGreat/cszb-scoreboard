@@ -58,15 +58,14 @@ void ReplacementPanel::bindEvents() {}
 void ReplacementPanel::positionWidgets() {
   int row = 0;
   for (const auto &replacement : replacements) {
-    UiUtil::addToGridBag(sizer(), replacement->controlPane(), row++, 0);
+    addWidget(*replacement->controlPane(), row++, 0);
   }
   runSizer();
 }
 
 void ReplacementPanel::addReplacement() {
   replacements.push_back(std::make_unique<Replacement>(this));
-  UiUtil::addToGridBag(sizer(), replacements.back()->controlPane(),
-                       replacements.size() - 1, 0);
+  addWidget(*(replacements.back()->controlPane()), replacements.size() - 1, 0);
   updateNotify();
 }
 

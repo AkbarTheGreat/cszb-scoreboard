@@ -25,6 +25,10 @@ limitations under the License.
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/Label.h"
+#include "ui/widget/Panel.h"
+#include "ui/widget/Text.h"
 
 namespace cszb_scoreboard {
 
@@ -34,20 +38,17 @@ class ReplacementPanel;
 class Replacement {
  public:
   explicit Replacement(ReplacementPanel *parent);
-  ~Replacement();
   void copyFrom(Replacement *other);
-  auto containsDeleteButton(wxObject *delete_button) -> bool;
-  auto controlPane() -> wxPanel * { return control_pane; }
-  auto deleteButton() -> wxButton * { return remove_replacement_button; }
+  auto controlPane() -> Panel * { return control_pane.get(); }
+  auto deleteButton() -> Button * { return remove_replacement_button.get(); }
   auto previewText() -> std::string;
 
  private:
-  wxPanel *control_pane;
+  std::unique_ptr<Panel> control_pane;
+  std::unique_ptr<Text> replaceable, replacement;
+  std::unique_ptr<Button> remove_replacement_button;
+  std::unique_ptr<Label> spacer_text;
   ReplacementPanel *parent;
-  wxTextCtrl *replaceable;
-  wxTextCtrl *replacement;
-  wxButton *remove_replacement_button;
-  wxStaticText *spacer_text;
 
   void bindEvents();
   void positionWidgets();
