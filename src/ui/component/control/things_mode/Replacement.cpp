@@ -50,7 +50,7 @@ void Replacement::copyFrom(Replacement *other) {
 }
 
 void Replacement::bindEvents() {
-  auto *rp = dynamic_cast<ReplacementPanel *>(parent);
+  auto *rp = parent;
   remove_replacement_button->bind(wxEVT_COMMAND_BUTTON_CLICKED,
                                   [this, rp](wxCommandEvent &event) -> void {
                                     rp->deleteReplacement(this);
@@ -62,8 +62,8 @@ void Replacement::bindEvents() {
 }
 
 void Replacement::positionWidgets() {
-  control_pane->addWidget(*replaceable, 0, 0);
-  control_pane->addWidget(*replacement, 0, 1);
+  control_pane->addWidgetWithSpan(*replaceable, 0, 0, 2, 1);
+  control_pane->addWidgetWithSpan(*replacement, 0, 1, 2, 1);
   control_pane->addWidget(*remove_replacement_button, 0, 2);
   control_pane->addWidget(*spacer_text, 0, 3);
   control_pane->runSizer();

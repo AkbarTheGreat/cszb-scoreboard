@@ -36,7 +36,7 @@ class Widget {
     addWidgetWithSpan(widget, row, column, 1, 1, border_size, flag);
   }
   void addWidgetWithSpan(const Widget &widget, int row, int column,
-                         int row_span = 1, int column_span = 1,
+                         int row_span, int column_span,
                          int border_size = DEFAULT_BORDER_SIZE,
                          int flag = wxALL | wxGROW);
   void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
@@ -64,9 +64,7 @@ class Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
-  // TODO: change to Widget* as the only option.
   void moveWidget(Widget *widget, int row, int column);
-  void moveWxWidget(wxWindow *widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
   void runSizer() { _wx()->SetSizerAndFit(sizer()); }

@@ -84,9 +84,7 @@ void ReplacementPanel::deleteReplacement(Replacement *deleted) {
 
 auto ReplacementPanel::previewText(int font_size)
     -> std::vector<proto::RenderableText> {
-  std::string preview_text =
-      dynamic_cast<ActivityPanel *>(activity_panel)->selectedActivityText() +
-      "\n \n";
+  std::string preview_text = activity_panel->selectedActivityText() + "\n \n";
 
   for (const auto &replacement : replacements) {
     preview_text += replacement->previewText() + "\n";
@@ -102,7 +100,7 @@ void ReplacementPanel::textUpdated() { updateNotify(); }
 
 void ReplacementPanel::updateNotify() {
   runSizer();
-  dynamic_cast<ActivityPanel *>(activity_panel)->updateNotify();
+  activity_panel->updateNotify();
 }
 
 }  // namespace cszb_scoreboard

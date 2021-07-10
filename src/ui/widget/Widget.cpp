@@ -43,10 +43,6 @@ void Widget::moveWidget(Widget *widget, int row, int column) {
   sizer()->SetItemPosition(widget->_wx(), wxGBPosition(row, column));
 }
 
-void Widget::moveWxWidget(wxWindow *widget, int row, int column) {
-  sizer()->SetItemPosition(widget, wxGBPosition(row, column));
-}
-
 std::vector<std::vector<const wxGBSizerItem *>> getOrderedRepresentation(
     wxGridBagSizer *sizer) {
   std::vector<std::vector<const wxGBSizerItem *>> table;
