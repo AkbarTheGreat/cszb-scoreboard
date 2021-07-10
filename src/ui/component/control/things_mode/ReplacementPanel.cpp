@@ -66,7 +66,7 @@ void ReplacementPanel::positionWidgets() {
 void ReplacementPanel::addReplacement() {
   replacements.push_back(std::make_unique<Replacement>(this));
   UiUtil::addToGridBag(sizer(), replacements.back()->controlPane(),
-                       replacements.size(), 0);
+                       replacements.size() - 1, 0);
   updateNotify();
 }
 
@@ -74,6 +74,7 @@ void ReplacementPanel::deleteReplacement(Replacement *deleted) {
   int offset = 0;
   for (const auto &replacement : replacements) {
     if (replacement.get() == deleted) {
+      removeRowFromSizer(offset);
       replacements.erase(replacements.begin() + offset);
       updateNotify();
       return;
