@@ -20,7 +20,6 @@ limitations under the License.
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
 #include "ScoreboardCommon.h"
-#include "ui/UiUtil.h"
 #include "ui/graphics/TeamColors.h"
 
 namespace cszb_scoreboard {
@@ -58,9 +57,9 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
         this, activity_half.get(), replacement_half.get(), i, is_first));
     is_first = false;
     activity_half->addWidget(*activities.back()->controlPane(), i, 0);
-    UiUtil::addToGridBag(replacement_half->sizer(),
-                         activities.back()->replacementPanel(), i + 1, 0);
-    activities.back()->replacementPanel()->Hide();
+    replacement_half->addWidget(*activities.back()->replacementPanel(), i + 1,
+                                0);
+    activities.back()->replacementPanel()->hide();
   }
   resetActivityMoveButtons();
 }
@@ -79,15 +78,13 @@ void ActivityPanel::positionWidgets() {
       first_activity = row;
     }
     activity_half->addWidget(*activity->controlPane(), row, 0);
-    UiUtil::addToGridBag(replacement_half->sizer(),
-                         activity->replacementPanel(), ++row, 0);
+    replacement_half->addWidget(*activity->replacementPanel(), ++row, 0);
   }
   showReplacement(first_activity);
 
   activity_half->runSizer();
   replacement_half->runSizer();
 
-  //  wxSizer *outer_sizer = UiUtil::sizer(0, 2);
   addWidget(*activity_half, 0, 0);
   addWidget(*replacement_half, 0, 1);
   addWidget(*color_picker, 1, 0);
@@ -101,9 +98,8 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
                                                   activities.size(), is_first));
   activity_half->addWidget(*activities.back()->controlPane(),
                            activities.size() - 1, 0);
-  UiUtil::addToGridBag(replacement_half->sizer(),
-                       activities.back()->replacementPanel(),
-                       activities.size() + 1, 0);
+  replacement_half->addWidget(*activities.back()->replacementPanel(),
+                              activities.size() + 1, 0);
   activities.back()->select();
 
   resetActivityMoveButtons();
@@ -241,12 +237,12 @@ void ActivityPanel::hideAllReplacements() {
   // Move them all way out first, then move them back to position, to avoid
   // things getting confused.
   for (int i = 0; i < activities.size(); i++) {
-    replacement_half->moveWxWidget(activities[i]->replacementPanel(), i + 32,
+    replacement_half->moveWidget(activities[i]->replacementPanel(), i + 32,
                                    0);
   }
   for (int i = 0; i < activities.size(); i++) {
-    activities[i]->replacementPanel()->Hide();
-    replacement_half->moveWxWidget(activities[i]->replacementPanel(), i + 1, 0);
+    activities[i]->replacementPanel()->hide();
+    replacement_half->moveWidget(activities[i]->replacementPanel(), i + 1, 0);
   }
 }
 
@@ -261,8 +257,8 @@ void ActivityPanel::showSelectedReplacement() {
 
 void ActivityPanel::showReplacement(int index) {
   hideAllReplacements();
-  replacement_half->moveWxWidget(activities[index]->replacementPanel(), 0, 0);
-  activities[index]->replacementPanel()->Show();
+  replacement_half->moveWidget(activities[index]->replacementPanel(), 0, 0);
+  activities[index]->replacementPanel()->show();
 }
 
 }  // namespace cszb_scoreboard

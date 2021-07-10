@@ -27,21 +27,22 @@ limitations under the License.
 #include "ui/component/control/things_mode/Replacement.h"
 
 namespace cszb_scoreboard {
-class ReplacementPanel : public wxPanel {
+
+// Pre-defining ActivityPanel for a parent pointer.
+class ActivityPanel;
+
+class ReplacementPanel : public Panel {
  public:
-  ReplacementPanel(wxWindow *parent, Widget *activity_panel);
+  ReplacementPanel(swx::Panel *wx, ActivityPanel *activity_panel);
   void copyFrom(ReplacementPanel *other);
   void addReplacement();
-  void deleteReplacement(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                               // wxWidgets callback.
+  void deleteReplacement(Replacement *deleted);
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
-                                        // wxWidgets callback.
+  void textUpdated();
 
  private:
-  Widget *activity_panel;
-  std::vector<std::shared_ptr<Replacement>> replacements;
+  ActivityPanel *activity_panel;
+  std::vector<std::unique_ptr<Replacement>> replacements;
 
   void bindEvents();
   void positionWidgets();

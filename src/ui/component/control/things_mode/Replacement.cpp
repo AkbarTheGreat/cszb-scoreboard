@@ -31,9 +31,9 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 static const char *BULLET = "\u2022";
 
-Replacement::Replacement(wxWindow *parent) {
+Replacement::Replacement(ReplacementPanel *parent) {
   this->parent = parent;
-  control_pane = new wxPanel(parent);
+  control_pane = new wxPanel(parent->wx);
   replaceable = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
                                wxSize(-1, -1), wxTE_MULTILINE);
   replacement = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
@@ -56,13 +56,15 @@ void Replacement::copyFrom(Replacement *other) {
 }
 
 void Replacement::bindEvents() {
+  auto *rp = dynamic_cast<ReplacementPanel *>(parent);
   remove_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                                  &ReplacementPanel::deleteReplacement,
-                                  dynamic_cast<ReplacementPanel *>(parent));
-  replaceable->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
-                    dynamic_cast<ReplacementPanel *>(parent));
-  replacement->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
-                    dynamic_cast<ReplacementPanel *>(parent));
+                                  [this, rp](wxCommandEvent &event) -> void {
+                                    rp->deleteReplacement(this);
+                                  });
+  replaceable->Bind(wxEVT_KEY_UP,
+                    [rp](wxKeyEvent &event) -> void { rp->textUpdated(); });
+  replacement->Bind(wxEVT_KEY_UP,
+                    [rp](wxKeyEvent &event) -> void { rp->textUpdated(); });
 }
 
 void Replacement::positionWidgets() {

@@ -27,9 +27,13 @@ limitations under the License.
 #include "ui/component/control/ScreenTextController.h"
 
 namespace cszb_scoreboard {
+
+// Pre-defining ReplacementPanel for a parent pointer.
+class ReplacementPanel;
+
 class Replacement {
  public:
-  explicit Replacement(wxWindow *parent);
+  explicit Replacement(ReplacementPanel *parent);
   ~Replacement();
   void copyFrom(Replacement *other);
   auto containsDeleteButton(wxObject *delete_button) -> bool;
@@ -39,7 +43,7 @@ class Replacement {
 
  private:
   wxPanel *control_pane;
-  wxWindow *parent;
+  ReplacementPanel *parent;
   wxTextCtrl *replaceable;
   wxTextCtrl *replacement;
   wxButton *remove_replacement_button;

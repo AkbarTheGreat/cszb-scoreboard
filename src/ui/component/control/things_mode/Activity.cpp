@@ -46,7 +46,8 @@ Activity::Activity(ActivityPanel *parent, Panel *activity_frame,
   up_button = control_pane->button("^", true);
   down_button = control_pane->button("v", true);
   remove_activity_button = control_pane->button("X", true);
-  replacement_panel = new ReplacementPanel(replacement_frame->wx, parent);
+  replacement_panel = std::make_unique<ReplacementPanel>(
+      replacement_frame->childPanel(), parent);
   bindEvents();
   positionWidgets();
 }
@@ -54,10 +55,8 @@ Activity::Activity(ActivityPanel *parent, Panel *activity_frame,
 void Activity::copyFrom(Activity *other) {
   activity_selector->setSelected(other->activity_selector->selected());
   activity_text->setValue(other->activity_text->value());
-  replacement_panel->copyFrom(other->replacement_panel);
+  replacement_panel->copyFrom(other->replacement_panel.get());
 }
-
-Activity::~Activity() { delete replacement_panel; }
 
 void Activity::bindEvents() {
   auto *ap = parent;

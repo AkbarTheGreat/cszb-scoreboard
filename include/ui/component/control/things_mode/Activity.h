@@ -41,11 +41,12 @@ class Activity {
  public:
   Activity(ActivityPanel *parent, Panel *activity_frame,
            Panel *replacement_frame, int index, bool is_first);
-  ~Activity();
   void copyFrom(Activity *other);
   auto controlPane() -> Panel * { return control_pane.get(); }
   auto previewText() -> std::string;
-  auto replacementPanel() -> ReplacementPanel * { return replacement_panel; }
+  auto replacementPanel() -> ReplacementPanel * {
+    return replacement_panel.get();
+  }
   void setIndex(int index, int max_index);
   auto isSelected() -> bool;
   void select();
@@ -58,7 +59,7 @@ class Activity {
   std::unique_ptr<Text> activity_text;
   std::unique_ptr<Button> down_button, up_button, remove_activity_button;
   ActivityPanel *parent;
-  ReplacementPanel *replacement_panel;
+  std::unique_ptr<ReplacementPanel> replacement_panel;
 
   void bindEvents();
   void positionWidgets();
