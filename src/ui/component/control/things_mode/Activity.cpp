@@ -55,7 +55,7 @@ Activity::Activity(ActivityPanel *parent, Panel *activity_frame,
 void Activity::copyFrom(Activity *other) {
   activity_selector->setSelected(other->activity_selector->selected());
   activity_text->setValue(other->activity_text->value());
-  replacement_panel->copyFrom(other->replacement_panel.get());
+  replacement_panel = std::move(other->replacement_panel);
 }
 
 void Activity::bindEvents() {

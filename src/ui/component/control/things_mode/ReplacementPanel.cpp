@@ -42,17 +42,6 @@ ReplacementPanel::ReplacementPanel(swx::Panel *wx,
   positionWidgets();
 }
 
-void ReplacementPanel::copyFrom(ReplacementPanel *other) {
-  while (!replacements.empty()) {
-    deleteReplacement(replacements.back().get());
-  }
-
-  for (const auto &other_replacement : other->replacements) {
-    addReplacement();
-    replacements.back()->copyFrom(other_replacement.get());
-  }
-}
-
 void ReplacementPanel::bindEvents() {}
 
 void ReplacementPanel::positionWidgets() {

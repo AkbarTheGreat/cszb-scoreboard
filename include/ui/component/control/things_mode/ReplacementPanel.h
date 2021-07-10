@@ -34,7 +34,6 @@ class ActivityPanel;
 class ReplacementPanel : public Panel {
  public:
   ReplacementPanel(swx::Panel *wx, ActivityPanel *activity_panel);
-  void copyFrom(ReplacementPanel *other);
   void addReplacement();
   void deleteReplacement(Replacement *deleted);
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;

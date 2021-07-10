@@ -27,6 +27,10 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int ACTIVITIES_FOR_SIZING = 3;
 const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
+// Just a buffer for adding new replacements to ensure they can't collide with
+// existing ones.  In theory this could be 1, but it self-resolves pretty much
+// immediately whent they're repositioned, so it doesn't matter much.
+const int REPLACEMENT_BUFFER_SIZE = 5;
 static const char *BULLET = "\u2022";
 
 ActivityPanel::ActivityPanel(swx::Panel *wx,
@@ -57,8 +61,8 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
         this, activity_half.get(), replacement_half.get(), i, is_first));
     is_first = false;
     activity_half->addWidget(*activities.back()->controlPane(), i, 0);
-    replacement_half->addWidget(*activities.back()->replacementPanel(), i + 1,
-                                0);
+    replacement_half->addWidget(*activities.back()->replacementPanel(),
+                                i + REPLACEMENT_BUFFER_SIZE, 0);
     activities.back()->replacementPanel()->hide();
   }
   resetActivityMoveButtons();
@@ -78,7 +82,9 @@ void ActivityPanel::positionWidgets() {
       first_activity = row;
     }
     activity_half->addWidget(*activity->controlPane(), row, 0);
-    replacement_half->addWidget(*activity->replacementPanel(), ++row, 0);
+    replacement_half->addWidget(*activity->replacementPanel(),
+                                row + REPLACEMENT_BUFFER_SIZE, 0);
+    row++;
   }
   showReplacement(first_activity);
 
@@ -99,7 +105,7 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
   activity_half->addWidget(*activities.back()->controlPane(),
                            activities.size() - 1, 0);
   replacement_half->addWidget(*activities.back()->replacementPanel(),
-                              activities.size() + 1, 0);
+                              activities.size() + REPLACEMENT_BUFFER_SIZE, 0);
   activities.back()->select();
 
   resetActivityMoveButtons();
@@ -171,16 +177,21 @@ void ActivityPanel::refreshSizers() {
 }
 
 void ActivityPanel::swapActivities(int a, int b) {
+  hideAllReplacements();
   Activity temp(this, activity_half.get(), replacement_half.get(), 0, false);
   temp.copyFrom(activities[a].get());
   activities[a]->copyFrom(activities[b].get());
   activities[b]->copyFrom(&temp);
 
-  if (activities[a]->isSelected()) {
-    showReplacement(a);
-  } else if (activities[b]->isSelected()) {
-    showReplacement(b);
-  }
+  // Move these out of each other's way for when the replacement hide/show logic
+  // runs.
+  int offset = activities.size() + REPLACEMENT_BUFFER_SIZE;
+  replacement_half->moveWidget(activities[a]->replacementPanel(), offset + a,
+                               0);
+  replacement_half->moveWidget(activities[b]->replacementPanel(), offset + b,
+                               0);
+
+  showSelectedReplacement();
 
   updateNotify();
 }
@@ -234,12 +245,6 @@ void ActivityPanel::resetActivityMoveButtons() {
 }
 
 void ActivityPanel::hideAllReplacements() {
-  // Move them all way out first, then move them back to position, to avoid
-  // things getting confused.
-  for (int i = 0; i < activities.size(); i++) {
-    replacement_half->moveWidget(activities[i]->replacementPanel(), i + 32,
-                                   0);
-  }
   for (int i = 0; i < activities.size(); i++) {
     activities[i]->replacementPanel()->hide();
     replacement_half->moveWidget(activities[i]->replacementPanel(), i + 1, 0);
