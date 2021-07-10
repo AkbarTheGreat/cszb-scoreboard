@@ -34,6 +34,7 @@ const int INITIAL_NUMBER_OF_REPLACEMENTS = 2;
 ReplacementPanel::ReplacementPanel(swx::Panel *wx,
                                    ActivityPanel *activity_panel)
     : Panel(wx) {
+  should_self_delete = true;
   this->activity_panel = activity_panel;
   for (int i = 0; i < INITIAL_NUMBER_OF_REPLACEMENTS; i++) {
     replacements.push_back(std::make_unique<Replacement>(this));
