@@ -28,6 +28,7 @@ limitations under the License.
 #include "ui/widget/Button.h"
 #include "ui/widget/ColorPicker.h"
 #include "ui/widget/Label.h"
+#include "ui/widget/RadioButton.h"
 #include "ui/widget/SearchBox.h"
 #include "ui/widget/Text.h"
 #include "ui/widget/Toggle.h"
@@ -52,6 +53,7 @@ class Panel : public Widget {
       -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto label(const std::string &text) const
       -> std::unique_ptr<Label>;
+  [[nodiscard]] auto radioButton() const -> std::unique_ptr<RadioButton>;
   [[nodiscard]] auto scrollingPanel(long scroll_style = wxHSCROLL |
                                                         wxVSCROLL) const
       -> std::unique_ptr<ScrollingPanel>;
@@ -65,7 +67,7 @@ class Panel : public Widget {
 
   // Create an anonymous Panel child for the current one, akin to button(),
   // above.
-  [[nodiscard]] auto panel() const -> std::unique_ptr<Panel>;
+  [[nodiscard]] auto panel(bool self_managed = false) const -> std::unique_ptr<Panel>;
 
   // Create a child wx entry, for new Panel object creation.
   [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,

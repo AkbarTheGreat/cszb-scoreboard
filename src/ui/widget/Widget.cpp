@@ -39,25 +39,47 @@ auto Widget::widgetAtIndex(int row, int column) -> wxWindow * {
   return item->GetWindow();
 }
 
-void Widget::moveWidget(wxWindow *widget, int row, int column) {
+void Widget::moveWidget(Widget *widget, int row, int column) {
+  sizer()->SetItemPosition(widget->_wx(), wxGBPosition(row, column));
+}
+
+void Widget::moveWxWidget(wxWindow *widget, int row, int column) {
   sizer()->SetItemPosition(widget, wxGBPosition(row, column));
+}
+
+std::vector<std::vector<const wxGBSizerItem *>> getOrderedRepresentation(
+    wxGridBagSizer *sizer) {
+  std::vector<std::vector<const wxGBSizerItem *>> table;
+  for (auto base : sizer->GetChildren()) {
+    wxGBSizerItem *item = sizer->FindItem(base->GetWindow());
+    int row, col;
+    item->GetPos(row, col);
+    if (row >= table.size()) {
+      table.resize(row + 1);
+    }
+    if (col >= table[row].size()) {
+      table[row].resize(col + 1);
+    }
+    table[row][col] = item;
+  }
+  return table;
 }
 
 void Widget::removeColumnFromSizer(int column) {
   if (window_sizer == nullptr) {
     return;
   }
-  for (int i = 0; i < sizer()->GetRows(); i++) {
-    wxWindow *entry = widgetAtIndex(i, column);
-    if (entry != nullptr) {
-      sizer()->Detach(entry);
-    }
-  }
-  for (int c = column + 1; c < sizer()->GetCols(); c++) {
-    for (int r = 0; r < sizer()->GetRows(); r++) {
-      wxWindow *item = widgetAtIndex(r, c);
-      if (item != nullptr) {
-        sizer()->SetItemPosition(item, wxGBPosition(r, c - 1));
+  auto table = getOrderedRepresentation(window_sizer);
+  for (int r = 0; r < table.size(); r++) {
+    for (int c = 0; c < table[r].size(); c++) {
+      if (table[r][c] == nullptr || table[r][c]->GetWindow() == nullptr) {
+        continue;
+      }
+      if (c == column) {
+        sizer()->Detach(table[r][c]->GetWindow());
+      } else if (c > column) {
+        sizer()->SetItemPosition(table[r][c]->GetWindow(),
+                                 wxGBPosition(r, c - 1));
       }
     }
   }
@@ -67,17 +89,17 @@ void Widget::removeRowFromSizer(int row) {
   if (window_sizer == nullptr) {
     return;
   }
-  for (int i = 0; i < sizer()->GetCols(); i++) {
-    wxWindow *entry = widgetAtIndex(row, i);
-    if (entry != nullptr) {
-      sizer()->Detach(entry);
-    }
-  }
-  for (int r = row + 1; r < sizer()->GetRows(); r++) {
-    for (int c = 0; c < sizer()->GetCols(); c++) {
-      wxWindow *item = widgetAtIndex(r, c);
-      if (item != nullptr) {
-        sizer()->SetItemPosition(item, wxGBPosition(r - 1, c));
+  auto table = getOrderedRepresentation(window_sizer);
+  for (int r = 0; r < table.size(); r++) {
+    for (int c = 0; c < table[r].size(); c++) {
+      if (table[r][c] == nullptr || table[r][c]->GetWindow() == nullptr) {
+        continue;
+      }
+      if (r == row) {
+        sizer()->Detach(table[r][c]->GetWindow());
+      } else if (r > row) {
+        sizer()->SetItemPosition(table[r][c]->GetWindow(),
+                                 wxGBPosition(r - 1, c));
       }
     }
   }

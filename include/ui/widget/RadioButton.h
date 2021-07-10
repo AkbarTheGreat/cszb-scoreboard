@@ -1,5 +1,5 @@
 /*
-ui/widget/Button.h: A simple button, nothing super fancy.
+ui/widget/RadioButton.h: A single round (radio) button.
 
 Copyright 2021 Tracy Beck
 
@@ -18,25 +18,25 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/gbsizer.h>
+
 #include "ui/widget/Widget.h"
-#include "ui/widget/swx/Button.h"
+#include "ui/widget/swx/RadioButton.h"
 
 namespace cszb_scoreboard {
 
-class Button : public Widget {
+class RadioButton : public Widget {
  public:
-  explicit Button(swx::Button *button) { wx = button; }
+  explicit RadioButton(swx::RadioButton *radio) { wx = radio; }
 
-  void disable() { wx->Disable(); }
-  void enable() { wx->Enable(); }
-  auto id() -> int { return wx->GetId(); }
-  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
+  auto selected() -> bool { return wx->GetValue(); };
+  void setSelected(bool sel) { wx->SetValue(sel); };
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }
 
  private:
-  swx::Button *wx;
+  swx::RadioButton *wx;
 };
 
 }  // namespace cszb_scoreboard

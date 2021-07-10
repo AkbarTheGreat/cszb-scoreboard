@@ -32,8 +32,9 @@ Panel::~Panel() {
 auto Panel::button(const std::string &label, bool exact_fit) const
     -> std::unique_ptr<Button> {
   if (exact_fit) {
-    return std::make_unique<Button>(new swx::Button(
-        _wx(), wxID_ANY, label, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT));
+    return std::make_unique<Button>(
+        new swx::Button(_wx(), wxID_ANY, label, wxDefaultPosition,
+                        wxDefaultSize, wxBU_EXACTFIT));
   }
   return std::make_unique<Button>(new swx::Button(_wx(), wxID_ANY, label));
 }
@@ -48,8 +49,17 @@ auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {
   return std::make_unique<Label>(new swx::StaticText(_wx(), wxID_ANY, text));
 }
 
-auto Panel::panel() const -> std::unique_ptr<Panel> {
-  return std::make_unique<Panel>(childPanel());
+auto Panel::panel(bool self_managed) const -> std::unique_ptr<Panel> {
+  auto panel = std::make_unique<Panel>(childPanel());
+  if (self_managed) {
+    panel->should_self_delete = true;
+  }
+  return panel;
+}
+
+auto Panel::radioButton() const -> std::unique_ptr<RadioButton> {
+  return std::make_unique<RadioButton>(new swx::RadioButton(
+      _wx(), wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxRB_SINGLE));
 }
 
 auto Panel::scrollingPanel(long scroll_style) const
@@ -74,11 +84,13 @@ auto Panel::text(const std::string &initial_text, bool multi_line) const
         new swx::TextCtrl(_wx(), wxID_ANY, initial_text, wxDefaultPosition,
                           wxSize(-1, -1), wxTE_MULTILINE));
   }
-  return std::make_unique<Text>(new swx::TextCtrl(_wx(), wxID_ANY, initial_text));
+  return std::make_unique<Text>(
+      new swx::TextCtrl(_wx(), wxID_ANY, initial_text));
 }
 
 auto Panel::toggle(const std::string &label) const -> std::unique_ptr<Toggle> {
-  return std::make_unique<Toggle>(new swx::ToggleButton(_wx(), wxID_ANY, label));
+  return std::make_unique<Toggle>(
+      new swx::ToggleButton(_wx(), wxID_ANY, label));
 }
 
 }  // namespace cszb_scoreboard

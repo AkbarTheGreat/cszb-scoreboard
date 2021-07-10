@@ -57,8 +57,7 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
     activities.push_back(std::make_unique<Activity>(
         this, activity_half.get(), replacement_half.get(), i, is_first));
     is_first = false;
-    UiUtil::addToGridBag(activity_half->sizer(),
-                         activities.back()->controlPane(), i, 0);
+    activity_half->addWidget(*activities.back()->controlPane(), i, 0);
     UiUtil::addToGridBag(replacement_half->sizer(),
                          activities.back()->replacementPanel(), i + 1, 0);
     activities.back()->replacementPanel()->Hide();
@@ -79,8 +78,7 @@ void ActivityPanel::positionWidgets() {
     if (activity->isSelected()) {
       first_activity = row;
     }
-    UiUtil::addToGridBag(activity_half->sizer(), activity->controlPane(), row,
-                         0);
+    activity_half->addWidget(*activity->controlPane(), row, 0);
     UiUtil::addToGridBag(replacement_half->sizer(),
                          activity->replacementPanel(), ++row, 0);
   }
@@ -101,8 +99,8 @@ void ActivityPanel::addActivity(wxPanel *parent_panel) {
   activities.push_back(std::make_unique<Activity>(this, activity_half.get(),
                                                   replacement_half.get(),
                                                   activities.size(), is_first));
-  UiUtil::addToGridBag(activity_half->sizer(), activities.back()->controlPane(),
-                       activities.size() - 1, 0);
+  activity_half->addWidget(*activities.back()->controlPane(),
+                           activities.size() - 1, 0);
   UiUtil::addToGridBag(replacement_half->sizer(),
                        activities.back()->replacementPanel(),
                        activities.size() + 1, 0);
@@ -119,11 +117,10 @@ void ActivityPanel::addReplacement() {
   }
 }
 
-void ActivityPanel::deleteActivity(wxCommandEvent &event) {
-  wxObject *event_object = event.GetEventObject();
+void ActivityPanel::deleteActivity(Activity *deleted) {
   int offset = 0;
   for (const auto &activity : activities) {
-    if (activity->containsDeleteButton(event_object)) {
+    if (activity.get() == deleted) {
       if (activity->isSelected()) {
         if (activities.size() > 1) {
           if (offset == 0) {
@@ -132,10 +129,12 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
             activities[0]->select();
           }
         }
+        hideAllReplacements();
       }
       activity_half->removeRowFromSizer(offset);
       replacement_half->removeRowFromSizer(offset + 1);
       activities.erase(activities.begin() + offset);
+      showSelectedReplacement();
       resetActivityMoveButtons();
       updateNotify();
       return;
@@ -144,11 +143,13 @@ void ActivityPanel::deleteActivity(wxCommandEvent &event) {
   }
 }
 
-void ActivityPanel::selectionChanged(wxCommandEvent &event) {
-  wxObject *event_object = event.GetEventObject();
+void ActivityPanel::selectionChanged(Activity *selected) {
   for (int i = 0; i < activities.size(); i++) {
-    if (activities[i]->resolveSelection(event_object)) {
+    if (activities[i].get() == selected) {
+      activities[i]->select();
       showReplacement(i);
+    } else {
+      activities[i]->unselect();
     }
   }
   updateNotify();
@@ -240,17 +241,27 @@ void ActivityPanel::hideAllReplacements() {
   // Move them all way out first, then move them back to position, to avoid
   // things getting confused.
   for (int i = 0; i < activities.size(); i++) {
-    replacement_half->moveWidget(activities[i]->replacementPanel(), i + 32, 0);
+    replacement_half->moveWxWidget(activities[i]->replacementPanel(), i + 32,
+                                   0);
   }
   for (int i = 0; i < activities.size(); i++) {
     activities[i]->replacementPanel()->Hide();
-    replacement_half->moveWidget(activities[i]->replacementPanel(), i + 1, 0);
+    replacement_half->moveWxWidget(activities[i]->replacementPanel(), i + 1, 0);
+  }
+}
+
+void ActivityPanel::showSelectedReplacement() {
+  for (int i = 0; i < activities.size(); i++) {
+    if (activities[i]->isSelected()) {
+      showReplacement(i);
+      return;
+    }
   }
 }
 
 void ActivityPanel::showReplacement(int index) {
   hideAllReplacements();
-  replacement_half->moveWidget(activities[index]->replacementPanel(), 0, 0);
+  replacement_half->moveWxWidget(activities[index]->replacementPanel(), 0, 0);
   activities[index]->replacementPanel()->Show();
 }
 

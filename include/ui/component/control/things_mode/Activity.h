@@ -26,20 +26,26 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/Panel.h"
+#include "ui/widget/RadioButton.h"
+#include "ui/widget/Text.h"
 #include "ui/widget/Widget.h"
 
 namespace cszb_scoreboard {
+
+// Pre-defining ActivityPanel for a parent pointer.
+class ActivityPanel;
+
 class Activity {
  public:
-  Activity(Widget *parent, Panel *activity_frame, Panel *replacement_frame,
-           int index, bool is_first);
+  Activity(ActivityPanel *parent, Panel *activity_frame,
+           Panel *replacement_frame, int index, bool is_first);
   ~Activity();
   void copyFrom(Activity *other);
-  auto controlPane() -> wxPanel * { return control_pane; }
-  auto containsDeleteButton(wxObject *delete_button) -> bool;
+  auto controlPane() -> Panel * { return control_pane.get(); }
   auto previewText() -> std::string;
   auto replacementPanel() -> ReplacementPanel * { return replacement_panel; }
-  auto resolveSelection(wxObject *selected_object) -> bool;
   void setIndex(int index, int max_index);
   auto isSelected() -> bool;
   void select();
@@ -47,19 +53,16 @@ class Activity {
 
  private:
   int index;
-  wxPanel *control_pane;
-  wxRadioButton *activity_selector;
-  wxTextCtrl *activity_text;
-  wxButton *down_button;
-  Widget *parent;
-  wxButton *remove_activity_button;
+  std::unique_ptr<Panel> control_pane;
+  std::unique_ptr<RadioButton> activity_selector;
+  std::unique_ptr<Text> activity_text;
+  std::unique_ptr<Button> down_button, up_button, remove_activity_button;
+  ActivityPanel *parent;
   ReplacementPanel *replacement_panel;
-  wxButton *up_button;
 
   void bindEvents();
   void positionWidgets();
-  void moveButton(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                           // wxWidgets callback.
+  void moveButton(bool is_up);
   void selectionChanged(
       wxCommandEvent &event);  // NOLINT(google-runtime-references)
                                // wxWidgets callback.

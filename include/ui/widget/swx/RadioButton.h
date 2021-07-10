@@ -1,5 +1,5 @@
 /*
-ui/widget/Button.h: A simple button, nothing super fancy.
+ui/widget/swx/RadioButton.h: A wrapper around wxRadioButton.
 
 Copyright 2021 Tracy Beck
 
@@ -18,25 +18,18 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/Button.h"
+#include <wx/wx.h>
 
-namespace cszb_scoreboard {
+namespace cszb_scoreboard::swx {
 
-class Button : public Widget {
+class RadioButton : public wxRadioButton {
  public:
-  explicit Button(swx::Button *button) { wx = button; }
-
-  void disable() { wx->Disable(); }
-  void enable() { wx->Enable(); }
-  auto id() -> int { return wx->GetId(); }
-  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
-
- protected:
-  auto _wx() const -> wxWindow * override { return wx; }
-
- private:
-  swx::Button *wx;
+  RadioButton(wxWindow *parent, wxWindowID id, const wxString &label,
+              const wxPoint &pos = wxDefaultPosition,
+              const wxSize &size = wxDefaultSize, long style = 0,
+              const wxValidator &validator = wxDefaultValidator,
+              const wxString &name = wxRadioButtonNameStr)
+      : wxRadioButton(parent, id, label, pos, size, style, validator, name) {}
 };
 
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::swx

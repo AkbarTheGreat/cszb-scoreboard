@@ -44,11 +44,8 @@ class ActivityPanel : public Panel {
   auto selectedActivityText() -> std::string;
   void swapActivities(int a, int b);
   void updateNotify();
-  // wxWidgets callbacks, waive linting error for references.
-  void deleteActivity(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void selectionChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void deleteActivity(Activity *deleted);
+  void selectionChanged(Activity *selected);
   void textUpdated();
 
  private:
@@ -64,5 +61,6 @@ class ActivityPanel : public Panel {
   void resetActivityMoveButtons();
   void hideAllReplacements();
   void showReplacement(int index);
+  void showSelectedReplacement();
 };
 }  // namespace cszb_scoreboard
