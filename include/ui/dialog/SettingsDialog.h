@@ -26,26 +26,28 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "ui/dialog/settings/SettingsPage.h"
+#include "ui/widget/Frame.h"
+#include "ui/widget/TabbedDialog.h"
 
 namespace cszb_scoreboard {
 
 extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
 
-class SettingsDialog : public wxPropertySheetDialog {
+class SettingsDialog : public TabbedDialog {
  public:
-  auto Create(wxWindow *parent) -> bool;
+  SettingsDialog(swx::PropertySheetDialog *wx, Frame *parent);
 
  private:
-  void addPage(SettingsPage *page, const std::string &name);
+  void addPage(std::unique_ptr<SettingsPage> page, const std::string &name);
   void bindEvents();
   void saveSettings();
   auto validateSettings() -> bool;
-  std::vector<SettingsPage *> pages;
-  wxWindow *parent;
-  // wxWidgets callbacks, waive linting error for references.
-  void onOk(wxCommandEvent &event);      // NOLINT(google-runtime-references)
-  void onCancel(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void onClose(wxCloseEvent &event);     // NOLINT(google-runtime-references)
+  void onOk();
+  void onCancel();
+  void onClose();
+
+  Frame *parent;
+  std::vector<std::unique_ptr<SettingsPage>> pages;
 };
 
 }  // namespace cszb_scoreboard

@@ -30,7 +30,7 @@ namespace cszb_scoreboard {
 
 class DisplaySettingsPage : public SettingsPage {
  public:
-  explicit DisplaySettingsPage(wxWindow *parent);
+  explicit DisplaySettingsPage(swx::Panel *wx);
   void saveSettings() override;
   auto validateSettings() -> bool override;
   void swapDisplays(int a, int b);
@@ -39,8 +39,9 @@ class DisplaySettingsPage : public SettingsPage {
   void bindEvents();
   void createControls();
   void positionWidgets();
-  void windowModeChanged(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                                  // wxWidgets callback.
+  void windowModeChanged(
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+                               // wxWidgets callback.
 
   std::vector<DisplaySettingsPanel *> display_settings_panels;
   wxPanel *window_mode_panel;

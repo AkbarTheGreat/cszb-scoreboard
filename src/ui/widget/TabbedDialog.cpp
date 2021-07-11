@@ -1,8 +1,8 @@
 /*
-ui/dialog/settings/SettingsPage.h: A page in the settings notebook.  Handles
-loading data in from a config object and validating it before saving it.
+ui/widget/TabbedDialog.cpp: A substantial pop-up dialog, which contains controls
+within tabs.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#pragma once
 
-#include "ui/widget/Panel.h"
+#include "ui/widget/TabbedDialog.h"
 
 namespace cszb_scoreboard {
 
-class SettingsPage : public Panel {
- public:
-  virtual void saveSettings() = 0;
-  virtual auto validateSettings() -> bool = 0;
+TabbedDialog::TabbedDialog(swx::PropertySheetDialog *dialog, long buttons) {
+  wx = dialog;
+  wx->CreateButtons(buttons);
+}
 
- protected:
-  explicit SettingsPage(swx::Panel *wx) : Panel(wx) {}
-};
+void TabbedDialog::addPage(const Panel &page, const std::string &name) {
+  wx->GetBookCtrl()->AddPage(page.wx, name);
+}
+
+void TabbedDialog::selfDestruct() {
+  wx->Destroy();
+  delete this;
+}
 
 }  // namespace cszb_scoreboard

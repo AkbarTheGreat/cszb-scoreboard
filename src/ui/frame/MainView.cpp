@@ -124,10 +124,10 @@ void MainView::onAbout(wxCommandEvent& event) {
 }
 
 void MainView::showSettings(wxCommandEvent& event) {
-  settings_dialog = new SettingsDialog();
-  settings_dialog->Create(this->wx);
-  settings_dialog->Show();
-  settings_dialog->Bind(
+  settings_dialog =
+      new SettingsDialog(childDialog("Scoreboard Settings"), this);
+  settings_dialog->show();
+  settings_dialog->bind(
       SETTINGS_UPDATED,
       [this](wxCommandEvent& event) -> void { this->onSettingsChange(event); });
 }

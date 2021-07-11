@@ -29,7 +29,7 @@ namespace cszb_scoreboard {
 
 class TeamSettingsPage : public SettingsPage {
  public:
-  explicit TeamSettingsPage(wxWindow *parent);
+  explicit TeamSettingsPage(swx::Panel *wx);
   void saveSettings() override;
   void swapTeams(int a, int b);
   auto validateSettings() -> bool override;

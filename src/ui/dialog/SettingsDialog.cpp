@@ -19,8 +19,6 @@ limitations under the License.
 
 #include "ui/dialog/SettingsDialog.h"
 
-#include <wx/bookctrl.h>
-
 #include "ScoreboardCommon.h"
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 #include "ui/dialog/settings/TeamSettingsPage.h"
@@ -32,46 +30,48 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 
-auto SettingsDialog::Create(wxWindow* parent) -> bool {
+SettingsDialog::SettingsDialog(swx::PropertySheetDialog* wx, Frame* parent)
+    : TabbedDialog(wx) {
   this->parent = parent;
-  if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Scoreboard Settings")) {
-    return false;
-  }
-  CreateButtons(wxOK | wxCANCEL);
-  addPage(new TeamSettingsPage(GetBookCtrl()), "Teams");
-  addPage(new DisplaySettingsPage(GetBookCtrl()), "Displays");
-  LayoutDialog();
+  addPage(std::make_unique<TeamSettingsPage>(childPanel()), "Teams");
+  addPage(std::make_unique<DisplaySettingsPage>(childPanel()), "Displays");
+  runSizer();
   bindEvents();
-  return true;
 }
 
-void SettingsDialog::addPage(SettingsPage* page, const std::string& name) {
-  pages.push_back(page);
-  GetBookCtrl()->AddPage(page, name);
+void SettingsDialog::addPage(std::unique_ptr<SettingsPage> page,
+                             const std::string& name) {
+  TabbedDialog::addPage(*page, name);
+  pages.push_back(std::move(page));
 }
 
 void SettingsDialog::bindEvents() {
-  Bind(wxEVT_BUTTON, &SettingsDialog::onOk, this, wxID_OK);
-  Bind(wxEVT_BUTTON, &SettingsDialog::onCancel, this, wxID_CANCEL);
-  Bind(wxEVT_CLOSE_WINDOW, &SettingsDialog::onClose, this);
+  bind(
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onOk(); },
+      wxID_OK);
+  bind(
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onCancel(); },
+      wxID_CANCEL);
+  bind(wxEVT_CLOSE_WINDOW,
+       [this](wxCloseEvent& event) -> void { this->onClose(); });
 }
 
-void SettingsDialog::onOk(wxCommandEvent& event) {
+void SettingsDialog::onOk() {
   if (validateSettings()) {
     saveSettings();
     wxCommandEvent settings_updated_event(SETTINGS_UPDATED);
     // Normally, I'd use wxPostEvent here for asynchronous event handling, but
     // it sometimes doesn't work (Maybe due to a race condition with object
     // destruction?)  Processing synchronously here is our best compromise.
-    ProcessEvent(settings_updated_event);
-    Close(true);
+    sendEvent(&settings_updated_event);
+    close();
     return;
   }
 }
 
-void SettingsDialog::onCancel(wxCommandEvent& event) { Close(true); }
+void SettingsDialog::onCancel() { close(true); }
 
-void SettingsDialog::onClose(wxCloseEvent& event) {
+void SettingsDialog::onClose() {
   // Sometimes closing out this menu has given focus to a totally different
   // window for focus for me in testing.  That's really obnoxious, because it
   // can have the effect of sending the main window to the back of another
@@ -79,13 +79,13 @@ void SettingsDialog::onClose(wxCloseEvent& event) {
   // before calling Destroy(), things quit working.  But Destroying calls the
   // destructor, so we can't rely on this->parent anymore after Destroy is
   // called.  So we save it in a local pointer temporarily for this purpose.
-  wxWindow* local_parent = parent;
-  Destroy();
-  local_parent->SetFocus();
+  Frame* local_parent = parent;
+  selfDestruct();
+  local_parent->focus();
 }
 
 auto SettingsDialog::validateSettings() -> bool {
-  for (auto* page : pages) {
+  for (const auto& page : pages) {
     if (!page->validateSettings()) {
       return false;
     }
@@ -94,7 +94,7 @@ auto SettingsDialog::validateSettings() -> bool {
 }
 
 void SettingsDialog::saveSettings() {
-  for (auto* page : pages) {
+  for (const auto& page : pages) {
     page->saveSettings();
   }
 }

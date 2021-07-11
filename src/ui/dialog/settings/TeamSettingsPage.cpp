@@ -25,17 +25,15 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-TeamSettingsPage::TeamSettingsPage(wxWindow* parent) : SettingsPage(parent) {
-  wxSizer* sizer = UiUtil::sizer(0, 1);
-
+TeamSettingsPage::TeamSettingsPage(swx::Panel* wx) : SettingsPage(wx) {
   int i = 0;
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
-    auto* team_panel = new TeamSettingsPanel(this, i++, team);
+    auto* team_panel = new TeamSettingsPanel(wx, i++, team);
     team_settings_panels.push_back(team_panel);
-    sizer->Add(team_panel, 0, wxALL, BORDER_SIZE);
+    UiUtil::addToGridBag(sizer(), team_panel, i - 1, 0);
   }
 
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
 auto TeamSettingsPage::validateSettings() -> bool {
@@ -75,7 +73,7 @@ void TeamSettingsPage::saveSettings() {
 }
 
 void TeamSettingsPage::swapTeams(int a, int b) {
-  TeamSettingsPanel temp(this, 0, proto::TeamInfo_TeamType_TEAM_ERROR);
+  TeamSettingsPanel temp(wx, 0, proto::TeamInfo_TeamType_TEAM_ERROR);
   temp.copyFrom(team_settings_panels[a]);
   team_settings_panels[a]->copyFrom(team_settings_panels[b]);
   team_settings_panels[b]->copyFrom(&temp);

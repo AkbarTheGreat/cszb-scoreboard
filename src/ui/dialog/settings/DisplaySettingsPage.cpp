@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 #include "ui/UiUtil.h"
+#include "ui/widget/Panel.h"
 #include "util/StringUtil.h"
 #include "wx/gbsizer.h"
 
@@ -28,8 +29,7 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
-    : SettingsPage(parent) {
+DisplaySettingsPage::DisplaySettingsPage(swx::Panel* wx) : SettingsPage(wx) {
   createControls();
   positionWidgets();
   bindEvents();
@@ -37,12 +37,12 @@ DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
 
 void DisplaySettingsPage::createControls() {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
-    auto* display_panel = new DisplaySettingsPanel(this, i);
+    auto* display_panel = new DisplaySettingsPanel(new swx::Panel(wx), i);
     display_settings_panels.push_back(display_panel);
   }
 
-  separator_line = new wxStaticLine(this);
-  window_mode_panel = new wxPanel(this);
+  separator_line = new wxStaticLine(wx);
+  window_mode_panel = new wxPanel(wx);
 
   enable_window_mode =
       new wxCheckBox(window_mode_panel, wxID_ANY, "Enable Window Mode");
@@ -84,16 +84,16 @@ void DisplaySettingsPage::positionWidgets() {
 
   window_mode_panel->SetSizerAndFit(window_mode_sizer);
 
-  wxSizer* sizer = UiUtil::sizer(0, 1);
-
+  int row = 0;
   for (auto* panel : display_settings_panels) {
-    sizer->Add(panel, 0, wxALL, BORDER_SIZE);
+    UiUtil::addToGridBag(sizer(), panel, row++, 0);
   }
 
-  sizer->Add(separator_line, 0, wxALL | wxGROW, BORDER_SIZE);
-  sizer->Add(window_mode_panel, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), separator_line, row++, 0, 1, 1,
+                       DEFAULT_BORDER_SIZE, wxALL | wxGROW);
+  UiUtil::addToGridBag(sizer(), window_mode_panel, row++, 0);
 
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
 void DisplaySettingsPage::bindEvents() {
@@ -196,7 +196,7 @@ void DisplaySettingsPage::windowModeChanged(wxCommandEvent& event) {
 }
 
 void DisplaySettingsPage::swapDisplays(int a, int b) {
-  DisplaySettingsPanel temp(this, 0);
+  DisplaySettingsPanel temp(wx, 0);
   temp.copyFrom(display_settings_panels[a]);
   display_settings_panels[a]->copyFrom(display_settings_panels[b]);
   display_settings_panels[b]->copyFrom(&temp);

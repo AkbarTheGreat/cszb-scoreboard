@@ -27,6 +27,7 @@ limitations under the License.
 #include "ui/widget/swx/Frame.h"
 #include "ui/widget/swx/Notebook.h"
 #include "ui/widget/swx/Panel.h"
+#include "ui/widget/swx/PropertySheetDialog.h"
 
 namespace cszb_scoreboard {
 
@@ -59,6 +60,14 @@ class Frame : public Widget {
   void menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu);
   void setDimensions(const wxRect &dim);
 
+  auto childDialog(const wxString &title, wxWindowID id = wxID_ANY,
+                   const wxPoint &pos = wxDefaultPosition,
+                   const wxSize &size = wxDefaultSize,
+                   long style = wxDEFAULT_DIALOG_STYLE,
+                   const wxString &name = wxDialogNameStr)
+      -> swx::PropertySheetDialog * {
+    return new swx::PropertySheetDialog(wx, id, title, pos, size, style, name);
+  }
   auto childPanel(wxWindowID id = wxID_ANY,
                   const wxPoint &pos = wxDefaultPosition,
                   const wxSize &size = wxDefaultSize,
