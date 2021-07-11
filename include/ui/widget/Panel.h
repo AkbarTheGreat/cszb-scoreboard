@@ -26,7 +26,9 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"
 #include "ui/widget/Button.h"
+#include "ui/widget/CheckBox.h"
 #include "ui/widget/ColorPicker.h"
+#include "ui/widget/Divider.h"
 #include "ui/widget/Label.h"
 #include "ui/widget/RadioButton.h"
 #include "ui/widget/SearchBox.h"
@@ -49,8 +51,11 @@ class Panel : public Widget {
   [[nodiscard]] auto button(const std::string &label,
                             bool exact_fit = false) const
       -> std::unique_ptr<Button>;
+  [[nodiscard]] auto checkBox(const std::string &label) const
+      -> std::unique_ptr<CheckBox>;
   [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
       -> std::unique_ptr<ColorPicker>;
+  [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
   [[nodiscard]] auto label(const std::string &text) const
       -> std::unique_ptr<Label>;
   [[nodiscard]] auto radioButton() const -> std::unique_ptr<RadioButton>;
@@ -67,7 +72,8 @@ class Panel : public Widget {
 
   // Create an anonymous Panel child for the current one, akin to button(),
   // above.
-  [[nodiscard]] auto panel(bool self_managed = false) const -> std::unique_ptr<Panel>;
+  [[nodiscard]] auto panel(bool self_managed = false) const
+      -> std::unique_ptr<Panel>;
 
   // Create a child wx entry, for new Panel object creation.
   [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,

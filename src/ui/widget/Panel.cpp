@@ -39,10 +39,19 @@ auto Panel::button(const std::string &label, bool exact_fit) const
   return std::make_unique<Button>(new swx::Button(_wx(), wxID_ANY, label));
 }
 
+auto Panel::checkBox(const std::string &label) const
+    -> std::unique_ptr<CheckBox> {
+  return std::make_unique<CheckBox>(new swx::CheckBox(_wx(), wxID_ANY, label));
+}
+
 auto Panel::colorPicker(const wxColour &initial_color) const
     -> std::unique_ptr<ColorPicker> {
   return std::make_unique<ColorPicker>(
       new swx::ColourPickerCtrl(_wx(), wxID_ANY, initial_color));
+}
+
+auto Panel::divider() const -> std::unique_ptr<Divider> {
+  return std::make_unique<Divider>(new swx::StaticLine(_wx()));
 }
 
 auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {

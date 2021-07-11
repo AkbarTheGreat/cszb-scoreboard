@@ -18,13 +18,17 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/statline.h>
 #include <wx/wx.h>
 
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
 #include "ui/dialog/settings/DisplaySettingsPanel.h"
 #include "ui/dialog/settings/SettingsPage.h"
+#include "ui/widget/CheckBox.h"
+#include "ui/widget/Divider.h"
+#include "ui/widget/Label.h"
+#include "ui/widget/Panel.h"
+#include "ui/widget/Text.h"
 
 namespace cszb_scoreboard {
 
@@ -46,8 +50,8 @@ class DisplaySettingsPage : public SettingsPage {
   std::unique_ptr<Label> number_of_windows_label, window_size_label,
       window_size_separator_label;
   std::unique_ptr<Text> number_of_windows, window_width, window_height;
-  wxCheckBox *enable_window_mode;
-  wxStaticLine *separator_line;
+  std::unique_ptr<CheckBox> enable_window_mode;
+  std::unique_ptr<Divider> separator_line;
 };
 
 }  // namespace cszb_scoreboard
