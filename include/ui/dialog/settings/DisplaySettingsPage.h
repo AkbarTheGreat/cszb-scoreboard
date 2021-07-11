@@ -39,16 +39,14 @@ class DisplaySettingsPage : public SettingsPage {
   void bindEvents();
   void createControls();
   void positionWidgets();
-  void windowModeChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                               // wxWidgets callback.
+  void windowModeChanged();
 
-  std::vector<DisplaySettingsPanel *> display_settings_panels;
-  wxPanel *window_mode_panel;
-  wxStaticText *number_of_windows_label, *window_size_label,
-      *window_size_separator_label;
+  std::vector<std::unique_ptr<DisplaySettingsPanel>> display_settings_panels;
+  std::unique_ptr<Panel> window_mode_panel;
+  std::unique_ptr<Label> number_of_windows_label, window_size_label,
+      window_size_separator_label;
+  std::unique_ptr<Text> number_of_windows, window_width, window_height;
   wxCheckBox *enable_window_mode;
-  wxTextCtrl *number_of_windows, *window_width, *window_height;
   wxStaticLine *separator_line;
 };
 

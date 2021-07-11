@@ -23,14 +23,18 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
+#include "ui/widget/Panel.h"
 #include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
 
-class DisplaySettingsPanel : public wxPanel {
+// Pre-defining ActivityPanel for a parent pointer.
+class DisplaySettingsPage;
+
+class DisplaySettingsPanel : public Panel {
  public:
-  DisplaySettingsPanel(wxPanel *parent, int index);
-  void copyFrom(DisplaySettingsPanel *other);
+  DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent);
+  void copyFrom(const DisplaySettingsPanel &other);
   auto getSide() -> proto::ScreenSide;
   [[nodiscard]] auto getDisplayId() const -> int { return display_id; }
 
@@ -50,6 +54,7 @@ class DisplaySettingsPanel : public wxPanel {
   wxPanel *button_panel;
   wxButton *down_button;
   wxButton *up_button;
+  DisplaySettingsPage *parent;
 };
 
 }  // namespace cszb_scoreboard

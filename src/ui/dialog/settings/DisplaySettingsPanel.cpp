@@ -30,22 +30,23 @@ const std::string ARROW_TOOL_TIP =
     "Change the order of displays.  This primarily affects the order used to "
     "show previews on the main screen.  Requires a restart to take effect.";
 
-DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int index)
-    : wxPanel(parent) {
+DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel* wx, int index,
+                                           DisplaySettingsPage* parent)
+    : Panel(wx) {
   this->index = index;
+  this->parent = parent;
   proto::DisplayInfo display_info =
       DisplayConfig::getInstance()->displayDetails(index);
   this->display_id = display_info.id();
-  wxSizer* sizer = UiUtil::sizer(0, 1);
 
   const proto::ScreenSide& screen_side = display_info.side();
   // Label for this display
-  display_label = new wxStaticText(this, wxID_ANY, "");
+  display_label = new wxStaticText(wx, wxID_ANY, "");
   wxFont font = display_label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);
   display_label->SetFont(font);
   updateLabel();
-  sizer->Add(display_label, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), display_label, 0, 0);
 
   // Up/Down buttons
   createButtonPanel();
@@ -56,31 +57,31 @@ DisplaySettingsPanel::DisplaySettingsPanel(wxPanel* parent, int index)
     down_button->Disable();
   }
 
-  sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), button_panel, 1, 0);
 
   // Booth monitor checkbox
-  control_checkbox = new wxCheckBox(this, wxID_ANY, wxT("&Booth Monitor"));
+  control_checkbox = new wxCheckBox(wx, wxID_ANY, wxT("&Booth Monitor"));
   control_checkbox->SetValue(screen_side.control());
-  sizer->Add(control_checkbox, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), control_checkbox, 2, 0);
 
   // Home team checkbox
-  home_checkbox = new wxCheckBox(this, wxID_ANY, wxT("&Home Team"));
+  home_checkbox = new wxCheckBox(wx, wxID_ANY, wxT("&Home Team"));
   home_checkbox->SetValue(screen_side.home());
-  sizer->Add(home_checkbox, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), home_checkbox, 3, 0);
 
   // Away team checkbox
-  away_checkbox = new wxCheckBox(this, wxID_ANY, wxT("&Away Team"));
+  away_checkbox = new wxCheckBox(wx, wxID_ANY, wxT("&Away Team"));
   away_checkbox->SetValue(screen_side.away());
-  sizer->Add(away_checkbox, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), away_checkbox, 4, 0);
 
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
-void DisplaySettingsPanel::copyFrom(DisplaySettingsPanel* other) {
-  this->display_id = other->display_id;
-  copyCheckbox(other->control_checkbox, this->control_checkbox);
-  copyCheckbox(other->home_checkbox, this->home_checkbox);
-  copyCheckbox(other->away_checkbox, this->away_checkbox);
+void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel& other) {
+  this->display_id = other.display_id;
+  copyCheckbox(other.control_checkbox, this->control_checkbox);
+  copyCheckbox(other.home_checkbox, this->home_checkbox);
+  copyCheckbox(other.away_checkbox, this->away_checkbox);
   updateLabel();
 }
 
@@ -98,7 +99,7 @@ void DisplaySettingsPanel::updateLabel() {
 void DisplaySettingsPanel::createButtonPanel() {
   wxSizer* sizer = UiUtil::sizer(0, 2);
 
-  button_panel = new wxPanel(this);
+  button_panel = new wxPanel(wx);
   up_button = new wxButton(button_panel, wxID_ANY, "^", wxDefaultPosition,
                            wxDefaultSize, wxBU_EXACTFIT);
   down_button = new wxButton(button_panel, wxID_ANY, "v", wxDefaultPosition,
@@ -127,11 +128,10 @@ auto DisplaySettingsPanel::getSide() -> proto::ScreenSide {
 }
 
 void DisplaySettingsPanel::moveDisplay(wxCommandEvent& event) {
-  auto* parent_page = dynamic_cast<DisplaySettingsPage*>(GetParent());
   if (event.GetEventObject() == up_button) {
-    parent_page->swapDisplays(index, index - 1);
+    parent->swapDisplays(index, index - 1);
   } else if (event.GetEventObject() == down_button) {
-    parent_page->swapDisplays(index, index + 1);
+    parent->swapDisplays(index, index + 1);
   } else {
     LogDebug("Button clicked, but not the up or down button.  That's weird.");
   }

@@ -27,10 +27,12 @@ class Text : public Widget {
  public:
   explicit Text(swx::TextCtrl *label) { wx = label; }
 
+  void clear() { wx->Clear(); }
+  void disable() { wx->Disable(); }
+  void enable() { wx->Enable(); }
+  void focus() { wx->SetFocus(); }
   void setValue(const std::string &value) { wx->SetValue(value); }
   auto value() -> std::string { return wx->GetValue(); }
-  void focus() { wx->SetFocus(); }
-  void clear() { wx->Clear(); }
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }
