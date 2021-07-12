@@ -35,7 +35,7 @@ class TeamSettingsPage : public SettingsPage {
   auto validateSettings() -> bool override;
 
  private:
-  std::vector<TeamSettingsPanel *> team_settings_panels;
+  std::vector<std::unique_ptr<TeamSettingsPanel>> team_settings_panels;
 };
 
 }  // namespace cszb_scoreboard

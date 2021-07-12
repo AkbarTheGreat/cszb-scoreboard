@@ -29,7 +29,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-// Pre-defining ActivityPanel for a parent pointer.
+// Pre-defining DisplaySettingsPage for a parent pointer.
 class DisplaySettingsPage;
 
 class DisplaySettingsPanel : public Panel {

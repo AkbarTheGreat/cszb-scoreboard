@@ -30,21 +30,21 @@ const std::string ARROW_TOOL_TIP =
     "Change the order of teams appear on the same screen and in score "
     "controls.  Requires a restart to take effect.";
 
-TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index,
-                                     proto::TeamInfo_TeamType team)
-    : wxPanel(parent) {
+TeamSettingsPanel::TeamSettingsPanel(swx::Panel* wx, int team_index,
+                                     proto::TeamInfo_TeamType team,
+                                     TeamSettingsPage* parent)
+    : Panel(wx) {
+  this->parent = parent;
   index = team_index;
   team_type = team;
 
-  auto* sizer = new wxGridSizer(0, 2, 0, 0);
-
   // Label for this display
-  label = new wxStaticText(this, wxID_ANY,
+  label = new wxStaticText(wx, wxID_ANY,
                            TeamConfig::getInstance()->teamName(team_type));
   wxFont font = label->GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);
   label->SetFont(font);
-  sizer->Add(label, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), label, 0, 0);
 
   createButtonPanel();
   if (index == 0) {
@@ -53,27 +53,27 @@ TeamSettingsPanel::TeamSettingsPanel(wxPanel* parent, int team_index,
   if (index >= TeamConfig::getInstance()->numberOfTeams() - 1) {
     down_button->Disable();
   }
-  sizer->Add(button_panel, 0, wxALL, BORDER_SIZE);
+  UiUtil::addToGridBag(sizer(), button_panel, 0, 1);
 
-  sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Default Color")), 0, wxALL,
-             BORDER_SIZE);
+  UiUtil::addToGridBag(
+      sizer(), new wxStaticText(wx, wxID_ANY, wxT("Default Color")), 1, 0);
   color_picker = new wxColourPickerCtrl(
-      this, wxID_ANY, TeamConfig::getInstance()->teamColor(team));
-  sizer->Add(color_picker, 0, wxALL, BORDER_SIZE);
+      wx, wxID_ANY, TeamConfig::getInstance()->teamColor(team));
+  UiUtil::addToGridBag(sizer(), color_picker, 1, 1);
 
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
-void TeamSettingsPanel::copyFrom(TeamSettingsPanel* other) {
-  label->SetLabelText(other->label->GetLabelText());
-  color_picker->SetColour(other->color_picker->GetColour());
-  team_type = other->team_type;
+void TeamSettingsPanel::copyFrom(const TeamSettingsPanel& other) {
+  label->SetLabelText(other.label->GetLabelText());
+  color_picker->SetColour(other.color_picker->GetColour());
+  team_type = other.team_type;
 }
 
 void TeamSettingsPanel::createButtonPanel() {
   wxSizer* sizer = UiUtil::sizer(0, 2);
 
-  button_panel = new wxPanel(this);
+  button_panel = new wxPanel(wx);
   up_button = new wxButton(button_panel, wxID_ANY, "^", wxDefaultPosition,
                            wxDefaultSize, wxBU_EXACTFIT);
   down_button = new wxButton(button_panel, wxID_ANY, "v", wxDefaultPosition,
@@ -99,11 +99,10 @@ auto TeamSettingsPanel::teamColor() -> Color {
 }
 
 void TeamSettingsPanel::moveTeam(wxCommandEvent& event) {
-  auto* parent_page = dynamic_cast<TeamSettingsPage*>(GetParent());
   if (event.GetEventObject() == up_button) {
-    parent_page->swapTeams(index, index - 1);
+    parent->swapTeams(index, index - 1);
   } else if (event.GetEventObject() == down_button) {
-    parent_page->swapTeams(index, index + 1);
+    parent->swapTeams(index, index + 1);
   } else {
     LogDebug("Button clicked, but not the up or down button.  That's weird.");
   }

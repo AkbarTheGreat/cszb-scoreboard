@@ -28,9 +28,10 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 TeamSettingsPage::TeamSettingsPage(swx::Panel* wx) : SettingsPage(wx) {
   int i = 0;
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
-    auto* team_panel = new TeamSettingsPanel(wx, i++, team);
-    team_settings_panels.push_back(team_panel);
-    UiUtil::addToGridBag(sizer(), team_panel, i - 1, 0);
+    auto team_panel =
+        std::make_unique<TeamSettingsPanel>(childPanel(), i++, team, this);
+    addWidget(*team_panel, i - 1, 0);
+    team_settings_panels.push_back(std::move(team_panel));
   }
 
   runSizer();
@@ -51,7 +52,7 @@ void TeamSettingsPage::saveSettings() {
     restart_warning = true;
   }
 
-  for (auto* panel : team_settings_panels) {
+  for (const auto& panel : team_settings_panels) {
     TeamConfig::getInstance()->setColor(panel->team(), panel->teamColor());
 
     if (restart_warning || previous_team_order.size() <= team_order.size() ||
@@ -73,10 +74,11 @@ void TeamSettingsPage::saveSettings() {
 }
 
 void TeamSettingsPage::swapTeams(int a, int b) {
-  TeamSettingsPanel temp(wx, 0, proto::TeamInfo_TeamType_TEAM_ERROR);
-  temp.copyFrom(team_settings_panels[a]);
-  team_settings_panels[a]->copyFrom(team_settings_panels[b]);
-  team_settings_panels[b]->copyFrom(&temp);
+  TeamSettingsPanel temp(childPanel(), 0, proto::TeamInfo_TeamType_TEAM_ERROR,
+                         this);
+  temp.copyFrom(*team_settings_panels[a]);
+  team_settings_panels[a]->copyFrom(*team_settings_panels[b]);
+  team_settings_panels[b]->copyFrom(temp);
 }
 
 }  // namespace cszb_scoreboard

@@ -25,14 +25,18 @@ limitations under the License.
 #include "config.pb.h"
 #include "config/TeamConfig.h"
 #include "ui/graphics/Color.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
-class TeamSettingsPanel : public wxPanel {
+// Pre-defining TeamSettingsPage for a parent pointer.
+class TeamSettingsPage;
+
+class TeamSettingsPanel : public Panel {
  public:
-  TeamSettingsPanel(wxPanel *parent, int team_index,
-                    proto::TeamInfo_TeamType team);
-  void copyFrom(TeamSettingsPanel *other);
+  TeamSettingsPanel(swx::Panel *wx, int team_index,
+                    proto::TeamInfo_TeamType team, TeamSettingsPage *parent);
+  void copyFrom(const TeamSettingsPanel &other);
   auto teamColor() -> Color;
   auto team() -> proto::TeamInfo_TeamType { return team_type; }
 
@@ -44,6 +48,7 @@ class TeamSettingsPanel : public wxPanel {
   wxPanel *button_panel;
   wxButton *down_button;
   wxButton *up_button;
+  TeamSettingsPage *parent;
   void createButtonPanel();
   void moveTeam(wxCommandEvent &event);  // NOLINT(google-runtime-references)
                                          // wxWidgets callback.
