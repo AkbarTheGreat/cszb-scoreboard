@@ -81,7 +81,7 @@ class Widget {
   // wxWidget will clean up our sizer for us, so keep it as an unmanaged
   // pointer.
   swx::Sizer *window_sizer = nullptr;
-  auto Widget::widgetAtIndex(int row, int column) -> wxWindow *;
+  auto widgetAtIndex(int row, int column) -> wxWindow *;
 };
 
 }  // namespace cszb_scoreboard

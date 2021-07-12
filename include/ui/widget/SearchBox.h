@@ -32,10 +32,10 @@ class SearchBox : public Widget {
 
   void showSearchButton(bool show) { wx->ShowSearchButton(show); }
   void showCancelButton(bool show) { wx->ShowCancelButton(show); }
-  std::string value() { return wx->GetValue(); }
+  auto value() -> std::string { return wx->GetValue().ToStdString(); }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::SearchCtrl *wx;
