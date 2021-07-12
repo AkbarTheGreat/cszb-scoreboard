@@ -48,15 +48,15 @@ void DisplaySettingsPage::createControls() {
   enable_window_mode->setChecked(DisplayConfig::getInstance()->windowedMode());
 
   number_of_windows_label = window_mode_panel->label("# of Windows");
-  number_of_windows = window_mode_panel->text(StringUtil::intToString(
+  number_of_windows = window_mode_panel->text(std::to_string(
       DisplayConfig::getInstance()->numberOfDisplays()));
 
   window_size_label = window_mode_panel->label("Window Size");
-  window_width = window_mode_panel->text(
-      StringUtil::intToString(DisplayConfig::getInstance()->windowWidth()));
+  window_width = window_mode_panel->text(std::to_string(
+      DisplayConfig::getInstance()->windowWidth()));
   window_size_separator_label = window_mode_panel->label("x");
-  window_height = window_mode_panel->text(
-      StringUtil::intToString(DisplayConfig::getInstance()->windowHeight()));
+  window_height = window_mode_panel->text(std::to_string(
+      DisplayConfig::getInstance()->windowHeight()));
 
   windowModeChanged();
 }

@@ -348,7 +348,7 @@ void ScoreControl::toggleIntroMode() {
 
 void ScoreControl::addToEntry(Text* entry, int amount) {
   int32_t current_score = StringUtil::stringToInt(entry->value());
-  entry->setValue(StringUtil::intToString(current_score + amount));
+  entry->setValue(current_score + amount);
   updatePreview();
 }
 

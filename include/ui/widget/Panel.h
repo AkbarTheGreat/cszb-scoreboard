@@ -23,6 +23,7 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include <vector>
+#include <memory>
 
 #include "ScoreboardCommon.h"
 #include "ui/widget/Button.h"

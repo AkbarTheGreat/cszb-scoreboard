@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/TextCtrl.h"
+#include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -32,7 +33,8 @@ class Text : public Widget {
   void enable() { wx->Enable(); }
   void focus() { wx->SetFocus(); }
   void setValue(const std::string &value) { wx->SetValue(value); }
-  auto value() -> std::string { return wx->GetValue(); }
+  void setValue(int value) { wx->SetValue(StringUtil::intToString(value)); }
+  auto value() -> std::string { return wx->GetValue().ToStdString(); }
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }

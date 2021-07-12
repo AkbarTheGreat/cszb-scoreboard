@@ -40,7 +40,7 @@ class ScoreControl : public ScreenTextController {
       -> std::unique_ptr<ScoreControl>;
 
  private:
-  void ScoreControl::addHomeAwayWidgetPair(Panel *panel, int row,
+  void addHomeAwayWidgetPair(Panel *panel, int row,
                                            const Widget &home_widget,
                                            const Widget &away_widget);
   void addToEntry(Text *entry, int amount);

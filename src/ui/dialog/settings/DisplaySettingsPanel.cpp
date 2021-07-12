@@ -89,9 +89,7 @@ void DisplaySettingsPanel::copyCheckbox(const CheckBox& source,
 }
 
 void DisplaySettingsPanel::updateLabel() {
-  wxString label_text = wxT("Display ");
-  label_text += StringUtil::intToString(display_id + 1);
-  display_label->set(label_text);
+  display_label->set("Display " + std::to_string(display_id + 1));
 }
 
 void DisplaySettingsPanel::createButtonPanel() {

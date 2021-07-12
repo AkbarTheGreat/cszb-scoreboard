@@ -59,7 +59,7 @@ void TextEntry::createControls(Panel *control_panel) {
 
   font_size_label = inner_panel->label("Font Size");
   font_size_entry =
-      inner_panel->text(StringUtil::intToString(DEFAULT_FONT_SIZE));
+      inner_panel->text(std::to_string(DEFAULT_FONT_SIZE));
 
   screen_selection = std::make_unique<TeamSelector>(inner_panel->childPanel(),
                                                     ProtoUtil::allSide());
@@ -148,15 +148,15 @@ void TextEntry::selectTeam(int index) {
 void TextEntry::screenChanged() {
   if (screen_selection->allSelected()) {
     text_entry->setValue(all_text);
-    font_size_entry->setValue(StringUtil::intToString(all_font_size));
+    font_size_entry->setValue(all_font_size);
     color_picker->setColor(all_color);
   } else if (screen_selection->homeSelected()) {
     text_entry->setValue(home_text);
-    font_size_entry->setValue(StringUtil::intToString(home_font_size));
+    font_size_entry->setValue(home_font_size);
     color_picker->setColor(home_color);
   } else if (screen_selection->awaySelected()) {
     text_entry->setValue(away_text);
-    font_size_entry->setValue(StringUtil::intToString(away_font_size));
+    font_size_entry->setValue(away_font_size);
     color_picker->setColor(away_color);
   }
 
