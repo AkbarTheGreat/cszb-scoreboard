@@ -41,99 +41,93 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel* wx, int index,
 
   const proto::ScreenSide& screen_side = display_info.side();
   // Label for this display
-  display_label = new wxStaticText(wx, wxID_ANY, "");
-  wxFont font = display_label->GetFont();
-  font.SetWeight(wxFONTWEIGHT_BOLD);
-  display_label->SetFont(font);
+  display_label = label("");
+  display_label->bold(true);
   updateLabel();
-  UiUtil::addToGridBag(sizer(), display_label, 0, 0);
+  addWidget(*display_label, 0, 0);
 
   // Up/Down buttons
   createButtonPanel();
   if (index == 0) {
-    up_button->Disable();
+    up_button->disable();
   }
   if (index >= DisplayConfig::getInstance()->numberOfDisplays() - 1) {
-    down_button->Disable();
+    down_button->disable();
   }
 
-  UiUtil::addToGridBag(sizer(), button_panel, 1, 0);
+  addWidget(*button_panel, 1, 0);
 
   // Booth monitor checkbox
-  control_checkbox = new wxCheckBox(wx, wxID_ANY, wxT("&Booth Monitor"));
-  control_checkbox->SetValue(screen_side.control());
-  UiUtil::addToGridBag(sizer(), control_checkbox, 2, 0);
+  control_checkbox = checkBox("&Booth Monitor");
+  control_checkbox->setChecked(screen_side.control());
+  addWidget(*control_checkbox, 2, 0);
 
   // Home team checkbox
-  home_checkbox = new wxCheckBox(wx, wxID_ANY, wxT("&Home Team"));
-  home_checkbox->SetValue(screen_side.home());
-  UiUtil::addToGridBag(sizer(), home_checkbox, 3, 0);
+  home_checkbox = checkBox("&Home Team");
+  home_checkbox->setChecked(screen_side.home());
+  addWidget(*home_checkbox, 3, 0);
 
   // Away team checkbox
-  away_checkbox = new wxCheckBox(wx, wxID_ANY, wxT("&Away Team"));
-  away_checkbox->SetValue(screen_side.away());
-  UiUtil::addToGridBag(sizer(), away_checkbox, 4, 0);
+  away_checkbox = checkBox("&Away Team");
+  away_checkbox->setChecked(screen_side.away());
+  addWidget(*away_checkbox, 4, 0);
 
   runSizer();
 }
 
 void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel& other) {
   this->display_id = other.display_id;
-  copyCheckbox(other.control_checkbox, this->control_checkbox);
-  copyCheckbox(other.home_checkbox, this->home_checkbox);
-  copyCheckbox(other.away_checkbox, this->away_checkbox);
+  copyCheckbox(*other.control_checkbox, this->control_checkbox.get());
+  copyCheckbox(*other.home_checkbox, this->home_checkbox.get());
+  copyCheckbox(*other.away_checkbox, this->away_checkbox.get());
   updateLabel();
 }
 
-void DisplaySettingsPanel::copyCheckbox(wxCheckBox* source,
-                                        wxCheckBox* target) {
-  target->SetValue(source->GetValue());
+void DisplaySettingsPanel::copyCheckbox(const CheckBox& source,
+                                        CheckBox* target) {
+  target->setChecked(source.checked());
 }
 
 void DisplaySettingsPanel::updateLabel() {
   wxString label_text = wxT("Display ");
   label_text += StringUtil::intToString(display_id + 1);
-  display_label->SetLabel(label_text);
+  display_label->set(label_text);
 }
 
 void DisplaySettingsPanel::createButtonPanel() {
-  wxSizer* sizer = UiUtil::sizer(0, 2);
+  button_panel = panel();
+  up_button = button_panel->button("^", true);
+  down_button = button_panel->button("v", true);
 
-  button_panel = new wxPanel(wx);
-  up_button = new wxButton(button_panel, wxID_ANY, "^", wxDefaultPosition,
-                           wxDefaultSize, wxBU_EXACTFIT);
-  down_button = new wxButton(button_panel, wxID_ANY, "v", wxDefaultPosition,
-                             wxDefaultSize, wxBU_EXACTFIT);
+  button_panel->addWidget(*up_button, 0, 0);
+  button_panel->addWidget(*down_button, 0, 1);
 
-  sizer->Add(up_button, 0, wxALL, BORDER_SIZE);
-  sizer->Add(down_button, 0, wxALL, BORDER_SIZE);
+  up_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->moveDisplay(true); });
+  down_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->moveDisplay(false); });
 
-  up_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                  &DisplaySettingsPanel::moveDisplay, this);
-  down_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                    &DisplaySettingsPanel::moveDisplay, this);
+  up_button->toolTip(ARROW_TOOL_TIP);
+  down_button->toolTip(ARROW_TOOL_TIP);
 
-  up_button->SetToolTip(ARROW_TOOL_TIP);
-  down_button->SetToolTip(ARROW_TOOL_TIP);
-
-  button_panel->SetSizerAndFit(sizer);
+  button_panel->runSizer();
 }
 
 auto DisplaySettingsPanel::getSide() -> proto::ScreenSide {
   proto::ScreenSide side;
-  side.set_control(control_checkbox->GetValue());
-  side.set_home(home_checkbox->GetValue());
-  side.set_away(away_checkbox->GetValue());
+  side.set_control(control_checkbox->checked());
+  side.set_home(home_checkbox->checked());
+  side.set_away(away_checkbox->checked());
   return side;
 }
 
-void DisplaySettingsPanel::moveDisplay(wxCommandEvent& event) {
-  if (event.GetEventObject() == up_button) {
+void DisplaySettingsPanel::moveDisplay(bool is_up_button) {
+  if (is_up_button) {
     parent->swapDisplays(index, index - 1);
-  } else if (event.GetEventObject() == down_button) {
-    parent->swapDisplays(index, index + 1);
   } else {
-    LogDebug("Button clicked, but not the up or down button.  That's weird.");
+    parent->swapDisplays(index, index + 1);
   }
 }
 

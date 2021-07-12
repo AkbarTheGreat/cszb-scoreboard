@@ -23,6 +23,7 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
+#include "ui/widget/Label.h"
 #include "ui/widget/Panel.h"
 #include "util/StringUtil.h"
 
@@ -39,21 +40,17 @@ class DisplaySettingsPanel : public Panel {
   [[nodiscard]] auto getDisplayId() const -> int { return display_id; }
 
  private:
-  static void copyCheckbox(wxCheckBox *source, wxCheckBox *target);
+  static void copyCheckbox(const CheckBox &source, CheckBox *target);
   void createButtonPanel();
-  void moveDisplay(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                            // wxWidgets callback.
+  void moveDisplay(bool is_up_button);
   void updateLabel();
 
   int display_id;
   int index;
-  wxCheckBox *control_checkbox;
-  wxCheckBox *home_checkbox;
-  wxCheckBox *away_checkbox;
-  wxStaticText *display_label;
-  wxPanel *button_panel;
-  wxButton *down_button;
-  wxButton *up_button;
+  std::unique_ptr<CheckBox> control_checkbox, home_checkbox, away_checkbox;
+  std::unique_ptr<Label> display_label;
+  std::unique_ptr<Panel> button_panel;
+  std::unique_ptr<Button> down_button, up_button;
   DisplaySettingsPage *parent;
 };
 

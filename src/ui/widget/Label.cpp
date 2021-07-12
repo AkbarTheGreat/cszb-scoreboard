@@ -1,5 +1,5 @@
 /*
-ui/widget/Label.h: A static text label.
+ui/widget/Label.cpp: A static text label.
 
 Copyright 2021 Tracy Beck
 
@@ -16,25 +16,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
-
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/StaticText.h"
+#include "ui/widget/Label.h"
 
 namespace cszb_scoreboard {
 
-class Label : public Widget {
- public:
-  explicit Label(swx::StaticText *label) { wx = label; }
-  void set(const std::string &label) { wx->SetLabelText(label); }
-  void setWithHotkey(const std::string &label) { wx->SetLabel(label); }
-  void bold(bool is_bold);
-
- protected:
-  auto _wx() const -> wxWindow * override { return wx; }
-
- private:
-  swx::StaticText *wx;
-};
+void Label::bold(bool is_bold) {
+  wxFont font = wx->GetFont();
+  if (is_bold) {
+    font.SetWeight(wxFONTWEIGHT_BOLD);
+  } else {
+    font.SetWeight(wxFONTWEIGHT_NORMAL);
+  }
+  wx->SetFont(font);
+}
 
 }  // namespace cszb_scoreboard

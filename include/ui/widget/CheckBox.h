@@ -27,7 +27,7 @@ class CheckBox : public Widget {
  public:
   explicit CheckBox(swx::CheckBox *check) { wx = check; }
 
-  auto checked() -> bool { return wx->GetValue(); }
+  auto checked() const -> bool { return wx->GetValue(); }
   void setChecked(bool checked) { wx->SetValue(checked); }
 
  protected:
