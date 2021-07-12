@@ -19,6 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <memory>
 
 #include "ui/component/ScreenText.h"
 #include "ui/widget/Frame.h"

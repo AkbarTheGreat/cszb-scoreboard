@@ -19,6 +19,8 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <memory>
+#include <vector>
 
 #include "config.pb.h"
 #include "config/TeamConfig.h"
@@ -26,6 +28,9 @@ limitations under the License.
 #include "ui/dialog/settings/TeamSettingsPanel.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class TeamSettingsPage : public SettingsPage {
  public:

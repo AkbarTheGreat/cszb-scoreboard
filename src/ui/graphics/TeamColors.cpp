@@ -19,9 +19,13 @@ limitations under the License.
 
 #include "ui/graphics/TeamColors.h"
 
+#include <vector>
+
 #include "config/TeamConfig.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
+#include "config.pb.h"
+#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 

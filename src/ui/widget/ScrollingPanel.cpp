@@ -19,6 +19,10 @@ limitations under the License.
 
 #include "ui/widget/ScrollingPanel.h"
 
+#include <wx/scrolwin.h>
+
+#include "ui/widget/swx/Sizer.h"
+
 namespace cszb_scoreboard {
 
 // For now, these are constant for all scrolling windows.  They may need to be

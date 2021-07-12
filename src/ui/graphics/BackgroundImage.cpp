@@ -20,6 +20,10 @@ limitations under the License.
 
 #include "ui/graphics/BackgroundImage.h"
 
+#include <wx/gdicmn.h>
+
+#include "ui/graphics/Color.h"
+
 namespace cszb_scoreboard {
 
 const int NUMBER_OF_SQUARES_HIGH = 8;

@@ -22,8 +22,10 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/gdicmn.h>
+#include <wx/string.h>
 #include <set>
+#include <memory>
 
 #include "ui/component/ScreenPresenter.h"
 #include "ui/component/ScreenText.h"
@@ -31,6 +33,9 @@ limitations under the License.
 #include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
+class Frame;
+class ScreenPresenter;
+class ScreenText;
 
 class FrameManager {
  public:

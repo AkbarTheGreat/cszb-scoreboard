@@ -16,16 +16,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/gbsizer.h>
-#include <wx/wx.h>
+#include <gtest/gtest-message.h>
+#include <gtest/gtest-test-part.h>
+#include <wx/dcclient.h>
+#include <wx/gdicmn.h>
+#include <wx/init.h>
+#include <memory>
 
-#include "config/TeamConfig.h"
-#include "gtest/gtest.h"
 #include "test/TestUtil.h"
-#include "ui/UiUtil.h"
 #include "ui/component/ScreenTextSide.h"
 #include "ui/widget/Frame.h"
 #include "util/ProtoUtil.h"
+#include "gtest/gtest_pred_impl.h"
+#include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard ::test {
 

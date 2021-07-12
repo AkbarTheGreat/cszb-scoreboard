@@ -24,7 +24,8 @@ limitations under the License.
 #include <gtest/gtest.h>
 #include <wx/uiaction.h>
 #include <wx/wx.h>
-
+#include <wx/dcclient.h>
+#include <wx/gdicmn.h>
 #include <map>
 #include <vector>
 
@@ -33,6 +34,16 @@ limitations under the License.
 #include "ui/component/ScreenPreview.h"
 #include "ui/frame/MainView.h"
 #include "ui/widget/Panel.h"
+#include "gtest/gtest_pred_impl.h"
+#include "wx/colour.h"
+
+namespace cszb_scoreboard {
+class MainView;
+class Panel;
+class Scoreboard;
+class ScreenPreview;
+class TextEntry;
+}  // namespace cszb_scoreboard
 
 namespace cszb_scoreboard::test {
 

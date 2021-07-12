@@ -19,7 +19,6 @@ limitations under the License.
 #pragma once
 
 #include <curl/curl.h>
-
 #include <string>
 #include <vector>
 

@@ -20,12 +20,19 @@ limitations under the License.
 
 #pragma once
 
+#include <memory>
+
 #include "config.pb.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/widget/Button.h"
 #include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 // Subclasses should create members via a Create static method which calls
 // initializeWidgets() on the newly created pointer.

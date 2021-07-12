@@ -21,9 +21,12 @@ limitations under the License.
 #include "ui/component/ScreenThumbnail.h"
 
 #include "config/DisplayConfig.h"
-#include "ui/widget/swx/Panel.h"
+#include "config.pb.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int THUMBNAIL_HEIGHT = 64;
 

@@ -22,9 +22,13 @@ limitations under the License.
 
 #include "ui/frame/FrameManager.h"
 
-#include "util/Log.h"
+#include <utility>
+
+#include "ui/component/ScreenPresenter.h"
+#include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
+class ScreenText;
 
 auto FrameManager::createMainView(const wxString &title, const wxPoint &pos,
                                   const wxSize &size) -> MainView * {

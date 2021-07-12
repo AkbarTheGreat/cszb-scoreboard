@@ -18,12 +18,17 @@ limitations under the License.
 */
 #pragma once
 
+#include <map>
+#include <string>
+#include <vector>
+
 #include "ScoreboardCommon.h"
 #include "config/Persistence.h"
 #include "image_library.pb.h"
 #include "util/FilesystemPath.h"
 
 namespace cszb_scoreboard {
+class FilesystemPath;
 
 class ImageSearchResults {
  public:

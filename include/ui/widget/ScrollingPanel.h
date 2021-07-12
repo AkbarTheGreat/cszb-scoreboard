@@ -22,6 +22,8 @@ limitations under the License.
 #include "ui/widget/Panel.h"
 #include "ui/widget/swx/ScrolledWindow.h"
 
+class wxWindow;
+
 namespace cszb_scoreboard {
 
 class ScrollingPanel : public Panel {

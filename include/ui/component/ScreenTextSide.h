@@ -21,7 +21,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/gdicmn.h>
+#include <wx/image.h>
+#include <wx/string.h>
 #include <optional>
 #include <vector>
 
@@ -30,7 +32,13 @@ limitations under the License.
 #include "ui/graphics/Color.h"
 #include "ui/widget/Panel.h"
 
+class wxDC;
+class wxPaintEvent;
+
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 enum class OverlayScreenPosition { Centered, BottomLeft };
 

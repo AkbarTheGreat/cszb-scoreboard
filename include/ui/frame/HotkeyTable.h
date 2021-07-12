@@ -19,12 +19,14 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/accel.h>
+#include <wx/defs.h>
 #include <vector>
 
 #include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
+class Frame;
 
 class HotkeyTable {
  public:

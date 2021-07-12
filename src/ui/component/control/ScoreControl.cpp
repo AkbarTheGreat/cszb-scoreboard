@@ -19,16 +19,36 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
+#include <stdint.h>
+#include <wx/accel.h>
+#include <wx/clrpicker.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/filedlg.h>
+#include <wx/string.h>
+#include <wx/tglbtn.h>
+#include <wx/translation.h>
+#include <algorithm>
+#include <filesystem>
+#include <string>
+
 #include "ScoreboardCommon.h"
 #include "config/TeamConfig.h"
-#include "ui/UiUtil.h"
 #include "ui/frame/HotkeyTable.h"
 #include "ui/graphics/TeamColors.h"
 #include "util/FilesystemPath.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
+#include "config.pb.h"
+#include "ui/component/ScreenText.h"
+#include "ui/component/ScreenTextSide.h"
+#include "ui/graphics/Color.h"
+#include "ui/widget/swx/Panel.h"
+#include "wx/filedlg.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class Widget;
 
 const int SCORE_FONT_SIZE = 20;
 const int TEAM_FONT_SIZE = 5;

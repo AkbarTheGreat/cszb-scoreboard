@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"
 #include "util/AutoUpdate.h"
+#include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
 

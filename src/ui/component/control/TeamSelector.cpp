@@ -19,7 +19,21 @@ limitations under the License.
 
 #include "ui/component/control/TeamSelector.h"
 
+#include <wx/chartype.h>
+#include <wx/defs.h>
+#include <wx/tbarbase.h>
+#include <array>
+
+#include "config.pb.h"
+#include "ui/widget/Widget.h"
+#include "ui/widget/swx/RadioBox.h"
+
+class wxString;
+
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 static const std::array<wxString, 3> CHOICES{{{"Home"}, {"Away"}, {"All"}}};
 

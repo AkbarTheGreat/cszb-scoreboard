@@ -19,7 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/string.h>
 #include <vector>
 
 #include "config.pb.h"

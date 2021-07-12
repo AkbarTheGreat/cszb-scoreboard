@@ -18,13 +18,19 @@ limitations under the License.
 */
 
 #include <wx/wx.h>
-
+#include <wx/image.h>
 #include <optional>
 
 #include "ui/widget/Panel.h"
 #include "util/FilesystemPath.h"
 
+class wxDC;
+class wxSize;
+
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ImagePreview : public Panel {
  public:

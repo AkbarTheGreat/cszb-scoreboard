@@ -22,10 +22,17 @@ limitations under the License.
 
 #include <wx/image.h>
 #include <wx/tokenzr.h>
+#include <wx/dc.h>
+#include <wx/dcclient.h>
+#include <wx/event.h>
+#include <algorithm>
+#include <memory>
 
 #include "config/TeamConfig.h"
 #include "ui/graphics/BackgroundImage.h"
 #include "util/ProtoUtil.h"
+#include "ui/widget/swx/Panel.h"
+#include "wx/bitmap.h"
 
 namespace cszb_scoreboard {
 

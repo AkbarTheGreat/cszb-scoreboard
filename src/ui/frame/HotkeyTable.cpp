@@ -18,6 +18,11 @@ limitations under the License.
 
 #include "ui/frame/HotkeyTable.h"
 
+#include <algorithm>
+#include <memory>
+
+#include "ui/widget/Frame.h"
+
 namespace cszb_scoreboard {
 
 auto HotkeyTable::getInstance() -> HotkeyTable * {

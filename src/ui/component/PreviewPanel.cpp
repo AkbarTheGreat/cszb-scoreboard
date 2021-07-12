@@ -19,13 +19,20 @@ limitations under the License.
 */
 #include "ui/component/PreviewPanel.h"
 
+#include <assert.h>
+#include <wx/generic/panelg.h>
+#include <algorithm>
+#include <utility>
+
 #include "config/DisplayConfig.h"
-#include "config/TeamConfig.h"
-#include "ui/component/Menu.h"
-#include "ui/frame/FrameManager.h"
-#include "util/ProtoUtil.h"
+#include "config.pb.h"
+#include "ui/component/ScreenPreview.h"
+#include "ui/widget/swx/Panel.h"
+
+class wxCommandEvent;
 
 namespace cszb_scoreboard {
+class ScreenText;
 
 PreviewPanel::PreviewPanel(swx::Panel* wx) : Panel(wx) {
   aui_manager.SetManagedWindow(wx);

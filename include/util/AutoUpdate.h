@@ -21,6 +21,7 @@ limitations under the License.
 #include <memory>
 #include <string>
 #include <vector>
+#include <utility>
 
 #include "HttpReader.h"
 #include "ScoreboardCommon.h"

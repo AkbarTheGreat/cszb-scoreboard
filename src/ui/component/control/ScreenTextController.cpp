@@ -20,11 +20,20 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"
 
-#include "ui/UiUtil.h"
+#include <wx/accel.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+
 #include "ui/frame/HotkeyTable.h"
-#include "util/ProtoUtil.h"
+#include "ScoreboardCommon.h"
+#include "ui/component/PreviewPanel.h"
+#include "ui/component/ScreenPreview.h"
+#include "ui/widget/Widget.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 

@@ -19,6 +19,12 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"
 
+#include <algorithm>
+#include <filesystem>
+#include <utility>
+
+#include "util/FilesystemPath.h"
+
 namespace cszb_scoreboard {
 
 // Simple helper method which will insert a string into a sorted vector of

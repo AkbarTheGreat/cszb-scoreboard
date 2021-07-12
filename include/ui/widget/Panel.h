@@ -21,9 +21,14 @@ limitations under the License.
 
 #include <wx/gbsizer.h>
 #include <wx/wx.h>
-
+#include <wx/defs.h>
+#include <wx/gdicmn.h>
+#include <wx/panel.h>
+#include <wx/string.h>
+#include <wx/tbarbase.h>
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "ScoreboardCommon.h"
 #include "ui/widget/Button.h"
@@ -37,11 +42,24 @@ limitations under the License.
 #include "ui/widget/Toggle.h"
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/Panel.h"
+#include "wx/colour.h"
+#include "wx/window.h"
+
+class wxWindow;
 
 namespace cszb_scoreboard {
 
 // pre-declare ScrollingPanel to avoid circular dependencies
 class ScrollingPanel;
+class Button;
+class CheckBox;
+class ColorPicker;
+class Divider;
+class Label;
+class RadioButton;
+class SearchBox;
+class Text;
+class Toggle;
 
 class Panel : public Widget {
  public:

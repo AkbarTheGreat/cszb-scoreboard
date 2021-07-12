@@ -19,9 +19,11 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/gdicmn.h>
 
 #include "config.pb.h"
 #include "ui/graphics/Color.h"
+#include "wx/font.h"
 
 namespace cszb_scoreboard {
 

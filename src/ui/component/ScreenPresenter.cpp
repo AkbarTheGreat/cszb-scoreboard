@@ -19,13 +19,14 @@ limitations under the License.
 
 #include "ui/component/ScreenPresenter.h"
 
-#include <wx/gbsizer.h>
+#include <wx/chartype.h>
+#include <wx/gdicmn.h>
+#include <wx/tbarbase.h>
 
-#include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
-#include "ui/UiUtil.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
+#include "config.pb.h"
 
 namespace cszb_scoreboard {
 

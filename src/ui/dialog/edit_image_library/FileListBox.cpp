@@ -19,9 +19,15 @@ limitations under the License.
 
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
-#include <wx/listctrl.h>
+#include <algorithm>
+#include <iterator>
+#include <string>
 
 #include "config/ImageLibrary.h"
+#include "ScoreboardCommon.h"
+#include <wx/listctrl.h>
+
+class wxWindow;
 
 namespace cszb_scoreboard {
 

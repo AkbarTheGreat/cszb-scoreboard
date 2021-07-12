@@ -21,12 +21,24 @@ limitations under the License.
 
 #include <wx/bookctrl.h>
 #include <wx/wx.h>
+#include <wx/defs.h>
+#include <wx/gdicmn.h>
+#include <wx/panel.h>
+#include <wx/string.h>
+#include <wx/tbarbase.h>
+#include <string>
 
 #include "ui/widget/Panel.h"
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/PropertySheetDialog.h"
+#include "ui/widget/swx/Panel.h"
+#include "wx/notebook.h"
+
+class wxEvent;
+class wxWindow;
 
 namespace cszb_scoreboard {
+class Panel;
 
 class TabbedDialog : public Widget {
  public:

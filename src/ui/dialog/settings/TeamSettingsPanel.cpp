@@ -19,11 +19,19 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPanel.h"
 
-#include "ui/UiUtil.h"
+#include <wx/event.h>
+#include <wx/string.h>
+#include <string>
+
 #include "ui/dialog/settings/TeamSettingsPage.h"
-#include "util/Log.h"
+#include "ScoreboardCommon.h"
+#include "config/TeamConfig.h"
+#include "wx/colour.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string ARROW_TOOL_TIP =

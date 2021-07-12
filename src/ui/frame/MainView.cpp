@@ -18,14 +18,24 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/gtk/menu.h>
+#include <wx/msgdlg.h>
 #include <vector>
+#include <algorithm>
+#include <string>
+#include <utility>
 
 #include "config/CommandArgs.h"
 #include "config/DisplayConfig.h"
-#include "ui/UiUtil.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/frame/HotkeyTable.h"
 #include "util/StringUtil.h"
+#include "ScoreboardCommon.h"
+#include "ui/component/Menu.h"
+#include "ui/dialog/SettingsDialog.h"
+#include "ui/event/UpdateTimer.h"
 
 namespace cszb_scoreboard {
 

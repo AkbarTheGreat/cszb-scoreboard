@@ -18,8 +18,13 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/string.h>
+#include <string>
+
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/StaticText.h"
+
+class wxWindow;
 
 namespace cszb_scoreboard {
 

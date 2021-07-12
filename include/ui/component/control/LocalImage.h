@@ -20,6 +20,7 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <memory>
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenImageController.h"
@@ -27,6 +28,10 @@ limitations under the License.
 #include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class LocalImage : public ScreenImageController {
  public:

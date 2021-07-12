@@ -19,10 +19,21 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
+#include <assert.h>
+#include <wx/clrpicker.h>
+#include <algorithm>
+
 #include "ScoreboardCommon.h"
 #include "ui/graphics/TeamColors.h"
+#include "ui/component/control/ScreenTextController.h"
+#include "ui/component/control/things_mode/ReplacementPanel.h"
+
+class wxPanel;
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int ACTIVITIES_FOR_SIZING = 3;

@@ -18,15 +18,28 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
+#include <stddef.h>
+#include <wx/accel.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <wx/gtk/button.h>
+#include <wx/wxcrtvararg.h>
 #include <string>
+#include <algorithm>
+#include <utility>
 
-#include "ui/UiUtil.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/frame/HotkeyTable.h"
 #include "ui/frame/MainView.h"
 #include "ui/widget/swx/Panel.h"
 #include "util/ProtoUtil.h"
 #include "wx/gbsizer.h"
+#include "config.pb.h"
+#include "ui/component/ControlPanel.h"
+#include "ui/component/PreviewPanel.h"
+#include "ui/component/ScreenTextSide.h"
+#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 

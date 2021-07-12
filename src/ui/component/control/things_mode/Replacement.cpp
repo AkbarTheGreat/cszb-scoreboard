@@ -19,12 +19,10 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/Replacement.h"
 
-#include <wx/wx.h>
+#include <wx/event.h>
 
-#include <vector>
-
-#include "ui/UiUtil.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
+#include "ScoreboardCommon.h"
 
 namespace cszb_scoreboard {
 

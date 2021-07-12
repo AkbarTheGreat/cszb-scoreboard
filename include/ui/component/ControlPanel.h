@@ -20,8 +20,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "ScoreboardCommon.h"
 #include "ui/component/PreviewPanel.h"
@@ -29,7 +30,15 @@ limitations under the License.
 #include "ui/widget/Notebook.h"
 #include "ui/widget/swx/Notebook.h"
 
+class wxAuiNotebookEvent;
+
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+
+namespace swx {
+class Notebook;
+}  // namespace swx
 
 class ControlPanel : public Notebook {
  public:

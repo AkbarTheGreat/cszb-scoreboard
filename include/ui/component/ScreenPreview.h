@@ -21,12 +21,32 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/gdicmn.h>
+#include <wx/image.h>
+#include <wx/string.h>
+#include <memory>
+#include <vector>
 
 #include "ui/component/ScreenPresenter.h"
 #include "ui/component/ScreenThumbnail.h"
 #include "ui/widget/Panel.h"
+#include "ui/component/ScreenText.h"
+#include "ui/component/ScreenTextSide.h"
+
+class wxPanel;
+class wxWindow;
 
 namespace cszb_scoreboard {
+class Color;
+class ScreenPresenter;
+namespace proto {
+class RenderableText;
+class ScreenSide;
+}  // namespace proto
+namespace swx {
+class Panel;
+}  // namespace swx
+
 class ScreenPreview : public Panel {
  public:
   ScreenPreview(swx::Panel* wx, std::vector<proto::ScreenSide> sides,

@@ -19,6 +19,10 @@ limitations under the License.
 
 #include "ui/component/ControlPanel.h"
 
+#include <wx/aui/auibook.h>
+#include <algorithm>
+#include <utility>
+
 #include "ui/component/control/ImageFromLibrary.h"
 #include "ui/component/control/LocalImage.h"
 #include "ui/component/control/ScoreControl.h"
@@ -26,6 +30,11 @@ limitations under the License.
 #include "ui/component/control/ThingsMode.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+namespace swx {
+class Notebook;
+}  // namespace swx
 
 ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
     : Notebook(wx) {

@@ -19,7 +19,29 @@ limitations under the License.
 
 #include "ui/widget/Panel.h"
 
+#include <wx/anybutton.h>
+#include <wx/textctrl.h>
+
 #include "ui/widget/ScrollingPanel.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/CheckBox.h"
+#include "ui/widget/ColorPicker.h"
+#include "ui/widget/Divider.h"
+#include "ui/widget/Label.h"
+#include "ui/widget/RadioButton.h"
+#include "ui/widget/SearchBox.h"
+#include "ui/widget/Text.h"
+#include "ui/widget/Toggle.h"
+#include "ui/widget/swx/Button.h"
+#include "ui/widget/swx/CheckBox.h"
+#include "ui/widget/swx/ColourPickerCtrl.h"
+#include "ui/widget/swx/RadioButton.h"
+#include "ui/widget/swx/ScrolledWindow.h"
+#include "ui/widget/swx/SearchCtrl.h"
+#include "ui/widget/swx/StaticLine.h"
+#include "ui/widget/swx/StaticText.h"
+#include "ui/widget/swx/TextCtrl.h"
+#include "ui/widget/swx/ToggleButton.h"
 
 namespace cszb_scoreboard {
 

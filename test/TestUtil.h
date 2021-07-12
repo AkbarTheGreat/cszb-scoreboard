@@ -21,6 +21,8 @@ limitations under the License.
 
 #include <wx/wx.h>
 
+class wxApp;
+
 namespace cszb_scoreboard ::test {
 
 class TestUtil {

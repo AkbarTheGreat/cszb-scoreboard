@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "ui/widget/TabbedDialog.h"
 
+#include "ui/widget/Panel.h"
+
 namespace cszb_scoreboard {
 
 TabbedDialog::TabbedDialog(swx::PropertySheetDialog *dialog, long buttons) {

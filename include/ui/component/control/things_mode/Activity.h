@@ -20,8 +20,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
@@ -31,6 +32,8 @@ limitations under the License.
 #include "ui/widget/RadioButton.h"
 #include "ui/widget/Text.h"
 #include "ui/widget/Widget.h"
+
+class wxCommandEvent;
 
 namespace cszb_scoreboard {
 

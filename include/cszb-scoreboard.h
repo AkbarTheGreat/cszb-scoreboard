@@ -20,6 +20,9 @@ limitations under the License.
 
 #include <wx/cmdline.h>
 #include <wx/wx.h>
+#include <wx/gtk/app.h>
+
+class wxCmdLineParser;
 
 namespace cszb_scoreboard {
 class Scoreboard : public wxApp {

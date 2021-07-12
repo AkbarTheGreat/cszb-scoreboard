@@ -19,9 +19,18 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
-#include "ui/UiUtil.h"
+#include <wx/msgdlg.h>
+#include <algorithm>
+#include <utility>
+
+#include "ScoreboardCommon.h"
+#include "config.pb.h"
+#include "config/TeamConfig.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 

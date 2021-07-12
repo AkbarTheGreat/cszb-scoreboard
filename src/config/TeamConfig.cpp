@@ -19,8 +19,12 @@ limitations under the License.
 
 #include "config/TeamConfig.h"
 
+#include <wx/chartype.h>
+#include <algorithm>
+
 #include "config/Persistence.h"
 #include "util/ProtoUtil.h"
+
 namespace cszb_scoreboard {
 
 auto TeamConfig::getInstance() -> TeamConfig * {

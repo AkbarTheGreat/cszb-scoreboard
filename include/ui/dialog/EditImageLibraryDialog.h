@@ -21,12 +21,25 @@ limitations under the License.
 #include <wx/editlbox.h>
 #include <wx/propdlg.h>
 #include <wx/wx.h>
+#include <wx/generic/propdlg.h>
+#include <map>
 
 #include "image_library.pb.h"
 #include "ui/dialog/edit_image_library/FileListBox.h"
 #include "util/FilesystemPath.h"
 
+class wxCloseEvent;
+class wxCommandEvent;
+class wxEditableListBox;
+class wxKeyEvent;
+class wxListEvent;
+class wxPanel;
+class wxStaticText;
+class wxTextCtrl;
+class wxWindow;
+
 namespace cszb_scoreboard {
+class FileListBox;
 
 class EditImageLibraryDialog : public wxPropertySheetDialog {
  public:

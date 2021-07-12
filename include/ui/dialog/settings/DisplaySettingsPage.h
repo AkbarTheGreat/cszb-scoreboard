@@ -19,6 +19,8 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <memory>
+#include <vector>
 
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
@@ -31,6 +33,9 @@ limitations under the License.
 #include "ui/widget/Text.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class DisplaySettingsPage : public SettingsPage {
  public:

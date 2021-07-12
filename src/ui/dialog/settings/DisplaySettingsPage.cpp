@@ -19,13 +19,22 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/msgdlg.h>
+#include <algorithm>
+#include <string>
+
 #include "config/DisplayConfig.h"
-#include "ui/UiUtil.h"
 #include "ui/widget/Panel.h"
 #include "util/StringUtil.h"
-#include "wx/gbsizer.h"
+#include "ScoreboardCommon.h"
+#include "config.pb.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 

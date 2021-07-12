@@ -19,14 +19,30 @@ limitations under the License.
 
 #include "ui/component/control/ThingsMode.h"
 
+#include <wx/chartype.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <wx/tbarbase.h>
 #include <array>
+#include <vector>
 
-#include "config/TeamConfig.h"
-#include "ui/UiUtil.h"
 #include "util/ProtoUtil.h"
-#include "util/StringUtil.h"
+#include "ScoreboardCommon.h"
+#include "config.pb.h"
+#include "ui/component/ScreenText.h"
+#include "ui/component/control/things_mode/ActivityPanel.h"
+#include "ui/component/control/things_mode/ReplacementPanel.h"
+#include "ui/graphics/Color.h"
+#include "ui/widget/Widget.h"
+#include "ui/widget/swx/Panel.h"
+#include "ui/widget/swx/RadioBox.h"
+#include "ui/widget/swx/ScrolledWindow.h"
+
+class wxString;
 
 namespace cszb_scoreboard {
+class PreviewPanel;
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;

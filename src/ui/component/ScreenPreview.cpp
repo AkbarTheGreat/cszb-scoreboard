@@ -19,15 +19,19 @@ limitations under the License.
 */
 #include "ui/component/ScreenPreview.h"
 
-#include <wx/gbsizer.h>
+#include <wx/defs.h>
 
 #include "config/DisplayConfig.h"
 #include "config/TeamConfig.h"
-#include "ui/UiUtil.h"
 #include "ui/component/ScreenText.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/widget/swx/Panel.h"
 #include "util/ProtoUtil.h"
+#include "ScoreboardCommon.h"
+#include "config.pb.h"
+#include "ui/component/ScreenPresenter.h"
+
+class wxPanel;
 
 namespace cszb_scoreboard {
 

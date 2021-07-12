@@ -20,16 +20,24 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
 #include <vector>
+#include <memory>
 
 #include "config.pb.h"
 #include "ui/component/control/things_mode/Replacement.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
 // Pre-defining ActivityPanel for a parent pointer.
 class ActivityPanel;
+
+namespace proto {
+class RenderableText;
+}  // namespace proto
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ReplacementPanel : public Panel {
  public:

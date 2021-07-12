@@ -20,9 +20,15 @@ limitations under the License.
 
 #include <wx/gbsizer.h>
 #include <wx/wx.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <functional>
 
 #include "ScoreboardCommon.h"
 #include "ui/widget/swx/Sizer.h"
+#include "wx/window.h"
+
+class wxWindow;
 
 namespace cszb_scoreboard {
 

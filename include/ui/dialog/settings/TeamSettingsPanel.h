@@ -20,6 +20,7 @@ limitations under the License.
 
 #include <wx/clrpicker.h>
 #include <wx/wx.h>
+#include <memory>
 
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
@@ -34,6 +35,9 @@ namespace cszb_scoreboard {
 
 // Pre-defining TeamSettingsPage for a parent pointer.
 class TeamSettingsPage;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class TeamSettingsPanel : public Panel {
  public:

@@ -19,12 +19,27 @@ limitations under the License.
 
 #include "ui/dialog/EditImageLibraryDialog.h"
 
+#include <wx/arrstr.h>
+#include <wx/defs.h>
+#include <wx/editlbox.h>
+#include <wx/event.h>
+#include <wx/generic/panelg.h>
+#include <wx/gtk/stattext.h>
+#include <wx/gtk/textctrl.h>
+#include <wx/listbase.h>
+#include <wx/sizer.h>
+#include <wx/string.h>
 #include <wx/bookctrl.h>
-#include <wx/listctrl.h>
+#include <algorithm>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 #include "ScoreboardCommon.h"
 #include "config/ImageLibrary.h"
 #include "ui/UiUtil.h"
+#include "ui/dialog/edit_image_library/FileListBox.h"
+#include "wx/window.h"
 
 namespace cszb_scoreboard {
 

@@ -19,11 +19,17 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
+#include <assert.h>
+#include <wx/display.h>
+#include <wx/gdicmn.h>
+#include <utility>
+
 #include "config/Persistence.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/widget/Frame.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
+#include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard {
 

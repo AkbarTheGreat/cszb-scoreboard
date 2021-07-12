@@ -19,6 +19,7 @@ limitations under the License.
 */
 #pragma once
 
+#include <string>
 #ifdef __APPLE__
 #include <string>
 #else

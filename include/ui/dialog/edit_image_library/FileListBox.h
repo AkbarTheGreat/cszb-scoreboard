@@ -20,9 +20,18 @@ limitations under the License.
 
 #include <wx/editlbox.h>
 #include <wx/wx.h>
+#include <stdint.h>
+#include <wx/defs.h>
+#include <wx/gdicmn.h>
+#include <wx/string.h>
+#include <wx/tbarbase.h>
+#include <vector>
 
 #include "image_library.pb.h"
 #include "util/FilesystemPath.h"
+
+class wxCommandEvent;
+class wxWindow;
 
 namespace cszb_scoreboard {
 

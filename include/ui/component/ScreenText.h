@@ -20,7 +20,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/gdicmn.h>
+#include <wx/image.h>
+#include <wx/string.h>
 #include <optional>
 #include <vector>
 
@@ -30,6 +32,15 @@ limitations under the License.
 #include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
+class Color;
+namespace proto {
+class Font;
+class RenderableText;
+class ScreenSide;
+}  // namespace proto
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ScreenText : public Panel {
  public:

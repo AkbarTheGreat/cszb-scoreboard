@@ -20,6 +20,8 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <memory>
+#include <string>
 
 #include "ScoreboardCommon.h"
 #include "ui/component/PreviewPanel.h"
@@ -29,8 +31,17 @@ limitations under the License.
 #include "ui/widget/Label.h"
 #include "ui/widget/Panel.h"
 #include "ui/widget/Text.h"
+#include "ui/graphics/Color.h"
+
+class wxColourPickerEvent;
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class TextEntry : public ScreenTextController {
  public:

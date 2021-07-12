@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "test/TestUtil.h"
 
+#include <wx/gtk/app.h>
+#include <wx/init.h>
 #include <array>
 
 namespace cszb_scoreboard ::test {

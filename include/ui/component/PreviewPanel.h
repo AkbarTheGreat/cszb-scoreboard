@@ -22,8 +22,10 @@ limitations under the License.
 
 #include <wx/aui/aui.h>
 #include <wx/wx.h>
-
+#include <wx/aui/framemanager.h>
 #include <vector>
+#include <functional>
+#include <memory>
 
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
@@ -31,7 +33,14 @@ limitations under the License.
 #include "ui/component/ScreenTextSide.h"
 #include "ui/widget/Panel.h"
 
+class wxCommandEvent;
+
 namespace cszb_scoreboard {
+class ScreenPreview;
+class ScreenText;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class PreviewPanel : public Panel {
  public:

@@ -19,6 +19,11 @@ limitations under the License.
 
 #include "ui/UiUtil.h"
 
+#include <wx/gbsizer.h>
+#include <wx/sizer.h>
+
+class wxWindow;
+
 namespace cszb_scoreboard {
 
 // Sizers are always transferred to a window, which takes care of cleanup, so we

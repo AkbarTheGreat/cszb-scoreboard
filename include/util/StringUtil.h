@@ -18,6 +18,8 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <stdint.h>
+#include <wx/string.h>
 
 namespace cszb_scoreboard {
 

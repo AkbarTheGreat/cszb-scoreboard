@@ -19,12 +19,11 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/Activity.h"
 
-#include <wx/wx.h>
+#include <wx/event.h>
+#include <utility>
 
-#include <vector>
-
-#include "ui/UiUtil.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
+#include "ScoreboardCommon.h"
 
 namespace cszb_scoreboard {
 

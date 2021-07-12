@@ -19,16 +19,17 @@ limitations under the License.
 
 #include "ui/component/ScreenText.h"
 
-#include <wx/gbsizer.h>
 #include <wx/image.h>
-#include <wx/tokenzr.h>
+#include <wx/defs.h>
+#include <wx/tbarbase.h>
+#include <algorithm>
 
 #include "config/TeamConfig.h"
-#include "ui/UiUtil.h"
-#include "ui/graphics/BackgroundImage.h"
 #include "util/ProtoUtil.h"
+#include "config.pb.h"
 
 namespace cszb_scoreboard {
+class Color;
 
 // Margin for the top or bottom, as a percentage
 const float TOP_OR_BOTTOM_MARGIN = 2;

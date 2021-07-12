@@ -21,8 +21,9 @@ limitations under the License.
 
 #include <wx/clrpicker.h>
 #include <wx/wx.h>
-
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "config.pb.h"
 #include "ui/component/control/things_mode/Activity.h"
@@ -30,7 +31,16 @@ limitations under the License.
 #include "ui/widget/ColorPicker.h"
 #include "ui/widget/Panel.h"
 
+class wxPanel;
+
 namespace cszb_scoreboard {
+class ReplacementPanel;
+class ScreenTextController;
+
+namespace swx {
+class Panel;
+}  // namespace swx
+
 class ActivityPanel : public Panel {
  public:
   ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,

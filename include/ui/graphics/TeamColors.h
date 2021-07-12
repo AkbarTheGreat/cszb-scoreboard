@@ -23,6 +23,10 @@ limitations under the License.
 #include "config.pb.h"
 
 namespace cszb_scoreboard {
+namespace proto {
+class ScreenSide;
+}  // namespace proto
+
 class TeamColors {
  public:
   static auto getInstance() -> TeamColors*;

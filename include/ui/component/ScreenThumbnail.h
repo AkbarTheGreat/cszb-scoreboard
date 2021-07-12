@@ -20,10 +20,15 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/gdicmn.h>
 
 #include "ui/component/ScreenText.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
+
 class ScreenThumbnail : public ScreenText {
  public:
   ScreenThumbnail(swx::Panel* wx, int monitor_number,

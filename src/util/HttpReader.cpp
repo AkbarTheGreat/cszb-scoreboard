@@ -19,16 +19,7 @@ limitations under the License.
 #include "util/HttpReader.h"
 
 #include <curl/curl.h>
-#include <json/json.h>
-#include <json/reader.h>
-#include <wx/wx.h>
-
-#include <fstream>
-#include <regex>
-
-#include "config/CommandArgs.h"
-#include "util/FilesystemPath.h"
-#include "util/StringUtil.h"
+#include <string.h>
 
 namespace cszb_scoreboard {
 

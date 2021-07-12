@@ -18,6 +18,13 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
+#include <wx/app.h>
+#include <wx/chartype.h>
+#include <wx/cmdline.h>
+#include <wx/gdicmn.h>
+#include <wx/image.h>
+#include <array>
+
 #include "config/CommandArgs.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/frame/MainView.h"

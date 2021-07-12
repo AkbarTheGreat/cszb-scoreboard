@@ -20,8 +20,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"

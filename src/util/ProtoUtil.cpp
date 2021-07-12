@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "util/ProtoUtil.h"
 
+#include <wx/font.h>
+
 namespace cszb_scoreboard {
 
 const float DEFAULT_FONT_SIZE = 10;

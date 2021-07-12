@@ -18,6 +18,8 @@ limitations under the License.
 
 #include "util/StringUtil.h"
 
+#include <wx/chartype.h>
+
 namespace cszb_scoreboard {
 
 auto StringUtil::intToString(int value) -> wxString {

@@ -19,14 +19,18 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
-#include <wx/wx.h>
-
 #include <vector>
+#include <algorithm>
+#include <string>
 
-#include "ui/UiUtil.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
+#include "ScoreboardCommon.h"
+#include "config.pb.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int INITIAL_NUMBER_OF_REPLACEMENTS = 2;

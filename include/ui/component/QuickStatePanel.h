@@ -19,15 +19,23 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "ui/component/ScreenText.h"
 #include "ui/widget/Panel.h"
 
+class wxButton;
+class wxCommandEvent;
+class wxMouseEvent;
+
 namespace cszb_scoreboard {
 
 class QuickStatePanel;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class QuickStateEntry : public ScreenText {
  public:

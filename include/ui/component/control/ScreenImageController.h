@@ -23,6 +23,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/image.h>
+#include <memory>
+#include <string>
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
@@ -30,6 +33,12 @@ limitations under the License.
 #include "ui/widget/Label.h"
 
 namespace cszb_scoreboard {
+class Panel;
+class PreviewPanel;
+class ScreenText;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ScreenImageController : public ScreenTextController {
  protected:

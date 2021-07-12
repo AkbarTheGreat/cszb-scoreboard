@@ -20,8 +20,8 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
 #include <vector>
+#include <memory>
 
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/control/ScreenTextController.h"
@@ -33,6 +33,13 @@ limitations under the License.
 #include "ui/widget/ScrollingPanel.h"
 
 namespace cszb_scoreboard {
+class ActivityPanel;
+class PreviewPanel;
+class ScreenText;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ThingsMode : public ScreenTextController {
  public:

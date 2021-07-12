@@ -20,8 +20,10 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/image.h>
 #include <vector>
+#include <memory>
+#include <optional>
 
 #include "config.pb.h"
 #include "ui/component/control/ScreenTextController.h"
@@ -29,8 +31,19 @@ limitations under the License.
 #include "ui/widget/Label.h"
 #include "ui/widget/Text.h"
 #include "ui/widget/Toggle.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+class Widget;
+namespace proto {
+class RenderableText;
+}  // namespace proto
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ScoreControl : public ScreenTextController {
  public:

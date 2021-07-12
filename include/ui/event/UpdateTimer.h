@@ -19,10 +19,12 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/timer.h>
 
 #include "ui/widget/Frame.h"
 
 namespace cszb_scoreboard {
+class Frame;
 
 class UpdateTimer : public wxTimer {
  public:

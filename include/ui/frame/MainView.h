@@ -19,8 +19,10 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/gdicmn.h>
+#include <wx/string.h>
 #include <vector>
+#include <memory>
 
 #include "ui/component/ControlPanel.h"
 #include "ui/component/Menu.h"
@@ -32,7 +34,13 @@ limitations under the License.
 #include "ui/event/UpdateTimer.h"
 #include "ui/widget/Frame.h"
 
+class wxCloseEvent;
+class wxCommandEvent;
+class wxNotebook;
+
 namespace cszb_scoreboard {
+class SettingsDialog;
+class UpdateTimer;
 
 class MainView : public Frame {
  public:

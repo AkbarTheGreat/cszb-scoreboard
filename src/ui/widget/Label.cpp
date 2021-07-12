@@ -18,6 +18,10 @@ limitations under the License.
 
 #include "ui/widget/Label.h"
 
+#include <wx/font.h>
+
+#include "wx/font.h"
+
 namespace cszb_scoreboard {
 
 void Label::bold(bool is_bold) {

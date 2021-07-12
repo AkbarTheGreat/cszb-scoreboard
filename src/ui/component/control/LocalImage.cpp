@@ -20,12 +20,29 @@ limitations under the License.
 #include "ui/component/control/LocalImage.h"
 
 #include <wx/clipbrd.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/filedlg.h>
+#include <wx/gtk/clipbrd.h>
+#include <wx/gtk/dataobj2.h>
+#include <wx/image.h>
+#include <wx/msgdlg.h>
+#include <wx/string.h>
+#include <wx/translation.h>
+#include <filesystem>
+#include <string>
 
-#include "ui/UiUtil.h"
 #include "util/FilesystemPath.h"
-#include "util/ProtoUtil.h"
+#include "ScoreboardCommon.h"
+#include "ui/component/control/TeamSelector.h"
+#include "ui/widget/Label.h"
+#include "ui/widget/Widget.h"
+#include "ui/widget/swx/Panel.h"
+#include "wx/bitmap.h"
+#include "wx/filedlg.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 

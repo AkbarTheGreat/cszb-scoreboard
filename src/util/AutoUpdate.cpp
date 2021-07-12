@@ -19,16 +19,18 @@ limitations under the License.
 
 #include "util/AutoUpdate.h"
 
-#include <json/json.h>
 #include <json/reader.h>
-
-#include <fstream>
+#include <json/value.h>
+#include <stddef.h>
 #include <regex>
+#include <sstream>
+#include <fstream>
 
 #include "config/CommandArgs.h"
 #include "util/FilesystemPath.h"
 #include "util/Log.h"
 #include "util/StringUtil.h"
+#include "util/HttpReader.h"
 
 namespace cszb_scoreboard {
 

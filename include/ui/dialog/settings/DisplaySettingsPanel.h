@@ -19,6 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
+#include <memory>
 
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
@@ -26,11 +27,17 @@ limitations under the License.
 #include "ui/widget/Label.h"
 #include "ui/widget/Panel.h"
 #include "util/StringUtil.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/CheckBox.h"
 
 namespace cszb_scoreboard {
 
 // Pre-defining DisplaySettingsPage for a parent pointer.
 class DisplaySettingsPage;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class DisplaySettingsPanel : public Panel {
  public:

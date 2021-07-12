@@ -20,8 +20,8 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
 #include <array>
+#include <memory>
 
 #include "config.pb.h"
 #include "ui/widget/Panel.h"
@@ -29,6 +29,12 @@ limitations under the License.
 #include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
+namespace proto {
+class ScreenSide;
+}  // namespace proto
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class TeamSelector : public Panel {
  public:

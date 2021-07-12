@@ -19,8 +19,16 @@ limitations under the License.
 
 #include "ui/component/control/ImagePreview.h"
 
+#include <wx/dc.h>
+#include <wx/dcclient.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <string>
+
 #include "ui/graphics/BackgroundImage.h"
 #include "ui/graphics/Color.h"
+#include "ui/widget/swx/Panel.h"
+#include "wx/bitmap.h"
 
 namespace cszb_scoreboard {
 

@@ -20,14 +20,27 @@ limitations under the License.
 #pragma once
 
 #include <wx/wx.h>
-
+#include <wx/aui/auibook.h>
+#include <wx/defs.h>
+#include <wx/dialog.h>
+#include <wx/gdicmn.h>
+#include <wx/generic/accel.h>
+#include <wx/panel.h>
+#include <wx/string.h>
+#include <wx/tbarbase.h>
 #include <vector>
+#include <string>
+#include <utility>
 
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/Frame.h"
 #include "ui/widget/swx/Notebook.h"
 #include "ui/widget/swx/Panel.h"
 #include "ui/widget/swx/PropertySheetDialog.h"
+
+class wxAcceleratorEntry;
+class wxMenu;
+class wxWindow;
 
 namespace cszb_scoreboard {
 

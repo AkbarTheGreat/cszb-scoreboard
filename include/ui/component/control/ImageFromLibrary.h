@@ -22,8 +22,9 @@ limitations under the License.
 
 #include <wx/srchctrl.h>
 #include <wx/wx.h>
-
+#include <wx/string.h>
 #include <vector>
+#include <memory>
 
 #include "config.pb.h"
 #include "ui/component/control/ImagePreview.h"
@@ -32,8 +33,14 @@ limitations under the License.
 #include "ui/widget/Button.h"
 #include "ui/widget/Label.h"
 #include "ui/widget/SearchBox.h"
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
+class EditImageLibraryDialog;
+class PreviewPanel;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ImageFromLibrary : public ScreenImageController {
  public:

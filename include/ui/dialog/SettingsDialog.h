@@ -20,8 +20,10 @@ limitations under the License.
 
 #include <wx/propdlg.h>
 #include <wx/wx.h>
-
+#include <wx/event.h>
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
@@ -30,6 +32,11 @@ limitations under the License.
 #include "ui/widget/TabbedDialog.h"
 
 namespace cszb_scoreboard {
+class Frame;
+
+namespace swx {
+class PropertySheetDialog;
+}  // namespace swx
 
 extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
 

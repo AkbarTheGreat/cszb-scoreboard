@@ -19,12 +19,20 @@ limitations under the License.
 
 #include "ui/component/control/TextEntry.h"
 
+#include <wx/clrpicker.h>
+#include <wx/event.h>
+#include <vector>
+
 #include "config/TeamConfig.h"
-#include "ui/UiUtil.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
+#include "ui/component/ScreenText.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
