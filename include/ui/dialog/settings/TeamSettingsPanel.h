@@ -25,6 +25,9 @@ limitations under the License.
 #include "config.pb.h"
 #include "config/TeamConfig.h"
 #include "ui/graphics/Color.h"
+#include "ui/widget/Button.h"
+#include "ui/widget/ColorPicker.h"
+#include "ui/widget/Label.h"
 #include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
@@ -43,15 +46,13 @@ class TeamSettingsPanel : public Panel {
  private:
   int index;
   proto::TeamInfo_TeamType team_type;
-  wxStaticText *label;
-  wxColourPickerCtrl *color_picker;
-  wxPanel *button_panel;
-  wxButton *down_button;
-  wxButton *up_button;
+  std::unique_ptr<Label> team_label, default_color_label;
+  std::unique_ptr<ColorPicker> color_picker;
+  std::unique_ptr<Panel> button_panel;
+  std::unique_ptr<Button> down_button, up_button;
   TeamSettingsPage *parent;
   void createButtonPanel();
-  void moveTeam(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                         // wxWidgets callback.
+  void moveTeam(bool is_up_button);
 };
 
 }  // namespace cszb_scoreboard

@@ -28,6 +28,7 @@ class Label : public Widget {
   explicit Label(swx::StaticText *label) { wx = label; }
   void set(const std::string &label) { wx->SetLabelText(label); }
   void setWithHotkey(const std::string &label) { wx->SetLabel(label); }
+  auto text() -> std::string { return wx->GetLabelText(); }
   void bold(bool is_bold);
 
  protected:
