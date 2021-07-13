@@ -59,10 +59,10 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   file_list =
       std::make_unique<FileListBox>(box_panel->childPanel(), "Filename");
 
-  name_entry = new wxTextCtrl(box_panel->wx, wxID_ANY);
-  name_label = new wxStaticText(box_panel->wx, wxID_ANY, "Display name");
+  name_entry = box_panel->text("");
+  name_label = box_panel->label("Display name");
 
-  tag_list = new wxEditableListBox(box_panel->wx, wxID_ANY, "Tags");
+  tag_list = box_panel->listBox("Tags");
 
   positionWidgets();
   bindEvents();
@@ -70,9 +70,9 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
 
 void EditImageLibraryDialog::positionWidgets() {
   box_panel->addWidget(*file_list, 0, 0);
-  UiUtil::addToGridBag(box_panel->sizer(), tag_list, 0, 1);
-  UiUtil::addToGridBag(box_panel->sizer(), name_label, 1, 0);
-  UiUtil::addToGridBag(box_panel->sizer(), name_entry, 1, 1);
+  box_panel->addWidget(*tag_list, 0, 1);
+  box_panel->addWidget(*name_label, 1, 0);
+  box_panel->addWidget(*name_entry, 1, 1);
 
   // CreateButtons(wxOK | wxCANCEL);
 
@@ -96,11 +96,15 @@ void EditImageLibraryDialog::bindEvents() {
   file_list->bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent &event) -> void {
     this->fileSelected(event);
   });
-  name_entry->Bind(wxEVT_KEY_UP, &EditImageLibraryDialog::nameUpdated, this);
-  tag_list->Bind(wxEVT_LIST_END_LABEL_EDIT,
-                 &EditImageLibraryDialog::tagsUpdated, this);
-  tag_list->Bind(wxEVT_LIST_DELETE_ITEM, &EditImageLibraryDialog::tagDeleted,
-                 this);
+  name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void {
+    this->nameUpdated(event);
+  });
+  tag_list->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
+    this->tagsUpdated(event);
+  });
+  tag_list->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent &event) -> void {
+    this->tagDeleted(event);
+  });
 }
 
 void EditImageLibraryDialog::onOk(wxCommandEvent &event) {
@@ -147,26 +151,26 @@ void EditImageLibraryDialog::saveSettings() {
 void EditImageLibraryDialog::fileSelected(wxListEvent &event) {
   FilesystemPath filename = file_list->selectedFilename();
 
-  name_entry->SetValue(images[filename].name());
+  name_entry->setValue(images[filename].name());
   wxArrayString tags;
   for (const auto &tag : images[filename].tags()) {
     tags.Add(tag);
   }
-  tag_list->SetStrings(tags);
+  tag_list->setStrings(tags);
   event.Skip();
 }
 
 void EditImageLibraryDialog::nameUpdated(wxKeyEvent &event) {
-  images[file_list->selectedFilename()].set_name(name_entry->GetValue());
+  images[file_list->selectedFilename()].set_name(name_entry->value());
 }
 
 void EditImageLibraryDialog::tagDeleted(wxListEvent &event) {
   wxArrayString tags;
-  tag_list->GetStrings(tags);
+  tag_list->strings(tags);
 
   tags.RemoveAt(event.GetIndex(), 1);
 
-  tag_list->SetStrings(tags);
+  tag_list->setStrings(tags);
 
   FilesystemPath filename = file_list->selectedFilename();
   images[filename].clear_tags();
@@ -177,14 +181,14 @@ void EditImageLibraryDialog::tagDeleted(wxListEvent &event) {
 
 void EditImageLibraryDialog::tagsUpdated(wxListEvent &event) {
   wxArrayString tags;
-  tag_list->GetStrings(tags);
+  tag_list->strings(tags);
   int index = event.GetIndex();
   if (index >= tags.size()) {
     tags.Add(event.GetText());
   } else {
     tags[index] = event.GetText();
   }
-  tag_list->SetStrings(tags);
+  tag_list->setStrings(tags);
 
   FilesystemPath filename = file_list->selectedFilename();
   images[filename].clear_tags();

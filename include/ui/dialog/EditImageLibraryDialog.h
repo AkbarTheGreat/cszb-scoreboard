@@ -24,8 +24,11 @@ limitations under the License.
 
 #include "image_library.pb.h"  // for ImageInfo
 #include "ui/widget/Frame.h"
+#include "ui/widget/Label.h"
+#include "ui/widget/ListBox.h"
 #include "ui/widget/Panel.h"
 #include "ui/widget/TabbedDialog.h"
+#include "ui/widget/Text.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 // IWYU pragma: no_include <wx/generic/propdlg.h>
 
@@ -50,11 +53,11 @@ class EditImageLibraryDialog : public TabbedDialog {
 
  private:
   std::unique_ptr<FileListBox> file_list;
-  wxTextCtrl *name_entry;
-  wxStaticText *name_label;
-  wxEditableListBox *tag_list;
-  std::map<FilesystemPath, proto::ImageInfo> images;
   std::unique_ptr<Panel> box_panel;
+  std::unique_ptr<Text> name_entry;
+  std::unique_ptr<Label> name_label;
+  std::unique_ptr<ListBox> tag_list;
+  std::map<FilesystemPath, proto::ImageInfo> images;
   Panel *parent;
 
   void bindEvents();

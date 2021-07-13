@@ -43,9 +43,10 @@ namespace cszb_scoreboard {
 
 FileListBox::FileListBox(swx::Panel *wx, const std::string &title) : Panel(wx) {
   box = listBox(title);
-  addWidget(*box, 0, 0, 0);
   updateStrings(ImageLibrary::getInstance()->allFilenames());
   bindEvents();
+  addWidget(*box, 0, 0, 0);
+  runSizer();
 }
 
 void FileListBox::bindEvents() {
