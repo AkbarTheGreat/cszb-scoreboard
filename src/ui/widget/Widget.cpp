@@ -18,7 +18,6 @@ limitations under the License.
 
 #include "ui/widget/Widget.h"
 
-#include <ext/alloc_traits.h>
 #include <wx/gbsizer.h>
 #include <wx/sizer.h>
 #include <algorithm>

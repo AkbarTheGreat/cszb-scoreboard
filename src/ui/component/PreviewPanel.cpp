@@ -20,7 +20,6 @@ limitations under the License.
 #include "ui/component/PreviewPanel.h"
 
 #include <assert.h>
-#include <wx/generic/panelg.h>
 #include <algorithm>
 #include <utility>
 

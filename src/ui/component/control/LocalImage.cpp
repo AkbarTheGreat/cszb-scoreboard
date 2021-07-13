@@ -23,8 +23,7 @@ limitations under the License.
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/filedlg.h>
-#include <wx/gtk/clipbrd.h>
-#include <wx/gtk/dataobj2.h>
+#include <wx/clipbrd.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
 #include <wx/string.h>

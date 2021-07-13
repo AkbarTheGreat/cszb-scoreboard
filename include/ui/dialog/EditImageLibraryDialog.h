@@ -21,7 +21,6 @@ limitations under the License.
 #include <wx/editlbox.h>
 #include <wx/propdlg.h>
 #include <wx/wx.h>
-#include <wx/generic/propdlg.h>
 #include <map>
 
 #include "image_library.pb.h"

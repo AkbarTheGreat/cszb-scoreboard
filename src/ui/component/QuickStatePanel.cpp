@@ -23,7 +23,7 @@ limitations under the License.
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
-#include <wx/gtk/button.h>
+#include <wx/button.h>
 #include <wx/wxcrtvararg.h>
 #include <string>
 #include <algorithm>

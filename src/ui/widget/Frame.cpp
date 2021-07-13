@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "ui/widget/Frame.h"
 
-#include <wx/gtk/menu.h>
+#include <wx/menu.h>
 #include <wx/toplevel.h>
 
 namespace cszb_scoreboard {

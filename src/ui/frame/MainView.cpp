@@ -20,7 +20,7 @@ limitations under the License.
 
 #include <wx/defs.h>
 #include <wx/event.h>
-#include <wx/gtk/menu.h>
+#include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <vector>
 #include <algorithm>

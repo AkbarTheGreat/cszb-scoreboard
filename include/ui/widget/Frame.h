@@ -24,7 +24,7 @@ limitations under the License.
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/gdicmn.h>
-#include <wx/generic/accel.h>
+#include <wx/accel.h>
 #include <wx/panel.h>
 #include <wx/string.h>
 #include <wx/tbarbase.h>

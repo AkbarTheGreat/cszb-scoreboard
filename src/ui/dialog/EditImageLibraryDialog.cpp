@@ -23,9 +23,8 @@ limitations under the License.
 #include <wx/defs.h>
 #include <wx/editlbox.h>
 #include <wx/event.h>
-#include <wx/generic/panelg.h>
-#include <wx/gtk/stattext.h>
-#include <wx/gtk/textctrl.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 #include <wx/listbase.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
