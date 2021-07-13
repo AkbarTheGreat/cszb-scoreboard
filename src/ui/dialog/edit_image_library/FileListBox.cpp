@@ -25,7 +25,6 @@ limitations under the License.
 #include <wx/event.h>        // for wxEventTypeTag, wxCommandEvent, wxE...
 #include <wx/filedlg.h>      // for wxFileDialog
 #include <wx/listctrl.h>     // IWYU pragma: keep for wxListCtrl
-#include <wx/listctrl.h>     // IWYU pragma: keep for wxListCtrl
 #include <wx/translation.h>  // for _
 
 #include <algorithm>  // for max
