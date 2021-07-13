@@ -22,12 +22,14 @@ limitations under the License.
 #include <wx/bmpbuttn.h>  // IWYU pragma: keep for wxBitmapButton
 #include <wx/defs.h>      // for wxID_ANY
 #include <wx/event.h>     // for wxEventTypeTag, wxCommand...
-#include <wx/listbase.h>  // for wxListEvent (ptr only)
+#include <wx/listbase.h>  // IWYU pragma: keep
 
 #include <functional>  // for function
 
 #include "ui/widget/Widget.h"               // for Widget
 #include "ui/widget/swx/EditableListBox.h"  // for EditableListBox
+
+class wxListEvent;
 // IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
 class wxWindow;

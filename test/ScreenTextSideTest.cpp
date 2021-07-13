@@ -18,9 +18,9 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiRes...
-#include <wx/app.h>                 // for wxApp
 #include <wx/dcclient.h>            // for wxClientDC
 #include <wx/gdicmn.h>              // for wxSize
+#include <wx/init.h>                // for wxEntryCleanup
 
 #include <memory>  // for unique_ptr, allocator, make...
 
