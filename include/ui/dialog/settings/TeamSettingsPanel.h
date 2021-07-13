@@ -18,23 +18,20 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/clrpicker.h>
-#include <wx/wx.h>
-#include <memory>
+#include <memory>                   // for unique_ptr
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/TeamConfig.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/ColorPicker.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Panel.h"
+#include "config.pb.h"              // for TeamInfo_TeamType
+#include "ui/graphics/Color.h"      // for Color
+#include "ui/widget/Button.h"       // for Button
+#include "ui/widget/ColorPicker.h"  // for ColorPicker
+#include "ui/widget/Label.h"        // for Label
+#include "ui/widget/Panel.h"        // for Panel
 
 namespace cszb_scoreboard {
 
 // Pre-defining TeamSettingsPage for a parent pointer.
 class TeamSettingsPage;
+
 namespace swx {
 class Panel;
 }  // namespace swx

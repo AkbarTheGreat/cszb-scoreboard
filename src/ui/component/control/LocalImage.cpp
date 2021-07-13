@@ -19,26 +19,26 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
-#include <wx/clipbrd.h>
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/filedlg.h>
-#include <wx/clipbrd.h>
-#include <wx/image.h>
-#include <wx/msgdlg.h>
-#include <wx/string.h>
-#include <wx/translation.h>
-#include <filesystem>
-#include <string>
+#include <wx/clipbrd.h>                         // for wxTheClipboard
+#include <wx/defs.h>                            // for wxDF_BITMAP, wxID_CANCEL
+#include <wx/event.h>                           // for wxCommandEvent (ptr o...
+#include <wx/image.h>                           // for wxImage
+#include <wx/msgdlg.h>                          // for wxMessageBox
+#include <wx/string.h>                          // for wxString
+#include <wx/translation.h>                     // for _
+#include <wx/clipbrd.h>                     // for wxClipboard
+#include <filesystem>                           // for path
+#include <string>                               // for string
 
-#include "util/FilesystemPath.h"
-#include "ScoreboardCommon.h"
-#include "ui/component/control/TeamSelector.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/Panel.h"
-#include "wx/bitmap.h"
-#include "wx/filedlg.h"
+#include "util/FilesystemPath.h"                // for FilesystemPath
+#include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
+#include "ui/component/control/TeamSelector.h"  // for TeamSelector
+#include "ui/widget/Label.h"                    // for Label
+#include "ui/widget/Widget.h"                   // for NO_BORDER
+#include "ui/widget/swx/Panel.h"                // for Panel
+#include "wx/bitmap.h"                          // for wxBitmap
+#include "wx/filedlg.h"                         // for wxFileDialog, wxFD_FI...
+#include "util/Log.h" // IWYU pragma: keep for LogDebug
 
 namespace cszb_scoreboard {
 class PreviewPanel;

@@ -20,17 +20,16 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/gdicmn.h>
-#include <wx/image.h>
-#include <wx/string.h>
-#include <optional>
-#include <vector>
+#include <wx/gdicmn.h>          // for wxPoint, wxSize
+#include <wx/image.h>           // for wxImage
+#include <wx/string.h>          // for wxString
+#include <optional>             // for optional
+#include <vector>               // for vector
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/Panel.h"
+#include "ScoreboardCommon.h"   // for PUBLIC_TEST_ONLY
+#include "config.pb.h"          // for RenderableText, Font (ptr only), Scre...
+#include "ui/graphics/Color.h"  // for Color
+#include "ui/widget/Panel.h"    // for Panel
 
 class wxDC;
 class wxPaintEvent;

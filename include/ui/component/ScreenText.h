@@ -19,20 +19,17 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/gdicmn.h>
-#include <wx/image.h>
-#include <wx/string.h>
-#include <optional>
-#include <vector>
+#include <wx/gdicmn.h>                    // for wxSize
+#include <wx/image.h>                     // for wxImage
+#include <wx/string.h>                    // for wxString
+#include <vector>                         // for vector
 
-#include "config.pb.h"
-#include "ui/component/ScreenTextSide.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/Panel.h"
+#include "ui/component/ScreenTextSide.h"  // for ScreenTextSide (ptr only)
+#include "ui/widget/Panel.h"              // for Panel
 
 namespace cszb_scoreboard {
 class Color;
+
 namespace proto {
 class Font;
 class RenderableText;

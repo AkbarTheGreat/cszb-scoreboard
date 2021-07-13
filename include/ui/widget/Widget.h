@@ -18,17 +18,13 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/gbsizer.h>
-#include <wx/wx.h>
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <functional>
+#include <wx/defs.h>              // for wxID_ANY, wxALL, wxGROW
+#include <wx/event.h>             // for wxEventTypeTag, wxCloseEvent (ptr o...
+#include <functional>             // for function
 
-#include "ScoreboardCommon.h"
-#include "ui/widget/swx/Sizer.h"
-#include "wx/window.h"
-
-class wxWindow;
+#include "ScoreboardCommon.h"     // for DEFAULT_BORDER_SIZE
+#include "ui/widget/swx/Sizer.h"  // for Sizer
+#include "wx/window.h"            // for wxWindow
 
 namespace cszb_scoreboard {
 

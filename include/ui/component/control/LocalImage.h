@@ -19,16 +19,15 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <memory>
+#include <memory>                                        // for unique_ptr
 
-#include "config.pb.h"
-#include "ui/component/control/ScreenImageController.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/Panel.h"
+#include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
+#include "ui/widget/Button.h"                            // for Button
+#include "ui/widget/Panel.h"                             // for Panel
 
 namespace cszb_scoreboard {
 class PreviewPanel;
+
 namespace swx {
 class Panel;
 }  // namespace swx

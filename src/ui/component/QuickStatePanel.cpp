@@ -18,28 +18,28 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
-#include <stddef.h>
-#include <wx/accel.h>
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/gdicmn.h>
-#include <wx/button.h>
-#include <wx/wxcrtvararg.h>
-#include <string>
-#include <algorithm>
-#include <utility>
+#include <stddef.h>                       // for size_t
+#include <wx/accel.h>                     // for wxACCEL_CTRL, wxACCEL_ALT
+#include <wx/defs.h>                      // for wxID_ANY
+#include <wx/event.h>                     // for wxEventTypeTag, wxCommandEvent
+#include <wx/gdicmn.h>                    // for wxSize
+#include <wx/wxcrtvararg.h>               // for snprintf
+#include <wx/button.h>                // for wxButton
+#include <string>                         // for string
+#include <algorithm>                      // for max
+#include <utility>                        // for move
 
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/HotkeyTable.h"
-#include "ui/frame/MainView.h"
-#include "ui/widget/swx/Panel.h"
-#include "util/ProtoUtil.h"
-#include "wx/gbsizer.h"
-#include "config.pb.h"
-#include "ui/component/ControlPanel.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/ScreenTextSide.h"
-#include "ui/graphics/Color.h"
+#include "ui/frame/FrameManager.h"        // for FrameManager
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable
+#include "ui/frame/MainView.h"            // for MainView
+#include "ui/widget/swx/Panel.h"          // for Panel
+#include "util/ProtoUtil.h"               // for ProtoUtil
+#include "wx/gbsizer.h"                   // for wxGridBagSizer
+#include "config.pb.h"                    // for ScreenSide
+#include "ui/component/ControlPanel.h"    // for ControlPanel
+#include "ui/component/PreviewPanel.h"    // for PreviewPanel
+#include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
+#include "ui/graphics/Color.h"            // for Color
 
 namespace cszb_scoreboard {
 

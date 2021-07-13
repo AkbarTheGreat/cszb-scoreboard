@@ -20,24 +20,20 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/aui/aui.h>
-#include <wx/wx.h>
-#include <wx/aui/framemanager.h>
-#include <vector>
-#include <functional>
-#include <memory>
+#include <wx/aui/framemanager.h>  // for wxAuiManager
+#include <vector>                 // for vector
+#include <functional>             // for function
+#include <memory>                 // for unique_ptr
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "ui/component/ScreenPreview.h"
-#include "ui/component/ScreenTextSide.h"
-#include "ui/widget/Panel.h"
+#include "ScoreboardCommon.h"     // for PUBLIC_TEST_ONLY
+#include "ui/widget/Panel.h"      // for Panel
 
 class wxCommandEvent;
 
 namespace cszb_scoreboard {
 class ScreenPreview;
 class ScreenText;
+
 namespace swx {
 class Panel;
 }  // namespace swx

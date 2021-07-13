@@ -17,12 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/wx.h>
-#include <wx/image.h>
-#include <optional>
+#include <wx/image.h>             // for wxImage
+#include <optional>               // for optional
 
-#include "ui/widget/Panel.h"
-#include "util/FilesystemPath.h"
+#include "ui/widget/Panel.h"      // for Panel
+#include "util/FilesystemPath.h"  // for FilesystemPath
 
 class wxDC;
 class wxSize;

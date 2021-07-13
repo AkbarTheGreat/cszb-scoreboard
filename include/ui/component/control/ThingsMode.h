@@ -19,18 +19,14 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <vector>
-#include <memory>
+#include <memory>                                       // for unique_ptr
 
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/TeamSelector.h"
-#include "ui/component/control/things_mode/ActivityPanel.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/Radio.h"
-#include "ui/widget/ScrollingPanel.h"
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/component/control/TeamSelector.h"          // for TeamSelector
+#include "ui/widget/Button.h"                           // for Button
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/Radio.h"                            // for Radio
+#include "ui/widget/ScrollingPanel.h"                   // for ScrollingPanel
 
 namespace cszb_scoreboard {
 class ActivityPanel;

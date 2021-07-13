@@ -18,21 +18,14 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/gdicmn.h>
-#include <wx/string.h>
-#include <vector>
-#include <memory>
+#include <wx/gdicmn.h>                     // for wxPoint, wxSize (ptr only)
+#include <wx/string.h>                     // for wxString
+#include <memory>                          // for unique_ptr
 
-#include "ui/component/ControlPanel.h"
-#include "ui/component/Menu.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/QuickStatePanel.h"
-#include "ui/component/ScreenPreview.h"
-#include "ui/component/control/TextEntry.h"
-#include "ui/dialog/SettingsDialog.h"
-#include "ui/event/UpdateTimer.h"
-#include "ui/widget/Frame.h"
+#include "ui/component/ControlPanel.h"     // for ControlPanel
+#include "ui/component/PreviewPanel.h"     // for PreviewPanel
+#include "ui/component/QuickStatePanel.h"  // for QuickStatePanel
+#include "ui/widget/Frame.h"               // for Frame
 
 class wxCloseEvent;
 class wxCommandEvent;

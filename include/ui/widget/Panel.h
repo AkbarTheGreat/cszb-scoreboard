@@ -19,33 +19,18 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/gbsizer.h>
-#include <wx/wx.h>
-#include <wx/defs.h>
-#include <wx/gdicmn.h>
-#include <wx/panel.h>
-#include <wx/string.h>
-#include <wx/tbarbase.h>
-#include <vector>
-#include <memory>
-#include <string>
+#include <wx/defs.h>              // for wxHSCROLL, wxID_ANY, wxTAB_TRAVERSAL
+#include <wx/gdicmn.h>            // for wxPoint, wxSize
+#include <wx/panel.h>             // for wxPanelNameStr
+#include <wx/string.h>            // for wxString
+#include <wx/tbarbase.h>          // for wxDefaultPosition, wxDefaultSize
+#include <memory>                 // for unique_ptr
+#include <string>                 // for string
 
-#include "ScoreboardCommon.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/CheckBox.h"
-#include "ui/widget/ColorPicker.h"
-#include "ui/widget/Divider.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/RadioButton.h"
-#include "ui/widget/SearchBox.h"
-#include "ui/widget/Text.h"
-#include "ui/widget/Toggle.h"
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/Panel.h"
-#include "wx/colour.h"
-#include "wx/window.h"
-
-class wxWindow;
+#include "ui/widget/Widget.h"     // for Widget
+#include "ui/widget/swx/Panel.h"  // for Panel
+#include "wx/colour.h"            // for wxColour
+#include "wx/window.h"            // for wxWindow
 
 namespace cszb_scoreboard {
 

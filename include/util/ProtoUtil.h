@@ -18,12 +18,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/gdicmn.h>
+#include <wx/gdicmn.h>          // for wxRect, wxSize (ptr only)
 
-#include "config.pb.h"
-#include "ui/graphics/Color.h"
-#include "wx/font.h"
+#include "config.pb.h"          // for ScreenSide, Font (ptr only), Color (p...
+#include "ui/graphics/Color.h"  // for Color
+#include "wx/font.h"            // for wxFont
 
 namespace cszb_scoreboard {
 

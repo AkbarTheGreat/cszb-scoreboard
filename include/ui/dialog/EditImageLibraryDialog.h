@@ -18,14 +18,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/editlbox.h>
-#include <wx/propdlg.h>
-#include <wx/wx.h>
-#include <map>
+#include <wx/propdlg.h>   // for wxPropertySheetDialog
+#include <map>                    // for map
 
-#include "image_library.pb.h"
-#include "ui/dialog/edit_image_library/FileListBox.h"
-#include "util/FilesystemPath.h"
+#include "image_library.pb.h"     // for ImageInfo
+#include "util/FilesystemPath.h"  // for FilesystemPath
 
 class wxCloseEvent;
 class wxCommandEvent;

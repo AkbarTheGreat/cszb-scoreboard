@@ -20,18 +20,16 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/gdicmn.h>
-#include <wx/image.h>
-#include <wx/string.h>
-#include <memory>
-#include <vector>
+#include <wx/gdicmn.h>                     // for wxSize
+#include <wx/image.h>                      // for wxImage
+#include <wx/string.h>                     // for wxString
+#include <memory>                          // for unique_ptr
+#include <vector>                          // for vector
 
-#include "ui/component/ScreenPresenter.h"
-#include "ui/component/ScreenThumbnail.h"
-#include "ui/widget/Panel.h"
-#include "ui/component/ScreenText.h"
-#include "ui/component/ScreenTextSide.h"
+#include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
+#include "ui/widget/Panel.h"               // for Panel
+#include "ui/component/ScreenText.h"       // for ScreenText
+#include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 
 class wxPanel;
 class wxWindow;
@@ -39,6 +37,7 @@ class wxWindow;
 namespace cszb_scoreboard {
 class Color;
 class ScreenPresenter;
+
 namespace proto {
 class RenderableText;
 class ScreenSide;

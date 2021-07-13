@@ -16,21 +16,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest-message.h>
-#include <gtest/gtest-test-part.h>
-#include <wx/uiaction.h>
-#include <memory>
+#include <gtest/gtest-message.h>             // for Message
+#include <gtest/gtest-test-part.h>           // for SuiteApiResolver, TestFa...
+#include <wx/uiaction.h>                     // for wxUIActionSimulator
+#include <memory>                            // for allocator
 
-#include "config/DisplayConfig.h"
-#include "test/GuiTest.h"
-#include "ui/component/control/TextEntry.h"
-#include "config.pb.h"
-#include "gtest/gtest_pred_impl.h"
-#include "ui/component/ScreenPreview.h"
-#include "ui/component/ScreenText.h"
-#include "ui/component/ScreenTextSide.h"
-#include "ui/widget/Text.h"
-#include "wx/colour.h"
+#include "config/DisplayConfig.h"            // for DisplayConfig
+#include "test/GuiTest.h"                    // for WX_A, ImageAnalysis, Gui...
+#include "ui/component/control/TextEntry.h"  // for TextEntry
+#include "config.pb.h"                       // for DisplayInfo, ScreenSide
+#include "gtest/gtest_pred_impl.h"           // for ASSERT_LT, TEST_F
+#include "ui/component/ScreenPreview.h"      // for ScreenPreview
+#include "ui/component/ScreenText.h"         // for ScreenText
+#include "ui/component/ScreenTextSide.h"     // for ScreenTextSide
+#include "ui/widget/Text.h"                  // for Text
+#include "wx/colour.h"                       // for wxColour
+#include "ui/frame/MainView.h"               // for MainView
 
 namespace cszb_scoreboard ::test {
 

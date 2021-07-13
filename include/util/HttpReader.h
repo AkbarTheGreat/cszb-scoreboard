@@ -18,9 +18,8 @@ limitations under the License.
 
 #pragma once
 
-#include <curl/curl.h>
-#include <string>
-#include <vector>
+#include <string>  // for string
+#include <vector>  // for vector
 
 namespace cszb_scoreboard {
 

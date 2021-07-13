@@ -18,17 +18,13 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <memory>
+#include <memory>                // for unique_ptr
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Panel.h"
-#include "util/StringUtil.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/CheckBox.h"
+#include "config.pb.h"           // for ScreenSide
+#include "ui/widget/Label.h"     // for Label
+#include "ui/widget/Panel.h"     // for Panel
+#include "ui/widget/Button.h"    // for Button
+#include "ui/widget/CheckBox.h"  // for CheckBox
 
 namespace cszb_scoreboard {
 

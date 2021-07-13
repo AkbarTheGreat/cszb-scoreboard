@@ -18,18 +18,13 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/propdlg.h>
-#include <wx/wx.h>
-#include <wx/event.h>
-#include <vector>
-#include <memory>
-#include <string>
+#include <wx/event.h>                         // for wxCommandEvent (ptr only)
+#include <vector>                             // for vector
+#include <memory>                             // for unique_ptr
+#include <string>                             // for string
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "ui/dialog/settings/SettingsPage.h"
-#include "ui/widget/Frame.h"
-#include "ui/widget/TabbedDialog.h"
+#include "ui/dialog/settings/SettingsPage.h"  // for SettingsPage
+#include "ui/widget/TabbedDialog.h"           // for TabbedDialog
 
 namespace cszb_scoreboard {
 class Frame;

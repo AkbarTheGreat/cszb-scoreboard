@@ -19,26 +19,27 @@ limitations under the License.
 
 #include "ui/dialog/EditImageLibraryDialog.h"
 
-#include <wx/arrstr.h>
-#include <wx/defs.h>
-#include <wx/editlbox.h>
-#include <wx/event.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/listbase.h>
-#include <wx/sizer.h>
-#include <wx/string.h>
-#include <wx/bookctrl.h>
-#include <algorithm>
-#include <filesystem>
-#include <string>
-#include <vector>
+#include <wx/arrstr.h>                                 // for wxArrayString
+#include <wx/defs.h>                                   // for wxID_ANY, wxALL
+#include <wx/editlbox.h>                               // for wxEditableListBox
+#include <wx/event.h>                                  // for wxEventTypeTag
+#include <wx/listbase.h>                               // for wxListEvent
+#include <wx/sizer.h>                                  // for wxSizer
+#include <wx/string.h>                                 // for wxString
+#include <wx/panel.h>                         // for wxPanel
+#include <wx/stattext.h>                           // for wxStaticText
+#include <wx/textctrl.h>                           // for wxTextCtrl
+#include <algorithm>                                   // for max
+#include <filesystem>                                  // for operator<
+#include <string>                                      // for string, basic_...
+#include <vector>                                      // for vector
 
-#include "ScoreboardCommon.h"
-#include "config/ImageLibrary.h"
-#include "ui/UiUtil.h"
-#include "ui/dialog/edit_image_library/FileListBox.h"
-#include "wx/window.h"
+#include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
+#include "config/ImageLibrary.h"                       // for ImageLibrary
+#include "ui/UiUtil.h"                                 // for UiUtil
+#include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
+#include "wx/window.h"                                 // for wxWindow
+#include "wx/notebook.h"                               // for wxBookCtrlBase
 
 namespace cszb_scoreboard {
 

@@ -19,14 +19,15 @@ limitations under the License.
 */
 #include "ui/component/PreviewPanel.h"
 
-#include <assert.h>
-#include <algorithm>
-#include <utility>
+#include <assert.h>                      // for assert
+#include <wx/panel.h>           // for wxPanel
+#include <algorithm>                     // for max
+#include <utility>                       // for move
 
-#include "config/DisplayConfig.h"
-#include "config.pb.h"
-#include "ui/component/ScreenPreview.h"
-#include "ui/widget/swx/Panel.h"
+#include "config/DisplayConfig.h"        // for DisplayConfig
+#include "config.pb.h"                   // for ScreenSide, DisplayInfo
+#include "ui/component/ScreenPreview.h"  // for ScreenPreview
+#include "ui/widget/swx/Panel.h"         // for Panel
 
 class wxCommandEvent;
 

@@ -18,19 +18,16 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <memory>
-#include <vector>
+#include <memory>                                     // for unique_ptr
+#include <vector>                                     // for vector
 
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "ui/dialog/settings/DisplaySettingsPanel.h"
-#include "ui/dialog/settings/SettingsPage.h"
-#include "ui/widget/CheckBox.h"
-#include "ui/widget/Divider.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/Text.h"
+#include "ui/dialog/settings/DisplaySettingsPanel.h"  // for DisplaySettings...
+#include "ui/dialog/settings/SettingsPage.h"          // for SettingsPage
+#include "ui/widget/CheckBox.h"                       // for CheckBox
+#include "ui/widget/Divider.h"                        // for Divider
+#include "ui/widget/Label.h"                          // for Label
+#include "ui/widget/Panel.h"                          // for Panel
+#include "ui/widget/Text.h"                           // for Text
 
 namespace cszb_scoreboard {
 namespace swx {

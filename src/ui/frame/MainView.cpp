@@ -18,24 +18,24 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/menu.h>
-#include <wx/msgdlg.h>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <utility>
+#include <wx/defs.h>                   // for wxID_ABOUT, wxID_EXIT, wxICON_...
+#include <wx/event.h>                  // for wxCommandEvent (ptr only), wxE...
+#include <wx/msgdlg.h>                 // for wxMessageBox
+#include <wx/menu.h>               // for wxMenu
+#include <vector>                      // for vector
+#include <algorithm>                   // for max
+#include <string>                      // for string
+#include <utility>                     // for pair
 
-#include "config/CommandArgs.h"
-#include "config/DisplayConfig.h"
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/HotkeyTable.h"
-#include "util/StringUtil.h"
-#include "ScoreboardCommon.h"
-#include "ui/component/Menu.h"
-#include "ui/dialog/SettingsDialog.h"
-#include "ui/event/UpdateTimer.h"
+#include "config/CommandArgs.h"        // for CommandArgs
+#include "config/DisplayConfig.h"      // for DisplayConfig
+#include "ui/frame/FrameManager.h"     // for FrameManager
+#include "ui/frame/HotkeyTable.h"      // for HotkeyTable
+#include "util/StringUtil.h"           // for StringUtil
+#include "ScoreboardCommon.h"          // for SCOREBOARD_VERSION
+#include "ui/component/Menu.h"         // for DISPLAY_BLACK_OUT, GENERAL_SET...
+#include "ui/dialog/SettingsDialog.h"  // for SettingsDialog, SETTINGS_UPDATED
+#include "ui/event/UpdateTimer.h"      // for UpdateTimer
 
 namespace cszb_scoreboard {
 

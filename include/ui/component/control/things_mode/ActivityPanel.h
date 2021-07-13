@@ -19,17 +19,15 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clrpicker.h>
-#include <wx/wx.h>
-#include <vector>
-#include <memory>
-#include <string>
+#include <vector>                                       // for vector
+#include <memory>                                       // for unique_ptr
+#include <string>                                       // for string
 
-#include "config.pb.h"
-#include "ui/component/control/things_mode/Activity.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/ColorPicker.h"
-#include "ui/widget/Panel.h"
+#include "config.pb.h"                                  // for RenderableTex...
+#include "ui/component/control/things_mode/Activity.h"  // for Activity
+#include "ui/graphics/Color.h"                          // for Color
+#include "ui/widget/ColorPicker.h"                      // for ColorPicker
+#include "ui/widget/Panel.h"                            // for Panel
 
 class wxPanel;
 

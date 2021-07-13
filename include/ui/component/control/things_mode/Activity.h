@@ -19,19 +19,14 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <vector>
-#include <memory>
-#include <string>
+#include <memory>                                               // for uniqu...
+#include <string>                                               // for string
 
-#include "config.pb.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/things_mode/ReplacementPanel.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/RadioButton.h"
-#include "ui/widget/Text.h"
-#include "ui/widget/Widget.h"
+#include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
+#include "ui/widget/Button.h"                                   // for Button
+#include "ui/widget/Panel.h"                                    // for Panel
+#include "ui/widget/RadioButton.h"                              // for Radio...
+#include "ui/widget/Text.h"                                     // for Text
 
 class wxCommandEvent;
 

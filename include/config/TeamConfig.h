@@ -18,12 +18,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/string.h>
-#include <vector>
+#include <wx/string.h>          // for wxString
+#include <vector>               // for vector
 
-#include "config.pb.h"
-#include "ui/graphics/Color.h"
+#include "config.pb.h"          // for TeamInfo_TeamType, ScreenSide (ptr only)
+#include "ui/graphics/Color.h"  // for Color
 
 namespace cszb_scoreboard {
 

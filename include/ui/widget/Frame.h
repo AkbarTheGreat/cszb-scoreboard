@@ -19,24 +19,23 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/aui/auibook.h>
-#include <wx/defs.h>
-#include <wx/dialog.h>
-#include <wx/gdicmn.h>
-#include <wx/accel.h>
-#include <wx/panel.h>
-#include <wx/string.h>
-#include <wx/tbarbase.h>
-#include <vector>
-#include <string>
-#include <utility>
+#include <wx/aui/auibook.h>                     // for wxAUI_NB_SCROLL_BUTTONS
+#include <wx/defs.h>                            // for wxID_ANY, wxWindowID
+#include <wx/dialog.h>                          // for wxDEFAULT_DIALOG_STYLE
+#include <wx/gdicmn.h>                          // for wxPoint, wxSize (ptr ...
+#include <wx/panel.h>                           // for wxPanelNameStr
+#include <wx/string.h>                          // for wxString
+#include <wx/tbarbase.h>                        // for wxDefaultPosition
+#include <wx/generic/accel.h>                   // for wxAcceleratorTable
+#include <vector>                               // for vector
+#include <string>                               // for string
+#include <utility>                              // for pair
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/Frame.h"
-#include "ui/widget/swx/Notebook.h"
-#include "ui/widget/swx/Panel.h"
-#include "ui/widget/swx/PropertySheetDialog.h"
+#include "ui/widget/Widget.h"                   // for Widget
+#include "ui/widget/swx/Frame.h"                // for Frame
+#include "ui/widget/swx/Notebook.h"             // for Notebook
+#include "ui/widget/swx/Panel.h"                // for Panel
+#include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 
 class wxAcceleratorEntry;
 class wxMenu;

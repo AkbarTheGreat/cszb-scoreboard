@@ -16,19 +16,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest-message.h>
-#include <gtest/gtest-test-part.h>
-#include <wx/dcclient.h>
-#include <wx/gdicmn.h>
-#include <wx/init.h>
-#include <memory>
+#include <gtest/gtest-message.h>          // for Message
+#include <gtest/gtest-test-part.h>        // for TestPartResult, SuiteApiRes...
+#include <wx/dcclient.h>                  // for wxClientDC
+#include <wx/gdicmn.h>                    // for wxSize
+#include <wx/init.h>                      // for wxEntryCleanup
+#include <wx/app.h>                   // for wxApp
+#include <memory>                         // for unique_ptr, allocator, make...
 
-#include "test/TestUtil.h"
-#include "ui/component/ScreenTextSide.h"
-#include "ui/widget/Frame.h"
-#include "util/ProtoUtil.h"
-#include "gtest/gtest_pred_impl.h"
-#include "ui/widget/swx/Panel.h"
+#include "test/TestUtil.h"                // for TestUtil
+#include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
+#include "ui/widget/Frame.h"              // for Frame
+#include "util/ProtoUtil.h"               // for ProtoUtil
+#include "gtest/gtest_pred_impl.h"        // for ASSERT_EQ, ASSERT_GT, TEST_F
+#include "ui/widget/swx/Panel.h"          // for Panel
 
 namespace cszb_scoreboard ::test {
 

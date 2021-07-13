@@ -18,17 +18,17 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
-#include <wx/app.h>
-#include <wx/chartype.h>
-#include <wx/cmdline.h>
-#include <wx/gdicmn.h>
-#include <wx/image.h>
-#include <array>
+#include <wx/app.h>                 // for wxIMPLEMENT_APP
+#include <wx/chartype.h>            // for wxT
+#include <wx/cmdline.h>             // for wxCmdLineParser
+#include <wx/gdicmn.h>              // for wxPoint, wxSize
+#include <wx/image.h>               // for wxInitAllImageHandlers
+#include <array>                    // for array
 
-#include "config/CommandArgs.h"
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/MainView.h"
-#include "util/Log.h"
+#include "config/CommandArgs.h"     // for ARG_LIST, CommandArgs
+#include "ui/frame/FrameManager.h"  // for FrameManager
+#include "ui/frame/MainView.h"      // for MainView
+#include "util/Log.h"               // for LogDebug
 
 #ifndef SCOREBOARD_TESTING
 // NOLINTNEXTLINE(modernize-use-trailing-return-type)

@@ -18,11 +18,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <memory>
+#include <memory>                     // for unique_ptr
 
-#include "ui/component/ScreenText.h"
-#include "ui/widget/Frame.h"
+#include "ui/component/ScreenText.h"  // for ScreenText
+#include "ui/widget/Frame.h"          // for Frame
 
 namespace cszb_scoreboard {
 class ScreenPresenter : public Frame {

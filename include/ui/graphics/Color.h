@@ -18,12 +18,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <stdint.h>
-#include <wx/colour.h>
-#include <wx/string.h>
+#include <stdint.h>     // for uint32_t
+#include <wx/string.h>  // for wxString
 
-#include "wx/colour.h"
+#include "wx/colour.h"  // for wxColour, wxALPHA_OPAQUE
 
 namespace cszb_scoreboard {
 class Color : public wxColour {

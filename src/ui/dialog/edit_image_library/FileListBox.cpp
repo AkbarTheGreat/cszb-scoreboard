@@ -19,13 +19,20 @@ limitations under the License.
 
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
-#include <algorithm>
-#include <iterator>
-#include <string>
+#include <wx/arrstr.h>            // for wxArrayString
+#include <wx/event.h>             // for wxEventTypeTag, wxCommandEvent, wxE...
+#include <wx/filedlg.h>           // for wxFD_FILE_MUST_EXIST, wxFD_OPEN
+#include <wx/listctrl.h>  // IWYU pragma: keep for wxListCtrl
+#include <wx/bmpbuttn.h>      // for wxBitmapButton
+#include <wx/listbase.h>          // for wxLIST_STATE_SELECTED, wxLIST_NEXT_ALL
+#include <wx/translation.h>       // for _
+#include <algorithm>              // for max
+#include <iterator>               // for next
+#include <string>                 // for string
 
-#include "config/ImageLibrary.h"
-#include "ScoreboardCommon.h"
-#include <wx/listctrl.h>
+#include "config/ImageLibrary.h"  // for ImageLibrary
+#include "ScoreboardCommon.h"     // for IMAGE_SELECTION_STRING
+#include "wx/filedlg.h"           // for wxFileDialog
 
 class wxWindow;
 

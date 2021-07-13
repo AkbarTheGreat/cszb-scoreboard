@@ -17,9 +17,8 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <stdint.h>
-#include <wx/string.h>
+#include <stdint.h>     // for int32_t
+#include <wx/string.h>  // for wxString
 
 namespace cszb_scoreboard {
 

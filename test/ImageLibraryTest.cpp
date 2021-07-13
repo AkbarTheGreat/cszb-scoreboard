@@ -16,18 +16,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest-message.h>
-#include <gtest/gtest-test-part.h>
-#include <gtest/gtest.h>
-#include <filesystem>
-#include <sstream>
-#include <string>
-#include <vector>
+#include <gtest/gtest-message.h>    // for Message
+#include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiResolver
+#include <filesystem>               // for operator<<, operator!=
+#include <sstream>                  // for basic_stringbuf<>::int_type, basi...
+#include <string>                   // for string, allocator, basic_string
+#include <vector>                   // for vector
 
-#include "config/ImageLibrary.h"
-#include "gtest/gtest_pred_impl.h"
-#include "image_library.pb.h"
-#include "util/FilesystemPath.h"
+#include "config/ImageLibrary.h"    // for ImageSearchResults, ImageLibrary
+#include "gtest/gtest_pred_impl.h"  // for Test, ASSERT_PRED_FORMAT2, Assert...
+#include "image_library.pb.h"       // for ImageInfo, ImageLibrary
+#include "util/FilesystemPath.h"    // for FilesystemPath
 
 namespace cszb_scoreboard::test {
 

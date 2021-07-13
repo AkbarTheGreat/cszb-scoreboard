@@ -18,13 +18,12 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <vector>
-#include <memory>
-#include <string>
+#include <vector>                     // for vector
+#include <memory>                     // for unique_ptr
+#include <string>                     // for string
 
-#include "ui/component/ScreenText.h"
-#include "ui/widget/Panel.h"
+#include "ui/component/ScreenText.h"  // for ScreenText
+#include "ui/widget/Panel.h"          // for Panel
 
 class wxButton;
 class wxCommandEvent;
@@ -33,6 +32,7 @@ class wxMouseEvent;
 namespace cszb_scoreboard {
 
 class QuickStatePanel;
+
 namespace swx {
 class Panel;
 }  // namespace swx

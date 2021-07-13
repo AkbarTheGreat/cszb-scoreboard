@@ -19,14 +19,10 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <array>
-#include <memory>
+#include <memory>             // for unique_ptr
 
-#include "config.pb.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/Radio.h"
-#include "ui/widget/swx/Panel.h"
+#include "ui/widget/Panel.h"  // for Panel
+#include "ui/widget/Radio.h"  // for Radio
 
 namespace cszb_scoreboard {
 namespace proto {

@@ -19,18 +19,18 @@ limitations under the License.
 
 #include "util/AutoUpdate.h"
 
-#include <json/reader.h>
-#include <json/value.h>
-#include <stddef.h>
-#include <regex>
-#include <sstream>
-#include <fstream>
+#include <json/reader.h>          // for CharReaderBuilder, CharReader
+#include <json/value.h>           // for Value
+#include <stddef.h>               // for size_t
+#include <regex>                  // for match_results<>::_Base_type, regex_...
+#include <sstream>                // for basic_stringbuf<>::int_type, operator|
+#include <fstream>                // IWYU pragma: keep for fstream
 
-#include "config/CommandArgs.h"
-#include "util/FilesystemPath.h"
-#include "util/Log.h"
-#include "util/StringUtil.h"
-#include "util/HttpReader.h"
+#include "config/CommandArgs.h"   // for CommandArgs
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Log.h"             // for LogDebug
+#include "util/StringUtil.h"      // for StringUtil
+#include "util/HttpReader.h"      // for HttpResponse, HttpReader
 
 namespace cszb_scoreboard {
 

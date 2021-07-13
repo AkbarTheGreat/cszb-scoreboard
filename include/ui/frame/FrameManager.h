@@ -21,16 +21,12 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/gdicmn.h>
-#include <wx/string.h>
-#include <set>
-#include <memory>
+#include <wx/gdicmn.h>          // for wxPoint, wxSize (ptr only)
+#include <wx/string.h>          // for wxString
+#include <set>                  // for set
+#include <memory>               // for unique_ptr
 
-#include "ui/component/ScreenPresenter.h"
-#include "ui/component/ScreenText.h"
-#include "ui/frame/MainView.h"
-#include "ui/widget/Frame.h"
+#include "ui/frame/MainView.h"  // for MainView
 
 namespace cszb_scoreboard {
 class Frame;

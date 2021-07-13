@@ -19,10 +19,9 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/gdicmn.h>
+#include <wx/gdicmn.h>                // for wxSize
 
-#include "ui/component/ScreenText.h"
+#include "ui/component/ScreenText.h"  // for ScreenText
 
 namespace cszb_scoreboard {
 namespace swx {

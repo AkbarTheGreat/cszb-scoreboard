@@ -19,20 +19,17 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/bookctrl.h>
-#include <wx/wx.h>
-#include <wx/defs.h>
-#include <wx/gdicmn.h>
-#include <wx/panel.h>
-#include <wx/string.h>
-#include <wx/tbarbase.h>
-#include <string>
+#include <wx/defs.h>                            // for wxCANCEL, wxID_ANY, wxOK
+#include <wx/gdicmn.h>                          // for wxPoint, wxSize (ptr ...
+#include <wx/panel.h>                           // for wxPanelNameStr
+#include <wx/string.h>                          // for wxString
+#include <wx/tbarbase.h>                        // for wxDefaultPosition
+#include <string>                               // for string
 
-#include "ui/widget/Panel.h"
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/PropertySheetDialog.h"
-#include "ui/widget/swx/Panel.h"
-#include "wx/notebook.h"
+#include "ui/widget/Widget.h"                   // for Widget
+#include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
+#include "ui/widget/swx/Panel.h"                // for Panel
+#include "wx/notebook.h"                        // for wxBookCtrlBase
 
 class wxEvent;
 class wxWindow;

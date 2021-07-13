@@ -18,9 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <ui/graphics/Color.h>
-
-#include "config.pb.h"
+#include <ui/graphics/Color.h>  // for Color
 
 namespace cszb_scoreboard {
 namespace proto {

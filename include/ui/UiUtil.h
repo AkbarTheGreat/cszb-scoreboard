@@ -18,12 +18,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gbsizer.h>
-#include <wx/wx.h>
-#include <stdint.h>
-#include <wx/defs.h>
+#include <stdint.h>            // for int32_t
+#include <wx/defs.h>           // for wxALL, wxGROW
 
-#include "ScoreboardCommon.h"
+#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
 
 class wxGridBagSizer;
 class wxSizer;

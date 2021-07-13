@@ -18,17 +18,15 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/editlbox.h>
-#include <wx/wx.h>
-#include <stdint.h>
-#include <wx/defs.h>
-#include <wx/gdicmn.h>
-#include <wx/string.h>
-#include <wx/tbarbase.h>
-#include <vector>
+#include <wx/editlbox.h>          // for wxEditableListBoxNameStr, wxEL_ALLO...
+#include <stdint.h>               // for int32_t
+#include <wx/defs.h>              // for wxWindowID
+#include <wx/gdicmn.h>            // for wxPoint, wxSize (ptr only)
+#include <wx/string.h>            // for wxString
+#include <wx/tbarbase.h>          // for wxDefaultPosition, wxDefaultSize
+#include <vector>                 // for vector
 
-#include "image_library.pb.h"
-#include "util/FilesystemPath.h"
+#include "util/FilesystemPath.h"  // for FilesystemPath
 
 class wxCommandEvent;
 class wxWindow;

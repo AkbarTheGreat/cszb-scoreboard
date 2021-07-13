@@ -18,10 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/image.h>
-
-#include "ui/graphics/Color.h"
+#include <wx/image.h>  // for wxImage
 
 class wxSize;
 

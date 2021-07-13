@@ -18,9 +18,7 @@ limitations under the License.
 
 #include "ui/widget/Label.h"
 
-#include <wx/font.h>
-
-#include "wx/font.h"
+#include "wx/font.h"  // for wxFont, wxFONTWEIGHT_BOLD, wxFONTWEIGHT_NORMAL
 
 namespace cszb_scoreboard {
 

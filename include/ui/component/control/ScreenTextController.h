@@ -20,16 +20,15 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>
+#include <memory>              // for unique_ptr
 
-#include "config.pb.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/Panel.h"
+#include "ui/widget/Button.h"  // for Button
+#include "ui/widget/Panel.h"   // for Panel
 
 namespace cszb_scoreboard {
 class PreviewPanel;
 class ScreenText;
+
 namespace swx {
 class Panel;
 }  // namespace swx

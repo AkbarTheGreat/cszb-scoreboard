@@ -19,19 +19,17 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <memory>
-#include <string>
+#include <memory>                                       // for unique_ptr
+#include <string>                                       // for string
 
-#include "ScoreboardCommon.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/TeamSelector.h"
-#include "ui/widget/ColorPicker.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/Text.h"
-#include "ui/graphics/Color.h"
+#include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/component/control/TeamSelector.h"          // for TeamSelector
+#include "ui/widget/ColorPicker.h"                      // for ColorPicker
+#include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/Text.h"                             // for Text
+#include "ui/graphics/Color.h"                          // for Color
 
 class wxColourPickerEvent;
 

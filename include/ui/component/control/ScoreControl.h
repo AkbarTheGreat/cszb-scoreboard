@@ -19,25 +19,24 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/image.h>
-#include <vector>
-#include <memory>
-#include <optional>
+#include <wx/image.h>                                   // for wxImage
+#include <vector>                                       // for vector
+#include <memory>                                       // for unique_ptr
+#include <optional>                                     // for optional
 
-#include "config.pb.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/widget/ColorPicker.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Text.h"
-#include "ui/widget/Toggle.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/Panel.h"
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/widget/ColorPicker.h"                      // for ColorPicker
+#include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Text.h"                             // for Text
+#include "ui/widget/Toggle.h"                           // for Toggle
+#include "ui/widget/Button.h"                           // for Button
+#include "ui/widget/Panel.h"                            // for Panel
 
 namespace cszb_scoreboard {
 class PreviewPanel;
 class ScreenText;
 class Widget;
+
 namespace proto {
 class RenderableText;
 }  // namespace proto

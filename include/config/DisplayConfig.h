@@ -18,10 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/display.h>
-#include <wx/wx.h>
-
-#include "config.pb.h"
+#include "config.pb.h"  // for DisplayConfig, DisplayInfo, ScreenSide (ptr o...
 
 namespace cszb_scoreboard {
 

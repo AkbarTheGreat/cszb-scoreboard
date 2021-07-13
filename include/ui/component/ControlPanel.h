@@ -19,16 +19,12 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <vector>
-#include <memory>
-#include <string>
+#include <vector>                                       // for vector
+#include <memory>                                       // for unique_ptr
+#include <string>                                       // for string
 
-#include "ScoreboardCommon.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/widget/Notebook.h"
-#include "ui/widget/swx/Notebook.h"
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/widget/Notebook.h"                         // for Notebook
 
 class wxAuiNotebookEvent;
 

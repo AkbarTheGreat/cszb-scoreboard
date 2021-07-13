@@ -18,14 +18,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-#include <memory>
-#include <vector>
+#include <memory>                                  // for unique_ptr
+#include <vector>                                  // for vector
 
-#include "config.pb.h"
-#include "config/TeamConfig.h"
-#include "ui/dialog/settings/SettingsPage.h"
-#include "ui/dialog/settings/TeamSettingsPanel.h"
+#include "ui/dialog/settings/SettingsPage.h"       // for SettingsPage
+#include "ui/dialog/settings/TeamSettingsPanel.h"  // for TeamSettingsPanel
 
 namespace cszb_scoreboard {
 namespace swx {

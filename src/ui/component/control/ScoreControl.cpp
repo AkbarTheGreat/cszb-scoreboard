@@ -19,32 +19,31 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
-#include <stdint.h>
-#include <wx/accel.h>
-#include <wx/clrpicker.h>
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/filedlg.h>
-#include <wx/string.h>
-#include <wx/tglbtn.h>
-#include <wx/translation.h>
-#include <algorithm>
-#include <filesystem>
-#include <string>
+#include <stdint.h>                       // for int32_t
+#include <wx/accel.h>                     // for wxACCEL_CTRL
+#include <wx/clrpicker.h>                 // for wxColourPickerEvent (ptr only)
+#include <wx/defs.h>                      // for wxALIGN_CENTER_VERTICAL, wxALL
+#include <wx/event.h>                     // for wxCommandEvent (ptr only)
+#include <wx/string.h>                    // for wxString
+#include <wx/tglbtn.h>                    // for wxEVT_TOGGLEBUTTON
+#include <wx/translation.h>               // for _
+#include <algorithm>                      // for max
+#include <filesystem>                     // for path
+#include <string>                         // for string
 
-#include "ScoreboardCommon.h"
-#include "config/TeamConfig.h"
-#include "ui/frame/HotkeyTable.h"
-#include "ui/graphics/TeamColors.h"
-#include "util/FilesystemPath.h"
-#include "util/ProtoUtil.h"
-#include "util/StringUtil.h"
-#include "config.pb.h"
-#include "ui/component/ScreenText.h"
-#include "ui/component/ScreenTextSide.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/swx/Panel.h"
-#include "wx/filedlg.h"
+#include "ScoreboardCommon.h"             // for LOGO_SELECTION_STRING
+#include "config/TeamConfig.h"            // for TeamConfig
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable
+#include "ui/graphics/TeamColors.h"       // for TeamColors
+#include "util/FilesystemPath.h"          // for FilesystemPath
+#include "util/ProtoUtil.h"               // for ProtoUtil
+#include "util/StringUtil.h"              // for StringUtil
+#include "config.pb.h"                    // for RenderableText, Font, Rende...
+#include "ui/component/ScreenText.h"      // for ScreenText
+#include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
+#include "ui/graphics/Color.h"            // for Color
+#include "ui/widget/swx/Panel.h"          // for Panel
+#include "wx/filedlg.h"                   // for wxFileDialog, wxFD_FILE_MUS...
 
 namespace cszb_scoreboard {
 class PreviewPanel;

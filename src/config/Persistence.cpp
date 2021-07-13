@@ -18,10 +18,9 @@ limitations under the License.
 */
 
 #include "config/Persistence.h"
-
-#include <fstream>
-#include "config/CommandArgs.h"
-#include "util/Log.h"
+#include "util/Log.h" // IWYU pragma: keep
+#include "config/CommandArgs.h" // IWYU pragma: keep
+#include <fstream> // IWYU pragma: keep
 
 namespace cszb_scoreboard {
 

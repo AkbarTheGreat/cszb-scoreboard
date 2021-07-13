@@ -18,8 +18,7 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/cmdline.h>
-#include <wx/wx.h>
+#include <wx/app.h>  // for wxApp
 
 class wxCmdLineParser;
 

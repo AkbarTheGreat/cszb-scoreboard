@@ -19,13 +19,11 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <vector>
-#include <memory>
+#include <vector>                                          // for vector
+#include <memory>                                          // for unique_ptr
 
-#include "config.pb.h"
-#include "ui/component/control/things_mode/Replacement.h"
-#include "ui/widget/Panel.h"
+#include "ui/component/control/things_mode/Replacement.h"  // for Replacement
+#include "ui/widget/Panel.h"                               // for Panel
 
 namespace cszb_scoreboard {
 

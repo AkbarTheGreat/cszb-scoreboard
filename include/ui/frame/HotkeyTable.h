@@ -18,12 +18,9 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-#include <wx/accel.h>
-#include <wx/defs.h>
-#include <vector>
-
-#include "ui/widget/Frame.h"
+#include <wx/accel.h>  // for wxAcceleratorEntry
+#include <wx/defs.h>   // for wxWindowID
+#include <vector>      // for vector
 
 namespace cszb_scoreboard {
 class Frame;
