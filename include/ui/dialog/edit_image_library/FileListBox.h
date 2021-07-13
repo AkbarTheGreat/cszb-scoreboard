@@ -27,6 +27,8 @@ limitations under the License.
 
 #include <vector>  // for vector
 
+#include "ui/widget/ListBox.h"
+#include "ui/widget/Panel.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
 class wxCommandEvent;
@@ -36,26 +38,27 @@ namespace cszb_scoreboard {
 
 const int32_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
-class FileListBox : public wxEditableListBox {
+class FileListBox : public Panel {
  public:
-  FileListBox(wxWindow *parent, wxWindowID id, const wxString &label,
-              const wxPoint &pos = wxDefaultPosition,
-              const wxSize &size = wxDefaultSize,
-              int32_t style = FILE_LIST_BOX_DEFAULT_STYLE,
-              const wxString &name = wxEditableListBoxNameStr);
+  FileListBox(swx::Panel *wx, const std::string &title);
 
+  void bind(const wxEventTypeTag<wxListEvent> &eventType,
+            const std::function<void(wxListEvent &)> &lambda,
+            int id = wxID_ANY) {
+    box->bind(eventType, lambda, id);
+  }
   auto getFilenames() -> std::vector<FilesystemPath>;
   auto selectedFilename() -> FilesystemPath;
 
  protected:
   void bindEvents();
-  auto listSize() -> int32_t;
   void newPressed(wxCommandEvent &event);  // NOLINT(google-runtime-references)
                                            // wxWidgets callback.
-  void selectItem(int32_t select_index);
-  auto selectedIndex() -> int32_t;
   void updateStrings(const std::vector<FilesystemPath> &filenames,
                      int32_t select_index = 0);
+
+ private:
+  std::unique_ptr<ListBox> box;
 };
 
 }  // namespace cszb_scoreboard

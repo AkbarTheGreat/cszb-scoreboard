@@ -32,6 +32,10 @@ void TabbedDialog::addPage(const Panel &page, const std::string &name) {
   wx->GetBookCtrl()->AddPage(page.wx, name);
 }
 
+auto TabbedDialog::panel() const -> std::unique_ptr<Panel> {
+  return std::make_unique<Panel>(childPanel());
+}
+
 void TabbedDialog::selfDestruct() {
   wx->Destroy();
   delete this;

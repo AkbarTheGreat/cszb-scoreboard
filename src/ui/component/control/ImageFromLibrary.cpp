@@ -139,9 +139,9 @@ void ImageFromLibrary::bindEvents() {
 void ImageFromLibrary::doSearch() { setImages(search_box->value()); }
 
 void ImageFromLibrary::editButton() {
-  edit_dialog = new EditImageLibraryDialog();
-  edit_dialog->Create(wx);
-  edit_dialog->Show();
+  edit_dialog =
+      new EditImageLibraryDialog(childDialog("Edit Image Library"), this);
+  edit_dialog->show();
   setImages(search_box->value());
 }
 

@@ -49,49 +49,53 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-auto EditImageLibraryDialog::Create(wxWindow *parent) -> bool {
+EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
+                                               Panel *parent)
+    : TabbedDialog(wx) {
   this->parent = parent;
-  if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Edit Image Library")) {
-    return false;
-  }
 
   images = ImageLibrary::getInstance()->imageMap();
-  panel = new wxPanel(GetBookCtrl());
-  file_list = new FileListBox(panel, wxID_ANY, "Filename");
+  box_panel = panel();
+  file_list =
+      std::make_unique<FileListBox>(box_panel->childPanel(), "Filename");
 
-  name_entry = new wxTextCtrl(panel, wxID_ANY);
-  name_label = new wxStaticText(panel, wxID_ANY, "Display name");
+  name_entry = new wxTextCtrl(box_panel->wx, wxID_ANY);
+  name_label = new wxStaticText(box_panel->wx, wxID_ANY, "Display name");
 
-  tag_list = new wxEditableListBox(panel, wxID_ANY, "Tags");
+  tag_list = new wxEditableListBox(box_panel->wx, wxID_ANY, "Tags");
 
   positionWidgets();
   bindEvents();
-  return true;
 }
 
 void EditImageLibraryDialog::positionWidgets() {
-  wxSizer *sizer = UiUtil::sizer(0, 2);
+  box_panel->addWidget(*file_list, 0, 0);
+  UiUtil::addToGridBag(box_panel->sizer(), tag_list, 0, 1);
+  UiUtil::addToGridBag(box_panel->sizer(), name_label, 1, 0);
+  UiUtil::addToGridBag(box_panel->sizer(), name_entry, 1, 1);
 
-  sizer->Add(file_list, 0, wxALL, BORDER_SIZE);
-  sizer->Add(tag_list, 0, wxALL, BORDER_SIZE);
-  sizer->Add(name_label, 0, wxALL, BORDER_SIZE);
-  sizer->Add(name_entry, 0, wxALL, BORDER_SIZE);
+  // CreateButtons(wxOK | wxCANCEL);
 
-  CreateButtons(wxOK | wxCANCEL);
+  box_panel->runSizer();
 
-  panel->SetSizerAndFit(sizer);
+  addPage(*box_panel, "");
 
-  GetBookCtrl()->AddPage(panel, "");
-
-  LayoutDialog();
+  runSizer();
 }
 
 void EditImageLibraryDialog::bindEvents() {
-  Bind(wxEVT_BUTTON, &EditImageLibraryDialog::onOk, this, wxID_OK);
-  Bind(wxEVT_BUTTON, &EditImageLibraryDialog::onCancel, this, wxID_CANCEL);
-  Bind(wxEVT_CLOSE_WINDOW, &EditImageLibraryDialog::onClose, this);
-  file_list->Bind(wxEVT_LIST_ITEM_SELECTED,
-                  &EditImageLibraryDialog::fileSelected, this);
+  bind(
+      wxEVT_BUTTON,
+      [this](wxCommandEvent &event) -> void { this->onOk(event); }, wxID_OK);
+  bind(
+      wxEVT_BUTTON,
+      [this](wxCommandEvent &event) -> void { this->onCancel(event); },
+      wxID_CANCEL);
+  bind(wxEVT_CLOSE_WINDOW,
+       [this](wxCloseEvent &event) -> void { this->onClose(event); });
+  file_list->bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent &event) -> void {
+    this->fileSelected(event);
+  });
   name_entry->Bind(wxEVT_KEY_UP, &EditImageLibraryDialog::nameUpdated, this);
   tag_list->Bind(wxEVT_LIST_END_LABEL_EDIT,
                  &EditImageLibraryDialog::tagsUpdated, this);
@@ -102,12 +106,12 @@ void EditImageLibraryDialog::bindEvents() {
 void EditImageLibraryDialog::onOk(wxCommandEvent &event) {
   if (validateSettings()) {
     saveSettings();
-    Close(true);
+    close();
     return;
   }
 }
 
-void EditImageLibraryDialog::onCancel(wxCommandEvent &event) { Close(true); }
+void EditImageLibraryDialog::onCancel(wxCommandEvent &event) { close(); }
 
 void EditImageLibraryDialog::onClose(wxCloseEvent &event) {
   // Sometimes closing out this menu has given focus to a totally different
@@ -117,9 +121,9 @@ void EditImageLibraryDialog::onClose(wxCloseEvent &event) {
   // before calling Destroy(), things quit working.  But Destroying calls the
   // destructor, so we can't rely on this->parent anymore after Destroy is
   // called.  So we save it in a local pointer temporarily for this purpose.
-  wxWindow *local_parent = parent;
-  Destroy();
-  local_parent->SetFocus();
+  Panel *local_parent = parent;
+  selfDestruct();
+  local_parent->focus();
 }
 
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }

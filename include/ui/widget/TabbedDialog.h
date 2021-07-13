@@ -51,10 +51,11 @@ class TabbedDialog : public Widget {
                   const wxPoint &pos = wxDefaultPosition,
                   const wxSize &size = wxDefaultSize,
                   long style = wxTAB_TRAVERSAL,
-                  const wxString &name = wxPanelNameStr) -> swx::Panel * {
+                  const wxString &name = wxPanelNameStr) const -> swx::Panel * {
     return new swx::Panel(wx->GetBookCtrl(), id, pos, size, style, name);
   }
   void close(bool force = true) { wx->Close(force); }
+  auto panel() const -> std::unique_ptr<Panel>;
   void runSizer() { wx->LayoutDialog(); }
   void show() { wx->Show(); }
   void sendEvent(wxEvent *event) { wx->ProcessEvent(*event); }

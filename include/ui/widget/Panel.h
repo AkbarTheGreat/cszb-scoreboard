@@ -30,18 +30,19 @@ limitations under the License.
 
 #include "ui/widget/Widget.h"     // for Widget
 #include "ui/widget/swx/Panel.h"  // for Panel
-#include "wx/colour.h"            // for wxColour
-#include "wx/window.h"            // for wxWindow
+#include "ui/widget/swx/PropertySheetDialog.h"
+#include "wx/colour.h"  // for wxColour
+#include "wx/window.h"  // for wxWindow
 
 namespace cszb_scoreboard {
 
-// pre-declare ScrollingPanel to avoid circular dependencies
 class ScrollingPanel;
 class Button;
 class CheckBox;
 class ColorPicker;
 class Divider;
 class Label;
+class ListBox;
 class RadioButton;
 class SearchBox;
 class Text;
@@ -63,6 +64,8 @@ class Panel : public Widget {
   [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
   [[nodiscard]] auto label(const std::string &text) const
       -> std::unique_ptr<Label>;
+  [[nodiscard]] auto listBox(const std::string &title) const
+      -> std::unique_ptr<ListBox>;
   [[nodiscard]] auto radioButton() const -> std::unique_ptr<RadioButton>;
   [[nodiscard]] auto scrollingPanel(long scroll_style = wxHSCROLL |
                                                         wxVSCROLL) const
@@ -80,6 +83,15 @@ class Panel : public Widget {
   [[nodiscard]] auto panel(bool self_managed = false) const
       -> std::unique_ptr<Panel>;
 
+  // Create a child wx entry, for new Dialog object creation.
+  auto childDialog(const wxString &title, wxWindowID id = wxID_ANY,
+                   const wxPoint &pos = wxDefaultPosition,
+                   const wxSize &size = wxDefaultSize,
+                   long style = wxDEFAULT_DIALOG_STYLE,
+                   const wxString &name = wxDialogNameStr)
+      -> swx::PropertySheetDialog * {
+    return new swx::PropertySheetDialog(wx, id, title, pos, size, style, name);
+  }
   // Create a child wx entry, for new Panel object creation.
   [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,
                                 const wxPoint &pos = wxDefaultPosition,

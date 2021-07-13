@@ -22,7 +22,10 @@ limitations under the License.
 
 #include <map>  // for map
 
-#include "image_library.pb.h"     // for ImageInfo
+#include "image_library.pb.h"  // for ImageInfo
+#include "ui/widget/Frame.h"
+#include "ui/widget/Panel.h"
+#include "ui/widget/TabbedDialog.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 // IWYU pragma: no_include <wx/generic/propdlg.h>
 
@@ -41,18 +44,18 @@ namespace cszb_scoreboard {
 
 class FileListBox;
 
-class EditImageLibraryDialog : public wxPropertySheetDialog {
+class EditImageLibraryDialog : public TabbedDialog {
  public:
-  auto Create(wxWindow *parent) -> bool;
+  EditImageLibraryDialog(swx::PropertySheetDialog *wx, Panel *parent);
 
  private:
-  FileListBox *file_list;
+  std::unique_ptr<FileListBox> file_list;
   wxTextCtrl *name_entry;
   wxStaticText *name_label;
   wxEditableListBox *tag_list;
   std::map<FilesystemPath, proto::ImageInfo> images;
-  wxPanel *panel;
-  wxWindow *parent;
+  std::unique_ptr<Panel> box_panel;
+  Panel *parent;
 
   void bindEvents();
   void positionWidgets();

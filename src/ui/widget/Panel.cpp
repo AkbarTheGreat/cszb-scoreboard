@@ -27,6 +27,7 @@ limitations under the License.
 #include "ui/widget/ColorPicker.h"
 #include "ui/widget/Divider.h"
 #include "ui/widget/Label.h"
+#include "ui/widget/ListBox.h"
 #include "ui/widget/RadioButton.h"
 #include "ui/widget/ScrollingPanel.h"
 #include "ui/widget/SearchBox.h"
@@ -35,6 +36,7 @@ limitations under the License.
 #include "ui/widget/swx/Button.h"
 #include "ui/widget/swx/CheckBox.h"
 #include "ui/widget/swx/ColourPickerCtrl.h"
+#include "ui/widget/swx/EditableListBox.h"
 #include "ui/widget/swx/RadioButton.h"
 #include "ui/widget/swx/ScrolledWindow.h"
 #include "ui/widget/swx/SearchCtrl.h"
@@ -78,6 +80,12 @@ auto Panel::divider() const -> std::unique_ptr<Divider> {
 
 auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {
   return std::make_unique<Label>(new swx::StaticText(_wx(), wxID_ANY, text));
+}
+
+auto Panel::listBox(const std::string &title) const
+    -> std::unique_ptr<ListBox> {
+  return std::make_unique<ListBox>(
+      new swx::EditableListBox(_wx(), wxID_ANY, title));
 }
 
 auto Panel::panel(bool self_managed) const -> std::unique_ptr<Panel> {

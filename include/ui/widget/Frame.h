@@ -57,7 +57,6 @@ class Frame : public Widget {
   explicit Frame(swx::Frame *frame) { wx = frame; }
   virtual ~Frame() { wx->Destroy(); }
 
-  void focus() { wx->SetFocus(); };
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
     wx->SetAcceleratorTable(wxAcceleratorTable(keys.size(), keys.data()));
   }

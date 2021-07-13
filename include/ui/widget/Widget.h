@@ -67,6 +67,7 @@ class Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
+  void focus() { _wx()->SetFocus(); }
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
