@@ -18,10 +18,9 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include <wx/defs.h>    // for wxID_ABOUT, wxID_EXIT, wxICON_...
-#include <wx/event.h>   // for wxCommandEvent (ptr only), wxE...
-#include <wx/menu.h>    // for wxMenu
-#include <wx/msgdlg.h>  // for wxMessageBox
+#include <wx/defs.h>   // for wxID_ABOUT, wxID_EXIT, wxICON_...
+#include <wx/event.h>  // for wxCommandEvent (ptr only), wxE...
+#include <wx/menu.h>   // IWYU pragma: keep for wxMenu
 
 #include <algorithm>  // for max
 #include <string>     // for string
@@ -37,6 +36,7 @@ limitations under the License.
 #include "ui/frame/FrameManager.h"     // for FrameManager
 #include "ui/frame/HotkeyTable.h"      // for HotkeyTable
 #include "util/StringUtil.h"           // for StringUtil
+// IWYU pragma: no_include <wx/gtk/menu.h>
 
 namespace cszb_scoreboard {
 

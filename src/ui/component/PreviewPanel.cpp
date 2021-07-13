@@ -20,7 +20,7 @@ limitations under the License.
 #include "ui/component/PreviewPanel.h"
 
 #include <assert.h>    // for assert
-#include <wx/panel.h>  // for wxPanel
+#include <wx/panel.h>  // IWYU pragma: keep for wxPanel
 
 #include <algorithm>  // for max
 #include <utility>    // for move
@@ -29,10 +29,12 @@ limitations under the License.
 #include "config/DisplayConfig.h"        // for DisplayConfig
 #include "ui/component/ScreenPreview.h"  // for ScreenPreview
 #include "ui/widget/swx/Panel.h"         // for Panel
+// IWYU pragma: no_include <wx/generic/panelg.h>
 
 class wxCommandEvent;
 
 namespace cszb_scoreboard {
+
 class ScreenText;
 
 PreviewPanel::PreviewPanel(swx::Panel *wx) : Panel(wx) {

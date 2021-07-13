@@ -18,13 +18,13 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
-#include <stddef.h>          // for size_t
-#include <wx/accel.h>        // for wxACCEL_CTRL, wxACCEL_ALT
-#include <wx/button.h>       // for wxButton
-#include <wx/defs.h>         // for wxID_ANY
-#include <wx/event.h>        // for wxEventTypeTag, wxCommandEvent
-#include <wx/gdicmn.h>       // for wxSize
-#include <wx/wxcrtvararg.h>  // for snprintf
+#include <stddef.h>     // for size_t
+#include <wx/accel.h>   // for wxACCEL_CTRL, wxACCEL_ALT
+#include <wx/button.h>  // for wxButton
+#include <wx/button.h>  // IWYU pragma: keep for wxButton
+#include <wx/defs.h>    // for wxID_ANY
+#include <wx/event.h>   // for wxEventTypeTag, wxCommandEvent
+#include <wx/gdicmn.h>  // for wxSize
 
 #include <algorithm>  // for max
 #include <string>     // for string
@@ -41,6 +41,7 @@ limitations under the License.
 #include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
 #include "wx/gbsizer.h"                   // for wxGridBagSizer
+// IWYU pragma: no_include <wx/gtk/button.h>
 
 namespace cszb_scoreboard {
 

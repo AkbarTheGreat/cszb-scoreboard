@@ -21,7 +21,6 @@ limitations under the License.
 #include <wx/app.h>                 // for wxApp
 #include <wx/dcclient.h>            // for wxClientDC
 #include <wx/gdicmn.h>              // for wxSize
-#include <wx/init.h>                // for wxEntryCleanup
 
 #include <memory>  // for unique_ptr, allocator, make...
 
@@ -31,6 +30,7 @@ limitations under the License.
 #include "ui/widget/Frame.h"              // for Frame
 #include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
+// IWYU pragma: no_include <wx/gtk/app.h>
 
 namespace cszb_scoreboard ::test {
 

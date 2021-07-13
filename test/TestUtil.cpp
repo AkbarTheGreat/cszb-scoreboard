@@ -19,10 +19,11 @@ limitations under the License.
 
 #include "test/TestUtil.h"
 
-#include <wx/app.h>
-#include <wx/init.h>
+#include <wx/app.h>   // IWYU pragma: keep for wxApp
+#include <wx/init.h>  // for wxEntryStart
 
-#include <array>
+#include <array>  // for array
+// IWYU pragma: no_include <wx/gtk/app.h>
 
 namespace cszb_scoreboard ::test {
 

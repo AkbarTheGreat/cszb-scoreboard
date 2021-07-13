@@ -18,12 +18,13 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/propdlg.h>  // for wxPropertySheetDialog
+#include <wx/propdlg.h>  // IWYU pragma: keep for wxPropertySheetDialog
 
 #include <map>  // for map
 
 #include "image_library.pb.h"     // for ImageInfo
 #include "util/FilesystemPath.h"  // for FilesystemPath
+// IWYU pragma: no_include <wx/generic/propdlg.h>
 
 class wxCloseEvent;
 class wxCommandEvent;
@@ -33,9 +34,11 @@ class wxListEvent;
 class wxPanel;
 class wxStaticText;
 class wxTextCtrl;
+
 class wxWindow;
 
 namespace cszb_scoreboard {
+
 class FileListBox;
 
 class EditImageLibraryDialog : public wxPropertySheetDialog {

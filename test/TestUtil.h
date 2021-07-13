@@ -19,8 +19,6 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
-
 class wxApp;
 
 namespace cszb_scoreboard ::test {
