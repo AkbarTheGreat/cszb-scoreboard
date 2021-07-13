@@ -19,12 +19,13 @@ limitations under the License.
 #include <gtest/gtest-message.h>
 #include <gtest/gtest-test-part.h>
 #include <wx/gdicmn.h>
+
 #include <memory>
 
 #include "config.pb.h"
-#include "util/ProtoUtil.h"
 #include "gtest/gtest_pred_impl.h"
 #include "ui/graphics/Color.h"
+#include "util/ProtoUtil.h"
 
 // extern wxColourDatabase *wxTheColourDatabase;
 

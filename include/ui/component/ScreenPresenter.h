@@ -18,7 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <memory>                     // for unique_ptr
+#include <memory>  // for unique_ptr
 
 #include "ui/component/ScreenText.h"  // for ScreenText
 #include "ui/widget/Frame.h"          // for Frame
@@ -26,9 +26,9 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenPresenter : public Frame {
  public:
-  ScreenPresenter(int monitor_number, const ScreenText& preview);
+  ScreenPresenter(int monitor_number, const ScreenText &preview);
   void blackout() { screen_text->blackout(); }
-  void setAll(const ScreenText& source) { screen_text->setAll(source); }
+  void setAll(const ScreenText &source) { screen_text->setAll(source); }
 
  private:
   int monitor_number;

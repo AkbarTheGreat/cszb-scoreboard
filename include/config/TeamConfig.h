@@ -18,8 +18,9 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/string.h>          // for wxString
-#include <vector>               // for vector
+#include <wx/string.h>  // for wxString
+
+#include <vector>  // for vector
 
 #include "config.pb.h"          // for TeamInfo_TeamType, ScreenSide (ptr only)
 #include "ui/graphics/Color.h"  // for Color

@@ -19,8 +19,8 @@ limitations under the License.
 
 #include "ui/widget/Frame.h"
 
+#include <wx/menu.h>      // for wxMenuBar, wxMenu (ptr only)
 #include <wx/toplevel.h>  // for wxSTAY_ON_TOP
-#include <wx/menu.h>  // for wxMenuBar, wxMenu (ptr only)
 
 namespace cszb_scoreboard {
 

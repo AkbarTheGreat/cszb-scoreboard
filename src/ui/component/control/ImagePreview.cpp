@@ -23,6 +23,7 @@ limitations under the License.
 #include <wx/dcclient.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
+
 #include <string>
 
 #include "ui/graphics/BackgroundImage.h"
@@ -34,17 +35,17 @@ namespace cszb_scoreboard {
 
 const std::string DEFAULT_PREVIEW_COLOR = "Grey";
 
-ImagePreview::ImagePreview(swx::Panel* wx) : Panel(wx) {
+ImagePreview::ImagePreview(swx::Panel *wx) : Panel(wx) {
   this->image = BackgroundImage(wx->GetSize(), Color(DEFAULT_PREVIEW_COLOR));
   bindEvents();
 }
 
 void ImagePreview::bindEvents() {
   bind(wxEVT_PAINT,
-       [this](wxPaintEvent& event) -> void { this->paintEvent(); });
+       [this](wxPaintEvent &event) -> void { this->paintEvent(); });
 }
 
-void ImagePreview::renderImage(wxDC* dc) {
+void ImagePreview::renderImage(wxDC *dc) {
   wxImage scaled_image = image;
   wxSize image_size = scaled_image.GetSize();
   float screen_ratio = ratio(size());
@@ -74,7 +75,7 @@ void ImagePreview::paintEvent() {
   renderImage(&dc);
 }
 
-auto ImagePreview::ratio(const wxSize& size) -> float {
+auto ImagePreview::ratio(const wxSize &size) -> float {
   float ratio = 4 / 3;
   ratio = static_cast<float>(size.GetWidth()) / size.GetHeight();
   return ratio;
@@ -90,7 +91,7 @@ auto ImagePreview::getFilename() const -> std::optional<FilesystemPath> {
   return filename;
 }
 
-void ImagePreview::setImage(const FilesystemPath& filename) {
+void ImagePreview::setImage(const FilesystemPath &filename) {
   this->filename = filename;
   image = wxImage(filename.string());
   refresh();

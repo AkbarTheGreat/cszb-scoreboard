@@ -19,18 +19,19 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/image.h>                                   // for wxImage
-#include <vector>                                       // for vector
-#include <memory>                                       // for unique_ptr
-#include <optional>                                     // for optional
+#include <wx/image.h>  // for wxImage
+
+#include <memory>    // for unique_ptr
+#include <optional>  // for optional
+#include <vector>    // for vector
 
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/widget/Button.h"                           // for Button
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
 #include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Panel.h"                            // for Panel
 #include "ui/widget/Text.h"                             // for Text
 #include "ui/widget/Toggle.h"                           // for Toggle
-#include "ui/widget/Button.h"                           // for Button
-#include "ui/widget/Panel.h"                            // for Panel
 
 namespace cszb_scoreboard {
 class PreviewPanel;
@@ -52,9 +53,8 @@ class ScoreControl : public ScreenTextController {
       -> std::unique_ptr<ScoreControl>;
 
  private:
-  void addHomeAwayWidgetPair(Panel *panel, int row,
-                                           const Widget &home_widget,
-                                           const Widget &away_widget);
+  void addHomeAwayWidgetPair(Panel *panel, int row, const Widget &home_widget,
+                             const Widget &away_widget);
   void addToEntry(Text *entry, int amount);
   void bindEvents();
   void createControls(Panel *control_panel) override;

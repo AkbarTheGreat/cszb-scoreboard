@@ -19,33 +19,34 @@ limitations under the License.
 
 #include "ui/dialog/EditImageLibraryDialog.h"
 
-#include <wx/arrstr.h>                                 // for wxArrayString
-#include <wx/defs.h>                                   // for wxID_ANY, wxALL
-#include <wx/editlbox.h>                               // for wxEditableListBox
-#include <wx/event.h>                                  // for wxEventTypeTag
-#include <wx/listbase.h>                               // for wxListEvent
-#include <wx/sizer.h>                                  // for wxSizer
-#include <wx/string.h>                                 // for wxString
-#include <wx/panel.h>                         // for wxPanel
-#include <wx/stattext.h>                           // for wxStaticText
-#include <wx/textctrl.h>                           // for wxTextCtrl
-#include <algorithm>                                   // for max
-#include <filesystem>                                  // for operator<
-#include <string>                                      // for string, basic_...
-#include <vector>                                      // for vector
+#include <wx/arrstr.h>    // for wxArrayString
+#include <wx/defs.h>      // for wxID_ANY, wxALL
+#include <wx/editlbox.h>  // for wxEditableListBox
+#include <wx/event.h>     // for wxEventTypeTag
+#include <wx/listbase.h>  // for wxListEvent
+#include <wx/panel.h>     // for wxPanel
+#include <wx/sizer.h>     // for wxSizer
+#include <wx/stattext.h>  // for wxStaticText
+#include <wx/string.h>    // for wxString
+#include <wx/textctrl.h>  // for wxTextCtrl
+
+#include <algorithm>   // for max
+#include <filesystem>  // for operator<
+#include <string>      // for string, basic_...
+#include <vector>      // for vector
 
 #include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
 #include "config/ImageLibrary.h"                       // for ImageLibrary
 #include "ui/UiUtil.h"                                 // for UiUtil
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-#include "wx/window.h"                                 // for wxWindow
 #include "wx/notebook.h"                               // for wxBookCtrlBase
+#include "wx/window.h"                                 // for wxWindow
 
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-auto EditImageLibraryDialog::Create(wxWindow* parent) -> bool {
+auto EditImageLibraryDialog::Create(wxWindow *parent) -> bool {
   this->parent = parent;
   if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Edit Image Library")) {
     return false;
@@ -66,7 +67,7 @@ auto EditImageLibraryDialog::Create(wxWindow* parent) -> bool {
 }
 
 void EditImageLibraryDialog::positionWidgets() {
-  wxSizer* sizer = UiUtil::sizer(0, 2);
+  wxSizer *sizer = UiUtil::sizer(0, 2);
 
   sizer->Add(file_list, 0, wxALL, BORDER_SIZE);
   sizer->Add(tag_list, 0, wxALL, BORDER_SIZE);
@@ -95,7 +96,7 @@ void EditImageLibraryDialog::bindEvents() {
                  this);
 }
 
-void EditImageLibraryDialog::onOk(wxCommandEvent& event) {
+void EditImageLibraryDialog::onOk(wxCommandEvent &event) {
   if (validateSettings()) {
     saveSettings();
     Close(true);
@@ -103,9 +104,9 @@ void EditImageLibraryDialog::onOk(wxCommandEvent& event) {
   }
 }
 
-void EditImageLibraryDialog::onCancel(wxCommandEvent& event) { Close(true); }
+void EditImageLibraryDialog::onCancel(wxCommandEvent &event) { Close(true); }
 
-void EditImageLibraryDialog::onClose(wxCloseEvent& event) {
+void EditImageLibraryDialog::onClose(wxCloseEvent &event) {
   // Sometimes closing out this menu has given focus to a totally different
   // window for focus for me in testing.  That's really obnoxious, because it
   // can have the effect of sending the main window to the back of another
@@ -113,7 +114,7 @@ void EditImageLibraryDialog::onClose(wxCloseEvent& event) {
   // before calling Destroy(), things quit working.  But Destroying calls the
   // destructor, so we can't rely on this->parent anymore after Destroy is
   // called.  So we save it in a local pointer temporarily for this purpose.
-  wxWindow* local_parent = parent;
+  wxWindow *local_parent = parent;
   Destroy();
   local_parent->SetFocus();
 }
@@ -122,9 +123,9 @@ auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
   ImageLibrary::getInstance()->clearLibrary();
-  for (const auto& filename : file_list->getFilenames()) {
+  for (const auto &filename : file_list->getFilenames()) {
     std::vector<std::string> tags;
-    for (const auto& tag : images[filename].tags()) {
+    for (const auto &tag : images[filename].tags()) {
       // Strip out empty tags that're left by accident.
       if (!tag.empty()) {
         tags.push_back(tag);
@@ -136,23 +137,23 @@ void EditImageLibraryDialog::saveSettings() {
   ImageLibrary::getInstance()->saveLibrary();
 }
 
-void EditImageLibraryDialog::fileSelected(wxListEvent& event) {
+void EditImageLibraryDialog::fileSelected(wxListEvent &event) {
   FilesystemPath filename = file_list->selectedFilename();
 
   name_entry->SetValue(images[filename].name());
   wxArrayString tags;
-  for (const auto& tag : images[filename].tags()) {
+  for (const auto &tag : images[filename].tags()) {
     tags.Add(tag);
   }
   tag_list->SetStrings(tags);
   event.Skip();
 }
 
-void EditImageLibraryDialog::nameUpdated(wxKeyEvent& event) {
+void EditImageLibraryDialog::nameUpdated(wxKeyEvent &event) {
   images[file_list->selectedFilename()].set_name(name_entry->GetValue());
 }
 
-void EditImageLibraryDialog::tagDeleted(wxListEvent& event) {
+void EditImageLibraryDialog::tagDeleted(wxListEvent &event) {
   wxArrayString tags;
   tag_list->GetStrings(tags);
 
@@ -162,12 +163,12 @@ void EditImageLibraryDialog::tagDeleted(wxListEvent& event) {
 
   FilesystemPath filename = file_list->selectedFilename();
   images[filename].clear_tags();
-  for (const auto& tag : tags) {
+  for (const auto &tag : tags) {
     images[filename].add_tags(tag);
   }
 }
 
-void EditImageLibraryDialog::tagsUpdated(wxListEvent& event) {
+void EditImageLibraryDialog::tagsUpdated(wxListEvent &event) {
   wxArrayString tags;
   tag_list->GetStrings(tags);
   int index = event.GetIndex();
@@ -180,7 +181,7 @@ void EditImageLibraryDialog::tagsUpdated(wxListEvent& event) {
 
   FilesystemPath filename = file_list->selectedFilename();
   images[filename].clear_tags();
-  for (const auto& tag : tags) {
+  for (const auto &tag : tags) {
     images[filename].add_tags(tag);
   }
 }

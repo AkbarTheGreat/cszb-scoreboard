@@ -19,28 +19,29 @@ limitations under the License.
 
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
-#include <wx/arrstr.h>            // for wxArrayString
-#include <wx/event.h>             // for wxEventTypeTag, wxCommandEvent, wxE...
-#include <wx/filedlg.h>           // for wxFD_FILE_MUST_EXIST, wxFD_OPEN
-#include <wx/listctrl.h>  // IWYU pragma: keep for wxListCtrl
-#include <wx/bmpbuttn.h>      // for wxBitmapButton
-#include <wx/listbase.h>          // for wxLIST_STATE_SELECTED, wxLIST_NEXT_ALL
-#include <wx/translation.h>       // for _
-#include <algorithm>              // for max
-#include <iterator>               // for next
-#include <string>                 // for string
+#include <wx/arrstr.h>       // for wxArrayString
+#include <wx/bmpbuttn.h>     // for wxBitmapButton
+#include <wx/event.h>        // for wxEventTypeTag, wxCommandEvent, wxE...
+#include <wx/filedlg.h>      // for wxFD_FILE_MUST_EXIST, wxFD_OPEN
+#include <wx/listbase.h>     // for wxLIST_STATE_SELECTED, wxLIST_NEXT_ALL
+#include <wx/listctrl.h>     // IWYU pragma: keep for wxListCtrl
+#include <wx/translation.h>  // for _
 
-#include "config/ImageLibrary.h"  // for ImageLibrary
+#include <algorithm>  // for max
+#include <iterator>   // for next
+#include <string>     // for string
+
 #include "ScoreboardCommon.h"     // for IMAGE_SELECTION_STRING
+#include "config/ImageLibrary.h"  // for ImageLibrary
 #include "wx/filedlg.h"           // for wxFileDialog
 
 class wxWindow;
 
 namespace cszb_scoreboard {
 
-FileListBox::FileListBox(wxWindow* parent, wxWindowID id, const wxString& label,
-                         const wxPoint& pos, const wxSize& size, int32_t style,
-                         const wxString& name)
+FileListBox::FileListBox(wxWindow *parent, wxWindowID id, const wxString &label,
+                         const wxPoint &pos, const wxSize &size, int32_t style,
+                         const wxString &name)
     : wxEditableListBox(parent, id, label, pos, size, style, name) {
   updateStrings(ImageLibrary::getInstance()->allFilenames());
   bindEvents();
@@ -50,7 +51,7 @@ void FileListBox::bindEvents() {
   GetNewButton()->Bind(wxEVT_BUTTON, &FileListBox::newPressed, this);
 }
 
-void FileListBox::newPressed(wxCommandEvent& event) {
+void FileListBox::newPressed(wxCommandEvent &event) {
   wxFileDialog dialog(this, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   std::vector<FilesystemPath> filenames = getFilenames();
@@ -71,7 +72,7 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
   GetStrings(strings);
   std::vector<FilesystemPath> filenames;
 
-  for (const auto& entry : strings) {
+  for (const auto &entry : strings) {
     if (!entry.empty()) {
       filenames.emplace_back(FilesystemPath(std::string(entry)));
     }
@@ -101,10 +102,10 @@ auto FileListBox::selectedIndex() -> int32_t {
   return GetListCtrl()->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
 }
 
-void FileListBox::updateStrings(const std::vector<FilesystemPath>& filenames,
+void FileListBox::updateStrings(const std::vector<FilesystemPath> &filenames,
                                 int32_t select_index) {
   wxArrayString strings;
-  for (const auto& file : filenames) {
+  for (const auto &file : filenames) {
     strings.Add(file.c_str());
   }
   SetStrings(strings);

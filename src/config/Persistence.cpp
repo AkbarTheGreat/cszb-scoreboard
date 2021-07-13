@@ -18,9 +18,11 @@ limitations under the License.
 */
 
 #include "config/Persistence.h"
-#include "util/Log.h" // IWYU pragma: keep
-#include "config/CommandArgs.h" // IWYU pragma: keep
-#include <fstream> // IWYU pragma: keep
+
+#include <fstream>  // IWYU pragma: keep
+
+#include "config/CommandArgs.h"  // IWYU pragma: keep
+#include "util/Log.h"            // IWYU pragma: keep
 
 namespace cszb_scoreboard {
 
@@ -29,10 +31,10 @@ namespace cszb_scoreboard {
 #define FAKE_CONFIGURATION_FILES
 #endif
 
-const char* CONFIG_FILE = "scoreboard.config";
-const char* IMAGE_LIBRARY_FILE = "image_library.data";
+const char *CONFIG_FILE = "scoreboard.config";
+const char *IMAGE_LIBRARY_FILE = "image_library.data";
 
-auto Persistence::getInstance() -> Persistence* {
+auto Persistence::getInstance() -> Persistence * {
   static Persistence singleton;
   return &singleton;
 }
@@ -104,9 +106,9 @@ auto Persistence::loadDisplays() -> proto::DisplayConfig {
   return full_config.display_config();
 }
 
-void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
+void Persistence::saveDisplays(const proto::DisplayConfig &display_config) {
   // full_config.clear_display_config();
-  proto::DisplayConfig* new_display_config =
+  proto::DisplayConfig *new_display_config =
       full_config.mutable_display_config();
   new_display_config->CopyFrom(display_config);
   saveConfigToDisk();
@@ -118,9 +120,9 @@ auto Persistence::loadTeams() -> proto::TeamConfig {
   return full_config.team_config();
 }
 
-void Persistence::saveTeams(const proto::TeamConfig& team_config) {
+void Persistence::saveTeams(const proto::TeamConfig &team_config) {
   // full_config.clear_display_config();
-  proto::TeamConfig* new_team_config = full_config.mutable_team_config();
+  proto::TeamConfig *new_team_config = full_config.mutable_team_config();
   new_team_config->CopyFrom(team_config);
   saveConfigToDisk();
 }
@@ -131,7 +133,7 @@ auto Persistence::loadImageLibrary() -> proto::ImageLibrary {
   return image_library;
 }
 
-void Persistence::saveImageLibrary(const proto::ImageLibrary& library) {
+void Persistence::saveImageLibrary(const proto::ImageLibrary &library) {
   image_library.CopyFrom(library);
   saveImageLibraryToDisk();
 }

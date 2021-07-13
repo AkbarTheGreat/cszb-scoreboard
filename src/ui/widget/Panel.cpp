@@ -22,13 +22,13 @@ limitations under the License.
 #include <wx/anybutton.h>
 #include <wx/textctrl.h>
 
-#include "ui/widget/ScrollingPanel.h"
 #include "ui/widget/Button.h"
 #include "ui/widget/CheckBox.h"
 #include "ui/widget/ColorPicker.h"
 #include "ui/widget/Divider.h"
 #include "ui/widget/Label.h"
 #include "ui/widget/RadioButton.h"
+#include "ui/widget/ScrollingPanel.h"
 #include "ui/widget/SearchBox.h"
 #include "ui/widget/Text.h"
 #include "ui/widget/Toggle.h"

@@ -18,12 +18,13 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>
 #include <gtest/gtest-test-part.h>
+
 #include <vector>
 
-#include "config/DisplayConfig.h"
-#include "test/GuiTest.h"
 #include "config.pb.h"
+#include "config/DisplayConfig.h"
 #include "gtest/gtest_pred_impl.h"
+#include "test/GuiTest.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/ScreenText.h"
 #include "ui/component/ScreenTextSide.h"

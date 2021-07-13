@@ -21,15 +21,15 @@ limitations under the License.
 
 #include <vector>
 
+#include "config.pb.h"
 #include "config/TeamConfig.h"
+#include "ui/graphics/Color.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
-#include "config.pb.h"
-#include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 
-auto TeamColors::getInstance() -> TeamColors* {
+auto TeamColors::getInstance() -> TeamColors * {
   static TeamColors singleton;
   return &singleton;
 }
@@ -43,7 +43,7 @@ TeamColors::TeamColors() {
   all_color = Color("Black");
 }
 
-auto TeamColors::getColor(const proto::ScreenSide& side) -> Color {
+auto TeamColors::getColor(const proto::ScreenSide &side) -> Color {
   if (side.home() && side.away() && side.extra()) {
     return all_color;
   }
@@ -57,7 +57,7 @@ auto TeamColors::getColor(const proto::ScreenSide& side) -> Color {
   return Color("Black");
 }
 
-void TeamColors::setColor(const proto::ScreenSide& side, const Color& color) {
+void TeamColors::setColor(const proto::ScreenSide &side, const Color &color) {
   if (side.home() && side.away() && side.extra()) {
     all_color = color;
   } else if (side.home()) {

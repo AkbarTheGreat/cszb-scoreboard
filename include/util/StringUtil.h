@@ -25,7 +25,8 @@ namespace cszb_scoreboard {
 class StringUtil {
  public:
   static auto intToString(int value) -> wxString;
-  static auto stringToInt(const wxString &string, int default_value = 0) -> int32_t;
+  static auto stringToInt(const wxString &string, int default_value = 0)
+      -> int32_t;
 };
 
 }  // namespace cszb_scoreboard

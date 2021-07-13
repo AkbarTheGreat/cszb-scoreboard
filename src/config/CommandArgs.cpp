@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/chartype.h>
 #include <wx/cmdargs.h>
 #include <wx/string.h>
+
 #include <stdexcept>
 
 namespace cszb_scoreboard {

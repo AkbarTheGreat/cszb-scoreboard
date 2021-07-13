@@ -19,13 +19,14 @@ limitations under the License.
 */
 #include "ui/component/PreviewPanel.h"
 
-#include <assert.h>                      // for assert
-#include <wx/panel.h>           // for wxPanel
-#include <algorithm>                     // for max
-#include <utility>                       // for move
+#include <assert.h>    // for assert
+#include <wx/panel.h>  // for wxPanel
 
-#include "config/DisplayConfig.h"        // for DisplayConfig
+#include <algorithm>  // for max
+#include <utility>    // for move
+
 #include "config.pb.h"                   // for ScreenSide, DisplayInfo
+#include "config/DisplayConfig.h"        // for DisplayConfig
 #include "ui/component/ScreenPreview.h"  // for ScreenPreview
 #include "ui/widget/swx/Panel.h"         // for Panel
 
@@ -34,7 +35,7 @@ class wxCommandEvent;
 namespace cszb_scoreboard {
 class ScreenText;
 
-PreviewPanel::PreviewPanel(swx::Panel* wx) : Panel(wx) {
+PreviewPanel::PreviewPanel(swx::Panel *wx) : Panel(wx) {
   aui_manager.SetManagedWindow(wx);
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
@@ -68,8 +69,8 @@ void PreviewPanel::positionWidgets() {
   pane_style.CenterPane();
   pane_style.Top();
   pane_style.CloseButton(false);
-  for (const auto& screen : screens) {
-    wxPanel* pane = screen->controlPane();
+  for (const auto &screen : screens) {
+    wxPanel *pane = screen->controlPane();
     pane_style.MinSize(pane->GetSize());
     aui_manager.AddPane(pane, pane_style);
   }
@@ -78,27 +79,27 @@ void PreviewPanel::positionWidgets() {
 
 auto PreviewPanel::numPreviews() -> int { return screens.size(); }
 
-auto PreviewPanel::preview(int index) -> ScreenPreview* {
+auto PreviewPanel::preview(int index) -> ScreenPreview * {
   assert(index >= 0 && index < screens.size());
   return screens[index].get();
 }
 
 void PreviewPanel::forAllScreens(
-    const std::function<void(ScreenPreview*)>& lambda) {
-  for (const auto& preview : screens) {
+    const std::function<void(ScreenPreview *)> &lambda) {
+  for (const auto &preview : screens) {
     lambda(preview.get());
   }
 }
 
-void PreviewPanel::setToPresenters(ScreenText* screen_text) {
-  forAllScreens([screen_text](ScreenPreview* preview) -> void {
+void PreviewPanel::setToPresenters(ScreenText *screen_text) {
+  forAllScreens([screen_text](ScreenPreview *preview) -> void {
     preview->sendToPresenter(screen_text);
   });
 }
 
 void PreviewPanel::updatePresenters() {
   forAllScreens(
-      [](ScreenPreview* preview) -> void { preview->sendToPresenter(); });
+      [](ScreenPreview *preview) -> void { preview->sendToPresenter(); });
 }
 
 void PreviewPanel::updatePreviewsFromSettings() {
@@ -118,9 +119,9 @@ void PreviewPanel::updatePreviewsFromSettings() {
   }
 }
 
-void PreviewPanel::blackout(wxCommandEvent& event) {
+void PreviewPanel::blackout(wxCommandEvent &event) {
   forAllScreens(
-      [](ScreenPreview* preview) -> void { preview->blackoutPresenter(); });
+      [](ScreenPreview *preview) -> void { preview->blackoutPresenter(); });
 }
 
 }  // namespace cszb_scoreboard

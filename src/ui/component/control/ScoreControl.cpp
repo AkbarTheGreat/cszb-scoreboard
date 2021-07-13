@@ -19,30 +19,31 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
-#include <stdint.h>                       // for int32_t
-#include <wx/accel.h>                     // for wxACCEL_CTRL
-#include <wx/clrpicker.h>                 // for wxColourPickerEvent (ptr only)
-#include <wx/defs.h>                      // for wxALIGN_CENTER_VERTICAL, wxALL
-#include <wx/event.h>                     // for wxCommandEvent (ptr only)
-#include <wx/string.h>                    // for wxString
-#include <wx/tglbtn.h>                    // for wxEVT_TOGGLEBUTTON
-#include <wx/translation.h>               // for _
-#include <algorithm>                      // for max
-#include <filesystem>                     // for path
-#include <string>                         // for string
+#include <stdint.h>          // for int32_t
+#include <wx/accel.h>        // for wxACCEL_CTRL
+#include <wx/clrpicker.h>    // for wxColourPickerEvent (ptr only)
+#include <wx/defs.h>         // for wxALIGN_CENTER_VERTICAL, wxALL
+#include <wx/event.h>        // for wxCommandEvent (ptr only)
+#include <wx/string.h>       // for wxString
+#include <wx/tglbtn.h>       // for wxEVT_TOGGLEBUTTON
+#include <wx/translation.h>  // for _
+
+#include <algorithm>   // for max
+#include <filesystem>  // for path
+#include <string>      // for string
 
 #include "ScoreboardCommon.h"             // for LOGO_SELECTION_STRING
+#include "config.pb.h"                    // for RenderableText, Font, Rende...
 #include "config/TeamConfig.h"            // for TeamConfig
+#include "ui/component/ScreenText.h"      // for ScreenText
+#include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
 #include "ui/frame/HotkeyTable.h"         // for HotkeyTable
+#include "ui/graphics/Color.h"            // for Color
 #include "ui/graphics/TeamColors.h"       // for TeamColors
+#include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/FilesystemPath.h"          // for FilesystemPath
 #include "util/ProtoUtil.h"               // for ProtoUtil
 #include "util/StringUtil.h"              // for StringUtil
-#include "config.pb.h"                    // for RenderableText, Font, Rende...
-#include "ui/component/ScreenText.h"      // for ScreenText
-#include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
-#include "ui/graphics/Color.h"            // for Color
-#include "ui/widget/swx/Panel.h"          // for Panel
 #include "wx/filedlg.h"                   // for wxFileDialog, wxFD_FILE_MUS...
 
 namespace cszb_scoreboard {
@@ -60,14 +61,14 @@ const std::string NO_LOGO_MESSAGE = "<No Logo Selected>";
 const std::string INTRO_MODE_LABEL = "Introduce Teams";
 const std::string SCORE_MODE_LABEL = "Show Scores";
 
-auto ScoreControl::Create(PreviewPanel* preview_panel, swx::Panel* wx)
+auto ScoreControl::Create(PreviewPanel *preview_panel, swx::Panel *wx)
     -> std::unique_ptr<ScoreControl> {
   auto control = std::make_unique<ScoreControl>(preview_panel, wx);
   control->initializeWidgets();
   return control;
 }
 
-void ScoreControl::createControls(Panel* control_panel) {
+void ScoreControl::createControls(Panel *control_panel) {
   // TODO(akbar): Populate the team names from settings-based defaults
 
   team_controls_panel = control_panel->panel();
@@ -108,62 +109,62 @@ void ScoreControl::createControls(Panel* control_panel) {
 
 void ScoreControl::bindEvents() {
   home_score_entry->bind(
-      wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void { this->homeUpdated(); });
-  home_name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void {
+      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->homeUpdated(); });
+  home_name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void {
     this->homeNameUpdated();
   });
   away_score_entry->bind(
-      wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void { this->awayUpdated(); });
-  away_name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void {
+      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->awayUpdated(); });
+  away_name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void {
     this->awayNameUpdated();
   });
   home_plus_1->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->homeAddOne(); });
+      [this](wxCommandEvent &event) -> void { this->homeAddOne(); });
   home_plus_5->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->homeAddFive(); });
+      [this](wxCommandEvent &event) -> void { this->homeAddFive(); });
   home_minus_1->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->homeMinusOne(); });
+      [this](wxCommandEvent &event) -> void { this->homeMinusOne(); });
   away_plus_1->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->awayAddOne(); });
+      [this](wxCommandEvent &event) -> void { this->awayAddOne(); });
   away_plus_5->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->awayAddFive(); });
+      [this](wxCommandEvent &event) -> void { this->awayAddFive(); });
   away_minus_1->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->awayMinusOne(); });
+      [this](wxCommandEvent &event) -> void { this->awayMinusOne(); });
   home_color_picker->bind(
       wxEVT_COLOURPICKER_CHANGED,
-      [this](wxColourPickerEvent& event) -> void { this->colorChanged(); });
+      [this](wxColourPickerEvent &event) -> void { this->colorChanged(); });
   away_color_picker->bind(
       wxEVT_COLOURPICKER_CHANGED,
-      [this](wxColourPickerEvent& event) -> void { this->colorChanged(); });
-  home_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
+      [this](wxColourPickerEvent &event) -> void { this->colorChanged(); });
+  home_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
     this->selectLogo(true);
   });
-  away_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
+  away_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
     this->selectLogo(false);
   });
   team_intro_button->bind(
       wxEVT_TOGGLEBUTTON,
-      [this](wxCommandEvent& event) -> void { this->toggleIntroMode(); });
+      [this](wxCommandEvent &event) -> void { this->toggleIntroMode(); });
 }
 
 /* Since the control panel alternates between home and away buttons to make
  * columns, this method adds them in the correct order to mirror the
  * single-window positioning. */
-void ScoreControl::addHomeAwayWidgetPair(Panel* panel, int row,
-                                         const Widget& home_widget,
-                                         const Widget& away_widget) {
+void ScoreControl::addHomeAwayWidgetPair(Panel *panel, int row,
+                                         const Widget &home_widget,
+                                         const Widget &away_widget) {
   bool is_left = true;
   int col = 0;
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
-    Button* minus_1 = home_minus_1.get();
-    Button* plus_1 = home_plus_1.get();
-    Button* plus_5 = home_plus_5.get();
+    Button *minus_1 = home_minus_1.get();
+    Button *plus_1 = home_plus_1.get();
+    Button *plus_5 = home_plus_5.get();
 
     if (team == proto::TeamInfo_TeamType_HOME_TEAM) {
       panel->addWidget(home_widget, row, col++, BORDER_SIZE);
@@ -199,7 +200,7 @@ void ScoreControl::addHomeAwayWidgetPair(Panel* panel, int row,
   }
 }
 
-void ScoreControl::positionWidgets(Panel* control_panel) {
+void ScoreControl::positionWidgets(Panel *control_panel) {
   addHomeAwayWidgetPair(team_controls_panel.get(), 0, *home_score_label,
                         *away_score_label);
   addHomeAwayWidgetPair(team_controls_panel.get(), 1, *home_color_picker,
@@ -256,8 +257,8 @@ auto ScoreControl::scoreLines(bool isHome)
     -> std::vector<proto::RenderableText> {
   std::vector<proto::RenderableText> update;
 
-  Text* score_entry = away_score_entry.get();
-  Text* name_entry = away_name_entry.get();
+  Text *score_entry = away_score_entry.get();
+  Text *name_entry = away_name_entry.get();
 
   if (isHome) {
     score_entry = home_score_entry.get();
@@ -280,7 +281,7 @@ auto ScoreControl::introLines(bool isHome)
     -> std::vector<proto::RenderableText> {
   std::vector<proto::RenderableText> update;
 
-  Text* name_entry = away_name_entry.get();
+  Text *name_entry = away_name_entry.get();
   std::string intro_text = "Visitors";
 
   if (isHome) {
@@ -300,7 +301,7 @@ auto ScoreControl::introLines(bool isHome)
   return update;
 }
 
-void ScoreControl::updateScreenText(ScreenText* screen_text) {
+void ScoreControl::updateScreenText(ScreenText *screen_text) {
   home_color_picker->setColor(
       TeamColors::getInstance()->getColor(ProtoUtil::homeSide()));
   away_color_picker->setColor(
@@ -365,7 +366,7 @@ void ScoreControl::toggleIntroMode() {
   updatePreview();
 }
 
-void ScoreControl::addToEntry(Text* entry, int amount) {
+void ScoreControl::addToEntry(Text *entry, int amount) {
   int32_t current_score = StringUtil::stringToInt(entry->value());
   entry->setValue(current_score + amount);
   updatePreview();

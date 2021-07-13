@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/dialog/SettingsDialog.h"
 
 #include <wx/defs.h>
+
 #include <algorithm>
 #include <utility>
 
@@ -37,7 +38,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 
-SettingsDialog::SettingsDialog(swx::PropertySheetDialog* wx, Frame* parent)
+SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, Frame *parent)
     : TabbedDialog(wx) {
   this->parent = parent;
   addPage(std::make_unique<TeamSettingsPage>(childPanel()), "Teams");
@@ -47,20 +48,20 @@ SettingsDialog::SettingsDialog(swx::PropertySheetDialog* wx, Frame* parent)
 }
 
 void SettingsDialog::addPage(std::unique_ptr<SettingsPage> page,
-                             const std::string& name) {
+                             const std::string &name) {
   TabbedDialog::addPage(*page, name);
   pages.push_back(std::move(page));
 }
 
 void SettingsDialog::bindEvents() {
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onOk(); },
+      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onOk(); },
       wxID_OK);
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onCancel(); },
+      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
   bind(wxEVT_CLOSE_WINDOW,
-       [this](wxCloseEvent& event) -> void { this->onClose(); });
+       [this](wxCloseEvent &event) -> void { this->onClose(); });
 }
 
 void SettingsDialog::onOk() {
@@ -86,13 +87,13 @@ void SettingsDialog::onClose() {
   // before calling Destroy(), things quit working.  But Destroying calls the
   // destructor, so we can't rely on this->parent anymore after Destroy is
   // called.  So we save it in a local pointer temporarily for this purpose.
-  Frame* local_parent = parent;
+  Frame *local_parent = parent;
   selfDestruct();
   local_parent->focus();
 }
 
 auto SettingsDialog::validateSettings() -> bool {
-  for (const auto& page : pages) {
+  for (const auto &page : pages) {
     if (!page->validateSettings()) {
       return false;
     }
@@ -101,7 +102,7 @@ auto SettingsDialog::validateSettings() -> bool {
 }
 
 void SettingsDialog::saveSettings() {
-  for (const auto& page : pages) {
+  for (const auto &page : pages) {
     page->saveSettings();
   }
 }

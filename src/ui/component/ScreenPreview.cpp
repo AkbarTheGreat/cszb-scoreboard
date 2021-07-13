@@ -21,26 +21,26 @@ limitations under the License.
 
 #include <wx/defs.h>
 
+#include "ScoreboardCommon.h"
+#include "config.pb.h"
 #include "config/DisplayConfig.h"
 #include "config/TeamConfig.h"
+#include "ui/component/ScreenPresenter.h"
 #include "ui/component/ScreenText.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/widget/swx/Panel.h"
 #include "util/ProtoUtil.h"
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "ui/component/ScreenPresenter.h"
 
 class wxPanel;
 
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 10;
-const char* WELCOME_MESSAGE = "Hello";
-const char* ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
+const char *WELCOME_MESSAGE = "Hello";
+const char *ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
 const int PREVIEW_HEIGHT = 320;
 
-ScreenPreview::ScreenPreview(swx::Panel* wx,
+ScreenPreview::ScreenPreview(swx::Panel *wx,
                              std::vector<proto::ScreenSide> sides,
                              int monitor_number)
     : Panel(wx) {
@@ -80,15 +80,17 @@ auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
   float ratio = 4 / 3;
 
   if (!display_info.side().error()) {
-    const proto::Rectangle& dimensions = display_info.dimensions();
+    const proto::Rectangle &dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
   return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
 }
 
-auto ScreenPreview::controlPane() -> wxPanel* { return wx; }
+auto ScreenPreview::controlPane() -> wxPanel * { return wx; }
 
-auto ScreenPreview::thumbnailWidget() -> ScreenText* { return thumbnail.get(); }
+auto ScreenPreview::thumbnailWidget() -> ScreenText * {
+  return thumbnail.get();
+}
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
   screen_text->setSize(previewSize(monitor_number));
@@ -105,7 +107,7 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
   screen_text->refresh();
 }
 
-void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
+void ScreenPreview::sendToPresenter(ScreenText *screen_text) {
   presenter->setAll(*screen_text);
   thumbnail->setAll(*screen_text);
 }

@@ -22,15 +22,16 @@ limitations under the License.
 #include "test/GuiTest.h"
 
 #include <wx/init.h>
+
 #include <utility>
 
-#include "test/TestUtil.h"
-#include "ui/frame/FrameManager.h"
 #include "cszb-scoreboard.h"
+#include "test/TestUtil.h"
 #include "ui/component/ControlPanel.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/TextEntry.h"
+#include "ui/frame/FrameManager.h"
 #include "ui/frame/MainView.h"
 #include "ui/widget/Panel.h"
 #include "ui/widget/swx/Panel.h"

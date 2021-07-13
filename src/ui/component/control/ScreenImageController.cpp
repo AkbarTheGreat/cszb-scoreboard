@@ -22,11 +22,11 @@ limitations under the License.
 
 #include <wx/event.h>
 
-#include "util/ProtoUtil.h"
 #include "ScoreboardCommon.h"
 #include "ui/component/ScreenText.h"
 #include "ui/graphics/Color.h"
 #include "ui/widget/Panel.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 

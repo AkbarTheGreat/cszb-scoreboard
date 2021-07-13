@@ -18,8 +18,8 @@ limitations under the License.
 */
 #pragma once
 
-#include <memory>                                     // for unique_ptr
-#include <vector>                                     // for vector
+#include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
 #include "ui/dialog/settings/DisplaySettingsPanel.h"  // for DisplaySettings...
 #include "ui/dialog/settings/SettingsPage.h"          // for SettingsPage

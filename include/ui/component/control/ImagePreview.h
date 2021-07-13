@@ -17,8 +17,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/image.h>             // for wxImage
-#include <optional>               // for optional
+#include <wx/image.h>  // for wxImage
+
+#include <optional>  // for optional
 
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
@@ -33,17 +34,17 @@ class Panel;
 
 class ImagePreview : public Panel {
  public:
-  explicit ImagePreview(swx::Panel* wx);
+  explicit ImagePreview(swx::Panel *wx);
 
   void clearImage();
   [[nodiscard]] auto getFilename() const -> std::optional<FilesystemPath>;
-  void setImage(const FilesystemPath& filename);
+  void setImage(const FilesystemPath &filename);
 
  private:
   void bindEvents();
   void paintEvent();
-  static auto ratio(const wxSize& size) -> float;
-  void renderImage(wxDC* dc);
+  static auto ratio(const wxSize &size) -> float;
+  void renderImage(wxDC *dc);
 
   std::optional<FilesystemPath> filename;
   wxImage image;

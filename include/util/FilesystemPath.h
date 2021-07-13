@@ -32,42 +32,42 @@ namespace cszb_scoreboard {
 class FilesystemPath {
  public:
   FilesystemPath();
-  explicit FilesystemPath(const std::string& str);
+  explicit FilesystemPath(const std::string &str);
 
-  static auto remove(const FilesystemPath& p) -> bool;
-  static void rename(const FilesystemPath& a, const FilesystemPath& b);
+  static auto remove(const FilesystemPath &p) -> bool;
+  static void rename(const FilesystemPath &a, const FilesystemPath &b);
 
   auto filename() -> FilesystemPath;
   auto pathname() -> FilesystemPath;
-  void replace_filename(const std::string& new_filename);
+  void replace_filename(const std::string &new_filename);
   [[nodiscard]] auto string() const -> std::string { return path_string; }
-  [[nodiscard]] auto c_str() const -> const char* {
+  [[nodiscard]] auto c_str() const -> const char * {
     return path_string.c_str();
   }
 
-  [[nodiscard]] auto compare(const FilesystemPath& p) const -> int;
+  [[nodiscard]] auto compare(const FilesystemPath &p) const -> int;
 
-  friend auto operator<(const FilesystemPath& a, const FilesystemPath& b)
+  friend auto operator<(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return a.compare(b) < 0;
   }
-  friend auto operator==(const FilesystemPath& a, const FilesystemPath& b)
+  friend auto operator==(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return a.compare(b) == 0;
   }
-  friend auto operator>(const FilesystemPath& a, const FilesystemPath& b)
+  friend auto operator>(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return b < a;
   }
-  friend auto operator<=(const FilesystemPath& a, const FilesystemPath& b)
+  friend auto operator<=(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return !(a > b);
   }
-  friend auto operator>=(const FilesystemPath& a, const FilesystemPath& b)
+  friend auto operator>=(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return !(a < b);
   }
-  friend auto operator!=(const FilesystemPath& a, const FilesystemPath& b)
+  friend auto operator!=(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return !(a == b);
   }
@@ -80,14 +80,14 @@ class FilesystemPath {
 class FilesystemPath : public std::filesystem::path {
  public:
   FilesystemPath() = default;
-  explicit FilesystemPath(const std::string& str)
+  explicit FilesystemPath(const std::string &str)
       : std::filesystem::path(str) {}
 
-  static auto remove(const FilesystemPath& p) -> bool {
+  static auto remove(const FilesystemPath &p) -> bool {
     return std::filesystem::remove(p);
   }
 
-  static void rename(const FilesystemPath& a, const FilesystemPath& b) {
+  static void rename(const FilesystemPath &a, const FilesystemPath &b) {
     std::filesystem::rename(a, b);
   }
 };

@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>                                        // for unique_ptr
+#include <memory>  // for unique_ptr
 
 #include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
 #include "ui/widget/Button.h"                            // for Button

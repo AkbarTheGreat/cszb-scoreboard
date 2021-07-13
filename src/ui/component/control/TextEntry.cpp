@@ -21,12 +21,13 @@ limitations under the License.
 
 #include <wx/clrpicker.h>
 #include <wx/event.h>
+
 #include <vector>
 
 #include "config/TeamConfig.h"
+#include "ui/component/ScreenText.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
-#include "ui/component/ScreenText.h"
 
 namespace cszb_scoreboard {
 class PreviewPanel;
@@ -66,8 +67,7 @@ void TextEntry::createControls(Panel *control_panel) {
   inner_panel = control_panel->panel();
 
   font_size_label = inner_panel->label("Font Size");
-  font_size_entry =
-      inner_panel->text(std::to_string(DEFAULT_FONT_SIZE));
+  font_size_entry = inner_panel->text(std::to_string(DEFAULT_FONT_SIZE));
 
   screen_selection = std::make_unique<TeamSelector>(inner_panel->childPanel(),
                                                     ProtoUtil::allSide());

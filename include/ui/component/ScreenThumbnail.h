@@ -19,7 +19,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>                // for wxSize
+#include <wx/gdicmn.h>  // for wxSize
 
 #include "ui/component/ScreenText.h"  // for ScreenText
 
@@ -30,8 +30,8 @@ class Panel;
 
 class ScreenThumbnail : public ScreenText {
  public:
-  ScreenThumbnail(swx::Panel* wx, int monitor_number,
-                  const ScreenText& preview);
+  ScreenThumbnail(swx::Panel *wx, int monitor_number,
+                  const ScreenText &preview);
 
  private:
   static auto thumbnailSize(int monitor_number) -> wxSize;

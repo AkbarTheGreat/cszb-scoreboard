@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/chartype.h>
 #include <wx/defs.h>
 #include <wx/tbarbase.h>
+
 #include <array>
 
 #include "config.pb.h"
@@ -37,7 +38,7 @@ class Panel;
 
 static const std::array<wxString, 3> CHOICES{{{"Home"}, {"Away"}, {"All"}}};
 
-TeamSelector::TeamSelector(swx::Panel* wx) : Panel(wx) {
+TeamSelector::TeamSelector(swx::Panel *wx) : Panel(wx) {
   selector = std::make_unique<Radio>(new swx::RadioBox(
       _wx(), wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
       CHOICES.size(), CHOICES.data(), 0, wxRA_SPECIFY_ROWS));
@@ -45,7 +46,7 @@ TeamSelector::TeamSelector(swx::Panel* wx) : Panel(wx) {
   runSizer();
 }
 
-TeamSelector::TeamSelector(swx::Panel* wx, const proto::ScreenSide& side)
+TeamSelector::TeamSelector(swx::Panel *wx, const proto::ScreenSide &side)
     : TeamSelector(wx) {
   if (side.home() && side.away()) {
     selector->setSelection(2);

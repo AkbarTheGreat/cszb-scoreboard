@@ -26,12 +26,13 @@ limitations under the License.
 #include <wx/image.h>
 #include <wx/tbarbase.h>
 #include <wx/textctrl.h>
+
 #include <algorithm>
 #include <optional>
 #include <string>
 
-#include "config/ImageLibrary.h"
 #include "ScoreboardCommon.h"
+#include "config/ImageLibrary.h"
 #include "ui/component/control/TeamSelector.h"
 #include "ui/dialog/EditImageLibraryDialog.h"
 #include "ui/widget/swx/Panel.h"
@@ -84,8 +85,7 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
 
 void ImageFromLibrary::positionWidgets(Panel *control_panel) {
   search_panel->addWidget(*search_box, 0, 0, DEFAULT_BORDER_SIZE, wxALL);
-  search_panel->addWidget(*tag_list_label, 1, 0, DEFAULT_BORDER_SIZE,
-                          wxALL);
+  search_panel->addWidget(*tag_list_label, 1, 0, DEFAULT_BORDER_SIZE, wxALL);
 
   main_panel->addWidgetWithSpan(*search_panel, 0, 0, 1, 2);
   main_panel->addWidget(*screen_selection, 0, 2);
@@ -97,8 +97,7 @@ void ImageFromLibrary::positionWidgets(Panel *control_panel) {
   control_panel->addWidget(*current_image_label, 0, 0);
   control_panel->addWidget(*main_panel, 1, 0);
   control_panel->addWidget(*image_preview_panel, 2, 0);
-  control_panel->addWidget(*configure_button, 3, 0, DEFAULT_BORDER_SIZE,
-                           wxALL);
+  control_panel->addWidget(*configure_button, 3, 0, DEFAULT_BORDER_SIZE, wxALL);
 
   int col = 0;
   for (const auto &preview : image_previews) {

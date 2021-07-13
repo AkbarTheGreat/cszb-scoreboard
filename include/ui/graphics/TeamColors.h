@@ -27,9 +27,9 @@ class ScreenSide;
 
 class TeamColors {
  public:
-  static auto getInstance() -> TeamColors*;
-  auto getColor(const proto::ScreenSide& side) -> Color;
-  void setColor(const proto::ScreenSide& side, const Color& color);
+  static auto getInstance() -> TeamColors *;
+  auto getColor(const proto::ScreenSide &side) -> Color;
+  void setColor(const proto::ScreenSide &side, const Color &color);
 
  private:
   TeamColors();

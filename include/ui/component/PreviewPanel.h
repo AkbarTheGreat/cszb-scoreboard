@@ -21,12 +21,13 @@ limitations under the License.
 #pragma once
 
 #include <wx/aui/framemanager.h>  // for wxAuiManager
-#include <vector>                 // for vector
-#include <functional>             // for function
-#include <memory>                 // for unique_ptr
 
-#include "ScoreboardCommon.h"     // for PUBLIC_TEST_ONLY
-#include "ui/widget/Panel.h"      // for Panel
+#include <functional>  // for function
+#include <memory>      // for unique_ptr
+#include <vector>      // for vector
+
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "ui/widget/Panel.h"   // for Panel
 
 class wxCommandEvent;
 
@@ -40,20 +41,20 @@ class Panel;
 
 class PreviewPanel : public Panel {
  public:
-  explicit PreviewPanel(swx::Panel* wx);
+  explicit PreviewPanel(swx::Panel *wx);
   ~PreviewPanel();
 
-  void blackout(wxCommandEvent& event);  // NOLINT(google-runtime-references)
+  void blackout(wxCommandEvent &event);  // NOLINT(google-runtime-references)
                                          // wxWidgets callback.
   // inline auto all_screens() -> std::vector<ScreenPreview*> { return screens;
   // }
-  void forAllScreens(const std::function<void(ScreenPreview*)>& lambda);
-  void setToPresenters(ScreenText* screen_text);
+  void forAllScreens(const std::function<void(ScreenPreview *)> &lambda);
+  void setToPresenters(ScreenText *screen_text);
   void updatePresenters();
   void updatePreviewsFromSettings();
 
   PUBLIC_TEST_ONLY
-  auto preview(int index) -> ScreenPreview*;
+  auto preview(int index) -> ScreenPreview *;
 
  private:
   wxAuiManager aui_manager;

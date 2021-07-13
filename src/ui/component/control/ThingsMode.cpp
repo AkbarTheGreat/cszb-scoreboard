@@ -24,10 +24,10 @@ limitations under the License.
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/tbarbase.h>
+
 #include <array>
 #include <vector>
 
-#include "util/ProtoUtil.h"
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "ui/component/ScreenText.h"
@@ -38,6 +38,7 @@ limitations under the License.
 #include "ui/widget/swx/Panel.h"
 #include "ui/widget/swx/RadioBox.h"
 #include "ui/widget/swx/ScrolledWindow.h"
+#include "util/ProtoUtil.h"
 
 class wxString;
 

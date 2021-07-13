@@ -18,9 +18,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>                     // for wxPoint, wxSize (ptr only)
-#include <wx/string.h>                     // for wxString
-#include <memory>                          // for unique_ptr
+#include <wx/gdicmn.h>  // for wxPoint, wxSize (ptr only)
+#include <wx/string.h>  // for wxString
+
+#include <memory>  // for unique_ptr
 
 #include "ui/component/ControlPanel.h"     // for ControlPanel
 #include "ui/component/PreviewPanel.h"     // for PreviewPanel
@@ -37,30 +38,30 @@ class UpdateTimer;
 
 class MainView : public Frame {
  public:
-  MainView(const wxString& title, const wxPoint& pos, const wxSize& size);
-  auto controlPanel() -> ControlPanel* { return control_panel.get(); }
-  auto previewPanel() -> PreviewPanel* { return preview_panel.get(); }
+  MainView(const wxString &title, const wxPoint &pos, const wxSize &size);
+  auto controlPanel() -> ControlPanel * { return control_panel.get(); }
+  auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
 
  private:
   void bindEvents();
   void createMenu();
-  auto createControlNotebook() -> wxNotebook*;
+  auto createControlNotebook() -> wxNotebook *;
   void createStatusBar();
   void positionWidgets();
   // wxWidgets callbacks, waive linting error for references.
-  void onExit(wxCommandEvent& event);   // NOLINT(google-runtime-references)
-  void onAbout(wxCommandEvent& event);  // NOLINT(google-runtime-references)
-  void onClose(wxCloseEvent& event);    // NOLINT(google-runtime-references)
+  void onExit(wxCommandEvent &event);   // NOLINT(google-runtime-references)
+  void onAbout(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void onClose(wxCloseEvent &event);    // NOLINT(google-runtime-references)
   void onSettingsChange(
-      wxCommandEvent& event);  // NOLINT(google-runtime-references)
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
   void showSettings(
-      wxCommandEvent& event);  // NOLINT(google-runtime-references)
+      wxCommandEvent &event);  // NOLINT(google-runtime-references)
 
   std::unique_ptr<ControlPanel> control_panel;
-  SettingsDialog* settings_dialog;
+  SettingsDialog *settings_dialog;
   std::unique_ptr<PreviewPanel> preview_panel;
   std::unique_ptr<QuickStatePanel> quick_state;
-  UpdateTimer* update_timer;
+  UpdateTimer *update_timer;
 };
 
 }  // namespace cszb_scoreboard

@@ -20,11 +20,12 @@ limitations under the License.
 #include "ui/dialog/settings/DisplaySettingsPanel.h"
 
 #include <wx/event.h>
+
 #include <string>
 
-#include "ui/dialog/settings/DisplaySettingsPage.h"
 #include "ScoreboardCommon.h"
 #include "config/DisplayConfig.h"
+#include "ui/dialog/settings/DisplaySettingsPage.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -36,8 +37,8 @@ const std::string ARROW_TOOL_TIP =
     "Change the order of displays.  This primarily affects the order used to "
     "show previews on the main screen.  Requires a restart to take effect.";
 
-DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel* wx, int index,
-                                           DisplaySettingsPage* parent)
+DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
+                                           DisplaySettingsPage *parent)
     : Panel(wx) {
   this->index = index;
   this->parent = parent;
@@ -45,7 +46,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel* wx, int index,
       DisplayConfig::getInstance()->displayDetails(index);
   this->display_id = display_info.id();
 
-  const proto::ScreenSide& screen_side = display_info.side();
+  const proto::ScreenSide &screen_side = display_info.side();
   // Label for this display
   display_label = label("");
   display_label->bold(true);
@@ -81,7 +82,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel* wx, int index,
   runSizer();
 }
 
-void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel& other) {
+void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel &other) {
   this->display_id = other.display_id;
   copyCheckbox(*other.control_checkbox, this->control_checkbox.get());
   copyCheckbox(*other.home_checkbox, this->home_checkbox.get());
@@ -89,8 +90,8 @@ void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel& other) {
   updateLabel();
 }
 
-void DisplaySettingsPanel::copyCheckbox(const CheckBox& source,
-                                        CheckBox* target) {
+void DisplaySettingsPanel::copyCheckbox(const CheckBox &source,
+                                        CheckBox *target) {
   target->setChecked(source.checked());
 }
 
@@ -108,10 +109,10 @@ void DisplaySettingsPanel::createButtonPanel() {
 
   up_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->moveDisplay(true); });
+      [this](wxCommandEvent &event) -> void { this->moveDisplay(true); });
   down_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->moveDisplay(false); });
+      [this](wxCommandEvent &event) -> void { this->moveDisplay(false); });
 
   up_button->toolTip(ARROW_TOOL_TIP);
   down_button->toolTip(ARROW_TOOL_TIP);

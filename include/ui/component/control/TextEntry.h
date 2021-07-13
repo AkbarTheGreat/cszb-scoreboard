@@ -19,17 +19,17 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>                                       // for unique_ptr
-#include <string>                                       // for string
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
 #include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/TeamSelector.h"          // for TeamSelector
+#include "ui/graphics/Color.h"                          // for Color
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
 #include "ui/widget/Label.h"                            // for Label
 #include "ui/widget/Panel.h"                            // for Panel
 #include "ui/widget/Text.h"                             // for Text
-#include "ui/graphics/Color.h"                          // for Color
 
 class wxColourPickerEvent;
 
@@ -49,7 +49,7 @@ class TextEntry : public ScreenTextController {
   auto textField() -> Text *;
   void textUpdated();
 
-PUBLIC_TEST_ONLY
+  PUBLIC_TEST_ONLY
   void selectTeam(int index);
 
  private:

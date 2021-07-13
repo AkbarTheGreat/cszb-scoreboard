@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/ControlPanel.h"
 
 #include <wx/aui/auibook.h>
+
 #include <algorithm>
 #include <utility>
 
@@ -36,7 +37,7 @@ namespace swx {
 class Notebook;
 }  // namespace swx
 
-ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
+ControlPanel::ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
     : Notebook(wx) {
   addController(std::move(ScoreControl::Create(preview_panel, childPanel())),
                 "Score");
@@ -57,21 +58,21 @@ ControlPanel::ControlPanel(swx::Notebook* wx, PreviewPanel* preview_panel)
 }
 
 void ControlPanel::addController(std::unique_ptr<ScreenTextController> tab,
-                                 const std::string& name) {
+                                 const std::string &name) {
   addTab(*tab, name);
   controllers.push_back(std::move(tab));
 }
 
 void ControlPanel::bindEvents() {
   bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED,
-       [this](wxAuiNotebookEvent& event) -> void { this->tabChanged(event); });
+       [this](wxAuiNotebookEvent &event) -> void { this->tabChanged(event); });
 }
 
-void ControlPanel::tabChanged(wxAuiNotebookEvent& event) {
+void ControlPanel::tabChanged(wxAuiNotebookEvent &event) {
   controllers[event.GetSelection()]->updatePreview();
 }
 
-void ControlPanel::updateScreenTextFromSelected(ScreenText* screen_text) {
+void ControlPanel::updateScreenTextFromSelected(ScreenText *screen_text) {
   controllers[selection()]->updateScreenText(screen_text);
 }
 

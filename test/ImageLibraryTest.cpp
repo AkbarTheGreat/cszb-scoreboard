@@ -18,10 +18,11 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiResolver
-#include <filesystem>               // for operator<<, operator!=
-#include <sstream>                  // for basic_stringbuf<>::int_type, basi...
-#include <string>                   // for string, allocator, basic_string
-#include <vector>                   // for vector
+
+#include <filesystem>  // for operator<<, operator!=
+#include <sstream>     // for basic_stringbuf<>::int_type, basi...
+#include <string>      // for string, allocator, basic_string
+#include <vector>      // for vector
 
 #include "config/ImageLibrary.h"    // for ImageSearchResults, ImageLibrary
 #include "gtest/gtest_pred_impl.h"  // for Test, ASSERT_PRED_FORMAT2, Assert...
@@ -34,7 +35,7 @@ auto testLibrary() -> ImageLibrary {
   proto::ImageLibrary library;
 
   // Add a corgi
-  proto::ImageInfo* image = library.add_images();
+  proto::ImageInfo *image = library.add_images();
   image->set_name("corgi");
   image->set_file_path("/test/corgi.jpg");
   image->add_tags("dog");
@@ -78,10 +79,10 @@ auto testLibrary() -> ImageLibrary {
 
 // Predicate for asserting against two arbitrary vectors.
 template <typename T, typename A>
-auto assertVectorEquality(const char* actual_expression,
-                          const char* expected_expression,
-                          std::vector<T, A> const& actual,
-                          std::vector<T, A> const& expected)
+auto assertVectorEquality(const char *actual_expression,
+                          const char *expected_expression,
+                          std::vector<T, A> const &actual,
+                          std::vector<T, A> const &expected)
     -> ::testing::AssertionResult {
   if (actual.size() != expected.size()) {
     return ::testing::AssertionFailure()
@@ -103,10 +104,10 @@ auto assertVectorEquality(const char* actual_expression,
 }
 
 // Quick and easy cast of a list of strings to a list of paths
-auto filesystemPathVector(const std::vector<std::string>& in)
+auto filesystemPathVector(const std::vector<std::string> &in)
     -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> out;
-  for (const auto& i : in) {
+  for (const auto &i : in) {
     //  These vectors are small enough that the extra code isn't worthwhile, so
     //  waive this lint error.
     // NOLINTNEXTLINE(performance-inefficient-vector-operation)

@@ -19,8 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>              // for unique_ptr
-#include <string>              // for string
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
 #include "ui/widget/Button.h"  // for Button
 #include "ui/widget/Label.h"   // for Label

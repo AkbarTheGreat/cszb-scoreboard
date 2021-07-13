@@ -21,11 +21,12 @@ limitations under the License.
 
 #include <wx/event.h>
 #include <wx/string.h>
+
 #include <string>
 
-#include "ui/dialog/settings/TeamSettingsPage.h"
 #include "ScoreboardCommon.h"
 #include "config/TeamConfig.h"
+#include "ui/dialog/settings/TeamSettingsPage.h"
 #include "wx/colour.h"
 
 namespace cszb_scoreboard {
@@ -38,16 +39,17 @@ const std::string ARROW_TOOL_TIP =
     "Change the order of teams appear on the same screen and in score "
     "controls.  Requires a restart to take effect.";
 
-TeamSettingsPanel::TeamSettingsPanel(swx::Panel* wx, int team_index,
+TeamSettingsPanel::TeamSettingsPanel(swx::Panel *wx, int team_index,
                                      proto::TeamInfo_TeamType team,
-                                     TeamSettingsPage* parent)
+                                     TeamSettingsPage *parent)
     : Panel(wx) {
   this->parent = parent;
   index = team_index;
   team_type = team;
 
   // Label for this display
-  team_label = label(TeamConfig::getInstance()->teamName(team_type).ToStdString());
+  team_label =
+      label(TeamConfig::getInstance()->teamName(team_type).ToStdString());
   team_label->bold(true);
   addWidget(*team_label, 0, 0);
 
@@ -68,7 +70,7 @@ TeamSettingsPanel::TeamSettingsPanel(swx::Panel* wx, int team_index,
   runSizer();
 }
 
-void TeamSettingsPanel::copyFrom(const TeamSettingsPanel& other) {
+void TeamSettingsPanel::copyFrom(const TeamSettingsPanel &other) {
   team_label->set(other.team_label->text());
   color_picker->setColor(other.color_picker->color());
   team_type = other.team_type;
@@ -84,10 +86,10 @@ void TeamSettingsPanel::createButtonPanel() {
 
   up_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->moveTeam(true); });
+      [this](wxCommandEvent &event) -> void { this->moveTeam(true); });
   down_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent& event) -> void { this->moveTeam(false); });
+      [this](wxCommandEvent &event) -> void { this->moveTeam(false); });
 
   up_button->toolTip(ARROW_TOOL_TIP);
   down_button->toolTip(ARROW_TOOL_TIP);

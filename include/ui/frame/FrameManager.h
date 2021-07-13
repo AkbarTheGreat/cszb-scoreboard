@@ -21,10 +21,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>          // for wxPoint, wxSize (ptr only)
-#include <wx/string.h>          // for wxString
-#include <set>                  // for set
-#include <memory>               // for unique_ptr
+#include <wx/gdicmn.h>  // for wxPoint, wxSize (ptr only)
+#include <wx/string.h>  // for wxString
+
+#include <memory>  // for unique_ptr
+#include <set>     // for set
 
 #include "ui/frame/MainView.h"  // for MainView
 

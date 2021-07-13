@@ -20,7 +20,7 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>              // for unique_ptr
+#include <memory>  // for unique_ptr
 
 #include "ui/widget/Button.h"  // for Button
 #include "ui/widget/Panel.h"   // for Panel

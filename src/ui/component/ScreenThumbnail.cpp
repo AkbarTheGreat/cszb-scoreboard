@@ -20,8 +20,8 @@ limitations under the License.
 
 #include "ui/component/ScreenThumbnail.h"
 
-#include "config/DisplayConfig.h"
 #include "config.pb.h"
+#include "config/DisplayConfig.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -30,8 +30,8 @@ class Panel;
 
 const int THUMBNAIL_HEIGHT = 64;
 
-ScreenThumbnail::ScreenThumbnail(swx::Panel* wx, int monitor_number,
-                                 const ScreenText& preview)
+ScreenThumbnail::ScreenThumbnail(swx::Panel *wx, int monitor_number,
+                                 const ScreenText &preview)
     : ScreenText(wx) {
   setupPresenter(preview, thumbnailSize(monitor_number));
 }
@@ -43,7 +43,7 @@ auto ScreenThumbnail::thumbnailSize(int monitor_number) -> wxSize {
   float ratio = 4 / 3;
 
   if (!display_info.side().error()) {
-    const proto::Rectangle& dimensions = display_info.dimensions();
+    const proto::Rectangle &dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
   return wxSize(THUMBNAIL_HEIGHT * ratio, THUMBNAIL_HEIGHT);

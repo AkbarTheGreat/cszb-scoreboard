@@ -28,7 +28,7 @@ class Scoreboard : public wxApp {
   auto OnInit() -> bool final;
 
  private:
-  void OnInitCmdLine(wxCmdLineParser& parser) final;
-  auto OnCmdLineParsed(wxCmdLineParser& parser) -> bool final;
+  void OnInitCmdLine(wxCmdLineParser &parser) final;
+  auto OnCmdLineParsed(wxCmdLineParser &parser) -> bool final;
 };
 }  // namespace cszb_scoreboard

@@ -19,8 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include <vector>                                          // for vector
-#include <memory>                                          // for unique_ptr
+#include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
 #include "ui/component/control/things_mode/Replacement.h"  // for Replacement
 #include "ui/widget/Panel.h"                               // for Panel

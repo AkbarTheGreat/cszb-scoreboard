@@ -18,8 +18,9 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/propdlg.h>   // for wxPropertySheetDialog
-#include <map>                    // for map
+#include <wx/propdlg.h>  // for wxPropertySheetDialog
+
+#include <map>  // for map
 
 #include "image_library.pb.h"     // for ImageInfo
 #include "util/FilesystemPath.h"  // for FilesystemPath
@@ -39,29 +40,29 @@ class FileListBox;
 
 class EditImageLibraryDialog : public wxPropertySheetDialog {
  public:
-  auto Create(wxWindow* parent) -> bool;
+  auto Create(wxWindow *parent) -> bool;
 
  private:
-  FileListBox* file_list;
-  wxTextCtrl* name_entry;
-  wxStaticText* name_label;
-  wxEditableListBox* tag_list;
+  FileListBox *file_list;
+  wxTextCtrl *name_entry;
+  wxStaticText *name_label;
+  wxEditableListBox *tag_list;
   std::map<FilesystemPath, proto::ImageInfo> images;
-  wxPanel* panel;
-  wxWindow* parent;
+  wxPanel *panel;
+  wxWindow *parent;
 
   void bindEvents();
   void positionWidgets();
   void saveSettings();
   static auto validateSettings() -> bool;
   // wxWidgets callbacks, waive linting error for references.
-  void fileSelected(wxListEvent& event);  // NOLINT(google-runtime-references)
-  void onOk(wxCommandEvent& event);       // NOLINT(google-runtime-references)
-  void onCancel(wxCommandEvent& event);   // NOLINT(google-runtime-references)
-  void onClose(wxCloseEvent& event);      // NOLINT(google-runtime-references)
-  void nameUpdated(wxKeyEvent& event);    // NOLINT(google-runtime-references)
-  void tagDeleted(wxListEvent& event);    // NOLINT(google-runtime-references)
-  void tagsUpdated(wxListEvent& event);   // NOLINT(google-runtime-references)
+  void fileSelected(wxListEvent &event);  // NOLINT(google-runtime-references)
+  void onOk(wxCommandEvent &event);       // NOLINT(google-runtime-references)
+  void onCancel(wxCommandEvent &event);   // NOLINT(google-runtime-references)
+  void onClose(wxCloseEvent &event);      // NOLINT(google-runtime-references)
+  void nameUpdated(wxKeyEvent &event);    // NOLINT(google-runtime-references)
+  void tagDeleted(wxListEvent &event);    // NOLINT(google-runtime-references)
+  void tagsUpdated(wxListEvent &event);   // NOLINT(google-runtime-references)
 };
 
 }  // namespace cszb_scoreboard

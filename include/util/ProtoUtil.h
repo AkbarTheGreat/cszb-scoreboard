@@ -18,7 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>          // for wxRect, wxSize (ptr only)
+#include <wx/gdicmn.h>  // for wxRect, wxSize (ptr only)
 
 #include "config.pb.h"          // for ScreenSide, Font (ptr only), Color (p...
 #include "ui/graphics/Color.h"  // for Color

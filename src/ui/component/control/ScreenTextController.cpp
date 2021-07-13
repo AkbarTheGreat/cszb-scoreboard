@@ -24,10 +24,10 @@ limitations under the License.
 #include <wx/defs.h>
 #include <wx/event.h>
 
-#include "ui/frame/HotkeyTable.h"
 #include "ScoreboardCommon.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/ScreenPreview.h"
+#include "ui/frame/HotkeyTable.h"
 #include "ui/widget/Widget.h"
 
 namespace cszb_scoreboard {

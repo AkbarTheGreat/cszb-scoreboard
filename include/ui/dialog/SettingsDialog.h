@@ -18,10 +18,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/event.h>                         // for wxCommandEvent (ptr only)
-#include <vector>                             // for vector
-#include <memory>                             // for unique_ptr
-#include <string>                             // for string
+#include <wx/event.h>  // for wxCommandEvent (ptr only)
+
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
 #include "ui/dialog/settings/SettingsPage.h"  // for SettingsPage
 #include "ui/widget/TabbedDialog.h"           // for TabbedDialog

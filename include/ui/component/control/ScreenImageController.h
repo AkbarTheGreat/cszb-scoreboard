@@ -22,9 +22,10 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/image.h>                                   // for wxImage
-#include <memory>                                       // for unique_ptr
-#include <string>                                       // for string
+#include <wx/image.h>  // for wxImage
+
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/TeamSelector.h"          // for TeamSelector

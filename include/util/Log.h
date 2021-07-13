@@ -19,8 +19,7 @@ limitations under the License.
 
 #ifdef INTEGRATION_TEST
 #define LogDebug(...) fprintf(stderr, __VA_ARGS__)
-#else // INTEGRATION_TEST
+#else  // INTEGRATION_TEST
 #include <wx/wx.h>
 #define LogDebug(...) wxLogDebug(__VA_ARGS__)
-#endif // INTEGRATION_TEST
-
+#endif  // INTEGRATION_TEST

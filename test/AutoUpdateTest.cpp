@@ -22,14 +22,15 @@ limitations under the License.
 #include <gtest/gtest-matchers.h>
 #include <gtest/gtest-message.h>
 #include <gtest/gtest-test-part.h>
-#include <vector>
+
 #include <memory>
 #include <string>
 #include <utility>
+#include <vector>
 
+#include "gtest/gtest_pred_impl.h"
 #include "test/mocks/MockHttpReader.h"
 #include "util/AutoUpdate.h"
-#include "gtest/gtest_pred_impl.h"
 #include "util/HttpReader.h"
 
 using ::testing::_;

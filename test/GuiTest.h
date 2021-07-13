@@ -22,19 +22,20 @@ limitations under the License.
 #pragma once
 
 #include <gtest/gtest.h>
-#include <wx/uiaction.h>
-#include <wx/wx.h>
 #include <wx/dcclient.h>
 #include <wx/gdicmn.h>
+#include <wx/uiaction.h>
+#include <wx/wx.h>
+
 #include <map>
 #include <vector>
 
 #include "cszb-scoreboard.h"
+#include "gtest/gtest_pred_impl.h"
 #include "ui/component/ControlPanel.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/frame/MainView.h"
 #include "ui/widget/Panel.h"
-#include "gtest/gtest_pred_impl.h"
 #include "wx/colour.h"
 
 namespace cszb_scoreboard {

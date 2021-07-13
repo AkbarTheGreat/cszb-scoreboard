@@ -20,16 +20,17 @@ limitations under the License.
 
 #include <wx/accel.h>  // for wxAcceleratorEntry
 #include <wx/defs.h>   // for wxWindowID
-#include <vector>      // for vector
+
+#include <vector>  // for vector
 
 namespace cszb_scoreboard {
 class Frame;
 
 class HotkeyTable {
  public:
-  static auto getInstance() -> HotkeyTable*;
+  static auto getInstance() -> HotkeyTable *;
   void addHotkey(int modifier_flags, int key_code, wxWindowID widget_id);
-  void installHotkeys(Frame* main_window);
+  void installHotkeys(Frame *main_window);
 
  private:
   std::vector<wxAcceleratorEntry> accel_entries;

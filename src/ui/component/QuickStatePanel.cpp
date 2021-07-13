@@ -18,28 +18,29 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
-#include <stddef.h>                       // for size_t
-#include <wx/accel.h>                     // for wxACCEL_CTRL, wxACCEL_ALT
-#include <wx/defs.h>                      // for wxID_ANY
-#include <wx/event.h>                     // for wxEventTypeTag, wxCommandEvent
-#include <wx/gdicmn.h>                    // for wxSize
-#include <wx/wxcrtvararg.h>               // for snprintf
-#include <wx/button.h>                // for wxButton
-#include <string>                         // for string
-#include <algorithm>                      // for max
-#include <utility>                        // for move
+#include <stddef.h>          // for size_t
+#include <wx/accel.h>        // for wxACCEL_CTRL, wxACCEL_ALT
+#include <wx/button.h>       // for wxButton
+#include <wx/defs.h>         // for wxID_ANY
+#include <wx/event.h>        // for wxEventTypeTag, wxCommandEvent
+#include <wx/gdicmn.h>       // for wxSize
+#include <wx/wxcrtvararg.h>  // for snprintf
 
-#include "ui/frame/FrameManager.h"        // for FrameManager
-#include "ui/frame/HotkeyTable.h"         // for HotkeyTable
-#include "ui/frame/MainView.h"            // for MainView
-#include "ui/widget/swx/Panel.h"          // for Panel
-#include "util/ProtoUtil.h"               // for ProtoUtil
-#include "wx/gbsizer.h"                   // for wxGridBagSizer
+#include <algorithm>  // for max
+#include <string>     // for string
+#include <utility>    // for move
+
 #include "config.pb.h"                    // for ScreenSide
 #include "ui/component/ControlPanel.h"    // for ControlPanel
 #include "ui/component/PreviewPanel.h"    // for PreviewPanel
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
+#include "ui/frame/FrameManager.h"        // for FrameManager
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable
+#include "ui/frame/MainView.h"            // for MainView
 #include "ui/graphics/Color.h"            // for Color
+#include "ui/widget/swx/Panel.h"          // for Panel
+#include "util/ProtoUtil.h"               // for ProtoUtil
+#include "wx/gbsizer.h"                   // for wxGridBagSizer
 
 namespace cszb_scoreboard {
 
@@ -49,7 +50,7 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(swx::Panel* wx, QuickStatePanel* parent,
+QuickStateEntry::QuickStateEntry(swx::Panel *wx, QuickStatePanel *parent,
                                  int id)
     : ScreenText(wx) {
   this->parent = parent;
@@ -77,14 +78,14 @@ void QuickStateEntry::bindEvents(int id) {
   }
   std::string tooltip = tooltipText(command_button);
 
-  for (auto* side : sides()) {
+  for (auto *side : sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
-    side->bind(wxEVT_RIGHT_UP, [this](wxMouseEvent& event) -> void {
+    side->bind(wxEVT_RIGHT_UP, [this](wxMouseEvent &event) -> void {
       this->setShortcutFromPanel(event);
     });
-    side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent& event) -> void {
+    side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent &event) -> void {
       this->executeShortcutFromPanel(event);
     });
     side->toolTip(tooltip);
@@ -128,7 +129,7 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
   return buffer;
 }
 
-QuickStatePanel::QuickStatePanel(swx::Panel* wx) : Panel(wx) {
+QuickStatePanel::QuickStatePanel(swx::Panel *wx) : Panel(wx) {
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
     entries.push_back(
         std::move(std::make_unique<QuickStateEntry>(childPanel(), this, i)));
@@ -137,7 +138,7 @@ QuickStatePanel::QuickStatePanel(swx::Panel* wx) : Panel(wx) {
 }
 
 void QuickStatePanel::positionWidgets() {
-  auto* sizer = new wxGridBagSizer();
+  auto *sizer = new wxGridBagSizer();
 
   for (int i = 0; i < entries.size(); i++) {
     addWidget(*entries[i], i, 0);
@@ -146,12 +147,12 @@ void QuickStatePanel::positionWidgets() {
   runSizer();
 }
 
-void QuickStatePanel::executeShortcut(QuickStateEntry* entry) {
+void QuickStatePanel::executeShortcut(QuickStateEntry *entry) {
   FrameManager::getInstance()->mainView()->previewPanel()->setToPresenters(
       entry);
 }
 
-void QuickStatePanel::setShortcut(QuickStateEntry* entry) {
+void QuickStatePanel::setShortcut(QuickStateEntry *entry) {
   FrameManager::getInstance()
       ->mainView()
       ->controlPanel()

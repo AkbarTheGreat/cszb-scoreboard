@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
 #include <wx/msgdlg.h>
+
 #include <algorithm>
 #include <utility>
 
@@ -34,7 +35,7 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-TeamSettingsPage::TeamSettingsPage(swx::Panel* wx) : SettingsPage(wx) {
+TeamSettingsPage::TeamSettingsPage(swx::Panel *wx) : SettingsPage(wx) {
   int i = 0;
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
     auto team_panel =
@@ -61,7 +62,7 @@ void TeamSettingsPage::saveSettings() {
     restart_warning = true;
   }
 
-  for (const auto& panel : team_settings_panels) {
+  for (const auto &panel : team_settings_panels) {
     TeamConfig::getInstance()->setColor(panel->team(), panel->teamColor());
 
     if (restart_warning || previous_team_order.size() <= team_order.size() ||

@@ -24,8 +24,8 @@ namespace cszb_scoreboard {
 
 class DisplayConfig {
  public:
-  static auto getInstance() -> DisplayConfig*;
-  static auto isPrimaryDisplay(proto::DisplayInfo* display_info) -> bool;
+  static auto getInstance() -> DisplayConfig *;
+  static auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
   void detectDisplays();
   auto displayDetails(int index) -> proto::DisplayInfo;
   auto numberOfDisplays() -> int;

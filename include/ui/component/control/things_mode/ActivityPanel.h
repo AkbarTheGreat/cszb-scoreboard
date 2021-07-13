@@ -19,9 +19,9 @@ limitations under the License.
 
 #pragma once
 
-#include <vector>                                       // for vector
-#include <memory>                                       // for unique_ptr
-#include <string>                                       // for string
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
 #include "config.pb.h"                                  // for RenderableTex...
 #include "ui/component/control/things_mode/Activity.h"  // for Activity

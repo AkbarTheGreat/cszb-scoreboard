@@ -18,9 +18,9 @@ limitations under the License.
 
 #pragma once
 
-#include <vector>                     // for vector
-#include <memory>                     // for unique_ptr
-#include <string>                     // for string
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
 #include "ui/component/ScreenText.h"  // for ScreenText
 #include "ui/widget/Panel.h"          // for Panel
@@ -39,7 +39,7 @@ class Panel;
 
 class QuickStateEntry : public ScreenText {
  public:
-  QuickStateEntry(swx::Panel* wx, QuickStatePanel* parent, int id);
+  QuickStateEntry(swx::Panel *wx, QuickStatePanel *parent, int id);
 
  private:
   static auto tooltipText(char command_character) -> std::string;
@@ -50,36 +50,36 @@ class QuickStateEntry : public ScreenText {
   // Thin wrappers just to include the appropriate event objects in the
   // signatures.
   void executeShortcutFromButton(
-      wxCommandEvent&
-          event) {  // NOLINT(google-runtime-references) wxWidgets callback.
+      wxCommandEvent &event) {  // NOLINT(google-runtime-references)
+                                // wxWidgets callback.
     executeShortcut();
   }
   void executeShortcutFromPanel(
-      wxMouseEvent& event) {  // NOLINT(google-runtime-references)
+      wxMouseEvent &event) {  // NOLINT(google-runtime-references)
                               // wxWidgets callback.
     executeShortcut();
   }
   void setShortcutFromButton(
-      wxCommandEvent& event) {  // NOLINT(google-runtime-references)
+      wxCommandEvent &event) {  // NOLINT(google-runtime-references)
                                 // wxWidgets callback.
     setShortcut();
   }
   void setShortcutFromPanel(
-      wxMouseEvent& event) {  // NOLINT(google-runtime-references)
+      wxMouseEvent &event) {  // NOLINT(google-runtime-references)
                               // wxWidgets callback.
     setShortcut();
   }
 
-  QuickStatePanel* parent; // unowned pointer to the parent of this object.
+  QuickStatePanel *parent;  // unowned pointer to the parent of this object.
   wxButton *set_button, *execute_button;
   bool initialized = false;
 };
 
 class QuickStatePanel : public Panel {
  public:
-  explicit QuickStatePanel(swx::Panel* wx);
-  void executeShortcut(QuickStateEntry* entry);
-  void setShortcut(QuickStateEntry* entry);
+  explicit QuickStatePanel(swx::Panel *wx);
+  void executeShortcut(QuickStateEntry *entry);
+  void setShortcut(QuickStateEntry *entry);
 
  private:
   void positionWidgets();

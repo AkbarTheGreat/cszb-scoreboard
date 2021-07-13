@@ -20,6 +20,7 @@ limitations under the License.
 #include "config/TeamConfig.h"
 
 #include <wx/chartype.h>
+
 #include <algorithm>
 
 #include "config/Persistence.h"

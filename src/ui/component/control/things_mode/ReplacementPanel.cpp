@@ -19,13 +19,13 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
-#include <vector>
 #include <algorithm>
 #include <string>
+#include <vector>
 
-#include "ui/component/control/things_mode/ActivityPanel.h"
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
+#include "ui/component/control/things_mode/ActivityPanel.h"
 
 namespace cszb_scoreboard {
 namespace swx {

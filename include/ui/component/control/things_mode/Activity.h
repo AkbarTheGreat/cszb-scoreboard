@@ -19,8 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>                                               // for uniqu...
-#include <string>                                               // for string
+#include <memory>  // for uniqu...
+#include <string>  // for string
 
 #include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
 #include "ui/widget/Button.h"                                   // for Button

@@ -18,7 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <memory>                   // for unique_ptr
+#include <memory>  // for unique_ptr
 
 #include "config.pb.h"              // for TeamInfo_TeamType
 #include "ui/graphics/Color.h"      // for Color

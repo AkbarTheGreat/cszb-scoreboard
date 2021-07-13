@@ -23,16 +23,16 @@ limitations under the License.
 #include <wx/gdicmn.h>
 #include <wx/tbarbase.h>
 
+#include "config.pb.h"
 #include "config/DisplayConfig.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
-#include "config.pb.h"
 
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 0;
 
-ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText& preview)
+ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview)
     : Frame("Scoreboard", wxDefaultPosition, wxDefaultSize) {
   this->monitor_number = monitor_number;
 

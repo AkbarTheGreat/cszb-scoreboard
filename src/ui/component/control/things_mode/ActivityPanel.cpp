@@ -21,12 +21,13 @@ limitations under the License.
 
 #include <assert.h>
 #include <wx/clrpicker.h>
+
 #include <algorithm>
 
 #include "ScoreboardCommon.h"
-#include "ui/graphics/TeamColors.h"
 #include "ui/component/control/ScreenTextController.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
+#include "ui/graphics/TeamColors.h"
 
 class wxPanel;
 

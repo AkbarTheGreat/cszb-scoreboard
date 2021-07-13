@@ -22,14 +22,15 @@ limitations under the License.
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/msgdlg.h>
+
 #include <algorithm>
 #include <string>
 
+#include "ScoreboardCommon.h"
+#include "config.pb.h"
 #include "config/DisplayConfig.h"
 #include "ui/widget/Panel.h"
 #include "util/StringUtil.h"
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -38,7 +39,7 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-DisplaySettingsPage::DisplaySettingsPage(swx::Panel* wx) : SettingsPage(wx) {
+DisplaySettingsPage::DisplaySettingsPage(swx::Panel *wx) : SettingsPage(wx) {
   createControls();
   positionWidgets();
   bindEvents();
@@ -57,15 +58,15 @@ void DisplaySettingsPage::createControls() {
   enable_window_mode->setChecked(DisplayConfig::getInstance()->windowedMode());
 
   number_of_windows_label = window_mode_panel->label("# of Windows");
-  number_of_windows = window_mode_panel->text(std::to_string(
-      DisplayConfig::getInstance()->numberOfDisplays()));
+  number_of_windows = window_mode_panel->text(
+      std::to_string(DisplayConfig::getInstance()->numberOfDisplays()));
 
   window_size_label = window_mode_panel->label("Window Size");
-  window_width = window_mode_panel->text(std::to_string(
-      DisplayConfig::getInstance()->windowWidth()));
+  window_width = window_mode_panel->text(
+      std::to_string(DisplayConfig::getInstance()->windowWidth()));
   window_size_separator_label = window_mode_panel->label("x");
-  window_height = window_mode_panel->text(std::to_string(
-      DisplayConfig::getInstance()->windowHeight()));
+  window_height = window_mode_panel->text(
+      std::to_string(DisplayConfig::getInstance()->windowHeight()));
 
   windowModeChanged();
 }
@@ -84,7 +85,7 @@ void DisplaySettingsPage::positionWidgets() {
   window_mode_panel->runSizer();
 
   int row = 0;
-  for (const auto& panel : display_settings_panels) {
+  for (const auto &panel : display_settings_panels) {
     addWidget(*panel, row++, 0);
   }
 
@@ -97,14 +98,14 @@ void DisplaySettingsPage::positionWidgets() {
 void DisplaySettingsPage::bindEvents() {
   enable_window_mode->bind(
       wxEVT_CHECKBOX,
-      [this](wxCommandEvent& event) -> void { this->windowModeChanged(); });
+      [this](wxCommandEvent &event) -> void { this->windowModeChanged(); });
 }
 
 /* Returns true if the display settings are allowable, presents a warning dialog
  * if not (and returns false). */
 auto DisplaySettingsPage::validateSettings() -> bool {
   bool has_control = false;
-  for (const auto& display_panel : display_settings_panels) {
+  for (const auto &display_panel : display_settings_panels) {
     proto::ScreenSide side = display_panel->getSide();
     if (side.control()) {
       has_control = true;

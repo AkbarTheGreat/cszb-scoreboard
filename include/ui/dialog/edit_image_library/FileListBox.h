@@ -18,13 +18,14 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/editlbox.h>          // for wxEditableListBoxNameStr, wxEL_ALLO...
-#include <stdint.h>               // for int32_t
-#include <wx/defs.h>              // for wxWindowID
-#include <wx/gdicmn.h>            // for wxPoint, wxSize (ptr only)
-#include <wx/string.h>            // for wxString
-#include <wx/tbarbase.h>          // for wxDefaultPosition, wxDefaultSize
-#include <vector>                 // for vector
+#include <stdint.h>       // for int32_t
+#include <wx/defs.h>      // for wxWindowID
+#include <wx/editlbox.h>  // for wxEditableListBoxNameStr, wxEL_ALLO...
+#include <wx/gdicmn.h>    // for wxPoint, wxSize (ptr only)
+#include <wx/string.h>    // for wxString
+#include <wx/tbarbase.h>  // for wxDefaultPosition, wxDefaultSize
+
+#include <vector>  // for vector
 
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
@@ -37,11 +38,11 @@ const int32_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
 class FileListBox : public wxEditableListBox {
  public:
-  FileListBox(wxWindow* parent, wxWindowID id, const wxString& label,
-              const wxPoint& pos = wxDefaultPosition,
-              const wxSize& size = wxDefaultSize,
+  FileListBox(wxWindow *parent, wxWindowID id, const wxString &label,
+              const wxPoint &pos = wxDefaultPosition,
+              const wxSize &size = wxDefaultSize,
               int32_t style = FILE_LIST_BOX_DEFAULT_STYLE,
-              const wxString& name = wxEditableListBoxNameStr);
+              const wxString &name = wxEditableListBoxNameStr);
 
   auto getFilenames() -> std::vector<FilesystemPath>;
   auto selectedFilename() -> FilesystemPath;
@@ -49,11 +50,11 @@ class FileListBox : public wxEditableListBox {
  protected:
   void bindEvents();
   auto listSize() -> int32_t;
-  void newPressed(wxCommandEvent& event);  // NOLINT(google-runtime-references)
+  void newPressed(wxCommandEvent &event);  // NOLINT(google-runtime-references)
                                            // wxWidgets callback.
   void selectItem(int32_t select_index);
   auto selectedIndex() -> int32_t;
-  void updateStrings(const std::vector<FilesystemPath>& filenames,
+  void updateStrings(const std::vector<FilesystemPath> &filenames,
                      int32_t select_index = 0);
 };
 

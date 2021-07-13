@@ -25,14 +25,14 @@ namespace cszb_scoreboard::swx {
 
 class PropertySheetDialog : public wxPropertySheetDialog {
  public:
-  PropertySheetDialog(wxWindow* parent, wxWindowID id, const wxString& title,
-                      const wxPoint& pos = wxDefaultPosition,
-                      const wxSize& size = wxDefaultSize,
+  PropertySheetDialog(wxWindow *parent, wxWindowID id, const wxString &title,
+                      const wxPoint &pos = wxDefaultPosition,
+                      const wxSize &size = wxDefaultSize,
                       long style = wxDEFAULT_DIALOG_STYLE,
-                      const wxString& name = wxDialogNameStr)
+                      const wxString &name = wxDialogNameStr)
       : wxPropertySheetDialog(parent, id, title, pos, size, style, name) {}
 
-  bool ProcessEvent(wxEvent& event) override {
+  bool ProcessEvent(wxEvent &event) override {
     return wxPropertySheetDialog::ProcessEvent(event);
   }
 };

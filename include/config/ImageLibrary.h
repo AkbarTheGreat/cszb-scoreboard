@@ -18,9 +18,9 @@ limitations under the License.
 */
 #pragma once
 
-#include <map>                   // for map
-#include <string>                // for string
-#include <vector>                // for vector
+#include <map>     // for map
+#include <string>  // for string
+#include <vector>  // for vector
 
 #include "ScoreboardCommon.h"    // for PUBLIC_TEST_ONLY
 #include "config/Persistence.h"  // for Persistence

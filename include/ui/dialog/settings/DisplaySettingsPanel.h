@@ -18,13 +18,13 @@ limitations under the License.
 */
 #pragma once
 
-#include <memory>                // for unique_ptr
+#include <memory>  // for unique_ptr
 
 #include "config.pb.h"           // for ScreenSide
-#include "ui/widget/Label.h"     // for Label
-#include "ui/widget/Panel.h"     // for Panel
 #include "ui/widget/Button.h"    // for Button
 #include "ui/widget/CheckBox.h"  // for CheckBox
+#include "ui/widget/Label.h"     // for Label
+#include "ui/widget/Panel.h"     // for Panel
 
 namespace cszb_scoreboard {
 

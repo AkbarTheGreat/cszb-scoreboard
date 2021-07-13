@@ -28,7 +28,8 @@ auto StringUtil::intToString(int value) -> wxString {
   return string;
 }
 
-auto StringUtil::stringToInt(const wxString &string, int default_value) -> int32_t {
+auto StringUtil::stringToInt(const wxString &string, int default_value)
+    -> int32_t {
   long value = default_value;  // NOLINT(google-runtime-int) Must be long to
                                // match string.ToLong() below.
   if (string.IsNumber()) {

@@ -19,13 +19,14 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/defs.h>              // for wxHSCROLL, wxID_ANY, wxTAB_TRAVERSAL
-#include <wx/gdicmn.h>            // for wxPoint, wxSize
-#include <wx/panel.h>             // for wxPanelNameStr
-#include <wx/string.h>            // for wxString
-#include <wx/tbarbase.h>          // for wxDefaultPosition, wxDefaultSize
-#include <memory>                 // for unique_ptr
-#include <string>                 // for string
+#include <wx/defs.h>      // for wxHSCROLL, wxID_ANY, wxTAB_TRAVERSAL
+#include <wx/gdicmn.h>    // for wxPoint, wxSize
+#include <wx/panel.h>     // for wxPanelNameStr
+#include <wx/string.h>    // for wxString
+#include <wx/tbarbase.h>  // for wxDefaultPosition, wxDefaultSize
+
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
 #include "ui/widget/Widget.h"     // for Widget
 #include "ui/widget/swx/Panel.h"  // for Panel

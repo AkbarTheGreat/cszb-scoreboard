@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>             // for unique_ptr
+#include <memory>  // for unique_ptr
 
 #include "ui/widget/Panel.h"  // for Panel
 #include "ui/widget/Radio.h"  // for Radio

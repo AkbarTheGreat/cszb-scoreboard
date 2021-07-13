@@ -18,8 +18,8 @@ limitations under the License.
 */
 #pragma once
 
-#include <stdint.h>            // for int32_t
-#include <wx/defs.h>           // for wxALL, wxGROW
+#include <stdint.h>   // for int32_t
+#include <wx/defs.h>  // for wxALL, wxGROW
 
 #include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
 

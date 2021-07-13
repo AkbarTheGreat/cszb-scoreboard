@@ -18,6 +18,7 @@ cmake_minimum_required(VERSION 3.9.0)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
 
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
