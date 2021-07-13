@@ -18,22 +18,19 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/arrstr.h>
-#include <wx/bookctrl.h>
-#include <wx/defs.h>
-#include <wx/editlbox.h>
-#include <wx/event.h>
-#include <wx/listbase.h>
-#include <wx/panel.h>
-#include <wx/panel.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
+#include <stdint.h>           // for int32_t
+#include <wx/defs.h>          // for wxID_ANY
+#include <wx/event.h>         // for wxEventTypeTag, wxCommand...
+#include <wx/gtk/bmpbuttn.h>  // for wxBitmapButton
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/EditableListBox.h"
+#include <functional>  // for function
+
+#include "ui/widget/Widget.h"               // for Widget
+#include "ui/widget/swx/EditableListBox.h"  // for EditableListBox
 
 class wxWindow;
+class wxArrayString;
+class wxListEvent;
 
 namespace cszb_scoreboard {
 

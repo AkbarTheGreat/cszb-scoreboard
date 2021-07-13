@@ -21,10 +21,9 @@ limitations under the License.
 
 #include <wx/arrstr.h>       // for wxArrayString
 #include <wx/bmpbuttn.h>     // for wxBitmapButton
-#include <wx/bmpbuttn.h>     // IWYU pragma: keep for wxBitmapButton
-#include <wx/event.h>        // for wxEventTypeTag, wxCommandEvent, wxE...
-#include <wx/filedlg.h>      // for wxFileDialog
+#include <wx/event.h>        // for wxCommandEvent (ptr only), wxEVT_BU...
 #include <wx/listctrl.h>     // IWYU pragma: keep for wxListCtrl
+#include <wx/string.h>       // for wxString
 #include <wx/translation.h>  // for _
 
 #include <algorithm>  // for max
@@ -33,11 +32,10 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"     // for IMAGE_SELECTION_STRING
 #include "config/ImageLibrary.h"  // for ImageLibrary
-#include "wx/filedlg.h"           // for wxFD_FILE_MUST_EXIST, wxFD_OPEN
+#include "ui/widget/swx/Panel.h"  // for Panel
+#include "wx/filedlg.h"           // for wxFileDialog, wxFD_FILE_MUST_EXIST
 // IWYU pragma: no_include <wx/generic/listctrl.h>
 // IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
-
-class wxWindow;
 
 namespace cszb_scoreboard {
 

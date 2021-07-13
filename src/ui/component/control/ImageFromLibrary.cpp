@@ -20,23 +20,22 @@ limitations under the License.
 
 #include "ui/component/control/ImageFromLibrary.h"
 
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/gdicmn.h>
-#include <wx/image.h>
-#include <wx/tbarbase.h>
-#include <wx/textctrl.h>
+#include <wx/defs.h>      // for wxALL, wxALIGN_LEFT
+#include <wx/event.h>     // for wxCommandEvent (ptr o...
+#include <wx/gdicmn.h>    // for wxSize
+#include <wx/image.h>     // for wxImage
+#include <wx/tbarbase.h>  // for wxDefaultPosition
+#include <wx/textctrl.h>  // for wxEVT_TEXT
 
-#include <algorithm>
-#include <optional>
-#include <string>
+#include <algorithm>  // for max
+#include <optional>   // for optional
+#include <string>     // for string
 
-#include "ScoreboardCommon.h"
-#include "config/ImageLibrary.h"
-#include "ui/component/control/TeamSelector.h"
-#include "ui/dialog/EditImageLibraryDialog.h"
-#include "ui/widget/swx/Panel.h"
-#include "util/FilesystemPath.h"
+#include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
+#include "config/ImageLibrary.h"                // for ImageLibrary, ImageSe...
+#include "ui/component/control/TeamSelector.h"  // for TeamSelector
+#include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog
+#include "util/FilesystemPath.h"                // for FilesystemPath
 
 namespace cszb_scoreboard {
 class PreviewPanel;

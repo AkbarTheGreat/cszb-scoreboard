@@ -20,15 +20,12 @@ limitations under the License.
 #include "ui/dialog/EditImageLibraryDialog.h"
 
 #include <wx/arrstr.h>    // for wxArrayString
-#include <wx/bookctrl.h>  // for wxBookCtrlBase
-#include <wx/defs.h>      // for wxID_ANY, wxALL
-#include <wx/editlbox.h>  // for wxEditableListBox
-#include <wx/event.h>     // for wxEventTypeTag
+#include <wx/defs.h>      // for wxID_CANCEL
+#include <wx/event.h>     // for wxCommandEvent...
 #include <wx/listbase.h>  // for wxListEvent
 #include <wx/panel.h>     // IWYU pragma: keep for wxPanel
-#include <wx/panel.h>     // for wxPanel
-#include <wx/sizer.h>     // for wxSizer
 #include <wx/stattext.h>  // IWYU pragma: keep for wxStaticText
+#include <wx/string.h>    // for wxString
 #include <wx/textctrl.h>  // IWYU pragma: keep for wxTextCtrl
 
 #include <algorithm>   // for max
@@ -38,14 +35,15 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
 #include "config/ImageLibrary.h"                       // for ImageLibrary
-#include "ui/UiUtil.h"                                 // for UiUtil
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-#include "wx/window.h"                                 // for wxWindow
 // IWYU pragma: no_include: <wx/generic/panelg.h>
 // IWYU pragma: no_include: <wx/gtk/stattext.h>
 // IWYU pragma: no_include: <wx/gtk/textctrl.h>
 
 namespace cszb_scoreboard {
+namespace swx {
+class PropertySheetDialog;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 

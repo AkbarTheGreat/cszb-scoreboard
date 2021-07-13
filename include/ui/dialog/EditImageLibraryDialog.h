@@ -20,32 +20,28 @@ limitations under the License.
 
 #include <wx/propdlg.h>  // IWYU pragma: keep for wxPropertySheetDialog
 
-#include <map>  // for map
+#include <map>     // for map
+#include <memory>  // for unique_ptr
 
-#include "image_library.pb.h"  // for ImageInfo
-#include "ui/widget/Frame.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/ListBox.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/TabbedDialog.h"
-#include "ui/widget/Text.h"
-#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "image_library.pb.h"                          // for ImageInfo
+#include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
+#include "ui/widget/Label.h"                           // for Label
+#include "ui/widget/ListBox.h"                         // for ListBox
+#include "ui/widget/Panel.h"                           // for Panel
+#include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
+#include "ui/widget/Text.h"                            // for Text
+#include "util/FilesystemPath.h"                       // for FilesystemPath
 // IWYU pragma: no_include <wx/generic/propdlg.h>
 
 class wxCloseEvent;
 class wxCommandEvent;
-class wxEditableListBox;
 class wxKeyEvent;
 class wxListEvent;
-class wxPanel;
-class wxStaticText;
-class wxTextCtrl;
-
-class wxWindow;
 
 namespace cszb_scoreboard {
-
-class FileListBox;
+namespace swx {
+class PropertySheetDialog;
+}  // namespace swx
 
 class EditImageLibraryDialog : public TabbedDialog {
  public:

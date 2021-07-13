@@ -19,22 +19,25 @@ limitations under the License.
 #pragma once
 
 #include <stdint.h>       // for int32_t
-#include <wx/defs.h>      // for wxWindowID
-#include <wx/editlbox.h>  // for wxEditableListBoxNameStr, wxEL_ALLO...
-#include <wx/gdicmn.h>    // for wxPoint, wxSize (ptr only)
-#include <wx/string.h>    // for wxString
-#include <wx/tbarbase.h>  // for wxDefaultPosition, wxDefaultSize
+#include <wx/defs.h>      // for wxID_ANY
+#include <wx/editlbox.h>  // for wxEL_ALLOW_DELETE, wxEL_ALLOW_NEW
+#include <wx/event.h>     // for wxCommandEvent (ptr only), wxEventT...
 
-#include <vector>  // for vector
+#include <functional>  // for function
+#include <memory>      // for unique_ptr
+#include <string>      // for string
+#include <vector>      // for vector
 
-#include "ui/widget/ListBox.h"
-#include "ui/widget/Panel.h"
+#include "ui/widget/ListBox.h"    // for ListBox
+#include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
-class wxCommandEvent;
-class wxWindow;
+class wxListEvent;
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int32_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 

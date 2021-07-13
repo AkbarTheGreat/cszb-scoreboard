@@ -19,13 +19,15 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
-#include <wx/clipbrd.h>  // for wxTheClipboard
-#include <wx/clipbrd.h>  // IWYU pragma: keep for wxClipboard
-#include <wx/defs.h>     // for wxDF_BITMAP, wxID_CANCEL
-#include <wx/event.h>    // for wxCommandEvent (ptr o...
-#include <wx/image.h>    // for wxImage
-#include <wx/msgdlg.h>   // for wxMessageBox
-#include <wx/string.h>   // for wxString
+#include <wx/clipbrd.h>       // for wxTheClipboard
+#include <wx/defs.h>          // for wxDF_BITMAP, wxID_CANCEL
+#include <wx/event.h>         // for wxCommandEvent (ptr o...
+#include <wx/gtk/clipbrd.h>   // for wxClipboard
+#include <wx/gtk/dataobj2.h>  // for wxBitmapDataObject
+#include <wx/image.h>         // for wxImage
+#include <wx/msgdlg.h>        // for wxMessageBox
+#include <wx/string.h>        // for wxString
+#include <wx/translation.h>   // for _
 
 #include <filesystem>  // for path
 #include <string>      // for string

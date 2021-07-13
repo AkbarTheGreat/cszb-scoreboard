@@ -18,7 +18,6 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
-#include <wx/app.h>       // for wxIMPLEMENT_APP
 #include <wx/chartype.h>  // for wxT
 #include <wx/cmdline.h>   // for wxCmdLineParser
 #include <wx/gdicmn.h>    // for wxPoint, wxSize
