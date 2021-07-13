@@ -18,15 +18,15 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>           // for int32_t
-#include <wx/defs.h>          // for wxID_ANY
-#include <wx/event.h>         // for wxEventTypeTag, wxCommand...
-#include <wx/gtk/bmpbuttn.h>  // for wxBitmapButton
-
-#include <functional>  // for function
+#include <stdint.h>       // for int32_t
+#include <wx/bmpbuttn.h>  // for wxBitmapButton
+#include <wx/defs.h>      // for wxID_ANY
+#include <wx/event.h>     // for wxEventTypeTag, wxCommand...
+#include <wx/listbase.h>  // IWYU pragma: keep for wxListEvent
 
 #include "ui/widget/Widget.h"               // for Widget
 #include "ui/widget/swx/EditableListBox.h"  // for EditableListBox
+// IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
 class wxWindow;
 class wxArrayString;

@@ -19,15 +19,14 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
-#include <wx/clipbrd.h>       // for wxTheClipboard
-#include <wx/defs.h>          // for wxDF_BITMAP, wxID_CANCEL
-#include <wx/event.h>         // for wxCommandEvent (ptr o...
-#include <wx/gtk/clipbrd.h>   // for wxClipboard
-#include <wx/gtk/dataobj2.h>  // for wxBitmapDataObject
-#include <wx/image.h>         // for wxImage
-#include <wx/msgdlg.h>        // for wxMessageBox
-#include <wx/string.h>        // for wxString
-#include <wx/translation.h>   // for _
+#include <wx/clipbrd.h>      // for wxTheClipboard
+#include <wx/clipbrd.h>      // IWYU pragma: keep for wxClipboard
+#include <wx/defs.h>         // for wxDF_BITMAP, wxID_CANCEL
+#include <wx/event.h>        // for wxCommandEvent (ptr o...
+#include <wx/image.h>        // for wxImage
+#include <wx/msgdlg.h>       // for wxMessageBox
+#include <wx/string.h>       // for wxString
+#include <wx/translation.h>  // for _
 
 #include <filesystem>  // for path
 #include <string>      // for string
@@ -41,8 +40,8 @@ limitations under the License.
 #include "util/Log.h"    // IWYU pragma: keep for LogDebug
 #include "wx/bitmap.h"   // for wxBitmap
 #include "wx/filedlg.h"  // for wxFileDialog, wxFD_FI...
-// IWYU pragma: no_include: <wx/gtk/clipbrd.h>
-// IWYU pragma: no_include: <wx/gtk/dataobj2.h>
+// IWYU pragma: no_include <wx/gtk/clipbrd.h>
+// IWYU pragma: no_include <wx/gtk/dataobj2.h>
 
 namespace cszb_scoreboard {
 
