@@ -20,7 +20,6 @@ limitations under the License.
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
 #include <wx/arrstr.h>       // for wxArrayString
-#include <wx/bmpbuttn.h>     // for wxBitmapButton
 #include <wx/event.h>        // for wxCommandEvent (ptr only), wxEVT_BU...
 #include <wx/listctrl.h>     // IWYU pragma: keep for wxListCtrl
 #include <wx/string.h>       // for wxString

@@ -26,6 +26,7 @@ limitations under the License.
 #include <wx/string.h>    // for wxString
 #include <wx/tbarbase.h>  // for wxDefaultPosition
 
+#include <memory>
 #include <string>  // for string
 
 #include "ui/widget/Widget.h"                   // for Widget

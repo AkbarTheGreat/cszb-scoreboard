@@ -20,7 +20,6 @@ limitations under the License.
 
 #include <stddef.h>          // for size_t
 #include <wx/accel.h>        // for wxACCEL_CTRL, wxACCEL_ALT
-#include <wx/button.h>       // for wxButton
 #include <wx/defs.h>         // for wxID_ANY
 #include <wx/event.h>        // for wxEventTypeTag, wxCommandEvent
 #include <wx/gdicmn.h>       // for wxSize

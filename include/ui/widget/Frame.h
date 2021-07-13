@@ -19,7 +19,6 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/accel.h>        // for wxAcceleratorEntry (p...
 #include <wx/aui/auibook.h>  // for wxAUI_NB_SCROLL_BUTTONS
 #include <wx/defs.h>         // for wxID_ANY, wxWindowID
 #include <wx/dialog.h>       // for wxDEFAULT_DIALOG_STYLE
@@ -37,6 +36,8 @@ limitations under the License.
 #include "ui/widget/swx/Notebook.h"             // for Notebook
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
+
+class wxAcceleratorEntry;
 // IWYU pragma: no_include <wx/generic/accel.h>
 
 class wxMenu;

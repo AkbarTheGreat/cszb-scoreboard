@@ -21,21 +21,21 @@ limitations under the License.
 
 #include "test/GuiTest.h"
 
-#include <wx/init.h>
+#include <wx/init.h>  // for wxEntryCleanup
 
-#include <utility>
+#include <utility>  // for pair
 
-#include "cszb-scoreboard.h"
-#include "test/TestUtil.h"
-#include "ui/component/ControlPanel.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/TextEntry.h"
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/MainView.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/swx/Panel.h"
-#include "wx/window.h"
+#include "cszb-scoreboard.h"                            // for Scoreboard
+#include "test/TestUtil.h"                              // for TestUtil
+#include "ui/component/ControlPanel.h"                  // for ControlPanel
+#include "ui/component/PreviewPanel.h"                  // for PreviewPanel
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/component/control/TextEntry.h"             // for TextEntry
+#include "ui/frame/FrameManager.h"                      // for FrameManager
+#include "ui/frame/MainView.h"                          // for MainView
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/swx/Panel.h"                        // for Panel
+#include "wx/window.h"                                  // for wxWindow
 
 namespace cszb_scoreboard {
 class ScreenPreview;
