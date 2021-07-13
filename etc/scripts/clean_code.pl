@@ -80,7 +80,7 @@ sub cmake {
 
 sub run_iwyu {
   cmake();
-  return `make -j2 clean ProtoUtilTest 2>&1 1>/dev/null`;
+  return `make -j2 clean all 2>&1 1>/dev/null`;
 }
 
 sub run_fix_include {
