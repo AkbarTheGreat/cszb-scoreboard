@@ -48,8 +48,7 @@ TeamSettingsPanel::TeamSettingsPanel(swx::Panel *wx, int team_index,
   team_type = team;
 
   // Label for this display
-  team_label =
-      label(TeamConfig::getInstance()->teamName(team_type).ToStdString());
+  team_label = label(TeamConfig::getInstance()->teamName(team_type));
   team_label->bold(true);
   addWidget(*team_label, 0, 0);
 

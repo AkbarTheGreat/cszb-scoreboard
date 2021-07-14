@@ -19,8 +19,6 @@ limitations under the License.
 
 #include "config/TeamConfig.h"
 
-#include <wx/chartype.h>
-
 #include <algorithm>
 
 #include "config/Persistence.h"
@@ -174,14 +172,14 @@ auto TeamConfig::teamColor(const proto::ScreenSide &side)
   return colors;
 }
 
-auto TeamConfig::teamName(proto::TeamInfo_TeamType team) -> wxString {
+auto TeamConfig::teamName(proto::TeamInfo_TeamType team) -> std::string {
   switch (team_config.teams(indexForTeam(team)).team_type()) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
-      return wxT("Home");
+      return "Home";
     case proto::TeamInfo_TeamType_AWAY_TEAM:
-      return wxT("Away");
+      return "Away";
     default:
-      return wxT("Unknown");
+      return "Unknown";
   }
 }
 
