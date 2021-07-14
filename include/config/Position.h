@@ -19,7 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/gdicmn.h>
+#include <stdint.h>     // for int32_t
+#include <wx/gdicmn.h>  // for wxPoint, wxSize
 
 namespace cszb_scoreboard {
 

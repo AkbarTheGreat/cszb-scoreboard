@@ -20,7 +20,10 @@ limitations under the License.
 
 #include "ui/graphics/BackgroundImage.h"
 
-#include "ui/graphics/Color.h"
+#include <wx/gdicmn.h>  // for wxRect
+
+#include "config/Position.h"    // for Size
+#include "ui/graphics/Color.h"  // for Color
 
 namespace cszb_scoreboard {
 

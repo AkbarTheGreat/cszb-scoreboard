@@ -19,18 +19,16 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/defs.h>      // for wxID_ANY, wxWindowID
+#include <wx/defs.h>      // for wxHSCROLL, wxID_ANY
 #include <wx/dialog.h>    // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>    // for wxPoint, wxSize
-#include <wx/panel.h>     // for wxPanelNameStr
 #include <wx/string.h>    // for wxString
 #include <wx/tbarbase.h>  // for wxDefaultPosition
 
 #include <memory>  // for unique_ptr
 #include <string>  // for string
 
-#include "config.pb.h"
-#include "config/Position.h"
+#include "config/Position.h"                    // for Size
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog

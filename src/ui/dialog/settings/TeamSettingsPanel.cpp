@@ -19,15 +19,14 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPanel.h"
 
-#include <wx/event.h>
-#include <wx/string.h>
+#include <wx/event.h>  // for wxCommandEvent (ptr...
 
-#include <string>
+#include <string>  // for string
 
-#include "ScoreboardCommon.h"
-#include "config/TeamConfig.h"
-#include "ui/dialog/settings/TeamSettingsPage.h"
-#include "wx/colour.h"
+#include "ScoreboardCommon.h"                     // for DEFAULT_BORDER_SIZE
+#include "config/TeamConfig.h"                    // for TeamConfig
+#include "ui/dialog/settings/TeamSettingsPage.h"  // for TeamSettingsPage
+#include "wx/colour.h"                            // for wxColour
 
 namespace cszb_scoreboard {
 namespace swx {

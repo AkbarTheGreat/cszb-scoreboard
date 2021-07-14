@@ -18,13 +18,16 @@ limitations under the License.
 
 #include "ui/widget/Widget.h"
 
-#include <wx/dc.h>
-#include <wx/gbsizer.h>  // for wxGBSizerItem, wxGBPosition, wxGridBag...
-#include <wx/sizer.h>    // for wxSizerItem, wxSizerItemList
+#include <wx/dcclient.h>  // for wxPaintDC
+#include <wx/gbsizer.h>   // for wxGBSizerItem, wxGBPosition, wxGridBag...
+#include <wx/sizer.h>     // for wxSizerItem, wxSizerItemList
 
 #include <algorithm>  // for max
 #include <memory>     // for allocator_traits<>::value_type
 #include <vector>     // for vector
+
+#include "config/swx/image.h"  // for Image
+#include "wx/bitmap.h"         // for wxBitmap
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 class wxWindow;

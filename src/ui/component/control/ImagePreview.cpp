@@ -19,12 +19,12 @@ limitations under the License.
 
 #include "ui/component/control/ImagePreview.h"
 
-#include <string>
+#include <string>  // for allocator, string
 
-#include "config/swx/event.h"
-#include "ui/graphics/BackgroundImage.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/swx/Panel.h"
+#include "config/Position.h"              // for Size
+#include "config/swx/event.h"             // for wxEVT_PAINT
+#include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
+#include "ui/graphics/Color.h"            // for Color
 
 namespace cszb_scoreboard {
 

@@ -19,13 +19,15 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
-#include <algorithm>
-#include <cassert>
+#include <wx/clrpicker.h>  // for wxCol...
 
-#include "ScoreboardCommon.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/things_mode/ReplacementPanel.h"
-#include "ui/graphics/TeamColors.h"
+#include <algorithm>  // for max
+#include <cassert>    // for assert
+
+#include "ScoreboardCommon.h"                                   // for DEFAU...
+#include "ui/component/control/ScreenTextController.h"          // for Scree...
+#include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
+#include "ui/graphics/TeamColors.h"                             // for TeamC...
 
 class wxPanel;
 

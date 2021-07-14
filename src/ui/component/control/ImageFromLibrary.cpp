@@ -20,15 +20,16 @@ limitations under the License.
 
 #include "ui/component/control/ImageFromLibrary.h"
 
+#include <wx/image.h>  // for wxImage
+
 #include <algorithm>  // for max
 #include <optional>   // for optional
 #include <string>     // for string
 
-#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
-#include "config.pb.h"
+#include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
 #include "config/ImageLibrary.h"                // for ImageLibrary, ImageSe...
 #include "config/swx/defs.h"                    // for wxALL, wxALIGN_LEFT
-#include "config/swx/event.h"                   // for wxCommandEvent (ptr o...
+#include "config/swx/event.h"                   // for wxEVT_COMMAND_BUTTON_...
 #include "config/swx/image.h"                   // for Image
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
 #include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog

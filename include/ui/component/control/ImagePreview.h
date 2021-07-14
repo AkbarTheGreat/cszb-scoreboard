@@ -19,12 +19,13 @@ limitations under the License.
 
 #include <optional>  // for optional
 
-#include "config/Position.h"
 #include "config/swx/image.h"     // for Image
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
 namespace cszb_scoreboard {
+struct Size;
+
 namespace swx {
 class Panel;
 }  // namespace swx

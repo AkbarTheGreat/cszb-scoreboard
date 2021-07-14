@@ -21,6 +21,7 @@ limitations under the License.
 #pragma once
 
 #include <memory>  // for unique_ptr
+#include <string>  // for string
 #include <vector>  // for vector
 
 #include "ui/component/control/ImagePreview.h"           // for ImagePreview

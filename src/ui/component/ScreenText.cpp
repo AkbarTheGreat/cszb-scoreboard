@@ -19,15 +19,13 @@ limitations under the License.
 
 #include "ui/component/ScreenText.h"
 
-#include <wx/defs.h>
-#include <wx/image.h>
-#include <wx/tbarbase.h>
+#include <wx/image.h>  // for wxImage
 
-#include <algorithm>
+#include <algorithm>  // for max
 
-#include "config.pb.h"
-#include "config/TeamConfig.h"
-#include "util/ProtoUtil.h"
+#include "config.pb.h"          // for TeamInfo_TeamType, ScreenSide (ptr only)
+#include "config/TeamConfig.h"  // for TeamConfig
+#include "util/ProtoUtil.h"     // for ProtoUtil
 
 namespace cszb_scoreboard {
 class Color;

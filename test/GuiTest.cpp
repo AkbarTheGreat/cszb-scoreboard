@@ -23,8 +23,7 @@ limitations under the License.
 
 #include <wx/init.h>  // for wxEntryCleanup
 
-#include <algorithm>  // for max
-#include <utility>    // for pair
+#include <utility>  // for pair
 
 #include "cszb-scoreboard.h"                            // for Scoreboard
 #include "test/TestUtil.h"                              // for TestUtil

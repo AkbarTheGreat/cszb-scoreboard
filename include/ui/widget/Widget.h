@@ -18,17 +18,18 @@ limitations under the License.
 
 #pragma once
 
+#include <stdint.h>    // for int32_t
 #include <wx/defs.h>   // for wxID_ANY, wxALL, wxGROW
 #include <wx/event.h>  // for wxEventTypeTag, wxCloseEvent (ptr o...
 
 #include <functional>  // for function
 
-#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
-#include "config/swx/image.h"
+#include "ScoreboardCommon.h"     // for DEFAULT_BORDER_SIZE
 #include "ui/widget/swx/Sizer.h"  // for Sizer
 #include "wx/window.h"            // for wxWindow
 
 namespace cszb_scoreboard {
+class Image;
 
 const int NO_BORDER = 0;
 
