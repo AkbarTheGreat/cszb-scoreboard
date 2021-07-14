@@ -20,10 +20,6 @@ limitations under the License.
 
 #include "ui/component/control/ImageFromLibrary.h"
 
-#include <wx/gdicmn.h>    // for wxSize
-#include <wx/image.h>     // for wxImage
-#include <wx/tbarbase.h>  // for wxDefaultPosition
-
 #include <algorithm>  // for max
 #include <optional>   // for optional
 #include <string>     // for string
@@ -33,6 +29,7 @@ limitations under the License.
 #include "config/ImageLibrary.h"                // for ImageLibrary, ImageSe...
 #include "config/swx/defs.h"                    // for wxALL, wxALIGN_LEFT
 #include "config/swx/event.h"                   // for wxCommandEvent (ptr o...
+#include "config/swx/image.h"                   // for Image
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
 #include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog
 #include "util/FilesystemPath.h"                // for FilesystemPath
@@ -163,15 +160,15 @@ void ImageFromLibrary::selectImage(const ImagePreview &image) {
   }
 
   if (screen_selection->allSelected()) {
-    all_screen_image = wxImage(filename->string());
+    all_screen_image = Image(filename->string());
     all_screen_image_name = ImageLibrary::getInstance()->name(*filename);
     current_image_label->set(all_screen_image_name);
   } else if (screen_selection->awaySelected()) {
-    away_screen_image = wxImage(filename->string());
+    away_screen_image = Image(filename->string());
     away_screen_image_name = ImageLibrary::getInstance()->name(*filename);
     current_image_label->set(away_screen_image_name);
   } else {
-    home_screen_image = wxImage(filename->string());
+    home_screen_image = Image(filename->string());
     home_screen_image_name = ImageLibrary::getInstance()->name(*filename);
     current_image_label->set(home_screen_image_name);
   }
