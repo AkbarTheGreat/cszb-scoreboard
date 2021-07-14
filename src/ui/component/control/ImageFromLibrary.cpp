@@ -20,12 +20,9 @@ limitations under the License.
 
 #include "ui/component/control/ImageFromLibrary.h"
 
-#include <wx/defs.h>      // for wxALL, wxALIGN_LEFT
-#include <wx/event.h>     // for wxCommandEvent (ptr o...
 #include <wx/gdicmn.h>    // for wxSize
 #include <wx/image.h>     // for wxImage
 #include <wx/tbarbase.h>  // for wxDefaultPosition
-#include <wx/textctrl.h>  // for wxEVT_TEXT
 
 #include <algorithm>  // for max
 #include <optional>   // for optional
@@ -33,6 +30,8 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
 #include "config/ImageLibrary.h"                // for ImageLibrary, ImageSe...
+#include "config/swx/defs.h"                    // for wxALL, wxALIGN_LEFT
+#include "config/swx/event.h"                   // for wxCommandEvent (ptr o...
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
 #include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog
 #include "util/FilesystemPath.h"                // for FilesystemPath
@@ -180,7 +179,7 @@ void ImageFromLibrary::selectImage(const ImagePreview &image) {
   updatePreview();
 }
 
-void ImageFromLibrary::setImages(const wxString &search,
+void ImageFromLibrary::setImages(const std::string &search,
                                  unsigned int page_number) {
   current_image_page = page_number;
 

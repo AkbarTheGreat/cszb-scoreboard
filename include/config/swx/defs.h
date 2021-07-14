@@ -1,5 +1,5 @@
 /*
-config/swx/event.h:  A simple wrapper around wx's event header.  Wrappers like
+config/swx/defs.h:  A simple wrapper around wx's defs header.  Wrappers like
 this exist to make it easier to spot where unexpected wx direct dependencies are
 creeping into our codebase.
 
@@ -18,5 +18,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/event.h>     // IWYU pragma: export
-#include <wx/textctrl.h>  // IWYU pragma: export for wxEVT_TEXT
+#include <wx/defs.h>  // IWYU pragma: export

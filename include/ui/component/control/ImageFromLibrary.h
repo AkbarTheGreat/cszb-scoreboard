@@ -20,8 +20,6 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/string.h>  // for wxString
-
 #include <memory>  // for unique_ptr
 #include <vector>  // for vector
 
@@ -63,7 +61,7 @@ class ImageFromLibrary : public ScreenImageController {
   void bindEvents();
   void createControls(Panel *control_panel) override;
   void positionWidgets(Panel *control_panel) override;
-  void setImages(const wxString &search, unsigned int page_number = 0);
+  void setImages(const std::string &search, unsigned int page_number = 0);
   void doSearch();
   void selectImage(const ImagePreview &image);
   void editButton();
