@@ -34,7 +34,7 @@ struct Size {
  public:
   int32_t width, height;
   [[nodiscard]] auto toWx() const -> wxSize { return wxSize(width, height); }
-  static auto Size::fromWx(const wxSize& wx) -> Size;
+  static auto fromWx(const wxSize& wx) -> Size;
 };
 
 }  // namespace cszb_scoreboard
