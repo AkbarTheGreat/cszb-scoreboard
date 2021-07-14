@@ -53,6 +53,13 @@ Panel::~Panel() {
   }
 }
 
+auto Panel::childPanel() const -> swx::Panel * { return new swx::Panel(_wx()); }
+
+auto Panel::childPanel(int width, int height) const -> swx::Panel * {
+  return new swx::Panel(_wx(), wxID_ANY, wxDefaultPosition,
+                        wxSize(width, height));
+}
+
 auto Panel::button(const std::string &label, bool exact_fit) const
     -> std::unique_ptr<Button> {
   if (exact_fit) {

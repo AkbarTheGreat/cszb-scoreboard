@@ -28,7 +28,8 @@ limitations under the License.
 #include <optional>   // for optional
 #include <string>     // for string
 
-#include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
+#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"
 #include "config/ImageLibrary.h"                // for ImageLibrary, ImageSe...
 #include "config/swx/defs.h"                    // for wxALL, wxALIGN_LEFT
 #include "config/swx/event.h"                   // for wxCommandEvent (ptr o...
@@ -42,7 +43,8 @@ class PreviewPanel;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const int NUM_PREVIEWS = 5;
-const wxSize PREVIEW_SIZE(160, 90);
+const int PREVIEW_WIDTH = 160;
+const int PREVIEW_HEIGHT = 90;
 
 auto ImageFromLibrary::Create(PreviewPanel *preview_panel, swx::Panel *wx)
     -> std::unique_ptr<ImageFromLibrary> {
@@ -69,9 +71,8 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
   tag_list_label = search_panel->label("");
 
   for (int i = 0; i < NUM_PREVIEWS; i++) {
-    image_previews.emplace_back(
-        std::make_unique<ImagePreview>(image_preview_panel->childPanel(
-            wxID_ANY, wxDefaultPosition, PREVIEW_SIZE)));
+    image_previews.emplace_back(std::make_unique<ImagePreview>(
+        image_preview_panel->childPanel(PREVIEW_WIDTH, PREVIEW_HEIGHT)));
     image_names.emplace_back(image_preview_panel->label("          "));
   }
 

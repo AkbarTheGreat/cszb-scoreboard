@@ -29,6 +29,7 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 #include <string>  // for string
 
+#include "config.pb.h"
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
@@ -94,14 +95,9 @@ class Panel : public Widget {
     return new swx::PropertySheetDialog(wx, id, title, pos, size, style, name);
   }
   // Create a child wx entry, for new Panel object creation.
-  [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,
-                                const wxPoint &pos = wxDefaultPosition,
-                                const wxSize &size = wxDefaultSize,
-                                long style = wxTAB_TRAVERSAL,
-                                const wxString &name = wxPanelNameStr) const
-      -> swx::Panel * {
-    return new swx::Panel(_wx(), id, pos, size, style, name);
-  }
+  [[nodiscard]] auto childPanel() const -> swx::Panel *;
+  // Create a child wx entry, sized as large as the given rectangle.
+  [[nodiscard]] auto childPanel(int width, int height) const -> swx::Panel *;
   void hide() const { _wx()->Hide(); }
   void refresh() const { _wx()->Refresh(); }
   void setSize(const wxSize &size) const { _wx()->SetSize(size); }

@@ -52,9 +52,9 @@ void ScreenText::setupPreview(const wxString &initial_text,
   for (auto team : screen_order) {
     for (const auto &side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
-        text_sides.push_back(new ScreenTextSide(
-            childPanel(wxID_ANY, wxDefaultPosition, split_size), initial_text,
-            side, split_size));
+        text_sides.push_back(
+            new ScreenTextSide(childPanel(split_size.x, split_size.y),
+                               initial_text, side, split_size));
         break;
       }
     }
@@ -71,9 +71,8 @@ void ScreenText::setupPresenter(const ScreenText &preview, wxSize size) {
       splitScreenSize(size.x, size.y, preview.text_sides.size());
 
   for (auto *source_text_side : preview.text_sides) {
-    text_sides.push_back(
-        new ScreenTextSide(childPanel(wxID_ANY, wxDefaultPosition, split_size),
-                           source_text_side, split_size));
+    text_sides.push_back(new ScreenTextSide(
+        childPanel(split_size.x, split_size.y), source_text_side, split_size));
   }
 
   initializeSides(text_sides);
