@@ -18,17 +18,16 @@ limitations under the License.
 */
 #pragma once
 
+#include "config/Position.h"
 #include "config/swx/image.h"  // for Image
-
-class wxSize;
 
 namespace cszb_scoreboard {
 class Color;
 
 class BackgroundImage : public Image {
  public:
-  BackgroundImage(wxSize size, Color color);
-  static auto errorImage(wxSize size) -> BackgroundImage;
+  BackgroundImage(::cszb_scoreboard::Size size, Color color);
+  static auto errorImage(::cszb_scoreboard::Size size) -> BackgroundImage;
 };
 
 }  // namespace cszb_scoreboard

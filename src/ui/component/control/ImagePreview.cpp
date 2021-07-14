@@ -31,7 +31,7 @@ namespace cszb_scoreboard {
 const std::string DEFAULT_PREVIEW_COLOR = "Grey";
 
 ImagePreview::ImagePreview(swx::Panel *wx) : Panel(wx) {
-  this->image = BackgroundImage(wx->GetSize(), Color(DEFAULT_PREVIEW_COLOR));
+  this->image = BackgroundImage(size(), Color(DEFAULT_PREVIEW_COLOR));
   bindEvents();
 }
 
@@ -72,7 +72,7 @@ auto ImagePreview::ratio(const Size &size) -> float {
 }
 
 void ImagePreview::clearImage() {
-  image = BackgroundImage(wx_size(), Color(DEFAULT_PREVIEW_COLOR));
+  image = BackgroundImage(size(), Color(DEFAULT_PREVIEW_COLOR));
   filename.reset();
   refresh();
 }

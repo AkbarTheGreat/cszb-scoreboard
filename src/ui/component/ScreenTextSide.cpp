@@ -71,7 +71,7 @@ ScreenTextSide::ScreenTextSide(swx::Panel *wx, const wxString &initial_text,
   image_is_scaled = false;
 
   if (side.error()) {
-    image = BackgroundImage::errorImage(size);
+    image = BackgroundImage::errorImage(Size::fromWx(size));
     ProtoUtil::setFontColor(texts[0].mutable_font(), Color("Black"));
   } else {
     setDefaultBackground(side);
@@ -127,7 +127,7 @@ void ScreenTextSide::setText(const wxString &text, int font_size,
 
 void ScreenTextSide::initializeForColor(wxSize size, Color color) {
   image_is_scaled = false;
-  image = BackgroundImage(size, color);
+  image = BackgroundImage(Size::fromWx(size), color);
   for (auto &text : texts) {
     ProtoUtil::setFontColor(text.mutable_font(), color.contrastColor());
   }
@@ -138,7 +138,7 @@ void ScreenTextSide::createBlackout() {
   if (!blackout_image.IsOk() ||
       wx_size().GetWidth() != blackout_image.GetSize().GetWidth() ||
       wx_size().GetHeight() != blackout_image.GetSize().GetHeight()) {
-    blackout_image = BackgroundImage(wx_size(), Color("Black"));
+    blackout_image = BackgroundImage(size(), Color("Black"));
   }
 }
 

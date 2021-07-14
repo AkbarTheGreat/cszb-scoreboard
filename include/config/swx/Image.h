@@ -29,6 +29,8 @@ namespace cszb_scoreboard {
 class Image : public wxImage {
  public:
   Image() = default;
+  explicit Image(const ::cszb_scoreboard::Size &sz, bool clear = true)
+      : wxImage(sz.toWx(), clear) {}
   explicit Image(const wxSize &sz, bool clear = true) : wxImage(sz, clear) {}
   explicit Image(const wxString &name, wxBitmapType type = wxBITMAP_TYPE_ANY,
                  int index = -1)

@@ -20,28 +20,27 @@ limitations under the License.
 
 #include "ui/graphics/BackgroundImage.h"
 
-#include <wx/gdicmn.h>
-
 #include "ui/graphics/Color.h"
 
 namespace cszb_scoreboard {
 
 const int NUMBER_OF_SQUARES_HIGH = 8;
 
-BackgroundImage::BackgroundImage(wxSize size, Color color)
+BackgroundImage::BackgroundImage(::cszb_scoreboard::Size size, Color color)
     : Image(size, true) {
-  wxRect fullMask(0, 0, size.GetWidth(), size.GetHeight());
+  wxRect fullMask(0, 0, size.width, size.height);
   SetRGB(fullMask, color.red(), color.green(), color.blue());
 }
 
-auto BackgroundImage::errorImage(wxSize size) -> BackgroundImage {
+auto BackgroundImage::errorImage(::cszb_scoreboard::Size size)
+    -> BackgroundImage {
   BackgroundImage error(size, Color("Red"));
-  int square_size = size.GetHeight() / NUMBER_OF_SQUARES_HIGH;
+  int square_size = size.height / NUMBER_OF_SQUARES_HIGH;
   Color white("White");
   bool is_red = true;
-  for (int x = 0; x < size.GetWidth(); ++x) {
+  for (int x = 0; x < size.width; ++x) {
     bool x_toggle = static_cast<bool>((x / square_size) & 1);
-    for (int y = 0; y < size.GetHeight(); ++y) {
+    for (int y = 0; y < size.height; ++y) {
       bool y_toggle = static_cast<bool>((y / square_size) & 1);
       if (x_toggle ^ y_toggle) {
         error.SetRGB(x, y, white.red(), white.green(), white.blue());
