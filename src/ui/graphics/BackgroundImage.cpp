@@ -29,7 +29,7 @@ namespace cszb_scoreboard {
 const int NUMBER_OF_SQUARES_HIGH = 8;
 
 BackgroundImage::BackgroundImage(wxSize size, Color color)
-    : wxImage(size, true) {
+    : Image(size, true) {
   wxRect fullMask(0, 0, size.GetWidth(), size.GetHeight());
   SetRGB(fullMask, color.red(), color.green(), color.blue());
 }

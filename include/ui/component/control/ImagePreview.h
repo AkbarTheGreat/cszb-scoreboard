@@ -17,10 +17,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/image.h>  // for wxImage
-
 #include <optional>  // for optional
 
+#include "config/swx/image.h"     // for Image
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
@@ -47,7 +46,7 @@ class ImagePreview : public Panel {
   void renderImage(wxDC *dc);
 
   std::optional<FilesystemPath> filename;
-  wxImage image;
+  Image image;
 };
 
 }  // namespace cszb_scoreboard

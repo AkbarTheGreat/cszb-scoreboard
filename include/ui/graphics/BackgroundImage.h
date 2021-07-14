@@ -18,14 +18,14 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/image.h>  // for wxImage
+#include "config/swx/image.h"  // for Image
 
 class wxSize;
 
 namespace cszb_scoreboard {
 class Color;
 
-class BackgroundImage : public wxImage {
+class BackgroundImage : public Image {
  public:
   BackgroundImage(wxSize size, Color color);
   static auto errorImage(wxSize size) -> BackgroundImage;

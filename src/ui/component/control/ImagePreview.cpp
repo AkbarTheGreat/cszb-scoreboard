@@ -46,7 +46,7 @@ void ImagePreview::bindEvents() {
 }
 
 void ImagePreview::renderImage(wxDC *dc) {
-  wxImage scaled_image = image;
+  Image scaled_image = image;
   wxSize image_size = scaled_image.GetSize();
   float screen_ratio = ratio(size());
   float image_ratio = ratio(image_size);
@@ -93,7 +93,7 @@ auto ImagePreview::getFilename() const -> std::optional<FilesystemPath> {
 
 void ImagePreview::setImage(const FilesystemPath &filename) {
   this->filename = filename;
-  image = wxImage(filename.string());
+  image = Image(filename.string());
   refresh();
 }
 
