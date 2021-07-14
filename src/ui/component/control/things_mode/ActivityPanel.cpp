@@ -19,10 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
-#include <assert.h>
-#include <wx/clrpicker.h>
-
 #include <algorithm>
+#include <cassert>
 
 #include "ScoreboardCommon.h"
 #include "ui/component/control/ScreenTextController.h"
