@@ -19,12 +19,10 @@ limitations under the License.
 
 #include <optional>  // for optional
 
+#include "config/Position.h"
 #include "config/swx/image.h"     // for Image
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
-
-class wxDC;
-class wxSize;
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -42,8 +40,7 @@ class ImagePreview : public Panel {
  private:
   void bindEvents();
   void paintEvent();
-  static auto ratio(const wxSize &size) -> float;
-  void renderImage(wxDC *dc);
+  static auto ratio(const Size &size) -> float;
 
   std::optional<FilesystemPath> filename;
   Image image;

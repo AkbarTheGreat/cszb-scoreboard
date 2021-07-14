@@ -53,6 +53,8 @@ Panel::~Panel() {
   }
 }
 
+auto Panel::size() const -> Size { return Size::fromWx(_wx()->GetSize()); }
+
 auto Panel::childPanel() const -> swx::Panel * { return new swx::Panel(_wx()); }
 
 auto Panel::childPanel(int width, int height) const -> swx::Panel * {

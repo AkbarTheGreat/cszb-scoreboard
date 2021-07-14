@@ -18,5 +18,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#pragma once
+
 #include <wx/event.h>     // IWYU pragma: export
 #include <wx/textctrl.h>  // IWYU pragma: export for wxEVT_TEXT

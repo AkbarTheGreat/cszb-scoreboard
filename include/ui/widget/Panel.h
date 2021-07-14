@@ -30,6 +30,7 @@ limitations under the License.
 #include <string>  // for string
 
 #include "config.pb.h"
+#include "config/Position.h"
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
@@ -102,7 +103,9 @@ class Panel : public Widget {
   void refresh() const { _wx()->Refresh(); }
   void setSize(const wxSize &size) const { _wx()->SetSize(size); }
   void show() const { _wx()->Show(); }
-  [[nodiscard]] auto size() const -> wxSize { return _wx()->GetSize(); }
+  // Temporary -- remove once we get rid of clients using wx_size
+  [[nodiscard]] auto wx_size() const -> wxSize { return _wx()->GetSize(); }
+  [[nodiscard]] auto size() const -> Size;
   void toolTip(const std::string &tip) const { _wx()->SetToolTip(tip); }
   void update() const { _wx()->Update(); }
 
@@ -111,8 +114,8 @@ class Panel : public Widget {
   swx::Panel *wx;
 
  protected:
-  // If true, this panel will destory its own wxPanel object rather than rely on
-  // the parent wxWidget to do it for us.
+  // If true, this panel will destory its own wxPanel object rather than rely
+  // on the parent wxWidget to do it for us.
   bool should_self_delete = false;
 
   [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }

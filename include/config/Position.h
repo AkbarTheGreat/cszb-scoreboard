@@ -1,8 +1,8 @@
 /*
-config/swx/image.h: A wrapper around wxImage with methods removing the need to
-use wx types directly.
+config/Position.h: A few structs which help with passing around positions or
+sizes, easily convertable to wxSize and wxPosition or proto::Rect.
 
-Copyright 2021 Tracy Beck
+Copyright 2019-2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,23 +19,22 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clrpicker.h>
-#include <wx/wx.h>
-
-#include "config/Position.h"
+#include <wx/gdicmn.h>
 
 namespace cszb_scoreboard {
 
-class Image : public wxImage {
+struct Position {
  public:
-  Image() = default;
-  explicit Image(const wxSize &sz, bool clear = true) : wxImage(sz, clear) {}
-  explicit Image(const wxString &name, wxBitmapType type = wxBITMAP_TYPE_ANY,
-                 int index = -1)
-      : wxImage(name, type, index) {}
-  auto size() -> ::cszb_scoreboard::Size {
-    return ::cszb_scoreboard::Size::fromWx(GetSize());
-  }
+  int32_t x, y;
+  [[nodiscard]] auto toWx() const -> wxPoint { return wxPoint(x, y); }
+  static auto fromWx(const wxPoint& wx) -> Position;
+};
+
+struct Size {
+ public:
+  int32_t width, height;
+  [[nodiscard]] auto toWx() const -> wxSize { return wxSize(width, height); }
+  static auto Size::fromWx(const wxSize& wx) -> Size;
 };
 
 }  // namespace cszb_scoreboard

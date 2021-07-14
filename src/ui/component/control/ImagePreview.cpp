@@ -19,17 +19,12 @@ limitations under the License.
 
 #include "ui/component/control/ImagePreview.h"
 
-#include <wx/dc.h>
-#include <wx/dcclient.h>
-#include <wx/event.h>
-#include <wx/gdicmn.h>
-
 #include <string>
 
+#include "config/swx/event.h"
 #include "ui/graphics/BackgroundImage.h"
 #include "ui/graphics/Color.h"
 #include "ui/widget/swx/Panel.h"
-#include "wx/bitmap.h"
 
 namespace cszb_scoreboard {
 
@@ -45,44 +40,39 @@ void ImagePreview::bindEvents() {
        [this](wxPaintEvent &event) -> void { this->paintEvent(); });
 }
 
-void ImagePreview::renderImage(wxDC *dc) {
+void ImagePreview::paintEvent() {
   Image scaled_image = image;
-  wxSize image_size = scaled_image.GetSize();
+  Size image_size = scaled_image.size();
   float screen_ratio = ratio(size());
   float image_ratio = ratio(image_size);
   int image_height;
   int image_width;
   if (screen_ratio > image_ratio) {
     // Screen is wider than image, so make the heights match
-    image_height = size().GetHeight();
-    image_width = size().GetHeight() * image_ratio;
+    image_height = size().height;
+    image_width = size().height * image_ratio;
   } else {
     // Screen is either the same ratio or narrower than image, so make the
     // widths match
-    image_width = size().GetWidth();
-    image_height = size().GetWidth() / image_ratio;
+    image_width = size().width;
+    image_height = size().width / image_ratio;
   }
 
   scaled_image.Rescale(image_width, image_height);
-  int x = (size().GetWidth() - image_width) / 2;
-  int y = (size().GetHeight() - image_height) / 2;
+  int x = (size().width - image_width) / 2;
+  int y = (size().height - image_height) / 2;
 
-  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
+  drawImage(scaled_image, x, y);
 }
 
-void ImagePreview::paintEvent() {
-  wxPaintDC dc(_wx());
-  renderImage(&dc);
-}
-
-auto ImagePreview::ratio(const wxSize &size) -> float {
+auto ImagePreview::ratio(const Size &size) -> float {
   float ratio = 4 / 3;
-  ratio = static_cast<float>(size.GetWidth()) / size.GetHeight();
+  ratio = static_cast<float>(size.width) / size.height;
   return ratio;
 }
 
 void ImagePreview::clearImage() {
-  image = BackgroundImage(size(), Color(DEFAULT_PREVIEW_COLOR));
+  image = BackgroundImage(wx_size(), Color(DEFAULT_PREVIEW_COLOR));
   filename.reset();
   refresh();
 }

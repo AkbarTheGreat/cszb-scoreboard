@@ -18,6 +18,7 @@ limitations under the License.
 
 #include "ui/widget/Widget.h"
 
+#include <wx/dc.h>
 #include <wx/gbsizer.h>  // for wxGBSizerItem, wxGBPosition, wxGridBag...
 #include <wx/sizer.h>    // for wxSizerItem, wxSizerItemList
 
@@ -37,6 +38,11 @@ void Widget::addWidgetWithSpan(const Widget &widget, int row, int column,
                wxGBSpan(row_span, column_span), flag, border_size);
 }
 
+void Widget::drawImage(const Image &image, int32_t x, int32_t y,
+                       bool use_mask) {
+  wxPaintDC(_wx()).DrawBitmap(wxBitmap(image), x, y, false);
+}
+
 auto Widget::widgetAtIndex(int row, int column) -> wxWindow * {
   if (window_sizer == nullptr) {
     return nullptr;
@@ -53,12 +59,12 @@ void Widget::moveWidget(Widget *widget, int row, int column) {
   sizer()->SetItemPosition(widget->_wx(), wxGBPosition(row, column));
 }
 
-std::vector<std::vector<const wxGBSizerItem *>> getOrderedRepresentation(
-    wxGridBagSizer *sizer) {
+auto getOrderedRepresentation(wxGridBagSizer *sizer)
+    -> std::vector<std::vector<const wxGBSizerItem *>> {
   std::vector<std::vector<const wxGBSizerItem *>> table;
   for (auto base : sizer->GetChildren()) {
     wxGBSizerItem *item = sizer->FindItem(base->GetWindow());
-    int row, col;
+    int32_t row, col;
     item->GetPos(row, col);
     if (row >= table.size()) {
       table.resize(row + 1);

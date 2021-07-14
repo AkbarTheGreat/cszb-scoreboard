@@ -23,7 +23,8 @@ limitations under the License.
 
 #include <functional>  // for function
 
-#include "ScoreboardCommon.h"     // for DEFAULT_BORDER_SIZE
+#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
+#include "config/swx/image.h"
 #include "ui/widget/swx/Sizer.h"  // for Sizer
 #include "wx/window.h"            // for wxWindow
 
@@ -67,6 +68,8 @@ class Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
+  void drawImage(const Image &image, int32_t x, int32_t y,
+                 bool use_mask = false);
   void focus() { _wx()->SetFocus(); }
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);

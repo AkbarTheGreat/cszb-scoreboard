@@ -229,7 +229,7 @@ void ScreenText::singleDisplay() {
   if (text_sides.size() < 2) {
     return;
   }
-  text_sides[0]->setSize(size());
+  text_sides[0]->setSize(wx_size());
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->hide();
   }
@@ -242,7 +242,7 @@ void ScreenText::splitDisplays() {
     return;
   }
   text_sides[0]->setSize(
-      splitScreenSize(size().x, size().y, text_sides.size()));
+      splitScreenSize(wx_size().x, wx_size().y, text_sides.size()));
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->show();
   }

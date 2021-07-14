@@ -81,7 +81,7 @@ void ThingsMode::createControls(Panel *control_panel) {
   positionWidgets(control_panel);
   bindEvents();
 
-  wxSize scrollable_size = scrollable_panel->size();
+  wxSize scrollable_size = scrollable_panel->wx_size();
 }
 
 void ThingsMode::positionWidgets(Panel *control_panel) {
