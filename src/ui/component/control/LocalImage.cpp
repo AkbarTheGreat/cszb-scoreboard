@@ -19,8 +19,6 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
-#include <wx/translation.h>  // for _
-
 #include <filesystem>  // for path
 #include <string>      // for string
 
@@ -37,8 +35,6 @@ limitations under the License.
 #include "util/Clipboard.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "util/Log.h"             // IWYU pragma: keep for LogDebug
-// IWYU pragma: no_include <wx/gtk/clipbrd.h>
-// IWYU pragma: no_include <wx/gtk/dataobj2.h>
 
 namespace cszb_scoreboard {
 
@@ -100,13 +96,13 @@ void LocalImage::browsePressed() {
   std::optional<FilesystemPath> selected_file = dialog->selectFile();
   if (selected_file.has_value()) {
     if (screen_selection->allSelected()) {
-      all_screen_image = wxImage(selected_file->c_str());
+      all_screen_image = Image(*selected_file);
       all_screen_image_name = selected_file->filename().string();
     } else if (screen_selection->awaySelected()) {
-      away_screen_image = wxImage(selected_file->c_str());
+      away_screen_image = Image(*selected_file);
       away_screen_image_name = selected_file->filename().string();
     } else {
-      home_screen_image = wxImage(selected_file->c_str());
+      home_screen_image = Image(*selected_file);
       home_screen_image_name = selected_file->filename().string();
     }
     current_image_label->set(selected_file->filename().string());

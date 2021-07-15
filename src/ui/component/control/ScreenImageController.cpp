@@ -20,9 +20,8 @@ limitations under the License.
 
 #include "ui/component/control/ScreenImageController.h"
 
-#include <wx/event.h>
-
 #include "ScoreboardCommon.h"
+#include "config/swx/event.h"
 #include "ui/component/ScreenText.h"
 #include "ui/graphics/Color.h"
 #include "ui/widget/Panel.h"

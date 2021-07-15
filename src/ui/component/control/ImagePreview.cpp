@@ -83,7 +83,7 @@ auto ImagePreview::getFilename() const -> std::optional<FilesystemPath> {
 
 void ImagePreview::setImage(const FilesystemPath &filename) {
   this->filename = filename;
-  image = Image(filename.string());
+  image = Image(filename);
   refresh();
 }
 

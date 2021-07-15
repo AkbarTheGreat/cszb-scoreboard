@@ -22,21 +22,24 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "config/Position.h"
+#include "util/FilesystemPath.h"
 #include "wx/bitmap.h"  // for wxBitmap
 
 namespace cszb_scoreboard {
 
 class Image : public wxImage {
  public:
+  // wxImage overridden constructors
   Image() = default;
+  explicit Image(const wxImage &img) : wxImage(img) {}
+
+  // Custom constructors
   explicit Image(const ::cszb_scoreboard::Size &sz, bool clear = true)
       : wxImage(sz.toWx(), clear) {}
-  explicit Image(const wxSize &sz, bool clear = true) : wxImage(sz, clear) {}
-  explicit Image(const wxString &name, wxBitmapType type = wxBITMAP_TYPE_ANY,
-                 int index = -1)
-      : wxImage(name, type, index) {}
-  Image(const wxBitmap &bmp) : wxImage(bmp.ConvertToImage()) {}
-  Image(const wxImage &img);
+  explicit Image(const wxBitmap &bmp) : wxImage(bmp.ConvertToImage()) {}
+  explicit Image(const FilesystemPath &file) : wxImage(file.string()) {}
+
+  // Custom methods
   auto size() -> ::cszb_scoreboard::Size;
 };
 

@@ -21,10 +21,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-Image::Image(const wxImage &img) : wxImage() {
-  this->m_refData = CloneRefData(img.GetRefData());
-}
-
 auto Image::size() -> ::cszb_scoreboard::Size {
   return ::cszb_scoreboard::Size::fromWx(GetSize());
 }

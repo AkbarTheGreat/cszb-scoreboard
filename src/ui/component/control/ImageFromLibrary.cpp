@@ -161,15 +161,15 @@ void ImageFromLibrary::selectImage(const ImagePreview &image) {
   }
 
   if (screen_selection->allSelected()) {
-    all_screen_image = Image(filename->string());
+    all_screen_image = Image(*filename);
     all_screen_image_name = ImageLibrary::getInstance()->name(*filename);
     current_image_label->set(all_screen_image_name);
   } else if (screen_selection->awaySelected()) {
-    away_screen_image = Image(filename->string());
+    away_screen_image = Image(*filename);
     away_screen_image_name = ImageLibrary::getInstance()->name(*filename);
     current_image_label->set(away_screen_image_name);
   } else {
-    home_screen_image = Image(filename->string());
+    home_screen_image = Image(*filename);
     home_screen_image_name = ImageLibrary::getInstance()->name(*filename);
     current_image_label->set(home_screen_image_name);
   }

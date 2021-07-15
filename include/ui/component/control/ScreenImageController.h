@@ -22,11 +22,10 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/image.h>  // for wxImage
-
 #include <memory>  // for unique_ptr
 #include <string>  // for string
 
+#include "config/swx/image.h"
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/TeamSelector.h"          // for TeamSelector
 #include "ui/widget/Label.h"                            // for Label
@@ -44,7 +43,7 @@ class ScreenImageController : public ScreenTextController {
  protected:
   std::unique_ptr<Label> current_image_label;
   std::unique_ptr<TeamSelector> screen_selection;
-  wxImage all_screen_image, home_screen_image, away_screen_image;
+  Image all_screen_image, home_screen_image, away_screen_image;
   std::string all_screen_image_name, home_screen_image_name,
       away_screen_image_name;
 
