@@ -19,8 +19,6 @@ limitations under the License.
 
 #include "ui/component/control/LocalImage.h"
 
-#include <wx/clipbrd.h>      // for wxTheClipboard
-#include <wx/clipbrd.h>      // IWYU pragma: keep for wxClipboard
 #include <wx/defs.h>         // for wxDF_BITMAP, wxID_CANCEL
 #include <wx/event.h>        // for wxCommandEvent (ptr o...
 #include <wx/image.h>        // for wxImage
@@ -36,10 +34,11 @@ limitations under the License.
 #include "ui/widget/Label.h"                    // for Label
 #include "ui/widget/Widget.h"                   // for NO_BORDER
 #include "ui/widget/swx/Panel.h"                // for Panel
-#include "util/FilesystemPath.h"                // for FilesystemPath
-#include "util/Log.h"    // IWYU pragma: keep for LogDebug
-#include "wx/bitmap.h"   // for wxBitmap
-#include "wx/filedlg.h"  // for wxFileDialog, wxFD_FI...
+#include "util/Clipboard.h"
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Log.h"             // IWYU pragma: keep for LogDebug
+#include "wx/bitmap.h"            // for wxBitmap
+#include "wx/filedlg.h"           // for wxFileDialog, wxFD_FI...
 // IWYU pragma: no_include <wx/gtk/clipbrd.h>
 // IWYU pragma: no_include <wx/gtk/dataobj2.h>
 
@@ -121,29 +120,21 @@ void LocalImage::browsePressed() {
 }
 
 void LocalImage::pastePressed() {
-  wxImage clipboard_image;
+  std::optional<Image> clipboard_image = Clipboard::getImage();
 
-  if (wxTheClipboard->Open()) {
-    if (wxTheClipboard->IsSupported(wxDF_BITMAP)) {
-      wxBitmapDataObject data;
-      wxTheClipboard->GetData(data);
-      wxTheClipboard->Close();
-      clipboard_image = data.GetBitmap().ConvertToImage();
-    } else {
-      wxTheClipboard->Close();
-      wxMessageBox("ERROR: No supported image data found in clipboard.");
-      return;
-    }
+  if (!clipboard_image.has_value()) {
+    wxMessageBox("ERROR: No supported image data found in clipboard.");
+    return;
   }
 
   if (screen_selection->allSelected()) {
-    all_screen_image = clipboard_image;
+    all_screen_image = *clipboard_image;
     all_screen_image_name = CLIPBOARD_IMAGE_MESSAGE;
   } else if (screen_selection->awaySelected()) {
-    away_screen_image = clipboard_image;
+    away_screen_image = *clipboard_image;
     away_screen_image_name = CLIPBOARD_IMAGE_MESSAGE;
   } else {
-    home_screen_image = clipboard_image;
+    home_screen_image = *clipboard_image;
     home_screen_image_name = CLIPBOARD_IMAGE_MESSAGE;
   }
   current_image_label->set(CLIPBOARD_IMAGE_MESSAGE);

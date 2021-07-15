@@ -19,10 +19,10 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clrpicker.h>
 #include <wx/wx.h>
 
 #include "config/Position.h"
+#include "wx/bitmap.h"  // for wxBitmap
 
 namespace cszb_scoreboard {
 
@@ -35,9 +35,9 @@ class Image : public wxImage {
   explicit Image(const wxString &name, wxBitmapType type = wxBITMAP_TYPE_ANY,
                  int index = -1)
       : wxImage(name, type, index) {}
-  auto size() -> ::cszb_scoreboard::Size {
-    return ::cszb_scoreboard::Size::fromWx(GetSize());
-  }
+  Image(const wxBitmap &bmp) : wxImage(bmp.ConvertToImage()) {}
+  Image(const wxImage &img);
+  auto size() -> ::cszb_scoreboard::Size;
 };
 
 }  // namespace cszb_scoreboard
