@@ -26,6 +26,7 @@ limitations under the License.
 #include "ui/widget/CheckBox.h"
 #include "ui/widget/ColorPicker.h"
 #include "ui/widget/Divider.h"
+#include "ui/widget/FilePicker.h"
 #include "ui/widget/Label.h"
 #include "ui/widget/ListBox.h"
 #include "ui/widget/RadioButton.h"
@@ -85,6 +86,14 @@ auto Panel::colorPicker(const wxColour &initial_color) const
 
 auto Panel::divider() const -> std::unique_ptr<Divider> {
   return std::make_unique<Divider>(new swx::StaticLine(_wx()));
+}
+
+// Get a FilePicker to open an existing file.
+auto Panel::openFilePicker(const std::string &title,
+                           const std::string &selectionMode) const
+    -> std::unique_ptr<FilePicker> {
+  return std::make_unique<FilePicker>(new swx::FileDialog(
+      wx, title, "", "", selectionMode, wxFD_OPEN | wxFD_FILE_MUST_EXIST));
 }
 
 auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {

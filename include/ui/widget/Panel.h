@@ -42,6 +42,7 @@ class Button;
 class CheckBox;
 class ColorPicker;
 class Divider;
+class FilePicker;
 class Label;
 class ListBox;
 class RadioButton;
@@ -63,6 +64,9 @@ class Panel : public Widget {
   [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
       -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
+  [[nodiscard]] auto openFilePicker(const std::string &title,
+                                    const std::string &selectionMode) const
+      -> std::unique_ptr<FilePicker>;
   [[nodiscard]] auto label(const std::string &text) const
       -> std::unique_ptr<Label>;
   [[nodiscard]] auto listBox(const std::string &title) const

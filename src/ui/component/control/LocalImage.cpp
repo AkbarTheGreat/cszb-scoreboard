@@ -29,14 +29,14 @@ limitations under the License.
 #include "config/swx/event.h"
 #include "config/swx/image.h"
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
-#include "ui/widget/Label.h"                    // for Label
+#include "ui/widget/FilePicker.h"
+#include "ui/widget/Label.h"  // for Label
 #include "ui/widget/PopUp.h"
 #include "ui/widget/Widget.h"     // for NO_BORDER
 #include "ui/widget/swx/Panel.h"  // for Panel
 #include "util/Clipboard.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "util/Log.h"             // IWYU pragma: keep for LogDebug
-#include "wx/filedlg.h"           // for wxFileDialog, wxFD_FI...
 // IWYU pragma: no_include <wx/gtk/clipbrd.h>
 // IWYU pragma: no_include <wx/gtk/dataobj2.h>
 
@@ -95,22 +95,21 @@ void LocalImage::bindEvents() {
 }
 
 void LocalImage::browsePressed() {
-  wxFileDialog dialog(wx, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
-                      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-  if (dialog.ShowModal() != wxID_CANCEL) {
-    FilesystemPath selected_file =
-        FilesystemPath(std::string(dialog.GetPath()));
+  std::unique_ptr<FilePicker> dialog =
+      openFilePicker("Select Image", IMAGE_SELECTION_STRING);
+  std::optional<FilesystemPath> selected_file = dialog->selectFile();
+  if (selected_file.has_value()) {
     if (screen_selection->allSelected()) {
-      all_screen_image = wxImage(selected_file.c_str());
-      all_screen_image_name = selected_file.filename().string();
+      all_screen_image = wxImage(selected_file->c_str());
+      all_screen_image_name = selected_file->filename().string();
     } else if (screen_selection->awaySelected()) {
-      away_screen_image = wxImage(selected_file.c_str());
-      away_screen_image_name = selected_file.filename().string();
+      away_screen_image = wxImage(selected_file->c_str());
+      away_screen_image_name = selected_file->filename().string();
     } else {
-      home_screen_image = wxImage(selected_file.c_str());
-      home_screen_image_name = selected_file.filename().string();
+      home_screen_image = wxImage(selected_file->c_str());
+      home_screen_image_name = selected_file->filename().string();
     }
-    current_image_label->set(selected_file.filename().string());
+    current_image_label->set(selected_file->filename().string());
   }
 
   control_panel->update();
