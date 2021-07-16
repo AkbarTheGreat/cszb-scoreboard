@@ -20,11 +20,9 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"
 
-#include <wx/accel.h>
-#include <wx/defs.h>
-#include <wx/event.h>
-
 #include "ScoreboardCommon.h"
+#include "config/swx/defs.h"
+#include "config/swx/event.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/frame/HotkeyTable.h"

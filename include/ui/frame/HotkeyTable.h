@@ -18,7 +18,10 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/accel.h>  // for wxAcceleratorEntry
+// wx/accel needs to be used by clients of this interface as they use macros to
+// reference key combinations (like wxACCEL_CTRL).  But no one should use it
+// outside of interfacing with this class.
+#include <wx/accel.h>  // IWYU pragma: export for wxAcceleratorEntry
 #include <wx/defs.h>   // for wxWindowID
 
 #include <vector>  // for vector
