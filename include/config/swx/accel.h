@@ -1,7 +1,7 @@
 /*
-config/swx/event.h:  A simple wrapper around wx's event header.  Wrappers like
-this exist to make it easier to spot where unexpected wx direct dependencies are
-creeping into our codebase.
+config/swx/accel.h:  A simple wrapper around wx's accel (Hotkey binding) header.
+Wrappers like this exist to make it easier to spot where unexpected wx direct
+dependencies are creeping into our codebase.
 
 Copyright 2021 Tracy Beck
 
@@ -20,7 +20,4 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clrpicker.h>  // IWYU pragma: export for wxColourPickerEvent
-#include <wx/event.h>      // IWYU pragma: export
-#include <wx/textctrl.h>   // IWYU pragma: export for wxEVT_TEXT
-#include <wx/tglbtn.h>     // IWYU pragma: export for wxEVT_TOGGLEBUTTON
+#include <wx/accel.h>  // IWYU pragma: export

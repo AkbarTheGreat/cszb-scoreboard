@@ -19,12 +19,11 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/image.h>  // for wxImage
-
 #include <memory>    // for unique_ptr
 #include <optional>  // for optional
 #include <vector>    // for vector
 
+#include "config/swx/image.h"
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/widget/Button.h"                           // for Button
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
@@ -76,7 +75,7 @@ class ScoreControl : public ScreenTextController {
   void selectLogo(bool isHome);
   void toggleIntroMode();
 
-  std::optional<wxImage> home_logo, away_logo;
+  std::optional<Image> home_logo, away_logo;
   std::unique_ptr<Text> alpha_ctrl, size_ctrl;
   std::unique_ptr<Toggle> team_intro_button;
   std::unique_ptr<Panel> team_controls_panel;

@@ -20,21 +20,17 @@ limitations under the License.
 #include "ui/component/control/ScoreControl.h"
 
 #include <stdint.h>          // for int32_t
-#include <wx/accel.h>        // for wxACCEL_CTRL
-#include <wx/clrpicker.h>    // for wxColourPickerEvent (ptr only)
-#include <wx/defs.h>         // for wxALIGN_CENTER_VERTICAL, wxALL
-#include <wx/event.h>        // for wxCommandEvent (ptr only)
-#include <wx/string.h>       // for wxString
-#include <wx/tglbtn.h>       // for wxEVT_TOGGLEBUTTON
-#include <wx/translation.h>  // for _
+#include "config/swx/accel.h"
+#include "config/swx/defs.h"
 
 #include <algorithm>   // for max
 #include <filesystem>  // for path
 #include <string>      // for string
 
-#include "ScoreboardCommon.h"             // for LOGO_SELECTION_STRING
-#include "config.pb.h"                    // for RenderableText, Font, Rende...
-#include "config/TeamConfig.h"            // for TeamConfig
+#include "ScoreboardCommon.h"   // for LOGO_SELECTION_STRING
+#include "config.pb.h"          // for RenderableText, Font, Rende...
+#include "config/TeamConfig.h"  // for TeamConfig
+#include "config/swx/event.h"
 #include "ui/component/ScreenText.h"      // for ScreenText
 #include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
 #include "ui/frame/HotkeyTable.h"         // for HotkeyTable
@@ -44,7 +40,7 @@ limitations under the License.
 #include "util/FilesystemPath.h"          // for FilesystemPath
 #include "util/ProtoUtil.h"               // for ProtoUtil
 #include "util/StringUtil.h"              // for StringUtil
-#include "wx/filedlg.h"                   // for wxFileDialog, wxFD_FILE_MUS...
+#include "ui/widget/FilePicker.h"
 
 namespace cszb_scoreboard {
 class PreviewPanel;
@@ -236,17 +232,15 @@ void ScoreControl::positionWidgets(Panel *control_panel) {
 }
 
 void ScoreControl::selectLogo(bool isHome) {
-  wxFileDialog dialog(wx, _("Select Logo Image"), "", "", LOGO_SELECTION_STRING,
-                      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-  if (dialog.ShowModal() != wxID_CANCEL) {
-    FilesystemPath selected_file =
-        FilesystemPath(std::string(dialog.GetPath()));
+  std::unique_ptr<FilePicker> picker = openFilePicker("Select Logo Image", LOGO_SELECTION_STRING);
+  std::optional<FilesystemPath> selected_file = picker->selectFile();
+  if (selected_file.has_value()) {
     if (isHome) {
-      home_logo = wxImage(selected_file.c_str());
-      home_logo_label->set(selected_file.filename().string());
+      home_logo = Image(*selected_file);
+      home_logo_label->set(selected_file->filename().string());
     } else {
-      away_logo = wxImage(selected_file.c_str());
-      away_logo_label->set(selected_file.filename().string());
+      away_logo = Image(*selected_file);
+      away_logo_label->set(selected_file->filename().string());
     }
   }
   control_panel->update();
