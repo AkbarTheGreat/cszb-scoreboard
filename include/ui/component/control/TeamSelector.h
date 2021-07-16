@@ -34,7 +34,7 @@ class Panel;
 
 class TeamSelector : public Panel {
  public:
-  TeamSelector(swx::Panel *wx);
+  explicit TeamSelector(swx::Panel *wx);
   TeamSelector(swx::Panel *wx, const proto::ScreenSide &side);
   auto allSelected() -> bool;
   auto awaySelected() -> bool;

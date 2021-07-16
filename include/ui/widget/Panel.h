@@ -27,6 +27,7 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 #include <string>  // for string
+#include <vector>
 
 #include "config/Position.h"                    // for Size
 #include "ui/widget/Widget.h"                   // for Widget
@@ -46,6 +47,7 @@ class FilePicker;
 class Label;
 class ListBox;
 class RadioButton;
+class Radio;
 class SearchBox;
 class Text;
 class Toggle;
@@ -71,6 +73,10 @@ class Panel : public Widget {
       -> std::unique_ptr<Label>;
   [[nodiscard]] auto listBox(const std::string &title) const
       -> std::unique_ptr<ListBox>;
+  [[nodiscard]] auto radio(const std::string name,
+                           const std::vector<std::string> &choices,
+                           bool is_vertical = true) const
+      -> std::unique_ptr<Radio>;
   [[nodiscard]] auto radioButton() const -> std::unique_ptr<RadioButton>;
   [[nodiscard]] auto scrollingPanel(long scroll_style = wxHSCROLL |
                                                         wxVSCROLL) const

@@ -23,7 +23,7 @@ limitations under the License.
 #include <wx/defs.h>
 #include <wx/tbarbase.h>
 
-#include <array>
+#include <vector>
 
 #include "config.pb.h"
 #include "ui/widget/Widget.h"
@@ -36,12 +36,10 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-static const std::array<wxString, 3> CHOICES{{{"Home"}, {"Away"}, {"All"}}};
+static const std::vector<std::string> CHOICES{{"Home", "Away", "All"}};
 
 TeamSelector::TeamSelector(swx::Panel *wx) : Panel(wx) {
-  selector = std::make_unique<Radio>(new swx::RadioBox(
-      _wx(), wxID_ANY, wxT("Team"), wxDefaultPosition, wxDefaultSize,
-      CHOICES.size(), CHOICES.data(), 0, wxRA_SPECIFY_ROWS));
+  selector = radio("Team", CHOICES);
   addWidget(*selector, 0, 0, NO_BORDER);
   runSizer();
 }

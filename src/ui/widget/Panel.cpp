@@ -29,6 +29,7 @@ limitations under the License.
 #include "ui/widget/FilePicker.h"
 #include "ui/widget/Label.h"
 #include "ui/widget/ListBox.h"
+#include "ui/widget/Radio.h"
 #include "ui/widget/RadioButton.h"
 #include "ui/widget/ScrollingPanel.h"
 #include "ui/widget/SearchBox.h"
@@ -112,6 +113,22 @@ auto Panel::panel(bool self_managed) const -> std::unique_ptr<Panel> {
     panel->should_self_delete = true;
   }
   return panel;
+}
+
+auto Panel::radio(const std::string name,
+                  const std::vector<std::string> &choices,
+                  bool is_vertical) const -> std::unique_ptr<Radio> {
+  long style = wxRA_SPECIFY_COLS;
+  if (is_vertical) {
+    style = wxRA_SPECIFY_ROWS;
+  }
+  std::vector<wxString> wx_choices;
+  for (auto choice : choices) {
+    wx_choices.push_back(choice);
+  }
+  return std::make_unique<Radio>(
+      new swx::RadioBox(_wx(), wxID_ANY, name, wxDefaultPosition, wxDefaultSize,
+                        wx_choices.size(), wx_choices.data(), 0, style));
 }
 
 auto Panel::radioButton() const -> std::unique_ptr<RadioButton> {
