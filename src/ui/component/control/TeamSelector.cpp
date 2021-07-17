@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "ui/component/control/TeamSelector.h"
 
-#include <vector>
+#include <array>
 
 #include "config.pb.h"
 #include "config/swx/defs.h"
@@ -33,10 +33,10 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-static const std::vector<std::string> CHOICES{{"Home", "Away", "All"}};
+static constexpr std::array<char *, 3> CHOICES{{"Home", "Away", "All"}};
 
 TeamSelector::TeamSelector(swx::Panel *wx) : Panel(wx) {
-  selector = radio("Team", CHOICES);
+  selector = radio("Team", CHOICES.data(), CHOICES.size());
   addWidget(*selector, 0, 0, NO_BORDER);
   runSizer();
 }

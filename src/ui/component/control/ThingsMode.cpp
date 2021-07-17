@@ -19,17 +19,13 @@ limitations under the License.
 
 #include "ui/component/control/ThingsMode.h"
 
-#include <wx/chartype.h>
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/gdicmn.h>
-#include <wx/tbarbase.h>
-
 #include <array>
 #include <vector>
 
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
+#include "config/swx/defs.h"
+#include "config/swx/event.h"
 #include "ui/component/ScreenText.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
@@ -40,15 +36,13 @@ limitations under the License.
 #include "ui/widget/swx/ScrolledWindow.h"
 #include "util/ProtoUtil.h"
 
-class wxString;
-
 namespace cszb_scoreboard {
 class PreviewPanel;
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-const std::array<wxString, 2> PRESENTER_OPTIONS{
-    {{"Activity List"}, {"Replacements"}}};
+static constexpr std::array<char *, 2> PRESENTER_OPTIONS{
+    {"Activity List", "Replacements"}};
 
 auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)
     -> std::unique_ptr<ThingsMode> {
@@ -58,15 +52,13 @@ auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)
 }
 
 void ThingsMode::createControls(Panel *control_panel) {
-  scrollable_panel = control_panel->scrollingPanel(wxVSCROLL);
+  scrollable_panel = control_panel->scrollingPanel();
 
   button_panel = scrollable_panel->panel();
 
   screen_selection = std::make_unique<TeamSelector>(button_panel->childPanel());
-  presenter_selection = std::make_unique<Radio>(new swx::RadioBox(
-      button_panel->wx, wxID_ANY, wxT("Present"), wxDefaultPosition,
-      wxDefaultSize, PRESENTER_OPTIONS.size(), PRESENTER_OPTIONS.data(), 0,
-      wxRA_SPECIFY_ROWS));
+  presenter_selection = button_panel->radio("Present", PRESENTER_OPTIONS.data(),
+                                            PRESENTER_OPTIONS.size());
 
   new_activity_button = button_panel->button("New Activity");
   new_replacement_button = button_panel->button("New Replacement");
@@ -80,8 +72,6 @@ void ThingsMode::createControls(Panel *control_panel) {
 
   positionWidgets(control_panel);
   bindEvents();
-
-  wxSize scrollable_size = scrollable_panel->wx_size();
 }
 
 void ThingsMode::positionWidgets(Panel *control_panel) {

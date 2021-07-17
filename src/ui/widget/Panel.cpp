@@ -115,16 +115,16 @@ auto Panel::panel(bool self_managed) const -> std::unique_ptr<Panel> {
   return panel;
 }
 
-auto Panel::radio(const std::string name,
-                  const std::vector<std::string> &choices,
-                  bool is_vertical) const -> std::unique_ptr<Radio> {
+auto Panel::radio(const std::string name, const char *const *choices,
+                  int32_t choices_size, bool is_vertical) const
+    -> std::unique_ptr<Radio> {
   long style = wxRA_SPECIFY_COLS;
   if (is_vertical) {
     style = wxRA_SPECIFY_ROWS;
   }
-  std::vector<wxString> wx_choices;
-  for (auto choice : choices) {
-    wx_choices.push_back(choice);
+  std::vector<wxString> wx_choices(choices_size);
+  for (int i = 0; i < choices_size; i++) {
+    wx_choices[i] = choices[i];
   }
   return std::make_unique<Radio>(
       new swx::RadioBox(_wx(), wxID_ANY, name, wxDefaultPosition, wxDefaultSize,
@@ -136,10 +136,9 @@ auto Panel::radioButton() const -> std::unique_ptr<RadioButton> {
       _wx(), wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxRB_SINGLE));
 }
 
-auto Panel::scrollingPanel(long scroll_style) const
-    -> std::unique_ptr<ScrollingPanel> {
+auto Panel::scrollingPanel() const -> std::unique_ptr<ScrollingPanel> {
   return std::make_unique<ScrollingPanel>(new swx::ScrolledWindow(
-      _wx(), wxID_ANY, wxDefaultPosition, wxDefaultSize, scroll_style));
+      _wx(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL));
 }
 
 auto Panel::searchBox(const std::string &initial_text) const

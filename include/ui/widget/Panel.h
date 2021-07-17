@@ -73,14 +73,11 @@ class Panel : public Widget {
       -> std::unique_ptr<Label>;
   [[nodiscard]] auto listBox(const std::string &title) const
       -> std::unique_ptr<ListBox>;
-  [[nodiscard]] auto radio(const std::string name,
-                           const std::vector<std::string> &choices,
-                           bool is_vertical = true) const
+  [[nodiscard]] auto radio(const std::string name, const char *const *choices,
+                           int32_t choices_size, bool is_vertical = true) const
       -> std::unique_ptr<Radio>;
   [[nodiscard]] auto radioButton() const -> std::unique_ptr<RadioButton>;
-  [[nodiscard]] auto scrollingPanel(long scroll_style = wxHSCROLL |
-                                                        wxVSCROLL) const
-      -> std::unique_ptr<ScrollingPanel>;
+  [[nodiscard]] auto scrollingPanel() const -> std::unique_ptr<ScrollingPanel>;
   [[nodiscard]] auto searchBox(const std::string &initial_text) const
       -> std::unique_ptr<SearchBox>;
   [[nodiscard]] auto text(const std::string &initial_text,
