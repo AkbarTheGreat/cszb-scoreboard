@@ -19,12 +19,10 @@ limitations under the License.
 
 #include "ui/component/control/TextEntry.h"
 
-#include <wx/clrpicker.h>
-#include <wx/event.h>
-
 #include <vector>
 
 #include "config/TeamConfig.h"
+#include "config/swx/event.h"
 #include "ui/component/ScreenText.h"
 #include "util/ProtoUtil.h"
 #include "util/StringUtil.h"
@@ -79,8 +77,6 @@ void TextEntry::createControls(Panel *control_panel) {
 }
 
 void TextEntry::positionWidgets(Panel *control_panel) {
-  // wxSizer *inner_sizer = UiUtil::sizer(0, 2);
-
   control_panel->addWidget(*text_label, 0, 0);
   control_panel->addWidget(*text_entry, 0, 1);
   control_panel->addWidget(*inner_panel, 0, 2);
@@ -102,10 +98,9 @@ void TextEntry::bindEvents() {
   screen_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
       [this](wxCommandEvent &event) -> void { this->screenChanged(); });
-  color_picker->bind(wxEVT_COLOURPICKER_CHANGED,
-                     [this](wxColourPickerEvent &event) -> void {
-                       this->colorChanged(event);
-                     });
+  color_picker->bind(
+      wxEVT_COLOURPICKER_CHANGED,
+      [this](wxColourPickerEvent &event) -> void { this->colorChanged(); });
 }
 
 auto TextEntry::textField() -> Text * { return text_entry.get(); }
@@ -123,13 +118,13 @@ void TextEntry::updateScreenText(ScreenText *screen_text) {
   }
 }
 
-void TextEntry::colorChanged(const wxColourPickerEvent &event) {
+void TextEntry::colorChanged() {
   if (screen_selection->allSelected()) {
-    all_color = Color(event.GetColour());
+    all_color = Color(color_picker->color());
   } else if (screen_selection->homeSelected()) {
-    home_color = Color(event.GetColour());
+    home_color = Color(color_picker->color());
   } else if (screen_selection->awaySelected()) {
-    away_color = Color(event.GetColour());
+    away_color = Color(color_picker->color());
   }
   updatePreview();
 }

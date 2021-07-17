@@ -31,8 +31,6 @@ limitations under the License.
 #include "ui/widget/Panel.h"                            // for Panel
 #include "ui/widget/Text.h"                             // for Text
 
-class wxColourPickerEvent;
-
 namespace cszb_scoreboard {
 class PreviewPanel;
 class ScreenText;
@@ -69,8 +67,7 @@ class TextEntry : public ScreenTextController {
   auto enteredFontSize() -> int;
   void positionWidgets(Panel *control_panel);
   void screenChanged();
-  // wxWidgets callbacks, waive linting error for references.
-  void colorChanged(const wxColourPickerEvent &event);
+  void colorChanged();
 };
 
 }  // namespace cszb_scoreboard
