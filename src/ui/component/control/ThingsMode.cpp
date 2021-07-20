@@ -167,11 +167,11 @@ void ThingsMode::presentedListChanged() { updatePreview(); }
 
 void ThingsMode::addActivity() {
   if (screen_selection->allSelected()) {
-    all_activities_panel->addActivity(scrollable_panel->wx);
+    all_activities_panel->addActivity();
   } else if (screen_selection->homeSelected()) {
-    home_activities_panel->addActivity(scrollable_panel->wx);
+    home_activities_panel->addActivity();
   } else if (screen_selection->awaySelected()) {
-    away_activities_panel->addActivity(scrollable_panel->wx);
+    away_activities_panel->addActivity();
   }
 }
 

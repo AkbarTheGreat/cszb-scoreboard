@@ -109,7 +109,7 @@ void ActivityPanel::positionWidgets() {
   runSizer();
 }
 
-void ActivityPanel::addActivity(wxPanel *parent_panel) {
+void ActivityPanel::addActivity() {
   bool is_first = (activities.empty());
   activities.push_back(std::make_unique<Activity>(this, activity_half.get(),
                                                   replacement_half.get(),

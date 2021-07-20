@@ -29,8 +29,6 @@ limitations under the License.
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
 #include "ui/widget/Panel.h"                            // for Panel
 
-class wxPanel;
-
 namespace cszb_scoreboard {
 class ReplacementPanel;
 class ScreenTextController;
@@ -43,7 +41,7 @@ class ActivityPanel : public Panel {
  public:
   ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
                 const proto::ScreenSide &side);
-  void addActivity(wxPanel *parent_panel);
+  void addActivity();
   void addReplacement();
   auto getColor() -> Color;
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;

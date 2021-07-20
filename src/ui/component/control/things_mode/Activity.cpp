@@ -120,10 +120,6 @@ void Activity::setIndex(int index, int max_index) {
   }
 }
 
-void Activity::selectionChanged(wxCommandEvent &event) {
-  parent->selectionChanged(this);
-}
-
 auto Activity::previewText() -> std::string {
   if (activity_text->value().empty()) {
     return " ";

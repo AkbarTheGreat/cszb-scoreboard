@@ -62,9 +62,6 @@ class Activity {
   void bindEvents();
   void positionWidgets();
   void moveButton(bool is_up);
-  void selectionChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                               // wxWidgets callback.
 };
 
 }  // namespace cszb_scoreboard
