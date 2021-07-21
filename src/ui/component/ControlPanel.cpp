@@ -68,7 +68,7 @@ void ControlPanel::bindEvents() {
        [this](wxAuiNotebookEvent &event) -> void { this->tabChanged(event); });
 }
 
-void ControlPanel::tabChanged(wxAuiNotebookEvent &event) {
+void ControlPanel::tabChanged(const wxAuiNotebookEvent &event) {
   controllers[event.GetSelection()]->updatePreview();
 }
 

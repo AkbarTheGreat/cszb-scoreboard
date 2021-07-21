@@ -26,8 +26,6 @@ limitations under the License.
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/widget/Notebook.h"                         // for Notebook
 
-class wxAuiNotebookEvent;
-
 namespace cszb_scoreboard {
 class PreviewPanel;
 class ScreenText;
@@ -51,9 +49,7 @@ class ControlPanel : public Notebook {
   void addController(std::unique_ptr<ScreenTextController> tab,
                      const std::string &name);
   void bindEvents();
-  void tabChanged(
-      wxAuiNotebookEvent &event);  // NOLINT(google-runtime-references)
-                                   // wxWidgets callback.
+  void tabChanged(const wxAuiNotebookEvent &event);
   // Holds a view to these controllers, does not own them.
   std::vector<std::unique_ptr<ScreenTextController>> controllers;
 };

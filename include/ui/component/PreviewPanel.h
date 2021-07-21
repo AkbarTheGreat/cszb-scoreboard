@@ -44,10 +44,7 @@ class PreviewPanel : public Panel {
   explicit PreviewPanel(swx::Panel *wx);
   ~PreviewPanel();
 
-  void blackout(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                         // wxWidgets callback.
-  // inline auto all_screens() -> std::vector<ScreenPreview*> { return screens;
-  // }
+  void blackout();
   void forAllScreens(const std::function<void(ScreenPreview *)> &lambda);
   void setToPresenters(ScreenText *screen_text);
   void updatePresenters();

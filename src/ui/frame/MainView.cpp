@@ -117,7 +117,7 @@ void MainView::bindEvents() {
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent &event) -> void {
-        this->preview_panel->blackout(event);
+        this->preview_panel->blackout();
       },
       DISPLAY_BLACK_OUT);
 }

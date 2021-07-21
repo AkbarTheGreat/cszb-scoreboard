@@ -19,10 +19,10 @@ limitations under the License.
 */
 #include "ui/component/PreviewPanel.h"
 
-#include <assert.h>    // for assert
 #include <wx/panel.h>  // IWYU pragma: keep for wxPanel
 
 #include <algorithm>  // for max
+#include <cassert>    // for assert
 #include <utility>    // for move
 
 #include "config.pb.h"                   // for ScreenSide, DisplayInfo
@@ -121,7 +121,7 @@ void PreviewPanel::updatePreviewsFromSettings() {
   }
 }
 
-void PreviewPanel::blackout(wxCommandEvent &event) {
+void PreviewPanel::blackout() {
   forAllScreens(
       [](ScreenPreview *preview) -> void { preview->blackoutPresenter(); });
 }
