@@ -82,7 +82,6 @@ class Widget {
   // This should be moved to protected when the conversion is complete.
   auto sizer() -> swx::Sizer *;
 
- protected:
   [[nodiscard]] virtual auto _wx() const -> wxWindow * = 0;
 
  private:

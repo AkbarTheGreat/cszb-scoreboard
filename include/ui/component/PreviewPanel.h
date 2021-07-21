@@ -20,14 +20,12 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/aui/framemanager.h>  // for wxAuiManager
-
 #include <functional>  // for function
 #include <memory>      // for unique_ptr
 #include <vector>      // for vector
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "ui/widget/Panel.h"   // for Panel
+#include "ui/widget/DraggablePanel.h"   // for Panel
 
 class wxCommandEvent;
 
@@ -39,10 +37,9 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-class PreviewPanel : public Panel {
+class PreviewPanel : public DraggablePanel {
  public:
   explicit PreviewPanel(swx::Panel *wx);
-  ~PreviewPanel();
 
   void blackout();
   void forAllScreens(const std::function<void(ScreenPreview *)> &lambda);
@@ -54,7 +51,6 @@ class PreviewPanel : public Panel {
   auto preview(int index) -> ScreenPreview *;
 
  private:
-  wxAuiManager aui_manager;
   // Contains a view of the screens, does not own the screens themselves.
   std::vector<std::unique_ptr<ScreenPreview>> screens;
   auto numPreviews() -> int;

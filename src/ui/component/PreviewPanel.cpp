@@ -37,8 +37,7 @@ namespace cszb_scoreboard {
 
 class ScreenText;
 
-PreviewPanel::PreviewPanel(swx::Panel *wx) : Panel(wx) {
-  aui_manager.SetManagedWindow(wx);
+PreviewPanel::PreviewPanel(swx::Panel *wx) : DraggablePanel(wx) {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
         DisplayConfig::getInstance()->displayDetails(i);
@@ -64,19 +63,11 @@ PreviewPanel::PreviewPanel(swx::Panel *wx) : Panel(wx) {
   positionWidgets();
 }
 
-PreviewPanel::~PreviewPanel() { aui_manager.UnInit(); }
 
 void PreviewPanel::positionWidgets() {
-  wxAuiPaneInfo pane_style;
-  pane_style.CenterPane();
-  pane_style.Top();
-  pane_style.CloseButton(false);
   for (const auto &screen : screens) {
-    wxPanel *pane = screen->controlPane();
-    pane_style.MinSize(pane->GetSize());
-    aui_manager.AddPane(pane, pane_style);
+    addWidget(*screen);
   }
-  aui_manager.Update();
 }
 
 auto PreviewPanel::numPreviews() -> int { return screens.size(); }
