@@ -31,6 +31,7 @@ limitations under the License.
 #include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 #include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
 #include "ui/widget/Panel.h"               // for Panel
+#include "config/Position.h"
 
 class wxPanel;
 class wxWindow;
@@ -87,7 +88,7 @@ class ScreenPreview : public Panel {
   const wxWindow *parent;
   ScreenPresenter *presenter;
   std::unique_ptr<ScreenThumbnail> thumbnail;
-  static auto previewSize(int monitor_number) -> wxSize;
+  static auto previewSize(int monitor_number) -> Size;
   void positionWidgets();
 };
 }  // namespace cszb_scoreboard

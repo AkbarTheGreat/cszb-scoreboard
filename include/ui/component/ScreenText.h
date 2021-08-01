@@ -27,6 +27,7 @@ limitations under the License.
 
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide (ptr only)
 #include "ui/widget/Panel.h"              // for Panel
+#include "config/Position.h"
 
 namespace cszb_scoreboard {
 class Color;
@@ -43,8 +44,8 @@ class Panel;
 class ScreenText : public Panel {
  public:
   explicit ScreenText(swx::Panel *wx) : Panel(wx) {}
-  void setupPreview(const wxString &initial_text,
-                    const std::vector<proto::ScreenSide> &sides, wxSize size);
+  void setupPreview(const std::string &initial_text,
+                    const std::vector<proto::ScreenSide> &sides, Size size);
 
   void setupPresenter(const ScreenText &preview, wxSize size);
 

@@ -46,7 +46,7 @@ ScreenPreview::ScreenPreview(swx::Panel *wx,
     : Panel(wx) {
   this->parent = parent;
 
-  wxString initial_text;
+  std::string initial_text;
   if (sides[0].error()) {
     initial_text = ERROR_MESSAGE;
   } else {
@@ -73,7 +73,7 @@ void ScreenPreview::positionWidgets() {
   runSizer();
 }
 
-auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
+auto ScreenPreview::previewSize(int monitor_number) -> Size {
   proto::DisplayInfo display_info =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
 
@@ -83,7 +83,7 @@ auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
     const proto::Rectangle &dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
-  return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
+  return Size::fromWx(wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT));
 }
 
 auto ScreenPreview::controlPane() -> wxPanel * { return wx; }
@@ -93,7 +93,7 @@ auto ScreenPreview::thumbnailWidget() -> ScreenText * {
 }
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
-  screen_text->setSize(previewSize(monitor_number));
+  screen_text->setSize(previewSize(monitor_number).toWx());
   proto::ScreenSide side =
       DisplayConfig::getInstance()->displayDetails(monitor_number).side();
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {

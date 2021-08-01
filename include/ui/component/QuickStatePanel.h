@@ -23,11 +23,8 @@ limitations under the License.
 #include <vector>  // for vector
 
 #include "ui/component/ScreenText.h"  // for ScreenText
-#include "ui/widget/Panel.h"          // for Panel
-
-class wxButton;
-class wxCommandEvent;
-class wxMouseEvent;
+#include "ui/widget/Button.h"
+#include "ui/widget/Panel.h"  // for Panel
 
 namespace cszb_scoreboard {
 
@@ -47,31 +44,8 @@ class QuickStateEntry : public ScreenText {
   void executeShortcut();
   void setShortcut();
 
-  // Thin wrappers just to include the appropriate event objects in the
-  // signatures.
-  void executeShortcutFromButton(
-      wxCommandEvent &event) {  // NOLINT(google-runtime-references)
-                                // wxWidgets callback.
-    executeShortcut();
-  }
-  void executeShortcutFromPanel(
-      wxMouseEvent &event) {  // NOLINT(google-runtime-references)
-                              // wxWidgets callback.
-    executeShortcut();
-  }
-  void setShortcutFromButton(
-      wxCommandEvent &event) {  // NOLINT(google-runtime-references)
-                                // wxWidgets callback.
-    setShortcut();
-  }
-  void setShortcutFromPanel(
-      wxMouseEvent &event) {  // NOLINT(google-runtime-references)
-                              // wxWidgets callback.
-    setShortcut();
-  }
-
   QuickStatePanel *parent;  // unowned pointer to the parent of this object.
-  wxButton *set_button, *execute_button;
+  std::unique_ptr<Button> set_button, execute_button;
   bool initialized = false;
 };
 

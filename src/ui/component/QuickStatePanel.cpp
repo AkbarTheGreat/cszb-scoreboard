@@ -18,18 +18,14 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
-#include <stddef.h>          // for size_t
-#include <wx/accel.h>        // for wxACCEL_CTRL, wxACCEL_ALT
-#include <wx/defs.h>         // for wxID_ANY
-#include <wx/event.h>        // for wxEventTypeTag, wxCommandEvent
-#include <wx/gdicmn.h>       // for wxSize
-#include <wx/wxcrtvararg.h>  // for snprintf
-
 #include <algorithm>  // for max
+#include <cstddef>    // for size_t
 #include <string>     // for string
 #include <utility>    // for move
 
-#include "config.pb.h"                    // for ScreenSide
+#include "config.pb.h"  // for ScreenSide
+#include "config/swx/defs.h"
+#include "config/swx/event.h"
 #include "ui/component/ControlPanel.h"    // for ControlPanel
 #include "ui/component/PreviewPanel.h"    // for PreviewPanel
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
@@ -39,8 +35,6 @@ limitations under the License.
 #include "ui/graphics/Color.h"            // for Color
 #include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
-#include "wx/gbsizer.h"                   // for wxGridBagSizer
-// IWYU pragma: no_include <wx/gtk/button.h>
 
 namespace cszb_scoreboard {
 
@@ -55,17 +49,20 @@ QuickStateEntry::QuickStateEntry(swx::Panel *wx, QuickStatePanel *parent,
     : ScreenText(wx) {
   this->parent = parent;
   should_self_delete = true;
+  Size preview_size;
+  preview_size.height = PREVIEW_HEIGHT;
+  preview_size.width = PREVIEW_WIDTH;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
-               wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
+               preview_size);
 
   setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
   setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
 
   // These two buttons are always hidden and exist only to add hotkey support
-  set_button = new wxButton(wx, wxID_ANY);
-  execute_button = new wxButton(wx, wxID_ANY);
-  set_button->Hide();
-  execute_button->Hide();
+  set_button = button("");
+  execute_button = button("");
+  set_button->hide();
+  execute_button->hide();
 
   bindEvents(id);
 }
@@ -82,24 +79,25 @@ void QuickStateEntry::bindEvents(int id) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
-    side->bind(wxEVT_RIGHT_UP, [this](wxMouseEvent &event) -> void {
-      this->setShortcutFromPanel(event);
-    });
+    side->bind(wxEVT_RIGHT_UP,
+               [this](wxMouseEvent &event) -> void { this->setShortcut(); });
     side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent &event) -> void {
-      this->executeShortcutFromPanel(event);
+      this->executeShortcut();
     });
     side->toolTip(tooltip);
   }
 
-  execute_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                       &QuickStateEntry::executeShortcutFromButton, this);
-  set_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                   &QuickStateEntry::setShortcutFromButton, this);
+  execute_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
+  set_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
 
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, command_button,
-                                        execute_button->GetId());
+                                        execute_button->id());
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL | wxACCEL_ALT,
-                                        command_button, set_button->GetId());
+                                        command_button, set_button->id());
 }
 
 void QuickStateEntry::executeShortcut() {
@@ -138,8 +136,6 @@ QuickStatePanel::QuickStatePanel(swx::Panel *wx) : Panel(wx) {
 }
 
 void QuickStatePanel::positionWidgets() {
-  auto *sizer = new wxGridBagSizer();
-
   for (int i = 0; i < entries.size(); i++) {
     addWidget(*entries[i], i, 0);
   }

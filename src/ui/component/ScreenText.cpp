@@ -34,13 +34,13 @@ class Color;
 const float TOP_OR_BOTTOM_MARGIN = 2;
 const int BORDER_SIZE = 0;
 
-void ScreenText::setupPreview(const wxString &initial_text,
+void ScreenText::setupPreview(const std::string &initial_text,
                               const std::vector<proto::ScreenSide> &sides,
-                              wxSize size) {
-  setSize(size);
+                              Size size) {
+  setSize(size.toWx());
   std::vector<ScreenTextSide *> text_sides;
 
-  wxSize split_size = splitScreenSize(size.x, size.y, sides.size());
+  wxSize split_size = splitScreenSize(size.width, size.height, sides.size());
 
   std::vector<proto::TeamInfo_TeamType> screen_order =
       TeamConfig::getInstance()->singleScreenOrder();
