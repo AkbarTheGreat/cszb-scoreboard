@@ -45,9 +45,12 @@ auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
   return search("").filenames();
 }
 
-auto ImageLibrary::allTags() -> std::vector<std::string> {
+auto ImageLibrary::allTags(bool include_name) -> std::vector<std::string> {
   std::vector<std::string> tags;
   for (const auto &image : library.images()) {
+    if (include_name) {
+      insertIntoSortedVector(&tags, image.name());
+    }
     for (const auto &tag : image.tags()) {
       insertIntoSortedVector(&tags, tag);
     }
@@ -109,7 +112,7 @@ auto ImageLibrary::search(const std::string &query) -> ImageSearchResults {
     return emptySearch();
   }
 
-  auto tags = allTags();
+  auto tags = allTags(/*include_name=*/true);
   if (binary_search(tags.begin(), tags.end(), query)) {
     return exactMatchSearch(query);
   }
@@ -128,8 +131,9 @@ auto ImageLibrary::exactMatchSearch(const std::string &query)
     -> ImageSearchResults {
   std::vector<proto::ImageInfo> matched_images;
   for (const auto &image : library.images()) {
-    if (std::find(image.tags().begin(), image.tags().end(), query) !=
-        image.tags().end()) {
+    if ((image.name() == query) ||
+        (std::find(image.tags().begin(), image.tags().end(), query) !=
+         image.tags().end())) {
       matched_images.push_back(image);
     }
   }
@@ -147,6 +151,11 @@ auto ImageLibrary::partialMatchSearch(const std::string &query)
   std::vector<std::string> matched_tags;
   for (const auto &image : library.images()) {
     bool image_matched = false;
+    if (image.name().find(query) != std::string::npos) {
+      matched_images.push_back(image);
+      insertIntoSortedVector(&matched_tags, image.name());
+      image_matched = true;
+    }
     for (const auto &tag : image.tags()) {
       if (std::search(tag.begin(), tag.end(), query.begin(), query.end()) !=
           tag.end()) {

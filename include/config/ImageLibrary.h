@@ -45,7 +45,7 @@ class ImageLibrary {
   static auto getInstance() -> ImageLibrary *;
   // Returns all unique tags, sorted
   auto allFilenames() -> std::vector<FilesystemPath>;
-  auto allTags() -> std::vector<std::string>;
+  auto allTags(bool include_name = false) -> std::vector<std::string>;
   auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
   auto name(const FilesystemPath &filename) -> std::string;
   void addImage(const FilesystemPath &file, const std::string &name,
