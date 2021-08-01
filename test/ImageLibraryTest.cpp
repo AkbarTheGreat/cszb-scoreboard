@@ -125,6 +125,12 @@ TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
   // Check that they're in the correct (alphabetical) order.
   ASSERT_STR_VECTOR(tags, {"cute", "dog", "gender", "neutral", "rodent",
                            "short", "stall", "tall"});
+
+  tags = library.allTags(true);
+  // Check that image names are now included approprately.
+  ASSERT_STR_VECTOR(
+      tags, {"bathroom", "capybara", "corgi", "cute", "dog", "gender",
+             "great dane", "neutral", "rodent", "short", "stall", "tall"});
 }
 
 // Searches for full single words match the relevant tag if it exists.
@@ -142,6 +148,11 @@ TEST(ImageLibraryTest, FullWordSearches) {
   result = library.search("tall");
   ASSERT_STR_VECTOR(result.matchedTags(), {"tall"});
   ASSERT_PATH_VECTOR(result.filenames(), {"/test/great_dane.jpg"});
+
+  // Titles match full names
+  result = library.search("capybara");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"capybara"});
+  ASSERT_PATH_VECTOR(result.filenames(), {"/test/capy.jpg"});
 
   // Bad search returns nothing
   result = library.search("notgonnafindit");
@@ -165,6 +176,11 @@ TEST(ImageLibraryTest, PartialWordSearches) {
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/great_dane.jpg", "/test/but-why.jpg"});
 
+  // Titles match partial names too
+  result = library.search("capy");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"capybara"});
+  ASSERT_PATH_VECTOR(result.filenames(), {"/test/capy.jpg"});
+
   // Empty search returns everything
   result = library.search("");
   ASSERT_STR_VECTOR(result.matchedTags(), {"cute", "dog", "gender", "neutral",
@@ -184,8 +200,8 @@ TEST(ImageLibraryTest, PartialWordSearches) {
 TEST(ImageLibraryTest, DeduplicatingSearches) {
   ImageLibrary library = testLibrary();
   // This single-letter search should match 3/4 images
-  auto result = library.search("o");
-  ASSERT_STR_VECTOR(result.matchedTags(), {"dog", "rodent", "short"});
+  auto result = library.search("c");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"capybara", "corgi", "cute"});
   ASSERT_PATH_VECTOR(
       result.filenames(),
       {"/test/corgi.jpg", "/test/great_dane.jpg", "/test/capy.jpg"});
