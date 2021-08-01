@@ -49,11 +49,8 @@ QuickStateEntry::QuickStateEntry(swx::Panel *wx, QuickStatePanel *parent,
     : ScreenText(wx) {
   this->parent = parent;
   should_self_delete = true;
-  Size preview_size;
-  preview_size.height = PREVIEW_HEIGHT;
-  preview_size.width = PREVIEW_WIDTH;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
-               preview_size);
+               Size{.width = PREVIEW_WIDTH, .height = PREVIEW_HEIGHT});
 
   setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
   setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
