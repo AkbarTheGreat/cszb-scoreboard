@@ -41,7 +41,7 @@ class PreviewPanel;
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-static constexpr std::array<char *, 2> PRESENTER_OPTIONS{
+static constexpr std::array<const char *, 2> PRESENTER_OPTIONS{
     {"Activity List", "Replacements"}};
 
 auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)

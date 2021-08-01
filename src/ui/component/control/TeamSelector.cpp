@@ -33,7 +33,7 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-static constexpr std::array<char *, 3> CHOICES{{"Home", "Away", "All"}};
+static constexpr std::array<const char *, 3> CHOICES{{"Home", "Away", "All"}};
 
 TeamSelector::TeamSelector(swx::Panel *wx) : Panel(wx) {
   selector = radio("Team", CHOICES.data(), CHOICES.size());
