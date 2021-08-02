@@ -35,7 +35,7 @@ const int BORDER_SIZE = 0;
 void ScreenText::setupPreview(const std::string &initial_text,
                               const std::vector<proto::ScreenSide> &sides,
                               Size size) {
-  setSize(size.toWx());
+  setSize(size);
   std::vector<ScreenTextSide *> text_sides;
 
   Size split_size = splitScreenSize(size.width, size.height, sides.size());
@@ -50,7 +50,7 @@ void ScreenText::setupPreview(const std::string &initial_text,
       if (ProtoUtil::sideContains(side, team)) {
         text_sides.push_back(
             new ScreenTextSide(childPanel(split_size.width, split_size.height),
-                               initial_text, side, split_size.toWx()));
+                               initial_text, side, split_size));
         break;
       }
     }
@@ -60,7 +60,7 @@ void ScreenText::setupPreview(const std::string &initial_text,
 }
 
 void ScreenText::setupPresenter(const ScreenText &preview, Size size) {
-  setSize(size.toWx());
+  setSize(size);
   std::vector<ScreenTextSide *> text_sides;
 
   Size split_size =
@@ -69,7 +69,7 @@ void ScreenText::setupPresenter(const ScreenText &preview, Size size) {
   for (auto *source_text_side : preview.text_sides) {
     text_sides.push_back(
         new ScreenTextSide(childPanel(split_size.width, split_size.height),
-                           source_text_side, split_size.toWx()));
+                           source_text_side, split_size));
   }
 
   initializeSides(text_sides);
@@ -226,7 +226,7 @@ void ScreenText::singleDisplay() {
   if (text_sides.size() < 2) {
     return;
   }
-  text_sides[0]->setSize(size().toWx());
+  text_sides[0]->setSize(size());
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->hide();
   }
@@ -239,7 +239,7 @@ void ScreenText::splitDisplays() {
     return;
   }
   text_sides[0]->setSize(
-      splitScreenSize(size().width, size().height, text_sides.size()).toWx());
+      splitScreenSize(size().width, size().height, text_sides.size()));
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->show();
   }

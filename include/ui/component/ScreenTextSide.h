@@ -20,15 +20,13 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/gdicmn.h>  // for wxPoint, wxSize
-#include <wx/image.h>   // for wxImage
-#include <wx/string.h>  // for wxString
-
 #include <optional>  // for optional
 #include <vector>    // for vector
 
-#include "ScoreboardCommon.h"   // for PUBLIC_TEST_ONLY
-#include "config.pb.h"          // for RenderableText, Font (ptr only), Scre...
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "config.pb.h"         // for RenderableText, Font (ptr only), Scre...
+#include "config/Position.h"
+#include "config/swx/image.h"
 #include "ui/graphics/Color.h"  // for Color
 #include "ui/widget/Panel.h"    // for Panel
 
@@ -44,61 +42,59 @@ enum class OverlayScreenPosition { Centered, BottomLeft };
 
 class ScreenTextSide : public Panel {
  public:
-  ScreenTextSide(swx::Panel *wx, const wxString &initial_text,
-                 const proto::ScreenSide &side, wxSize size);
-  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, wxSize size);
+  ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
+                 const proto::ScreenSide &side, Size size);
+  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size);
 
   void addText(const proto::RenderableText &text,
                const proto::ScreenSide &side);
   void blackout();
-  void paintEvent(wxPaintEvent &event);  // NOLINT(google-runtime-references)
-                                         // wxWidgets callback.
+  void paintEvent();
   void resetAllText(const proto::ScreenSide &side);
-  void setImage(const wxImage &image, bool is_scaled,
+  void setImage(const Image &image, bool is_scaled,
                 const proto::ScreenSide &side);
   void setBackground(const Color &color, const proto::ScreenSide &side);
-  void setBackgroundOverlay(const wxImage &overlay,
+  void setBackgroundOverlay(const Image &overlay,
                             double overlay_screen_percentage,
                             unsigned char overlay_alpha,
                             OverlayScreenPosition position,
                             const proto::ScreenSide &side);
   void setDefaultBackground(const proto::ScreenSide &side);
   void setFontColor(proto::Font *font, const proto::ScreenSide &side);
-  void setText(const wxString &text, int font_size,
+  void setText(const std::string &text, int font_size,
                const proto::ScreenSide &side);
   void setAll(const ScreenTextSide *source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide &side);
-  void setSize(const wxSize &size);
+  void setSize(const Size &size);
   auto side() -> const proto::ScreenSide & { return screen_side; }
   auto isSide(const proto::ScreenSide &side) -> bool;
 
   PUBLIC_TEST_ONLY
-  static auto getTextExtent(wxDC *dc, const wxString &text) -> wxSize;
+  static auto getTextExtent(wxDC *dc, const std::string &text) -> Size;
 
  private:
   bool auto_fit_text;
-  wxImage blackout_image;
+  Image blackout_image;
   std::optional<Color> background_color;
-  std::optional<wxImage> background_overlay;
+  std::optional<Image> background_overlay;
   unsigned char overlay_alpha;
   double overlay_percentage;
   OverlayScreenPosition overlay_position;
-  wxImage image;
+  Image image;
   bool image_is_scaled;
   proto::ScreenSide screen_side;
   std::vector<proto::RenderableText> texts;
 
-  static auto ratio(const wxSize &size) -> float;
-  static auto scaleImage(const wxImage &image, const wxSize &target_size)
-      -> wxImage;
+  static auto ratio(const Size &size) -> float;
+  static auto scaleImage(const Image &image, const Size &target_size) -> Image;
   void autoFitText(wxDC *dc, proto::RenderableText *text);
   void bindEvents();
-  void adjustOverlayColorAndAlpha(wxImage *image, const Color &color) const;
-  auto bottomText(wxDC *dc, const wxString &text) -> wxPoint;
-  auto centerText(wxDC *dc, const wxString &text) -> wxPoint;
+  void adjustOverlayColorAndAlpha(Image *image, const Color &color) const;
+  auto bottomText(wxDC *dc, const std::string &text) -> Position;
+  auto centerText(wxDC *dc, const std::string &text) -> Position;
   void createBlackout();
-  void initializeForColor(wxSize size, Color color);
-  auto positionText(wxDC *dc, const proto::RenderableText &text) -> wxPoint;
+  void initializeForColor(Size size, Color color);
+  auto positionText(wxDC *dc, const proto::RenderableText &text) -> Position;
   void renderBackground(wxDC *dc);
   void renderOverlay(wxDC *dc);
   void renderOverlayBottomCorner(wxDC *dc);
@@ -107,7 +103,7 @@ class ScreenTextSide : public Panel {
   void renderText(wxDC *dc, proto::RenderableText *text);
   void renderAllText(wxDC *dc);
   void setBackground(const Color &color);
-  auto topText(wxDC *dc, const wxString &text) -> wxPoint;
+  auto topText(wxDC *dc, const std::string &text) -> Position;
 };
 
 }  // namespace cszb_scoreboard
