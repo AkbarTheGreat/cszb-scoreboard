@@ -28,11 +28,81 @@ auto Position::fromWx(const wxPoint& wx) -> Position {
   return pos;
 }
 
+auto Position::operator==(const Position& rhs) const -> bool {
+  return (this->x == rhs.x && this->y == rhs.y);
+}
+
+auto Position::operator!=(const Position& rhs) const -> bool {
+  return !(*this == rhs);
+}
+
+auto Position::operator-() const -> Position {
+  return Position{.x = -this->x, .y = -this->y};
+}
+
+auto Position::operator+(const Position& b) const -> Position {
+  return Position{.x = this->x + b.x, .y = this->y + b.y};
+}
+
+auto Position::operator-(const Position& b) const -> Position {
+  return *this + -b;
+}
+
+auto Position::operator*(const Position& b) const -> Position {
+  return Position{.x = this->x * b.x, .y = this->y * b.y};
+}
+
+auto Position::operator/(const Position& b) const -> Position {
+  return Position{.x = this->x / b.x, .y = this->y / b.y};
+}
+
+auto Position::operator%(const Position& b) const -> Position {
+  return Position{.x = this->x % b.x, .y = this->y % b.y};
+}
+
 auto Size::fromWx(const wxSize& wx) -> Size {
   Size size;
   size.width = wx.GetWidth();
   size.height = wx.GetHeight();
   return size;
+}
+
+auto Size::operator==(const Size& rhs) const -> bool {
+  return (this->width == rhs.width && this->height == rhs.height);
+}
+
+auto Size::operator!=(const Size& rhs) const -> bool { return !(*this == rhs); }
+
+auto Size::operator-() const -> Size {
+  return Size{.width = -this->width, .height = -this->height};
+}
+
+auto Size::operator+(const Size& b) const -> Size {
+  return Size{.width = this->width + b.width,
+              .height = this->height + b.height};
+}
+
+auto Size::operator-(const Size& b) const -> Size { return *this + -b; }
+
+auto Size::operator*(const Size& b) const -> Size {
+  return Size{.width = this->width * b.width,
+              .height = this->height * b.height};
+}
+
+auto Size::operator*(double b) const -> Size {
+  return Size{
+      .width = static_cast<int32_t>(static_cast<double>(this->width) * b),
+      .height = static_cast<int32_t>(static_cast<double>(this->height) * b)};
+}
+
+auto Size::operator/(const Size& b) const -> Size {
+  return Size{.width = this->width / b.width,
+              .height = this->height / b.height};
+}
+
+auto Size::operator%(const Size& b) const -> Size {
+  return Size{.width = this->width % b.width,
+              .height = this->height % b.height};
 }
 
 }  // namespace cszb_scoreboard
