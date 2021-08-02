@@ -33,7 +33,7 @@ const int THUMBNAIL_HEIGHT = 64;
 ScreenThumbnail::ScreenThumbnail(swx::Panel *wx, int monitor_number,
                                  const ScreenText &preview)
     : ScreenText(wx) {
-  setupPresenter(preview, thumbnailSize(monitor_number));
+  setupPresenter(preview, Size::fromWx(thumbnailSize(monitor_number)));
 }
 
 auto ScreenThumbnail::thumbnailSize(int monitor_number) -> wxSize {

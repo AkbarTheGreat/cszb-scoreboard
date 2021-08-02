@@ -29,7 +29,8 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>
 
-#include "config/Position.h"                    // for Size
+#include "config/Position.h"  // for Size
+#include "config/Position.h"
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
@@ -106,7 +107,9 @@ class Panel : public Widget {
   [[nodiscard]] auto childPanel(int width, int height) const -> swx::Panel *;
   void hide() const { _wx()->Hide(); }
   void refresh() const { _wx()->Refresh(); }
+  // TODO(akbar): Get rid of this duplicate setSize method
   void setSize(const wxSize &size) const { _wx()->SetSize(size); }
+  void setSize(const Size &size) const { _wx()->SetSize(size.toWx()); }
   void show() const { _wx()->Show(); }
   // Temporary -- remove once we get rid of clients using wx_size
   [[nodiscard]] auto wx_size() const -> wxSize { return _wx()->GetSize(); }

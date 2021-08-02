@@ -19,8 +19,6 @@ limitations under the License.
 
 #include "ui/component/ScreenText.h"
 
-#include <wx/image.h>  // for wxImage
-
 #include <algorithm>  // for max
 
 #include "config.pb.h"          // for TeamInfo_TeamType, ScreenSide (ptr only)
@@ -40,7 +38,7 @@ void ScreenText::setupPreview(const std::string &initial_text,
   setSize(size.toWx());
   std::vector<ScreenTextSide *> text_sides;
 
-  wxSize split_size = splitScreenSize(size.width, size.height, sides.size());
+  Size split_size = splitScreenSize(size.width, size.height, sides.size());
 
   std::vector<proto::TeamInfo_TeamType> screen_order =
       TeamConfig::getInstance()->singleScreenOrder();
@@ -51,8 +49,8 @@ void ScreenText::setupPreview(const std::string &initial_text,
     for (const auto &side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
         text_sides.push_back(
-            new ScreenTextSide(childPanel(split_size.x, split_size.y),
-                               initial_text, side, split_size));
+            new ScreenTextSide(childPanel(split_size.width, split_size.height),
+                               initial_text, side, split_size.toWx()));
         break;
       }
     }
@@ -61,16 +59,17 @@ void ScreenText::setupPreview(const std::string &initial_text,
   initializeSides(text_sides);
 }
 
-void ScreenText::setupPresenter(const ScreenText &preview, wxSize size) {
-  setSize(size);
+void ScreenText::setupPresenter(const ScreenText &preview, Size size) {
+  setSize(size.toWx());
   std::vector<ScreenTextSide *> text_sides;
 
-  wxSize split_size =
-      splitScreenSize(size.x, size.y, preview.text_sides.size());
+  Size split_size =
+      splitScreenSize(size.width, size.height, preview.text_sides.size());
 
   for (auto *source_text_side : preview.text_sides) {
-    text_sides.push_back(new ScreenTextSide(
-        childPanel(split_size.x, split_size.y), source_text_side, split_size));
+    text_sides.push_back(
+        new ScreenTextSide(childPanel(split_size.width, split_size.height),
+                           source_text_side, split_size.toWx()));
   }
 
   initializeSides(text_sides);
@@ -113,7 +112,7 @@ void ScreenText::addText(const proto::RenderableText &text,
   }
 }
 
-void ScreenText::setText(const wxString &text, int font_size,
+void ScreenText::setText(const std::string &text, int font_size,
                          const proto::ScreenSide &side) {
   autosplitDisplays(side);
   for (auto *text_side : text_sides) {
@@ -121,7 +120,7 @@ void ScreenText::setText(const wxString &text, int font_size,
   }
 }
 
-void ScreenText::setAllText(const wxString &text, int font_size,
+void ScreenText::setAllText(const std::string &text, int font_size,
                             const Color &background, bool auto_fit,
                             const proto::ScreenSide &side) {
   setAutoFit(auto_fit, side);
@@ -146,7 +145,7 @@ void ScreenText::setAllText(const std::vector<proto::RenderableText> &lines,
 
 void ScreenText::setAllText(const std::vector<proto::RenderableText> &lines,
                             const Color &background, bool auto_fit,
-                            const wxImage &logo_overlay,
+                            const Image &logo_overlay,
                             double overlay_screen_percentage,
                             unsigned char logo_alpha,
                             OverlayScreenPosition logo_position,
@@ -177,7 +176,7 @@ void ScreenText::blackout() {
   text_sides[0]->blackout();
 }
 
-void ScreenText::setImage(const wxImage &image, bool is_scaled,
+void ScreenText::setImage(const Image &image, bool is_scaled,
                           const proto::ScreenSide &side) {
   autosplitDisplays(side);
   for (auto *text_side : text_sides) {
@@ -193,7 +192,7 @@ void ScreenText::setBackground(const Color &color,
   }
 }
 
-void ScreenText::setBackgroundOverlay(const wxImage &overlay,
+void ScreenText::setBackgroundOverlay(const Image &overlay,
                                       double overlay_screen_percentage,
                                       unsigned char overlay_alpha,
                                       OverlayScreenPosition position,
@@ -227,7 +226,7 @@ void ScreenText::singleDisplay() {
   if (text_sides.size() < 2) {
     return;
   }
-  text_sides[0]->setSize(wx_size());
+  text_sides[0]->setSize(size().toWx());
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->hide();
   }
@@ -240,18 +239,18 @@ void ScreenText::splitDisplays() {
     return;
   }
   text_sides[0]->setSize(
-      splitScreenSize(wx_size().x, wx_size().y, text_sides.size()));
+      splitScreenSize(size().width, size().height, text_sides.size()).toWx());
   for (int i = 1; i < text_sides.size(); i++) {
     text_sides[i]->show();
   }
   update();
 }
 
-auto ScreenText::splitScreenSize(int x, int y, int number_of_splits) -> wxSize {
+auto ScreenText::splitScreenSize(int x, int y, int number_of_splits) -> Size {
   if (number_of_splits > 0) {
     x = x / number_of_splits;
   }
-  return wxSize(x, y);
+  return Size{.width = x, .height = y};
 }
 
 void ScreenText::setAll(const ScreenText &source) {

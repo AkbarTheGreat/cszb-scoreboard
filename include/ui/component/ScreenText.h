@@ -19,15 +19,12 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/gdicmn.h>  // for wxSize
-#include <wx/image.h>   // for wxImage
-#include <wx/string.h>  // for wxString
-
 #include <vector>  // for vector
 
+#include "config/Position.h"
+#include "config/swx/image.h"
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide (ptr only)
 #include "ui/widget/Panel.h"              // for Panel
-#include "config/Position.h"
 
 namespace cszb_scoreboard {
 class Color;
@@ -47,18 +44,18 @@ class ScreenText : public Panel {
   void setupPreview(const std::string &initial_text,
                     const std::vector<proto::ScreenSide> &sides, Size size);
 
-  void setupPresenter(const ScreenText &preview, wxSize size);
+  void setupPresenter(const ScreenText &preview, Size size);
 
   void addText(const proto::RenderableText &text,
                const proto::ScreenSide &side);
   void blackout();
   void resetAllText(const proto::ScreenSide &side);
-  void setImage(const wxImage &image, const proto::ScreenSide &side) {
+  void setImage(const Image &image, const proto::ScreenSide &side) {
     setImage(image, true, side);
     refresh();
   }
   void setBackground(const Color &color, const proto::ScreenSide &side);
-  void setBackgroundOverlay(const wxImage &overlay,
+  void setBackgroundOverlay(const Image &overlay,
                             double overlay_screen_percentage,
                             unsigned char overlay_alpha,
                             OverlayScreenPosition position,
@@ -66,14 +63,15 @@ class ScreenText : public Panel {
   void setDefaultBackground(const proto::ScreenSide &side);
   void setFontColor(proto::Font *font, const proto::ScreenSide &side);
   // Resets text fully for screen updates
-  void setAllText(const wxString &text, int font_size, const Color &background,
-                  bool auto_fit, const proto::ScreenSide &side);
+  void setAllText(const std::string &text, int font_size,
+                  const Color &background, bool auto_fit,
+                  const proto::ScreenSide &side);
   void setAllText(const std::vector<proto::RenderableText> &lines,
                   const Color &background, bool auto_fit,
                   const proto::ScreenSide &side);
   void setAllText(const std::vector<proto::RenderableText> &lines,
                   const Color &background, bool auto_fit,
-                  const wxImage &logo_overlay, double overlay_screen_percentage,
+                  const Image &logo_overlay, double overlay_screen_percentage,
                   unsigned char logo_alpha, OverlayScreenPosition logo_position,
                   const proto::ScreenSide &side);
   void setAll(const ScreenText &source);
@@ -91,12 +89,12 @@ class ScreenText : public Panel {
   void autosplitDisplays(const proto::ScreenSide &side);
   void initializeSides(const std::vector<ScreenTextSide *> &text_sides);
   void singleDisplay();
-  void setImage(const wxImage &image, bool is_scaled,
+  void setImage(const Image &image, bool is_scaled,
                 const proto::ScreenSide &side);
-  void setText(const wxString &text, int font_size,
+  void setText(const std::string &text, int font_size,
                const proto::ScreenSide &side);
   void splitDisplays();
-  static auto splitScreenSize(int x, int y, int number_of_splits) -> wxSize;
+  static auto splitScreenSize(int x, int y, int number_of_splits) -> Size;
 };
 
 }  // namespace cszb_scoreboard

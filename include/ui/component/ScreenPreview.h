@@ -27,11 +27,11 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 #include <vector>  // for vector
 
+#include "config/Position.h"
 #include "ui/component/ScreenText.h"       // for ScreenText
 #include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 #include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
 #include "ui/widget/Panel.h"               // for Panel
-#include "config/Position.h"
 
 class wxPanel;
 class wxWindow;
@@ -71,7 +71,7 @@ class ScreenPreview : public Panel {
   }
   void setAllText(const std::vector<proto::RenderableText> &lines,
                   const Color &background, bool auto_fit,
-                  const wxImage &logo_overlay, double overlay_screen_percentage,
+                  const Image &logo_overlay, double overlay_screen_percentage,
                   unsigned char logo_alpha, OverlayScreenPosition logo_position,
                   const proto::ScreenSide &side) {
     screen_text->setAllText(lines, background, auto_fit, logo_overlay,
@@ -79,7 +79,7 @@ class ScreenPreview : public Panel {
                             logo_position, side);
   }
   void setAll(const ScreenText &source) { screen_text->setAll(source); }
-  void setImage(const wxImage &image, const proto::ScreenSide &side) {
+  void setImage(const Image &image, const proto::ScreenSide &side) {
     screen_text->setImage(image, side);
   }
 
