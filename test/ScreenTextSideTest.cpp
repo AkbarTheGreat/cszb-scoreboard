@@ -44,7 +44,7 @@ class TestFrame : public Frame {
   TestFrame() : Frame("ScreenTextSideTest") {
     screen_text_side = std::make_unique<ScreenTextSide>(
         childPanel(), "Text", ProtoUtil::homeSide(),
-        wxSize(STARTING_WIDTH, STARTING_HEIGHT));
+        Size(STARTING_WIDTH, STARTING_HEIGHT));
     addWidget(*screen_text_side, 0, 0);
     runSizer();
   }
@@ -84,9 +84,9 @@ class ScreenTextSideTest : public testing::Test {
 TEST_F(ScreenTextSideTest, getExtents) {
   wxClientDC dc(screenText()->wx);
 
-  wxSize size = ScreenTextSide::getTextExtent(&dc, "Test Text");
-  int line_width = size.GetWidth();
-  int line_height = size.GetHeight();
+  Size size = ScreenTextSide::getTextExtent(&dc, "Test Text");
+  int line_width = size.width;
+  int line_height = size.height;
 
   // Single line text -- we can't guarantee pixel sizes per-platform, so let's
   // get a baseline here.
@@ -95,23 +95,23 @@ TEST_F(ScreenTextSideTest, getExtents) {
 
   // Multi-line Text, with something on every line
   size = ScreenTextSide::getTextExtent(&dc, "Test Text\n.\n.\nEnd");
-  ASSERT_EQ(size.GetWidth(), line_width)
+  ASSERT_EQ(size.width, line_width)
       << "Multi-line text with non-empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), line_height * 4)
+  ASSERT_EQ(size.height, line_height * 4)
       << "Multi-line text with non-empty lines height does not match";
 
   // Multi-line Text, with blank lines
   size = ScreenTextSide::getTextExtent(&dc, "Test Text\n\n\nEnd");
-  ASSERT_EQ(size.GetWidth(), line_width)
+  ASSERT_EQ(size.width, line_width)
       << "Multi-line text with empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), line_height * 4)
+  ASSERT_EQ(size.height, line_height * 4)
       << "Multi-line text with empty lines height does not match";
 
   // Multi-line Text, with trailing blank lines
   size = ScreenTextSide::getTextExtent(&dc, "Test Text\n\n\n\n");
-  ASSERT_EQ(size.GetWidth(), line_width)
+  ASSERT_EQ(size.width, line_width)
       << "Multi-line text with trailing empty lines width does not match";
-  ASSERT_EQ(size.GetHeight(), line_height * 5)
+  ASSERT_EQ(size.height, line_height * 5)
       << "Multi-line text with trailing empty lines height does not match";
 }
 

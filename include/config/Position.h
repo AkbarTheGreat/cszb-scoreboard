@@ -30,7 +30,7 @@ struct Position {
   [[nodiscard]] auto toWx() const -> wxPoint { return wxPoint(x, y); }
   static auto fromWx(const wxPoint& wx) -> Position;
   auto operator==(const Position& rhs) const -> bool;
-  auto operator!=(const Position& rhs) const -> bool ;
+  auto operator!=(const Position& rhs) const -> bool;
   auto operator-() const -> Position;
   auto operator+(const Position& b) const -> Position;
   auto operator-(const Position& b) const -> Position;
@@ -45,7 +45,7 @@ struct Size {
   [[nodiscard]] auto toWx() const -> wxSize { return wxSize(width, height); }
   static auto fromWx(const wxSize& wx) -> Size;
   auto operator==(const Size& rhs) const -> bool;
-  auto operator!=(const Size& rhs) const -> bool ;
+  auto operator!=(const Size& rhs) const -> bool;
   auto operator-() const -> Size;
   auto operator+(const Size& b) const -> Size;
   auto operator-(const Size& b) const -> Size;
