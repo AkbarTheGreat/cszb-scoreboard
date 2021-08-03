@@ -60,11 +60,11 @@ PreviewPanel::PreviewPanel(swx::Panel *wx) : DraggablePanel(wx) {
   positionWidgets();
 }
 
-
 void PreviewPanel::positionWidgets() {
   for (const auto &screen : screens) {
     addWidget(*screen);
   }
+  update();
 }
 
 auto PreviewPanel::numPreviews() -> int { return screens.size(); }
