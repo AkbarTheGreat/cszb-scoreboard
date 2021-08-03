@@ -41,7 +41,12 @@ class RenderContext {
   static auto forEvent(wxWindow* wx) -> std::unique_ptr<RenderContext>;
   static auto forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext>;
 
-  void drawImage(const Image& image, int32_t x, int32_t y, bool use_mask = false);
+  void drawImage(const Image& image, int32_t x, int32_t y,
+                 bool use_mask = false);
+  void drawText(const std::string& text, int32_t x, int32_t y);
+  void setFont(wxFont font);
+  void setTextColor(wxColour color);
+  void textExtent(wxString text, int* width, int* height);
 
  private:
   // Any initialization of either of these objects should ensure that the other

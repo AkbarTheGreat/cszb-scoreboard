@@ -18,7 +18,6 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiRes...
-#include <wx/dcclient.h>            // for wxClientDC
 #include <wx/gdicmn.h>              // for wxSize
 #include <wx/init.h>                // for wxEntryCleanup
 
@@ -82,9 +81,10 @@ class ScreenTextSideTest : public testing::Test {
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ScreenTextSideTest, getExtents) {
-  wxClientDC dc(screenText()->wx);
+  std::unique_ptr<RenderContext> renderer =
+      RenderContext::forWidget(screenText()->wx);
 
-  Size size = ScreenTextSide::getTextExtent(&dc, "Test Text");
+  Size size = ScreenTextSide::getTextExtent(renderer.get(), "Test Text");
   int line_width = size.width;
   int line_height = size.height;
 
@@ -94,21 +94,21 @@ TEST_F(ScreenTextSideTest, getExtents) {
   ASSERT_GT(line_height, 10) << "Single line text height looks unrealistic";
 
   // Multi-line Text, with something on every line
-  size = ScreenTextSide::getTextExtent(&dc, "Test Text\n.\n.\nEnd");
+  size = ScreenTextSide::getTextExtent(renderer.get(), "Test Text\n.\n.\nEnd");
   ASSERT_EQ(size.width, line_width)
       << "Multi-line text with non-empty lines width does not match";
   ASSERT_EQ(size.height, line_height * 4)
       << "Multi-line text with non-empty lines height does not match";
 
   // Multi-line Text, with blank lines
-  size = ScreenTextSide::getTextExtent(&dc, "Test Text\n\n\nEnd");
+  size = ScreenTextSide::getTextExtent(renderer.get(), "Test Text\n\n\nEnd");
   ASSERT_EQ(size.width, line_width)
       << "Multi-line text with empty lines width does not match";
   ASSERT_EQ(size.height, line_height * 4)
       << "Multi-line text with empty lines height does not match";
 
   // Multi-line Text, with trailing blank lines
-  size = ScreenTextSide::getTextExtent(&dc, "Test Text\n\n\n\n");
+  size = ScreenTextSide::getTextExtent(renderer.get(), "Test Text\n\n\n\n");
   ASSERT_EQ(size.width, line_width)
       << "Multi-line text with trailing empty lines width does not match";
   ASSERT_EQ(size.height, line_height * 5)

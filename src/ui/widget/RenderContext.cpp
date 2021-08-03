@@ -24,9 +24,49 @@ namespace cszb_scoreboard {
 void RenderContext::drawImage(const Image& image, int32_t x, int32_t y,
                               bool use_mask) {
   if (event_context) {
-    event_context->DrawBitmap(wxBitmap(image), x, y, false);
+    event_context->DrawBitmap(wxBitmap(image), x, y, use_mask);
   } else if (generic_context) {
-    event_context->DrawBitmap(wxBitmap(image), x, y, false);
+    generic_context->DrawBitmap(wxBitmap(image), x, y, use_mask);
+  }
+  // If neither of the above is true, this behavior is undefined.
+}
+
+void RenderContext::drawText(const std::string& text, int32_t x, int32_t y) {
+  if (event_context) {
+    event_context->DrawText(text, x, y);
+  } else if (generic_context) {
+    generic_context->DrawText(text, x, y);
+  }
+  // If neither of the above is true, this behavior is undefined.
+}
+
+// This is a stop-gap implementation of setFont.  Ultimately, we'll move away
+// from using wxFont.
+void RenderContext::setFont(wxFont font) {
+  if (event_context) {
+    event_context->SetFont(font);
+  } else if (generic_context) {
+    generic_context->SetFont(font);
+  }
+  // If neither of the above is true, this behavior is undefined.
+}
+
+// This is a stop-gap implementation of setFont.  Ultimately, we'll move away
+// from using wxFont.
+void RenderContext::setTextColor(wxColour color) {
+  if (event_context) {
+    event_context->SetTextForeground(color);
+  } else if (generic_context) {
+    generic_context->SetTextForeground(color);
+  }
+  // If neither of the above is true, this behavior is undefined.
+}
+
+void RenderContext::textExtent(wxString text, int* width, int* height) {
+  if (event_context) {
+    event_context->GetTextExtent(text, width, height);
+  } else if (generic_context) {
+    generic_context->GetTextExtent(text, width, height);
   }
   // If neither of the above is true, this behavior is undefined.
 }

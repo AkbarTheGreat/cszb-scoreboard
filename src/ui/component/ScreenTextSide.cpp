@@ -20,8 +20,6 @@ limitations under the License.
 
 #include "ui/component/ScreenTextSide.h"
 
-#include <wx/dc.h>        // for wxDC
-#include <wx/dcclient.h>  // for wxPaintDC
 #include <wx/event.h>     // for wxPaintEvent (ptr only)
 #include <wx/tokenzr.h>   // for wxStringTokenizer, wxTOKEN_...
 
@@ -168,26 +166,26 @@ void ScreenTextSide::blackout() {
   refresh();
 }
 
-void ScreenTextSide::renderScaledBackground(wxDC *dc) {
+void ScreenTextSide::renderScaledBackground(RenderContext *renderer) {
   Image scaled_image = scaleImage(image, size());
   int x = (size().width - scaled_image.size().width) / 2;
   int y = (size().height - scaled_image.size().height) / 2;
-  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
+  renderer->drawImage( scaled_image, x, y );
 }
 
-void ScreenTextSide::renderOverlay(wxDC *dc) {
+void ScreenTextSide::renderOverlay(RenderContext *renderer) {
   if (!background_overlay.has_value()) {
     return;
   }
 
   if (overlay_position == OverlayScreenPosition::Centered) {
-    renderOverlayCentered(dc);
+    renderOverlayCentered(renderer);
   } else if (overlay_position == OverlayScreenPosition::BottomLeft) {
-    renderOverlayBottomCorner(dc);
+    renderOverlayBottomCorner(renderer);
   }
 }
 
-void ScreenTextSide::renderOverlayBottomCorner(wxDC *dc) {
+void ScreenTextSide::renderOverlayBottomCorner(RenderContext *renderer) {
   Image scaled_image =
       scaleImage(*background_overlay, size() * BOTTOM_CORNER_OVERLAY_SCALE);
   Color font_color("White");
@@ -198,10 +196,10 @@ void ScreenTextSide::renderOverlayBottomCorner(wxDC *dc) {
 
   int x = TOP_OR_BOTTOM_MARGIN;
   int y = size().height - scaled_image.size().height - TOP_OR_BOTTOM_MARGIN;
-  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
+  renderer->drawImage(scaled_image, x, y );
 }
 
-void ScreenTextSide::renderOverlayCentered(wxDC *dc) {
+void ScreenTextSide::renderOverlayCentered(RenderContext *renderer) {
   Image scaled_image =
       scaleImage(*background_overlay, size() * overlay_percentage);
 
@@ -213,16 +211,16 @@ void ScreenTextSide::renderOverlayCentered(wxDC *dc) {
 
   int x = (size().width - scaled_image.size().width) / 2;
   int y = (size().height - scaled_image.size().height) / 2;
-  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
+  renderer->drawImage(scaled_image, x, y );
 }
 
-void ScreenTextSide::renderBackground(wxDC *dc) {
+void ScreenTextSide::renderBackground(RenderContext *renderer) {
   if (image_is_scaled) {
-    renderScaledBackground(dc);
+    renderScaledBackground(renderer);
   } else {
-    dc->DrawBitmap(wxBitmap(image), 0, 0, false);
+    renderer->drawImage(image, 0, 0 );
   }
-  renderOverlay(dc);
+  renderOverlay(renderer);
 }
 
 auto ScreenTextSide::scaleImage(const Image &image, const Size &target_size)
@@ -263,81 +261,81 @@ void ScreenTextSide::adjustOverlayColorAndAlpha(Image *image,
   }
 }
 
-void ScreenTextSide::autoFitText(wxDC *dc, proto::RenderableText *text) {
+void ScreenTextSide::autoFitText(RenderContext *renderer, proto::RenderableText *text) {
   proto::Font *font = text->mutable_font();
   wxSize screen_size = wx_size();
 
-  dc->SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
-  Size text_extent = getTextExtent(dc, text->text());
+  renderer->setFont(ProtoUtil::wxScaledFont(*font, screen_size));
+  Size text_extent = getTextExtent(renderer, text->text());
 
   while (text_extent.width > screen_size.GetWidth() && font->size() > 0) {
     font->set_size(font->size() - AUTOFIT_FONT_ADJUSTMENT);
-    dc->SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
-    text_extent = getTextExtent(dc, text->text());
+    renderer->setFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    text_extent = getTextExtent(renderer, text->text());
   }
 
   while (text_extent.height > screen_size.GetHeight() && font->size() > 0) {
     font->set_size(font->size() - AUTOFIT_FONT_ADJUSTMENT);
-    dc->SetFont(ProtoUtil::wxScaledFont(*font, screen_size));
-    text_extent = getTextExtent(dc, text->text());
+    renderer->setFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    text_extent = getTextExtent(renderer, text->text());
   }
 }
 
-auto ScreenTextSide::bottomText(wxDC *dc, const std::string &text) -> Position {
-  Size text_extent = getTextExtent(dc, text);
+auto ScreenTextSide::bottomText(RenderContext *renderer, const std::string &text) -> Position {
+  Size text_extent = getTextExtent(renderer, text);
   int x = (wx_size().GetWidth() - text_extent.width) / 2;
   int margin = wx_size().GetHeight() * TOP_OR_BOTTOM_RATIO;
   int y = wx_size().GetHeight() - text_extent.height - margin;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::centerText(wxDC *dc, const std::string &text) -> Position {
-  Size text_extent = getTextExtent(dc, text);
+auto ScreenTextSide::centerText(RenderContext *renderer, const std::string &text) -> Position {
+  Size text_extent = getTextExtent(renderer, text);
   int x = (size().width - text_extent.width) / 2;
   int y = (size().height - text_extent.height) / 2;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::topText(wxDC *dc, const std::string &text) -> Position {
-  Size text_extent = getTextExtent(dc, text);
+auto ScreenTextSide::topText(RenderContext *renderer, const std::string &text) -> Position {
+  Size text_extent = getTextExtent(renderer, text);
   int x = (size().width - text_extent.width) / 2;
   int y = size().height * TOP_OR_BOTTOM_RATIO;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::positionText(wxDC *dc, const proto::RenderableText &text)
+auto ScreenTextSide::positionText(RenderContext *renderer, const proto::RenderableText &text)
     -> Position {
   switch (text.position()) {
     case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_BOTTOM:
-      return bottomText(dc, text.text());
+      return bottomText(renderer, text.text());
       break;
     case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_TOP:
-      return topText(dc, text.text());
+      return topText(renderer, text.text());
       break;
     case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_CENTERED:
     default:
-      return centerText(dc, text.text());
+      return centerText(renderer, text.text());
       break;
   }
 }
 
-void ScreenTextSide::renderText(wxDC *dc, proto::RenderableText *text) {
+void ScreenTextSide::renderText(RenderContext *renderer, proto::RenderableText *text) {
   if (auto_fit_text) {
-    autoFitText(dc, text);
+    autoFitText(renderer, text);
   }
-  dc->SetFont(ProtoUtil::wxScaledFont(text->font(), wx_size()));
-  dc->SetTextForeground(ProtoUtil::wxClr(text->font().color()));
-  Position placement = positionText(dc, *text);
-  dc->DrawText(text->text(), placement.x, placement.y);
+  renderer->setFont(ProtoUtil::wxScaledFont(text->font(), wx_size()));
+  renderer->setTextColor(ProtoUtil::wxClr(text->font().color()));
+  Position placement = positionText(renderer, *text);
+  renderer->drawText(text->text(), placement.x, placement.y);
 }
 
-void ScreenTextSide::renderAllText(wxDC *dc) {
+void ScreenTextSide::renderAllText(RenderContext *renderer) {
   for (auto &text : texts) {
-    renderText(dc, &text);
+    renderText(renderer, &text);
   }
 }
 
-auto ScreenTextSide::getTextExtent(wxDC *dc, const std::string &text) -> Size {
+auto ScreenTextSide::getTextExtent(RenderContext *renderer, const std::string &text) -> Size {
   wxStringTokenizer tokens(text, "\n\r", wxTOKEN_RET_EMPTY_ALL);
   int width = 0;
   int height = 0;
@@ -351,7 +349,7 @@ auto ScreenTextSide::getTextExtent(wxDC *dc, const std::string &text) -> Size {
     }
     int line_width;
     int line_height;
-    dc->GetTextExtent(token, &line_width, &line_height);
+    renderer->textExtent(token, &line_width, &line_height);
     if (line_width > width) {
       width = line_width;
     }
@@ -362,9 +360,8 @@ auto ScreenTextSide::getTextExtent(wxDC *dc, const std::string &text) -> Size {
 }
 
 void ScreenTextSide::paintEvent(RenderContext *renderer) {
-  wxPaintDC dc(wx);
-  renderBackground(&dc);
-  renderAllText(&dc);
+  renderBackground(renderer);
+  renderAllText(renderer);
 }
 
 void ScreenTextSide::setImage(const Image &image, bool is_scaled,

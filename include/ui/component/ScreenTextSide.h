@@ -29,8 +29,8 @@ limitations under the License.
 #include "config/swx/image.h"
 #include "ui/graphics/Color.h"  // for Color
 #include "ui/widget/Panel.h"    // for Panel
+#include "ui/widget/RenderContext.h"
 
-class wxDC;
 class wxPaintEvent;
 
 namespace cszb_scoreboard {
@@ -70,7 +70,7 @@ class ScreenTextSide : public Panel {
   auto isSide(const proto::ScreenSide &side) -> bool;
 
   PUBLIC_TEST_ONLY
-  static auto getTextExtent(wxDC *dc, const std::string &text) -> Size;
+  static auto getTextExtent(RenderContext *renderer, const std::string &text) -> Size;
 
  private:
   bool auto_fit_text;
@@ -87,23 +87,23 @@ class ScreenTextSide : public Panel {
 
   static auto ratio(const Size &size) -> float;
   static auto scaleImage(const Image &image, const Size &target_size) -> Image;
-  void autoFitText(wxDC *dc, proto::RenderableText *text);
+  void autoFitText(RenderContext *renderer, proto::RenderableText *text);
   void bindEvents();
   void adjustOverlayColorAndAlpha(Image *image, const Color &color) const;
-  auto bottomText(wxDC *dc, const std::string &text) -> Position;
-  auto centerText(wxDC *dc, const std::string &text) -> Position;
+  auto bottomText(RenderContext *renderer, const std::string &text) -> Position;
+  auto centerText(RenderContext *renderer, const std::string &text) -> Position;
   void createBlackout();
   void initializeForColor(Size size, Color color);
-  auto positionText(wxDC *dc, const proto::RenderableText &text) -> Position;
-  void renderBackground(wxDC *dc);
-  void renderOverlay(wxDC *dc);
-  void renderOverlayBottomCorner(wxDC *dc);
-  void renderOverlayCentered(wxDC *dc);
-  void renderScaledBackground(wxDC *dc);
-  void renderText(wxDC *dc, proto::RenderableText *text);
-  void renderAllText(wxDC *dc);
+  auto positionText(RenderContext *renderer, const proto::RenderableText &text) -> Position;
+  void renderBackground(RenderContext *renderer);
+  void renderOverlay(RenderContext *renderer);
+  void renderOverlayBottomCorner(RenderContext *renderer);
+  void renderOverlayCentered(RenderContext *renderer);
+  void renderScaledBackground(RenderContext *renderer);
+  void renderText(RenderContext *dc, proto::RenderableText *text);
+  void renderAllText(RenderContext *renderer);
   void setBackground(const Color &color);
-  auto topText(wxDC *dc, const std::string &text) -> Position;
+  auto topText(RenderContext *renderer, const std::string &text) -> Position;
 };
 
 }  // namespace cszb_scoreboard
