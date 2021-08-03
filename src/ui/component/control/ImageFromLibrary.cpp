@@ -125,8 +125,8 @@ void ImageFromLibrary::bindEvents() {
       wxEVT_COMMAND_BUTTON_CLICKED,
       [this](wxCommandEvent &event) -> void { this->pageChange(true); });
   for (const auto &preview : image_previews) {
-    // Cast our pointer to a const reference, for the lambda capture.
-    auto arg = *preview;
+    // Capture the unique_ptr to a referencing pointer, for the lambda capture.
+    auto *arg = preview.get();
     preview->bind(wxEVT_LEFT_DOWN, [this, arg](wxMouseEvent &event) -> void {
       this->selectImage(arg);
     });
@@ -152,8 +152,11 @@ void ImageFromLibrary::pageChange(bool forward) {
   }
 }
 
-void ImageFromLibrary::selectImage(const ImagePreview &image) {
-  std::optional<FilesystemPath> filename = image.getFilename();
+// selectImage uses a pointer instead of a const ref due to the delayed nature
+// of it's use in a bind.  If you bind the lambda with a const ref, you wind up
+// with an object that is potentially stuck in initialization-time semantics.
+void ImageFromLibrary::selectImage(ImagePreview *image) {
+  std::optional<FilesystemPath> filename = image->getFilename();
 
   // do nothing if someone clicked a gray box
   if (!filename) {

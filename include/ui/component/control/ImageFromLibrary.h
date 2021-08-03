@@ -64,7 +64,7 @@ class ImageFromLibrary : public ScreenImageController {
   void positionWidgets(Panel *control_panel) override;
   void setImages(const std::string &search, unsigned int page_number = 0);
   void doSearch();
-  void selectImage(const ImagePreview &image);
+  void selectImage(ImagePreview *image);
   void editButton();
   void pageChange(bool forward);
 };
