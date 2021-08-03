@@ -24,7 +24,8 @@ limitations under the License.
 
 #include <functional>  // for function
 
-#include "ScoreboardCommon.h"     // for DEFAULT_BORDER_SIZE
+#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
+#include "ui/widget/RenderContext.h"
 #include "ui/widget/swx/Sizer.h"  // for Sizer
 #include "wx/window.h"            // for wxWindow
 
@@ -64,13 +65,12 @@ class Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
+  // A wxPaintEvent wraps more functionality than others, in that it creates a
+  // renderable context for use in rendering to the window implicitly, which may
+  // be utilized by other Widget methods.
   void bind(const wxEventTypeTag<wxPaintEvent> &eventType,
-            const std::function<void(wxPaintEvent &)> &lambda,
-            int id = wxID_ANY) {
-    _wx()->Bind(eventType, lambda, id);
-  }
-  void drawImage(const Image &image, int32_t x, int32_t y,
-                 bool use_mask = false);
+            const std::function<void(RenderContext *)> &lambda,
+            int id = wxID_ANY);
   void focus() { _wx()->SetFocus(); }
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);

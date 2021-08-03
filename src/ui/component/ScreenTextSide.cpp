@@ -82,7 +82,7 @@ ScreenTextSide::ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
 
 void ScreenTextSide::bindEvents() {
   bind(wxEVT_PAINT,
-       [this](wxPaintEvent &event) -> void { this->paintEvent(); });
+       [this](RenderContext *renderer) -> void { this->paintEvent(renderer); });
 }
 
 void ScreenTextSide::resetAllText(const proto::ScreenSide &side) {
@@ -361,7 +361,7 @@ auto ScreenTextSide::getTextExtent(wxDC *dc, const std::string &text) -> Size {
   return Size{.width = width, .height = height};
 }
 
-void ScreenTextSide::paintEvent() {
+void ScreenTextSide::paintEvent(RenderContext *renderer) {
   wxPaintDC dc(wx);
   renderBackground(&dc);
   renderAllText(&dc);

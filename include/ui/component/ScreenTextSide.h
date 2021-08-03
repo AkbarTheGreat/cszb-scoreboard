@@ -49,7 +49,7 @@ class ScreenTextSide : public Panel {
   void addText(const proto::RenderableText &text,
                const proto::ScreenSide &side);
   void blackout();
-  void paintEvent();
+  void paintEvent(RenderContext *renderer);
   void resetAllText(const proto::ScreenSide &side);
   void setImage(const Image &image, bool is_scaled,
                 const proto::ScreenSide &side);

@@ -40,7 +40,7 @@ class ImagePreview : public Panel {
 
  private:
   void bindEvents();
-  void paintEvent();
+  void paintEvent(RenderContext *renderer);
   static auto ratio(const Size &size) -> float;
 
   std::optional<FilesystemPath> filename;

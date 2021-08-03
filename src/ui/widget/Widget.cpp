@@ -41,11 +41,6 @@ void Widget::addWidgetWithSpan(const Widget &widget, int row, int column,
                wxGBSpan(row_span, column_span), flag, border_size);
 }
 
-void Widget::drawImage(const Image &image, int32_t x, int32_t y,
-                       bool use_mask) {
-  wxPaintDC(_wx()).DrawBitmap(wxBitmap(image), x, y, false);
-}
-
 auto Widget::widgetAtIndex(int row, int column) -> wxWindow * {
   if (window_sizer == nullptr) {
     return nullptr;
@@ -125,6 +120,19 @@ auto Widget::sizer() -> swx::Sizer * {
     window_sizer = new swx::Sizer();
   }
   return window_sizer;
+}
+
+// Paint events also need to create a DC to work appropriately, so we handle
+// that here.
+void Widget::bind(const wxEventTypeTag<wxPaintEvent> &eventType,
+                  const std::function<void(RenderContext *)> &lambda, int id) {
+  _wx()->Bind(
+      eventType,
+      [this, lambda](wxPaintEvent &event) -> void {
+        std::unique_ptr<RenderContext> render_context = RenderContext::forEvent(_wx());
+        lambda(render_context.get());
+      },
+      id);
 }
 
 }  // namespace cszb_scoreboard

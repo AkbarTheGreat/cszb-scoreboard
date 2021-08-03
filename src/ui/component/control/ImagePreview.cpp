@@ -37,10 +37,10 @@ ImagePreview::ImagePreview(swx::Panel *wx) : Panel(wx) {
 
 void ImagePreview::bindEvents() {
   bind(wxEVT_PAINT,
-       [this](wxPaintEvent &event) -> void { this->paintEvent(); });
+       [this](RenderContext *renderer) -> void { this->paintEvent(renderer); });
 }
 
-void ImagePreview::paintEvent() {
+void ImagePreview::paintEvent(RenderContext *renderer) {
   Image scaled_image = image;
   Size image_size = scaled_image.size();
   float screen_ratio = ratio(size());
@@ -62,7 +62,7 @@ void ImagePreview::paintEvent() {
   int x = (size().width - image_width) / 2;
   int y = (size().height - image_height) / 2;
 
-  drawImage(scaled_image, x, y);
+  renderer->drawImage(scaled_image, x, y);
 }
 
 auto ImagePreview::ratio(const Size &size) -> float {
