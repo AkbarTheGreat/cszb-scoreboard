@@ -43,7 +43,7 @@ class TestFrame : public Frame {
   TestFrame() : Frame("ScreenTextSideTest") {
     screen_text_side = std::make_unique<ScreenTextSide>(
         childPanel(), "Text", ProtoUtil::homeSide(),
-        Size(STARTING_WIDTH, STARTING_HEIGHT));
+        Size{.width = STARTING_WIDTH, .height = STARTING_HEIGHT});
     addWidget(*screen_text_side, 0, 0);
     runSizer();
   }

@@ -60,7 +60,7 @@ class ScreenPreview : public Panel {
   auto screen() -> ScreenText * { return screen_text.get(); }
   auto thumbnailWidget() -> ScreenText *;
 
-  void setAllText(const wxString &text, int font_size, const Color &background,
+  void setAllText(const std::string &text, int font_size, const Color &background,
                   bool auto_fit, const proto::ScreenSide &side) {
     screen_text->setAllText(text, font_size, background, auto_fit, side);
   }

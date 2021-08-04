@@ -26,11 +26,11 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "ui/widget/DraggablePanel.h"   // for Panel
+#include "ui/component/ScreenPreview.h"
 
 class wxCommandEvent;
 
 namespace cszb_scoreboard {
-class ScreenPreview;
 class ScreenText;
 
 namespace swx {
