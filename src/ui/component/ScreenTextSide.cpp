@@ -20,18 +20,15 @@ limitations under the License.
 
 #include "ui/component/ScreenTextSide.h"
 
-#include <wx/event.h>     // for wxPaintEvent (ptr only)
-#include <wx/tokenzr.h>   // for wxStringTokenizer, wxTOKEN_...
-
 #include <algorithm>  // for max
 #include <memory>     // for allocator_traits<>::value_type
 
 #include "config/Position.h"              // for Size
 #include "config/TeamConfig.h"            // for TeamConfig
+#include "config/swx/event.h"             // for wxPaintEvent (ptr only)
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
 #include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
-#include "wx/bitmap.h"                    // for wxBitmap
 
 namespace cszb_scoreboard {
 
@@ -170,7 +167,7 @@ void ScreenTextSide::renderScaledBackground(RenderContext *renderer) {
   Image scaled_image = scaleImage(image, size());
   int x = (size().width - scaled_image.size().width) / 2;
   int y = (size().height - scaled_image.size().height) / 2;
-  renderer->drawImage( scaled_image, x, y );
+  renderer->drawImage(scaled_image, x, y);
 }
 
 void ScreenTextSide::renderOverlay(RenderContext *renderer) {
@@ -196,7 +193,7 @@ void ScreenTextSide::renderOverlayBottomCorner(RenderContext *renderer) {
 
   int x = TOP_OR_BOTTOM_MARGIN;
   int y = size().height - scaled_image.size().height - TOP_OR_BOTTOM_MARGIN;
-  renderer->drawImage(scaled_image, x, y );
+  renderer->drawImage(scaled_image, x, y);
 }
 
 void ScreenTextSide::renderOverlayCentered(RenderContext *renderer) {
@@ -211,14 +208,14 @@ void ScreenTextSide::renderOverlayCentered(RenderContext *renderer) {
 
   int x = (size().width - scaled_image.size().width) / 2;
   int y = (size().height - scaled_image.size().height) / 2;
-  renderer->drawImage(scaled_image, x, y );
+  renderer->drawImage(scaled_image, x, y);
 }
 
 void ScreenTextSide::renderBackground(RenderContext *renderer) {
   if (image_is_scaled) {
     renderScaledBackground(renderer);
   } else {
-    renderer->drawImage(image, 0, 0 );
+    renderer->drawImage(image, 0, 0);
   }
   renderOverlay(renderer);
 }
@@ -250,8 +247,7 @@ void ScreenTextSide::adjustOverlayColorAndAlpha(Image *image,
                                                 const Color &color) const {
   // We presume that the overlay is predominantly black, so subtracting it from
   // the font color should give us that color most of the time.
-  wxRect dimensions(wxPoint(0, 0), image->GetSize());
-  image->SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
+  image->setColor(color);
   unsigned char *alpha = image->GetAlpha();
   for (int i = 0;
        i < image->GetSize().GetWidth() * image->GetSize().GetHeight(); i++) {
@@ -261,49 +257,53 @@ void ScreenTextSide::adjustOverlayColorAndAlpha(Image *image,
   }
 }
 
-void ScreenTextSide::autoFitText(RenderContext *renderer, proto::RenderableText *text) {
+void ScreenTextSide::autoFitText(RenderContext *renderer,
+                                 proto::RenderableText *text) {
   proto::Font *font = text->mutable_font();
-  wxSize screen_size = wx_size();
 
-  renderer->setFont(ProtoUtil::wxScaledFont(*font, screen_size));
+  renderer->setFont(*font, size());
   Size text_extent = getTextExtent(renderer, text->text());
 
-  while (text_extent.width > screen_size.GetWidth() && font->size() > 0) {
+  while (text_extent.width > size().width && font->size() > 0) {
     font->set_size(font->size() - AUTOFIT_FONT_ADJUSTMENT);
-    renderer->setFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    renderer->setFont(*font, size());
     text_extent = getTextExtent(renderer, text->text());
   }
 
-  while (text_extent.height > screen_size.GetHeight() && font->size() > 0) {
+  while (text_extent.height > size().height && font->size() > 0) {
     font->set_size(font->size() - AUTOFIT_FONT_ADJUSTMENT);
-    renderer->setFont(ProtoUtil::wxScaledFont(*font, screen_size));
+    renderer->setFont(*font, size());
     text_extent = getTextExtent(renderer, text->text());
   }
 }
 
-auto ScreenTextSide::bottomText(RenderContext *renderer, const std::string &text) -> Position {
+auto ScreenTextSide::bottomText(RenderContext *renderer,
+                                const std::string &text) -> Position {
   Size text_extent = getTextExtent(renderer, text);
-  int x = (wx_size().GetWidth() - text_extent.width) / 2;
-  int margin = wx_size().GetHeight() * TOP_OR_BOTTOM_RATIO;
-  int y = wx_size().GetHeight() - text_extent.height - margin;
+  int x = (size().width - text_extent.width) / 2;
+  int margin = size().height * TOP_OR_BOTTOM_RATIO;
+  int y = size().height - text_extent.height - margin;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::centerText(RenderContext *renderer, const std::string &text) -> Position {
+auto ScreenTextSide::centerText(RenderContext *renderer,
+                                const std::string &text) -> Position {
   Size text_extent = getTextExtent(renderer, text);
   int x = (size().width - text_extent.width) / 2;
   int y = (size().height - text_extent.height) / 2;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::topText(RenderContext *renderer, const std::string &text) -> Position {
+auto ScreenTextSide::topText(RenderContext *renderer, const std::string &text)
+    -> Position {
   Size text_extent = getTextExtent(renderer, text);
   int x = (size().width - text_extent.width) / 2;
   int y = size().height * TOP_OR_BOTTOM_RATIO;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::positionText(RenderContext *renderer, const proto::RenderableText &text)
+auto ScreenTextSide::positionText(RenderContext *renderer,
+                                  const proto::RenderableText &text)
     -> Position {
   switch (text.position()) {
     case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_BOTTOM:
@@ -319,11 +319,12 @@ auto ScreenTextSide::positionText(RenderContext *renderer, const proto::Renderab
   }
 }
 
-void ScreenTextSide::renderText(RenderContext *renderer, proto::RenderableText *text) {
+void ScreenTextSide::renderText(RenderContext *renderer,
+                                proto::RenderableText *text) {
   if (auto_fit_text) {
     autoFitText(renderer, text);
   }
-  renderer->setFont(ProtoUtil::wxScaledFont(text->font(), wx_size()));
+  renderer->setFont(text->font(), size());
   renderer->setTextColor(ProtoUtil::wxClr(text->font().color()));
   Position placement = positionText(renderer, *text);
   renderer->drawText(text->text(), placement.x, placement.y);
@@ -335,28 +336,9 @@ void ScreenTextSide::renderAllText(RenderContext *renderer) {
   }
 }
 
-auto ScreenTextSide::getTextExtent(RenderContext *renderer, const std::string &text) -> Size {
-  wxStringTokenizer tokens(text, "\n\r", wxTOKEN_RET_EMPTY_ALL);
-  int width = 0;
-  int height = 0;
-  while (tokens.HasMoreTokens()) {
-    wxString token = tokens.GetNextToken();
-    if (token.IsEmpty()) {
-      // If the line is empty, the vertical extent reads as 0, when it should be
-      // the constant height of a character.  So put a thin character here to
-      // get the correct vertical extent.
-      token = "|";
-    }
-    int line_width;
-    int line_height;
-    renderer->textExtent(token, &line_width, &line_height);
-    if (line_width > width) {
-      width = line_width;
-    }
-    height += line_height;
-  }
-
-  return Size{.width = width, .height = height};
+auto ScreenTextSide::getTextExtent(RenderContext *renderer,
+                                   const std::string &text) -> Size {
+  return renderer->textExtent(text);
 }
 
 void ScreenTextSide::paintEvent(RenderContext *renderer) {

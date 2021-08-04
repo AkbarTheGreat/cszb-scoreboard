@@ -25,4 +25,9 @@ auto Image::size() -> ::cszb_scoreboard::Size {
   return ::cszb_scoreboard::Size::fromWx(GetSize());
 }
 
+void Image::setColor(const Color &color) {
+  wxRect dimensions(wxPoint(0, 0), GetSize());
+  SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
+}
+
 }  // namespace cszb_scoreboard

@@ -19,6 +19,10 @@ limitations under the License.
 
 #include "ui/widget/RenderContext.h"
 
+#include <wx/tokenzr.h>  // for wxStringTokenizer, wxTOKEN_...
+
+#include "util/ProtoUtil.h"
+
 namespace cszb_scoreboard {
 
 void RenderContext::drawImage(const Image& image, int32_t x, int32_t y,
@@ -42,18 +46,18 @@ void RenderContext::drawText(const std::string& text, int32_t x, int32_t y) {
 
 // This is a stop-gap implementation of setFont.  Ultimately, we'll move away
 // from using wxFont.
-void RenderContext::setFont(wxFont font) {
+void RenderContext::setFont(const proto::Font& font, const Size& font_size) {
   if (event_context) {
-    event_context->SetFont(font);
+    event_context->SetFont(ProtoUtil::wxScaledFont(font, font_size.toWx()));
   } else if (generic_context) {
-    generic_context->SetFont(font);
+    generic_context->SetFont(ProtoUtil::wxScaledFont(font, font_size.toWx()));
   }
   // If neither of the above is true, this behavior is undefined.
 }
 
 // This is a stop-gap implementation of setFont.  Ultimately, we'll move away
 // from using wxFont.
-void RenderContext::setTextColor(wxColour color) {
+void RenderContext::setTextColor(const Color& color) {
   if (event_context) {
     event_context->SetTextForeground(color);
   } else if (generic_context) {
@@ -62,13 +66,42 @@ void RenderContext::setTextColor(wxColour color) {
   // If neither of the above is true, this behavior is undefined.
 }
 
-void RenderContext::textExtent(wxString text, int* width, int* height) {
+void RenderContext::textExtent(const std::string& text, int* width,
+                               int* height) {
   if (event_context) {
     event_context->GetTextExtent(text, width, height);
   } else if (generic_context) {
     generic_context->GetTextExtent(text, width, height);
   }
   // If neither of the above is true, this behavior is undefined.
+}
+
+auto RenderContext::textExtent(const std::string& text) -> Size {
+  wxStringTokenizer tokens(text, "\n\r", wxTOKEN_RET_EMPTY_ALL);
+  int width = 0;
+  int height = 0;
+  while (tokens.HasMoreTokens()) {
+    wxString token = tokens.GetNextToken();
+    if (token.IsEmpty()) {
+      // If the line is empty, the vertical extent reads as 0, when it should be
+      // the constant height of a character.  So put a thin character here to
+      // get the correct vertical extent.
+      token = "|";
+    }
+    int line_width;
+    int line_height;
+    if (event_context) {
+      event_context->GetTextExtent(token, &line_width, &line_height);
+    } else if (generic_context) {
+      generic_context->GetTextExtent(token, &line_width, &line_height);
+    }
+    if (line_width > width) {
+      width = line_width;
+    }
+    height += line_height;
+  }
+
+  return Size{.width = width, .height = height};
 }
 
 auto RenderContext::forEvent(wxWindow* wx) -> std::unique_ptr<RenderContext> {

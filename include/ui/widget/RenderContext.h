@@ -19,7 +19,10 @@ limitations under the License.
 
 #pragma once
 
+#include "config.pb.h"
+#include "config/Position.h"
 #include "config/swx/image.h"
+#include "ui/graphics/Color.h"
 #include "ui/widget/swx/ClientDC.h"
 #include "ui/widget/swx/PaintDC.h"
 
@@ -44,9 +47,10 @@ class RenderContext {
   void drawImage(const Image& image, int32_t x, int32_t y,
                  bool use_mask = false);
   void drawText(const std::string& text, int32_t x, int32_t y);
-  void setFont(wxFont font);
-  void setTextColor(wxColour color);
-  void textExtent(wxString text, int* width, int* height);
+  void setFont(const proto::Font& font, const Size& font_size);
+  void setTextColor(const Color& color);
+  void textExtent(const std::string& text, int* width, int* height);
+  auto textExtent(const std::string& text) -> Size;
 
  private:
   // Any initialization of either of these objects should ensure that the other

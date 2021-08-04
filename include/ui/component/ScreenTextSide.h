@@ -31,8 +31,6 @@ limitations under the License.
 #include "ui/widget/Panel.h"    // for Panel
 #include "ui/widget/RenderContext.h"
 
-class wxPaintEvent;
-
 namespace cszb_scoreboard {
 namespace swx {
 class Panel;
@@ -70,7 +68,8 @@ class ScreenTextSide : public Panel {
   auto isSide(const proto::ScreenSide &side) -> bool;
 
   PUBLIC_TEST_ONLY
-  static auto getTextExtent(RenderContext *renderer, const std::string &text) -> Size;
+  static auto getTextExtent(RenderContext *renderer, const std::string &text)
+      -> Size;
 
  private:
   bool auto_fit_text;
@@ -94,7 +93,8 @@ class ScreenTextSide : public Panel {
   auto centerText(RenderContext *renderer, const std::string &text) -> Position;
   void createBlackout();
   void initializeForColor(Size size, Color color);
-  auto positionText(RenderContext *renderer, const proto::RenderableText &text) -> Position;
+  auto positionText(RenderContext *renderer, const proto::RenderableText &text)
+      -> Position;
   void renderBackground(RenderContext *renderer);
   void renderOverlay(RenderContext *renderer);
   void renderOverlayBottomCorner(RenderContext *renderer);

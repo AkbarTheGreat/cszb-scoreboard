@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/wx.h>
 
 #include "config/Position.h"
+#include "ui/graphics/Color.h"
 #include "util/FilesystemPath.h"
 #include "wx/bitmap.h"  // for wxBitmap
 
@@ -41,6 +42,9 @@ class Image : public wxImage {
 
   // Custom methods
   auto size() -> ::cszb_scoreboard::Size;
+  // Sets the color of the whole image to the given color, but does not change
+  // the alpha.
+  void setColor(const Color &color);
 };
 
 }  // namespace cszb_scoreboard
