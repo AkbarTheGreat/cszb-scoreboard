@@ -28,6 +28,7 @@ limitations under the License.
 #include <algorithm>  // for max
 #include <iterator>   // for next
 #include <string>     // for string
+#include "ui/widget/FilePicker.h"
 
 #include "ScoreboardCommon.h"     // for IMAGE_SELECTION_STRING
 #include "config/ImageLibrary.h"  // for ImageLibrary
@@ -37,6 +38,8 @@ limitations under the License.
 // IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
 namespace cszb_scoreboard {
+
+const int32_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
 FileListBox::FileListBox(swx::Panel *wx, const std::string &title) : Panel(wx) {
   box = listBox(title);
@@ -48,22 +51,22 @@ FileListBox::FileListBox(swx::Panel *wx, const std::string &title) : Panel(wx) {
 
 void FileListBox::bindEvents() {
   box->bindNew(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
-    this->newPressed(event);
+    this->newPressed();
   });
 }
 
-void FileListBox::newPressed(wxCommandEvent &event) {
-  wxFileDialog dialog(wx, _("Select Image"), "", "", IMAGE_SELECTION_STRING,
-                      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+void FileListBox::newPressed() {
+  std::unique_ptr<FilePicker> dialog =
+      openFilePicker("Select Image", IMAGE_SELECTION_STRING);
   std::vector<FilesystemPath> filenames = getFilenames();
-  if (dialog.ShowModal() != wxID_CANCEL) {
-    FilesystemPath new_file = FilesystemPath(std::string(dialog.GetPath()));
+  std::optional<FilesystemPath> new_file = dialog->selectFile();
+  if (new_file.has_value()) {
     // Insert the new file after the currently selected one.
     int32_t new_index = box->selectedIndex() + 1;
     if (box->selectedIndex() >= box->listSize()) {
       new_index = box->listSize();
     }
-    filenames.insert(std::next(filenames.begin(), new_index), new_file);
+    filenames.insert(std::next(filenames.begin(), new_index), *new_file);
     updateStrings(filenames, new_index);
   }
 }

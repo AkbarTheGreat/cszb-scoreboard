@@ -21,3 +21,4 @@ limitations under the License.
 #pragma once
 
 #include <wx/defs.h>  // IWYU pragma: export
+#include <wx/editlbox.h>  // IWYU pragma: export for wxEL_ALLOW_DELETE, wxEL_ALLOW_NEW
