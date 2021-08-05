@@ -71,7 +71,7 @@ class Frame : public Widget {
   void fullScreen(bool show) { wx->ShowFullScreen(show); }
   void minimize() { wx->Iconize(); }
   void menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu);
-  void setDimensions(const wxRect &dim);
+  void setDimensions(const Position &position, const Size &size);
 
   auto childDialog(const wxString &title, wxWindowID id = wxID_ANY,
                    const wxPoint &pos = wxDefaultPosition,

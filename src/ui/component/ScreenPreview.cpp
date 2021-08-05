@@ -19,19 +19,16 @@ limitations under the License.
 */
 #include "ui/component/ScreenPreview.h"
 
-#include <wx/defs.h>
-
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
 #include "config/TeamConfig.h"
+#include "config/swx/defs.h"
 #include "ui/component/ScreenPresenter.h"
 #include "ui/component/ScreenText.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/widget/swx/Panel.h"
 #include "util/ProtoUtil.h"
-
-class wxPanel;
 
 namespace cszb_scoreboard {
 
@@ -44,8 +41,6 @@ ScreenPreview::ScreenPreview(swx::Panel *wx,
                              std::vector<proto::ScreenSide> sides,
                              int monitor_number)
     : Panel(wx) {
-  this->parent = parent;
-
   std::string initial_text;
   if (sides[0].error()) {
     initial_text = ERROR_MESSAGE;
@@ -83,10 +78,9 @@ auto ScreenPreview::previewSize(int monitor_number) -> Size {
     const proto::Rectangle &dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
-  return Size::fromWx(wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT));
+  return Size{.width = static_cast<int>(PREVIEW_HEIGHT * ratio),
+              .height = PREVIEW_HEIGHT};
 }
-
-auto ScreenPreview::controlPane() -> wxPanel * { return wx; }
 
 auto ScreenPreview::thumbnailWidget() -> ScreenText * {
   return thumbnail.get();

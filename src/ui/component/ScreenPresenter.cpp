@@ -19,10 +19,6 @@ limitations under the License.
 
 #include "ui/component/ScreenPresenter.h"
 
-#include <wx/chartype.h>
-#include <wx/gdicmn.h>
-#include <wx/tbarbase.h>
-
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
 #include "util/Log.h"
@@ -33,7 +29,7 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = 0;
 
 ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview)
-    : Frame("Scoreboard", wxDefaultPosition, wxDefaultSize) {
+    : Frame("Scoreboard") {
   this->monitor_number = monitor_number;
 
   if (DisplayConfig::getInstance()->windowedMode()) {
@@ -50,16 +46,19 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview)
 
   proto::DisplayInfo display =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
-  wxRect screen = ProtoUtil::wxRct(display.dimensions());
+  Size screen_size{.width = display.dimensions().width(),
+                   .height = display.dimensions().height()};
+  Position screen_pos{.x = display.dimensions().x(),
+                      .y = display.dimensions().y()};
 
   screen_text = std::make_unique<ScreenText>(childPanel());
-  screen_text->setupPresenter(preview, Size::fromWx(screen.GetSize()));
-  screen_text->setSize(screen.GetSize());
-  LogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
-           screen.y, screen.width, screen.height);
+  screen_text->setupPresenter(preview, screen_size);
+  screen_text->setSize(screen_size.toWx());
+  LogDebug("ScreenPresenter %d: %d,%d", monitor_number, screen_size.width,
+           screen_size.height);
 
   positionWidgets();
-  setDimensions(screen);
+  setDimensions(screen_pos, screen_size);
 }
 
 void ScreenPresenter::positionWidgets() {

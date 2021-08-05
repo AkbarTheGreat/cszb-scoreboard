@@ -42,9 +42,9 @@ void Frame::menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu) {
   wx->SetMenuBar(menu_bar);
 }
 
-void Frame::setDimensions(const wxRect &dim) {
-  wx->SetSize(dim.GetSize());
-  wx->SetPosition(dim.GetPosition());
+void Frame::setDimensions(const Position &position, const Size &size) {
+  wx->SetSize(size.toWx());
+  wx->SetPosition(position.toWx());
 }
 
 void Frame::setStatusBar(const wxString &text) {

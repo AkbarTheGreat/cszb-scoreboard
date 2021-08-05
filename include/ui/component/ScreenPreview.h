@@ -20,10 +20,6 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>  // for wxSize
-#include <wx/image.h>   // for wxImage
-#include <wx/string.h>  // for wxString
-
 #include <memory>  // for unique_ptr
 #include <vector>  // for vector
 
@@ -32,9 +28,6 @@ limitations under the License.
 #include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 #include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
 #include "ui/widget/Panel.h"               // for Panel
-
-class wxPanel;
-class wxWindow;
 
 namespace cszb_scoreboard {
 class Color;
@@ -55,13 +48,13 @@ class ScreenPreview : public Panel {
   void sendToPresenter(ScreenText *screen_text);
   void sendToPresenter();
   void blackoutPresenter();
-  auto controlPane() -> wxPanel *;
   void resetFromSettings(int monitor_number);
   auto screen() -> ScreenText * { return screen_text.get(); }
   auto thumbnailWidget() -> ScreenText *;
 
-  void setAllText(const std::string &text, int font_size, const Color &background,
-                  bool auto_fit, const proto::ScreenSide &side) {
+  void setAllText(const std::string &text, int font_size,
+                  const Color &background, bool auto_fit,
+                  const proto::ScreenSide &side) {
     screen_text->setAllText(text, font_size, background, auto_fit, side);
   }
   void setAllText(const std::vector<proto::RenderableText> &lines,
@@ -85,7 +78,6 @@ class ScreenPreview : public Panel {
 
  private:
   std::unique_ptr<ScreenText> screen_text;
-  const wxWindow *parent;
   ScreenPresenter *presenter;
   std::unique_ptr<ScreenThumbnail> thumbnail;
   static auto previewSize(int monitor_number) -> Size;
