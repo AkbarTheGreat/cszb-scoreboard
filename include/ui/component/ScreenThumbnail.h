@@ -19,8 +19,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>  // for wxSize
-
+#include "config/Position.h"
 #include "ui/component/ScreenText.h"  // for ScreenText
 
 namespace cszb_scoreboard {
@@ -34,6 +33,6 @@ class ScreenThumbnail : public ScreenText {
                   const ScreenText &preview);
 
  private:
-  static auto thumbnailSize(int monitor_number) -> wxSize;
+  static auto thumbnailSize(int monitor_number) -> Size;
 };
 }  // namespace cszb_scoreboard

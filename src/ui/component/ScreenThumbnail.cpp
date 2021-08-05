@@ -33,10 +33,10 @@ const int THUMBNAIL_HEIGHT = 64;
 ScreenThumbnail::ScreenThumbnail(swx::Panel *wx, int monitor_number,
                                  const ScreenText &preview)
     : ScreenText(wx) {
-  setupPresenter(preview, Size::fromWx(thumbnailSize(monitor_number)));
+  setupPresenter(preview, thumbnailSize(monitor_number));
 }
 
-auto ScreenThumbnail::thumbnailSize(int monitor_number) -> wxSize {
+auto ScreenThumbnail::thumbnailSize(int monitor_number) -> Size {
   proto::DisplayInfo display_info =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
 
@@ -46,7 +46,8 @@ auto ScreenThumbnail::thumbnailSize(int monitor_number) -> wxSize {
     const proto::Rectangle &dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
-  return wxSize(THUMBNAIL_HEIGHT * ratio, THUMBNAIL_HEIGHT);
+  return Size{.width = static_cast<int>(THUMBNAIL_HEIGHT * ratio),
+              .height = THUMBNAIL_HEIGHT};
 }
 
 }  // namespace cszb_scoreboard
