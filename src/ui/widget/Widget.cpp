@@ -129,7 +129,8 @@ void Widget::bind(const wxEventTypeTag<wxPaintEvent> &eventType,
   _wx()->Bind(
       eventType,
       [this, lambda](wxPaintEvent &event) -> void {
-        std::unique_ptr<RenderContext> render_context = RenderContext::forEvent(_wx());
+        std::unique_ptr<RenderContext> render_context =
+            RenderContext::forEvent(_wx());
         lambda(render_context.get());
       },
       id);

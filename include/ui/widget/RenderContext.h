@@ -58,6 +58,8 @@ class RenderContext {
   // contexts at a time.
   std::unique_ptr<swx::ClientDC> generic_context;
   std::unique_ptr<swx::PaintDC> event_context;
+
+  void runAgainstActiveContext(const std::function<void(wxDC*)>& lambda);
 };
 
 }  // namespace cszb_scoreboard

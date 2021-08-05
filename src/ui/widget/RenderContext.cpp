@@ -27,53 +27,25 @@ namespace cszb_scoreboard {
 
 void RenderContext::drawImage(const Image& image, int32_t x, int32_t y,
                               bool use_mask) {
-  if (event_context) {
-    event_context->DrawBitmap(wxBitmap(image), x, y, use_mask);
-  } else if (generic_context) {
-    generic_context->DrawBitmap(wxBitmap(image), x, y, use_mask);
-  }
-  // If neither of the above is true, this behavior is undefined.
+  runAgainstActiveContext([image, x, y, use_mask](wxDC* context) -> void {
+    context->DrawBitmap(wxBitmap(image), x, y, use_mask);
+  });
 }
 
 void RenderContext::drawText(const std::string& text, int32_t x, int32_t y) {
-  if (event_context) {
-    event_context->DrawText(text, x, y);
-  } else if (generic_context) {
-    generic_context->DrawText(text, x, y);
-  }
-  // If neither of the above is true, this behavior is undefined.
+  runAgainstActiveContext(
+      [text, x, y](wxDC* context) -> void { context->DrawText(text, x, y); });
 }
 
-// This is a stop-gap implementation of setFont.  Ultimately, we'll move away
-// from using wxFont.
 void RenderContext::setFont(const proto::Font& font, const Size& font_size) {
-  if (event_context) {
-    event_context->SetFont(ProtoUtil::wxScaledFont(font, font_size.toWx()));
-  } else if (generic_context) {
-    generic_context->SetFont(ProtoUtil::wxScaledFont(font, font_size.toWx()));
-  }
-  // If neither of the above is true, this behavior is undefined.
+  runAgainstActiveContext([font, font_size](wxDC* context) -> void {
+    context->SetFont(ProtoUtil::wxScaledFont(font, font_size.toWx()));
+  });
 }
 
-// This is a stop-gap implementation of setFont.  Ultimately, we'll move away
-// from using wxFont.
 void RenderContext::setTextColor(const Color& color) {
-  if (event_context) {
-    event_context->SetTextForeground(color);
-  } else if (generic_context) {
-    generic_context->SetTextForeground(color);
-  }
-  // If neither of the above is true, this behavior is undefined.
-}
-
-void RenderContext::textExtent(const std::string& text, int* width,
-                               int* height) {
-  if (event_context) {
-    event_context->GetTextExtent(text, width, height);
-  } else if (generic_context) {
-    generic_context->GetTextExtent(text, width, height);
-  }
-  // If neither of the above is true, this behavior is undefined.
+  runAgainstActiveContext(
+      [color](wxDC* context) -> void { context->SetTextForeground(color); });
 }
 
 auto RenderContext::textExtent(const std::string& text) -> Size {
@@ -90,11 +62,10 @@ auto RenderContext::textExtent(const std::string& text) -> Size {
     }
     int line_width;
     int line_height;
-    if (event_context) {
-      event_context->GetTextExtent(token, &line_width, &line_height);
-    } else if (generic_context) {
-      generic_context->GetTextExtent(token, &line_width, &line_height);
-    }
+    runAgainstActiveContext(
+        [token, &line_width, &line_height](wxDC* context) -> void {
+          context->GetTextExtent(token, &line_width, &line_height);
+        });
     if (line_width > width) {
       width = line_width;
     }
@@ -114,6 +85,16 @@ auto RenderContext::forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext> {
   auto renderer = std::make_unique<RenderContext>(Token{});
   renderer->generic_context = std::make_unique<swx::ClientDC>(wx);
   return renderer;
+}
+
+void RenderContext::runAgainstActiveContext(
+    const std::function<void(wxDC*)>& lambda) {
+  if (event_context) {
+    lambda(event_context.get());
+  } else if (generic_context) {
+    lambda(generic_context.get());
+  }
+  // If neither of the above is true, this behavior is undefined.
 }
 
 }  // namespace cszb_scoreboard
