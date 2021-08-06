@@ -38,11 +38,13 @@ use lib "$FindBin::RealBin";
 our $BUILD_PATH = 'out/iwyu';
 our $BASE_DIR = Cwd::cwd();
 
-my ($opt_help, $opt_version, $opt_dry_run);
+my ($opt_help );
+my $opt_procs = 2;
 
 # No real options yet, but it makes pretty boilerplate.
 my %options = (
     'help|?'    => {'val'=>\$opt_help,'help'=>'This help'},
+    'processes=i'    => {'val'=>\$opt_procs,'processes'=>'The number of jobs to run per build execution (default 2)'},
 );
 
 sub usage {
@@ -80,7 +82,7 @@ sub cmake {
 
 sub run_iwyu {
   cmake();
-  return `make -j2 clean all 2>&1 1>/dev/null`;
+  return `make -j${opt_procs} clean all 2>&1 1>/dev/null`;
 }
 
 sub run_fix_include {
@@ -91,7 +93,7 @@ sub run_fix_include {
 
 sub run_clangformat {
   cmake();
-  system 'make -j2 clangformat';
+  system 'make -j${opt_procs} clangformat';
 }
 
 sub main {
