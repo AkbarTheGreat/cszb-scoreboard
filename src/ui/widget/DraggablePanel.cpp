@@ -19,7 +19,13 @@ limitations under the License.
 
 #include "ui/widget/DraggablePanel.h"
 
+#include "ui/widget/Widget.h"  // for Widget
+#include "wx/window.h"         // for wxWindow
+
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 DraggablePanel::DraggablePanel(swx::Panel *panel) : Panel(panel) {
   aui_manager.SetManagedWindow(_wx());

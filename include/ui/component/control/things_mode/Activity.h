@@ -28,8 +28,6 @@ limitations under the License.
 #include "ui/widget/RadioButton.h"                              // for Radio...
 #include "ui/widget/Text.h"                                     // for Text
 
-class wxCommandEvent;
-
 namespace cszb_scoreboard {
 
 // Pre-defining ActivityPanel for a parent pointer.

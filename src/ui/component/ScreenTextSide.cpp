@@ -20,14 +20,15 @@ limitations under the License.
 
 #include "ui/component/ScreenTextSide.h"
 
-#include <algorithm>  // for max
-#include <memory>     // for allocator_traits<>::value_type
+#include <wx/gdicmn.h>  // for wxSize
 
-#include "config/Position.h"              // for Size
+#include <memory>  // for allocator_traits<>::value_type
+
+#include "config/Position.h"              // for Size, Position
 #include "config/TeamConfig.h"            // for TeamConfig
-#include "config/swx/event.h"             // for wxPaintEvent (ptr only)
+#include "config/swx/event.h"             // for wxEVT_PAINT
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
-#include "ui/widget/swx/Panel.h"          // for Panel
+#include "ui/widget/RenderContext.h"      // for RenderContext
 #include "util/ProtoUtil.h"               // for ProtoUtil
 
 namespace cszb_scoreboard {

@@ -44,6 +44,8 @@ class wxMenu;
 class wxWindow;
 
 namespace cszb_scoreboard {
+struct Position;
+struct Size;
 
 const int DEFAULT_NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
                                    wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;

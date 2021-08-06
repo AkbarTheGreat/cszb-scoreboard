@@ -21,6 +21,7 @@ limitations under the License.
 
 #pragma once
 
+#include <gtest/gtest.h>  // for Test
 #include <wx/dcclient.h>  // for wxClientDC
 #include <wx/gdicmn.h>    // for wxRect
 #include <wx/uiaction.h>  // for wxUIActionSimulator
@@ -28,8 +29,7 @@ limitations under the License.
 #include <map>     // for map
 #include <vector>  // for vector
 
-#include "gtest/gtest_pred_impl.h"  // for Test
-#include "wx/colour.h"              // for wxColour
+#include "wx/colour.h"  // for wxColour
 
 namespace cszb_scoreboard {
 class MainView;

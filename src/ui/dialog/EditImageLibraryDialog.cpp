@@ -28,7 +28,6 @@ limitations under the License.
 #include <wx/string.h>    // for wxString
 #include <wx/textctrl.h>  // IWYU pragma: keep for wxTextCtrl
 
-#include <algorithm>   // for max
 #include <filesystem>  // for operator<
 #include <string>      // for string, basic_...
 #include <vector>      // for vector

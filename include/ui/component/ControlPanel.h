@@ -26,6 +26,8 @@ limitations under the License.
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/widget/Notebook.h"                         // for Notebook
 
+class wxAuiNotebookEvent;
+
 namespace cszb_scoreboard {
 class PreviewPanel;
 class ScreenText;

@@ -19,14 +19,13 @@ limitations under the License.
 
 #include "ui/component/ScreenText.h"
 
-#include <algorithm>  // for max
-
 #include "config.pb.h"          // for TeamInfo_TeamType, ScreenSide (ptr only)
 #include "config/TeamConfig.h"  // for TeamConfig
 #include "util/ProtoUtil.h"     // for ProtoUtil
 
 namespace cszb_scoreboard {
 class Color;
+class Image;
 
 // Margin for the top or bottom, as a percentage
 const float TOP_OR_BOTTOM_MARGIN = 2;

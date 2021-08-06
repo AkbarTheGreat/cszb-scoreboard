@@ -19,11 +19,21 @@ limitations under the License.
 
 #include "ui/widget/RenderContext.h"
 
-#include <wx/tokenzr.h>  // for wxStringTokenizer, wxTOKEN_...
+#include <wx/dc.h>       // for wxDC
+#include <wx/string.h>   // for wxString
+#include <wx/tokenzr.h>  // for wxStringTokenizer, wxTOKEN_RET_EMPTY_ALL
 
-#include "util/ProtoUtil.h"
+#include "config/swx/image.h"   // for Image
+#include "ui/graphics/Color.h"  // for Color
+#include "util/ProtoUtil.h"     // for ProtoUtil
+#include "wx/bitmap.h"          // for wxBitmap
+
+class wxWindow;
 
 namespace cszb_scoreboard {
+namespace proto {
+class Font;
+}  // namespace proto
 
 void RenderContext::drawImage(const Image& image, int32_t x, int32_t y,
                               bool use_mask) {

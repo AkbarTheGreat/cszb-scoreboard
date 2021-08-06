@@ -19,6 +19,10 @@ limitations under the License.
 
 #include "config/swx/image.h"
 
+#include <wx/gdicmn.h>  // for wxPoint, wxRect
+
+#include "ui/graphics/Color.h"  // for Color
+
 namespace cszb_scoreboard {
 
 auto Image::size() -> ::cszb_scoreboard::Size {

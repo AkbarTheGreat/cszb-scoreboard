@@ -19,16 +19,12 @@ limitations under the License.
 */
 #include "ui/component/PreviewPanel.h"
 
-#include <algorithm>  // for max
-#include <cassert>    // for assert
-#include <utility>    // for move
+#include <cassert>  // for assert
+#include <utility>  // for move
 
 #include "config.pb.h"                   // for ScreenSide, DisplayInfo
 #include "config/DisplayConfig.h"        // for DisplayConfig
 #include "ui/component/ScreenPreview.h"  // for ScreenPreview
-#include "ui/widget/swx/Panel.h"         // for Panel
-
-class wxCommandEvent;
 
 namespace cszb_scoreboard {
 

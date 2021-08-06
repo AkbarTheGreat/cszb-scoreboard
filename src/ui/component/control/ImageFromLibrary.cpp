@@ -20,11 +20,8 @@ limitations under the License.
 
 #include "ui/component/control/ImageFromLibrary.h"
 
-#include <wx/image.h>  // for wxImage
-
-#include <algorithm>  // for max
-#include <optional>   // for optional
-#include <string>     // for string
+#include <optional>  // for optional
+#include <string>    // for string
 
 #include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
 #include "config/ImageLibrary.h"                // for ImageLibrary, ImageSe...

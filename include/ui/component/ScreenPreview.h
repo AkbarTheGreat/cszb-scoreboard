@@ -21,9 +21,10 @@ limitations under the License.
 #pragma once
 
 #include <memory>  // for unique_ptr
+#include <string>  // for string
 #include <vector>  // for vector
 
-#include "config/Position.h"
+#include "config/Position.h"               // for Size
 #include "ui/component/ScreenText.h"       // for ScreenText
 #include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 #include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
@@ -32,6 +33,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 class Color;
 class ScreenPresenter;
+class Image;
 
 namespace proto {
 class RenderableText;

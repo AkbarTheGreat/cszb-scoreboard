@@ -20,21 +20,20 @@ limitations under the License.
 #include "ui/component/control/LocalImage.h"
 
 #include <filesystem>  // for path
+#include <optional>    // for optional
 #include <string>      // for string
 
-#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
-#include "config/swx/defs.h"
-#include "config/swx/event.h"
-#include "config/swx/image.h"
+#include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
+#include "config/swx/event.h"                   // for wxEVT_BUTTON
+#include "config/swx/image.h"                   // for Image
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
-#include "ui/widget/FilePicker.h"
-#include "ui/widget/Label.h"  // for Label
-#include "ui/widget/PopUp.h"
-#include "ui/widget/Widget.h"     // for NO_BORDER
-#include "ui/widget/swx/Panel.h"  // for Panel
-#include "util/Clipboard.h"
-#include "util/FilesystemPath.h"  // for FilesystemPath
-#include "util/Log.h"             // IWYU pragma: keep for LogDebug
+#include "ui/widget/FilePicker.h"               // for FilePicker
+#include "ui/widget/Label.h"                    // for Label
+#include "ui/widget/PopUp.h"                    // for PopUp
+#include "ui/widget/Widget.h"                   // for NO_BORDER
+#include "util/Clipboard.h"                     // for Clipboard
+#include "util/FilesystemPath.h"                // for FilesystemPath
+#include "util/Log.h"  // IWYU pragma: keep for LogDebug
 
 namespace cszb_scoreboard {
 

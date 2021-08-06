@@ -19,22 +19,18 @@ limitations under the License.
 
 #include "ui/component/control/ThingsMode.h"
 
-#include <array>
-#include <vector>
+#include <array>   // for array
+#include <vector>  // for vector
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/swx/defs.h"
-#include "config/swx/event.h"
-#include "ui/component/ScreenText.h"
-#include "ui/component/control/things_mode/ActivityPanel.h"
-#include "ui/component/control/things_mode/ReplacementPanel.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/Panel.h"
-#include "ui/widget/swx/RadioBox.h"
-#include "ui/widget/swx/ScrolledWindow.h"
-#include "util/ProtoUtil.h"
+#include "ScoreboardCommon.h"                                   // for DEFAU...
+#include "config.pb.h"                                          // for Rende...
+#include "config/swx/event.h"                                   // for wxEVT...
+#include "ui/component/ScreenText.h"                            // for Scree...
+#include "ui/component/control/things_mode/ActivityPanel.h"     // for Activ...
+#include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
+#include "ui/graphics/Color.h"                                  // for Color
+#include "ui/widget/Widget.h"                                   // for NO_BO...
+#include "util/ProtoUtil.h"                                     // for Proto...
 
 namespace cszb_scoreboard {
 class PreviewPanel;

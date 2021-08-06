@@ -21,10 +21,13 @@ limitations under the License.
 
 #include <wx/aui/framemanager.h>  // for wxAuiManager
 
-#include "ui/widget/Panel.h"
-#include "ui/widget/swx/Panel.h"
+#include "ui/widget/Panel.h"  // for Panel
 
 namespace cszb_scoreboard {
+class Widget;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class DraggablePanel : public Panel {
  public:

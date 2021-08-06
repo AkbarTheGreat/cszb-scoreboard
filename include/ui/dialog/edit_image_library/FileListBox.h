@@ -25,10 +25,12 @@ limitations under the License.
 #include <vector>      // for vector
 
 #include "config/swx/defs.h"      // for wxID_ANY
-#include "config/swx/event.h"     // for wxCommandEvent (ptr only), wxEventT...
+#include "config/swx/event.h"     // for wxEventTypeTag
 #include "ui/widget/ListBox.h"    // for ListBox
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
+
+class wxListEvent;
 
 namespace cszb_scoreboard {
 namespace swx {

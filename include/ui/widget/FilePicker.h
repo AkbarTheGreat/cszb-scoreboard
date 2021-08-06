@@ -19,13 +19,15 @@ limitations under the License.
 
 #pragma once
 
-#include <optional>
+#include <optional>  // for optional
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/FileDialog.h"
-#include "util/FilesystemPath.h"
+#include "ui/widget/Widget.h"          // for Widget
+#include "ui/widget/swx/FileDialog.h"  // for FileDialog
+
+class wxWindow;
 
 namespace cszb_scoreboard {
+class FilesystemPath;
 
 class FilePicker : public Widget {
  public:

@@ -19,33 +19,39 @@ limitations under the License.
 
 #include "ui/widget/Panel.h"
 
-#include <wx/anybutton.h>
-#include <wx/textctrl.h>
+#include <wx/anybutton.h>  // for wxBU_EXACTFIT
+#include <wx/filedlg.h>    // for wxFD_FILE_MUST_EXIST
+#include <wx/textctrl.h>   // for wxTE_MULTILINE
 
-#include "ui/widget/Button.h"
-#include "ui/widget/CheckBox.h"
-#include "ui/widget/ColorPicker.h"
-#include "ui/widget/Divider.h"
-#include "ui/widget/FilePicker.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/ListBox.h"
-#include "ui/widget/Radio.h"
-#include "ui/widget/RadioButton.h"
-#include "ui/widget/ScrollingPanel.h"
-#include "ui/widget/SearchBox.h"
-#include "ui/widget/Text.h"
-#include "ui/widget/Toggle.h"
-#include "ui/widget/swx/Button.h"
-#include "ui/widget/swx/CheckBox.h"
-#include "ui/widget/swx/ColourPickerCtrl.h"
-#include "ui/widget/swx/EditableListBox.h"
-#include "ui/widget/swx/RadioButton.h"
-#include "ui/widget/swx/ScrolledWindow.h"
-#include "ui/widget/swx/SearchCtrl.h"
-#include "ui/widget/swx/StaticLine.h"
-#include "ui/widget/swx/StaticText.h"
-#include "ui/widget/swx/TextCtrl.h"
-#include "ui/widget/swx/ToggleButton.h"
+#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_...
+#include <vector>              // for vector
+
+#include "ui/widget/Button.h"                // for Button
+#include "ui/widget/CheckBox.h"              // for CheckBox
+#include "ui/widget/ColorPicker.h"           // for ColorPicker
+#include "ui/widget/Divider.h"               // for Divider
+#include "ui/widget/FilePicker.h"            // for FilePicker
+#include "ui/widget/Label.h"                 // for Label
+#include "ui/widget/ListBox.h"               // for ListBox
+#include "ui/widget/Radio.h"                 // for Radio
+#include "ui/widget/RadioButton.h"           // for RadioButton
+#include "ui/widget/ScrollingPanel.h"        // for ScrollingPanel
+#include "ui/widget/SearchBox.h"             // for SearchBox
+#include "ui/widget/Text.h"                  // for Text
+#include "ui/widget/Toggle.h"                // for Toggle
+#include "ui/widget/swx/Button.h"            // for Button
+#include "ui/widget/swx/CheckBox.h"          // for CheckBox
+#include "ui/widget/swx/ColourPickerCtrl.h"  // for ColourPickerCtrl
+#include "ui/widget/swx/EditableListBox.h"   // for EditableListBox
+#include "ui/widget/swx/FileDialog.h"        // for FileDialog
+#include "ui/widget/swx/RadioBox.h"          // for RadioBox
+#include "ui/widget/swx/RadioButton.h"       // for RadioButton
+#include "ui/widget/swx/ScrolledWindow.h"    // for ScrolledWindow
+#include "ui/widget/swx/SearchCtrl.h"        // for SearchCtrl
+#include "ui/widget/swx/StaticLine.h"        // for StaticLine
+#include "ui/widget/swx/StaticText.h"        // for StaticText
+#include "ui/widget/swx/TextCtrl.h"          // for TextCtrl
+#include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
 
 namespace cszb_scoreboard {
 

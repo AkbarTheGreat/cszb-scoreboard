@@ -21,17 +21,19 @@ limitations under the License.
 #pragma once
 
 #include <optional>  // for optional
+#include <string>    // for string
 #include <vector>    // for vector
 
-#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "config.pb.h"         // for RenderableText, Font (ptr only), Scre...
-#include "config/Position.h"
-#include "config/swx/image.h"
+#include "ScoreboardCommon.h"   // for PUBLIC_TEST_ONLY
+#include "config.pb.h"          // for RenderableText, Font (ptr only), Scre...
+#include "config/Position.h"    // for Position, Size
+#include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
 #include "ui/widget/Panel.h"    // for Panel
-#include "ui/widget/RenderContext.h"
 
 namespace cszb_scoreboard {
+class RenderContext;
+
 namespace swx {
 class Panel;
 }  // namespace swx

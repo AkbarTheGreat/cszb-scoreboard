@@ -18,22 +18,22 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
-#include <algorithm>  // for max
-#include <cstddef>    // for size_t
-#include <string>     // for string
-#include <utility>    // for move
+#include <wx/wxcrtvararg.h>  // for snprintf
 
-#include "config.pb.h"  // for ScreenSide
-#include "config/swx/defs.h"
-#include "config/swx/event.h"
+#include <cstddef>  // for size_t
+#include <string>   // for string
+#include <utility>  // for move
+
+#include "config.pb.h"                    // for ScreenSide
+#include "config/Position.h"              // for Size
+#include "config/swx/event.h"             // for wxEVT_COMMAND_BUTTON_CLICKED
 #include "ui/component/ControlPanel.h"    // for ControlPanel
 #include "ui/component/PreviewPanel.h"    // for PreviewPanel
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
 #include "ui/frame/FrameManager.h"        // for FrameManager
-#include "ui/frame/HotkeyTable.h"         // for HotkeyTable
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxACCEL_CTRL
 #include "ui/frame/MainView.h"            // for MainView
 #include "ui/graphics/Color.h"            // for Color
-#include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
 
 namespace cszb_scoreboard {

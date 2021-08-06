@@ -18,15 +18,16 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiRes...
-#include <wx/gdicmn.h>              // for wxSize
 #include <wx/init.h>                // for wxEntryCleanup
 
 #include <memory>  // for unique_ptr, allocator, make...
 
+#include "config/Position.h"              // for Size
 #include "gtest/gtest_pred_impl.h"        // for ASSERT_EQ, ASSERT_GT, TEST_F
 #include "test/TestUtil.h"                // for TestUtil
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
 #include "ui/widget/Frame.h"              // for Frame
+#include "ui/widget/RenderContext.h"      // for RenderContext
 #include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
 // IWYU pragma: no_include <wx/gtk/app.h>

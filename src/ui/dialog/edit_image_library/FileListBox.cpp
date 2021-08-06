@@ -19,21 +19,17 @@ limitations under the License.
 
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
-#include <wx/arrstr.h>       // for wxArrayString
-#include <wx/event.h>        // for wxCommandEvent (ptr only), wxEVT_BU...
-#include <wx/listctrl.h>     // IWYU pragma: keep for wxListCtrl
-#include <wx/string.h>       // for wxString
-#include <wx/translation.h>  // for _
+#include <wx/arrstr.h>    // for wxArrayString
+#include <wx/listctrl.h>  // IWYU pragma: keep for wxListCtrl
+#include <wx/string.h>    // for wxString
 
-#include <algorithm>  // for max
-#include <iterator>   // for next
-#include <string>     // for string
-#include "ui/widget/FilePicker.h"
+#include <iterator>  // for next
+#include <optional>  // for optional
+#include <string>    // for string
 
-#include "ScoreboardCommon.h"     // for IMAGE_SELECTION_STRING
-#include "config/ImageLibrary.h"  // for ImageLibrary
-#include "ui/widget/swx/Panel.h"  // for Panel
-#include "wx/filedlg.h"           // for wxFileDialog, wxFD_FILE_MUST_EXIST
+#include "ScoreboardCommon.h"      // for IMAGE_SELECTION_STRING
+#include "config/ImageLibrary.h"   // for ImageLibrary
+#include "ui/widget/FilePicker.h"  // for FilePicker
 // IWYU pragma: no_include <wx/generic/listctrl.h>
 // IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
@@ -50,9 +46,8 @@ FileListBox::FileListBox(swx::Panel *wx, const std::string &title) : Panel(wx) {
 }
 
 void FileListBox::bindEvents() {
-  box->bindNew(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
-    this->newPressed();
-  });
+  box->bindNew(wxEVT_BUTTON,
+               [this](wxCommandEvent &event) -> void { this->newPressed(); });
 }
 
 void FileListBox::newPressed() {

@@ -43,7 +43,7 @@ const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
 // and unzip the release, which is more complicated than a Windows install. Once
 // the mechanism is in place, remove -autoupdatedisabled- below.
 const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
-#else  // ifdef __APPLE__
+#else   // ifdef __APPLE__
 const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
 #endif  // ifdef _WIN32

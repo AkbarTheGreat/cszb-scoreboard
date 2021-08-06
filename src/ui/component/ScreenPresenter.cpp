@@ -19,10 +19,10 @@ limitations under the License.
 
 #include "ui/component/ScreenPresenter.h"
 
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "util/Log.h"
-#include "util/ProtoUtil.h"
+#include "config.pb.h"             // for DisplayInfo, Rectangle
+#include "config/DisplayConfig.h"  // for DisplayConfig
+#include "config/Position.h"       // for Size, Position
+#include "util/Log.h"              // for LogDebug
 
 namespace cszb_scoreboard {
 

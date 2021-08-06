@@ -19,16 +19,15 @@ limitations under the License.
 */
 #include "ui/component/ScreenPreview.h"
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "config/TeamConfig.h"
-#include "config/swx/defs.h"
-#include "ui/component/ScreenPresenter.h"
-#include "ui/component/ScreenText.h"
-#include "ui/frame/FrameManager.h"
-#include "ui/widget/swx/Panel.h"
-#include "util/ProtoUtil.h"
+#include "ScoreboardCommon.h"              // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"                     // for DisplayInfo, ScreenSide
+#include "config/DisplayConfig.h"          // for DisplayConfig
+#include "config/TeamConfig.h"             // for TeamConfig
+#include "config/swx/defs.h"               // for wxALIGN_CENTER, wxALL, wxLEFT
+#include "ui/component/ScreenPresenter.h"  // for ScreenPresenter
+#include "ui/component/ScreenText.h"       // for ScreenText
+#include "ui/frame/FrameManager.h"         // for FrameManager
+#include "util/ProtoUtil.h"                // for ProtoUtil
 
 namespace cszb_scoreboard {
 

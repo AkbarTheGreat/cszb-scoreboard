@@ -25,6 +25,7 @@ limitations under the License.
 #include "config/swx/event.h"             // for wxEVT_PAINT
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
 #include "ui/graphics/Color.h"            // for Color
+#include "ui/widget/RenderContext.h"      // for RenderContext
 
 namespace cszb_scoreboard {
 

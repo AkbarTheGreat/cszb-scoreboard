@@ -1,7 +1,7 @@
 /*
-config/swx/clipbrd.h:  A simple wrapper around wx's clipbrd header.  Wrappers like
-this exist to make it easier to spot where unexpected wx direct dependencies are
-creeping into our codebase.
+config/swx/clipbrd.h:  A simple wrapper around wx's clipbrd header.  Wrappers
+like this exist to make it easier to spot where unexpected wx direct
+dependencies are creeping into our codebase.
 
 Copyright 2021 Tracy Beck
 
@@ -20,4 +20,4 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clipbrd.h> // IWYU pragma: export
+#include <wx/clipbrd.h>  // IWYU pragma: export

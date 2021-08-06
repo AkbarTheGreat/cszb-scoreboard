@@ -18,10 +18,9 @@ limitations under the License.
 
 #include "ui/frame/HotkeyTable.h"
 
-#include <algorithm>
-#include <memory>
+#include <memory>  // for allocator_traits<>::value_type
 
-#include "ui/widget/Frame.h"
+#include "ui/widget/Frame.h"  // for Frame
 
 namespace cszb_scoreboard {
 

@@ -23,10 +23,9 @@ limitations under the License.
 #include <wx/menu.h>    // IWYU pragma: keep for wxMenu
 #include <wx/msgdlg.h>  // for wxMessageBox
 
-#include <algorithm>  // for max
-#include <string>     // for string
-#include <utility>    // for pair
-#include <vector>     // for vector
+#include <string>   // for string
+#include <utility>  // for pair
+#include <vector>   // for vector
 
 #include "ScoreboardCommon.h"          // for SCOREBOARD_VERSION
 #include "config/CommandArgs.h"        // for CommandArgs

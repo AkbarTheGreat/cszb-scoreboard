@@ -19,10 +19,8 @@ limitations under the License.
 
 #include "config/TeamConfig.h"
 
-#include <algorithm>
-
-#include "config/Persistence.h"
-#include "util/ProtoUtil.h"
+#include "config/Persistence.h"  // for Persistence
+#include "util/ProtoUtil.h"      // for ProtoUtil
 
 namespace cszb_scoreboard {
 

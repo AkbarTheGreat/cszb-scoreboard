@@ -19,18 +19,17 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/msgdlg.h>
+#include <wx/defs.h>    // for wxALL, wxGROW
+#include <wx/event.h>   // for wxCommandEvent (ptr only), wxEVT_C...
+#include <wx/msgdlg.h>  // for wxMessageBox
 
-#include <algorithm>
-#include <string>
+#include <string>  // for to_string
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "ui/widget/Panel.h"
-#include "util/StringUtil.h"
+#include "ScoreboardCommon.h"      // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"             // for ScreenSide
+#include "config/DisplayConfig.h"  // for DisplayConfig
+#include "ui/widget/Panel.h"       // for Panel
+#include "util/StringUtil.h"       // for StringUtil
 
 namespace cszb_scoreboard {
 namespace swx {

@@ -24,11 +24,9 @@ limitations under the License.
 #include <memory>      // for unique_ptr
 #include <vector>      // for vector
 
-#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "ui/widget/DraggablePanel.h"   // for Panel
-#include "ui/component/ScreenPreview.h"
-
-class wxCommandEvent;
+#include "ScoreboardCommon.h"            // for PUBLIC_TEST_ONLY
+#include "ui/component/ScreenPreview.h"  // for ScreenPreview
+#include "ui/widget/DraggablePanel.h"    // for DraggablePanel
 
 namespace cszb_scoreboard {
 class ScreenText;

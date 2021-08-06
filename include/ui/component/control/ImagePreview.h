@@ -25,6 +25,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 struct Size;
+class RenderContext;
 
 namespace swx {
 class Panel;

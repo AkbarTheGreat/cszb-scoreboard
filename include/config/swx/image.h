@@ -19,14 +19,15 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <wx/image.h>   // for wxImage
+#include <wx/string.h>  // for wxString
 
-#include "config/Position.h"
-#include "ui/graphics/Color.h"
-#include "util/FilesystemPath.h"
-#include "wx/bitmap.h"  // for wxBitmap
+#include "config/Position.h"      // for Size
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "wx/bitmap.h"            // for wxBitmap
 
 namespace cszb_scoreboard {
+class Color;
 
 class Image : public wxImage {
  public:

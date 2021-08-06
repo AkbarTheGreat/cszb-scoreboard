@@ -19,14 +19,25 @@ limitations under the License.
 
 #pragma once
 
-#include "config.pb.h"
-#include "config/Position.h"
-#include "config/swx/image.h"
-#include "ui/graphics/Color.h"
-#include "ui/widget/swx/ClientDC.h"
-#include "ui/widget/swx/PaintDC.h"
+#include <stdint.h>  // for int32_t
+
+#include <functional>  // for function
+#include <memory>      // for unique_ptr
+#include <string>      // for string
+
+#include "config/Position.h"         // for Size
+#include "ui/widget/swx/ClientDC.h"  // for ClientDC
+#include "ui/widget/swx/PaintDC.h"   // for PaintDC
+
+class wxDC;
+class wxWindow;
 
 namespace cszb_scoreboard {
+class Color;
+class Image;
+namespace proto {
+class Font;
+}  // namespace proto
 
 class RenderContext {
   // Using the passkey idiom from https://abseil.io/tips/134 to avoid adding

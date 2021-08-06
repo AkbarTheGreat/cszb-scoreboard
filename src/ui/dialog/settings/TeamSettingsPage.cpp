@@ -19,14 +19,13 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
-#include <wx/msgdlg.h>
+#include <wx/msgdlg.h>  // for wxMessageBox
 
-#include <algorithm>
-#include <utility>
+#include <utility>  // for move
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/TeamConfig.h"
+#include "ScoreboardCommon.h"   // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"          // for TeamInfo_TeamType, TeamInfo_TeamType_...
+#include "config/TeamConfig.h"  // for TeamConfig
 
 namespace cszb_scoreboard {
 namespace swx {

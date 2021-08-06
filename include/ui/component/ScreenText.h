@@ -19,15 +19,16 @@ limitations under the License.
 
 #pragma once
 
+#include <string>  // for string
 #include <vector>  // for vector
 
-#include "config/Position.h"
-#include "config/swx/image.h"
+#include "config/Position.h"              // for Size
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide (ptr only)
 #include "ui/widget/Panel.h"              // for Panel
 
 namespace cszb_scoreboard {
 class Color;
+class Image;
 
 namespace proto {
 class Font;

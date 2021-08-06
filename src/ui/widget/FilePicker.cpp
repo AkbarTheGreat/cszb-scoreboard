@@ -19,6 +19,13 @@ limitations under the License.
 
 #include "ui/widget/FilePicker.h"
 
+#include <wx/defs.h>    // for wxID_CANCEL
+#include <wx/string.h>  // for wxString
+
+#include <string>  // for allocator, string
+
+#include "util/FilesystemPath.h"  // for FilesystemPath
+
 namespace cszb_scoreboard {
 
 FilePicker::~FilePicker() { delete wx; }

@@ -19,20 +19,20 @@ limitations under the License.
 
 #include "ui/component/ControlPanel.h"
 
-#include <wx/aui/auibook.h>
+#include <wx/aui/auibook.h>  // for wxAuiNotebookEvent
 
-#include <algorithm>
-#include <utility>
+#include <utility>  // for move
 
-#include "ui/component/control/ImageFromLibrary.h"
-#include "ui/component/control/LocalImage.h"
-#include "ui/component/control/ScoreControl.h"
-#include "ui/component/control/TextEntry.h"
-#include "ui/component/control/ThingsMode.h"
+#include "ui/component/control/ImageFromLibrary.h"  // for ImageFromLibrary
+#include "ui/component/control/LocalImage.h"        // for LocalImage
+#include "ui/component/control/ScoreControl.h"      // for ScoreControl
+#include "ui/component/control/TextEntry.h"         // for TextEntry
+#include "ui/component/control/ThingsMode.h"        // for ThingsMode
 
 namespace cszb_scoreboard {
 class PreviewPanel;
 class ScreenText;
+
 namespace swx {
 class Notebook;
 }  // namespace swx

@@ -19,14 +19,10 @@ limitations under the License.
 
 #include "ui/component/control/TeamSelector.h"
 
-#include <array>
+#include <array>  // for array
 
-#include "config.pb.h"
-#include "config/swx/defs.h"
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/RadioBox.h"
-
-class wxString;
+#include "config.pb.h"         // for ScreenSide
+#include "ui/widget/Widget.h"  // for NO_BORDER
 
 namespace cszb_scoreboard {
 namespace swx {

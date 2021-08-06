@@ -21,6 +21,8 @@ limitations under the License.
 
 #include <wx/menu.h>      // IWYU pragma: keep for wxMenuBar, wxMenu (ptr only)
 #include <wx/toplevel.h>  // for wxSTAY_ON_TOP
+
+#include "config/Position.h"  // for Position, Size
 // IWYU pragma: no_include <wx/gtk/menu.h>
 
 namespace cszb_scoreboard {
