@@ -20,7 +20,6 @@ limitations under the License.
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
 #include <wx/arrstr.h>    // for wxArrayString
-#include <wx/listctrl.h>  // IWYU pragma: keep for wxListCtrl
 #include <wx/string.h>    // for wxString
 
 #include <iterator>  // for next
@@ -30,8 +29,6 @@ limitations under the License.
 #include "ScoreboardCommon.h"      // for IMAGE_SELECTION_STRING
 #include "config/ImageLibrary.h"   // for ImageLibrary
 #include "ui/widget/FilePicker.h"  // for FilePicker
-// IWYU pragma: no_include <wx/generic/listctrl.h>
-// IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
 namespace cszb_scoreboard {
 

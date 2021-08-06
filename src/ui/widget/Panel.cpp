@@ -23,7 +23,6 @@ limitations under the License.
 #include <wx/filedlg.h>    // for wxFD_FILE_MUST_EXIST
 #include <wx/textctrl.h>   // for wxTE_MULTILINE
 
-#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_...
 #include <vector>              // for vector
 
 #include "ui/widget/Button.h"                // for Button

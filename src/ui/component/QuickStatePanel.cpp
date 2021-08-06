@@ -18,9 +18,8 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
-#include <wx/wxcrtvararg.h>  // for snprintf
-
 #include <cstddef>  // for size_t
+#include <cstdio>   // for snprintf
 #include <string>   // for string
 #include <utility>  // for move
 
