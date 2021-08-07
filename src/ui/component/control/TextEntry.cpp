@@ -120,11 +120,11 @@ void TextEntry::updateScreenText(ScreenText *screen_text) {
 
 void TextEntry::colorChanged() {
   if (screen_selection->allSelected()) {
-    all_color = Color(color_picker->color());
+    all_color = color_picker->color();
   } else if (screen_selection->homeSelected()) {
-    home_color = Color(color_picker->color());
+    home_color = color_picker->color();
   } else if (screen_selection->awaySelected()) {
-    away_color = Color(color_picker->color());
+    away_color = color_picker->color();
   }
   updatePreview();
 }

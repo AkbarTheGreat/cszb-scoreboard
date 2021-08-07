@@ -95,7 +95,7 @@ void TeamSettingsPanel::createButtonPanel() {
 }
 
 auto TeamSettingsPanel::teamColor() -> Color {
-  return Color(color_picker->color());
+  return color_picker->color();
 }
 
 void TeamSettingsPanel::moveTeam(bool is_up_button) {

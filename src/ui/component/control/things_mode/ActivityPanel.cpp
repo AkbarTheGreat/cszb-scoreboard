@@ -174,7 +174,7 @@ void ActivityPanel::updateNotify() {
 }
 
 void ActivityPanel::colorChanged() {
-  TeamColors::getInstance()->setColor(side, Color(color_picker->color()));
+  TeamColors::getInstance()->setColor(side, color_picker->color());
 
   owning_controller->updatePreview();
 }

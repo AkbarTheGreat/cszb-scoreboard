@@ -19,6 +19,7 @@ limitations under the License.
 
 #pragma once
 
+#include "ui/graphics/Color.h"
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/ColourPickerCtrl.h"
 
@@ -33,8 +34,8 @@ class ColorPicker : public Widget {
             int id = wxID_ANY) {
     _wx()->Bind(eventType, lambda, id);
   }
-  auto color() -> wxColour { return wx->GetColour(); }
-  void setColor(const wxColour &color) { wx->SetColour(color); }
+  auto color() -> Color { return Color(wx->GetColour()); }
+  void setColor(const Color &color) { wx->SetColour(color); }
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }

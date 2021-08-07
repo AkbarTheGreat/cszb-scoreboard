@@ -315,19 +315,19 @@ void ScoreControl::updateScreenText(ScreenText *screen_text) {
   }
 
   if (home_logo.has_value()) {
-    screen_text->setAllText(home_update, Color(home_color_picker->color()),
+    screen_text->setAllText(home_update, home_color_picker->color(),
                             true, *home_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::homeSide());
   } else {
-    screen_text->setAllText(home_update, Color(home_color_picker->color()),
+    screen_text->setAllText(home_update, home_color_picker->color(),
                             true, ProtoUtil::homeSide());
   }
   if (away_logo.has_value()) {
-    screen_text->setAllText(away_update, Color(away_color_picker->color()),
+    screen_text->setAllText(away_update, away_color_picker->color(),
                             true, *away_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::awaySide());
   } else {
-    screen_text->setAllText(away_update, Color(away_color_picker->color()),
+    screen_text->setAllText(away_update, away_color_picker->color(),
                             true, ProtoUtil::awaySide());
   }
 }
@@ -342,9 +342,9 @@ void ScoreControl::awayNameUpdated() { updatePreview(); }
 
 void ScoreControl::colorChanged() {
   TeamColors::getInstance()->setColor(ProtoUtil::homeSide(),
-                                      Color(home_color_picker->color()));
+                                      home_color_picker->color());
   TeamColors::getInstance()->setColor(ProtoUtil::awaySide(),
-                                      Color(away_color_picker->color()));
+                                      away_color_picker->color());
 
   updatePreview();
 }
