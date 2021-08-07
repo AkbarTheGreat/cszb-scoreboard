@@ -19,12 +19,11 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPanel.h"
 
-#include <wx/event.h>
-
 #include <string>
 
 #include "ScoreboardCommon.h"
 #include "config/DisplayConfig.h"
+#include "config/swx/event.h"
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
 namespace cszb_scoreboard {

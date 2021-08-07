@@ -19,13 +19,12 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
-#include <wx/msgdlg.h>  // for wxMessageBox
-
 #include <utility>  // for move
 
 #include "ScoreboardCommon.h"   // for DEFAULT_BORDER_SIZE
 #include "config.pb.h"          // for TeamInfo_TeamType, TeamInfo_TeamType_...
 #include "config/TeamConfig.h"  // for TeamConfig
+#include "ui/widget/PopUp.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -73,7 +72,7 @@ void TeamSettingsPage::saveSettings() {
   }
 
   if (restart_warning) {
-    wxMessageBox(
+    PopUp::Message(
         "WARNING: You have changed team ordering.  To see this take "
         "effect, you must restart the application.");
   }

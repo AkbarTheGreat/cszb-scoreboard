@@ -19,14 +19,13 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPanel.h"
 
-#include <wx/event.h>  // for wxCommandEvent (ptr...
-
 #include <string>  // for string
 
 #include "ScoreboardCommon.h"                     // for DEFAULT_BORDER_SIZE
 #include "config/TeamConfig.h"                    // for TeamConfig
+#include "config/swx/event.h"                     // for wxCommandEvent (ptr...
 #include "ui/dialog/settings/TeamSettingsPage.h"  // for TeamSettingsPage
-#include "wx/colour.h"                            // for wxColour
+#include "ui/graphics/Color.h"                    // for Color
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -96,8 +95,7 @@ void TeamSettingsPanel::createButtonPanel() {
 }
 
 auto TeamSettingsPanel::teamColor() -> Color {
-  wxColour wx_color = color_picker->color();
-  return Color(wx_color);
+  return Color(color_picker->color());
 }
 
 void TeamSettingsPanel::moveTeam(bool is_up_button) {

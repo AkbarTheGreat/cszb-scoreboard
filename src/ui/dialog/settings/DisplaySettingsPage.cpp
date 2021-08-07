@@ -19,17 +19,16 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
-#include <wx/defs.h>    // for wxALL, wxGROW
-#include <wx/event.h>   // for wxCommandEvent (ptr only), wxEVT_C...
-#include <wx/msgdlg.h>  // for wxMessageBox
-
 #include <string>  // for to_string
 
 #include "ScoreboardCommon.h"      // for DEFAULT_BORDER_SIZE
 #include "config.pb.h"             // for ScreenSide
 #include "config/DisplayConfig.h"  // for DisplayConfig
+#include "config/swx/defs.h"       // for wxALL, wxGROW
+#include "config/swx/event.h"      // for wxCommandEvent (ptr only), wxEVT_C...
 #include "ui/widget/Panel.h"       // for Panel
-#include "util/StringUtil.h"       // for StringUtil
+#include "ui/widget/PopUp.h"
+#include "util/StringUtil.h"  // for StringUtil
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -110,20 +109,20 @@ auto DisplaySettingsPage::validateSettings() -> bool {
       has_control = true;
       if (!DisplayConfig::getInstance()->windowedMode() &&
           (side.home() || side.away() || side.extra())) {
-        wxMessageBox(
+        PopUp::Message(
             "ERROR: The Booth Monitor display may not also be a team display.");
         return false;
       }
     }
   }
   if (!has_control) {
-    wxMessageBox("ERROR: One window must be selected as a Booth Monitor.");
+    PopUp::Message("ERROR: One window must be selected as a Booth Monitor.");
     return false;
   }
 
   if (enable_window_mode->checked()) {
     if (StringUtil::stringToInt(number_of_windows->value()) < 1) {
-      wxMessageBox(
+      PopUp::Message(
           "ERROR: If enabling windows mode, at least one window must be "
           "created.");
       return false;
@@ -131,7 +130,7 @@ auto DisplaySettingsPage::validateSettings() -> bool {
 
     if (StringUtil::stringToInt(window_width->value()) < 1 ||
         StringUtil::stringToInt(window_height->value()) < 1) {
-      wxMessageBox(
+      PopUp::Message(
           "ERROR: If enabling windows mode, window resolution must be larger "
           "than 0x0.");
       return false;
@@ -148,7 +147,7 @@ void DisplaySettingsPage::saveSettings() {
     if (DisplayConfig::getInstance()->setDisplayId(
             i, display_settings_panels[i]->getDisplayId()) &&
         !warnedAboutOrderChange) {
-      wxMessageBox(
+      PopUp::Message(
           "WARNING: You have changed monitor ordering.  To see this take "
           "effect, you must restart the application.");
       warnedAboutOrderChange = true;
@@ -166,7 +165,7 @@ void DisplaySettingsPage::saveSettings() {
        StringUtil::stringToInt(window_width->value())) ||
       (DisplayConfig::getInstance()->windowHeight() !=
        StringUtil::stringToInt(window_height->value()))) {
-    wxMessageBox(
+    PopUp::Message(
         "WARNING: Changes to windowed mode will require an application restart "
         "to take effect.");
   }
