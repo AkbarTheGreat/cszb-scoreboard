@@ -55,10 +55,8 @@ class ListBox : public Widget {
   auto selectedIndex() -> int32_t;
   void selectItem(int32_t select_index);
 
-  // TODO(akbar) Get rid of these for something a lot less... dependent on
-  // wxWidgets objects.
-  void strings(wxArrayString &strings) { wx->GetStrings(strings); }
-  void setStrings(wxArrayString &strings) { wx->SetStrings(strings); }
+  auto strings() -> std::vector<std::string>;
+  void setStrings(const std::vector<std::string> &strings);
 
  protected:
   auto _wx() const -> wxWindow * override { return wx; }

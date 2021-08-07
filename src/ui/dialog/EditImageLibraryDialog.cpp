@@ -149,9 +149,9 @@ void EditImageLibraryDialog::fileSelected(wxListEvent &event) {
   FilesystemPath filename = file_list->selectedFilename();
 
   name_entry->setValue(images[filename].name());
-  wxArrayString tags;
+  std::vector<std::string> tags;
   for (const auto &tag : images[filename].tags()) {
-    tags.Add(tag);
+    tags.push_back(tag);
   }
   tag_list->setStrings(tags);
   event.Skip();
@@ -162,10 +162,9 @@ void EditImageLibraryDialog::nameUpdated(wxKeyEvent &event) {
 }
 
 void EditImageLibraryDialog::tagDeleted(wxListEvent &event) {
-  wxArrayString tags;
-  tag_list->strings(tags);
+  std::vector<std::string> tags = tag_list->strings();
 
-  tags.RemoveAt(event.GetIndex(), 1);
+  tags.erase(tags.begin() + event.GetIndex());
 
   tag_list->setStrings(tags);
 
@@ -177,11 +176,10 @@ void EditImageLibraryDialog::tagDeleted(wxListEvent &event) {
 }
 
 void EditImageLibraryDialog::tagsUpdated(wxListEvent &event) {
-  wxArrayString tags;
-  tag_list->strings(tags);
+  std::vector<std::string> tags = tag_list->strings();
   int index = event.GetIndex();
   if (index >= tags.size()) {
-    tags.Add(event.GetText());
+    tags.push_back(event.GetText());
   } else {
     tags[index] = event.GetText();
   }

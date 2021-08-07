@@ -26,11 +26,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-auto ListBox::listSize() -> int32_t {
-  wxArrayString data;
-  strings(data);
-  return data.GetCount();
-}
+auto ListBox::listSize() -> int32_t { return strings().size(); }
 
 auto ListBox::selectedIndex() -> int32_t {
   if (listSize() == 0) {
@@ -47,6 +43,24 @@ void ListBox::selectItem(int32_t select_index) {
 
   wx->GetListCtrl()->SetItemState(select_index, wxLIST_STATE_SELECTED,
                                   wxLIST_STATE_SELECTED);
+}
+
+auto ListBox::strings() -> std::vector<std::string> {
+  std::vector<std::string> strings;
+  wxArrayString wx_strings;
+  wx->GetStrings(wx_strings);
+  for (const auto &entry : wx_strings) {
+    strings.push_back(entry.ToStdString());
+  }
+  return strings;
+}
+
+void ListBox::setStrings(const std::vector<std::string> &strings) {
+  wxArrayString wx_strings;
+  for (const auto &entry : strings) {
+    wx_strings.Add(entry.c_str());
+  }
+  wx->SetStrings(wx_strings);
 }
 
 }  // namespace cszb_scoreboard

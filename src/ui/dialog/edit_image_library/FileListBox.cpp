@@ -19,9 +19,6 @@ limitations under the License.
 
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
-#include <wx/arrstr.h>    // for wxArrayString
-#include <wx/string.h>    // for wxString
-
 #include <iterator>  // for next
 #include <optional>  // for optional
 #include <string>    // for string
@@ -64,8 +61,7 @@ void FileListBox::newPressed() {
 }
 
 auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
-  wxArrayString strings;
-  box->strings(strings);
+  std::vector<std::string> strings = box->strings();
   std::vector<FilesystemPath> filenames;
 
   for (const auto &entry : strings) {
@@ -87,13 +83,13 @@ auto FileListBox::selectedFilename() -> FilesystemPath {
 
 void FileListBox::updateStrings(const std::vector<FilesystemPath> &filenames,
                                 int32_t select_index) {
-  wxArrayString strings;
+  std::vector<std::string> strings;
   for (const auto &file : filenames) {
-    strings.Add(file.c_str());
+    strings.push_back(file.string());
   }
   box->setStrings(strings);
 
-  if (strings.GetCount() > 0) {
+  if (strings.size() > 0) {
     box->selectItem(select_index);
   }
 }
