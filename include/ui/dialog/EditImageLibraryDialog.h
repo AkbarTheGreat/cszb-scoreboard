@@ -18,8 +18,6 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/propdlg.h>  // IWYU pragma: keep for wxPropertySheetDialog
-
 #include <map>     // for map
 #include <memory>  // for unique_ptr
 
@@ -31,7 +29,6 @@ limitations under the License.
 #include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
 #include "ui/widget/Text.h"                            // for Text
 #include "util/FilesystemPath.h"                       // for FilesystemPath
-// IWYU pragma: no_include <wx/generic/propdlg.h>
 
 class wxCloseEvent;
 class wxCommandEvent;
@@ -60,14 +57,13 @@ class EditImageLibraryDialog : public TabbedDialog {
   void positionWidgets();
   void saveSettings();
   static auto validateSettings() -> bool;
-  // wxWidgets callbacks, waive linting error for references.
-  void fileSelected(wxListEvent &event);  // NOLINT(google-runtime-references)
-  void onOk(wxCommandEvent &event);       // NOLINT(google-runtime-references)
-  void onCancel(wxCommandEvent &event);   // NOLINT(google-runtime-references)
-  void onClose(wxCloseEvent &event);      // NOLINT(google-runtime-references)
-  void nameUpdated(wxKeyEvent &event);    // NOLINT(google-runtime-references)
-  void tagDeleted(wxListEvent &event);    // NOLINT(google-runtime-references)
-  void tagsUpdated(wxListEvent &event);   // NOLINT(google-runtime-references)
+  void fileSelected(wxListEvent *event);
+  void onOk();
+  void onCancel();
+  void onClose();
+  void nameUpdated();
+  void tagDeleted(const wxListEvent &event);
+  void tagsUpdated(const wxListEvent &event);
 };
 
 }  // namespace cszb_scoreboard

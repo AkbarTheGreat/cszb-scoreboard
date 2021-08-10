@@ -19,25 +19,15 @@ limitations under the License.
 
 #include "ui/dialog/EditImageLibraryDialog.h"
 
-#include <wx/arrstr.h>    // for wxArrayString
-#include <wx/defs.h>      // for wxID_CANCEL
-#include <wx/event.h>     // for wxCommandEvent...
-#include <wx/listbase.h>  // for wxListEvent
-#include <wx/panel.h>     // IWYU pragma: keep for wxPanel
-#include <wx/stattext.h>  // IWYU pragma: keep for wxStaticText
-#include <wx/string.h>    // for wxString
-#include <wx/textctrl.h>  // IWYU pragma: keep for wxTextCtrl
-
 #include <filesystem>  // for operator<
 #include <string>      // for string, basic_...
 #include <vector>      // for vector
 
 #include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
 #include "config/ImageLibrary.h"                       // for ImageLibrary
+#include "config/swx/defs.h"                           // for wxID_CANCEL
+#include "config/swx/event.h"                          // for wxCommandEvent...
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-// IWYU pragma: no_include: <wx/generic/panelg.h>
-// IWYU pragma: no_include: <wx/gtk/stattext.h>
-// IWYU pragma: no_include: <wx/gtk/textctrl.h>
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -71,8 +61,6 @@ void EditImageLibraryDialog::positionWidgets() {
   box_panel->addWidget(*name_label, 1, 0);
   box_panel->addWidget(*name_entry, 1, 1);
 
-  // CreateButtons(wxOK | wxCANCEL);
-
   box_panel->runSizer();
 
   addPage(*box_panel, "");
@@ -82,20 +70,18 @@ void EditImageLibraryDialog::positionWidgets() {
 
 void EditImageLibraryDialog::bindEvents() {
   bind(
-      wxEVT_BUTTON,
-      [this](wxCommandEvent &event) -> void { this->onOk(event); }, wxID_OK);
+      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onOk(); },
+      wxID_OK);
   bind(
-      wxEVT_BUTTON,
-      [this](wxCommandEvent &event) -> void { this->onCancel(event); },
+      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
   bind(wxEVT_CLOSE_WINDOW,
-       [this](wxCloseEvent &event) -> void { this->onClose(event); });
+       [this](wxCloseEvent &event) -> void { this->onClose(); });
   file_list->bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent &event) -> void {
-    this->fileSelected(event);
+    this->fileSelected(&event);
   });
-  name_entry->bind(wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void {
-    this->nameUpdated(event);
-  });
+  name_entry->bind(wxEVT_KEY_UP,
+                   [this](wxKeyEvent &event) -> void { this->nameUpdated(); });
   tag_list->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
     this->tagsUpdated(event);
   });
@@ -104,7 +90,7 @@ void EditImageLibraryDialog::bindEvents() {
   });
 }
 
-void EditImageLibraryDialog::onOk(wxCommandEvent &event) {
+void EditImageLibraryDialog::onOk() {
   if (validateSettings()) {
     saveSettings();
     close();
@@ -112,9 +98,9 @@ void EditImageLibraryDialog::onOk(wxCommandEvent &event) {
   }
 }
 
-void EditImageLibraryDialog::onCancel(wxCommandEvent &event) { close(); }
+void EditImageLibraryDialog::onCancel() { close(); }
 
-void EditImageLibraryDialog::onClose(wxCloseEvent &event) {
+void EditImageLibraryDialog::onClose() {
   // Sometimes closing out this menu has given focus to a totally different
   // window for focus for me in testing.  That's really obnoxious, because it
   // can have the effect of sending the main window to the back of another
@@ -145,7 +131,7 @@ void EditImageLibraryDialog::saveSettings() {
   ImageLibrary::getInstance()->saveLibrary();
 }
 
-void EditImageLibraryDialog::fileSelected(wxListEvent &event) {
+void EditImageLibraryDialog::fileSelected(wxListEvent *event) {
   FilesystemPath filename = file_list->selectedFilename();
 
   name_entry->setValue(images[filename].name());
@@ -154,14 +140,14 @@ void EditImageLibraryDialog::fileSelected(wxListEvent &event) {
     tags.push_back(tag);
   }
   tag_list->setStrings(tags);
-  event.Skip();
+  event->Skip();
 }
 
-void EditImageLibraryDialog::nameUpdated(wxKeyEvent &event) {
+void EditImageLibraryDialog::nameUpdated() {
   images[file_list->selectedFilename()].set_name(name_entry->value());
 }
 
-void EditImageLibraryDialog::tagDeleted(wxListEvent &event) {
+void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
   std::vector<std::string> tags = tag_list->strings();
 
   tags.erase(tags.begin() + event.GetIndex());
@@ -175,7 +161,7 @@ void EditImageLibraryDialog::tagDeleted(wxListEvent &event) {
   }
 }
 
-void EditImageLibraryDialog::tagsUpdated(wxListEvent &event) {
+void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
   std::vector<std::string> tags = tag_list->strings();
   int index = event.GetIndex();
   if (index >= tags.size()) {
