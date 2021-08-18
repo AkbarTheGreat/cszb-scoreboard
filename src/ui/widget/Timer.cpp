@@ -1,7 +1,7 @@
 /*
-ui/event/UpdateTimer.h: A timer which periodically checks for updates.
+ui/widget/Timer.cpp: A timer object which performs a given action periodically.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,25 +18,15 @@ limitations under the License.
 
 #pragma once
 
-#include <ui/widget/timer.h>
+#include "ui/widget/Timer.h"
 
 namespace cszb_scoreboard {
 
-constexpr int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
+void Timer::start() {
+  execute();
+  Start(periodMillis(), false);
+}
 
-class Frame;
-
-class UpdateTimer : public Timer {
- public:
-  explicit UpdateTimer(Frame *main_view);
-  void start() override;
-
- private:
-  Frame *main_view;
-
-  // Retry every six hours to look for an update.
-  auto periodMillis() -> int override { return AUTO_UPDATE_DELAY; }
-  void execute() override;
-};
+void Timer::Notify() { execute(); }
 
 }  // namespace cszb_scoreboard

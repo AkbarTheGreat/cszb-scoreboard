@@ -24,17 +24,15 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-// Retry every six hours to look for an update.
-const int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
-
 UpdateTimer::UpdateTimer(Frame *main_view) { this->main_view = main_view; }
 
-void UpdateTimer::Notify() {
-  if (IsOneShot()) {
-    // First time through, remove an old auto-update.
-    AutoUpdate::removeOldUpdate();
-  }
+void UpdateTimer::start() {
+  // First time through, remove an old auto-update.
+  AutoUpdate::removeOldUpdate();
+  Timer::start();
+}
 
+void UpdateTimer::execute() {
   bool new_version_available =
       AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version_available) {
@@ -52,11 +50,6 @@ void UpdateTimer::Notify() {
           "New version found, please go to "
           "github.com/AkbarTheGreat/cszb-scoreboard to update.");
     }
-  }
-
-  // If called as a one-shot, we need to establish this as a periodic event.
-  if (IsOneShot()) {
-    Start(AUTO_UPDATE_DELAY);
   }
 }
 

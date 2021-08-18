@@ -1,7 +1,7 @@
 /*
-ui/event/UpdateTimer.h: A timer which periodically checks for updates.
+ui/widget/swx/Timer.h: A wrapper around wxTimer.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,25 +18,13 @@ limitations under the License.
 
 #pragma once
 
-#include <ui/widget/timer.h>
+#include <wx/timer.h>  // for wxTimer
 
-namespace cszb_scoreboard {
+namespace cszb_scoreboard::swx {
 
-constexpr int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
-
-class Frame;
-
-class UpdateTimer : public Timer {
+class Timer : public wxTimer {
  public:
-  explicit UpdateTimer(Frame *main_view);
-  void start() override;
-
- private:
-  Frame *main_view;
-
-  // Retry every six hours to look for an update.
-  auto periodMillis() -> int override { return AUTO_UPDATE_DELAY; }
-  void execute() override;
+  Timer() = default;
 };
 
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::swx
