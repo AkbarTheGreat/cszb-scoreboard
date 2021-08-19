@@ -58,10 +58,10 @@ class MainView : public Frame {
       wxCommandEvent &event);  // NOLINT(google-runtime-references)
 
   std::unique_ptr<ControlPanel> control_panel;
-  SettingsDialog *settings_dialog;
+  std::unique_ptr<SettingsDialog> settings_dialog;
   std::unique_ptr<PreviewPanel> preview_panel;
   std::unique_ptr<QuickStatePanel> quick_state;
-  UpdateTimer *update_timer;
+  std::unique_ptr<UpdateTimer> update_timer;
 };
 
 }  // namespace cszb_scoreboard

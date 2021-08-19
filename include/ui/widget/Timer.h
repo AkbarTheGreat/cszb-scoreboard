@@ -22,16 +22,17 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class Timer  : public swx::Timer {
+class Timer : public swx::Timer {
  public:
   Timer() = default;
   virtual void start();
   /* The period between executions of the timer. */
   virtual auto periodMillis() -> int = 0;
   /* The code to execute every iteration of the timer. */
-  virtual void execute() =0;
+  virtual void execute() = 0;
+
  private:
-    void Notify() override;
+  void Notify() override;
 };
 
 }  // namespace cszb_scoreboard

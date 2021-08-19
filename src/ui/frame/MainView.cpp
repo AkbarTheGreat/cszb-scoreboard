@@ -60,7 +60,7 @@ MainView::MainView(const wxString &title, const wxPoint &pos,
   bindEvents();
 
   if (CommandArgs::getInstance()->autoUpdate()) {
-    update_timer = new UpdateTimer(this);
+    update_timer = std::make_unique<UpdateTimer>(this);
     update_timer->start();
   }
 
@@ -135,8 +135,8 @@ void MainView::onAbout(wxCommandEvent &event) {
 }
 
 void MainView::showSettings(wxCommandEvent &event) {
-  settings_dialog =
-      new SettingsDialog(childDialog("Scoreboard Settings"), this);
+  settings_dialog = std::make_unique<SettingsDialog>(
+      childDialog("Scoreboard Settings"), this);
   settings_dialog->show();
   settings_dialog->bind(
       SETTINGS_UPDATED,
