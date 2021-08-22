@@ -165,7 +165,7 @@ void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
   std::vector<std::string> tags = tag_list->strings();
   int index = event.GetIndex();
   if (index >= tags.size()) {
-    tags.push_back(event.GetText());
+    tags.push_back(event.GetText().ToStdString());
   } else {
     tags[index] = event.GetText();
   }
