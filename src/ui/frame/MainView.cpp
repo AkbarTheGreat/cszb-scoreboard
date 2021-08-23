@@ -27,15 +27,13 @@ limitations under the License.
 #include <utility>  // for pair
 #include <vector>   // for vector
 
-#include "ScoreboardCommon.h"          // for SCOREBOARD_VERSION
-#include "config/CommandArgs.h"        // for CommandArgs
-#include "config/DisplayConfig.h"      // for DisplayConfig
-#include "ui/component/Menu.h"         // for DISPLAY_BLACK_OUT, GENERAL_SET...
-#include "ui/dialog/SettingsDialog.h"  // for SettingsDialog, SETTINGS_UPDATED
-#include "ui/event/UpdateTimer.h"      // for UpdateTimer
-#include "ui/frame/FrameManager.h"     // for FrameManager
-#include "ui/frame/HotkeyTable.h"      // for HotkeyTable
-#include "util/StringUtil.h"           // for StringUtil
+#include "ScoreboardCommon.h"       // for SCOREBOARD_VERSION
+#include "config/CommandArgs.h"     // for CommandArgs
+#include "config/DisplayConfig.h"   // for DisplayConfig
+#include "ui/component/Menu.h"      // for DISPLAY_BLACK_OUT, GENERAL_SET...
+#include "ui/frame/FrameManager.h"  // for FrameManager
+#include "ui/frame/HotkeyTable.h"   // for HotkeyTable
+#include "util/StringUtil.h"        // for StringUtil
 // IWYU pragma: no_include <wx/gtk/menu.h>
 
 namespace cszb_scoreboard {

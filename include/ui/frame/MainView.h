@@ -26,15 +26,15 @@ limitations under the License.
 #include "ui/component/ControlPanel.h"     // for ControlPanel
 #include "ui/component/PreviewPanel.h"     // for PreviewPanel
 #include "ui/component/QuickStatePanel.h"  // for QuickStatePanel
-#include "ui/widget/Frame.h"               // for Frame
+#include "ui/dialog/SettingsDialog.h"  // for SettingsDialog, SETTINGS_UPDATED
+#include "ui/event/UpdateTimer.h"      // for UpdateTimer
+#include "ui/widget/Frame.h"           // for Frame
 
 class wxCloseEvent;
 class wxCommandEvent;
 class wxNotebook;
 
 namespace cszb_scoreboard {
-class SettingsDialog;
-class UpdateTimer;
 
 class MainView : public Frame {
  public:
