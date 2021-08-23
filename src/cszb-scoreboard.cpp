@@ -29,7 +29,6 @@ limitations under the License.
 #include "ui/frame/FrameManager.h"  // for FrameManager
 #include "ui/frame/MainView.h"      // for MainView
 #include "util/Log.h"               // for LogDebug
-// IWYU pragma: no_include <wx/unix/app.h>
 
 #ifndef SCOREBOARD_TESTING
 // NOLINTNEXTLINE(modernize-use-trailing-return-type)

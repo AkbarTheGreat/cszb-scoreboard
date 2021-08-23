@@ -18,12 +18,11 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/defs.h>   // for wxID_ANY, wxALL, wxGROW
-#include <wx/event.h>  // for wxEventTypeTag, wxCloseEvent (ptr o...
-
 #include <functional>  // for function
 
 #include "ScoreboardCommon.h"     // for DEFAULT_BORDER_SIZE
+#include "config/swx/defs.h"      // for wxID_ANY, wxALL, wxGROW
+#include "config/swx/event.h"     // for wxEventTypeTag, wxCloseEvent (ptr o...
 #include "ui/widget/swx/Sizer.h"  // for Sizer
 #include "wx/window.h"            // for wxWindow
 

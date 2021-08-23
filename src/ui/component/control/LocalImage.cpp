@@ -33,7 +33,6 @@ limitations under the License.
 #include "ui/widget/Widget.h"                   // for NO_BORDER
 #include "util/Clipboard.h"                     // for Clipboard
 #include "util/FilesystemPath.h"                // for FilesystemPath
-#include "util/Log.h"  // IWYU pragma: keep for LogDebug
 
 namespace cszb_scoreboard {
 

@@ -22,5 +22,6 @@ limitations under the License.
 
 #include <wx/clrpicker.h>  // IWYU pragma: export for wxColourPickerEvent
 #include <wx/event.h>      // IWYU pragma: export
+#include <wx/listbase.h>   // IWYU pragma: export for wxListEvent (ptr only)
 #include <wx/textctrl.h>   // IWYU pragma: export for wxEVT_TEXT
 #include <wx/tglbtn.h>     // IWYU pragma: export for wxEVT_TOGGLEBUTTON

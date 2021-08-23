@@ -20,7 +20,6 @@ limitations under the License.
 #pragma once
 
 #include <stdint.h>       // for int32_t
-#include <wx/defs.h>      // for wxID_ANY, wxWindowID
 #include <wx/dialog.h>    // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>    // for wxPoint, wxSize
 #include <wx/string.h>    // for wxString
@@ -30,6 +29,7 @@ limitations under the License.
 #include <string>  // for string
 
 #include "config/Position.h"                    // for Size
+#include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
