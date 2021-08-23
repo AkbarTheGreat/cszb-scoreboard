@@ -24,12 +24,16 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-UpdateTimer::UpdateTimer(Frame *main_view) { this->main_view = main_view; }
+// Retry every six hours to look for an update.
+constexpr int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
 
-void UpdateTimer::start() {
+UpdateTimer::UpdateTimer(Frame *main_view)
+    : PersistentTimer(AUTO_UPDATE_DELAY,
+                      [this]() -> void { this->execute(); }) {
+  this->main_view = main_view;
   // First time through, remove an old auto-update.
   AutoUpdate::removeOldUpdate();
-  Timer::start();
+  execute();
 }
 
 void UpdateTimer::execute() {

@@ -1,5 +1,6 @@
 /*
-ui/widget/Timer.cpp: A timer object which performs a given action periodically.
+ui/widget/PersistentTimer.cpp: A timer object which performs a given action
+periodically.
 
 Copyright 2021 Tracy Beck
 
@@ -18,15 +19,22 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/widget/Timer.h"
+#include "ui/widget/PersistentTimer.h"
 
 namespace cszb_scoreboard {
 
-void Timer::start() {
-  execute();
-  Start(periodMillis(), false);
+PersistentTimer::PersistentTimer(int period,
+                                 const std::function<void()>& on_tick) {
+  held = new HeldTimer(on_tick);
+  held->Start(period, false);
 }
 
-void Timer::Notify() { execute(); }
+PersistentTimer::~PersistentTimer() { delete held; }
+
+PersistentTimer::HeldTimer::HeldTimer(const std::function<void()>& on_tick) {
+  this->on_tick = on_tick;
+}
+
+void PersistentTimer::HeldTimer::Notify() { on_tick(); }
 
 }  // namespace cszb_scoreboard

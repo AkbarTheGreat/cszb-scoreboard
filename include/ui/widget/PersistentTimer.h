@@ -1,5 +1,6 @@
 /*
-ui/widget/Timer.h: A timer object which performs a given action periodically.
+ui/widget/PersistentTimer.h: A timer object which performs a given action
+periodically.
 
 Copyright 2021 Tracy Beck
 
@@ -22,17 +23,23 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class Timer : public swx::Timer {
+class PersistentTimer {
+ private:
+  class HeldTimer : public swx::Timer {
+   public:
+    HeldTimer(const std::function<void()> &on_tick);
+
+   private:
+    void Notify() override;
+    std::function<void()> on_tick;
+  };
+
  public:
-  Timer() = default;
-  virtual void start();
-  /* The period between executions of the timer. */
-  virtual auto periodMillis() -> int = 0;
-  /* The code to execute every iteration of the timer. */
-  virtual void execute() = 0;
+  PersistentTimer(int period, const std::function<void()> &on_tick);
+  virtual ~PersistentTimer();
 
  private:
-  void Notify() override;
+  HeldTimer *held;
 };
 
 }  // namespace cszb_scoreboard

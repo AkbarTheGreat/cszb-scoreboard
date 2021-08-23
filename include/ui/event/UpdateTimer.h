@@ -18,25 +18,21 @@ limitations under the License.
 
 #pragma once
 
-#include <ui/widget/timer.h>
+#include <ui/widget/PersistentTimer.h>
 
 namespace cszb_scoreboard {
 
-constexpr int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
 
 class Frame;
 
-class UpdateTimer : public Timer {
+class UpdateTimer : public PersistentTimer {
  public:
   explicit UpdateTimer(Frame *main_view);
-  void start() override;
 
  private:
   Frame *main_view;
 
-  // Retry every six hours to look for an update.
-  auto periodMillis() -> int override { return AUTO_UPDATE_DELAY; }
-  void execute() override;
+  void execute() ;
 };
 
 }  // namespace cszb_scoreboard

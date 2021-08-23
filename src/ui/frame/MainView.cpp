@@ -61,7 +61,6 @@ MainView::MainView(const wxString &title, const wxPoint &pos,
 
   if (CommandArgs::getInstance()->autoUpdate()) {
     update_timer = std::make_unique<UpdateTimer>(this);
-    update_timer->start();
   }
 
   // Set focus to the control_panel so that tab movement works correctly without
