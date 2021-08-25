@@ -137,6 +137,12 @@ sub cmake {
     return run_cmd($CMAKE_CMD, @cmake_args, $repo_path);
 }
 
+sub generate_protobuf {
+    die 'Incorrect number of arguments to generate_protobuf' if (@_ != 0);
+    
+    return run_cmd($CMAKE_CMD, '--build', '.', '--config', 'Release', '--target', 'scoreboard_proto')
+}
+
 sub make {
     die 'Incorrect number of arguments to make' if (@_ != 0);
     
@@ -176,6 +182,9 @@ sub main {
 	}
     if (cmake() != 0) {
         die 'Error running cmake: ' . $!;
+	}
+    if (generate_protobuf() != 0) {
+        die 'Error generating protobufs: ' . $!;
 	}
     if (make() != 0) {
         die 'Error building: ' . $!;
