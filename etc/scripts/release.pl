@@ -42,7 +42,7 @@ our $GIT_REPO = 'git@github.com:AkbarTheGreat/cszb-scoreboard.git';
 our $VERSION_FILE = '/include/ScoreboardCommon.h';
 
 # These should be the parts that are very specific to my machine
-our $VCPKG_CMAKE = 'C:/Users/akbar/Software/vcpkg/scripts/buildsystems/vcpkg.cmake',
+our $VCPKG_CMAKE = 'C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake',
 our $GIT_CMD = 'C:/Program Files/Git/cmd/git.exe';
 our $CMAKE_ROOT = 'C:/PROGRAM FILES (X86)/MICROSOFT VISUAL STUDIO/2019/COMMUNITY/COMMON7/IDE/COMMONEXTENSIONS/MICROSOFT/CMAKE/CMake/bin/';
 our $CMAKE_CMD = $CMAKE_ROOT . 'cmake.exe';
@@ -137,6 +137,12 @@ sub cmake {
     return run_cmd($CMAKE_CMD, @cmake_args, $repo_path);
 }
 
+sub generate_protobuf {
+    die 'Incorrect number of arguments to generate_protobuf' if (@_ != 0);
+    
+    return run_cmd($CMAKE_CMD, '--build', '.', '--config', 'Release', '--target', 'scoreboard_proto')
+}
+
 sub make {
     die 'Incorrect number of arguments to make' if (@_ != 0);
     
@@ -176,6 +182,9 @@ sub main {
 	}
     if (cmake() != 0) {
         die 'Error running cmake: ' . $!;
+	}
+    if (generate_protobuf() != 0) {
+        die 'Error generating protobufs: ' . $!;
 	}
     if (make() != 0) {
         die 'Error building: ' . $!;
