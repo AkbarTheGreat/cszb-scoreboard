@@ -30,8 +30,8 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenText;
 
-auto FrameManager::createMainView(const wxString &title, const wxPoint &pos,
-                                  const wxSize &size) -> MainView * {
+auto FrameManager::createMainView(const std::string &title, const Position &pos,
+                                  const Size &size) -> MainView * {
   main_view = std::make_unique<MainView>(title, pos, size);
   return main_view.get();
 }

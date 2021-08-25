@@ -25,7 +25,8 @@ limitations under the License.
 
 #include <array>  // for array
 
-#include "config/CommandArgs.h"     // for ARG_LIST, CommandArgs
+#include "config/CommandArgs.h"  // for ARG_LIST, CommandArgs
+#include "config/Position.h"
 #include "ui/frame/FrameManager.h"  // for FrameManager
 #include "ui/frame/MainView.h"      // for MainView
 #include "util/Log.h"               // for LogDebug
@@ -49,8 +50,9 @@ auto Scoreboard::OnInit() -> bool {
   wxInitAllImageHandlers();
   LogDebug(wxT("Starting up main loop"));
   FrameManager::getInstance()
-      ->createMainView("ComedySportz Scoreboard", wxPoint(START_X, START_Y),
-                       wxSize(START_WIDTH, START_HEIGHT))
+      ->createMainView("ComedySportz Scoreboard",
+                       Position{.x = START_X, .y = START_Y},
+                       Size{.width = START_WIDTH, .height = START_HEIGHT})
       ->show(true);
   return true;
 }

@@ -18,11 +18,9 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>  // for wxPoint, wxSize (ptr only)
-#include <wx/string.h>  // for wxString
-
 #include <memory>  // for unique_ptr
 
+#include "config/Position.h"
 #include "ui/component/ControlPanel.h"     // for ControlPanel
 #include "ui/component/PreviewPanel.h"     // for PreviewPanel
 #include "ui/component/QuickStatePanel.h"  // for QuickStatePanel
@@ -38,7 +36,7 @@ namespace cszb_scoreboard {
 
 class MainView : public Frame {
  public:
-  MainView(const wxString &title, const wxPoint &pos, const wxSize &size);
+  MainView(const std::string &title, const Position &pos, const Size &size);
   auto controlPanel() -> ControlPanel * { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
 

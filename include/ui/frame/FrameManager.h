@@ -21,12 +21,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>  // for wxPoint, wxSize (ptr only)
-#include <wx/string.h>  // for wxString
-
 #include <memory>  // for unique_ptr
 #include <set>     // for set
 
+#include "config/Position.h"
 #include "ui/frame/MainView.h"  // for MainView
 
 namespace cszb_scoreboard {
@@ -37,8 +35,8 @@ class ScreenText;
 class FrameManager {
  public:
   static auto getInstance() -> FrameManager *;
-  auto createMainView(const wxString &title, const wxPoint &pos,
-                      const wxSize &size) -> MainView *;
+  auto createMainView(const std::string &title, const Position &pos,
+                      const Size &size) -> MainView *;
   auto createScreenPresenter(int monitor_number, const ScreenText &preview)
       -> ScreenPresenter *;
   inline auto mainView() -> MainView * { return main_view.get(); }

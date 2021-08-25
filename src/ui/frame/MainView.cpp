@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/event.h>   // for wxCommandEvent (ptr only), wxE...
 #include <wx/menu.h>    // IWYU pragma: keep for wxMenu
 #include <wx/msgdlg.h>  // for wxMessageBox
+#include <wx/string.h>  // for wxString
 
 #include <string>   // for string
 #include <utility>  // for pair
@@ -40,8 +41,8 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 0;
 
-MainView::MainView(const wxString &title, const wxPoint &pos,
-                   const wxSize &size)
+MainView::MainView(const std::string &title, const Position &pos,
+                   const Size &size)
     : Frame(title, pos, size) {
   createMenu();
   setStatusBar("Welcome to ComedySportz Scoreboard, " +

@@ -30,6 +30,7 @@ limitations under the License.
 #include <utility>  // for pair
 #include <vector>   // for vector
 
+#include "config/Position.h"
 #include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Frame.h"                // for Frame
@@ -43,17 +44,17 @@ class wxMenu;
 class wxWindow;
 
 namespace cszb_scoreboard {
-struct Position;
-struct Size;
 
 const int DEFAULT_NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
                                    wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;
 
 class Frame : public Widget {
  public:
-  explicit Frame(const wxString &title, const wxPoint &pos = wxDefaultPosition,
-                 const wxSize &size = wxDefaultSize)
-      : Frame(new swx::Frame(nullptr, wxID_ANY, title, pos, size)) {}
+  explicit Frame(const std::string &title,
+                 const Position &pos = Position::fromWx(wxDefaultPosition),
+                 const Size &size = Size::fromWx(wxDefaultSize))
+      : Frame(new swx::Frame(nullptr, wxID_ANY, title, pos.toWx(),
+                             size.toWx())) {}
   // Injectable constructor, for testing.
   explicit Frame(swx::Frame *frame) { wx = frame; }
   virtual ~Frame() { wx->Destroy(); }
