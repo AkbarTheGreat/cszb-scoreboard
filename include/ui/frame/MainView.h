@@ -46,14 +46,11 @@ class MainView : public Frame {
   auto createControlNotebook() -> wxNotebook *;
   void createStatusBar();
   void positionWidgets();
-  // wxWidgets callbacks, waive linting error for references.
-  void onExit(wxCommandEvent &event);   // NOLINT(google-runtime-references)
-  void onAbout(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void onClose(wxCloseEvent &event);    // NOLINT(google-runtime-references)
-  void onSettingsChange(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void showSettings(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void onExit();
+  void onAbout();
+  void onClose();
+  void onSettingsChange();
+  void showSettings();
 
   std::unique_ptr<ControlPanel> control_panel;
   std::unique_ptr<SettingsDialog> settings_dialog;

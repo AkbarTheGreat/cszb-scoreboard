@@ -18,11 +18,7 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include <wx/defs.h>    // for wxID_ABOUT, wxID_EXIT, wxICON_...
-#include <wx/event.h>   // for wxCommandEvent (ptr only), wxE...
-#include <wx/menu.h>    // IWYU pragma: keep for wxMenu
-#include <wx/msgdlg.h>  // for wxMessageBox
-#include <wx/string.h>  // for wxString
+#include <wx/menu.h>  // IWYU pragma: keep for wxMenu
 
 #include <string>   // for string
 #include <utility>  // for pair
@@ -31,10 +27,13 @@ limitations under the License.
 #include "ScoreboardCommon.h"       // for SCOREBOARD_VERSION
 #include "config/CommandArgs.h"     // for CommandArgs
 #include "config/DisplayConfig.h"   // for DisplayConfig
+#include "config/swx/defs.h"        // for wxID_ABOUT, wxID_EXIT, wxICON_...
+#include "config/swx/event.h"       // for wxCommandEvent (ptr only), wxE...
 #include "ui/component/Menu.h"      // for DISPLAY_BLACK_OUT, GENERAL_SET...
 #include "ui/frame/FrameManager.h"  // for FrameManager
 #include "ui/frame/HotkeyTable.h"   // for HotkeyTable
-#include "util/StringUtil.h"        // for StringUtil
+#include "ui/widget/PopUp.h"
+#include "util/StringUtil.h"  // for StringUtil
 // IWYU pragma: no_include <wx/gtk/menu.h>
 
 namespace cszb_scoreboard {
@@ -96,21 +95,19 @@ void MainView::positionWidgets() {
 
 void MainView::bindEvents() {
   bind(wxEVT_CLOSE_WINDOW,
-       [this](wxCloseEvent &event) -> void { this->onClose(event); });
+       [this](wxCloseEvent &event) -> void { this->onClose(); });
   // Menu events bind against the frame itself, so a bare Bind() is useful
   // here.
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->showSettings(event); },
+      [this](wxCommandEvent &event) -> void { this->showSettings(); },
       GENERAL_SETTINGS);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->onExit(event); },
-      wxID_EXIT);
+      [this](wxCommandEvent &event) -> void { this->onExit(); }, wxID_EXIT);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->onAbout(event); },
-      wxID_ABOUT);
+      [this](wxCommandEvent &event) -> void { this->onAbout(); }, wxID_ABOUT);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent &event) -> void {
@@ -119,33 +116,30 @@ void MainView::bindEvents() {
       DISPLAY_BLACK_OUT);
 }
 
-void MainView::onExit(wxCommandEvent &event) { closeWindow(); }
+void MainView::onExit() { closeWindow(); }
 
-// Callbacks cannot be static.
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-void MainView::onAbout(wxCommandEvent &event) {
-  wxString about_string;
-  about_string.Printf(
-      "cszb-scoreboard: The ComedySportz Scoreboard.  Version %s.  Copyright "
-      "(c) Tracy Beck, Licensed via the Apache License.",
-      SCOREBOARD_VERSION);
-  wxMessageBox(about_string, "About Scoreboard", wxOK | wxICON_INFORMATION);
+void MainView::onAbout() {
+  std::string about_string =
+      "cszb-scoreboard: The ComedySportz Scoreboard.  "
+      "Version " SCOREBOARD_VERSION
+      ".  Copyright (c) Tracy Beck, Licensed via the Apache License.";
+  PopUp::Info("About Scoreboard", about_string);
 }
 
-void MainView::showSettings(wxCommandEvent &event) {
+void MainView::showSettings() {
   settings_dialog = std::make_unique<SettingsDialog>(
       childDialog("Scoreboard Settings"), this);
   settings_dialog->show();
   settings_dialog->bind(
       SETTINGS_UPDATED,
-      [this](wxCommandEvent &event) -> void { this->onSettingsChange(event); });
+      [this](wxCommandEvent &event) -> void { this->onSettingsChange(); });
 }
 
-void MainView::onSettingsChange(wxCommandEvent &event) {
+void MainView::onSettingsChange() {
   preview_panel->updatePreviewsFromSettings();
 }
 
-void MainView::onClose(wxCloseEvent &event) {
+void MainView::onClose() {
   // The following call deletes the pointer to this object, so should always be
   // done last.
   FrameManager::getInstance()->exitFrames();

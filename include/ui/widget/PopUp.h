@@ -18,13 +18,16 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/msgdlg.h>
+#include <string>
 
 namespace cszb_scoreboard {
 
 class PopUp {
  public:
-  static void Message(const std::string &msg) { wxMessageBox(msg); }
+  static void Error(const std::string &title, const std::string &msg);
+  static void Info(const std::string &title, const std::string &msg);
+  static void Message(const std::string &msg);
+  static void Warning(const std::string &title, const std::string &msg);
 };
 
 }  // namespace cszb_scoreboard
