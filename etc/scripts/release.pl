@@ -42,7 +42,7 @@ our $GIT_REPO = 'git@github.com:AkbarTheGreat/cszb-scoreboard.git';
 our $VERSION_FILE = '/include/ScoreboardCommon.h';
 
 # These should be the parts that are very specific to my machine
-our $VCPKG_CMAKE = 'C:/Users/akbar/Software/vcpkg/scripts/buildsystems/vcpkg.cmake',
+our $VCPKG_CMAKE = 'C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake',
 our $GIT_CMD = 'C:/Program Files/Git/cmd/git.exe';
 our $CMAKE_ROOT = 'C:/PROGRAM FILES (X86)/MICROSOFT VISUAL STUDIO/2019/COMMUNITY/COMMON7/IDE/COMMONEXTENSIONS/MICROSOFT/CMAKE/CMake/bin/';
 our $CMAKE_CMD = $CMAKE_ROOT . 'cmake.exe';
