@@ -18,8 +18,6 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include <wx/menu.h>  // IWYU pragma: keep for wxMenu
-
 #include <string>   // for string
 #include <utility>  // for pair
 #include <vector>   // for vector
@@ -34,7 +32,6 @@ limitations under the License.
 #include "ui/frame/HotkeyTable.h"   // for HotkeyTable
 #include "ui/widget/PopUp.h"
 #include "util/StringUtil.h"  // for StringUtil
-// IWYU pragma: no_include <wx/gtk/menu.h>
 
 namespace cszb_scoreboard {
 
@@ -68,21 +65,26 @@ MainView::MainView(const std::string &title, const Position &pos,
 }
 
 void MainView::createMenu() {
-  auto *menu_general = new wxMenu;
-  menu_general->Append(GENERAL_SETTINGS, "&Settings",
-                       "Configure the scoreboard");
-  menu_general->AppendSeparator();
-  menu_general->Append(wxID_EXIT);
-  auto *menu_display = new wxMenu;
-  menu_display->Append(DISPLAY_BLACK_OUT, "&Black Out\tCtrl-B",
-                       "Black out both screens");
-  auto *menu_help = new wxMenu;
-  menu_help->Append(wxID_ABOUT);
+  std::vector<MenuItem> general;
+  general.emplace_back(MenuItem{.id = GENERAL_SETTINGS,
+                                .name = "&Settings",
+                                .description = "Configure the scoreboard"});
+  general.emplace_back(MenuItem{.id = wxID_SEPARATOR});
+  general.emplace_back(MenuItem{.id = wxID_EXIT});
 
-  std::vector<std::pair<wxMenu *, std::string>> menu;
-  menu.emplace_back(std::pair<wxMenu *, std::string>{menu_general, "&General"});
-  menu.emplace_back(std::pair<wxMenu *, std::string>{menu_display, "&Display"});
-  menu.emplace_back(std::pair<wxMenu *, std::string>{menu_help, "&Help"});
+  std::vector<MenuItem> display;
+  display.emplace_back(MenuItem{.id = DISPLAY_BLACK_OUT,
+                                .name = "&Black Out\tCtrl-B",
+                                .description = "Black out both screens"});
+
+  std::vector<MenuItem> help;
+  help.emplace_back(MenuItem{.id = wxID_ABOUT});
+
+  std::vector<MenuCategory> menu;
+  menu.emplace_back(MenuCategory{.name = "&General", .items = general});
+  menu.emplace_back(MenuCategory{.name = "&Display", .items = display});
+  menu.emplace_back(MenuCategory{.name = "&Help", .items = help});
+
   menuBar(menu);
 }
 
@@ -96,8 +98,6 @@ void MainView::positionWidgets() {
 void MainView::bindEvents() {
   bind(wxEVT_CLOSE_WINDOW,
        [this](wxCloseEvent &event) -> void { this->onClose(); });
-  // Menu events bind against the frame itself, so a bare Bind() is useful
-  // here.
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent &event) -> void { this->showSettings(); },

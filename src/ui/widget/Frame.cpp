@@ -36,10 +36,18 @@ void Frame::alwaysOnTop(bool isOnTop) {
   }
 }
 
-void Frame::menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu) {
+void Frame::menuBar(const std::vector<MenuCategory> &menu) {
   auto menu_bar = new wxMenuBar();
-  for (auto item : menu) {
-    menu_bar->Append(item.first, item.second);
+  for (auto category : menu) {
+    auto *menu_cat = new wxMenu;
+    for (auto item : category.items) {
+      if (item.name) {
+        menu_cat->Append(item.id, *item.name, *item.description);
+      } else {
+        menu_cat->Append(item.id);
+      }
+    }
+    menu_bar->Append(menu_cat, category.name);
   }
   wx->SetMenuBar(menu_bar);
 }

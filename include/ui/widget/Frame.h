@@ -26,6 +26,7 @@ limitations under the License.
 #include <wx/string.h>       // for wxString
 #include <wx/tbarbase.h>     // for wxDefaultPosition
 
+#include <optional>
 #include <string>   // for string
 #include <utility>  // for pair
 #include <vector>   // for vector
@@ -47,6 +48,17 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
                                    wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;
+
+struct MenuItem {
+  int64_t id;
+  std::optional<std::string> name;
+  std::optional<std::string> description;
+};
+
+struct MenuCategory {
+  std::string name;
+  std::vector<MenuItem> items;
+};
 
 class Frame : public Widget {
  public:
@@ -72,7 +84,7 @@ class Frame : public Widget {
   void closeWindow() { wx->Close(true); }
   void fullScreen(bool show) { wx->ShowFullScreen(show); }
   void minimize() { wx->Iconize(); }
-  void menuBar(const std::vector<std::pair<wxMenu *, std::string>> &menu);
+  void menuBar(const std::vector<MenuCategory> &menu);
   void setDimensions(const Position &position, const Size &size);
 
   auto childDialog(const wxString &title, wxWindowID id = wxID_ANY,
