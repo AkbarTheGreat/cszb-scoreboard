@@ -20,6 +20,7 @@ limitations under the License.
 
 #include <wx/app.h>  // IWYU pragma: keep for wxApp
 // IWYU pragma: no_include <wx/gtk/app.h>
+#include "include/ScoreboardCommon.h"
 
 class wxCmdLineParser;
 
@@ -27,6 +28,9 @@ namespace cszb_scoreboard {
 class Scoreboard : public wxApp {
  public:
   auto OnInit() -> bool final;
+
+  PUBLIC_TEST_ONLY
+  void close();
 
  private:
   void OnInitCmdLine(wxCmdLineParser &parser) final;

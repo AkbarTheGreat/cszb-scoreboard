@@ -69,7 +69,7 @@ class Frame : public Widget {
                              size.toWx())) {}
   // Injectable constructor, for testing.
   explicit Frame(swx::Frame *frame) { wx = frame; }
-  virtual ~Frame() { }
+  virtual ~Frame() {}
 
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
     wx->SetAcceleratorTable(wxAcceleratorTable(keys.size(), keys.data()));
@@ -78,10 +78,10 @@ class Frame : public Widget {
   void setStatusBar(const wxString &text);
   auto show(bool show) -> bool { return wx->Show(show); }
   void updateWindow() { wx->Update(); }
+  void closeWindow() { wx->Close(true); }
 
  protected:
   void alwaysOnTop(bool isOnTop);
-  void closeWindow() { wx->Close(true); }
   void fullScreen(bool show) { wx->ShowFullScreen(show); }
   void minimize() { wx->Iconize(); }
   void menuBar(const std::vector<MenuCategory> &menu);

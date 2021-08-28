@@ -57,6 +57,10 @@ auto Scoreboard::OnInit() -> bool {
   return true;
 }
 
+void Scoreboard::close() {
+  FrameManager::getInstance()->mainView()->closeWindow();
+}
+
 void Scoreboard::OnInitCmdLine(wxCmdLineParser &parser) {
   wxApp::OnInitCmdLine(parser);
   parser.SetDesc(ARG_LIST.data());

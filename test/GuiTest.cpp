@@ -52,7 +52,7 @@ void GuiTest::SetUp() {
 }
 
 void GuiTest::TearDown() {
-  app->OnExit();
+  app->close();
   wxEntryCleanup();
 }
 
