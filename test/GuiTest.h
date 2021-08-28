@@ -21,7 +21,7 @@ limitations under the License.
 
 #pragma once
 
-#include <gtest/gtest.h>  // for Test
+#include <gtest/gtest.h>  // IWYU pragma: keep for Test
 #include <wx/dcclient.h>  // for wxClientDC
 #include <wx/gdicmn.h>    // for wxRect
 #include <wx/uiaction.h>  // for wxUIActionSimulator
