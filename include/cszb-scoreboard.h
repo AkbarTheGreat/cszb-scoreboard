@@ -30,7 +30,7 @@ class Scoreboard : public wxApp {
   auto OnInit() -> bool final;
 
   PUBLIC_TEST_ONLY
-  void close();
+  static void close();
 
  private:
   void OnInitCmdLine(wxCmdLineParser &parser) final;
