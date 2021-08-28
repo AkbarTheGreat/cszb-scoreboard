@@ -27,7 +27,8 @@ limitations under the License.
 
 namespace cszb_scoreboard ::test {
 
-const std::array<const char *, 1> TEST_ARGV = {{{"scoreboard_testing.exe"}}};
+const std::array<const char *, 2> TEST_ARGV = {
+    {{"scoreboard_testing.exe"}, {"-n"}}};
 
 void TestUtil::startApp(wxApp *app) {
   wxApp::SetInstance(app);
