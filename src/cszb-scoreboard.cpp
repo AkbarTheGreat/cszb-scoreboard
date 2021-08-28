@@ -20,13 +20,14 @@ limitations under the License.
 
 #include <wx/chartype.h>  // for wxT
 #include <wx/cmdline.h>   // for wxCmdLineParser
-#include <wx/gdicmn.h>    // for wxPoint, wxSize
 #include <wx/image.h>     // for wxInitAllImageHandlers
+#include <wx/unix/app.h>  // for wxAppConsole
 
-#include <array>  // for array
+#include <array>   // for array
+#include <memory>  // for allocator
 
-#include "config/CommandArgs.h"  // for ARG_LIST, CommandArgs
-#include "config/Position.h"
+#include "config/CommandArgs.h"     // for ARG_LIST, CommandArgs
+#include "config/Position.h"        // for Position, Size
 #include "ui/frame/FrameManager.h"  // for FrameManager
 #include "ui/frame/MainView.h"      // for MainView
 #include "util/Log.h"               // for LogDebug

@@ -22,7 +22,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-
 class Frame;
 
 class UpdateTimer : public PersistentTimer {
@@ -32,7 +31,7 @@ class UpdateTimer : public PersistentTimer {
  private:
   Frame *main_view;
 
-  void execute() ;
+  void execute();
 };
 
 }  // namespace cszb_scoreboard

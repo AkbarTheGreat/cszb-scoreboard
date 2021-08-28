@@ -26,11 +26,11 @@ limitations under the License.
 
 #include "ui/component/control/ImagePreview.h"           // for ImagePreview
 #include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
-#include "ui/widget/Button.h"                            // for Button
-#include "ui/widget/Label.h"                             // for Label
-#include "ui/widget/Panel.h"                             // for Panel
-#include "ui/widget/SearchBox.h"                         // for SearchBox
 #include "ui/dialog/EditImageLibraryDialog.h"
+#include "ui/widget/Button.h"     // for Button
+#include "ui/widget/Label.h"      // for Label
+#include "ui/widget/Panel.h"      // for Panel
+#include "ui/widget/SearchBox.h"  // for SearchBox
 
 namespace cszb_scoreboard {
 class PreviewPanel;

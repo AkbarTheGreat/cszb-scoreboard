@@ -61,8 +61,9 @@ void SettingsDialog::bindEvents() {
       wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
   MainView *local_parent = parent;
-  bind(wxEVT_CLOSE_WINDOW,
-       [local_parent](wxCloseEvent &event) -> void { local_parent->onSettingsClose(); });
+  bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
+    local_parent->onSettingsClose();
+  });
 }
 
 void SettingsDialog::onOk() {

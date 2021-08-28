@@ -18,9 +18,12 @@ limitations under the License.
 
 #include "ui/event/UpdateTimer.h"
 
-#include "ScoreboardCommon.h"
-#include "ui/widget/Frame.h"
-#include "util/AutoUpdate.h"
+#include <functional>  // for function
+
+#include "ScoreboardCommon.h"           // for SCOREBOARD_VERSION
+#include "ui/widget/Frame.h"            // for Frame
+#include "ui/widget/PersistentTimer.h"  // for PersistentTimer
+#include "util/AutoUpdate.h"            // for AutoUpdate
 
 namespace cszb_scoreboard {
 

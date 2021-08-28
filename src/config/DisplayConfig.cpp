@@ -19,10 +19,10 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
-#include <cassert>
 #include <wx/display.h>
 #include <wx/gdicmn.h>
 
+#include <cassert>
 #include <utility>
 
 #include "config/Persistence.h"

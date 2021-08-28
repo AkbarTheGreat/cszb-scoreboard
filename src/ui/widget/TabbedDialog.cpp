@@ -28,9 +28,7 @@ TabbedDialog::TabbedDialog(swx::PropertySheetDialog *dialog, int64_t buttons) {
   wx->CreateButtons(buttons);
 }
 
-TabbedDialog::~TabbedDialog() {
-  wx->Destroy();
-}
+TabbedDialog::~TabbedDialog() { wx->Destroy(); }
 
 void TabbedDialog::addPage(const Panel &page, const std::string &name) {
   wx->GetBookCtrl()->AddPage(page.wx, name);

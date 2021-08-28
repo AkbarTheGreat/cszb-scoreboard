@@ -18,6 +18,7 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiResolver
+#include <gtest/gtest.h>            // for Test, AssertionResult, TestInfo (...
 
 #include <filesystem>  // for operator<<, operator!=
 #include <sstream>     // for basic_stringbuf<>::int_type, basi...
@@ -25,7 +26,7 @@ limitations under the License.
 #include <vector>      // for vector
 
 #include "config/ImageLibrary.h"    // for ImageSearchResults, ImageLibrary
-#include "gtest/gtest_pred_impl.h"  // for ASSERT_PRED_FORMAT2, Test, Assert...
+#include "gtest/gtest_pred_impl.h"  // for ASSERT_PRED_FORMAT2
 #include "image_library.pb.h"       // for ImageInfo, ImageLibrary
 #include "util/FilesystemPath.h"    // for FilesystemPath
 

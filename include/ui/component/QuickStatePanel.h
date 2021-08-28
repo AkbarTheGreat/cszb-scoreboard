@@ -23,12 +23,10 @@ limitations under the License.
 #include <vector>  // for vector
 
 #include "ui/component/ScreenText.h"  // for ScreenText
-#include "ui/widget/Button.h"
-#include "ui/widget/Panel.h"  // for Panel
+#include "ui/widget/Button.h"         // for Button
+#include "ui/widget/Panel.h"          // for Panel
 
 namespace cszb_scoreboard {
-
-class QuickStatePanel;
 
 namespace swx {
 class Panel;

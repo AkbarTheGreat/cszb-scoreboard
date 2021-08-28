@@ -19,15 +19,18 @@ limitations under the License.
 
 #include "ui/dialog/EditImageLibraryDialog.h"
 
-#include <filesystem>  // for operator<
-#include <string>      // for string, basic_...
-#include <vector>      // for vector
+#include <wx/string.h>  // for wxString
 
-#include "ScoreboardCommon.h"     // for DEFAULT_BORDER...
-#include "config/ImageLibrary.h"  // for ImageLibrary
-#include "config/swx/defs.h"      // for wxID_CANCEL
-#include "config/swx/event.h"     // for wxCommandEvent...
-#include "ui/component/control/ImageFromLibrary.h"
+#include <ext/alloc_traits.h>  // for __alloc_traits...
+#include <filesystem>          // for operator<
+#include <string>              // for string, basic_...
+#include <vector>              // for vector
+
+#include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
+#include "config/ImageLibrary.h"                       // for ImageLibrary
+#include "config/swx/defs.h"                           // for wxID_CANCEL
+#include "config/swx/event.h"                          // for wxListEvent
+#include "ui/component/control/ImageFromLibrary.h"     // for ImageFromLibrary
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
 
 namespace cszb_scoreboard {
