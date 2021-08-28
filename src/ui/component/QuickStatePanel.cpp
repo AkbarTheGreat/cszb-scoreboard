@@ -44,7 +44,6 @@ const int PREVIEW_HEIGHT = 64;
 const int NUMBER_OF_QUICK_PANELS = 10;
 
 QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id) : ScreenText(wx) {
-  should_self_delete = true;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
                Size{.width = PREVIEW_WIDTH, .height = PREVIEW_HEIGHT});
 

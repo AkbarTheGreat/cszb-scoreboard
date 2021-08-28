@@ -69,7 +69,7 @@ class Frame : public Widget {
                              size.toWx())) {}
   // Injectable constructor, for testing.
   explicit Frame(swx::Frame *frame) { wx = frame; }
-  virtual ~Frame() { wx->Destroy(); }
+  virtual ~Frame() { }
 
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
     wx->SetAcceleratorTable(wxAcceleratorTable(keys.size(), keys.data()));
