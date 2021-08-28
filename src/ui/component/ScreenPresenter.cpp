@@ -54,8 +54,8 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview)
   screen_text = std::make_unique<ScreenText>(childPanel());
   screen_text->setupPresenter(preview, screen_size);
   screen_text->setSize(screen_size.toWx());
-  LogDebug("ScreenPresenter %d: %d,%d", monitor_number, screen_size.width,
-           screen_size.height);
+  LogDebug("ScreenPresenter %d: %d,%d", (int)monitor_number, (int)screen_size.width,
+           (int)screen_size.height);
 
   positionWidgets();
   setDimensions(screen_pos, screen_size);

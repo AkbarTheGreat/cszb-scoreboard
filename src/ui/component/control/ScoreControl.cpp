@@ -193,17 +193,17 @@ void ScoreControl::addHomeAwayWidgetPair(Panel *panel, int row,
 }
 
 void ScoreControl::positionWidgets(Panel *control_panel) {
-  int col = 0;
-  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_score_label,
+  int row = 0;
+  addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_score_label,
                         *away_score_label);
-  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_color_picker,
+  addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_color_picker,
                         *away_color_picker);
-  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_name_entry,
+  addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_name_entry,
                         *away_name_entry);
-  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_score_entry,
+  addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_score_entry,
                         *away_score_entry);
 
-  col = 0;
+  int col = 0;
   home_button_panel->addWidget(*home_plus_5, 0, col++, BORDER_SIZE);
   home_button_panel->addWidget(*home_plus_1, 0, col++, BORDER_SIZE);
   home_button_panel->addWidget(*home_minus_1, 0, col++, BORDER_SIZE);
@@ -213,11 +213,11 @@ void ScoreControl::positionWidgets(Panel *control_panel) {
   away_button_panel->addWidget(*away_plus_1, 0, col++, BORDER_SIZE);
   away_button_panel->addWidget(*away_minus_1, 0, col++, BORDER_SIZE);
 
-  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_button_panel,
+  addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_button_panel,
                         *away_button_panel);
-  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_logo_label,
+  addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_logo_label,
                         *away_logo_label);
-  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_logo_button,
+  addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_logo_button,
                         *away_logo_button);
 
   col = 0;
