@@ -18,10 +18,10 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
+#include <wx/app.h>       // IWYU pragma: keep for wxAppConsole
 #include <wx/chartype.h>  // for wxT
 #include <wx/cmdline.h>   // for wxCmdLineParser
 #include <wx/image.h>     // for wxInitAllImageHandlers
-#include <wx/unix/app.h>  // for wxAppConsole
 
 #include <array>   // for array
 #include <memory>  // for allocator
@@ -31,6 +31,7 @@ limitations under the License.
 #include "ui/frame/FrameManager.h"  // for FrameManager
 #include "ui/frame/MainView.h"      // for MainView
 #include "util/Log.h"               // for LogDebug
+// IWYU pragma: no_include <wx/unix/app.h>
 
 #ifndef SCOREBOARD_TESTING
 // NOLINTNEXTLINE(modernize-use-trailing-return-type)

@@ -23,7 +23,6 @@ limitations under the License.
 #include <wx/filedlg.h>    // for wxFD_FILE_MUST_EXIST
 #include <wx/textctrl.h>   // for wxTE_MULTILINE
 
-#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_...
 #include <vector>              // for vector
 
 #include "ui/widget/Button.h"                // for Button
@@ -52,6 +51,7 @@ limitations under the License.
 #include "ui/widget/swx/StaticText.h"        // for StaticText
 #include "ui/widget/swx/TextCtrl.h"          // for TextCtrl
 #include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
 
