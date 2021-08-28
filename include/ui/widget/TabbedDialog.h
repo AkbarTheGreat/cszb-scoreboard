@@ -44,6 +44,7 @@ class TabbedDialog : public Widget {
  public:
   explicit TabbedDialog(swx::PropertySheetDialog *dialog,
                         int64_t buttons = wxOK | wxCANCEL);
+  virtual ~TabbedDialog();
 
   void addPage(const Panel &page, const std::string &name);
   [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,
@@ -59,7 +60,6 @@ class TabbedDialog : public Widget {
   void runSizer() { wx->LayoutDialog(); }
   void show() { wx->Show(); }
   void sendEvent(wxEvent *event) { wx->ProcessEvent(*event); }
-  void selfDestruct();
 
  protected:
   [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }

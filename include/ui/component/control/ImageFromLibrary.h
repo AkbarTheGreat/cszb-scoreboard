@@ -30,9 +30,9 @@ limitations under the License.
 #include "ui/widget/Label.h"                             // for Label
 #include "ui/widget/Panel.h"                             // for Panel
 #include "ui/widget/SearchBox.h"                         // for SearchBox
+#include "ui/dialog/EditImageLibraryDialog.h"
 
 namespace cszb_scoreboard {
-class EditImageLibraryDialog;
 class PreviewPanel;
 
 namespace swx {
@@ -45,6 +45,7 @@ class ImageFromLibrary : public ScreenImageController {
       : ScreenImageController(preview_panel, wx) {}
   static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
       -> std::unique_ptr<ImageFromLibrary>;
+  void onEditDialogClose();
 
  private:
   int current_image_page = 0;
@@ -54,10 +55,7 @@ class ImageFromLibrary : public ScreenImageController {
   std::unique_ptr<Label> tag_list_label;
   std::vector<std::unique_ptr<ImagePreview>> image_previews;
   std::vector<std::unique_ptr<Label>> image_names;
-  // All of the following pointer types are references to wxWidgets elements
-  // that wxWidgets maintains.  They are raw pointers as wxWidgets will handle
-  // destruction of them at shutdown.
-  EditImageLibraryDialog *edit_dialog;
+  std::unique_ptr<EditImageLibraryDialog> edit_dialog;
 
   void bindEvents();
   void createControls(Panel *control_panel) override;

@@ -39,6 +39,7 @@ class MainView : public Frame {
   MainView(const std::string &title, const Position &pos, const Size &size);
   auto controlPanel() -> ControlPanel * { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
+  void onSettingsClose();
 
  private:
   void bindEvents();

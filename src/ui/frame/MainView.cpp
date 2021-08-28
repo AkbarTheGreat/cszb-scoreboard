@@ -138,6 +138,16 @@ void MainView::onSettingsChange() {
   preview_panel->updatePreviewsFromSettings();
 }
 
+void MainView::onSettingsClose() {
+  settings_dialog.reset();
+  // Sometimes closing out this menu has given focus to a totally different
+  // window for focus for me in testing.  That's really obnoxious, because it
+  // can have the effect of sending the main window to the back of another
+  // window by virtue of exiting a dialog.   So while we're at it, focus on the
+  // control panel, to allow tab navigation to work without additional clicking.
+  control_panel->focus();
+}
+
 void MainView::onClose() {
   // The following call deletes the pointer to this object, so should always be
   // done last.

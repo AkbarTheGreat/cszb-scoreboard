@@ -23,10 +23,11 @@ limitations under the License.
 #include <string>      // for string, basic_...
 #include <vector>      // for vector
 
-#include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
-#include "config/ImageLibrary.h"                       // for ImageLibrary
-#include "config/swx/defs.h"                           // for wxID_CANCEL
-#include "config/swx/event.h"                          // for wxCommandEvent...
+#include "ScoreboardCommon.h"     // for DEFAULT_BORDER...
+#include "config/ImageLibrary.h"  // for ImageLibrary
+#include "config/swx/defs.h"      // for wxID_CANCEL
+#include "config/swx/event.h"     // for wxCommandEvent...
+#include "ui/component/control/ImageFromLibrary.h"
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
 
 namespace cszb_scoreboard {
@@ -37,7 +38,7 @@ class PropertySheetDialog;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
-                                               Panel *parent)
+                                               ImageFromLibrary *parent)
     : TabbedDialog(wx) {
   this->parent = parent;
 
@@ -75,8 +76,10 @@ void EditImageLibraryDialog::bindEvents() {
   bind(
       wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
-  bind(wxEVT_CLOSE_WINDOW,
-       [this](wxCloseEvent &event) -> void { this->onClose(); });
+  ImageFromLibrary *local_parent = parent;
+  bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
+    local_parent->onEditDialogClose();
+  });
   file_list->bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent &event) -> void {
     this->fileSelected(&event);
   });
@@ -99,19 +102,6 @@ void EditImageLibraryDialog::onOk() {
 }
 
 void EditImageLibraryDialog::onCancel() { close(); }
-
-void EditImageLibraryDialog::onClose() {
-  // Sometimes closing out this menu has given focus to a totally different
-  // window for focus for me in testing.  That's really obnoxious, because it
-  // can have the effect of sending the main window to the back of another
-  // window by virtue of exiting a dialog.  To top that off, if you set focus
-  // before calling Destroy(), things quit working.  But Destroying calls the
-  // destructor, so we can't rely on this->parent anymore after Destroy is
-  // called.  So we save it in a local pointer temporarily for this purpose.
-  Panel *local_parent = parent;
-  selfDestruct();
-  local_parent->focus();
-}
 
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 

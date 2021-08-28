@@ -27,7 +27,7 @@ limitations under the License.
 #include "ScoreboardCommon.h"                        // for DEFAULT_BORDER_SIZE
 #include "ui/dialog/settings/DisplaySettingsPage.h"  // for DisplaySettingsPage
 #include "ui/dialog/settings/TeamSettingsPage.h"     // for TeamSettingsPage
-#include "ui/widget/Frame.h"                         // for Frame
+#include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -38,7 +38,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 
-SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, Frame *parent)
+SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent)
     : TabbedDialog(wx) {
   this->parent = parent;
   addPage(std::make_unique<TeamSettingsPage>(childPanel()), "Teams");
@@ -60,8 +60,9 @@ void SettingsDialog::bindEvents() {
   bind(
       wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
+  MainView *local_parent = parent;
   bind(wxEVT_CLOSE_WINDOW,
-       [this](wxCloseEvent &event) -> void { this->onClose(); });
+       [local_parent](wxCloseEvent &event) -> void { local_parent->onSettingsClose(); });
 }
 
 void SettingsDialog::onOk() {
@@ -78,19 +79,6 @@ void SettingsDialog::onOk() {
 }
 
 void SettingsDialog::onCancel() { close(true); }
-
-void SettingsDialog::onClose() {
-  // Sometimes closing out this menu has given focus to a totally different
-  // window for focus for me in testing.  That's really obnoxious, because it
-  // can have the effect of sending the main window to the back of another
-  // window by virtue of exiting a dialog.  To top that off, if you set focus
-  // before calling Destroy(), things quit working.  But Destroying calls the
-  // destructor, so we can't rely on this->parent anymore after Destroy is
-  // called.  So we save it in a local pointer temporarily for this purpose.
-  Frame *local_parent = parent;
-  selfDestruct();
-  local_parent->focus();
-}
 
 auto SettingsDialog::validateSettings() -> bool {
   return std::all_of(pages.begin(), pages.end(),

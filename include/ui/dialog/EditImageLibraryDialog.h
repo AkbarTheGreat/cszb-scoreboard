@@ -40,9 +40,11 @@ namespace swx {
 class PropertySheetDialog;
 }  // namespace swx
 
+class ImageFromLibrary;
+
 class EditImageLibraryDialog : public TabbedDialog {
  public:
-  EditImageLibraryDialog(swx::PropertySheetDialog *wx, Panel *parent);
+  EditImageLibraryDialog(swx::PropertySheetDialog *wx, ImageFromLibrary *parent);
 
  private:
   std::unique_ptr<FileListBox> file_list;
@@ -51,7 +53,7 @@ class EditImageLibraryDialog : public TabbedDialog {
   std::unique_ptr<Label> name_label;
   std::unique_ptr<ListBox> tag_list;
   std::map<FilesystemPath, proto::ImageInfo> images;
-  Panel *parent;
+  ImageFromLibrary *parent;
 
   void bindEvents();
   void positionWidgets();
@@ -60,7 +62,6 @@ class EditImageLibraryDialog : public TabbedDialog {
   void fileSelected(wxListEvent *event);
   void onOk();
   void onCancel();
-  void onClose();
   void nameUpdated();
   void tagDeleted(const wxListEvent &event);
   void tagsUpdated(const wxListEvent &event);

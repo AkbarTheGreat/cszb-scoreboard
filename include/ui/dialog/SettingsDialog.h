@@ -28,7 +28,7 @@ limitations under the License.
 #include "ui/widget/TabbedDialog.h"           // for TabbedDialog
 
 namespace cszb_scoreboard {
-class Frame;
+class MainView;
 
 namespace swx {
 class PropertySheetDialog;
@@ -38,7 +38,7 @@ extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
 
 class SettingsDialog : public TabbedDialog {
  public:
-  SettingsDialog(swx::PropertySheetDialog *wx, Frame *parent);
+  SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent);
 
  private:
   void addPage(std::unique_ptr<SettingsPage> page, const std::string &name);
@@ -49,7 +49,7 @@ class SettingsDialog : public TabbedDialog {
   void onCancel();
   void onClose();
 
-  Frame *parent;
+  MainView *parent;
   std::vector<std::unique_ptr<SettingsPage>> pages;
 };
 

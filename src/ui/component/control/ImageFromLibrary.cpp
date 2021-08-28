@@ -133,10 +133,20 @@ void ImageFromLibrary::bindEvents() {
 void ImageFromLibrary::doSearch() { setImages(search_box->value()); }
 
 void ImageFromLibrary::editButton() {
-  edit_dialog =
-      new EditImageLibraryDialog(childDialog("Edit Image Library"), this);
+  edit_dialog = std::make_unique<EditImageLibraryDialog>(
+      childDialog("Edit Image Library"), this);
   edit_dialog->show();
+}
+
+void ImageFromLibrary::onEditDialogClose() {
+  edit_dialog.reset();
+  // Sometimes closing out this menu has given focus to a totally different
+  // window for focus for me in testing.  That's really obnoxious, because it
+  // can have the effect of sending the main window to the back of another
+  // window by virtue of exiting a dialog. Also update the images shown now that
+  // it's exited.
   setImages(search_box->value());
+  focus();
 }
 
 void ImageFromLibrary::pageChange(bool forward) {
