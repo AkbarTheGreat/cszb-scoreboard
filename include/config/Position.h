@@ -19,14 +19,15 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>     // for int32_t
 #include <wx/gdicmn.h>  // for wxPoint, wxSize
+
+#include <cstdint>  // for int64_t
 
 namespace cszb_scoreboard {
 
 struct Position {
  public:
-  int32_t x, y;
+  int64_t x, y;
   [[nodiscard]] auto toWx() const -> wxPoint { return wxPoint(x, y); }
   static auto fromWx(const wxPoint& wx) -> Position;
   auto operator==(const Position& rhs) const -> bool;
@@ -41,7 +42,7 @@ struct Position {
 
 struct Size {
  public:
-  int32_t width, height;
+  int64_t width, height;
   [[nodiscard]] auto toWx() const -> wxSize { return wxSize(width, height); }
   static auto fromWx(const wxSize& wx) -> Size;
   auto operator==(const Size& rhs) const -> bool;

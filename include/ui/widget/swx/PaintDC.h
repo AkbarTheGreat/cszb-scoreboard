@@ -24,7 +24,7 @@ namespace cszb_scoreboard::swx {
 
 class PaintDC : public wxPaintDC {
  public:
-  PaintDC(wxWindow* wx) : wxPaintDC(wx) {}
+  explicit PaintDC(wxWindow* wx) : wxPaintDC(wx) {}
 };
 
 }  // namespace cszb_scoreboard::swx

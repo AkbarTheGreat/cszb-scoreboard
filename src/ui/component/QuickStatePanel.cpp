@@ -43,10 +43,7 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(swx::Panel *wx, QuickStatePanel *parent,
-                                 int id)
-    : ScreenText(wx) {
-  this->parent = parent;
+QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id) : ScreenText(wx) {
   should_self_delete = true;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
                Size{.width = PREVIEW_WIDTH, .height = PREVIEW_HEIGHT});
@@ -100,12 +97,12 @@ void QuickStateEntry::executeShortcut() {
   if (!initialized) {
     return;
   }
-  parent->executeShortcut(this);
+  QuickStatePanel::executeShortcut(this);
 }
 
 void QuickStateEntry::setShortcut() {
   initialized = true;
-  parent->setShortcut(this);
+  QuickStatePanel::setShortcut(this);
 }
 
 auto QuickStateEntry::tooltipText(char command_character) -> std::string {
@@ -126,7 +123,7 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
 QuickStatePanel::QuickStatePanel(swx::Panel *wx) : Panel(wx) {
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
     entries.push_back(
-        std::move(std::make_unique<QuickStateEntry>(childPanel(), this, i)));
+        std::move(std::make_unique<QuickStateEntry>(childPanel(), i)));
   }
   positionWidgets();
 }

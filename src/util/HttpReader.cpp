@@ -19,7 +19,8 @@ limitations under the License.
 #include "util/HttpReader.h"
 
 #include <curl/curl.h>
-#include <string.h>
+
+#include <cstring>
 
 namespace cszb_scoreboard {
 

@@ -31,14 +31,14 @@ void Frame::alwaysOnTop(bool isOnTop) {
   if (isOnTop) {
     wx->SetWindowStyle(wx->GetWindowStyle() | wxSTAY_ON_TOP);
   } else {
-    long styleMask = 0L ^ wxSTAY_ON_TOP;
+    int64_t styleMask = 0L ^ wxSTAY_ON_TOP;
     wx->SetWindowStyle(wx->GetWindowStyle() & styleMask);
   }
 }
 
 void Frame::menuBar(const std::vector<MenuCategory> &menu) {
-  auto menu_bar = new wxMenuBar();
-  for (auto category : menu) {
+  auto *menu_bar = new wxMenuBar();
+  for (const auto &category : menu) {
     auto *menu_cat = new wxMenu;
     for (auto item : category.items) {
       if (item.name) {

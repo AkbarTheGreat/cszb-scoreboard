@@ -42,26 +42,27 @@ class Panel;
 
 class TabbedDialog : public Widget {
  public:
-  TabbedDialog(swx::PropertySheetDialog *dialog,
-               long buttons = wxOK | wxCANCEL);
+  explicit TabbedDialog(swx::PropertySheetDialog *dialog,
+                        int64_t buttons = wxOK | wxCANCEL);
 
   void addPage(const Panel &page, const std::string &name);
-  auto childPanel(wxWindowID id = wxID_ANY,
-                  const wxPoint &pos = wxDefaultPosition,
-                  const wxSize &size = wxDefaultSize,
-                  long style = wxTAB_TRAVERSAL,
-                  const wxString &name = wxPanelNameStr) const -> swx::Panel * {
+  [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,
+                                const wxPoint &pos = wxDefaultPosition,
+                                const wxSize &size = wxDefaultSize,
+                                int64_t style = wxTAB_TRAVERSAL,
+                                const wxString &name = wxPanelNameStr) const
+      -> swx::Panel * {
     return new swx::Panel(wx->GetBookCtrl(), id, pos, size, style, name);
   }
   void close(bool force = true) { wx->Close(force); }
-  auto panel() const -> std::unique_ptr<Panel>;
+  [[nodiscard]] auto panel() const -> std::unique_ptr<Panel>;
   void runSizer() { wx->LayoutDialog(); }
   void show() { wx->Show(); }
   void sendEvent(wxEvent *event) { wx->ProcessEvent(*event); }
   void selfDestruct();
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::PropertySheetDialog *wx;

@@ -18,7 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <cstdint>     // for int32_t
+#include <cstdint>     // for int64_t
 #include <functional>  // for function
 #include <memory>      // for unique_ptr
 #include <string>      // for string
@@ -53,7 +53,7 @@ class FileListBox : public Panel {
   void bindEvents();
   void newPressed();
   void updateStrings(const std::vector<FilesystemPath> &filenames,
-                     int32_t select_index = 0);
+                     int64_t select_index = 0);
 
  private:
   std::unique_ptr<ListBox> box;

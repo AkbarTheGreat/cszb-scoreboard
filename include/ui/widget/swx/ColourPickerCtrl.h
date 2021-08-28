@@ -29,7 +29,7 @@ class ColourPickerCtrl : public wxColourPickerCtrl {
                    const wxColour &colour = *wxBLACK,
                    const wxPoint &pos = wxDefaultPosition,
                    const wxSize &size = wxDefaultSize,
-                   long style = wxCLRP_DEFAULT_STYLE,
+                   int64_t style = wxCLRP_DEFAULT_STYLE,
                    const wxValidator &validator = wxDefaultValidator,
                    const wxString &name = wxColourPickerCtrlNameStr)
       : wxColourPickerCtrl(parent, id, colour, pos, size, style, validator,

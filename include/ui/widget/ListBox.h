@@ -18,8 +18,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>  // for int32_t
-
+#include <cstdint>     // for int64_t
 #include <functional>  // for function
 
 #include "config/swx/defs.h"                // for wxID_ANY
@@ -48,15 +47,15 @@ class ListBox : public Widget {
                int id = wxID_ANY) {
     wx->GetNewButton()->Bind(eventType, lambda, id);
   }
-  auto listSize() -> int32_t;
-  auto selectedIndex() -> int32_t;
-  void selectItem(int32_t select_index);
+  auto listSize() -> int64_t;
+  auto selectedIndex() -> int64_t;
+  void selectItem(int64_t select_index);
 
   auto strings() -> std::vector<std::string>;
   void setStrings(const std::vector<std::string> &strings);
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::EditableListBox *wx;

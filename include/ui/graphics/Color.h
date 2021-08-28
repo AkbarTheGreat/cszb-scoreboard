@@ -18,8 +18,9 @@ limitations under the License.
 */
 #pragma once
 
-#include <stdint.h>     // for uint32_t
 #include <wx/string.h>  // for wxString
+
+#include <cstdint>  // for uint64_t
 
 #include "wx/colour.h"  // for wxColour, wxALPHA_OPAQUE
 
@@ -32,7 +33,7 @@ class Color : public wxColour {
       : wxColour(red, green, blue, alpha) {}
   explicit Color(const char *colorName) : wxColour(wxString(colorName)) {}
   explicit Color(const wxString &colorName) : wxColour(colorName) {}
-  explicit Color(uint32_t colRGB) : wxColour(colRGB) {}
+  explicit Color(uint64_t colRGB) : wxColour(colRGB) {}
   explicit Color(const wxColour &color) : wxColour(color) {}
 
   // Get red by anding by a full byte.

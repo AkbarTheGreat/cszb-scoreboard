@@ -28,11 +28,11 @@ class PropertySheetDialog : public wxPropertySheetDialog {
   PropertySheetDialog(wxWindow *parent, wxWindowID id, const wxString &title,
                       const wxPoint &pos = wxDefaultPosition,
                       const wxSize &size = wxDefaultSize,
-                      long style = wxDEFAULT_DIALOG_STYLE,
+                      int64_t style = wxDEFAULT_DIALOG_STYLE,
                       const wxString &name = wxDialogNameStr)
       : wxPropertySheetDialog(parent, id, title, pos, size, style, name) {}
 
-  bool ProcessEvent(wxEvent &event) override {
+  auto ProcessEvent(wxEvent &event) -> bool override {
     return wxPropertySheetDialog::ProcessEvent(event);
   }
 };

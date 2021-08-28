@@ -31,7 +31,7 @@ class Toggle : public Widget {
   auto value() -> bool { return wx->GetValue(); }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::ToggleButton *wx;

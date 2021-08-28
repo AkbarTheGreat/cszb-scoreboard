@@ -21,8 +21,8 @@ limitations under the License.
 
 #include <json/reader.h>  // for CharReaderBuilder, CharReader
 #include <json/value.h>   // for Value
-#include <stddef.h>       // for size_t
 
+#include <cstddef>  // for size_t
 #include <fstream>  // IWYU pragma: keep for fstream
 #include <regex>    // for match_results<>::_Base_type, regex_...
 #include <sstream>  // for basic_stringbuf<>::int_type, operator|

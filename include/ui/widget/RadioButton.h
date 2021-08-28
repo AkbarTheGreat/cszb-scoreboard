@@ -33,7 +33,7 @@ class RadioButton : public Widget {
   void setSelected(bool sel) { wx->SetValue(sel); };
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::RadioButton *wx;

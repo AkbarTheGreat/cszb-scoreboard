@@ -25,10 +25,10 @@ namespace cszb_scoreboard::swx {
 
 class Notebook : public wxAuiNotebook {
  public:
-  Notebook(wxWindow *parent, wxWindowID id = wxID_ANY,
-           const wxPoint &pos = wxDefaultPosition,
-           const wxSize &size = wxDefaultSize,
-           long style = wxAUI_NB_DEFAULT_STYLE)
+  explicit Notebook(wxWindow *parent, wxWindowID id = wxID_ANY,
+                    const wxPoint &pos = wxDefaultPosition,
+                    const wxSize &size = wxDefaultSize,
+                    int64_t style = wxAUI_NB_DEFAULT_STYLE)
       : wxAuiNotebook(parent, id, pos, size, style) {}
 };
 

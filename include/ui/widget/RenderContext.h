@@ -19,8 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>  // for int32_t
-
+#include <cstdint>     // for int64_t
 #include <functional>  // for function
 #include <memory>      // for unique_ptr
 #include <string>      // for string
@@ -55,9 +54,9 @@ class RenderContext {
   static auto forEvent(wxWindow* wx) -> std::unique_ptr<RenderContext>;
   static auto forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext>;
 
-  void drawImage(const Image& image, int32_t x, int32_t y,
+  void drawImage(const Image& image, int64_t x, int64_t y,
                  bool use_mask = false);
-  void drawText(const std::string& text, int32_t x, int32_t y);
+  void drawText(const std::string& text, int64_t x, int64_t y);
   void setFont(const proto::Font& font, const Size& font_size);
   void setTextColor(const Color& color);
   void textExtent(const std::string& text, int* width, int* height);

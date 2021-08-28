@@ -28,7 +28,7 @@ class Divider : public Widget {
   explicit Divider(swx::StaticLine *line) { wx = line; }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::StaticLine *wx;

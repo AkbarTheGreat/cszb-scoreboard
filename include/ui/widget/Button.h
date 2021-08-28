@@ -34,7 +34,7 @@ class Button : public Widget {
   void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::Button *wx;

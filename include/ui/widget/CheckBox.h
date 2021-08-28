@@ -27,11 +27,11 @@ class CheckBox : public Widget {
  public:
   explicit CheckBox(swx::CheckBox *check) { wx = check; }
 
-  auto checked() const -> bool { return wx->GetValue(); }
+  [[nodiscard]] auto checked() const -> bool { return wx->GetValue(); }
   void setChecked(bool checked) { wx->SetValue(checked); }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::CheckBox *wx;

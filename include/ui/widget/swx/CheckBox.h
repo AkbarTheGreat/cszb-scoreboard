@@ -26,7 +26,7 @@ class CheckBox : public wxCheckBox {
  public:
   CheckBox(wxWindow *parent, wxWindowID id, const wxString &label,
            const wxPoint &pos = wxDefaultPosition,
-           const wxSize &size = wxDefaultSize, long style = 0,
+           const wxSize &size = wxDefaultSize, int64_t style = 0,
            const wxValidator &validator = wxDefaultValidator,
            const wxString &name = wxCheckBoxNameStr)
       : wxCheckBox(parent, id, label, pos, size, style, validator, name) {}

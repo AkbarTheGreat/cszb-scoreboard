@@ -19,14 +19,14 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>       // for int32_t
 #include <wx/dialog.h>    // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>    // for wxPoint, wxSize
 #include <wx/string.h>    // for wxString
 #include <wx/tbarbase.h>  // for wxDefaultPosition
 
-#include <memory>  // for unique_ptr
-#include <string>  // for string
+#include <cstdint>  // for int64_t
+#include <memory>   // for unique_ptr
+#include <string>   // for string
 
 #include "config/Position.h"                    // for Size
 #include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
@@ -73,8 +73,8 @@ class Panel : public Widget {
       -> std::unique_ptr<Label>;
   [[nodiscard]] auto listBox(const std::string &title) const
       -> std::unique_ptr<ListBox>;
-  [[nodiscard]] auto radio(const std::string name, const char *const *choices,
-                           int32_t choices_size, bool is_vertical = true) const
+  [[nodiscard]] auto radio(const std::string &name, const char *const *choices,
+                           int64_t choices_size, bool is_vertical = true) const
       -> std::unique_ptr<Radio>;
   [[nodiscard]] auto radioButton() const -> std::unique_ptr<RadioButton>;
   [[nodiscard]] auto scrollingPanel() const -> std::unique_ptr<ScrollingPanel>;
@@ -92,11 +92,12 @@ class Panel : public Widget {
       -> std::unique_ptr<Panel>;
 
   // Create a child wx entry, for new Dialog object creation.
-  auto childDialog(const wxString &title, wxWindowID id = wxID_ANY,
-                   const wxPoint &pos = wxDefaultPosition,
-                   const wxSize &size = wxDefaultSize,
-                   long style = wxDEFAULT_DIALOG_STYLE,
-                   const wxString &name = wxDialogNameStr)
+  [[nodiscard]] auto childDialog(const wxString &title,
+                                 wxWindowID id = wxID_ANY,
+                                 const wxPoint &pos = wxDefaultPosition,
+                                 const wxSize &size = wxDefaultSize,
+                                 int64_t style = wxDEFAULT_DIALOG_STYLE,
+                                 const wxString &name = wxDialogNameStr) const
       -> swx::PropertySheetDialog * {
     return new swx::PropertySheetDialog(wx, id, title, pos, size, style, name);
   }

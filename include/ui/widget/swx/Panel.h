@@ -27,7 +27,7 @@ class Panel : public wxPanel {
   explicit Panel(wxWindow *parent, wxWindowID id = wxID_ANY,
                  const wxPoint &pos = wxDefaultPosition,
                  const wxSize &size = wxDefaultSize,
-                 long style = wxTAB_TRAVERSAL,
+                 int64_t style = wxTAB_TRAVERSAL,
                  const wxString &name = wxPanelNameStr)
       : wxPanel(parent, id, pos, size, style, name) {}
 };

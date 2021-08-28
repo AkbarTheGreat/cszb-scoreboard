@@ -26,9 +26,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-auto ListBox::listSize() -> int32_t { return strings().size(); }
+auto ListBox::listSize() -> int64_t { return strings().size(); }
 
-auto ListBox::selectedIndex() -> int32_t {
+auto ListBox::selectedIndex() -> int64_t {
   if (listSize() == 0) {
     return -1;
   }
@@ -36,7 +36,7 @@ auto ListBox::selectedIndex() -> int32_t {
                                         wxLIST_STATE_SELECTED);
 }
 
-void ListBox::selectItem(int32_t select_index) {
+void ListBox::selectItem(int64_t select_index) {
   if (listSize() <= select_index) {
     select_index = 0;
   }

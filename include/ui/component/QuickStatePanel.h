@@ -36,7 +36,7 @@ class Panel;
 
 class QuickStateEntry : public ScreenText {
  public:
-  QuickStateEntry(swx::Panel *wx, QuickStatePanel *parent, int id);
+  QuickStateEntry(swx::Panel *wx, int id);
 
  private:
   static auto tooltipText(char command_character) -> std::string;
@@ -44,7 +44,6 @@ class QuickStateEntry : public ScreenText {
   void executeShortcut();
   void setShortcut();
 
-  QuickStatePanel *parent;  // unowned pointer to the parent of this object.
   std::unique_ptr<Button> set_button, execute_button;
   bool initialized = false;
 };
@@ -52,8 +51,8 @@ class QuickStateEntry : public ScreenText {
 class QuickStatePanel : public Panel {
  public:
   explicit QuickStatePanel(swx::Panel *wx);
-  void executeShortcut(QuickStateEntry *entry);
-  void setShortcut(QuickStateEntry *entry);
+  static void executeShortcut(QuickStateEntry *entry);
+  static void setShortcut(QuickStateEntry *entry);
 
  private:
   void positionWidgets();

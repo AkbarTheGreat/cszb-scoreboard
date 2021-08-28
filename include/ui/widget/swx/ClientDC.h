@@ -24,7 +24,7 @@ namespace cszb_scoreboard::swx {
 
 class ClientDC : public wxClientDC {
  public:
-  ClientDC(wxWindow* wx) : wxClientDC(wx) {}
+  explicit ClientDC(wxWindow* wx) : wxClientDC(wx) {}
 };
 
 }  // namespace cszb_scoreboard::swx

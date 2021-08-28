@@ -32,7 +32,7 @@ class Panel;
 class DraggablePanel : public Panel {
  public:
   explicit DraggablePanel(swx::Panel *panel);
-  virtual ~DraggablePanel();
+  ~DraggablePanel() override;
   void addWidget(const Widget &widget);
   void update() { aui_manager.Update(); }
 

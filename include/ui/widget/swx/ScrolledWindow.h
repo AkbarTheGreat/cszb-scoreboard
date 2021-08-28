@@ -24,11 +24,11 @@ namespace cszb_scoreboard::swx {
 
 class ScrolledWindow : public wxScrolledWindow {
  public:
-  ScrolledWindow(wxWindow *parent, wxWindowID id = -1,
-                 const wxPoint &pos = wxDefaultPosition,
-                 const wxSize &size = wxDefaultSize,
-                 long style = wxHSCROLL | wxVSCROLL,
-                 const wxString &name = "scrolledWindow")
+  explicit ScrolledWindow(wxWindow *parent, wxWindowID id = -1,
+                          const wxPoint &pos = wxDefaultPosition,
+                          const wxSize &size = wxDefaultSize,
+                          int64_t style = wxHSCROLL | wxVSCROLL,
+                          const wxString &name = "scrolledWindow")
       : wxScrolledWindow(parent, id, pos, size, style, name) {}
 };
 

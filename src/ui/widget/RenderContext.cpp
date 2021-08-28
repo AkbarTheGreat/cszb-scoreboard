@@ -35,14 +35,14 @@ namespace proto {
 class Font;
 }  // namespace proto
 
-void RenderContext::drawImage(const Image& image, int32_t x, int32_t y,
+void RenderContext::drawImage(const Image& image, int64_t x, int64_t y,
                               bool use_mask) {
   runAgainstActiveContext([image, x, y, use_mask](wxDC* context) -> void {
     context->DrawBitmap(wxBitmap(image), x, y, use_mask);
   });
 }
 
-void RenderContext::drawText(const std::string& text, int32_t x, int32_t y) {
+void RenderContext::drawText(const std::string& text, int64_t x, int64_t y) {
   runAgainstActiveContext(
       [text, x, y](wxDC* context) -> void { context->DrawText(text, x, y); });
 }

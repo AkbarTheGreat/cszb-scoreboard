@@ -38,7 +38,7 @@ class Label : public Widget {
   void bold(bool is_bold);
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::StaticText *wx;

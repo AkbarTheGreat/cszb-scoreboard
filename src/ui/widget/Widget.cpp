@@ -18,12 +18,12 @@ limitations under the License.
 
 #include "ui/widget/Widget.h"
 
-#include <stdint.h>      // for int32_t
 #include <wx/gbsizer.h>  // for wxGBSizerItem, wxGBPosition
 #include <wx/sizer.h>    // for wxSizerItem, wxSizerItemList
 
-#include <memory>  // for allocator_traits<>::value_type
-#include <vector>  // for vector
+#include <cstdint>  // for int64_t
+#include <memory>   // for allocator_traits<>::value_type
+#include <vector>   // for vector
 
 #include "ui/widget/RenderContext.h"  // for RenderContext
 // IWYU pragma: no_include <ext/alloc_traits.h>
@@ -58,9 +58,10 @@ void Widget::moveWidget(Widget *widget, int row, int column) {
 auto getOrderedRepresentation(wxGridBagSizer *sizer)
     -> std::vector<std::vector<const wxGBSizerItem *>> {
   std::vector<std::vector<const wxGBSizerItem *>> table;
-  for (auto base : sizer->GetChildren()) {
+  for (auto *base : sizer->GetChildren()) {
     wxGBSizerItem *item = sizer->FindItem(base->GetWindow());
-    int32_t row, col;
+    int32_t row;
+    int32_t col;
     item->GetPos(row, col);
     if (row >= table.size()) {
       table.resize(row + 1);

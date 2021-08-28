@@ -21,6 +21,7 @@ limitations under the License.
 
 #include <wx/defs.h>  // for wxID_CANCEL, wxI...
 
+#include <algorithm>
 #include <utility>  // for move
 
 #include "ScoreboardCommon.h"                        // for DEFAULT_BORDER_SIZE
@@ -92,12 +93,10 @@ void SettingsDialog::onClose() {
 }
 
 auto SettingsDialog::validateSettings() -> bool {
-  for (const auto &page : pages) {
-    if (!page->validateSettings()) {
-      return false;
-    }
-  }
-  return true;
+  return std::all_of(pages.begin(), pages.end(),
+                     [](const std::unique_ptr<SettingsPage> &page) -> bool {
+                       return page->validateSettings();
+                     });
 }
 
 void SettingsDialog::saveSettings() {

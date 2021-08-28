@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
-#include <assert.h>
+#include <cassert>
 #include <wx/display.h>
 #include <wx/gdicmn.h>
 

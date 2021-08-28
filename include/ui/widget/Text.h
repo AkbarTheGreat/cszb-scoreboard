@@ -37,7 +37,7 @@ class Text : public Widget {
   auto value() -> std::string { return wx->GetValue().ToStdString(); }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::TextCtrl *wx;

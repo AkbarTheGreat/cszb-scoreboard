@@ -26,7 +26,7 @@ namespace cszb_scoreboard::swx {
 
 class Sizer : public wxGridBagSizer {
  public:
-  Sizer(int vgap = 0, int hgap = 0) : wxGridBagSizer(vgap, hgap) {}
+  explicit Sizer(int vgap = 0, int hgap = 0) : wxGridBagSizer(vgap, hgap) {}
 };
 
 }  // namespace cszb_scoreboard::swx

@@ -96,8 +96,7 @@ void MainView::positionWidgets() {
 }
 
 void MainView::bindEvents() {
-  bind(wxEVT_CLOSE_WINDOW,
-       [this](wxCloseEvent &event) -> void { this->onClose(); });
+  bind(wxEVT_CLOSE_WINDOW, [](wxCloseEvent &event) -> void { onClose(); });
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent &event) -> void { this->showSettings(); },
@@ -107,7 +106,7 @@ void MainView::bindEvents() {
       [this](wxCommandEvent &event) -> void { this->onExit(); }, wxID_EXIT);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->onAbout(); }, wxID_ABOUT);
+      [](wxCommandEvent &event) -> void { onAbout(); }, wxID_ABOUT);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent &event) -> void {

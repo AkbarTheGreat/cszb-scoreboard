@@ -26,7 +26,7 @@ class Frame : public wxFrame {
  public:
   Frame(wxWindow *parent, wxWindowID id, const wxString &title,
         const wxPoint &pos = wxDefaultPosition,
-        const wxSize &size = wxDefaultSize, long style = wxDEFAULT_FRAME_STYLE,
+        const wxSize &size = wxDefaultSize, int64_t style = wxDEFAULT_FRAME_STYLE,
         const wxString &name = wxFrameNameStr)
       : wxFrame(parent, id, title, pos, size, style, name){};
 };

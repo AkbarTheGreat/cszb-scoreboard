@@ -25,10 +25,11 @@ namespace cszb_scoreboard::swx {
 
 class StaticLine : public wxStaticLine {
  public:
-  StaticLine(wxWindow *parent, wxWindowID id = wxID_ANY,
-             const wxPoint &pos = wxDefaultPosition,
-             const wxSize &size = wxDefaultSize, long style = wxLI_HORIZONTAL,
-             const wxString &name = wxStaticLineNameStr)
+  explicit StaticLine(wxWindow *parent, wxWindowID id = wxID_ANY,
+                      const wxPoint &pos = wxDefaultPosition,
+                      const wxSize &size = wxDefaultSize,
+                      int64_t style = wxLI_HORIZONTAL,
+                      const wxString &name = wxStaticLineNameStr)
       : wxStaticLine(parent, wxID_ANY, pos, size, style, name) {}
 };
 

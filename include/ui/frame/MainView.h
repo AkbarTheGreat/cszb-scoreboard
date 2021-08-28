@@ -47,8 +47,8 @@ class MainView : public Frame {
   void createStatusBar();
   void positionWidgets();
   void onExit();
-  void onAbout();
-  void onClose();
+  static void onAbout();
+  static void onClose();
   void onSettingsChange();
   void showSettings();
 

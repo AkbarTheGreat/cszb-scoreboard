@@ -29,7 +29,7 @@ auto StringUtil::intToString(int value) -> wxString {
 }
 
 auto StringUtil::stringToInt(const wxString &string, int default_value)
-    -> int32_t {
+    -> int64_t {
   long value = default_value;  // NOLINT(google-runtime-int) Must be long to
                                // match string.ToLong() below.
   if (string.IsNumber()) {

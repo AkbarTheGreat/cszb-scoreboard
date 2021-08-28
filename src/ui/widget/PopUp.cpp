@@ -22,7 +22,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-void BoxWithIcon(const std::string &title, const std::string &msg, long icon) {
+void BoxWithIcon(const std::string &title, const std::string &msg,
+                 int64_t icon) {
   // wxMessageBox puts msg & title in a weird order in my mind, so this is the
   // one place that's message first.
   wxMessageBox(msg, title, wxOK | wxCENTRE | icon);

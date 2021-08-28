@@ -38,7 +38,7 @@ class ColorPicker : public Widget {
   void setColor(const Color &color) { wx->SetColour(color); }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::ColourPickerCtrl *wx;

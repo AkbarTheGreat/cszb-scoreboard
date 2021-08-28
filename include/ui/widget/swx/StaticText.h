@@ -26,7 +26,7 @@ class StaticText : public wxStaticText {
  public:
   StaticText(wxWindow *parent, wxWindowID id, const wxString &label,
              const wxPoint &pos = wxDefaultPosition,
-             const wxSize &size = wxDefaultSize, long style = 0,
+             const wxSize &size = wxDefaultSize, int64_t style = 0,
              const wxString &name = wxStaticTextNameStr)
       : wxStaticText(parent, id, label, pos, size, style, name) {}
 };

@@ -23,7 +23,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-TabbedDialog::TabbedDialog(swx::PropertySheetDialog *dialog, long buttons) {
+TabbedDialog::TabbedDialog(swx::PropertySheetDialog *dialog, int64_t buttons) {
   wx = dialog;
   wx->CreateButtons(buttons);
 }

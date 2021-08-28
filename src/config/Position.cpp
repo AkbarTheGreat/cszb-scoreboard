@@ -91,8 +91,8 @@ auto Size::operator*(const Size& b) const -> Size {
 
 auto Size::operator*(double b) const -> Size {
   return Size{
-      .width = static_cast<int32_t>(static_cast<double>(this->width) * b),
-      .height = static_cast<int32_t>(static_cast<double>(this->height) * b)};
+      .width = static_cast<int64_t>(static_cast<double>(this->width) * b),
+      .height = static_cast<int64_t>(static_cast<double>(this->height) * b)};
 }
 
 auto Size::operator/(const Size& b) const -> Size {

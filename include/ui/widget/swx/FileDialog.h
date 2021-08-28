@@ -26,15 +26,15 @@ namespace cszb_scoreboard::swx {
 
 class FileDialog : public wxFileDialog {
  public:
-  FileDialog(wxWindow *parent,
-             const wxString &message = wxFileSelectorPromptStr,
-             const wxString &defaultDir = wxEmptyString,
-             const wxString &defaultFile = wxEmptyString,
-             const wxString &wildcard = wxFileSelectorDefaultWildcardStr,
-             long style = wxFD_DEFAULT_STYLE,
-             const wxPoint &pos = wxDefaultPosition,
-             const wxSize &size = wxDefaultSize,
-             const wxString &name = wxFileDialogNameStr)
+  explicit FileDialog(
+      wxWindow *parent, const wxString &message = wxFileSelectorPromptStr,
+      const wxString &defaultDir = wxEmptyString,
+      const wxString &defaultFile = wxEmptyString,
+      const wxString &wildcard = wxFileSelectorDefaultWildcardStr,
+      int64_t style = wxFD_DEFAULT_STYLE,
+      const wxPoint &pos = wxDefaultPosition,
+      const wxSize &size = wxDefaultSize,
+      const wxString &name = wxFileDialogNameStr)
       : wxFileDialog(parent, message, defaultDir, defaultFile, wildcard, style,
                      pos, size, name) {}
 };

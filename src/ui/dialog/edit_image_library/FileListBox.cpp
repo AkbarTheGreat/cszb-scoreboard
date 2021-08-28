@@ -29,7 +29,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-const int32_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
+const int64_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
 FileListBox::FileListBox(swx::Panel *wx, const std::string &title) : Panel(wx) {
   box = listBox(title);
@@ -51,7 +51,7 @@ void FileListBox::newPressed() {
   std::optional<FilesystemPath> new_file = dialog->selectFile();
   if (new_file.has_value()) {
     // Insert the new file after the currently selected one.
-    int32_t new_index = box->selectedIndex() + 1;
+    int64_t new_index = box->selectedIndex() + 1;
     if (box->selectedIndex() >= box->listSize()) {
       new_index = box->listSize();
     }
@@ -74,7 +74,7 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
 }
 
 auto FileListBox::selectedFilename() -> FilesystemPath {
-  int32_t index = box->selectedIndex();
+  int64_t index = box->selectedIndex();
   if (index == -1 || index >= box->listSize()) {
     return FilesystemPath();
   }
@@ -82,14 +82,15 @@ auto FileListBox::selectedFilename() -> FilesystemPath {
 }
 
 void FileListBox::updateStrings(const std::vector<FilesystemPath> &filenames,
-                                int32_t select_index) {
+                                int64_t select_index) {
   std::vector<std::string> strings;
+  strings.reserve(filenames.size());
   for (const auto &file : filenames) {
     strings.push_back(file.string());
   }
   box->setStrings(strings);
 
-  if (strings.size() > 0) {
+  if (!strings.empty()) {
     box->selectItem(select_index);
   }
 }

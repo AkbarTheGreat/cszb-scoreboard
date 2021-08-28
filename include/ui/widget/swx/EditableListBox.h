@@ -28,7 +28,7 @@ class EditableListBox : public wxEditableListBox {
   EditableListBox(wxWindow *parent, wxWindowID id, const wxString &label,
                   const wxPoint &pos = wxDefaultPosition,
                   const wxSize &size = wxDefaultSize,
-                  long style = wxEL_DEFAULT_STYLE,
+                  int64_t style = wxEL_DEFAULT_STYLE,
                   const wxString &name = wxEditableListBoxNameStr)
       : wxEditableListBox(parent, id, label, pos, size, style, name) {}
 };

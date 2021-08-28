@@ -23,7 +23,7 @@ limitations under the License.
 #include <wx/filedlg.h>    // for wxFD_FILE_MUST_EXIST
 #include <wx/textctrl.h>   // for wxTE_MULTILINE
 
-#include <vector>              // for vector
+#include <vector>  // for vector
 
 #include "ui/widget/Button.h"                // for Button
 #include "ui/widget/CheckBox.h"              // for CheckBox
@@ -120,10 +120,10 @@ auto Panel::panel(bool self_managed) const -> std::unique_ptr<Panel> {
   return panel;
 }
 
-auto Panel::radio(const std::string name, const char *const *choices,
-                  int32_t choices_size, bool is_vertical) const
+auto Panel::radio(const std::string &name, const char *const *choices,
+                  int64_t choices_size, bool is_vertical) const
     -> std::unique_ptr<Radio> {
-  long style = wxRA_SPECIFY_COLS;
+  int64_t style = wxRA_SPECIFY_COLS;
   if (is_vertical) {
     style = wxRA_SPECIFY_ROWS;
   }

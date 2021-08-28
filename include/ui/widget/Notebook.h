@@ -45,7 +45,7 @@ class Notebook : public Widget {
   auto childPanel(wxWindowID id = wxID_ANY,
                   const wxPoint &pos = wxDefaultPosition,
                   const wxSize &size = wxDefaultSize,
-                  long style = wxTAB_TRAVERSAL,
+                  int64_t style = wxTAB_TRAVERSAL,
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
     return new swx::Panel(wx, id, pos, size, style, name);
   }
@@ -54,7 +54,7 @@ class Notebook : public Widget {
   void setSelection(int selection) { wx->SetSelection(selection); }
 
  protected:
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
 
  private:
   swx::Notebook *wx;

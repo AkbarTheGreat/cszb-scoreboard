@@ -27,7 +27,7 @@ class PersistentTimer {
  private:
   class HeldTimer : public swx::Timer {
    public:
-    HeldTimer(const std::function<void()> &on_tick);
+    explicit HeldTimer(const std::function<void()> &on_tick);
 
    private:
     void Notify() override;

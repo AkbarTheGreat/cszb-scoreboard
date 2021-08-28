@@ -19,8 +19,7 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
-#include <stdint.h>  // for int32_t
-
+#include <cstdint>     // for int64_t
 #include <filesystem>  // for path
 #include <string>      // for string
 
@@ -194,32 +193,36 @@ void ScoreControl::addHomeAwayWidgetPair(Panel *panel, int row,
 }
 
 void ScoreControl::positionWidgets(Panel *control_panel) {
-  addHomeAwayWidgetPair(team_controls_panel.get(), 0, *home_score_label,
+  int col = 0;
+  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_score_label,
                         *away_score_label);
-  addHomeAwayWidgetPair(team_controls_panel.get(), 1, *home_color_picker,
+  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_color_picker,
                         *away_color_picker);
-  addHomeAwayWidgetPair(team_controls_panel.get(), 2, *home_name_entry,
+  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_name_entry,
                         *away_name_entry);
-  addHomeAwayWidgetPair(team_controls_panel.get(), 3, *home_score_entry,
+  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_score_entry,
                         *away_score_entry);
 
-  home_button_panel->addWidget(*home_plus_5, 0, 0, BORDER_SIZE);
-  home_button_panel->addWidget(*home_plus_1, 0, 1, BORDER_SIZE);
-  home_button_panel->addWidget(*home_minus_1, 0, 2, BORDER_SIZE);
+  col = 0;
+  home_button_panel->addWidget(*home_plus_5, 0, col++, BORDER_SIZE);
+  home_button_panel->addWidget(*home_plus_1, 0, col++, BORDER_SIZE);
+  home_button_panel->addWidget(*home_minus_1, 0, col++, BORDER_SIZE);
 
-  away_button_panel->addWidget(*away_plus_5, 0, 0, BORDER_SIZE);
-  away_button_panel->addWidget(*away_plus_1, 0, 1, BORDER_SIZE);
-  away_button_panel->addWidget(*away_minus_1, 0, 2, BORDER_SIZE);
+  col = 0;
+  away_button_panel->addWidget(*away_plus_5, 0, col++, BORDER_SIZE);
+  away_button_panel->addWidget(*away_plus_1, 0, col++, BORDER_SIZE);
+  away_button_panel->addWidget(*away_minus_1, 0, col++, BORDER_SIZE);
 
-  addHomeAwayWidgetPair(team_controls_panel.get(), 4, *home_button_panel,
+  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_button_panel,
                         *away_button_panel);
-  addHomeAwayWidgetPair(team_controls_panel.get(), 5, *home_logo_label,
+  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_logo_label,
                         *away_logo_label);
-  addHomeAwayWidgetPair(team_controls_panel.get(), 6, *home_logo_button,
+  addHomeAwayWidgetPair(team_controls_panel.get(), col++, *home_logo_button,
                         *away_logo_button);
 
-  control_panel->addWidget(*team_controls_panel, 0, 0, BORDER_SIZE);
-  control_panel->addWidget(*team_intro_button, 0, 1, BORDER_SIZE,
+  col = 0;
+  control_panel->addWidget(*team_controls_panel, 0, col++, BORDER_SIZE);
+  control_panel->addWidget(*team_intro_button, 0, col++, BORDER_SIZE,
                            wxALL | wxALIGN_CENTER_VERTICAL);
 
   home_button_panel->runSizer();
@@ -315,20 +318,20 @@ void ScoreControl::updateScreenText(ScreenText *screen_text) {
   }
 
   if (home_logo.has_value()) {
-    screen_text->setAllText(home_update, home_color_picker->color(),
-                            true, *home_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
+    screen_text->setAllText(home_update, home_color_picker->color(), true,
+                            *home_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::homeSide());
   } else {
-    screen_text->setAllText(home_update, home_color_picker->color(),
-                            true, ProtoUtil::homeSide());
+    screen_text->setAllText(home_update, home_color_picker->color(), true,
+                            ProtoUtil::homeSide());
   }
   if (away_logo.has_value()) {
-    screen_text->setAllText(away_update, away_color_picker->color(),
-                            true, *away_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
+    screen_text->setAllText(away_update, away_color_picker->color(), true,
+                            *away_logo, LOGO_OVERLAY_SCALE, LOGO_ALPHA,
                             logo_position, ProtoUtil::awaySide());
   } else {
-    screen_text->setAllText(away_update, away_color_picker->color(),
-                            true, ProtoUtil::awaySide());
+    screen_text->setAllText(away_update, away_color_picker->color(), true,
+                            ProtoUtil::awaySide());
   }
 }
 
@@ -359,7 +362,7 @@ void ScoreControl::toggleIntroMode() {
 }
 
 void ScoreControl::addToEntry(Text *entry, int amount) {
-  int32_t current_score = StringUtil::stringToInt(entry->value());
+  int64_t current_score = StringUtil::stringToInt(entry->value());
   entry->setValue(current_score + amount);
   updatePreview();
 }

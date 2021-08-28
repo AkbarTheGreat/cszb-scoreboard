@@ -90,7 +90,7 @@ class Frame : public Widget {
   auto childDialog(const wxString &title, wxWindowID id = wxID_ANY,
                    const wxPoint &pos = wxDefaultPosition,
                    const wxSize &size = wxDefaultSize,
-                   long style = wxDEFAULT_DIALOG_STYLE,
+                   int64_t style = wxDEFAULT_DIALOG_STYLE,
                    const wxString &name = wxDialogNameStr)
       -> swx::PropertySheetDialog * {
     return new swx::PropertySheetDialog(wx, id, title, pos, size, style, name);
@@ -98,18 +98,19 @@ class Frame : public Widget {
   auto childPanel(wxWindowID id = wxID_ANY,
                   const wxPoint &pos = wxDefaultPosition,
                   const wxSize &size = wxDefaultSize,
-                  long style = wxTAB_TRAVERSAL,
+                  int64_t style = wxTAB_TRAVERSAL,
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
     return new swx::Panel(wx, id, pos, size, style, name);
   }
   auto childNotebook(wxWindowID id = wxID_ANY,
                      const wxPoint &pos = wxDefaultPosition,
                      const wxSize &size = wxDefaultSize,
-                     long style = DEFAULT_NOTEBOOK_STYLE) -> swx::Notebook * {
+                     int64_t style = DEFAULT_NOTEBOOK_STYLE)
+      -> swx::Notebook * {
     return new swx::Notebook(wx, id, pos, size, style);
   }
 
-  auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
   swx::Frame *wx;
