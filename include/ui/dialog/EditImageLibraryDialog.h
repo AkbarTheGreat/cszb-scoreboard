@@ -18,41 +18,53 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/editlbox.h>
-#include <wx/propdlg.h>
-#include <wx/wx.h>
+#include <map>     // for map
+#include <memory>  // for unique_ptr
 
-#include "image_library.pb.h"
-#include "ui/dialog/edit_image_library/FileListBox.h"
-#include "util/FilesystemPath.h"
+#include "image_library.pb.h"                          // for ImageInfo
+#include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
+#include "ui/widget/Label.h"                           // for Label
+#include "ui/widget/ListBox.h"                         // for ListBox
+#include "ui/widget/Panel.h"                           // for Panel
+#include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
+#include "ui/widget/Text.h"                            // for Text
+#include "util/FilesystemPath.h"                       // for FilesystemPath
+
+class wxCloseEvent;
+class wxCommandEvent;
+class wxKeyEvent;
+class wxListEvent;
 
 namespace cszb_scoreboard {
+namespace swx {
+class PropertySheetDialog;
+}  // namespace swx
 
-class EditImageLibraryDialog : public wxPropertySheetDialog {
+class ImageFromLibrary;
+
+class EditImageLibraryDialog : public TabbedDialog {
  public:
-  auto Create(wxWindow* parent) -> bool;
+  EditImageLibraryDialog(swx::PropertySheetDialog *wx, ImageFromLibrary *parent);
 
  private:
-  FileListBox* file_list;
-  wxTextCtrl* name_entry;
-  wxStaticText* name_label;
-  wxEditableListBox* tag_list;
+  std::unique_ptr<FileListBox> file_list;
+  std::unique_ptr<Panel> box_panel;
+  std::unique_ptr<Text> name_entry;
+  std::unique_ptr<Label> name_label;
+  std::unique_ptr<ListBox> tag_list;
   std::map<FilesystemPath, proto::ImageInfo> images;
-  wxPanel* panel;
-  wxWindow* parent;
+  ImageFromLibrary *parent;
 
   void bindEvents();
   void positionWidgets();
   void saveSettings();
   static auto validateSettings() -> bool;
-  // wxWidgets callbacks, waive linting error for references.
-  void fileSelected(wxListEvent& event);  // NOLINT(google-runtime-references)
-  void onOk(wxCommandEvent& event);       // NOLINT(google-runtime-references)
-  void onCancel(wxCommandEvent& event);   // NOLINT(google-runtime-references)
-  void onClose(wxCloseEvent& event);      // NOLINT(google-runtime-references)
-  void nameUpdated(wxKeyEvent& event);    // NOLINT(google-runtime-references)
-  void tagDeleted(wxListEvent& event);    // NOLINT(google-runtime-references)
-  void tagsUpdated(wxListEvent& event);   // NOLINT(google-runtime-references)
+  void fileSelected(wxListEvent *event);
+  void onOk();
+  void onCancel();
+  void nameUpdated();
+  void tagDeleted(const wxListEvent &event);
+  void tagsUpdated(const wxListEvent &event);
 };
 
 }  // namespace cszb_scoreboard

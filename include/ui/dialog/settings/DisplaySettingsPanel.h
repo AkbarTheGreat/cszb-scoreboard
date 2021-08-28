@@ -18,38 +18,43 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "util/StringUtil.h"
+#include "config.pb.h"           // for ScreenSide
+#include "ui/widget/Button.h"    // for Button
+#include "ui/widget/CheckBox.h"  // for CheckBox
+#include "ui/widget/Label.h"     // for Label
+#include "ui/widget/Panel.h"     // for Panel
 
 namespace cszb_scoreboard {
 
-class DisplaySettingsPanel : public wxPanel {
+// Pre-defining DisplaySettingsPage for a parent pointer.
+class DisplaySettingsPage;
+
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class DisplaySettingsPanel : public Panel {
  public:
-  DisplaySettingsPanel(wxPanel *parent, int index);
-  void copyFrom(DisplaySettingsPanel *other);
+  DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent);
+  void copyFrom(const DisplaySettingsPanel &other);
   auto getSide() -> proto::ScreenSide;
   [[nodiscard]] auto getDisplayId() const -> int { return display_id; }
 
  private:
-  static void copyCheckbox(wxCheckBox *source, wxCheckBox *target);
+  static void copyCheckbox(const CheckBox &source, CheckBox *target);
   void createButtonPanel();
-  void moveDisplay(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                            // wxWidgets callback.
+  void moveDisplay(bool is_up_button);
   void updateLabel();
 
   int display_id;
   int index;
-  wxCheckBox *control_checkbox;
-  wxCheckBox *home_checkbox;
-  wxCheckBox *away_checkbox;
-  wxStaticText *display_label;
-  wxPanel *button_panel;
-  wxButton *down_button;
-  wxButton *up_button;
+  std::unique_ptr<CheckBox> control_checkbox, home_checkbox, away_checkbox;
+  std::unique_ptr<Label> display_label;
+  std::unique_ptr<Panel> button_panel;
+  std::unique_ptr<Button> down_button, up_button;
+  DisplaySettingsPage *parent;
 };
 
 }  // namespace cszb_scoreboard

@@ -1,9 +1,8 @@
 /*
-ui/frame/FrameList.cpp: This class is a singleton which holds a list to all
-active frames (or windows) in the current application.  This is primarily to
-manage destroying all frames when the application is shut down.
+ui/widget/PersistentTimer.h: A timer object which performs a given action
+periodically.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,22 +17,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/frame/FrameList.h"
+#pragma once
 
-#include "util/Log.h"
+#include "ui/widget/swx/Timer.h"
 
 namespace cszb_scoreboard {
 
-auto FrameList::getInstance() -> FrameList * {
-  static FrameList singleton;
-  return &singleton;
-}
+class PersistentTimer {
+ private:
+  class HeldTimer : public swx::Timer {
+   public:
+    explicit HeldTimer(const std::function<void()> &on_tick);
 
-void FrameList::exitFrames() {
-  for (auto *frame : frames) {
-    LogDebug(wxT("Destroying a frame"));
-    frame->Destroy();
-  }
-}
+   private:
+    void Notify() override;
+    std::function<void()> on_tick;
+  };
+
+ public:
+  PersistentTimer(int period, const std::function<void()> &on_tick);
+  virtual ~PersistentTimer();
+
+ private:
+  HeldTimer *held;
+};
 
 }  // namespace cszb_scoreboard

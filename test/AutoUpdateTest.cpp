@@ -16,11 +16,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gmock/gmock-actions.h>
+#include <gmock/gmock-matchers.h>
+#include <gmock/gmock-spec-builders.h>
+#include <gtest/gtest-matchers.h>
+#include <gtest/gtest-message.h>
+#include <gtest/gtest-test-part.h>
+
+#include <memory>
+#include <string>
+#include <utility>
 #include <vector>
 
-#include "gtest/gtest.h"
+#include "gtest/gtest_pred_impl.h"
 #include "test/mocks/MockHttpReader.h"
 #include "util/AutoUpdate.h"
+#include "util/HttpReader.h"
 
 using ::testing::_;
 using ::testing::HasSubstr;

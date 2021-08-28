@@ -19,74 +19,73 @@ limitations under the License.
 
 #include "ui/component/control/ImagePreview.h"
 
-#include "ui/graphics/BackgroundImage.h"
-#include "ui/graphics/Color.h"
+#include <string>  // for allocator, string
+
+#include "config/Position.h"              // for Size
+#include "config/swx/event.h"             // for wxEVT_PAINT
+#include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
+#include "ui/graphics/Color.h"            // for Color
+#include "ui/widget/RenderContext.h"      // for RenderContext
 
 namespace cszb_scoreboard {
 
 const std::string DEFAULT_PREVIEW_COLOR = "Grey";
 
-ImagePreview::ImagePreview(wxWindow* parent, const wxSize& size)
-    : wxPanel(parent, wxID_ANY, wxDefaultPosition, size, wxTAB_TRAVERSAL) {
-  this->size = size;
-  this->image = BackgroundImage(size, Color(DEFAULT_PREVIEW_COLOR));
+ImagePreview::ImagePreview(swx::Panel *wx) : Panel(wx) {
+  this->image = BackgroundImage(size(), Color(DEFAULT_PREVIEW_COLOR));
   bindEvents();
 }
 
 void ImagePreview::bindEvents() {
-  Bind(wxEVT_PAINT, &ImagePreview::paintEvent, this);
+  bind(wxEVT_PAINT,
+       [this](RenderContext *renderer) -> void { this->paintEvent(renderer); });
 }
 
-void ImagePreview::renderImage(wxDC* dc) {
-  wxImage scaled_image = image;
-  wxSize image_size = scaled_image.GetSize();
-  float screen_ratio = ratio(size);
+void ImagePreview::paintEvent(RenderContext *renderer) {
+  Image scaled_image = image;
+  Size image_size = scaled_image.size();
+  float screen_ratio = ratio(size());
   float image_ratio = ratio(image_size);
   int image_height;
   int image_width;
   if (screen_ratio > image_ratio) {
     // Screen is wider than image, so make the heights match
-    image_height = size.GetHeight();
-    image_width = size.GetHeight() * image_ratio;
+    image_height = size().height;
+    image_width = size().height * image_ratio;
   } else {
     // Screen is either the same ratio or narrower than image, so make the
     // widths match
-    image_width = size.GetWidth();
-    image_height = size.GetWidth() / image_ratio;
+    image_width = size().width;
+    image_height = size().width / image_ratio;
   }
 
   scaled_image.Rescale(image_width, image_height);
-  int x = (size.GetWidth() - image_width) / 2;
-  int y = (size.GetHeight() - image_height) / 2;
+  int x = (size().width - image_width) / 2;
+  int y = (size().height - image_height) / 2;
 
-  dc->DrawBitmap(wxBitmap(scaled_image), x, y, false);
+  renderer->drawImage(scaled_image, x, y);
 }
 
-void ImagePreview::paintEvent(wxPaintEvent& event) {
-  wxPaintDC dc(this);
-  renderImage(&dc);
-}
-
-auto ImagePreview::ratio(const wxSize& size) -> float {
+auto ImagePreview::ratio(const Size &size) -> float {
   float ratio = 4 / 3;
-  ratio = static_cast<float>(size.GetWidth()) / size.GetHeight();
+  ratio = static_cast<float>(size.width) / size.height;
   return ratio;
 }
 
 void ImagePreview::clearImage() {
-  image = BackgroundImage(size, Color(DEFAULT_PREVIEW_COLOR));
+  image = BackgroundImage(size(), Color(DEFAULT_PREVIEW_COLOR));
   filename.reset();
-  Refresh();
+  refresh();
 }
 
-auto ImagePreview::getFilename() -> std::optional<FilesystemPath> {
+auto ImagePreview::getFilename() const -> std::optional<FilesystemPath> {
   return filename;
 }
 
-void ImagePreview::setImage(const FilesystemPath& filename) {
+void ImagePreview::setImage(const FilesystemPath &filename) {
   this->filename = filename;
-  image = wxImage(filename.string());
-  Refresh();
+  image = Image(filename);
+  refresh();
 }
 
 }  // namespace cszb_scoreboard

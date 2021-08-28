@@ -19,17 +19,25 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
-#include "config/DisplayConfig.h"
-#include "ui/UiUtil.h"
-#include "util/StringUtil.h"
-#include "wx/gbsizer.h"
+#include <string>  // for to_string
+
+#include "ScoreboardCommon.h"      // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"             // for ScreenSide
+#include "config/DisplayConfig.h"  // for DisplayConfig
+#include "config/swx/defs.h"       // for wxALL, wxGROW
+#include "config/swx/event.h"      // for wxCommandEvent (ptr only), wxEVT_C...
+#include "ui/widget/Panel.h"       // for Panel
+#include "ui/widget/PopUp.h"
+#include "util/StringUtil.h"  // for StringUtil
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
-    : SettingsPage(parent) {
+DisplaySettingsPage::DisplaySettingsPage(swx::Panel *wx) : SettingsPage(wx) {
   createControls();
   positionWidgets();
   bindEvents();
@@ -37,102 +45,92 @@ DisplaySettingsPage::DisplaySettingsPage(wxWindow* parent)
 
 void DisplaySettingsPage::createControls() {
   for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
-    auto* display_panel = new DisplaySettingsPanel(this, i);
-    display_settings_panels.push_back(display_panel);
+    display_settings_panels.push_back(
+        std::make_unique<DisplaySettingsPanel>(childPanel(), i, this));
   }
 
-  separator_line = new wxStaticLine(this);
-  window_mode_panel = new wxPanel(this);
+  separator_line = divider();
+  window_mode_panel = panel();
 
-  enable_window_mode =
-      new wxCheckBox(window_mode_panel, wxID_ANY, "Enable Window Mode");
-  enable_window_mode->SetValue(DisplayConfig::getInstance()->windowedMode());
+  enable_window_mode = window_mode_panel->checkBox("Enable Window Mode");
+  enable_window_mode->setChecked(DisplayConfig::getInstance()->windowedMode());
 
-  number_of_windows_label =
-      new wxStaticText(window_mode_panel, wxID_ANY, "# of Windows");
-  number_of_windows =
-      new wxTextCtrl(window_mode_panel, wxID_ANY,
-                     StringUtil::intToString(
-                         DisplayConfig::getInstance()->numberOfDisplays()));
+  number_of_windows_label = window_mode_panel->label("# of Windows");
+  number_of_windows = window_mode_panel->text(
+      std::to_string(DisplayConfig::getInstance()->numberOfDisplays()));
 
-  window_size_label =
-      new wxStaticText(window_mode_panel, wxID_ANY, "Window Size");
-  window_width = new wxTextCtrl(
-      window_mode_panel, wxID_ANY,
-      StringUtil::intToString(DisplayConfig::getInstance()->windowWidth()));
-  window_size_separator_label =
-      new wxStaticText(window_mode_panel, wxID_ANY, "x");
-  window_height = new wxTextCtrl(
-      window_mode_panel, wxID_ANY,
-      StringUtil::intToString(DisplayConfig::getInstance()->windowHeight()));
+  window_size_label = window_mode_panel->label("Window Size");
+  window_width = window_mode_panel->text(
+      std::to_string(DisplayConfig::getInstance()->windowWidth()));
+  window_size_separator_label = window_mode_panel->label("x");
+  window_height = window_mode_panel->text(
+      std::to_string(DisplayConfig::getInstance()->windowHeight()));
 
-  std::unique_ptr<wxCommandEvent> event(new wxCommandEvent());
-  windowModeChanged(*event);
+  windowModeChanged();
 }
 
 void DisplaySettingsPage::positionWidgets() {
-  auto* window_mode_sizer = new wxGridBagSizer();
-  UiUtil::addToGridBag(window_mode_sizer, enable_window_mode, 0, 0, 1, 2);
+  window_mode_panel->addWidgetWithSpan(*enable_window_mode, 0, 0, 1, 2);
 
-  UiUtil::addToGridBag(window_mode_sizer, number_of_windows_label, 1, 0);
-  UiUtil::addToGridBag(window_mode_sizer, number_of_windows, 1, 1);
+  window_mode_panel->addWidget(*number_of_windows_label, 1, 0);
+  window_mode_panel->addWidget(*number_of_windows, 1, 1);
 
-  UiUtil::addToGridBag(window_mode_sizer, window_size_label, 2, 0);
-  UiUtil::addToGridBag(window_mode_sizer, window_width, 2, 1);
-  UiUtil::addToGridBag(window_mode_sizer, window_size_separator_label, 2, 2);
-  UiUtil::addToGridBag(window_mode_sizer, window_height, 2, 3);
+  window_mode_panel->addWidget(*window_size_label, 2, 0);
+  window_mode_panel->addWidget(*window_width, 2, 1);
+  window_mode_panel->addWidget(*window_size_separator_label, 2, 2);
+  window_mode_panel->addWidget(*window_height, 2, 3);
 
-  window_mode_panel->SetSizerAndFit(window_mode_sizer);
+  window_mode_panel->runSizer();
 
-  wxSizer* sizer = UiUtil::sizer(0, 1);
-
-  for (auto* panel : display_settings_panels) {
-    sizer->Add(panel, 0, wxALL, BORDER_SIZE);
+  int row = 0;
+  for (const auto &panel : display_settings_panels) {
+    addWidget(*panel, row++, 0);
   }
 
-  sizer->Add(separator_line, 0, wxALL | wxGROW, BORDER_SIZE);
-  sizer->Add(window_mode_panel, 0, wxALL, BORDER_SIZE);
+  addWidget(*separator_line, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
+  addWidget(*window_mode_panel, row++, 0);
 
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
 void DisplaySettingsPage::bindEvents() {
-  enable_window_mode->Bind(wxEVT_CHECKBOX,
-                           &DisplaySettingsPage::windowModeChanged, this);
+  enable_window_mode->bind(
+      wxEVT_CHECKBOX,
+      [this](wxCommandEvent &event) -> void { this->windowModeChanged(); });
 }
 
 /* Returns true if the display settings are allowable, presents a warning dialog
  * if not (and returns false). */
 auto DisplaySettingsPage::validateSettings() -> bool {
   bool has_control = false;
-  for (auto* display_panel : display_settings_panels) {
+  for (const auto &display_panel : display_settings_panels) {
     proto::ScreenSide side = display_panel->getSide();
     if (side.control()) {
       has_control = true;
       if (!DisplayConfig::getInstance()->windowedMode() &&
           (side.home() || side.away() || side.extra())) {
-        wxMessageBox(
+        PopUp::Message(
             "ERROR: The Booth Monitor display may not also be a team display.");
         return false;
       }
     }
   }
   if (!has_control) {
-    wxMessageBox("ERROR: One window must be selected as a Booth Monitor.");
+    PopUp::Message("ERROR: One window must be selected as a Booth Monitor.");
     return false;
   }
 
-  if (enable_window_mode->GetValue()) {
-    if (StringUtil::stringToInt(number_of_windows->GetValue()) < 1) {
-      wxMessageBox(
+  if (enable_window_mode->checked()) {
+    if (StringUtil::stringToInt(number_of_windows->value()) < 1) {
+      PopUp::Message(
           "ERROR: If enabling windows mode, at least one window must be "
           "created.");
       return false;
     }
 
-    if (StringUtil::stringToInt(window_width->GetValue()) < 1 ||
-        StringUtil::stringToInt(window_height->GetValue()) < 1) {
-      wxMessageBox(
+    if (StringUtil::stringToInt(window_width->value()) < 1 ||
+        StringUtil::stringToInt(window_height->value()) < 1) {
+      PopUp::Message(
           "ERROR: If enabling windows mode, window resolution must be larger "
           "than 0x0.");
       return false;
@@ -149,7 +147,7 @@ void DisplaySettingsPage::saveSettings() {
     if (DisplayConfig::getInstance()->setDisplayId(
             i, display_settings_panels[i]->getDisplayId()) &&
         !warnedAboutOrderChange) {
-      wxMessageBox(
+      PopUp::Message(
           "WARNING: You have changed monitor ordering.  To see this take "
           "effect, you must restart the application.");
       warnedAboutOrderChange = true;
@@ -160,46 +158,50 @@ void DisplaySettingsPage::saveSettings() {
 
   // If any of the windowed settings have chagned, re-detect display settings.
   if ((DisplayConfig::getInstance()->windowedMode() !=
-       enable_window_mode->GetValue()) ||
+       enable_window_mode->checked()) ||
       (DisplayConfig::getInstance()->windowedModeNumberOfWindows() !=
-       StringUtil::stringToInt(number_of_windows->GetValue())) ||
+       StringUtil::stringToInt(number_of_windows->value())) ||
       (DisplayConfig::getInstance()->windowWidth() !=
-       StringUtil::stringToInt(window_width->GetValue())) ||
+       StringUtil::stringToInt(window_width->value())) ||
       (DisplayConfig::getInstance()->windowHeight() !=
-       StringUtil::stringToInt(window_height->GetValue()))) {
-    wxMessageBox(
+       StringUtil::stringToInt(window_height->value()))) {
+    PopUp::Message(
         "WARNING: Changes to windowed mode will require an application restart "
         "to take effect.");
   }
 
-  DisplayConfig::getInstance()->setWindowedMode(enable_window_mode->GetValue());
+  DisplayConfig::getInstance()->setWindowedMode(enable_window_mode->checked());
   DisplayConfig::getInstance()->setWindowedModeNumberOfWindows(
-      StringUtil::stringToInt(number_of_windows->GetValue()));
+      StringUtil::stringToInt(number_of_windows->value()));
   DisplayConfig::getInstance()->setWindowWidth(
-      StringUtil::stringToInt(window_width->GetValue()));
+      StringUtil::stringToInt(window_width->value()));
   DisplayConfig::getInstance()->setWindowHeight(
-      StringUtil::stringToInt(window_height->GetValue()));
+      StringUtil::stringToInt(window_height->value()));
 
   DisplayConfig::getInstance()->saveSettings();
 }
 
-void DisplaySettingsPage::windowModeChanged(wxCommandEvent& event) {
-  if (enable_window_mode->GetValue()) {
-    number_of_windows->Enable();
-    window_width->Enable();
-    window_height->Enable();
+void DisplaySettingsPage::windowModeChanged() {
+  if (enable_window_mode->checked()) {
+    number_of_windows->enable();
+    window_width->enable();
+    window_height->enable();
   } else {
-    number_of_windows->Disable();
-    window_width->Disable();
-    window_height->Disable();
+    number_of_windows->disable();
+    window_width->disable();
+    window_height->disable();
   }
 }
 
 void DisplaySettingsPage::swapDisplays(int a, int b) {
-  DisplaySettingsPanel temp(this, 0);
-  temp.copyFrom(display_settings_panels[a]);
-  display_settings_panels[a]->copyFrom(display_settings_panels[b]);
-  display_settings_panels[b]->copyFrom(&temp);
+  // Create a self-destructing panel to hold our temp, to clean up after we're
+  // done.
+  std::unique_ptr<Panel> temp_holder = panel(true);
+  auto temp = std::make_unique<DisplaySettingsPanel>(temp_holder->childPanel(),
+                                                     0, this);
+  temp->copyFrom(*display_settings_panels[a]);
+  display_settings_panels[a]->copyFrom(*display_settings_panels[b]);
+  display_settings_panels[b]->copyFrom(*temp);
 }
 
 }  // namespace cszb_scoreboard

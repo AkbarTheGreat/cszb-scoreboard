@@ -16,17 +16,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gtest/gtest-message.h>
+#include <gtest/gtest-test-part.h>
+
+#include <vector>
+
+#include "config.pb.h"
 #include "config/DisplayConfig.h"
+#include "gtest/gtest_pred_impl.h"
 #include "test/GuiTest.h"
+#include "ui/component/ScreenPreview.h"
+#include "ui/component/ScreenText.h"
+#include "ui/component/ScreenTextSide.h"
+#include "ui/component/control/TextEntry.h"
+#include "ui/frame/MainView.h"
+#include "wx/colour.h"
 
 namespace cszb_scoreboard::test {
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
-  WX_A(mainView()->SetFocus());
+  WX_A(mainView()->focus());
   WX_A(textEntry()->selectTeam(0));
-  ImageAnalysis analysis(firstPreview()->widget()->sidePanel(0),
+  ImageAnalysis analysis(firstPreview()->screen()->sidePanel(0),
                          IA_MODE_QUARTER_SCAN);
   std::vector<int> color_list = analysis.colorList();
   int list_size = color_list.size();

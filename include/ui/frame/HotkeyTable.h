@@ -18,17 +18,22 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+// wx/accel needs to be used by clients of this interface as they use macros to
+// reference key combinations (like wxACCEL_CTRL).  But no one should use it
+// outside of interfacing with this class.
+#include <wx/accel.h>  // IWYU pragma: export for wxAcceleratorEntry
+#include <wx/defs.h>   // for wxWindowID
 
-#include <vector>
+#include <vector>  // for vector
 
 namespace cszb_scoreboard {
+class Frame;
 
 class HotkeyTable {
  public:
-  static auto getInstance() -> HotkeyTable*;
+  static auto getInstance() -> HotkeyTable *;
   void addHotkey(int modifier_flags, int key_code, wxWindowID widget_id);
-  void installHotkeys(wxFrame* main_window);
+  void installHotkeys(Frame *main_window);
 
  private:
   std::vector<wxAcceleratorEntry> accel_entries;

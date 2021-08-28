@@ -18,10 +18,15 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gbsizer.h>
-#include <wx/wx.h>
+#include <wx/defs.h>  // for wxALL, wxGROW
 
-#include "ScoreboardCommon.h"
+#include <cstdint>  // for int64_t
+
+#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
+
+class wxGridBagSizer;
+class wxSizer;
+class wxWindow;
 
 namespace cszb_scoreboard {
 
@@ -29,10 +34,11 @@ class UiUtil {
  public:
   // If making a new sizer, prefer using a wxGridBagSizer directly (it has a
   // simple constructor, so it doesn't need this helper method at all)
-  static auto sizer(int32_t rows, int32_t columns) -> wxSizer *;
+  static auto sizer(int64_t rows, int64_t columns) -> wxSizer *;
   static void addToGridBag(wxGridBagSizer *sizer, wxWindow *item, int row,
                            int column, int row_span = 1, int column_span = 1,
-                           int border_size = DEFAULT_BORDER_SIZE);
+                           int border_size = DEFAULT_BORDER_SIZE,
+                           int flags = wxALL | wxGROW);
 };
 
 }  // namespace cszb_scoreboard

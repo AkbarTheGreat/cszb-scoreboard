@@ -21,8 +21,11 @@ limitations under the License.
 #include <wx/cmdline.h>
 
 #include <array>
+#include <memory>
 
 #include "util/FilesystemPath.h"
+
+class wxCmdLineArgsArray;
 
 namespace cszb_scoreboard {
 

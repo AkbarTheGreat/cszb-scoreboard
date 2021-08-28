@@ -16,9 +16,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "config/DisplayConfig.h"
-#include "test/GuiTest.h"
-#include "ui/component/control/TextEntry.h"
+#include <gtest/gtest-message.h>    // for Message
+#include <gtest/gtest-test-part.h>  // for SuiteApiResolver, TestFa...
+#include <wx/uiaction.h>            // for wxUIActionSimulator
+
+#include <memory>  // for allocator
+
+#include "config.pb.h"                       // for DisplayInfo, ScreenSide
+#include "config/DisplayConfig.h"            // for DisplayConfig
+#include "gtest/gtest_pred_impl.h"           // for ASSERT_LT, TEST_F
+#include "test/GuiTest.h"                    // for WX_A, ImageAnalysis, Gui...
+#include "ui/component/ScreenPreview.h"      // for ScreenPreview
+#include "ui/component/ScreenText.h"         // for ScreenText
+#include "ui/component/ScreenTextSide.h"     // for ScreenTextSide
+#include "ui/component/control/TextEntry.h"  // for TextEntry
+#include "ui/frame/MainView.h"               // for MainView
+#include "ui/widget/Text.h"                  // for Text
+#include "wx/colour.h"                       // for wxColour
 
 namespace cszb_scoreboard ::test {
 
@@ -26,17 +40,16 @@ class TextEntryTest : public GuiTest {
  protected:
   static void enterTextIndirect(const char *text) {
     TextEntry *entry = textEntry();
-    WX_A(entry->textField()->SetFocus());
-    WX_A(entry->textField()->Clear());
-    WX_A(entry->textField()->WriteText(text));
-    wxKeyEvent event;
-    WX_A(entry->textUpdated(event));
+    WX_A(entry->textField()->focus());
+    WX_A(entry->textField()->clear());
+    WX_A(entry->textField()->setValue(text));
+    WX_A(entry->textUpdated());
   }
 
   void enterTextDirect(const char *text) {
     TextEntry *entry = textEntry();
-    WX_A(entry->textField()->SetFocus());
-    WX_A(entry->textField()->Clear());
+    WX_A(entry->textField()->focus());
+    WX_A(entry->textField()->clear());
     WX_A(act.Text(text));
   }
 
@@ -56,7 +69,7 @@ class TextEntryTest : public GuiTest {
     // Always assume we're dealing with the left (home) view, which is 0 in most
     // cases, but may also be an error screen in release, so this will fail for
     // release at the moment.
-    return ImageAnalysis(firstPreview()->widget()->sidePanel(0),
+    return ImageAnalysis(firstPreview()->screen()->sidePanel(0),
                          IA_MODE_CENTERLINE_SCAN);
   }
 };

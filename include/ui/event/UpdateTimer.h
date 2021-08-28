@@ -18,17 +18,21 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <ui/widget/PersistentTimer.h>
 
 namespace cszb_scoreboard {
 
-class UpdateTimer : public wxTimer {
+
+class Frame;
+
+class UpdateTimer : public PersistentTimer {
  public:
-  explicit UpdateTimer(wxFrame *main_view);
+  explicit UpdateTimer(Frame *main_view);
 
  private:
-  wxFrame *main_view;
-  void Notify() override;
+  Frame *main_view;
+
+  void execute() ;
 };
 
 }  // namespace cszb_scoreboard

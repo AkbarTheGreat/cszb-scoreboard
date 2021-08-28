@@ -19,43 +19,41 @@ limitations under the License.
 #include "ui/event/UpdateTimer.h"
 
 #include "ScoreboardCommon.h"
+#include "ui/widget/Frame.h"
 #include "util/AutoUpdate.h"
 
 namespace cszb_scoreboard {
 
 // Retry every six hours to look for an update.
-const int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
+constexpr int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
 
-UpdateTimer::UpdateTimer(wxFrame *main_view) { this->main_view = main_view; }
+UpdateTimer::UpdateTimer(Frame *main_view)
+    : PersistentTimer(AUTO_UPDATE_DELAY,
+                      [this]() -> void { this->execute(); }) {
+  this->main_view = main_view;
+  // First time through, remove an old auto-update.
+  AutoUpdate::removeOldUpdate();
+  execute();
+}
 
-void UpdateTimer::Notify() {
-  if (IsOneShot()) {
-    // First time through, remove an old auto-update.
-    AutoUpdate::removeOldUpdate();
-  }
-
+void UpdateTimer::execute() {
   bool new_version_available =
       AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version_available) {
     if (AutoUpdate::getInstance()->updateIsDownloadable()) {
-      main_view->SetStatusText("New version found, downloading...");
+      main_view->setStatusBar("New version found, downloading...");
       if (AutoUpdate::getInstance()->updateInPlace()) {
-        main_view->SetStatusText(
+        main_view->setStatusBar(
             "Auto-update downloaded.  Please restart to apply.");
       } else {
-        main_view->SetStatusText(
+        main_view->setStatusBar(
             "Auto-update failed!  Please manually update scoreboard.");
       }
     } else {
-      main_view->SetStatusText(
+      main_view->setStatusBar(
           "New version found, please go to "
           "github.com/AkbarTheGreat/cszb-scoreboard to update.");
     }
-  }
-
-  // If called as a one-shot, we need to establish this as a periodic event.
-  if (IsOneShot()) {
-    Start(AUTO_UPDATE_DELAY);
   }
 }
 

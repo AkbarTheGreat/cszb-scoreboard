@@ -19,35 +19,41 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/aui/aui.h>
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
-#include <vector>
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/widget/Notebook.h"                         // for Notebook
 
-#include "ScoreboardCommon.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScreenTextController.h"
+class wxAuiNotebookEvent;
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
 
-class ControlPanel : public wxAuiNotebook {
+namespace swx {
+class Notebook;
+}  // namespace swx
+
+class ControlPanel : public Notebook {
  public:
-  ControlPanel(wxWindow* parent, PreviewPanel* preview_panel);
-  void updateScreenTextFromSelected(ScreenText* screen_text);
+  ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel);
+  void updateScreenTextFromSelected(ScreenText *screen_text);
 
 #ifdef SCOREBOARD_TESTING
-  auto textController(int index) -> ScreenTextController* {
-    return controllers[index];
+  auto textController(int index) -> ScreenTextController * {
+    return controllers[index].get();
   }
 #endif
 
  private:
+  void addController(std::unique_ptr<ScreenTextController> tab,
+                     const std::string &name);
   void bindEvents();
-  void tabChanged(
-      wxAuiNotebookEvent& event);  // NOLINT(google-runtime-references)
-                                   // wxWidgets callback.
+  void tabChanged(const wxAuiNotebookEvent &event);
   // Holds a view to these controllers, does not own them.
-  std::vector<ScreenTextController*> controllers;
+  std::vector<std::unique_ptr<ScreenTextController>> controllers;
 };
 
 }  // namespace cszb_scoreboard

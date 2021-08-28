@@ -18,34 +18,39 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/propdlg.h>
-#include <wx/wx.h>
+#include <wx/event.h>  // for wxCommandEvent (ptr only)
 
-#include <vector>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "ui/dialog/settings/SettingsPage.h"
+#include "ui/dialog/settings/SettingsPage.h"  // for SettingsPage
+#include "ui/widget/TabbedDialog.h"           // for TabbedDialog
 
 namespace cszb_scoreboard {
+class MainView;
+
+namespace swx {
+class PropertySheetDialog;
+}  // namespace swx
 
 extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
 
-class SettingsDialog : public wxPropertySheetDialog {
+class SettingsDialog : public TabbedDialog {
  public:
-  auto Create(wxWindow *parent) -> bool;
+  SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent);
 
  private:
-  void addPage(SettingsPage *page, const std::string &name);
+  void addPage(std::unique_ptr<SettingsPage> page, const std::string &name);
   void bindEvents();
   void saveSettings();
   auto validateSettings() -> bool;
-  std::vector<SettingsPage *> pages;
-  wxWindow *parent;
-  // wxWidgets callbacks, waive linting error for references.
-  void onOk(wxCommandEvent &event);      // NOLINT(google-runtime-references)
-  void onCancel(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void onClose(wxCloseEvent &event);     // NOLINT(google-runtime-references)
+  void onOk();
+  void onCancel();
+  void onClose();
+
+  MainView *parent;
+  std::vector<std::unique_ptr<SettingsPage>> pages;
 };
 
 }  // namespace cszb_scoreboard

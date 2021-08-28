@@ -18,24 +18,26 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
-#include "config.pb.h"
-#include "config/TeamConfig.h"
-#include "ui/dialog/settings/SettingsPage.h"
-#include "ui/dialog/settings/TeamSettingsPanel.h"
+#include "ui/dialog/settings/SettingsPage.h"       // for SettingsPage
+#include "ui/dialog/settings/TeamSettingsPanel.h"  // for TeamSettingsPanel
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class TeamSettingsPage : public SettingsPage {
  public:
-  explicit TeamSettingsPage(wxWindow *parent);
+  explicit TeamSettingsPage(swx::Panel *wx);
   void saveSettings() override;
   void swapTeams(int a, int b);
   auto validateSettings() -> bool override;
 
  private:
-  std::vector<TeamSettingsPanel *> team_settings_panels;
+  std::vector<std::unique_ptr<TeamSettingsPanel>> team_settings_panels;
 };
 
 }  // namespace cszb_scoreboard

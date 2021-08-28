@@ -18,19 +18,25 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/statline.h>
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "ui/dialog/settings/DisplaySettingsPanel.h"
-#include "ui/dialog/settings/SettingsPage.h"
+#include "ui/dialog/settings/DisplaySettingsPanel.h"  // for DisplaySettings...
+#include "ui/dialog/settings/SettingsPage.h"          // for SettingsPage
+#include "ui/widget/CheckBox.h"                       // for CheckBox
+#include "ui/widget/Divider.h"                        // for Divider
+#include "ui/widget/Label.h"                          // for Label
+#include "ui/widget/Panel.h"                          // for Panel
+#include "ui/widget/Text.h"                           // for Text
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class DisplaySettingsPage : public SettingsPage {
  public:
-  explicit DisplaySettingsPage(wxWindow *parent);
+  explicit DisplaySettingsPage(swx::Panel *wx);
   void saveSettings() override;
   auto validateSettings() -> bool override;
   void swapDisplays(int a, int b);
@@ -39,16 +45,15 @@ class DisplaySettingsPage : public SettingsPage {
   void bindEvents();
   void createControls();
   void positionWidgets();
-  void windowModeChanged(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                                  // wxWidgets callback.
+  void windowModeChanged();
 
-  std::vector<DisplaySettingsPanel *> display_settings_panels;
-  wxPanel *window_mode_panel;
-  wxStaticText *number_of_windows_label, *window_size_label,
-      *window_size_separator_label;
-  wxCheckBox *enable_window_mode;
-  wxTextCtrl *number_of_windows, *window_width, *window_height;
-  wxStaticLine *separator_line;
+  std::vector<std::unique_ptr<DisplaySettingsPanel>> display_settings_panels;
+  std::unique_ptr<Panel> window_mode_panel;
+  std::unique_ptr<Label> number_of_windows_label, window_size_label,
+      window_size_separator_label;
+  std::unique_ptr<Text> number_of_windows, window_width, window_height;
+  std::unique_ptr<CheckBox> enable_window_mode;
+  std::unique_ptr<Divider> separator_line;
 };
 
 }  // namespace cszb_scoreboard

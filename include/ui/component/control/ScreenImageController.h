@@ -22,30 +22,37 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
-#include "config.pb.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/TeamSelector.h"
+#include "config/swx/image.h"
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/component/control/TeamSelector.h"          // for TeamSelector
+#include "ui/widget/Label.h"                            // for Label
 
 namespace cszb_scoreboard {
+class Panel;
+class PreviewPanel;
+class ScreenText;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ScreenImageController : public ScreenTextController {
  protected:
-  wxStaticText *current_image_label;
-  wxImage all_screen_image, home_screen_image, away_screen_image;
+  std::unique_ptr<Label> current_image_label;
+  std::unique_ptr<TeamSelector> screen_selection;
+  Image all_screen_image, home_screen_image, away_screen_image;
   std::string all_screen_image_name, home_screen_image_name,
       away_screen_image_name;
-  TeamSelector *screen_selection;
 
-  ScreenImageController(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenTextController(preview_panel, parent) {}
+  ScreenImageController(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenTextController(preview_panel, wx) {}
   void bindEvents();
-  void createControls(wxPanel *control_panel) override;
-  virtual void positionWidgets(wxPanel *control_panel) = 0;
-  void screenChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                               // wxWidgets callback.
+  void createControls(Panel *control_panel) override;
+  virtual void positionWidgets(Panel *control_panel) = 0;
+  void screenChanged();
   void updateScreenText(ScreenText *screen_text) override;
 };
 

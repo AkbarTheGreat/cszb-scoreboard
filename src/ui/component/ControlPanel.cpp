@@ -19,34 +19,37 @@ limitations under the License.
 
 #include "ui/component/ControlPanel.h"
 
-#include "ui/component/control/ImageFromLibrary.h"
-#include "ui/component/control/LocalImage.h"
-#include "ui/component/control/ScoreControl.h"
-#include "ui/component/control/TextEntry.h"
-#include "ui/component/control/ThingsMode.h"
+#include <wx/aui/auibook.h>  // for wxAuiNotebookEvent
+
+#include <utility>  // for move
+
+#include "ui/component/control/ImageFromLibrary.h"  // for ImageFromLibrary
+#include "ui/component/control/LocalImage.h"        // for LocalImage
+#include "ui/component/control/ScoreControl.h"      // for ScoreControl
+#include "ui/component/control/TextEntry.h"         // for TextEntry
+#include "ui/component/control/ThingsMode.h"        // for ThingsMode
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
 
-const int NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
-                           wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS;
+namespace swx {
+class Notebook;
+}  // namespace swx
 
-ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
-    : wxAuiNotebook(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                    NOTEBOOK_STYLE) {
-  controllers.push_back(ScoreControl::Create(preview_panel, this));
-  AddPage(controllers.back(), "Score");
-
-  controllers.push_back(ImageFromLibrary::Create(preview_panel, this));
-  AddPage(controllers.back(), "Image Library");
-
-  controllers.push_back(LocalImage::Create(preview_panel, this));
-  AddPage(controllers.back(), "Load Image");
-
-  controllers.push_back(ThingsMode::Create(preview_panel, this));
-  AddPage(controllers.back(), "5/6 Things");
-
-  controllers.push_back(TextEntry::Create(preview_panel, this));
-  AddPage(controllers.back(), "Text");
+ControlPanel::ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
+    : Notebook(wx) {
+  addController(std::move(ScoreControl::Create(preview_panel, childPanel())),
+                "Score");
+  addController(
+      std::move(ImageFromLibrary::Create(preview_panel, childPanel())),
+      "Image Library");
+  addController(std::move(LocalImage::Create(preview_panel, childPanel())),
+                "Load Image");
+  addController(std::move(ThingsMode::Create(preview_panel, childPanel())),
+                "5/6 Things");
+  addController(std::move(TextEntry::Create(preview_panel, childPanel())),
+                "Text");
 
   bindEvents();
 
@@ -54,16 +57,23 @@ ControlPanel::ControlPanel(wxWindow* parent, PreviewPanel* preview_panel)
   controllers[0]->updatePreview();
 }
 
-void ControlPanel::bindEvents() {
-  Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &ControlPanel::tabChanged, this);
+void ControlPanel::addController(std::unique_ptr<ScreenTextController> tab,
+                                 const std::string &name) {
+  addTab(*tab, name);
+  controllers.push_back(std::move(tab));
 }
 
-void ControlPanel::tabChanged(wxAuiNotebookEvent& event) {
+void ControlPanel::bindEvents() {
+  bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED,
+       [this](wxAuiNotebookEvent &event) -> void { this->tabChanged(event); });
+}
+
+void ControlPanel::tabChanged(const wxAuiNotebookEvent &event) {
   controllers[event.GetSelection()]->updatePreview();
 }
 
-void ControlPanel::updateScreenTextFromSelected(ScreenText* screen_text) {
-  controllers[GetSelection()]->updateScreenText(screen_text);
+void ControlPanel::updateScreenTextFromSelected(ScreenText *screen_text) {
+  controllers[selection()]->updateScreenText(screen_text);
 }
 
 }  // namespace cszb_scoreboard

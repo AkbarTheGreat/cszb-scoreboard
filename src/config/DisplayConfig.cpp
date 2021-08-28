@@ -19,8 +19,16 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
+#include <cassert>
+#include <wx/display.h>
+#include <wx/gdicmn.h>
+
+#include <utility>
+
 #include "config/Persistence.h"
-#include "ui/frame/FrameList.h"
+#include "ui/frame/FrameManager.h"
+#include "ui/frame/MainView.h"
+#include "ui/widget/Frame.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
 
@@ -58,6 +66,12 @@ void DisplayConfig::detectDisplays() {
 
 void DisplayConfig::detectExternalMonitors() {
   int numscreens = wxDisplay::GetCount();
+
+#ifdef SCOREBOARD_TESTING
+  // Force this to be 1 screen for tests, as all of our testing assumed that to
+  // be the case anyway.
+  numscreens = 1;
+#endif
 
   // Currently, don't re-detect displays if it matches our saved state,
   // otherwise, we'll re-initialize them.  In the future, we may get fancier
@@ -167,12 +181,12 @@ auto DisplayConfig::displayDetails(int index) -> proto::DisplayInfo {
 
 // Determines which display currently houses the main control window.
 auto DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool {
-  wxFrame *main_view = FrameList::getInstance()->getMainView();
+  Frame *main_view = FrameManager::getInstance()->mainView();
   if (main_view == nullptr) {
     return true;  // Guess that screen 0 is our primary, as we haven't created
                   // our main window yet.
   }
-  wxPoint main_size = main_view->GetPosition();
+  wxPoint main_size = main_view->position();
   return (ProtoUtil::wxRct(display_info->dimensions()).Contains(main_size));
 }
 

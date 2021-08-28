@@ -19,58 +19,55 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clrpicker.h>
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
-#include "ScoreboardCommon.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/TeamSelector.h"
+#include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/component/control/TeamSelector.h"          // for TeamSelector
+#include "ui/graphics/Color.h"                          // for Color
+#include "ui/widget/ColorPicker.h"                      // for ColorPicker
+#include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/Text.h"                             // for Text
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class TextEntry : public ScreenTextController {
  public:
-  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
-      -> TextEntry *;
-  auto textField() -> wxTextCtrl *;
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
-                                        // wxWidgets callback.
+  TextEntry(PreviewPanel *preview_panel, swx::Panel *wx);
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
+      -> std::unique_ptr<TextEntry>;
+  auto textField() -> Text *;
+  void textUpdated();
 
   PUBLIC_TEST_ONLY
   void selectTeam(int index);
 
  private:
-  wxColourPickerCtrl *color_picker;
-  wxStaticText *font_size_label;
-  wxPanel *inner_panel;
-  wxTextCtrl *font_size_entry;
-  TeamSelector *screen_selection;
-  wxStaticText *text_label;
-  wxTextCtrl *text_entry;
-  wxString home_text;
-  wxString away_text;
-  wxString all_text;
-  int home_font_size;
-  int away_font_size;
-  int all_font_size;
-  Color home_color;
-  Color away_color;
-  Color all_color;
+  std::unique_ptr<ColorPicker> color_picker;
+  std::unique_ptr<Label> font_size_label, text_label;
+  std::unique_ptr<Panel> inner_panel;
+  std::unique_ptr<Text> font_size_entry, text_entry;
+  std::unique_ptr<TeamSelector> screen_selection;
+  std::string home_text, away_text, all_text;
+  int home_font_size, away_font_size, all_font_size;
+  Color home_color, away_color, all_color;
 
-  TextEntry(PreviewPanel *preview_panel, wxWindow *parent);
   void updateScreenText(ScreenText *screen_text) override;
-  void createControls(wxPanel *control_panel) override;
+  void createControls(Panel *control_panel) override;
 
   void bindEvents();
   auto enteredFontSize() -> int;
-  void positionWidgets(wxPanel *control_panel);
-  void doScreenChanged();
-  // wxWidgets callbacks, waive linting error for references.
-  void colorChanged(
-      wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
-  void screenChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void positionWidgets(Panel *control_panel);
+  void screenChanged();
+  void colorChanged();
 };
 
 }  // namespace cszb_scoreboard

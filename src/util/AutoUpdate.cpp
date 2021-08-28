@@ -19,16 +19,19 @@ limitations under the License.
 
 #include "util/AutoUpdate.h"
 
-#include <json/json.h>
-#include <json/reader.h>
+#include <json/reader.h>  // for CharReaderBuilder, CharReader
+#include <json/value.h>   // for Value
 
-#include <fstream>
-#include <regex>
+#include <cstddef>  // for size_t
+#include <fstream>  // IWYU pragma: keep for fstream
+#include <regex>    // for match_results<>::_Base_type, regex_...
+#include <sstream>  // for basic_stringbuf<>::int_type, operator|
 
-#include "config/CommandArgs.h"
-#include "util/FilesystemPath.h"
-#include "util/Log.h"
-#include "util/StringUtil.h"
+#include "config/CommandArgs.h"   // for CommandArgs
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/HttpReader.h"      // for HttpResponse, HttpReader
+#include "util/Log.h"             // for LogDebug
+#include "util/StringUtil.h"      // for StringUtil
 
 namespace cszb_scoreboard {
 
@@ -40,7 +43,7 @@ const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
 // and unzip the release, which is more complicated than a Windows install. Once
 // the mechanism is in place, remove -autoupdatedisabled- below.
 const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
-#else  // ifdef __APPLE__
+#else   // ifdef __APPLE__
 const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
 #endif  // ifdef _WIN32

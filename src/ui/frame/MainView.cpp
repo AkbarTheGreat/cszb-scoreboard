@@ -18,117 +18,140 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include "config/CommandArgs.h"
-#include "config/DisplayConfig.h"
-#include "ui/UiUtil.h"
-#include "ui/frame/FrameList.h"
-#include "ui/frame/HotkeyTable.h"
-#include "util/StringUtil.h"
-#include "wx/gbsizer.h"
+#include <string>   // for string
+#include <utility>  // for pair
+#include <vector>   // for vector
+
+#include "ScoreboardCommon.h"       // for SCOREBOARD_VERSION
+#include "config/CommandArgs.h"     // for CommandArgs
+#include "config/DisplayConfig.h"   // for DisplayConfig
+#include "config/swx/defs.h"        // for wxID_ABOUT, wxID_EXIT, wxICON_...
+#include "config/swx/event.h"       // for wxCommandEvent (ptr only), wxE...
+#include "ui/component/Menu.h"      // for DISPLAY_BLACK_OUT, GENERAL_SET...
+#include "ui/frame/FrameManager.h"  // for FrameManager
+#include "ui/frame/HotkeyTable.h"   // for HotkeyTable
+#include "ui/widget/PopUp.h"
+#include "util/StringUtil.h"  // for StringUtil
 
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 0;
 
-MainView::MainView(const wxString& title, const wxPoint& pos,
-                   const wxSize& size)
-    : wxFrame(nullptr, wxID_ANY, title, pos, size) {
-  FrameList::getInstance()->setMainView(this);
-
+MainView::MainView(const std::string &title, const Position &pos,
+                   const Size &size)
+    : Frame(title, pos, size) {
   createMenu();
-  createStatusBar();
+  setStatusBar("Welcome to ComedySportz Scoreboard, " +
+               StringUtil::intToString(
+                   DisplayConfig::getInstance()->numberOfDisplays()) +
+               " displays found.");
 
-  preview_panel = new PreviewPanel(this);
-  control_panel = new ControlPanel(this, preview_panel);
-  quick_state = new QuickStatePanel(this);
+  preview_panel = std::make_unique<PreviewPanel>(childPanel());
+  control_panel =
+      std::make_unique<ControlPanel>(childNotebook(), preview_panel.get());
+  quick_state = std::make_unique<QuickStatePanel>(childPanel());
 
   positionWidgets();
   bindEvents();
 
   if (CommandArgs::getInstance()->autoUpdate()) {
-    update_timer = new UpdateTimer(this);
-    update_timer->Start(1, true);
+    update_timer = std::make_unique<UpdateTimer>(this);
   }
 
   // Set focus to the control_panel so that tab movement works correctly without
   // an initial click.
-  control_panel->SetFocus();
+  control_panel->focus();
   HotkeyTable::getInstance()->installHotkeys(this);
 }
 
 void MainView::createMenu() {
-  auto* menu_general = new wxMenu;
-  menu_general->Append(GENERAL_SETTINGS, "&Settings",
-                       "Configure the scoreboard");
-  menu_general->AppendSeparator();
-  menu_general->Append(wxID_EXIT);
-  auto* menu_display = new wxMenu;
-  menu_display->Append(DISPLAY_BLACK_OUT, "&Black Out\tCtrl-B",
-                       "Black out both screens");
-  auto* menu_help = new wxMenu;
-  menu_help->Append(wxID_ABOUT);
-  auto* menu_bar = new wxMenuBar;
-  menu_bar->Append(menu_general, "&General");
-  menu_bar->Append(menu_display, "&Display");
-  menu_bar->Append(menu_help, "&Help");
-  SetMenuBar(menu_bar);
-}
+  std::vector<MenuItem> general;
+  general.emplace_back(MenuItem{.id = GENERAL_SETTINGS,
+                                .name = "&Settings",
+                                .description = "Configure the scoreboard"});
+  general.emplace_back(MenuItem{.id = wxID_SEPARATOR});
+  general.emplace_back(MenuItem{.id = wxID_EXIT});
 
-void MainView::createStatusBar() {
-  CreateStatusBar();
-  wxString status_text = "Welcome to ComedySportz Scoreboard, ";
-  status_text +=
-      StringUtil::intToString(DisplayConfig::getInstance()->numberOfDisplays());
-  status_text += " displays found.";
-  SetStatusText(status_text);
+  std::vector<MenuItem> display;
+  display.emplace_back(MenuItem{.id = DISPLAY_BLACK_OUT,
+                                .name = "&Black Out\tCtrl-B",
+                                .description = "Black out both screens"});
+
+  std::vector<MenuItem> help;
+  help.emplace_back(MenuItem{.id = wxID_ABOUT});
+
+  std::vector<MenuCategory> menu;
+  menu.emplace_back(MenuCategory{.name = "&General", .items = general});
+  menu.emplace_back(MenuCategory{.name = "&Display", .items = display});
+  menu.emplace_back(MenuCategory{.name = "&Help", .items = help});
+
+  menuBar(menu);
 }
 
 void MainView::positionWidgets() {
-  auto* sizer = new wxGridBagSizer();
-  UiUtil::addToGridBag(sizer, preview_panel, 0, 0);
-  UiUtil::addToGridBag(sizer, control_panel, 1, 0);
-  UiUtil::addToGridBag(sizer, quick_state, 0, 1, 2, 1);
-
-  SetSizerAndFit(sizer);
+  addWidget(*preview_panel, 0, 0);
+  addWidget(*control_panel, 1, 0);
+  addWidgetWithSpan(*quick_state, 0, 1, 2, 1);
+  runSizer();
 }
 
 void MainView::bindEvents() {
-  Bind(wxEVT_CLOSE_WINDOW, &MainView::onClose, this);
-  // Menu events bind against the frame itself, so a bare Bind() is useful
-  // here.
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::showSettings, this,
-       GENERAL_SETTINGS);
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onExit, this, wxID_EXIT);
-  Bind(wxEVT_COMMAND_MENU_SELECTED, &MainView::onAbout, this, wxID_ABOUT);
+  bind(wxEVT_CLOSE_WINDOW, [](wxCloseEvent &event) -> void { onClose(); });
+  bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [this](wxCommandEvent &event) -> void { this->showSettings(); },
+      GENERAL_SETTINGS);
+  bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [this](wxCommandEvent &event) -> void { this->onExit(); }, wxID_EXIT);
+  bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [](wxCommandEvent &event) -> void { onAbout(); }, wxID_ABOUT);
+  bind(
+      wxEVT_COMMAND_MENU_SELECTED,
+      [this](wxCommandEvent &event) -> void {
+        this->preview_panel->blackout();
+      },
+      DISPLAY_BLACK_OUT);
 }
 
-void MainView::onExit(wxCommandEvent& event) { Close(true); }
+void MainView::onExit() { closeWindow(); }
 
-// Callbacks cannot be static.
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-void MainView::onAbout(wxCommandEvent& event) {
-  wxString about_string;
-  about_string.Printf(
-      "cszb-scoreboard: The ComedySportz Scoreboard.  Version %s.  Copyright "
-      "(c) Tracy Beck, Licensed via the Apache License.",
-      SCOREBOARD_VERSION);
-  wxMessageBox(about_string, "About Scoreboard", wxOK | wxICON_INFORMATION);
+void MainView::onAbout() {
+  std::string about_string =
+      "cszb-scoreboard: The ComedySportz Scoreboard.  "
+      "Version " SCOREBOARD_VERSION
+      ".  Copyright (c) Tracy Beck, Licensed via the Apache License.";
+  PopUp::Info("About Scoreboard", about_string);
 }
 
-void MainView::showSettings(wxCommandEvent& event) {
-  settings_dialog = new SettingsDialog();
-  settings_dialog->Create(this);
-  settings_dialog->Show();
-  settings_dialog->Bind(SETTINGS_UPDATED, &MainView::onSettingsChange, this);
+void MainView::showSettings() {
+  settings_dialog = std::make_unique<SettingsDialog>(
+      childDialog("Scoreboard Settings"), this);
+  settings_dialog->show();
+  settings_dialog->bind(
+      SETTINGS_UPDATED,
+      [this](wxCommandEvent &event) -> void { this->onSettingsChange(); });
 }
 
-void MainView::onSettingsChange(wxCommandEvent& event) {
+void MainView::onSettingsChange() {
   preview_panel->updatePreviewsFromSettings();
 }
 
-void MainView::onClose(wxCloseEvent& event) {
-  FrameList::getInstance()->exitFrames();
-  Destroy();
+void MainView::onSettingsClose() {
+  settings_dialog.reset();
+  // Sometimes closing out this menu has given focus to a totally different
+  // window for focus for me in testing.  That's really obnoxious, because it
+  // can have the effect of sending the main window to the back of another
+  // window by virtue of exiting a dialog.   So while we're at it, focus on the
+  // control panel, to allow tab navigation to work without additional clicking.
+  control_panel->focus();
+}
+
+void MainView::onClose() {
+  // The following call deletes the pointer to this object, so should always be
+  // done last.
+  FrameManager::getInstance()->exitFrames();
 }
 
 }  // namespace cszb_scoreboard

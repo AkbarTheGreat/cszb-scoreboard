@@ -19,19 +19,30 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
 
-#include "config.pb.h"
+#include "ui/widget/Panel.h"  // for Panel
+#include "ui/widget/Radio.h"  // for Radio
 
 namespace cszb_scoreboard {
+namespace proto {
+class ScreenSide;
+}  // namespace proto
+namespace swx {
+class Panel;
+}  // namespace swx
 
-class TeamSelector : public wxRadioBox {
+class TeamSelector : public Panel {
  public:
-  explicit TeamSelector(wxWindow *parent);
-  TeamSelector(wxWindow *parent, const proto::ScreenSide &initial_side);
+  explicit TeamSelector(swx::Panel *wx);
+  TeamSelector(swx::Panel *wx, const proto::ScreenSide &side);
   auto allSelected() -> bool;
   auto awaySelected() -> bool;
   auto homeSelected() -> bool;
+  void setSelection(int sel) { selector->setSelection(sel); }
+
+ private:
+  std::unique_ptr<Radio> selector;
 };
 
 }  // namespace cszb_scoreboard

@@ -20,6 +20,11 @@ limitations under the License.
 
 #include "ui/component/control/ScreenImageController.h"
 
+#include "ScoreboardCommon.h"
+#include "config/swx/event.h"
+#include "ui/component/ScreenText.h"
+#include "ui/graphics/Color.h"
+#include "ui/widget/Panel.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
@@ -32,16 +37,17 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string NO_IMAGE_MESSAGE =
     "<No Image Selected>                               ";
 
-void ScreenImageController::createControls(wxPanel *control_panel) {
-  screen_selection = new TeamSelector(control_panel, ProtoUtil::allSide());
-  current_image_label =
-      new wxStaticText(control_panel, wxID_ANY, NO_IMAGE_MESSAGE);
+void ScreenImageController::createControls(Panel *control_panel) {
+  screen_selection =
+      std::make_unique<TeamSelector>(childPanel(), ProtoUtil::allSide());
+  current_image_label = control_panel->label(NO_IMAGE_MESSAGE);
   bindEvents();
 }
 
 void ScreenImageController::bindEvents() {
-  screen_selection->Bind(wxEVT_COMMAND_RADIOBOX_SELECTED,
-                         &ScreenImageController::screenChanged, this);
+  screen_selection->bind(
+      wxEVT_COMMAND_RADIOBOX_SELECTED,
+      [this](wxCommandEvent &event) -> void { this->screenChanged(); });
 }
 
 void ScreenImageController::updateScreenText(ScreenText *screen_text) {
@@ -63,28 +69,28 @@ void ScreenImageController::updateScreenText(ScreenText *screen_text) {
   }
 }
 
-void ScreenImageController::screenChanged(wxCommandEvent &event) {
+void ScreenImageController::screenChanged() {
   if (screen_selection->allSelected()) {
     if (all_screen_image_name.empty()) {
-      current_image_label->SetLabelText(NO_IMAGE_MESSAGE);
+      current_image_label->set(NO_IMAGE_MESSAGE);
     } else {
-      current_image_label->SetLabelText(all_screen_image_name);
+      current_image_label->set(all_screen_image_name);
     }
   } else if (screen_selection->homeSelected()) {
     if (home_screen_image_name.empty()) {
-      current_image_label->SetLabelText(NO_IMAGE_MESSAGE);
+      current_image_label->set(NO_IMAGE_MESSAGE);
     } else {
-      current_image_label->SetLabelText(home_screen_image_name);
+      current_image_label->set(home_screen_image_name);
     }
   } else if (screen_selection->awaySelected()) {
     if (away_screen_image_name.empty()) {
-      current_image_label->SetLabelText(NO_IMAGE_MESSAGE);
+      current_image_label->set(NO_IMAGE_MESSAGE);
     } else {
-      current_image_label->SetLabelText(away_screen_image_name);
+      current_image_label->set(away_screen_image_name);
     }
   }
 
-  control_panel->Update();
+  control_panel->update();
   updatePreview();
 }
 

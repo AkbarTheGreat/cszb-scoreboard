@@ -19,19 +19,20 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-
-#include "ui/component/ScreenText.h"
+#include "config/Position.h"
+#include "ui/component/ScreenText.h"  // for ScreenText
 
 namespace cszb_scoreboard {
-class ScreenThumbnail {
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class ScreenThumbnail : public ScreenText {
  public:
-  ScreenThumbnail(wxWindow* parent, int monitor_number, ScreenText* widget);
-  inline auto widget() -> ScreenText* { return screen_text; }
+  ScreenThumbnail(swx::Panel *wx, int monitor_number,
+                  const ScreenText &preview);
 
  private:
-  // Just holding a pointer to this wxWidget, this object does not own it.
-  ScreenText* screen_text;
-  static auto thumbnailSize(int monitor_number) -> wxSize;
+  static auto thumbnailSize(int monitor_number) -> Size;
 };
 }  // namespace cszb_scoreboard

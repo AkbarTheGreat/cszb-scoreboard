@@ -19,64 +19,54 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
-#include <wx/wx.h>
+#include <string>  // for operator+
+#include <vector>  // for vector
 
-#include <vector>
-
-#include "ui/UiUtil.h"
-#include "ui/component/control/things_mode/ActivityPanel.h"
+#include "ScoreboardCommon.h"                                // for DEFAULT_...
+#include "config.pb.h"                                       // for Renderab...
+#include "ui/component/control/things_mode/ActivityPanel.h"  // for Activity...
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int INITIAL_NUMBER_OF_REPLACEMENTS = 2;
 
-ReplacementPanel::ReplacementPanel(wxWindow *parent, wxWindow *activity_panel)
-    : wxPanel(parent) {
-  // TODO(akbar): Research custom events and throw an event upward to propigate
-  // these changes rather than a much more brittle forced-cast relationship.
+ReplacementPanel::ReplacementPanel(swx::Panel *wx,
+                                   ActivityPanel *activity_panel)
+    : Panel(wx) {
+  should_self_delete = true;
   this->activity_panel = activity_panel;
   for (int i = 0; i < INITIAL_NUMBER_OF_REPLACEMENTS; i++) {
-    replacements.push_back(std::make_shared<Replacement>(this));
+    replacements.push_back(std::make_unique<Replacement>(this));
   }
   bindEvents();
   positionWidgets();
 }
 
-void ReplacementPanel::copyFrom(ReplacementPanel *other) {
-  while (!replacements.empty()) {
-    wxCommandEvent event;
-    event.SetEventObject(replacements.back()->deleteButton());
-    deleteReplacement(event);
-  }
-
-  for (const auto &other_replacement : other->replacements) {
-    addReplacement();
-    replacements.back()->copyFrom(other_replacement.get());
-  }
-}
-
 void ReplacementPanel::bindEvents() {}
 
 void ReplacementPanel::positionWidgets() {
-  wxSizer *sizer = UiUtil::sizer(0, 1);
+  int row = 0;
   for (const auto &replacement : replacements) {
-    sizer->Add(replacement->controlPane(), 0, wxALL, BORDER_SIZE);
+    addWidget(*replacement->controlPane(), row++, 0);
   }
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
 void ReplacementPanel::addReplacement() {
-  replacements.push_back(std::make_shared<Replacement>(this));
-  GetSizer()->Add(replacements.back()->controlPane(), 0, wxALL, BORDER_SIZE);
+  replacements.push_back(std::make_unique<Replacement>(this));
+  addWidget(*(replacements.back()->controlPane()), replacements.size() - 1, 0);
   updateNotify();
 }
 
-void ReplacementPanel::deleteReplacement(wxCommandEvent &event) {
-  wxObject *event_object = event.GetEventObject();
+void ReplacementPanel::deleteReplacement(Replacement *deleted) {
   int offset = 0;
   for (const auto &replacement : replacements) {
-    if (replacement->containsDeleteButton(event_object)) {
+    if (replacement.get() == deleted) {
+      removeRowFromSizer(offset);
       replacements.erase(replacements.begin() + offset);
       updateNotify();
       return;
@@ -87,9 +77,7 @@ void ReplacementPanel::deleteReplacement(wxCommandEvent &event) {
 
 auto ReplacementPanel::previewText(int font_size)
     -> std::vector<proto::RenderableText> {
-  std::string preview_text =
-      dynamic_cast<ActivityPanel *>(activity_panel)->selectedActivityText() +
-      "\n \n";
+  std::string preview_text = activity_panel->selectedActivityText() + "\n \n";
 
   for (const auto &replacement : replacements) {
     preview_text += replacement->previewText() + "\n";
@@ -101,11 +89,11 @@ auto ReplacementPanel::previewText(int font_size)
   return return_vector;
 }
 
-void ReplacementPanel::textUpdated(wxKeyEvent &event) { updateNotify(); }
+void ReplacementPanel::textUpdated() { updateNotify(); }
 
 void ReplacementPanel::updateNotify() {
-  SetSizerAndFit(GetSizer());
-  dynamic_cast<ActivityPanel *>(activity_panel)->updateNotify();
+  runSizer();
+  activity_panel->updateNotify();
 }
 
 }  // namespace cszb_scoreboard

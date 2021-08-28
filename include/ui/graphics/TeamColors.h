@@ -18,16 +18,18 @@ limitations under the License.
 */
 #pragma once
 
-#include <ui/graphics/Color.h>
-
-#include "config.pb.h"
+#include <ui/graphics/Color.h>  // for Color
 
 namespace cszb_scoreboard {
+namespace proto {
+class ScreenSide;
+}  // namespace proto
+
 class TeamColors {
  public:
-  static auto getInstance() -> TeamColors*;
-  auto getColor(const proto::ScreenSide& side) -> Color;
-  void setColor(const proto::ScreenSide& side, const Color& color);
+  static auto getInstance() -> TeamColors *;
+  auto getColor(const proto::ScreenSide &side) -> Color;
+  void setColor(const proto::ScreenSide &side, const Color &color);
 
  private:
   TeamColors();

@@ -19,11 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/Replacement.h"
 
-#include <wx/wx.h>
-
-#include <vector>
-
-#include "ui/UiUtil.h"
+#include "ScoreboardCommon.h"
+#include "config/swx/event.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"
 
 namespace cszb_scoreboard {
@@ -31,59 +28,50 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 static const char *BULLET = "\u2022";
 
-Replacement::Replacement(wxWindow *parent) {
+Replacement::Replacement(ReplacementPanel *parent) {
   this->parent = parent;
-  control_pane = new wxPanel(parent);
-  replaceable = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
-                               wxSize(-1, -1), wxTE_MULTILINE);
-  replacement = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
-                               wxSize(-1, -1), wxTE_MULTILINE);
-  remove_replacement_button =
-      new wxButton(control_pane, wxID_ANY, "X", wxDefaultPosition,
-                   wxDefaultSize, wxBU_EXACTFIT);
+  control_pane = parent->panel(true);
+  replaceable = control_pane->text("", true);
+  replacement = control_pane->text("", true);
+  remove_replacement_button = control_pane->button("X", true);
   // We add a blank space to the end of the line so that when the scrollbar
   // appears it doesn't occlude the delete button.
-  spacer_text = new wxStaticText(control_pane, wxID_ANY, "   ");
+  spacer_text = control_pane->label("   ");
   bindEvents();
   positionWidgets();
 }
 
-Replacement::~Replacement() { control_pane->Destroy(); }
-
 void Replacement::copyFrom(Replacement *other) {
-  replaceable->SetValue(other->replaceable->GetValue());
-  replacement->SetValue(other->replacement->GetValue());
+  replaceable->setValue(other->replaceable->value());
+  replacement->setValue(other->replacement->value());
 }
 
 void Replacement::bindEvents() {
-  remove_replacement_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                                  &ReplacementPanel::deleteReplacement,
-                                  dynamic_cast<ReplacementPanel *>(parent));
-  replaceable->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
-                    dynamic_cast<ReplacementPanel *>(parent));
-  replacement->Bind(wxEVT_KEY_UP, &ReplacementPanel::textUpdated,
-                    dynamic_cast<ReplacementPanel *>(parent));
+  auto *rp = parent;
+  remove_replacement_button->bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                                  [this, rp](wxCommandEvent &event) -> void {
+                                    rp->deleteReplacement(this);
+                                  });
+  replaceable->bind(wxEVT_KEY_UP,
+                    [rp](wxKeyEvent &event) -> void { rp->textUpdated(); });
+  replacement->bind(wxEVT_KEY_UP,
+                    [rp](wxKeyEvent &event) -> void { rp->textUpdated(); });
 }
 
 void Replacement::positionWidgets() {
-  wxSizer *sizer = UiUtil::sizer(0, 4);
-  sizer->Add(replaceable, 0, wxALL, BORDER_SIZE);
-  sizer->Add(replacement, 0, wxALL, BORDER_SIZE);
-  sizer->Add(remove_replacement_button, 0, wxALL, BORDER_SIZE);
-  sizer->Add(spacer_text, 0, wxALL, BORDER_SIZE);
-  control_pane->SetSizerAndFit(sizer);
-}
-
-auto Replacement::containsDeleteButton(wxObject *delete_button) -> bool {
-  return (delete_button == remove_replacement_button);
+  control_pane->addWidgetWithSpan(*replaceable, 0, 0, 2, 1);
+  control_pane->addWidgetWithSpan(*replacement, 0, 1, 2, 1);
+  control_pane->addWidget(*remove_replacement_button, 0, 2);
+  control_pane->addWidget(*spacer_text, 0, 3);
+  control_pane->runSizer();
 }
 
 auto Replacement::previewText() -> std::string {
-  if (replaceable->GetValue().empty() && replacement->GetValue().empty()) {
+  if (replaceable->value().empty() && replacement->value().empty()) {
     return " ";
   }
-  return std::string(BULLET) + " " + replaceable->GetValue().ToStdString() +
-         " - " + replacement->GetValue().ToStdString();
+  return std::string(BULLET) + " " + replaceable->value() + " - " +
+         replacement->value();
 }
 
 }  // namespace cszb_scoreboard

@@ -18,19 +18,25 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
-#include <vector>
-
-#include "ui/component/ScreenText.h"
+#include "ui/component/ScreenText.h"  // for ScreenText
+#include "ui/widget/Button.h"
+#include "ui/widget/Panel.h"  // for Panel
 
 namespace cszb_scoreboard {
 
-class QuickStateEntry {
+class QuickStatePanel;
+
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class QuickStateEntry : public ScreenText {
  public:
-  QuickStateEntry(wxPanel* parent, int id);
-  auto screen() -> ScreenText* { return screen_text; }
-  ~QuickStateEntry();
+  QuickStateEntry(swx::Panel *wx, int id);
 
  private:
   static auto tooltipText(char command_character) -> std::string;
@@ -38,39 +44,15 @@ class QuickStateEntry {
   void executeShortcut();
   void setShortcut();
 
-  // Thin wrappers just to include the appropriate event objects in the
-  // signatures.
-  void executeShortcutFromButton(
-      wxCommandEvent&
-          event) {  // NOLINT(google-runtime-references) wxWidgets callback.
-    executeShortcut();
-  }
-  void executeShortcutFromPanel(
-      wxMouseEvent& event) {  // NOLINT(google-runtime-references)
-                              // wxWidgets callback.
-    executeShortcut();
-  }
-  void setShortcutFromButton(
-      wxCommandEvent& event) {  // NOLINT(google-runtime-references)
-                                // wxWidgets callback.
-    setShortcut();
-  }
-  void setShortcutFromPanel(
-      wxMouseEvent& event) {  // NOLINT(google-runtime-references)
-                              // wxWidgets callback.
-    setShortcut();
-  }
-
-  ScreenText* screen_text;
-  wxButton *set_button, *execute_button;
+  std::unique_ptr<Button> set_button, execute_button;
   bool initialized = false;
 };
 
-class QuickStatePanel : public wxPanel {
+class QuickStatePanel : public Panel {
  public:
-  explicit QuickStatePanel(wxWindow* parent);
-  void executeShortcut(ScreenText* screen);
-  void setShortcut(ScreenText* screen);
+  explicit QuickStatePanel(swx::Panel *wx);
+  static void executeShortcut(QuickStateEntry *entry);
+  static void setShortcut(QuickStateEntry *entry);
 
  private:
   void positionWidgets();

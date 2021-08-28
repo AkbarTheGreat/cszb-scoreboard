@@ -20,16 +20,22 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
 
-#include "config.pb.h"
-#include "ui/component/PreviewPanel.h"
+#include "ui/widget/Button.h"  // for Button
+#include "ui/widget/Panel.h"   // for Panel
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 // Subclasses should create members via a Create static method which calls
 // initializeWidgets() on the newly created pointer.
-class ScreenTextController : public wxPanel {
+class ScreenTextController : public Panel {
  public:
   /* Called externally to request an update to the given panel.  All internally
    * triggered updates to previews should filter  through here, for consistency.
@@ -42,23 +48,22 @@ class ScreenTextController : public wxPanel {
  protected:
   /* Populate this control_panel in child classes with whatever controls this
    * ScreenTextController would like to populate to the window. */
-  virtual void createControls(wxPanel *control_panel) = 0;
+  virtual void createControls(Panel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
    * Defaults to all screens, may be overridden for more control. */
-  ScreenTextController(PreviewPanel *preview_panel, wxWindow *parent);
+  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx);
   void initializeWidgets();
   auto previewPanel() -> PreviewPanel *;
-  wxPanel *control_panel;
+  std::unique_ptr<Panel> control_panel;
 
  private:
+  // Weak reference to the global PreviewPanel, which this object does not own.
   PreviewPanel *preview_panel;
-  wxButton *update_screens;
+  std::unique_ptr<Button> update_screens;
 
   void bindEvents();
   void positionWidgets();
-  void updateClicked(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                               // wxWidgets callback.
+  void updateClicked();
 };
 
 }  // namespace cszb_scoreboard

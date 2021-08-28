@@ -19,52 +19,50 @@ limitations under the License.
 
 #include "ui/component/ScreenPresenter.h"
 
-#include "config/CommandArgs.h"
-#include "config/DisplayConfig.h"
-#include "ui/UiUtil.h"
-#include "ui/frame/FrameList.h"
-#include "util/Log.h"
-#include "util/ProtoUtil.h"
+#include "config.pb.h"             // for DisplayInfo, Rectangle
+#include "config/DisplayConfig.h"  // for DisplayConfig
+#include "config/Position.h"       // for Size, Position
+#include "util/Log.h"              // for LogDebug
 
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 0;
 
-ScreenPresenter::ScreenPresenter(int monitor_number, ScreenText* widget)
-    : wxFrame(nullptr, wxID_ANY, "Scoreboard", wxDefaultPosition,
-              wxDefaultSize) {
+ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview)
+    : Frame("Scoreboard") {
   this->monitor_number = monitor_number;
 
   if (DisplayConfig::getInstance()->windowedMode()) {
-    Show(true);
+    show(true);
   } else {
-    // Set external monitors to be always on top.
-    SetWindowStyle(GetWindowStyle() | wxSTAY_ON_TOP);
-    ShowFullScreen(true);
+    // Set external monitors to be always on top, fullscreen.
+    alwaysOnTop(true);
+    fullScreen(true);
   }
 
 #ifdef SCOREBOARD_TESTING
-  Iconize();
+  minimize();
 #endif
 
   proto::DisplayInfo display =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
-  wxRect screen = ProtoUtil::wxRct(display.dimensions());
+  Size screen_size{.width = display.dimensions().width(),
+                   .height = display.dimensions().height()};
+  Position screen_pos{.x = display.dimensions().x(),
+                      .y = display.dimensions().y()};
 
-  screen_text = ScreenText::getPresenter(this, widget, screen.GetSize());
-  screen_text->SetSize(screen.GetSize());
-  LogDebug(wxT("ScreenPresenter %d: %d,%d %d,%d"), monitor_number, screen.x,
-           screen.y, screen.width, screen.height);
-  FrameList::getInstance()->addFrame(this);
+  screen_text = std::make_unique<ScreenText>(childPanel());
+  screen_text->setupPresenter(preview, screen_size);
+  screen_text->setSize(screen_size.toWx());
+  LogDebug("ScreenPresenter %d: %d,%d", (int)monitor_number, (int)screen_size.width,
+           (int)screen_size.height);
 
   positionWidgets();
-  SetPosition(screen.GetPosition());
-  SetSize(screen.GetSize());
+  setDimensions(screen_pos, screen_size);
 }
 
 void ScreenPresenter::positionWidgets() {
-  wxSizer* sizer = UiUtil::sizer(0, 2);
-  sizer->Add(screen_text, 1, wxEXPAND | wxALL, BORDER_SIZE);
-  SetSizerAndFit(sizer);
+  addWidget(*screen_text, 0, 0);
+  runSizer();
 }
 }  // namespace cszb_scoreboard

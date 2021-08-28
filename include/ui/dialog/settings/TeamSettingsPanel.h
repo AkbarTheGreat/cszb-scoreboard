@@ -18,35 +18,42 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/clrpicker.h>
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "config/TeamConfig.h"
-#include "ui/graphics/Color.h"
+#include "config.pb.h"              // for TeamInfo_TeamType
+#include "ui/graphics/Color.h"      // for Color
+#include "ui/widget/Button.h"       // for Button
+#include "ui/widget/ColorPicker.h"  // for ColorPicker
+#include "ui/widget/Label.h"        // for Label
+#include "ui/widget/Panel.h"        // for Panel
 
 namespace cszb_scoreboard {
 
-class TeamSettingsPanel : public wxPanel {
+// Pre-defining TeamSettingsPage for a parent pointer.
+class TeamSettingsPage;
+
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class TeamSettingsPanel : public Panel {
  public:
-  TeamSettingsPanel(wxPanel *parent, int team_index,
-                    proto::TeamInfo_TeamType team);
-  void copyFrom(TeamSettingsPanel *other);
+  TeamSettingsPanel(swx::Panel *wx, int team_index,
+                    proto::TeamInfo_TeamType team, TeamSettingsPage *parent);
+  void copyFrom(const TeamSettingsPanel &other);
   auto teamColor() -> Color;
   auto team() -> proto::TeamInfo_TeamType { return team_type; }
 
  private:
   int index;
   proto::TeamInfo_TeamType team_type;
-  wxStaticText *label;
-  wxColourPickerCtrl *color_picker;
-  wxPanel *button_panel;
-  wxButton *down_button;
-  wxButton *up_button;
+  std::unique_ptr<Label> team_label, default_color_label;
+  std::unique_ptr<ColorPicker> color_picker;
+  std::unique_ptr<Panel> button_panel;
+  std::unique_ptr<Button> down_button, up_button;
+  TeamSettingsPage *parent;
   void createButtonPanel();
-  void moveTeam(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                         // wxWidgets callback.
+  void moveTeam(bool is_up_button);
 };
 
 }  // namespace cszb_scoreboard

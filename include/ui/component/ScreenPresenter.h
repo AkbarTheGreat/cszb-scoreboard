@@ -18,19 +18,21 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
 
-#include "ui/component/ScreenText.h"
+#include "ui/component/ScreenText.h"  // for ScreenText
+#include "ui/widget/Frame.h"          // for Frame
 
 namespace cszb_scoreboard {
-class ScreenPresenter : public wxFrame {
+class ScreenPresenter : public Frame {
  public:
-  ScreenPresenter(int monitor_number, ScreenText *widget);
-  inline auto widget() -> ScreenText * { return screen_text; }
+  ScreenPresenter(int monitor_number, const ScreenText &preview);
+  void blackout() { screen_text->blackout(); }
+  void setAll(const ScreenText &source) { screen_text->setAll(source); }
 
  private:
   int monitor_number;
-  ScreenText *screen_text;
+  std::unique_ptr<ScreenText> screen_text;
   void positionWidgets();
 };
 

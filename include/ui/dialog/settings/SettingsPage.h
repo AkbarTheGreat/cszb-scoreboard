@@ -18,18 +18,17 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
+#include "ui/widget/Panel.h"
 
 namespace cszb_scoreboard {
 
-class SettingsPage : public wxPanel {
+class SettingsPage : public Panel {
  public:
   virtual void saveSettings() = 0;
   virtual auto validateSettings() -> bool = 0;
 
  protected:
-  explicit SettingsPage(wxWindow *parent) : wxPanel(parent)  {}
-  ~SettingsPage() override = default;
+  explicit SettingsPage(swx::Panel *wx) : Panel(wx) {}
 };
 
 }  // namespace cszb_scoreboard

@@ -21,28 +21,33 @@ limitations under the License.
 
 #pragma once
 
-#include <gtest/gtest.h>
-#include <wx/uiaction.h>
-#include <wx/wx.h>
+#include <gtest/gtest.h>  // for Test
+#include <wx/dcclient.h>  // for wxClientDC
+#include <wx/gdicmn.h>    // for wxRect
+#include <wx/uiaction.h>  // for wxUIActionSimulator
 
-#include <map>
-#include <vector>
+#include <map>     // for map
+#include <vector>  // for vector
 
-#include "cszb-scoreboard.h"
-#include "ui/component/ControlPanel.h"
-#include "ui/component/ScreenPreview.h"
-#include "ui/frame/FrameList.h"
-#include "ui/frame/MainView.h"
+#include "wx/colour.h"  // for wxColour
+
+namespace cszb_scoreboard {
+class MainView;
+class Panel;
+class Scoreboard;
+class ScreenPreview;
+class TextEntry;
+}  // namespace cszb_scoreboard
 
 namespace cszb_scoreboard::test {
 
 /* Performs an action against the wxWidgets UI, and yields to allow it to
  * execute */
-#define WX_A(action)      \
-  {                       \
-    action;               \
-    wxYield();            \
-    mainView()->Update(); \
+#define WX_A(action)            \
+  {                             \
+    action;                     \
+    wxYield();                  \
+    mainView()->updateWindow(); \
   }
 
 enum ImageAnalysisMode {
@@ -54,11 +59,11 @@ enum ImageAnalysisMode {
 /* Checking if images are correct or not is tricky, so we have this to help */
 class ImageAnalysis {
  public:
-  explicit ImageAnalysis(wxWindow *widget)
-      : ImageAnalysis(widget, IA_MODE_FULL_SCAN) {}
+  explicit ImageAnalysis(Panel *panel)
+      : ImageAnalysis(panel, IA_MODE_FULL_SCAN) {}
   // Create an ImageAnalysis object where only x% of the pixels are sampled for
   // color counts, for speed.
-  ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode);
+  ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode);
   auto colorPercentage(const wxColour &color) -> float;
   auto colorAmount(const wxColour &color) -> float;
   auto colorList() -> std::vector<int>;

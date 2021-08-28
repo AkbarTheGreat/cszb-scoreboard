@@ -30,13 +30,13 @@ namespace cszb_scoreboard {
 
 FilesystemPath::FilesystemPath() { path_string = ""; }
 
-FilesystemPath::FilesystemPath(const std::string& str) { path_string = str; }
+FilesystemPath::FilesystemPath(const std::string &str) { path_string = str; }
 
-auto FilesystemPath::compare(const FilesystemPath& p) const -> int {
+auto FilesystemPath::compare(const FilesystemPath &p) const -> int {
   return path_string.compare(p.path_string);
 }
 
-auto FilesystemPath::remove(const FilesystemPath& p) -> bool {
+auto FilesystemPath::remove(const FilesystemPath &p) -> bool {
   if (p.path_string.empty()) {
     return false;
   }
@@ -45,7 +45,7 @@ auto FilesystemPath::remove(const FilesystemPath& p) -> bool {
   return (std::remove(p.path_string.c_str()) == 0);
 }
 
-void FilesystemPath::rename(const FilesystemPath& a, const FilesystemPath& b) {
+void FilesystemPath::rename(const FilesystemPath &a, const FilesystemPath &b) {
   std::rename(a.path_string.c_str(), b.path_string.c_str());
 }
 
@@ -67,7 +67,7 @@ auto FilesystemPath::pathname() -> FilesystemPath {
   return FilesystemPath(pathname);
 }
 
-void FilesystemPath::replace_filename(const std::string& new_filename) {
+void FilesystemPath::replace_filename(const std::string &new_filename) {
   path_string = pathname().string() + '/' + new_filename;
 }
 

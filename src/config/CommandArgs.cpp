@@ -19,7 +19,9 @@ limitations under the License.
 
 #include "config/CommandArgs.h"
 
-#include <wx/wx.h>
+#include <wx/chartype.h>
+#include <wx/cmdargs.h>
+#include <wx/string.h>
 
 #include <stdexcept>
 

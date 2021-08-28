@@ -18,6 +18,10 @@ limitations under the License.
 
 #include "ui/frame/HotkeyTable.h"
 
+#include <memory>  // for allocator_traits<>::value_type
+
+#include "ui/widget/Frame.h"  // for Frame
+
 namespace cszb_scoreboard {
 
 auto HotkeyTable::getInstance() -> HotkeyTable * {
@@ -33,9 +37,8 @@ void HotkeyTable::addHotkey(int modifier_flags, int key_code,
   accel_entries.back().Set(modifier_flags, key_code, widget_id);
 }
 
-void HotkeyTable::installHotkeys(wxFrame *main_window) {
-  main_window->SetAcceleratorTable(
-      wxAcceleratorTable(accel_entries.size(), accel_entries.data()));
+void HotkeyTable::installHotkeys(Frame *main_window) {
+  main_window->installHotkeys(accel_entries);
 }
 
 }  // namespace cszb_scoreboard

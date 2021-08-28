@@ -19,82 +19,76 @@ limitations under the License.
 
 #include "ui/dialog/SettingsDialog.h"
 
-#include <wx/bookctrl.h>
+#include <wx/defs.h>  // for wxID_CANCEL, wxI...
 
-#include "ScoreboardCommon.h"
-#include "ui/dialog/settings/DisplaySettingsPage.h"
-#include "ui/dialog/settings/TeamSettingsPage.h"
-#include "util/StringUtil.h"
+#include <algorithm>
+#include <utility>  // for move
+
+#include "ScoreboardCommon.h"                        // for DEFAULT_BORDER_SIZE
+#include "ui/dialog/settings/DisplaySettingsPage.h"  // for DisplaySettingsPage
+#include "ui/dialog/settings/TeamSettingsPage.h"     // for TeamSettingsPage
+#include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class PropertySheetDialog;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 
-auto SettingsDialog::Create(wxWindow* parent) -> bool {
+SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent)
+    : TabbedDialog(wx) {
   this->parent = parent;
-  if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Scoreboard Settings")) {
-    return false;
-  }
-  CreateButtons(wxOK | wxCANCEL);
-  addPage(new TeamSettingsPage(GetBookCtrl()), "Teams");
-  addPage(new DisplaySettingsPage(GetBookCtrl()), "Displays");
-  LayoutDialog();
+  addPage(std::make_unique<TeamSettingsPage>(childPanel()), "Teams");
+  addPage(std::make_unique<DisplaySettingsPage>(childPanel()), "Displays");
+  runSizer();
   bindEvents();
-  return true;
 }
 
-void SettingsDialog::addPage(SettingsPage* page, const std::string& name) {
-  pages.push_back(page);
-  GetBookCtrl()->AddPage(page, name);
+void SettingsDialog::addPage(std::unique_ptr<SettingsPage> page,
+                             const std::string &name) {
+  TabbedDialog::addPage(*page, name);
+  pages.push_back(std::move(page));
 }
 
 void SettingsDialog::bindEvents() {
-  Bind(wxEVT_BUTTON, &SettingsDialog::onOk, this, wxID_OK);
-  Bind(wxEVT_BUTTON, &SettingsDialog::onCancel, this, wxID_CANCEL);
-  Bind(wxEVT_CLOSE_WINDOW, &SettingsDialog::onClose, this);
+  bind(
+      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onOk(); },
+      wxID_OK);
+  bind(
+      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
+      wxID_CANCEL);
+  MainView *local_parent = parent;
+  bind(wxEVT_CLOSE_WINDOW,
+       [local_parent](wxCloseEvent &event) -> void { local_parent->onSettingsClose(); });
 }
 
-void SettingsDialog::onOk(wxCommandEvent& event) {
+void SettingsDialog::onOk() {
   if (validateSettings()) {
     saveSettings();
     wxCommandEvent settings_updated_event(SETTINGS_UPDATED);
     // Normally, I'd use wxPostEvent here for asynchronous event handling, but
     // it sometimes doesn't work (Maybe due to a race condition with object
     // destruction?)  Processing synchronously here is our best compromise.
-    ProcessEvent(settings_updated_event);
-    Close(true);
+    sendEvent(&settings_updated_event);
+    close();
     return;
   }
 }
 
-void SettingsDialog::onCancel(wxCommandEvent& event) { Close(true); }
-
-void SettingsDialog::onClose(wxCloseEvent& event) {
-  // Sometimes closing out this menu has given focus to a totally different
-  // window for focus for me in testing.  That's really obnoxious, because it
-  // can have the effect of sending the main window to the back of another
-  // window by virtue of exiting a dialog.  To top that off, if you set focus
-  // before calling Destroy(), things quit working.  But Destroying calls the
-  // destructor, so we can't rely on this->parent anymore after Destroy is
-  // called.  So we save it in a local pointer temporarily for this purpose.
-  wxWindow* local_parent = parent;
-  Destroy();
-  local_parent->SetFocus();
-}
+void SettingsDialog::onCancel() { close(true); }
 
 auto SettingsDialog::validateSettings() -> bool {
-  for (auto* page : pages) {
-    if (!page->validateSettings()) {
-      return false;
-    }
-  }
-  return true;
+  return std::all_of(pages.begin(), pages.end(),
+                     [](const std::unique_ptr<SettingsPage> &page) -> bool {
+                       return page->validateSettings();
+                     });
 }
 
 void SettingsDialog::saveSettings() {
-  for (auto* page : pages) {
+  for (const auto &page : pages) {
     page->saveSettings();
   }
 }

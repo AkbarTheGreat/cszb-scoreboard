@@ -19,28 +19,35 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
-#include <vector>
-
-#include "config.pb.h"
-#include "ui/component/control/things_mode/Replacement.h"
+#include "ui/component/control/things_mode/Replacement.h"  // for Replacement
+#include "ui/widget/Panel.h"                               // for Panel
 
 namespace cszb_scoreboard {
-class ReplacementPanel : public wxPanel {
+
+// Pre-defining ActivityPanel for a parent pointer.
+class ActivityPanel;
+
+namespace proto {
+class RenderableText;
+}  // namespace proto
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class ReplacementPanel : public Panel {
  public:
-  ReplacementPanel(wxWindow *parent, wxWindow *activity_panel);
-  void copyFrom(ReplacementPanel *other);
+  ReplacementPanel(swx::Panel *wx, ActivityPanel *activity_panel);
   void addReplacement();
-  void deleteReplacement(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-                                                  // wxWidgets callback.
+  void deleteReplacement(Replacement *deleted);
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
-                                        // wxWidgets callback.
+  void textUpdated();
 
  private:
-  wxWindow *activity_panel;
-  std::vector<std::shared_ptr<Replacement>> replacements;
+  ActivityPanel *activity_panel;
+  std::vector<std::unique_ptr<Replacement>> replacements;
 
   void bindEvents();
   void positionWidgets();

@@ -18,15 +18,16 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
-
-#include "ui/graphics/Color.h"
+#include "config/swx/image.h"  // for Image
 
 namespace cszb_scoreboard {
-class BackgroundImage : public wxImage {
+class Color;
+struct Size;
+
+class BackgroundImage : public Image {
  public:
-  BackgroundImage(wxSize size, Color color);
-  static auto errorImage(wxSize size) -> BackgroundImage;
+  BackgroundImage(::cszb_scoreboard::Size size, Color color);
+  static auto errorImage(::cszb_scoreboard::Size size) -> BackgroundImage;
 };
 
 }  // namespace cszb_scoreboard

@@ -19,97 +19,97 @@ limitations under the License.
 */
 #include "ui/component/ScreenPreview.h"
 
-#include "config/DisplayConfig.h"
-#include "config/TeamConfig.h"
-#include "ui/UiUtil.h"
-#include "ui/component/ScreenText.h"
-#include "util/ProtoUtil.h"
+#include "ScoreboardCommon.h"              // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"                     // for DisplayInfo, ScreenSide
+#include "config/DisplayConfig.h"          // for DisplayConfig
+#include "config/TeamConfig.h"             // for TeamConfig
+#include "config/swx/defs.h"               // for wxALIGN_CENTER, wxALL, wxLEFT
+#include "ui/component/ScreenPresenter.h"  // for ScreenPresenter
+#include "ui/component/ScreenText.h"       // for ScreenText
+#include "ui/frame/FrameManager.h"         // for FrameManager
+#include "util/ProtoUtil.h"                // for ProtoUtil
 
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 10;
-const char* WELCOME_MESSAGE = "Hello";
-const char* ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
+const char *WELCOME_MESSAGE = "Hello";
+const char *ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
 const int PREVIEW_HEIGHT = 320;
 
-ScreenPreview::ScreenPreview(wxWindow* parent,
+ScreenPreview::ScreenPreview(swx::Panel *wx,
                              std::vector<proto::ScreenSide> sides,
-                             int monitor_number) {
-  this->parent = parent;
-
-  wxString initial_text;
+                             int monitor_number)
+    : Panel(wx) {
+  std::string initial_text;
   if (sides[0].error()) {
     initial_text = ERROR_MESSAGE;
   } else {
     initial_text = WELCOME_MESSAGE;
   }
 
-  control_pane = new wxPanel(parent);
+  screen_text = std::make_unique<ScreenText>(childPanel());
+  screen_text->setupPreview(initial_text, sides, previewSize(monitor_number));
 
-  current_widget = ScreenText::getPreview(control_pane, initial_text, sides,
-                                          previewSize(monitor_number));
-
-  thumbnail = new ScreenThumbnail(control_pane, monitor_number, current_widget);
+  thumbnail = std::make_unique<ScreenThumbnail>(childPanel(), monitor_number,
+                                                *screen_text);
   if (!sides[0].error()) {
-    presenter = new ScreenPresenter(monitor_number, current_widget);
+    presenter = FrameManager::getInstance()->createScreenPresenter(
+        monitor_number, *screen_text);
   }
 
   positionWidgets();
 }
 
 void ScreenPreview::positionWidgets() {
-  wxSizer* sizer = UiUtil::sizer(2, 1);
-  sizer->Add(thumbnail->widget(), 1, wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
-  sizer->Add(current_widget, 1, wxALL, BORDER_SIZE);
-  control_pane->SetSizerAndFit(sizer);
+  addWidget(*thumbnail, 0, 0, DEFAULT_BORDER_SIZE,
+            wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER);
+  addWidget(*screen_text, 1, 0, BORDER_SIZE, wxALL);
+  runSizer();
 }
 
-auto ScreenPreview::previewSize(int monitor_number) -> wxSize {
+auto ScreenPreview::previewSize(int monitor_number) -> Size {
   proto::DisplayInfo display_info =
       DisplayConfig::getInstance()->displayDetails(monitor_number);
 
   float ratio = 4 / 3;
 
   if (!display_info.side().error()) {
-    const proto::Rectangle& dimensions = display_info.dimensions();
+    const proto::Rectangle &dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
-  return wxSize(PREVIEW_HEIGHT * ratio, PREVIEW_HEIGHT);
+  return Size{.width = static_cast<int>(PREVIEW_HEIGHT * ratio),
+              .height = PREVIEW_HEIGHT};
 }
 
-auto ScreenPreview::controlPane() -> wxPanel* { return control_pane; }
-
-auto ScreenPreview::widget() -> ScreenText* { return current_widget; }
-
-auto ScreenPreview::thumbnailWidget() -> ScreenText* {
-  return thumbnail->widget();
+auto ScreenPreview::thumbnailWidget() -> ScreenText * {
+  return thumbnail.get();
 }
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
-  current_widget->SetSize(previewSize(monitor_number));
+  screen_text->setSize(previewSize(monitor_number).toWx());
   proto::ScreenSide side =
       DisplayConfig::getInstance()->displayDetails(monitor_number).side();
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
     if (ProtoUtil::sideContains(side, team)) {
       proto::ScreenSide effective_side = ProtoUtil::teamSide(team);
-      current_widget->setBackground(
+      screen_text->setBackground(
           TeamConfig::getInstance()->teamColor(effective_side)[0],
           effective_side);
     }
   }
-  current_widget->Refresh();
+  screen_text->refresh();
 }
 
-void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
-  presenter->widget()->setAll(*screen_text);
-  thumbnail->widget()->setAll(*screen_text);
+void ScreenPreview::sendToPresenter(ScreenText *screen_text) {
+  presenter->setAll(*screen_text);
+  thumbnail->setAll(*screen_text);
 }
 
-void ScreenPreview::sendToPresenter() { sendToPresenter(current_widget); }
+void ScreenPreview::sendToPresenter() { sendToPresenter(screen_text.get()); }
 
 void ScreenPreview::blackoutPresenter() {
-  presenter->widget()->blackout();
-  thumbnail->widget()->blackout();
+  presenter->blackout();
+  thumbnail->blackout();
 }
 
 }  // namespace cszb_scoreboard

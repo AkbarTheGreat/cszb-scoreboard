@@ -18,12 +18,11 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/wx.h>
+#include <string>  // for string
+#include <vector>  // for vector
 
-#include <vector>
-
-#include "config.pb.h"
-#include "ui/graphics/Color.h"
+#include "config.pb.h"          // for TeamInfo_TeamType, ScreenSide (ptr only)
+#include "ui/graphics/Color.h"  // for Color
 
 namespace cszb_scoreboard {
 
@@ -37,7 +36,7 @@ class TeamConfig {
   auto singleScreenOrder() -> std::vector<proto::TeamInfo_TeamType>;
   auto teamColor(proto::TeamInfo_TeamType team) -> Color;
   auto teamColor(const proto::ScreenSide &side) -> std::vector<Color>;
-  auto teamName(proto::TeamInfo_TeamType team) -> wxString;
+  auto teamName(proto::TeamInfo_TeamType team) -> std::string;
 
  private:
   proto::TeamConfig team_config;

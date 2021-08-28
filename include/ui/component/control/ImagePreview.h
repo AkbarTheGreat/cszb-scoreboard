@@ -17,32 +17,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/wx.h>
+#include <optional>  // for optional
 
-#include <optional>
-
-#include "util/FilesystemPath.h"
+#include "config/swx/image.h"     // for Image
+#include "ui/widget/Panel.h"      // for Panel
+#include "util/FilesystemPath.h"  // for FilesystemPath
 
 namespace cszb_scoreboard {
+struct Size;
+class RenderContext;
 
-class ImagePreview : public wxPanel {
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class ImagePreview : public Panel {
  public:
-  ImagePreview(wxWindow* parent, const wxSize& size);
+  explicit ImagePreview(swx::Panel *wx);
 
   void clearImage();
-  auto getFilename() -> std::optional<FilesystemPath>;
-  void setImage(const FilesystemPath& filename);
+  [[nodiscard]] auto getFilename() const -> std::optional<FilesystemPath>;
+  void setImage(const FilesystemPath &filename);
 
  private:
   void bindEvents();
-  void paintEvent(wxPaintEvent& event);  // NOLINT(google-runtime-references)
-                                         // wxWidgets callback.
-  static auto ratio(const wxSize& size) -> float;
-  void renderImage(wxDC* dc);
+  void paintEvent(RenderContext *renderer);
+  static auto ratio(const Size &size) -> float;
 
   std::optional<FilesystemPath> filename;
-  wxImage image;
-  wxSize size;
+  Image image;
 };
 
 }  // namespace cszb_scoreboard

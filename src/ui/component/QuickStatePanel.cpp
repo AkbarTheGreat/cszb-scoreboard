@@ -18,13 +18,22 @@ limitations under the License.
 
 #include "ui/component/QuickStatePanel.h"
 
-#include <string>
+#include <cstddef>  // for size_t
+#include <cstdio>   // for snprintf
+#include <string>   // for string
+#include <utility>  // for move
 
-#include "ui/UiUtil.h"
-#include "ui/frame/HotkeyTable.h"
-#include "ui/frame/MainView.h"
-#include "util/ProtoUtil.h"
-#include "wx/gbsizer.h"
+#include "config.pb.h"                    // for ScreenSide
+#include "config/Position.h"              // for Size
+#include "config/swx/event.h"             // for wxEVT_COMMAND_BUTTON_CLICKED
+#include "ui/component/ControlPanel.h"    // for ControlPanel
+#include "ui/component/PreviewPanel.h"    // for PreviewPanel
+#include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
+#include "ui/frame/FrameManager.h"        // for FrameManager
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxACCEL_CTRL
+#include "ui/frame/MainView.h"            // for MainView
+#include "ui/graphics/Color.h"            // for Color
+#include "util/ProtoUtil.h"               // for ProtoUtil
 
 namespace cszb_scoreboard {
 
@@ -34,28 +43,24 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(wxPanel* parent, int id) {
-  screen_text = ScreenText::getPreview(
-      parent, "", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
-      wxSize(PREVIEW_WIDTH, PREVIEW_HEIGHT));
+QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id) : ScreenText(wx) {
+  should_self_delete = true;
+  setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
+               Size{.width = PREVIEW_WIDTH, .height = PREVIEW_HEIGHT});
 
-  screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
-  screen_text->setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+  setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
+  setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
 
   // These two buttons are always hidden and exist only to add hotkey support
-  set_button = new wxButton(parent, wxID_ANY);
-  execute_button = new wxButton(parent, wxID_ANY);
-  set_button->Hide();
-  execute_button->Hide();
+  set_button = button("");
+  execute_button = button("");
+  set_button->hide();
+  execute_button->hide();
 
   bindEvents(id);
 }
 
-QuickStateEntry::~QuickStateEntry() { screen()->Destroy(); }
-
 void QuickStateEntry::bindEvents(int id) {
-  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
-
   char command_button = '1' + id;
   if (id >= 9) {  // NOLINT(readability-magic-numbers) 9 is the highest single
                   // digit number.
@@ -63,38 +68,41 @@ void QuickStateEntry::bindEvents(int id) {
   }
   std::string tooltip = tooltipText(command_button);
 
-  for (auto* side : screen()->sides()) {
+  for (auto *side : sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
-    side->Bind(wxEVT_RIGHT_UP, &QuickStateEntry::setShortcutFromPanel, this);
-    side->Bind(wxEVT_LEFT_UP, &QuickStateEntry::executeShortcutFromPanel, this);
-    side->SetToolTip(tooltip);
+    side->bind(wxEVT_RIGHT_UP,
+               [this](wxMouseEvent &event) -> void { this->setShortcut(); });
+    side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent &event) -> void {
+      this->executeShortcut();
+    });
+    side->toolTip(tooltip);
   }
 
-  execute_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                       &QuickStateEntry::executeShortcutFromButton, this);
-  set_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                   &QuickStateEntry::setShortcutFromButton, this);
+  execute_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
+  set_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
 
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, command_button,
-                                        execute_button->GetId());
+                                        execute_button->id());
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL | wxACCEL_ALT,
-                                        command_button, set_button->GetId());
+                                        command_button, set_button->id());
 }
 
 void QuickStateEntry::executeShortcut() {
   if (!initialized) {
     return;
   }
-  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
-  parent->executeShortcut(screen());
+  QuickStatePanel::executeShortcut(this);
 }
 
 void QuickStateEntry::setShortcut() {
   initialized = true;
-  auto* parent = dynamic_cast<QuickStatePanel*>(screen()->GetParent());
-  parent->setShortcut(screen());
+  QuickStatePanel::setShortcut(this);
 }
 
 auto QuickStateEntry::tooltipText(char command_character) -> std::string {
@@ -112,31 +120,32 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
   return buffer;
 }
 
-QuickStatePanel::QuickStatePanel(wxWindow* parent) : wxPanel(parent) {
+QuickStatePanel::QuickStatePanel(swx::Panel *wx) : Panel(wx) {
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
-    entries.push_back(std::move(std::make_unique<QuickStateEntry>(this, i)));
+    entries.push_back(
+        std::move(std::make_unique<QuickStateEntry>(childPanel(), i)));
   }
   positionWidgets();
 }
 
 void QuickStatePanel::positionWidgets() {
-  auto* sizer = new wxGridBagSizer();
-
   for (int i = 0; i < entries.size(); i++) {
-    UiUtil::addToGridBag(sizer, entries[i]->screen(), i, 0);
+    addWidget(*entries[i], i, 0);
   }
 
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
-void QuickStatePanel::executeShortcut(ScreenText* screen) {
-  auto* main = dynamic_cast<MainView*>(GetParent());
-  main->previewPanel()->setToPresenters(screen);
+void QuickStatePanel::executeShortcut(QuickStateEntry *entry) {
+  FrameManager::getInstance()->mainView()->previewPanel()->setToPresenters(
+      entry);
 }
 
-void QuickStatePanel::setShortcut(ScreenText* screen) {
-  auto* main = dynamic_cast<MainView*>(GetParent());
-  main->controlPanel()->updateScreenTextFromSelected(screen);
+void QuickStatePanel::setShortcut(QuickStateEntry *entry) {
+  FrameManager::getInstance()
+      ->mainView()
+      ->controlPanel()
+      ->updateScreenTextFromSelected(entry);
 }
 
 }  // namespace cszb_scoreboard

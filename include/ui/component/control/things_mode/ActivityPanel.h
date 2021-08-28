@@ -19,21 +19,29 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/clrpicker.h>
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
-#include <vector>
-
-#include "config.pb.h"
-#include "ui/component/control/things_mode/Activity.h"
-#include "ui/graphics/Color.h"
+#include "config.pb.h"                                  // for RenderableTex...
+#include "ui/component/control/things_mode/Activity.h"  // for Activity
+#include "ui/graphics/Color.h"                          // for Color
+#include "ui/widget/ColorPicker.h"                      // for ColorPicker
+#include "ui/widget/Panel.h"                            // for Panel
 
 namespace cszb_scoreboard {
-class ActivityPanel : public wxPanel {
+class ReplacementPanel;
+class ScreenTextController;
+
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class ActivityPanel : public Panel {
  public:
-  ActivityPanel(wxWindow *parent, ScreenTextController *owning_controller,
+  ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
                 const proto::ScreenSide &side);
-  void addActivity(wxPanel *parent_panel);
+  void addActivity();
   void addReplacement();
   auto getColor() -> Color;
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;
@@ -42,26 +50,23 @@ class ActivityPanel : public wxPanel {
   auto selectedActivityText() -> std::string;
   void swapActivities(int a, int b);
   void updateNotify();
-  // wxWidgets callbacks, waive linting error for references.
-  void deleteActivity(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void selectionChanged(
-      wxCommandEvent &event);           // NOLINT(google-runtime-references)
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
+  void deleteActivity(Activity *deleted);
+  void selectionChanged(Activity *selected);
+  void textUpdated();
 
  private:
-  wxPanel *activity_half;
-  wxColourPickerCtrl *color_picker;
-  wxPanel *replacement_half;
+  std::unique_ptr<Panel> activity_half, replacement_half;
+  std::unique_ptr<ColorPicker> color_picker;
   proto::ScreenSide side;
-  std::vector<std::shared_ptr<Activity>> activities;
+  std::vector<std::unique_ptr<Activity>> activities;
   ScreenTextController *owning_controller;
-  wxWindow *parent;
 
   void bindEvents();
   void positionWidgets();
-  void colorChanged(wxColourPickerEvent &event);  // NOLINT(google-runtime-references)
-                                                  // wxWidgets callback.
+  void colorChanged();
   void resetActivityMoveButtons();
+  void hideAllReplacements();
+  void showReplacement(int index);
+  void showSelectedReplacement();
 };
 }  // namespace cszb_scoreboard

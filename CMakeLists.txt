@@ -18,6 +18,7 @@ cmake_minimum_required(VERSION 3.9.0)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
 
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
@@ -94,13 +95,13 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 # Protobuf files.
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
-add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
+add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES} "include/ui/widget/Frame.h")
 set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
 protobuf_generate(TARGET scoreboard_proto)
 target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
 
 
-add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
+add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC} "include/ui/widget/Frame.h")
 set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
@@ -122,7 +123,7 @@ list(APPEND TEST_ONLY_SRC
     "test/TestUtil.cpp"
 )
 
-add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
+add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC} "include/ui/widget/Frame.h")
 set_target_properties(scoreboard_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(scoreboard_test_classes PUBLIC SCOREBOARD_TESTING)
 target_link_libraries(scoreboard_test_classes PRIVATE ${wxWidgets_LIBRARIES}
@@ -131,7 +132,7 @@ target_link_libraries(scoreboard_test_classes PRIVATE ${wxWidgets_LIBRARIES}
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
 macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
-    add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN})
+    add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN} "include/ui/widget/Frame.h")
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     if (INTEGRATION_TEST)
         target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_INTEGRATION_TEST)

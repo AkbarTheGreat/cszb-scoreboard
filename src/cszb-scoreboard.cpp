@@ -18,8 +18,18 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
-#include "config/CommandArgs.h"
-#include "util/Log.h"
+#include <wx/chartype.h>  // for wxT
+#include <wx/cmdline.h>   // for wxCmdLineParser
+#include <wx/gdicmn.h>    // for wxPoint, wxSize
+#include <wx/image.h>     // for wxInitAllImageHandlers
+
+#include <array>  // for array
+
+#include "config/CommandArgs.h"  // for ARG_LIST, CommandArgs
+#include "config/Position.h"
+#include "ui/frame/FrameManager.h"  // for FrameManager
+#include "ui/frame/MainView.h"      // for MainView
+#include "util/Log.h"               // for LogDebug
 
 #ifndef SCOREBOARD_TESTING
 // NOLINTNEXTLINE(modernize-use-trailing-return-type)
@@ -39,14 +49,15 @@ auto Scoreboard::OnInit() -> bool {
   }
   wxInitAllImageHandlers();
   LogDebug(wxT("Starting up main loop"));
-  main_window =
-      new MainView("ComedySportz Scoreboard", wxPoint(START_X, START_Y),
-                   wxSize(START_WIDTH, START_HEIGHT));
-  main_window->Show(true);
+  FrameManager::getInstance()
+      ->createMainView("ComedySportz Scoreboard",
+                       Position{.x = START_X, .y = START_Y},
+                       Size{.width = START_WIDTH, .height = START_HEIGHT})
+      ->show(true);
   return true;
 }
 
-void Scoreboard::OnInitCmdLine(wxCmdLineParser& parser) {
+void Scoreboard::OnInitCmdLine(wxCmdLineParser &parser) {
   wxApp::OnInitCmdLine(parser);
   parser.SetDesc(ARG_LIST.data());
   // If we ever want '/' as a path separator to work in Windows, we have to
@@ -54,7 +65,7 @@ void Scoreboard::OnInitCmdLine(wxCmdLineParser& parser) {
   // the future.   If we need it, set via parser.SetSwitchChars(wxT("-"));
 }
 
-auto Scoreboard::OnCmdLineParsed(wxCmdLineParser& parser) -> bool {
+auto Scoreboard::OnCmdLineParsed(wxCmdLineParser &parser) -> bool {
   if (!CommandArgs::process_args(parser, argc, argv)) {
     return false;
   }

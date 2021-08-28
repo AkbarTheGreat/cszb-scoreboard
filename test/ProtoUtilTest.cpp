@@ -16,8 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gtest/gtest-message.h>
+#include <gtest/gtest-test-part.h>
+#include <wx/gdicmn.h>
+
+#include <memory>
+
 #include "config.pb.h"
-#include "gtest/gtest.h"
+#include "gtest/gtest_pred_impl.h"
+#include "ui/graphics/Color.h"
 #include "util/ProtoUtil.h"
 
 // extern wxColourDatabase *wxTheColourDatabase;

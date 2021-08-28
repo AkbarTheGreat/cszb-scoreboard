@@ -21,7 +21,25 @@ limitations under the License.
 
 #include "test/GuiTest.h"
 
-#include "test/TestUtil.h"
+#include <wx/init.h>  // for wxEntryCleanup
+
+#include <utility>  // for pair
+
+#include "cszb-scoreboard.h"                            // for Scoreboard
+#include "test/TestUtil.h"                              // for TestUtil
+#include "ui/component/ControlPanel.h"                  // for ControlPanel
+#include "ui/component/PreviewPanel.h"                  // for PreviewPanel
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/component/control/TextEntry.h"             // for TextEntry
+#include "ui/frame/FrameManager.h"                      // for FrameManager
+#include "ui/frame/MainView.h"                          // for MainView
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/swx/Panel.h"                        // for Panel
+#include "wx/window.h"                                  // for wxWindow
+
+namespace cszb_scoreboard {
+class ScreenPreview;
+}  // namespace cszb_scoreboard
 
 namespace cszb_scoreboard::test {
 
@@ -30,7 +48,7 @@ const int TEXT_ENTRY_TAB_INDEX = 4;
 void GuiTest::SetUp() {
   app = new Scoreboard();
   TestUtil::startApp(app);
-  mainView()->Update();
+  mainView()->updateWindow();
 }
 
 void GuiTest::TearDown() {
@@ -39,11 +57,11 @@ void GuiTest::TearDown() {
 }
 
 auto GuiTest::mainView() -> MainView * {
-  return dynamic_cast<MainView *>(FrameList::getInstance()->getMainView());
+  return dynamic_cast<MainView *>(FrameManager::getInstance()->mainView());
 }
 
 auto GuiTest::textEntry() -> TextEntry * {
-  mainView()->controlPanel()->SetSelection(TEXT_ENTRY_TAB_INDEX);
+  mainView()->controlPanel()->setSelection(TEXT_ENTRY_TAB_INDEX);
   return dynamic_cast<TextEntry *>(
       mainView()->controlPanel()->textController(TEXT_ENTRY_TAB_INDEX));
 }
@@ -52,7 +70,8 @@ auto GuiTest::firstPreview() -> ScreenPreview * {
   return mainView()->previewPanel()->preview(0);
 }
 
-ImageAnalysis::ImageAnalysis(wxWindow *widget, ImageAnalysisMode scan_mode) {
+ImageAnalysis::ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode) {
+  wxWindow *widget = panel->wx;
   wxClientDC dc(widget);
   wxRect dimensions = widget->GetRect();
 

@@ -20,57 +20,65 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"
 
-#include "ui/UiUtil.h"
+#include "ScoreboardCommon.h"
+#include "config/swx/defs.h"
+#include "config/swx/event.h"
+#include "ui/component/PreviewPanel.h"
+#include "ui/component/ScreenPreview.h"
 #include "ui/frame/HotkeyTable.h"
-#include "util/ProtoUtil.h"
+#include "ui/widget/Widget.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
-                                           wxWindow *parent)
-    : wxPanel(parent) {
+                                           swx::Panel *wx)
+    : Panel(wx) {
   this->preview_panel = preview_panel;
 }
 
 void ScreenTextController::initializeWidgets() {
-  update_screens = new wxButton(this, wxID_ANY, "Send to Monitors");
-  update_screens->SetToolTip("Ctrl+Space");
+  update_screens = button("Send to Monitors");
+  update_screens->toolTip("Ctrl+Space");
   HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, WXK_SPACE,
-                                        update_screens->GetId());
-  control_panel = new wxPanel(this);
-  createControls(control_panel);
+                                        update_screens->id());
+  control_panel = std::make_unique<Panel>(childPanel());
+  createControls(control_panel.get());
   positionWidgets();
   bindEvents();
 }
 
 void ScreenTextController::positionWidgets() {
-  wxSizer *sizer = UiUtil::sizer(0, 1);
+  // control_panel spans two columns so that update_screens isn't forced to
+  // stretch the the width of whatever the control_panel is.
+  addWidgetWithSpan(*control_panel, 0, 0, 1, 2, NO_BORDER);
+  addWidget(*update_screens, 1, 0);
 
-  sizer->Add(control_panel, 0, wxALL, BORDER_SIZE);
-  sizer->Add(update_screens, 0, wxALL, BORDER_SIZE);
-
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
 void ScreenTextController::bindEvents() {
-  update_screens->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                       &ScreenTextController::updateClicked, this);
+  update_screens->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->updateClicked(); });
 }
 
 auto ScreenTextController::previewPanel() -> PreviewPanel * {
   return preview_panel;
 }
 
-void ScreenTextController::updateClicked(wxCommandEvent &event) {
+void ScreenTextController::updateClicked() {
   preview_panel->updatePresenters();
 }
 
 void ScreenTextController::updatePreview() {
-  for (auto *screen : previewPanel()->all_screens()) {
-    updateScreenText(screen->widget());
-  }
+  previewPanel()->forAllScreens([this](ScreenPreview *preview) -> void {
+    this->updateScreenText(preview->screen());
+  });
 }
 
 }  // namespace cszb_scoreboard

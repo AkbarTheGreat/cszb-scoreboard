@@ -19,23 +19,30 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
-#include "ui/UiUtil.h"
+#include <utility>  // for move
+
+#include "ScoreboardCommon.h"   // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"          // for TeamInfo_TeamType, TeamInfo_TeamType_...
+#include "config/TeamConfig.h"  // for TeamConfig
+#include "ui/widget/PopUp.h"
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-TeamSettingsPage::TeamSettingsPage(wxWindow* parent) : SettingsPage(parent) {
-  wxSizer* sizer = UiUtil::sizer(0, 1);
-
+TeamSettingsPage::TeamSettingsPage(swx::Panel *wx) : SettingsPage(wx) {
   int i = 0;
   for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
-    auto* team_panel = new TeamSettingsPanel(this, i++, team);
-    team_settings_panels.push_back(team_panel);
-    sizer->Add(team_panel, 0, wxALL, BORDER_SIZE);
+    auto team_panel =
+        std::make_unique<TeamSettingsPanel>(childPanel(), i++, team, this);
+    addWidget(*team_panel, i - 1, 0);
+    team_settings_panels.push_back(std::move(team_panel));
   }
 
-  SetSizerAndFit(sizer);
+  runSizer();
 }
 
 auto TeamSettingsPage::validateSettings() -> bool {
@@ -53,7 +60,7 @@ void TeamSettingsPage::saveSettings() {
     restart_warning = true;
   }
 
-  for (auto* panel : team_settings_panels) {
+  for (const auto &panel : team_settings_panels) {
     TeamConfig::getInstance()->setColor(panel->team(), panel->teamColor());
 
     if (restart_warning || previous_team_order.size() <= team_order.size() ||
@@ -65,7 +72,7 @@ void TeamSettingsPage::saveSettings() {
   }
 
   if (restart_warning) {
-    wxMessageBox(
+    PopUp::Message(
         "WARNING: You have changed team ordering.  To see this take "
         "effect, you must restart the application.");
   }
@@ -75,10 +82,11 @@ void TeamSettingsPage::saveSettings() {
 }
 
 void TeamSettingsPage::swapTeams(int a, int b) {
-  TeamSettingsPanel temp(this, 0, proto::TeamInfo_TeamType_TEAM_ERROR);
-  temp.copyFrom(team_settings_panels[a]);
-  team_settings_panels[a]->copyFrom(team_settings_panels[b]);
-  team_settings_panels[b]->copyFrom(&temp);
+  TeamSettingsPanel temp(childPanel(), 0, proto::TeamInfo_TeamType_TEAM_ERROR,
+                         this);
+  temp.copyFrom(*team_settings_panels[a]);
+  team_settings_panels[a]->copyFrom(*team_settings_panels[b]);
+  team_settings_panels[b]->copyFrom(temp);
 }
 
 }  // namespace cszb_scoreboard

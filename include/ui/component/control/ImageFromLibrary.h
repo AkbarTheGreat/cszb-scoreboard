@@ -20,47 +20,51 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/srchctrl.h>
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+#include <vector>  // for vector
 
-#include <vector>
-
-#include "config.pb.h"
-#include "ui/component/control/ImagePreview.h"
-#include "ui/component/control/ScreenImageController.h"
+#include "ui/component/control/ImagePreview.h"           // for ImagePreview
+#include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
+#include "ui/widget/Button.h"                            // for Button
+#include "ui/widget/Label.h"                             // for Label
+#include "ui/widget/Panel.h"                             // for Panel
+#include "ui/widget/SearchBox.h"                         // for SearchBox
 #include "ui/dialog/EditImageLibraryDialog.h"
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ImageFromLibrary : public ScreenImageController {
  public:
-  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
-      -> ImageFromLibrary *;
+  ImageFromLibrary(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenImageController(preview_panel, wx) {}
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
+      -> std::unique_ptr<ImageFromLibrary>;
+  void onEditDialogClose();
 
  private:
   int current_image_page = 0;
-  // All of the following pointer types are references to wxWidgets elements
-  // that wxWidgets maintains.  They are raw pointers as wxWidgets will handle
-  // destruction of them at shutdown.
-  wxButton *left_button, *right_button, *configure_button;
-  wxSearchCtrl *search_box;
-  wxPanel *main_panel, *search_panel, *image_preview_panel;
-  wxStaticText *tag_list_label;
-  std::vector<ImagePreview *> image_previews;
-  std::vector<wxStaticText *> image_names;
-  EditImageLibraryDialog *edit_dialog;
+  std::unique_ptr<Button> left_button, right_button, configure_button;
+  std::unique_ptr<SearchBox> search_box;
+  std::unique_ptr<Panel> main_panel, search_panel, image_preview_panel;
+  std::unique_ptr<Label> tag_list_label;
+  std::vector<std::unique_ptr<ImagePreview>> image_previews;
+  std::vector<std::unique_ptr<Label>> image_names;
+  std::unique_ptr<EditImageLibraryDialog> edit_dialog;
 
-  ImageFromLibrary(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
-  void createControls(wxPanel *control_panel) override;
-  void positionWidgets(wxPanel *control_panel) override;
-  void setImages(const wxString &search, unsigned int page_number = 0);
-  // wxWidgets callbacks, waive linting error for references.
-  void doSearch(wxCommandEvent &event);    // NOLINT(google-runtime-references)
-  void selectImage(wxMouseEvent &event);   // NOLINT(google-runtime-references)
-  void editButton(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void pageChange(wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void createControls(Panel *control_panel) override;
+  void positionWidgets(Panel *control_panel) override;
+  void setImages(const std::string &search, unsigned int page_number = 0);
+  void doSearch();
+  void selectImage(ImagePreview *image);
+  void editButton();
+  void pageChange(bool forward);
 };
 
 }  // namespace cszb_scoreboard

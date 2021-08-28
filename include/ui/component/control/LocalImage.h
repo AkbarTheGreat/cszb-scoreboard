@@ -19,34 +19,35 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
 
-#include "config.pb.h"
-#include "ui/component/control/ScreenImageController.h"
+#include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
+#include "ui/widget/Button.h"                            // for Button
+#include "ui/widget/Panel.h"                             // for Panel
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class LocalImage : public ScreenImageController {
  public:
-  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
-      -> LocalImage *;
+  LocalImage(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenImageController(preview_panel, wx) {}
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
+      -> std::unique_ptr<LocalImage>;
 
  private:
-  wxButton *browse_button;
-  wxPanel *button_panel;
-  wxButton *paste_button;
-  wxPanel *inner_panel;
+  std::unique_ptr<Panel> button_panel, inner_panel;
+  std::unique_ptr<Button> browse_button, paste_button;
 
-  LocalImage(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenImageController(preview_panel, parent) {}
   void bindEvents();
-  void createControls(wxPanel *control_panel) override;
-  void positionWidgets(wxPanel *control_panel) override;
-  // wxWidgets callbacks, waive linting error for references.
-  void browsePressed(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void pastePressed(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void createControls(Panel *control_panel) override;
+  void positionWidgets(Panel *control_panel) override;
+  void browsePressed();
+  void pastePressed();
 };
 
 }  // namespace cszb_scoreboard

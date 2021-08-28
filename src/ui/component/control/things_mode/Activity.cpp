@@ -19,139 +19,112 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/Activity.h"
 
-#include <wx/wx.h>
+#include <utility>
 
-#include <vector>
-
-#include "ui/UiUtil.h"
+#include "ScoreboardCommon.h"
+#include "config/swx/event.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-Activity::Activity(wxWindow *parent, wxPanel *activity_frame,
-                   wxPanel *replacement_frame, int index, bool is_first) {
+Activity::Activity(ActivityPanel *parent, Panel *activity_frame,
+                   Panel *replacement_frame, int index, bool is_first) {
   this->index = index;
   this->parent = parent;
 
-  control_pane = new wxPanel(activity_frame);
+  control_pane = activity_frame->panel(true);
 
-  activity_selector =
-      new wxRadioButton(control_pane, wxID_ANY, "", wxDefaultPosition,
-                        wxDefaultSize, wxRB_SINGLE);
+  activity_selector = control_pane->radioButton();
+
   if (is_first) {
-    activity_selector->SetValue(true);
+    activity_selector->setSelected(true);
   }
-  activity_text = new wxTextCtrl(control_pane, wxID_ANY, "", wxDefaultPosition,
-                                 wxSize(-1, -1), wxTE_MULTILINE);
-  up_button = new wxButton(control_pane, wxID_ANY, "^", wxDefaultPosition,
-                           wxDefaultSize, wxBU_EXACTFIT);
-  down_button = new wxButton(control_pane, wxID_ANY, "v", wxDefaultPosition,
-                             wxDefaultSize, wxBU_EXACTFIT);
-  remove_activity_button =
-      new wxButton(control_pane, wxID_ANY, "X", wxDefaultPosition,
-                   wxDefaultSize, wxBU_EXACTFIT);
-  replacement_panel = new ReplacementPanel(replacement_frame, parent);
+  activity_text = control_pane->text("", true);
+  up_button = control_pane->button("^", true);
+  down_button = control_pane->button("v", true);
+  remove_activity_button = control_pane->button("X", true);
+  replacement_panel = std::make_unique<ReplacementPanel>(
+      replacement_frame->childPanel(), parent);
   bindEvents();
   positionWidgets();
 }
 
 void Activity::copyFrom(Activity *other) {
-  activity_selector->SetValue(other->activity_selector->GetValue());
-  activity_text->SetValue(other->activity_text->GetValue());
-  replacement_panel->copyFrom(other->replacement_panel);
-}
-
-Activity::~Activity() {
-  delete replacement_panel;
-  control_pane->Destroy();
+  activity_selector->setSelected(other->activity_selector->selected());
+  activity_text->setValue(other->activity_text->value());
+  replacement_panel = std::move(other->replacement_panel);
 }
 
 void Activity::bindEvents() {
-  activity_selector->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
-                          &ActivityPanel::selectionChanged,
-                          dynamic_cast<ActivityPanel *>(parent));
+  auto *ap = parent;
+  activity_selector->bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
+                          [this, ap](wxCommandEvent &event) -> void {
+                            ap->selectionChanged(this);
+                          });
 
-  up_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Activity::moveButton, this);
-  down_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Activity::moveButton, this);
+  up_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->moveButton(true); });
+  down_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->moveButton(false); });
 
-  remove_activity_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                               &ActivityPanel::deleteActivity,
-                               dynamic_cast<ActivityPanel *>(parent));
-  activity_text->Bind(wxEVT_KEY_UP, &ActivityPanel::textUpdated,
-                      dynamic_cast<ActivityPanel *>(parent));
+  remove_activity_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this, ap](wxCommandEvent &event) -> void { ap->deleteActivity(this); });
+  activity_text->bind(wxEVT_KEY_UP,
+                      [ap](wxKeyEvent &event) -> void { ap->textUpdated(); });
 }
 
 void Activity::positionWidgets() {
-  wxSizer *sizer = UiUtil::sizer(
-      0, 5);  // NOLINT(readability-magic-numbers) Matches the number of columns
-              // for the items listed below this line.
-  sizer->Add(activity_selector, 0, wxALL, BORDER_SIZE);
-  sizer->Add(activity_text, 0, wxALL, BORDER_SIZE);
-  sizer->Add(up_button, 0, wxALL, BORDER_SIZE);
-  sizer->Add(down_button, 0, wxALL, BORDER_SIZE);
-  sizer->Add(remove_activity_button, 0, wxALL, BORDER_SIZE);
-  control_pane->SetSizerAndFit(sizer);
+  control_pane->addWidget(*activity_selector, 0, 0);
+  control_pane->addWidgetWithSpan(*activity_text, 0, 1, 2, 1);
+  control_pane->addWidget(*up_button, 0, 2);
+  control_pane->addWidget(*down_button, 0, 3);
+  control_pane->addWidget(*remove_activity_button, 0, 4);
+  control_pane->runSizer();
 }
 
-void Activity::moveButton(wxCommandEvent &event) {
-  if (event.GetEventObject() == up_button) {
-    dynamic_cast<ActivityPanel *>(parent)->swapActivities(index, index - 1);
-  } else if (event.GetEventObject() == down_button) {
-    dynamic_cast<ActivityPanel *>(parent)->swapActivities(index, index + 1);
+void Activity::moveButton(bool is_up) {
+  if (is_up) {
+    parent->swapActivities(index, index - 1);
+  } else {
+    parent->swapActivities(index, index + 1);
   }
 }
 
 void Activity::select() {
-  if (!activity_selector->GetValue()) {
-    activity_selector->SetValue(true);
-    wxCommandEvent event;
-    event.SetEventObject(activity_selector);
-    dynamic_cast<ActivityPanel *>(parent)->selectionChanged(event);
+  if (!activity_selector->selected()) {
+    activity_selector->setSelected(true);
+    parent->selectionChanged(this);
   }
 }
 
-void Activity::unselect() { activity_selector->SetValue(false); }
+void Activity::unselect() { activity_selector->setSelected(false); }
 
-auto Activity::isSelected() -> bool { return activity_selector->GetValue(); }
-
-auto Activity::resolveSelection(wxObject *selected_object) -> bool {
-  if (activity_selector == selected_object) {
-    select();
-    return true;
-  }
-  unselect();
-  return false;
-}
+auto Activity::isSelected() -> bool { return activity_selector->selected(); }
 
 void Activity::setIndex(int index, int max_index) {
   this->index = index;
   if (index == 0) {
-    up_button->Disable();
+    up_button->disable();
   } else {
-    up_button->Enable();
+    up_button->enable();
   }
   if (index == max_index) {
-    down_button->Disable();
+    down_button->disable();
   } else {
-    down_button->Enable();
+    down_button->enable();
   }
-}
-
-auto Activity::containsDeleteButton(wxObject *delete_button) -> bool {
-  return (delete_button == remove_activity_button);
-}
-
-void Activity::selectionChanged(wxCommandEvent &event) {
-  dynamic_cast<ActivityPanel *>(parent)->selectionChanged(event);
 }
 
 auto Activity::previewText() -> std::string {
-  if (activity_text->GetValue().empty()) {
+  if (activity_text->value().empty()) {
     return " ";
   }
-  return activity_text->GetValue().ToStdString();
+  return activity_text->value();
 }
 
 }  // namespace cszb_scoreboard

@@ -20,37 +20,37 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/aui/aui.h>
-#include <wx/wx.h>
+#include <functional>  // for function
+#include <memory>      // for unique_ptr
+#include <vector>      // for vector
 
-#include <vector>
-
-#include "ScoreboardCommon.h"
-#include "config.pb.h"
-#include "ui/component/ScreenPreview.h"
-#include "ui/component/ScreenTextSide.h"
+#include "ScoreboardCommon.h"            // for PUBLIC_TEST_ONLY
+#include "ui/component/ScreenPreview.h"  // for ScreenPreview
+#include "ui/widget/DraggablePanel.h"    // for DraggablePanel
 
 namespace cszb_scoreboard {
+class ScreenText;
 
-class PreviewPanel : public wxPanel {
+namespace swx {
+class Panel;
+}  // namespace swx
+
+class PreviewPanel : public DraggablePanel {
  public:
-  explicit PreviewPanel(wxWindow* parent);
-  void blackout(wxCommandEvent& event);  // NOLINT(google-runtime-references)
-                                         // wxWidgets callback.
-  inline auto all_screens() -> std::vector<ScreenPreview*> { return screens; }
-  void setToPresenters(ScreenText* screen_text);
+  explicit PreviewPanel(swx::Panel *wx);
+
+  void blackout();
+  void forAllScreens(const std::function<void(ScreenPreview *)> &lambda);
+  void setToPresenters(ScreenText *screen_text);
   void updatePresenters();
   void updatePreviewsFromSettings();
 
   PUBLIC_TEST_ONLY
-  auto preview(int index) -> ScreenPreview*;
+  auto preview(int index) -> ScreenPreview *;
 
  private:
-  ~PreviewPanel() override;
-  wxAuiManager aui_manager;
   // Contains a view of the screens, does not own the screens themselves.
-  std::vector<ScreenPreview*> screens;
-  void bindEvents();
+  std::vector<std::unique_ptr<ScreenPreview>> screens;
   auto numPreviews() -> int;
   void positionWidgets();
 };

@@ -19,53 +19,54 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
 
-#include <vector>
-
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/component/control/TeamSelector.h"
-#include "ui/component/control/things_mode/ActivityPanel.h"
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/component/control/TeamSelector.h"          // for TeamSelector
+#include "ui/widget/Button.h"                           // for Button
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/Radio.h"                            // for Radio
+#include "ui/widget/ScrollingPanel.h"                   // for ScrollingPanel
 
 namespace cszb_scoreboard {
+class ActivityPanel;
+class PreviewPanel;
+class ScreenText;
+
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class ThingsMode : public ScreenTextController {
  public:
-  static auto Create(PreviewPanel *preview_panel, wxWindow *parent)
-      -> ThingsMode *;
-  void textUpdated(wxKeyEvent &event);  // NOLINT(google-runtime-references)
-                                        // wxWidgets callback.
+  ThingsMode(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenTextController(preview_panel, wx) {}
+  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
+      -> std::unique_ptr<ThingsMode>;
+  void textUpdated();
   void updateScreenText(ScreenText *screen_text) override;
 
  private:
-  wxPanel *button_panel;
-  wxButton *new_activity_button;
-  wxButton *new_replacement_button;
-  wxRadioBox *presenter_selection;
-  TeamSelector *screen_selection;
-  wxScrolledWindow *scrollable_panel;
+  std::unique_ptr<Panel> button_panel;
+  std::unique_ptr<Button> new_activity_button;
+  std::unique_ptr<Button> new_replacement_button;
+  std::unique_ptr<Radio> presenter_selection;
+  std::unique_ptr<TeamSelector> screen_selection;
+  std::unique_ptr<ScrollingPanel> scrollable_panel;
 
   ActivityPanel *home_activities_panel;
   ActivityPanel *away_activities_panel;
   ActivityPanel *all_activities_panel;
 
-  ThingsMode(PreviewPanel *preview_panel, wxWindow *parent)
-      : ScreenTextController(preview_panel, parent) {}
-
-  void createControls(wxPanel *control_panel) override;
+  void createControls(Panel *control_panel) override;
 
   void bindEvents();
-  void positionWidgets(wxPanel *control_panel);
+  void positionWidgets(Panel *control_panel);
   void updateActivityPanel();
-  // wxWidgets callbacks, waive linting error for references.
-  void addActivity(wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void addReplacement(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void presentedListChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
-  void screenChanged(
-      wxCommandEvent &event);  // NOLINT(google-runtime-references)
+  void addActivity();
+  void addReplacement();
+  void presentedListChanged();
+  void screenChanged();
 };
 
 }  // namespace cszb_scoreboard

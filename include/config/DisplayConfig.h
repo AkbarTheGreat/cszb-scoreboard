@@ -18,17 +18,14 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/display.h>
-#include <wx/wx.h>
-
-#include "config.pb.h"
+#include "config.pb.h"  // for DisplayConfig, DisplayInfo, ScreenSide (ptr o...
 
 namespace cszb_scoreboard {
 
 class DisplayConfig {
  public:
-  static auto getInstance() -> DisplayConfig*;
-  static auto isPrimaryDisplay(proto::DisplayInfo* display_info) -> bool;
+  static auto getInstance() -> DisplayConfig *;
+  static auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
   void detectDisplays();
   auto displayDetails(int index) -> proto::DisplayInfo;
   auto numberOfDisplays() -> int;

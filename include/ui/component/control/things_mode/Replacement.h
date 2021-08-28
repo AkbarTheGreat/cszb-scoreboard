@@ -19,31 +19,33 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/wx.h>
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
-#include <vector>
-
-#include "config.pb.h"
-#include "ui/component/control/ScreenTextController.h"
+#include "ui/widget/Button.h"  // for Button
+#include "ui/widget/Label.h"   // for Label
+#include "ui/widget/Panel.h"   // for Panel
+#include "ui/widget/Text.h"    // for Text
 
 namespace cszb_scoreboard {
+
+// Pre-defining ReplacementPanel for a parent pointer.
+class ReplacementPanel;
+
 class Replacement {
  public:
-  explicit Replacement(wxWindow *parent);
-  ~Replacement();
+  explicit Replacement(ReplacementPanel *parent);
   void copyFrom(Replacement *other);
-  auto containsDeleteButton(wxObject *delete_button) -> bool;
-  auto controlPane() -> wxPanel * { return control_pane; }
-  auto deleteButton() -> wxButton * { return remove_replacement_button; }
+  auto controlPane() -> Panel * { return control_pane.get(); }
+  auto deleteButton() -> Button * { return remove_replacement_button.get(); }
   auto previewText() -> std::string;
 
  private:
-  wxPanel *control_pane;
-  wxWindow *parent;
-  wxTextCtrl *replaceable;
-  wxTextCtrl *replacement;
-  wxButton *remove_replacement_button;
-  wxStaticText *spacer_text;
+  std::unique_ptr<Panel> control_pane;
+  std::unique_ptr<Text> replaceable, replacement;
+  std::unique_ptr<Button> remove_replacement_button;
+  std::unique_ptr<Label> spacer_text;
+  ReplacementPanel *parent;
 
   void bindEvents();
   void positionWidgets();

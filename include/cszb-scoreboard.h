@@ -18,10 +18,10 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/cmdline.h>
-#include <wx/wx.h>
+#include <wx/app.h>  // IWYU pragma: keep for wxApp
+// IWYU pragma: no_include <wx/gtk/app.h>
 
-#include "ui/frame/MainView.h"
+class wxCmdLineParser;
 
 namespace cszb_scoreboard {
 class Scoreboard : public wxApp {
@@ -29,9 +29,7 @@ class Scoreboard : public wxApp {
   auto OnInit() -> bool final;
 
  private:
-  // Raw pointer, wxWidgets will take care of collecting the MainView.
-  MainView* main_window;
-  void OnInitCmdLine(wxCmdLineParser& parser) final;
-  auto OnCmdLineParsed(wxCmdLineParser& parser) -> bool final;
+  void OnInitCmdLine(wxCmdLineParser &parser) final;
+  auto OnCmdLineParsed(wxCmdLineParser &parser) -> bool final;
 };
 }  // namespace cszb_scoreboard
