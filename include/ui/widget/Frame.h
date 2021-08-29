@@ -19,8 +19,6 @@ limitations under the License.
 
 #pragma once
 
-#include <cstdint>            // for int64_t
-#include <wx/accel.h>          // for wxAcceleratorEntry (p...
 #include <wx/aui/auibook.h>    // for wxAUI_NB_SCROLL_BUTTONS
 #include <wx/dialog.h>         // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>         // for wxPoint, wxSize (ptr ...
@@ -29,6 +27,7 @@ limitations under the License.
 #include <wx/string.h>         // for wxString
 #include <wx/tbarbase.h>       // for wxDefaultPosition
 
+#include <cstdint>   // for int64_t
 #include <optional>  // for optional
 #include <string>    // for string
 #include <vector>    // for vector
@@ -41,6 +40,8 @@ limitations under the License.
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 #include "wx/window.h"                          // for wxWindow
+
+class wxAcceleratorEntry;
 
 namespace cszb_scoreboard {
 

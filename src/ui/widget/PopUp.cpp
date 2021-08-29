@@ -18,9 +18,10 @@ limitations under the License.
 
 #include "ui/widget/PopUp.h"
 
-#include <cstdint>     // for int64_t
 #include <wx/defs.h>    // for wxCENTRE, wxICON_ERROR, wxICON_EXCLAMATION
 #include <wx/msgdlg.h>  // for wxMessageBox
+
+#include <cstdint>  // for int64_t
 
 namespace cszb_scoreboard {
 
