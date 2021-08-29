@@ -19,10 +19,10 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/accel.h>          // IWYU pragma: keep
 #include <wx/aui/auibook.h>    // for wxAUI_NB_SCROLL_BUTTONS
 #include <wx/dialog.h>         // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>         // for wxPoint, wxSize (ptr ...
-#include <wx/generic/accel.h>  // for wxAcceleratorTable
 #include <wx/panel.h>          // for wxPanelNameStr
 #include <wx/string.h>         // for wxString
 #include <wx/tbarbase.h>       // for wxDefaultPosition
@@ -40,6 +40,7 @@ limitations under the License.
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 #include "wx/window.h"                          // for wxWindow
+// IWYU pragma: no_include <wx/generic/accel.h>
 
 class wxAcceleratorEntry;
 
