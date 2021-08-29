@@ -18,14 +18,14 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiRes...
+#include <gtest/gtest.h>            // IWYU pragma: keep for Test (ptr only), TestInfo (ptr only)
+#include <gtest/gtest_pred_impl.h>  // IWYU pragma: keep for ASSERT_PRED_FORMAT2
 #include <wx/app.h>                 // IWYU pragma: keep for wxApp
-#include <wx/gtk/app.h>             // for wxApp
 #include <wx/init.h>                // for wxEntryCleanup
 
 #include <memory>  // for unique_ptr, allocator, make...
 
 #include "config/Position.h"              // for Size
-#include "gtest/gtest_pred_impl.h"        // for ASSERT_EQ, ASSERT_GT, TEST_F
 #include "test/TestUtil.h"                // for TestUtil
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
 #include "ui/widget/Frame.h"              // for Frame
