@@ -19,14 +19,15 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>          // for int64_t
-#include <wx/accel.h>        // IWYU pragma: keep for wxAcceleratorTable
-#include <wx/aui/auibook.h>  // for wxAUI_NB_SCROLL_BUTTONS
-#include <wx/dialog.h>       // for wxDEFAULT_DIALOG_STYLE
-#include <wx/gdicmn.h>       // for wxPoint, wxSize (ptr ...
-#include <wx/panel.h>        // for wxPanelNameStr
-#include <wx/string.h>       // for wxString
-#include <wx/tbarbase.h>     // for wxDefaultPosition
+#include <cstdint>            // for int64_t
+#include <wx/accel.h>          // for wxAcceleratorEntry (p...
+#include <wx/aui/auibook.h>    // for wxAUI_NB_SCROLL_BUTTONS
+#include <wx/dialog.h>         // for wxDEFAULT_DIALOG_STYLE
+#include <wx/gdicmn.h>         // for wxPoint, wxSize (ptr ...
+#include <wx/generic/accel.h>  // for wxAcceleratorTable
+#include <wx/panel.h>          // for wxPanelNameStr
+#include <wx/string.h>         // for wxString
+#include <wx/tbarbase.h>       // for wxDefaultPosition
 
 #include <optional>  // for optional
 #include <string>    // for string
@@ -40,9 +41,6 @@ limitations under the License.
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 #include "wx/window.h"                          // for wxWindow
-
-class wxAcceleratorEntry;
-class wxWindow;
 
 namespace cszb_scoreboard {
 

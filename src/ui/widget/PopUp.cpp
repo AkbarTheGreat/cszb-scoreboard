@@ -18,7 +18,7 @@ limitations under the License.
 
 #include "ui/widget/PopUp.h"
 
-#include <stdint.h>     // for int64_t
+#include <cstdint>     // for int64_t
 #include <wx/defs.h>    // for wxCENTRE, wxICON_ERROR, wxICON_EXCLAMATION
 #include <wx/msgdlg.h>  // for wxMessageBox
 

@@ -29,7 +29,8 @@ limitations under the License.
 #include <map>     // for map
 #include <vector>  // for vector
 
-#include "wx/colour.h"  // for wxColour
+#include "gtest/gtest_pred_impl.h"  // for Test
+#include "wx/colour.h"              // for wxColour
 
 namespace cszb_scoreboard {
 class MainView;
