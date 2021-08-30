@@ -19,13 +19,13 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/accel.h>          // IWYU pragma: keep
-#include <wx/aui/auibook.h>    // for wxAUI_NB_SCROLL_BUTTONS
-#include <wx/dialog.h>         // for wxDEFAULT_DIALOG_STYLE
-#include <wx/gdicmn.h>         // for wxPoint, wxSize (ptr ...
-#include <wx/panel.h>          // for wxPanelNameStr
-#include <wx/string.h>         // for wxString
-#include <wx/tbarbase.h>       // for wxDefaultPosition
+#include <wx/accel.h>        // IWYU pragma: keep
+#include <wx/aui/auibook.h>  // for wxAUI_NB_SCROLL_BUTTONS
+#include <wx/dialog.h>       // for wxDEFAULT_DIALOG_STYLE
+#include <wx/gdicmn.h>       // for wxPoint, wxSize (ptr ...
+#include <wx/panel.h>        // for wxPanelNameStr
+#include <wx/string.h>       // for wxString
+#include <wx/tbarbase.h>     // for wxDefaultPosition
 
 #include <cstdint>   // for int64_t
 #include <optional>  // for optional
