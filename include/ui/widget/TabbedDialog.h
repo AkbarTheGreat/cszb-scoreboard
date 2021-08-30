@@ -32,7 +32,7 @@ limitations under the License.
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
-#include "wx/notebook.h"                        // for wxBookCtrlBase
+#include "wx/notebook.h"                        // IWYU pragma: keep
 // IWYU pragma: no_include <wx/bookctrl.h>
 
 class wxEvent;
