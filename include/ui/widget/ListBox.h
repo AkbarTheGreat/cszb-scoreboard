@@ -18,16 +18,20 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/bmpbuttn.h>  // IWYU pragma: keep for wxBitmapButton
+
 #include <cstdint>     // for int64_t
 #include <functional>  // for function
+#include <string>      // for string
+#include <vector>      // for vector
 
 #include "config/swx/defs.h"                // for wxID_ANY
-#include "config/swx/event.h"               // for wxEventTypeTag, wxCommand...
+#include "config/swx/event.h"               // for wxEventTypeTag
 #include "ui/widget/Widget.h"               // for Widget
 #include "ui/widget/swx/EditableListBox.h"  // for EditableListBox
+// IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
 class wxWindow;
-class wxArrayString;
 
 namespace cszb_scoreboard {
 

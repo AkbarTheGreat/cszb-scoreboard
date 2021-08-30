@@ -22,13 +22,15 @@ limitations under the License.
 
 #include "ui/frame/FrameManager.h"
 
-#include <utility>
+#include <utility>  // for move
 
-#include "ui/component/ScreenPresenter.h"
-#include "ui/widget/Frame.h"
+#include "ui/component/ScreenPresenter.h"  // for ScreenPresenter
+#include "ui/widget/Frame.h"               // for Frame
 
 namespace cszb_scoreboard {
 class ScreenText;
+struct Position;
+struct Size;
 
 auto FrameManager::createMainView(const std::string &title, const Position &pos,
                                   const Size &size) -> MainView * {

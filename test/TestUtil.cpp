@@ -19,7 +19,6 @@ limitations under the License.
 
 #include "test/TestUtil.h"
 
-#include <wx/app.h>   // IWYU pragma: keep for wxApp
 #include <wx/init.h>  // for wxEntryStart
 
 #include <array>  // for array

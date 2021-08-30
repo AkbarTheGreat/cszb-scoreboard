@@ -18,16 +18,18 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiResolver
+#include <gtest/gtest.h>            // IWYU pragma: keep
 
 #include <filesystem>  // for operator<<, operator!=
 #include <sstream>     // for basic_stringbuf<>::int_type, basi...
 #include <string>      // for string, allocator, basic_string
 #include <vector>      // for vector
 
-#include "config/ImageLibrary.h"    // for ImageSearchResults, ImageLibrary
-#include "gtest/gtest_pred_impl.h"  // for ASSERT_PRED_FORMAT2, Test, Assert...
-#include "image_library.pb.h"       // for ImageInfo, ImageLibrary
-#include "util/FilesystemPath.h"    // for FilesystemPath
+#include "config/ImageLibrary.h"  // for ImageSearchResults, ImageLibrary
+#include "image_library.pb.h"     // for ImageInfo, ImageLibrary
+#include "util/FilesystemPath.h"  // for FilesystemPath
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

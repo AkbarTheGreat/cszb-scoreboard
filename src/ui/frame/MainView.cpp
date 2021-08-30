@@ -18,22 +18,25 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include <string>   // for string
-#include <utility>  // for pair
-#include <vector>   // for vector
+#include <wx/string.h>  // for operator+, wxString
+
+#include <string>  // for string
+#include <vector>  // for vector
 
 #include "ScoreboardCommon.h"       // for SCOREBOARD_VERSION
 #include "config/CommandArgs.h"     // for CommandArgs
 #include "config/DisplayConfig.h"   // for DisplayConfig
-#include "config/swx/defs.h"        // for wxID_ABOUT, wxID_EXIT, wxICON_...
-#include "config/swx/event.h"       // for wxCommandEvent (ptr only), wxE...
-#include "ui/component/Menu.h"      // for DISPLAY_BLACK_OUT, GENERAL_SET...
+#include "config/swx/defs.h"        // for wxID_ABOUT, wxID_EXIT, wxID_SEPAR...
+#include "config/swx/event.h"       // for wxEVT_COMMAND_MENU_SELECTED, wxEV...
+#include "ui/component/Menu.h"      // for DISPLAY_BLACK_OUT, GENERAL_SETTINGS
 #include "ui/frame/FrameManager.h"  // for FrameManager
 #include "ui/frame/HotkeyTable.h"   // for HotkeyTable
-#include "ui/widget/PopUp.h"
-#include "util/StringUtil.h"  // for StringUtil
+#include "ui/widget/PopUp.h"        // for PopUp
+#include "util/StringUtil.h"        // for StringUtil
 
 namespace cszb_scoreboard {
+struct Position;
+struct Size;
 
 const int BORDER_SIZE = 0;
 

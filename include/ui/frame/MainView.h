@@ -19,20 +19,20 @@ limitations under the License.
 #pragma once
 
 #include <memory>  // for unique_ptr
+#include <string>  // for string
 
-#include "config/Position.h"
 #include "ui/component/ControlPanel.h"     // for ControlPanel
 #include "ui/component/PreviewPanel.h"     // for PreviewPanel
 #include "ui/component/QuickStatePanel.h"  // for QuickStatePanel
-#include "ui/dialog/SettingsDialog.h"  // for SettingsDialog, SETTINGS_UPDATED
-#include "ui/event/UpdateTimer.h"      // for UpdateTimer
-#include "ui/widget/Frame.h"           // for Frame
+#include "ui/dialog/SettingsDialog.h"      // for SettingsDialog
+#include "ui/event/UpdateTimer.h"          // for UpdateTimer
+#include "ui/widget/Frame.h"               // for Frame
 
-class wxCloseEvent;
-class wxCommandEvent;
 class wxNotebook;
 
 namespace cszb_scoreboard {
+struct Position;
+struct Size;
 
 class MainView : public Frame {
  public:

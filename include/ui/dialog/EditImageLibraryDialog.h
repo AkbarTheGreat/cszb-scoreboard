@@ -30,9 +30,6 @@ limitations under the License.
 #include "ui/widget/Text.h"                            // for Text
 #include "util/FilesystemPath.h"                       // for FilesystemPath
 
-class wxCloseEvent;
-class wxCommandEvent;
-class wxKeyEvent;
 class wxListEvent;
 
 namespace cszb_scoreboard {
@@ -44,7 +41,8 @@ class ImageFromLibrary;
 
 class EditImageLibraryDialog : public TabbedDialog {
  public:
-  EditImageLibraryDialog(swx::PropertySheetDialog *wx, ImageFromLibrary *parent);
+  EditImageLibraryDialog(swx::PropertySheetDialog *wx,
+                         ImageFromLibrary *parent);
 
  private:
   std::unique_ptr<FileListBox> file_list;

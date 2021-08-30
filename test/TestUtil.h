@@ -19,6 +19,8 @@ limitations under the License.
 
 #pragma once
 
+#include <wx/app.h>  // IWYU pragma: keep for wxApp
+
 class wxApp;
 
 namespace cszb_scoreboard ::test {

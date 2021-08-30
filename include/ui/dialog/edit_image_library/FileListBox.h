@@ -30,8 +30,6 @@ limitations under the License.
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
-class wxListEvent;
-
 namespace cszb_scoreboard {
 namespace swx {
 class Panel;

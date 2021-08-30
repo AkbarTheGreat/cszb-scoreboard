@@ -23,14 +23,16 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 #include <set>     // for set
+#include <string>  // for string
 
-#include "config/Position.h"
 #include "ui/frame/MainView.h"  // for MainView
 
 namespace cszb_scoreboard {
 class Frame;
 class ScreenPresenter;
 class ScreenText;
+struct Position;
+struct Size;
 
 class FrameManager {
  public:

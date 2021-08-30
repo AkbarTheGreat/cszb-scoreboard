@@ -51,6 +51,7 @@ limitations under the License.
 #include "ui/widget/swx/StaticText.h"        // for StaticText
 #include "ui/widget/swx/TextCtrl.h"          // for TextCtrl
 #include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
 

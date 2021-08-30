@@ -19,7 +19,9 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/widget/swx/Timer.h"
+#include <functional>  // for function
+
+#include "ui/widget/swx/Timer.h"  // for Timer
 
 namespace cszb_scoreboard {
 

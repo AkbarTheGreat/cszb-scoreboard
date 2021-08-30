@@ -27,7 +27,7 @@ class RadioBox : public wxRadioBox {
   RadioBox(wxWindow *parent, wxWindowID id, const wxString &label,
            const wxPoint &pos = wxDefaultPosition,
            const wxSize &size = wxDefaultSize, int n = 0,
-           const wxString // NOLINT(modernize-avoid-c-arrays) -- to match wx
+           const wxString  // NOLINT(modernize-avoid-c-arrays) -- to match wx
                choices[] = nullptr,
            int majorDimension = 0, int64_t style = wxRA_SPECIFY_COLS,
            const wxValidator &validator = wxDefaultValidator,

@@ -24,14 +24,16 @@ limitations under the License.
 #include <wx/string.h>    // for wxString
 #include <wx/tbarbase.h>  // for wxDefaultPosition
 
-#include <memory>  // for unique_ptr
-#include <string>  // for string
+#include <cstdint>  // for int64_t
+#include <memory>   // for unique_ptr
+#include <string>   // for string
 
 #include "config/swx/defs.h"                    // for wxCANCEL, wxID_ANY, wxOK
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
-#include "wx/notebook.h"                        // for wxBookCtrlBase
+#include "wx/notebook.h"                        // IWYU pragma: keep
+// IWYU pragma: no_include <wx/bookctrl.h>
 
 class wxEvent;
 class wxWindow;

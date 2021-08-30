@@ -19,9 +19,8 @@ limitations under the License.
 #include "ui/widget/ListBox.h"
 
 #include <wx/arrstr.h>    // for wxArrayString
-#include <wx/listbase.h>  // for wxLIST_STATE_SELECTED, wxLIST_NEXT_ALL
-#include <wx/listctrl.h>  // for wxListCtrl
 #include <wx/listctrl.h>  // IWYU pragma: keep for wxListCtrl
+#include <wx/string.h>    // for wxString
 // IWYU pragma: no_include <wx/generic/listctrl.h>
 
 namespace cszb_scoreboard {
