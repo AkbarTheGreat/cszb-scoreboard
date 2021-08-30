@@ -42,8 +42,6 @@ limitations under the License.
 #include "wx/window.h"                          // for wxWindow
 // IWYU pragma: no_include <wx/generic/accel.h>
 
-class wxAcceleratorEntry;
-
 namespace cszb_scoreboard {
 
 const int DEFAULT_NOTEBOOK_STYLE = wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT |
