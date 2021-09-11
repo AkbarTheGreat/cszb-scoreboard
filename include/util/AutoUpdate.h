@@ -25,8 +25,11 @@ limitations under the License.
 
 #include "HttpReader.h"
 #include "ScoreboardCommon.h"
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
+
+class FilesystemPath;
 
 class Version {
  public:
@@ -48,28 +51,30 @@ class Version {
 
 class AutoUpdate {
  public:
-  static auto getInstance() -> AutoUpdate *;
+  explicit AutoUpdate(SingletonClass c)
+      : AutoUpdate(c, Singleton::getInstance(),
+                   std::move(std::make_unique<HttpReader>())){};
   auto checkForUpdate(const std::string &current_version) -> bool;
   [[nodiscard]] auto updateIsDownloadable() const -> bool {
     return update_size > 0;
   }
   auto downloadUpdate(std::vector<char> *update_data) -> bool;
-  static void removeOldUpdate();
+  void removeOldUpdate();
   auto updateInPlace() -> bool;
 
   PUBLIC_TEST_ONLY
   auto checkForUpdate(const std::string &current_version,
                       const std::string &platform_name) -> bool;
-  explicit AutoUpdate(std::unique_ptr<HttpReader> reader) {
-    httpReader = std::move(reader);
-  }
+  AutoUpdate(SingletonClass c, Singleton *singleton,
+             std::unique_ptr<HttpReader> reader);
 
  private:
   std::string new_binary_url;
   bool update_available;
   int update_size;
   std::unique_ptr<HttpReader> httpReader;
-  AutoUpdate() : AutoUpdate(std::move(std::make_unique<HttpReader>())){};
+  Singleton *singleton;
+  auto backupPath() -> FilesystemPath;
   auto downloadUpdate(const std::string &url, std::vector<char> *update_data,
                       int redirect_depth = 0) -> bool;
 };

@@ -40,15 +40,13 @@ const float BOTTOM_CORNER_OVERLAY_SCALE = 0.30F;
 const float AUTOFIT_FONT_ADJUSTMENT = 0.5F;
 
 ScreenTextSide::ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side,
-                               Size size)
-    : Panel(wx) {
+                               Size size, Singleton *singleton)
+    : ScreenTextSide(singleton, wx, source_side->screen_side) {
   for (const auto &new_text : source_side->texts) {
     this->texts.push_back(new_text);
   }
   this->image = source_side->image;
-  this->screen_side = source_side->screen_side;
   this->background_color = source_side->background_color;
-  image_is_scaled = false;
   if (background_color.has_value()) {
     initializeForColor(size, *background_color);
   }
@@ -56,15 +54,13 @@ ScreenTextSide::ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side,
 }
 
 ScreenTextSide::ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
-                               const proto::ScreenSide &side, Size size)
-    : Panel(wx) {
+                               const proto::ScreenSide &side, Size size,
+                               Singleton *singleton)
+    : ScreenTextSide(singleton, wx, side) {
   proto::RenderableText default_text;
   default_text.set_text(initial_text);
   ProtoUtil::defaultFont(default_text.mutable_font());
   texts.push_back(default_text);
-
-  this->screen_side = side;
-  image_is_scaled = false;
 
   if (side.error()) {
     image = BackgroundImage::errorImage(size);
@@ -74,6 +70,14 @@ ScreenTextSide::ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
     initializeForColor(size, *background_color);
   }
   bindEvents();
+}
+
+ScreenTextSide::ScreenTextSide(Singleton *singleton, swx::Panel *wx,
+                               const proto::ScreenSide &side)
+    : Panel(wx) {
+  this->image_is_scaled = false;
+  this->screen_side = side;
+  this->singleton = singleton;
 }
 
 void ScreenTextSide::bindEvents() {
@@ -384,7 +388,7 @@ void ScreenTextSide::setBackgroundOverlay(const Image &overlay,
 }
 
 void ScreenTextSide::setDefaultBackground(const proto::ScreenSide &side) {
-  Color background_color = TeamConfig::getInstance()->teamColor(side)[0];
+  Color background_color = singleton->teamConfig()->teamColor(side)[0];
   setBackground(background_color, side);
 }
 

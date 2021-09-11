@@ -19,8 +19,10 @@ limitations under the License.
 */
 #pragma once
 
+#include "ScoreboardCommon.h"
 #include "config/Position.h"
 #include "ui/component/ScreenText.h"  // for ScreenText
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -29,10 +31,16 @@ class Panel;
 
 class ScreenThumbnail : public ScreenText {
  public:
-  ScreenThumbnail(swx::Panel *wx, int monitor_number,
-                  const ScreenText &preview);
+  ScreenThumbnail(swx::Panel *wx, int monitor_number, const ScreenText &preview)
+      : ScreenThumbnail(wx, monitor_number, preview, Singleton::getInstance()) {
+  }
+
+  PUBLIC_TEST_ONLY
+  ScreenThumbnail(swx::Panel *wx, int monitor_number, const ScreenText &preview,
+                  Singleton *singleton);
 
  private:
-  static auto thumbnailSize(int monitor_number) -> Size;
+  Singleton *singleton;
+  auto thumbnailSize(int monitor_number) -> Size;
 };
 }  // namespace cszb_scoreboard

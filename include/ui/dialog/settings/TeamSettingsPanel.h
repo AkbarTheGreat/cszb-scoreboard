@@ -20,12 +20,14 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"              // for TeamInfo_TeamType
 #include "ui/graphics/Color.h"      // for Color
 #include "ui/widget/Button.h"       // for Button
 #include "ui/widget/ColorPicker.h"  // for ColorPicker
 #include "ui/widget/Label.h"        // for Label
 #include "ui/widget/Panel.h"        // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 
@@ -39,10 +41,17 @@ class Panel;
 class TeamSettingsPanel : public Panel {
  public:
   TeamSettingsPanel(swx::Panel *wx, int team_index,
-                    proto::TeamInfo_TeamType team, TeamSettingsPage *parent);
+                    proto::TeamInfo_TeamType team, TeamSettingsPage *parent)
+      : TeamSettingsPanel(wx, team_index, team, parent,
+                          Singleton::getInstance()) {}
   void copyFrom(const TeamSettingsPanel &other);
   auto teamColor() -> Color;
   auto team() -> proto::TeamInfo_TeamType { return team_type; }
+
+  PUBLIC_TEST_ONLY
+  TeamSettingsPanel(swx::Panel *wx, int team_index,
+                    proto::TeamInfo_TeamType team, TeamSettingsPage *parent,
+                    Singleton *singleton);
 
  private:
   int index;

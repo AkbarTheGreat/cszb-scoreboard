@@ -24,11 +24,13 @@ limitations under the License.
 #include <string>      // for string
 #include <vector>      // for vector
 
+#include "ScoreboardCommon.h"
 #include "config/swx/defs.h"      // for wxID_ANY
 #include "config/swx/event.h"     // for wxEventTypeTag
 #include "ui/widget/ListBox.h"    // for ListBox
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -37,7 +39,8 @@ class Panel;
 
 class FileListBox : public Panel {
  public:
-  FileListBox(swx::Panel *wx, const std::string &title);
+  FileListBox(swx::Panel *wx, const std::string &title)
+      : FileListBox(wx, title, Singleton::getInstance()) {}
 
   void bind(const wxEventTypeTag<wxListEvent> &eventType,
             const std::function<void(wxListEvent &)> &lambda,
@@ -46,6 +49,9 @@ class FileListBox : public Panel {
   }
   auto getFilenames() -> std::vector<FilesystemPath>;
   auto selectedFilename() -> FilesystemPath;
+
+  PUBLIC_TEST_ONLY
+  FileListBox(swx::Panel *wx, const std::string &title, Singleton *singleton);
 
  protected:
   void bindEvents();

@@ -37,12 +37,13 @@ const std::string ARROW_TOOL_TIP =
     "show previews on the main screen.  Requires a restart to take effect.";
 
 DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
-                                           DisplaySettingsPage *parent)
+                                           DisplaySettingsPage *parent,
+                                           Singleton *singleton)
     : Panel(wx) {
   this->index = index;
   this->parent = parent;
   proto::DisplayInfo display_info =
-      DisplayConfig::getInstance()->displayDetails(index);
+      singleton->displayConfig()->displayDetails(index);
   this->display_id = display_info.id();
 
   const proto::ScreenSide &screen_side = display_info.side();
@@ -57,7 +58,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
   if (index == 0) {
     up_button->disable();
   }
-  if (index >= DisplayConfig::getInstance()->numberOfDisplays() - 1) {
+  if (index >= singleton->displayConfig()->numberOfDisplays() - 1) {
     down_button->disable();
   }
 

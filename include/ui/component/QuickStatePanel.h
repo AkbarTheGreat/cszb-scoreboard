@@ -22,9 +22,11 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
+#include "ScoreboardCommon.h"
 #include "ui/component/ScreenText.h"  // for ScreenText
 #include "ui/widget/Button.h"         // for Button
 #include "ui/widget/Panel.h"          // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 
@@ -34,7 +36,7 @@ class Panel;
 
 class QuickStateEntry : public ScreenText {
  public:
-  QuickStateEntry(swx::Panel *wx, int id);
+  QuickStateEntry(swx::Panel *wx, int id, Singleton *singleton);
 
  private:
   static auto tooltipText(char command_character) -> std::string;
@@ -43,14 +45,19 @@ class QuickStateEntry : public ScreenText {
   void setShortcut();
 
   std::unique_ptr<Button> set_button, execute_button;
+  Singleton *singleton;
   bool initialized = false;
 };
 
 class QuickStatePanel : public Panel {
  public:
-  explicit QuickStatePanel(swx::Panel *wx);
-  static void executeShortcut(QuickStateEntry *entry);
-  static void setShortcut(QuickStateEntry *entry);
+  explicit QuickStatePanel(swx::Panel *wx)
+      : QuickStatePanel(wx, Singleton::getInstance()) {}
+  static void executeShortcut(QuickStateEntry *entry, Singleton *singleton);
+  static void setShortcut(QuickStateEntry *entry, Singleton *singleton);
+
+  PUBLIC_TEST_ONLY
+  QuickStatePanel(swx::Panel *wx, Singleton *singleton);
 
  private:
   void positionWidgets();

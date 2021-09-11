@@ -21,14 +21,16 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"          // for TeamInfo_TeamType, ScreenSide (ptr only)
 #include "ui/graphics/Color.h"  // for Color
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 
 class TeamConfig {
  public:
-  static auto getInstance() -> TeamConfig *;
+  TeamConfig(SingletonClass c) : TeamConfig(c, Singleton::getInstance()) {}
   auto numberOfTeams() -> int;
   void saveSettings();
   void setColor(proto::TeamInfo_TeamType team, const Color &color);
@@ -38,12 +40,15 @@ class TeamConfig {
   auto teamColor(const proto::ScreenSide &side) -> std::vector<Color>;
   auto teamName(proto::TeamInfo_TeamType team) -> std::string;
 
+  PUBLIC_TEST_ONLY
+  TeamConfig(SingletonClass c, Singleton *singleton);
+
  private:
   proto::TeamConfig team_config;
+  Singleton *singleton;
   static void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
   static auto teamsForSide(const proto::ScreenSide &side)
       -> std::vector<proto::TeamInfo_TeamType>;
-  TeamConfig();
   auto checkTeamConfig() -> bool;
   auto checkTeamOrder() -> bool;
   auto indexForTeam(proto::TeamInfo_TeamType team) -> int;

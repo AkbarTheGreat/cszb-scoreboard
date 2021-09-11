@@ -24,6 +24,8 @@ limitations under the License.
 #include <memory>
 
 #include "util/FilesystemPath.h"
+#include "ScoreboardCommon.h"
+#include "util/Singleton.h"
 
 class wxCmdLineArgsArray;
 
@@ -38,22 +40,11 @@ static const std::array<wxCmdLineEntryDesc, 3> ARG_LIST{
      {wxCMD_LINE_NONE}}};
 
 class CommandArgs {
-  // Using the passkey idiom from https://abseil.io/tips/134 to avoid adding
-  // abseil as a project dependency.  If enough uses of abseil pop up, this can
-  // be changed to simply using WrapUnique for singelton construction.
- private:
-  class Token {
-   private:
-    Token() = default;
-    friend CommandArgs;
-  };
-
  public:
-  explicit CommandArgs(Token t);
-  static auto getInstance() -> CommandArgs *;
+  explicit CommandArgs(SingletonClass c);
   /* parse must be called before getInstance, or an exception is thrown. */
-  static auto process_args(const wxCmdLineParser &parser, int argc,
-                           const wxCmdLineArgsArray &argv) -> bool;
+  void process_args(const wxCmdLineParser &parser, int argc,
+                    const wxCmdLineArgsArray &argv);
 
   // flag getters
   [[nodiscard]] auto autoUpdate() const -> bool;
@@ -64,8 +55,5 @@ class CommandArgs {
   static std::unique_ptr<CommandArgs> singleton_instance;
   bool auto_update, reset_config;
   FilesystemPath command_path;
-
-  auto process_args_internal(const wxCmdLineParser &parser, int argc,
-                             const wxCmdLineArgsArray &argv) -> bool;
 };
 }  // namespace cszb_scoreboard

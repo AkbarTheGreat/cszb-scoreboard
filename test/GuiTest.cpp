@@ -35,7 +35,8 @@ limitations under the License.
 #include "ui/frame/MainView.h"                          // for MainView
 #include "ui/widget/Panel.h"                            // for Panel
 #include "ui/widget/swx/Panel.h"                        // for Panel
-#include "wx/window.h"                                  // for wxWindow
+#include "util/Singleton.h"
+#include "wx/window.h"  // for wxWindow
 
 namespace cszb_scoreboard {
 class ScreenPreview;
@@ -57,7 +58,8 @@ void GuiTest::TearDown() {
 }
 
 auto GuiTest::mainView() -> MainView * {
-  return dynamic_cast<MainView *>(FrameManager::getInstance()->mainView());
+  return dynamic_cast<MainView *>(
+      Singleton::getInstance()->frameManager()->mainView());
 }
 
 auto GuiTest::textEntry() -> TextEntry * {

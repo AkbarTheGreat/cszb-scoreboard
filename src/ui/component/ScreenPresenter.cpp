@@ -28,11 +28,12 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 0;
 
-ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview)
+ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
+                                 Singleton *singleton)
     : Frame("Scoreboard") {
   this->monitor_number = monitor_number;
 
-  if (DisplayConfig::getInstance()->windowedMode()) {
+  if (singleton->displayConfig()->windowedMode()) {
     show(true);
   } else {
     // Set external monitors to be always on top, fullscreen.
@@ -45,7 +46,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview)
 #endif
 
   proto::DisplayInfo display =
-      DisplayConfig::getInstance()->displayDetails(monitor_number);
+      singleton->displayConfig()->displayDetails(monitor_number);
   Size screen_size{.width = display.dimensions().width(),
                    .height = display.dimensions().height()};
   Position screen_pos{.x = display.dimensions().x(),

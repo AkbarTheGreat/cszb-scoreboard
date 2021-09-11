@@ -44,7 +44,9 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id) : ScreenText(wx) {
+QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id, Singleton *singleton)
+    : ScreenText(wx) {
+  this->singleton = singleton;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
                Size{.width = PREVIEW_WIDTH, .height = PREVIEW_HEIGHT});
 
@@ -87,22 +89,22 @@ void QuickStateEntry::bindEvents(int id) {
       wxEVT_COMMAND_BUTTON_CLICKED,
       [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
 
-  HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, command_button,
-                                        execute_button->id());
-  HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL | wxACCEL_ALT,
-                                        command_button, set_button->id());
+  singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, command_button,
+                                      execute_button->id());
+  singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL | wxACCEL_ALT,
+                                      command_button, set_button->id());
 }
 
 void QuickStateEntry::executeShortcut() {
   if (!initialized) {
     return;
   }
-  QuickStatePanel::executeShortcut(this);
+  QuickStatePanel::executeShortcut(this, singleton);
 }
 
 void QuickStateEntry::setShortcut() {
   initialized = true;
-  QuickStatePanel::setShortcut(this);
+  QuickStatePanel::setShortcut(this, singleton);
 }
 
 auto QuickStateEntry::tooltipText(char command_character) -> std::string {
@@ -120,10 +122,11 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
   return buffer;
 }
 
-QuickStatePanel::QuickStatePanel(swx::Panel *wx) : Panel(wx) {
+QuickStatePanel::QuickStatePanel(swx::Panel *wx, Singleton *singleton)
+    : Panel(wx) {
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
-    entries.push_back(
-        std::move(std::make_unique<QuickStateEntry>(childPanel(), i)));
+    entries.push_back(std::move(
+        std::make_unique<QuickStateEntry>(childPanel(), i, singleton)));
   }
   positionWidgets();
 }
@@ -136,13 +139,14 @@ void QuickStatePanel::positionWidgets() {
   runSizer();
 }
 
-void QuickStatePanel::executeShortcut(QuickStateEntry *entry) {
-  FrameManager::getInstance()->mainView()->previewPanel()->setToPresenters(
-      entry);
+void QuickStatePanel::executeShortcut(QuickStateEntry *entry,
+                                      Singleton *singleton) {
+  singleton->frameManager()->mainView()->previewPanel()->setToPresenters(entry);
 }
 
-void QuickStatePanel::setShortcut(QuickStateEntry *entry) {
-  FrameManager::getInstance()
+void QuickStatePanel::setShortcut(QuickStateEntry *entry,
+                                  Singleton *singleton) {
+  singleton->frameManager()
       ->mainView()
       ->controlPanel()
       ->updateScreenTextFromSelected(entry);

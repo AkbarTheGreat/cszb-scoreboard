@@ -20,11 +20,13 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"           // for ScreenSide
 #include "ui/widget/Button.h"    // for Button
 #include "ui/widget/CheckBox.h"  // for CheckBox
 #include "ui/widget/Label.h"     // for Label
 #include "ui/widget/Panel.h"     // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 
@@ -37,10 +39,15 @@ class Panel;
 
 class DisplaySettingsPanel : public Panel {
  public:
-  DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent);
+  DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent)
+      : DisplaySettingsPanel(wx, index, parent, Singleton::getInstance()) {}
   void copyFrom(const DisplaySettingsPanel &other);
   auto getSide() -> proto::ScreenSide;
   [[nodiscard]] auto getDisplayId() const -> int { return display_id; }
+
+  PUBLIC_TEST_ONLY
+  DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent,
+                       Singleton *singleton);
 
  private:
   static void copyCheckbox(const CheckBox &source, CheckBox *target);

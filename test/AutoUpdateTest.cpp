@@ -30,6 +30,7 @@ limitations under the License.
 
 #include "gtest/gtest_pred_impl.h"
 #include "test/mocks/MockHttpReader.h"
+#include "test/mocks/MockSingleton.h"
 #include "util/AutoUpdate.h"
 #include "util/HttpReader.h"
 
@@ -38,6 +39,12 @@ using ::testing::HasSubstr;
 using ::testing::Return;
 
 namespace cszb_scoreboard::test {
+
+auto testObject(std::unique_ptr<MockHttpReader> reader,
+                MockSingleton* singleton) -> std::unique_ptr<AutoUpdate> {
+  return std::make_unique<AutoUpdate>(SingletonClass{}, singleton,
+                                      std::move(reader));
+}
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, VersionComparisons) {
@@ -83,7 +90,8 @@ TEST(AutoUpdateTest, NewVersionFound) {
   HttpResponse testReturn{"", std::vector(json.begin(), json.end())};
   auto reader = std::make_unique<MockHttpReader>();
   EXPECT_CALL(*reader, read).WillRepeatedly(Return(testReturn));
-  auto updater = std::make_unique<AutoUpdate>(std::move(reader));
+  MockSingleton singleton;
+  auto updater = testObject(std::move(reader), &singleton);
   EXPECT_TRUE(updater->checkForUpdate("0.0.0"));
   EXPECT_TRUE(updater->checkForUpdate("1.1.3"));
   EXPECT_TRUE(updater->checkForUpdate("1.2.2"));
@@ -105,7 +113,8 @@ TEST(AutoUpdateTest, NoNewVersionFound) {
   HttpResponse testReturn{"", std::vector(json.begin(), json.end())};
   auto reader = std::make_unique<MockHttpReader>();
   EXPECT_CALL(*reader, read).WillRepeatedly(Return(testReturn));
-  auto updater = std::make_unique<AutoUpdate>(std::move(reader));
+  MockSingleton singleton;
+  auto updater = testObject(std::move(reader), &singleton);
   EXPECT_FALSE(updater->checkForUpdate("99999.0.0"));
   EXPECT_FALSE(updater->checkForUpdate("1.2.3"));
   EXPECT_FALSE(updater->checkForUpdate("2.0.0"));
@@ -135,7 +144,8 @@ TEST(AutoUpdateTest, VersionDownloads) {
       .WillOnce(Return(versionReturn));
   EXPECT_CALL(*reader, read(HasSubstr("test-download")))
       .WillRepeatedly(Return(updateReturn));
-  auto updater = std::make_unique<AutoUpdate>(std::move(reader));
+  MockSingleton singleton;
+  auto updater = testObject(std::move(reader), &singleton);
 
   // We need to ask for an update before it'll ever work anyway, so assert on it
   // in case it goes wrong, although NewVersionFound properly tests this.
@@ -150,11 +160,12 @@ TEST(AutoUpdateTest, VersionDownloads) {
 // it sparingly.
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, LiveServerTest) {
-  // We need to ask for an update before it'll ever work anyway, so assert on it
-  // in case it goes wrong, although NewVersionFound properly tests this.
-  EXPECT_TRUE(AutoUpdate::getInstance()->checkForUpdate("0.0.0", "Win64"));
+  MockSingleton singleton;
+  AutoUpdate updater(SingletonClass{});
+  EXPECT_CALL(singleton, autoUpdate()).WillRepeatedly(Return(&updater));
+  EXPECT_TRUE(singleton.autoUpdate()->checkForUpdate("0.0.0", "Win64"));
   std::vector<char> update_data;
-  EXPECT_TRUE(AutoUpdate::getInstance()->downloadUpdate(&update_data));
+  EXPECT_TRUE(singleton.autoUpdate()->downloadUpdate(&update_data));
   EXPECT_GT(update_data.size(), 4000);
 }
 #endif  // SCOREBOARD_INTEGRATION_TEST

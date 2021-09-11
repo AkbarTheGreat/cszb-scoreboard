@@ -31,14 +31,16 @@ class Panel;
 const int THUMBNAIL_HEIGHT = 64;
 
 ScreenThumbnail::ScreenThumbnail(swx::Panel *wx, int monitor_number,
-                                 const ScreenText &preview)
+                                 const ScreenText &preview,
+                                 Singleton *singleton)
     : ScreenText(wx) {
+  this->singleton = singleton;
   setupPresenter(preview, thumbnailSize(monitor_number));
 }
 
 auto ScreenThumbnail::thumbnailSize(int monitor_number) -> Size {
   proto::DisplayInfo display_info =
-      DisplayConfig::getInstance()->displayDetails(monitor_number);
+      singleton->displayConfig()->displayDetails(monitor_number);
 
   float ratio = 4 / 3;
 

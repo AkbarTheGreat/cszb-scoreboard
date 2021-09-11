@@ -23,11 +23,13 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"                                  // for RenderableTex...
 #include "ui/component/control/things_mode/Activity.h"  // for Activity
 #include "ui/graphics/Color.h"                          // for Color
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
 #include "ui/widget/Panel.h"                            // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class ReplacementPanel;
@@ -40,7 +42,8 @@ class Panel;
 class ActivityPanel : public Panel {
  public:
   ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
-                const proto::ScreenSide &side);
+                const proto::ScreenSide &side)
+      : ActivityPanel(wx, owning_controller, side, Singleton::getInstance()) {}
   void addActivity();
   void addReplacement();
   auto getColor() -> Color;
@@ -54,12 +57,17 @@ class ActivityPanel : public Panel {
   void selectionChanged(Activity *selected);
   void textUpdated();
 
+  PUBLIC_TEST_ONLY
+  ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
+                const proto::ScreenSide &side, Singleton *singleton);
+
  private:
   std::unique_ptr<Panel> activity_half, replacement_half;
   std::unique_ptr<ColorPicker> color_picker;
   proto::ScreenSide side;
   std::vector<std::unique_ptr<Activity>> activities;
   ScreenTextController *owning_controller;
+  Singleton *singleton;
 
   void bindEvents();
   void positionWidgets();

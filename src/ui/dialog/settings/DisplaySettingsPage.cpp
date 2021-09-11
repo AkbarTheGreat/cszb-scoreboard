@@ -37,14 +37,16 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-DisplaySettingsPage::DisplaySettingsPage(swx::Panel *wx) : SettingsPage(wx) {
+DisplaySettingsPage::DisplaySettingsPage(swx::Panel *wx, Singleton *singleton)
+    : SettingsPage(wx) {
+  this->singleton = singleton;
   createControls();
   positionWidgets();
   bindEvents();
 }
 
 void DisplaySettingsPage::createControls() {
-  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
+  for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
     display_settings_panels.push_back(
         std::make_unique<DisplaySettingsPanel>(childPanel(), i, this));
   }
@@ -53,18 +55,18 @@ void DisplaySettingsPage::createControls() {
   window_mode_panel = panel();
 
   enable_window_mode = window_mode_panel->checkBox("Enable Window Mode");
-  enable_window_mode->setChecked(DisplayConfig::getInstance()->windowedMode());
+  enable_window_mode->setChecked(singleton->displayConfig()->windowedMode());
 
   number_of_windows_label = window_mode_panel->label("# of Windows");
   number_of_windows = window_mode_panel->text(
-      std::to_string(DisplayConfig::getInstance()->numberOfDisplays()));
+      std::to_string(singleton->displayConfig()->numberOfDisplays()));
 
   window_size_label = window_mode_panel->label("Window Size");
   window_width = window_mode_panel->text(
-      std::to_string(DisplayConfig::getInstance()->windowWidth()));
+      std::to_string(singleton->displayConfig()->windowWidth()));
   window_size_separator_label = window_mode_panel->label("x");
   window_height = window_mode_panel->text(
-      std::to_string(DisplayConfig::getInstance()->windowHeight()));
+      std::to_string(singleton->displayConfig()->windowHeight()));
 
   windowModeChanged();
 }
@@ -107,7 +109,7 @@ auto DisplaySettingsPage::validateSettings() -> bool {
     proto::ScreenSide side = display_panel->getSide();
     if (side.control()) {
       has_control = true;
-      if (!DisplayConfig::getInstance()->windowedMode() &&
+      if (!singleton->displayConfig()->windowedMode() &&
           (side.home() || side.away() || side.extra())) {
         PopUp::Message(
             "ERROR: The Booth Monitor display may not also be a team display.");
@@ -144,7 +146,7 @@ void DisplaySettingsPage::saveSettings() {
   bool warnedAboutOrderChange = false;
 
   for (int i = 0; i < display_settings_panels.size(); ++i) {
-    if (DisplayConfig::getInstance()->setDisplayId(
+    if (singleton->displayConfig()->setDisplayId(
             i, display_settings_panels[i]->getDisplayId()) &&
         !warnedAboutOrderChange) {
       PopUp::Message(
@@ -152,33 +154,33 @@ void DisplaySettingsPage::saveSettings() {
           "effect, you must restart the application.");
       warnedAboutOrderChange = true;
     }
-    DisplayConfig::getInstance()->setSide(
-        i, display_settings_panels[i]->getSide());
+    singleton->displayConfig()->setSide(i,
+                                        display_settings_panels[i]->getSide());
   }
 
   // If any of the windowed settings have chagned, re-detect display settings.
-  if ((DisplayConfig::getInstance()->windowedMode() !=
+  if ((singleton->displayConfig()->windowedMode() !=
        enable_window_mode->checked()) ||
-      (DisplayConfig::getInstance()->windowedModeNumberOfWindows() !=
+      (singleton->displayConfig()->windowedModeNumberOfWindows() !=
        StringUtil::stringToInt(number_of_windows->value())) ||
-      (DisplayConfig::getInstance()->windowWidth() !=
+      (singleton->displayConfig()->windowWidth() !=
        StringUtil::stringToInt(window_width->value())) ||
-      (DisplayConfig::getInstance()->windowHeight() !=
+      (singleton->displayConfig()->windowHeight() !=
        StringUtil::stringToInt(window_height->value()))) {
     PopUp::Message(
         "WARNING: Changes to windowed mode will require an application restart "
         "to take effect.");
   }
 
-  DisplayConfig::getInstance()->setWindowedMode(enable_window_mode->checked());
-  DisplayConfig::getInstance()->setWindowedModeNumberOfWindows(
+  singleton->displayConfig()->setWindowedMode(enable_window_mode->checked());
+  singleton->displayConfig()->setWindowedModeNumberOfWindows(
       StringUtil::stringToInt(number_of_windows->value()));
-  DisplayConfig::getInstance()->setWindowWidth(
+  singleton->displayConfig()->setWindowWidth(
       StringUtil::stringToInt(window_width->value()));
-  DisplayConfig::getInstance()->setWindowHeight(
+  singleton->displayConfig()->setWindowHeight(
       StringUtil::stringToInt(window_height->value()));
 
-  DisplayConfig::getInstance()->saveSettings();
+  singleton->displayConfig()->saveSettings();
 }
 
 void DisplaySettingsPage::windowModeChanged() {

@@ -43,7 +43,11 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
                          IA_MODE_QUARTER_SCAN);
   std::vector<int> color_list = analysis.colorList();
   int list_size = color_list.size();
-  if (DisplayConfig::getInstance()->displayDetails(0).side().error()) {
+  if (Singleton::getInstance()
+          ->displayConfig()
+          ->displayDetails(0)
+          .side()
+          .error()) {
     // The error image on pane 0 is ~50% white, ~50% red with black text over
     // part of it.  We rely on display config to tell us which kind of display
     // we should be testing.

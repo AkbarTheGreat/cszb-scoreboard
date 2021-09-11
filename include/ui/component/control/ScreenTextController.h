@@ -24,6 +24,7 @@ limitations under the License.
 
 #include "ui/widget/Button.h"  // for Button
 #include "ui/widget/Panel.h"   // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class PreviewPanel;
@@ -51,10 +52,14 @@ class ScreenTextController : public Panel {
   virtual void createControls(Panel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
    * Defaults to all screens, may be overridden for more control. */
-  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx);
+  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx)
+      : ScreenTextController(preview_panel, wx, Singleton::getInstance()) {}
+  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx,
+                       Singleton *singleton);
   void initializeWidgets();
   auto previewPanel() -> PreviewPanel *;
   std::unique_ptr<Panel> control_panel;
+  Singleton *singleton;
 
  private:
   // Weak reference to the global PreviewPanel, which this object does not own.

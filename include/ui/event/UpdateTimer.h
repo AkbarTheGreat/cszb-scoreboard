@@ -20,16 +20,24 @@ limitations under the License.
 
 #include <ui/widget/PersistentTimer.h>
 
+#include "ScoreboardCommon.h"
+#include "util/Singleton.h"
+
 namespace cszb_scoreboard {
 
 class Frame;
 
 class UpdateTimer : public PersistentTimer {
  public:
-  explicit UpdateTimer(Frame *main_view);
+  explicit UpdateTimer(Frame *main_view)
+      : UpdateTimer(main_view, Singleton::getInstance()) {}
+
+  PUBLIC_TEST_ONLY
+  explicit UpdateTimer(Frame *main_view, Singleton *singleton);
 
  private:
   Frame *main_view;
+  Singleton *singleton;
 
   void execute();
 };

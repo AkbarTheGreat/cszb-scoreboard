@@ -33,9 +33,11 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-TeamSettingsPage::TeamSettingsPage(swx::Panel *wx) : SettingsPage(wx) {
+TeamSettingsPage::TeamSettingsPage(swx::Panel *wx, Singleton *singleton)
+    : SettingsPage(wx) {
+  this->singleton = singleton;
   int i = 0;
-  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+  for (auto team : singleton->teamConfig()->singleScreenOrder()) {
     auto team_panel =
         std::make_unique<TeamSettingsPanel>(childPanel(), i++, team, this);
     addWidget(*team_panel, i - 1, 0);
@@ -54,14 +56,14 @@ void TeamSettingsPage::saveSettings() {
   bool restart_warning = false;
   std::vector<proto::TeamInfo_TeamType> team_order;
   std::vector<proto::TeamInfo_TeamType> previous_team_order =
-      TeamConfig::getInstance()->singleScreenOrder();
+      singleton->teamConfig()->singleScreenOrder();
 
   if (previous_team_order.size() != team_settings_panels.size()) {
     restart_warning = true;
   }
 
   for (const auto &panel : team_settings_panels) {
-    TeamConfig::getInstance()->setColor(panel->team(), panel->teamColor());
+    singleton->teamConfig()->setColor(panel->team(), panel->teamColor());
 
     if (restart_warning || previous_team_order.size() <= team_order.size() ||
         panel->team() != previous_team_order[team_order.size()]) {
@@ -77,8 +79,8 @@ void TeamSettingsPage::saveSettings() {
         "effect, you must restart the application.");
   }
 
-  TeamConfig::getInstance()->setSingleScreenOrder(team_order);
-  TeamConfig::getInstance()->saveSettings();
+  singleton->teamConfig()->setSingleScreenOrder(team_order);
+  singleton->teamConfig()->saveSettings();
 }
 
 void TeamSettingsPage::swapTeams(int a, int b) {

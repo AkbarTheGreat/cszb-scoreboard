@@ -37,15 +37,13 @@ namespace cszb_scoreboard {
 static const int DEFAULT_WIDTH = 1024;
 static const int DEFAULT_HEIGHT = 768;
 
-DisplayConfig::DisplayConfig() { detectDisplays(); }
-
-auto DisplayConfig::getInstance() -> DisplayConfig * {
-  static DisplayConfig singleton;
-  return &singleton;
+DisplayConfig::DisplayConfig(SingletonClass c, Singleton *singleton) {
+  this->singleton = singleton;
+  detectDisplays();
 }
 
 void DisplayConfig::detectDisplays() {
-  display_config = Persistence::getInstance()->loadDisplays();
+  display_config = singleton->persistence()->loadDisplays();
 
   // If we're in windowed mode, default to a reasonably sized window.
   if (display_config.window_size().width() == 0) {
@@ -167,7 +165,7 @@ auto DisplayConfig::setDisplayId(int index, int id) -> bool {
 }
 
 void DisplayConfig::saveSettings() {
-  Persistence::getInstance()->saveDisplays(display_config);
+  singleton->persistence()->saveDisplays(display_config);
 }
 
 auto DisplayConfig::numberOfDisplays() -> int {
@@ -181,7 +179,7 @@ auto DisplayConfig::displayDetails(int index) -> proto::DisplayInfo {
 
 // Determines which display currently houses the main control window.
 auto DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool {
-  Frame *main_view = FrameManager::getInstance()->mainView();
+  Frame *main_view = singleton->frameManager()->mainView();
   if (main_view == nullptr) {
     return true;  // Guess that screen 0 is our primary, as we haven't created
                   // our main window yet.

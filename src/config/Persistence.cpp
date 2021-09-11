@@ -34,12 +34,8 @@ namespace cszb_scoreboard {
 const char *CONFIG_FILE = "scoreboard.config";
 const char *IMAGE_LIBRARY_FILE = "image_library.data";
 
-auto Persistence::getInstance() -> Persistence * {
-  static Persistence singleton;
-  return &singleton;
-}
-
-Persistence::Persistence() {
+Persistence::Persistence(SingletonClass c, Singleton *singleton) {
+  this->singleton = singleton;
   loadConfigFromDisk();
   loadImageLibraryFromDisk();
 }
@@ -49,7 +45,7 @@ void Persistence::loadConfigFromDisk() {
   // Reset config to default proto.
   full_config = proto::ScoreboardConfig();
 #else
-  if (CommandArgs::getInstance()->resetConfig()) {
+  if (singleton->commandArgs()->resetConfig()) {
     LogDebug("Reset config argument passed, so all configuration data reset.");
     return;
   }

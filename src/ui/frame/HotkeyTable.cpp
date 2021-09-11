@@ -24,13 +24,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-auto HotkeyTable::getInstance() -> HotkeyTable * {
-  static HotkeyTable singleton;
-  return &singleton;
-}
-
-HotkeyTable::HotkeyTable() = default;
-
 void HotkeyTable::addHotkey(int modifier_flags, int key_code,
                             wxWindowID widget_id) {
   accel_entries.emplace_back(wxAcceleratorEntry());

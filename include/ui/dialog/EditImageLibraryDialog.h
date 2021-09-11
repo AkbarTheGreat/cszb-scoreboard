@@ -21,6 +21,7 @@ limitations under the License.
 #include <map>     // for map
 #include <memory>  // for unique_ptr
 
+#include "ScoreboardCommon.h"
 #include "image_library.pb.h"                          // for ImageInfo
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
 #include "ui/widget/Label.h"                           // for Label
@@ -29,6 +30,7 @@ limitations under the License.
 #include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
 #include "ui/widget/Text.h"                            // for Text
 #include "util/FilesystemPath.h"                       // for FilesystemPath
+#include "util/Singleton.h"
 
 class wxListEvent;
 
@@ -41,8 +43,12 @@ class ImageFromLibrary;
 
 class EditImageLibraryDialog : public TabbedDialog {
  public:
-  EditImageLibraryDialog(swx::PropertySheetDialog *wx,
-                         ImageFromLibrary *parent);
+  EditImageLibraryDialog(swx::PropertySheetDialog *wx, ImageFromLibrary *parent)
+      : EditImageLibraryDialog(wx, parent, Singleton::getInstance()) {}
+
+  PUBLIC_TEST_ONLY
+  EditImageLibraryDialog(swx::PropertySheetDialog *wx, ImageFromLibrary *parent,
+                         Singleton *singleton);
 
  private:
   std::unique_ptr<FileListBox> file_list;
@@ -52,6 +58,7 @@ class EditImageLibraryDialog : public TabbedDialog {
   std::unique_ptr<ListBox> tag_list;
   std::map<FilesystemPath, proto::ImageInfo> images;
   ImageFromLibrary *parent;
+  Singleton *singleton;
 
   void bindEvents();
   void positionWidgets();

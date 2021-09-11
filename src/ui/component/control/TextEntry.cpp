@@ -52,8 +52,8 @@ TextEntry::TextEntry(PreviewPanel *preview_panel, swx::Panel *wx)
 
   home_font_size = away_font_size = all_font_size = DEFAULT_FONT_SIZE;
 
-  home_color = TeamConfig::getInstance()->teamColor(ProtoUtil::homeSide())[0];
-  away_color = TeamConfig::getInstance()->teamColor(ProtoUtil::awaySide())[0];
+  home_color = singleton->teamConfig()->teamColor(ProtoUtil::homeSide())[0];
+  away_color = singleton->teamConfig()->teamColor(ProtoUtil::awaySide())[0];
 
   all_color = Color("Black");
 }

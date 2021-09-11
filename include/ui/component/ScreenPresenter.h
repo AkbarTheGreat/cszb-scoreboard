@@ -20,15 +20,22 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 
+#include "ScoreboardCommon.h"
 #include "ui/component/ScreenText.h"  // for ScreenText
 #include "ui/widget/Frame.h"          // for Frame
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class ScreenPresenter : public Frame {
  public:
-  ScreenPresenter(int monitor_number, const ScreenText &preview);
+  ScreenPresenter(int monitor_number, const ScreenText &preview)
+      : ScreenPresenter(monitor_number, preview, Singleton::getInstance()) {}
   void blackout() { screen_text->blackout(); }
   void setAll(const ScreenText &source) { screen_text->setAll(source); }
+
+  PUBLIC_TEST_ONLY
+  ScreenPresenter(int monitor_number, const ScreenText &preview,
+                  Singleton *singleton);
 
  private:
   int monitor_number;

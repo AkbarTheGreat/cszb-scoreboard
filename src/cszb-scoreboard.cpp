@@ -31,6 +31,7 @@ limitations under the License.
 #include "ui/frame/FrameManager.h"  // for FrameManager
 #include "ui/frame/MainView.h"      // for MainView
 #include "util/Log.h"               // for LogDebug
+#include "util/Singleton.h"
 // IWYU pragma: no_include <wx/unix/app.h>
 
 #ifndef SCOREBOARD_TESTING
@@ -51,7 +52,8 @@ auto Scoreboard::OnInit() -> bool {
   }
   wxInitAllImageHandlers();
   LogDebug(wxT("Starting up main loop"));
-  FrameManager::getInstance()
+  Singleton::getInstance()
+      ->frameManager()
       ->createMainView("ComedySportz Scoreboard",
                        Position{.x = START_X, .y = START_Y},
                        Size{.width = START_WIDTH, .height = START_HEIGHT})
@@ -60,7 +62,7 @@ auto Scoreboard::OnInit() -> bool {
 }
 
 void Scoreboard::close() {
-  FrameManager::getInstance()->mainView()->closeWindow();
+  Singleton::getInstance()->frameManager()->mainView()->closeWindow();
 }
 
 void Scoreboard::OnInitCmdLine(wxCmdLineParser &parser) {
@@ -72,9 +74,7 @@ void Scoreboard::OnInitCmdLine(wxCmdLineParser &parser) {
 }
 
 auto Scoreboard::OnCmdLineParsed(wxCmdLineParser &parser) -> bool {
-  if (!CommandArgs::process_args(parser, argc, argv)) {
-    return false;
-  }
+  Singleton::getInstance()->generateCommandArgs(parser, argc, argv);
   return wxApp::OnCmdLineParsed(parser);
 }
 

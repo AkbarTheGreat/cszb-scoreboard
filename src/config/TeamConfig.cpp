@@ -24,13 +24,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-auto TeamConfig::getInstance() -> TeamConfig * {
-  static TeamConfig singleton;
-  return &singleton;
-}
-
-TeamConfig::TeamConfig() {
-  team_config = Persistence::getInstance()->loadTeams();
+TeamConfig::TeamConfig(SingletonClass c, Singleton *singleton) {
+  this->singleton = singleton;
+  team_config = singleton->persistence()->loadTeams();
   bool settings_changed = false;
 
   settings_changed = checkTeamConfig() || settings_changed;
@@ -190,7 +186,7 @@ void TeamConfig::setColor(proto::TeamInfo_TeamType team, const Color &color) {
 }
 
 void TeamConfig::saveSettings() {
-  Persistence::getInstance()->saveTeams(team_config);
+  singleton->persistence()->saveTeams(team_config);
 }
 
 }  // namespace cszb_scoreboard

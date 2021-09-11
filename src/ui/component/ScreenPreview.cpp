@@ -38,8 +38,9 @@ const int PREVIEW_HEIGHT = 320;
 
 ScreenPreview::ScreenPreview(swx::Panel *wx,
                              std::vector<proto::ScreenSide> sides,
-                             int monitor_number)
+                             int monitor_number, Singleton *singleton)
     : Panel(wx) {
+  this->singleton = singleton;
   std::string initial_text;
   if (sides[0].error()) {
     initial_text = ERROR_MESSAGE;
@@ -53,8 +54,8 @@ ScreenPreview::ScreenPreview(swx::Panel *wx,
   thumbnail = std::make_unique<ScreenThumbnail>(childPanel(), monitor_number,
                                                 *screen_text);
   if (!sides[0].error()) {
-    presenter = FrameManager::getInstance()->createScreenPresenter(
-        monitor_number, *screen_text);
+    presenter = singleton->frameManager()->createScreenPresenter(monitor_number,
+                                                                 *screen_text);
   }
 
   positionWidgets();
@@ -69,7 +70,7 @@ void ScreenPreview::positionWidgets() {
 
 auto ScreenPreview::previewSize(int monitor_number) -> Size {
   proto::DisplayInfo display_info =
-      DisplayConfig::getInstance()->displayDetails(monitor_number);
+      singleton->displayConfig()->displayDetails(monitor_number);
 
   float ratio = 4 / 3;
 
@@ -88,12 +89,12 @@ auto ScreenPreview::thumbnailWidget() -> ScreenText * {
 void ScreenPreview::resetFromSettings(int monitor_number) {
   screen_text->setSize(previewSize(monitor_number).toWx());
   proto::ScreenSide side =
-      DisplayConfig::getInstance()->displayDetails(monitor_number).side();
-  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+      singleton->displayConfig()->displayDetails(monitor_number).side();
+  for (auto team : singleton->teamConfig()->singleScreenOrder()) {
     if (ProtoUtil::sideContains(side, team)) {
       proto::ScreenSide effective_side = ProtoUtil::teamSide(team);
       screen_text->setBackground(
-          TeamConfig::getInstance()->teamColor(effective_side)[0],
+          singleton->teamConfig()->teamColor(effective_side)[0],
           effective_side);
     }
   }

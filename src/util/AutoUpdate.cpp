@@ -58,9 +58,10 @@ const int MIN_HTTP_RESPONSE_SIZE = 50;
 const int MAX_HTTP_RESPONSE_SIZE = 1000;
 const int MAX_REDIRECT_ATTEMPTS = 5;
 
-auto AutoUpdate::getInstance() -> AutoUpdate * {
-  static AutoUpdate singleton;
-  return &singleton;
+AutoUpdate::AutoUpdate(SingletonClass c, Singleton *singleton,
+                       std::unique_ptr<HttpReader> reader) {
+  this->singleton = singleton;
+  httpReader = std::move(reader);
 }
 
 auto getHref(const std::string &html) -> std::string {
@@ -93,8 +94,8 @@ auto isRedirect(const std::vector<char> &http_data) -> std::string {
   return getHref(http_data.data());
 }
 
-auto backupPath() -> FilesystemPath {
-  FilesystemPath backup_path = CommandArgs::getInstance()->commandPath();
+auto AutoUpdate::backupPath() -> FilesystemPath {
+  FilesystemPath backup_path = singleton->commandArgs()->commandPath();
   backup_path.replace_filename(AUTO_UPDATE_BACKUP_NAME);
   return backup_path;
 }
@@ -191,9 +192,9 @@ auto AutoUpdate::updateInPlace() -> bool {
     return false;
   }
   LogDebug("Writing auto-update to %s",
-           CommandArgs::getInstance()->commandPath().string());
+           singleton->commandArgs()->commandPath().string());
 
-  FilesystemPath executable_path = CommandArgs::getInstance()->commandPath();
+  FilesystemPath executable_path = singleton->commandArgs()->commandPath();
   FilesystemPath backup_path = backupPath();
 
   FilesystemPath::rename(executable_path, backup_path);

@@ -29,17 +29,12 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-auto TeamColors::getInstance() -> TeamColors * {
-  static TeamColors singleton;
-  return &singleton;
-}
-
-TeamColors::TeamColors() {
+TeamColors::TeamColors(SingletonClass c, Singleton *singleton) {
   // Initialize colors from configured defaults
   setColor(ProtoUtil::homeSide(),
-           TeamConfig::getInstance()->teamColor(ProtoUtil::homeSide())[0]);
+           singleton->teamConfig()->teamColor(ProtoUtil::homeSide())[0]);
   setColor(ProtoUtil::awaySide(),
-           TeamConfig::getInstance()->teamColor(ProtoUtil::awaySide())[0]);
+           singleton->teamConfig()->teamColor(ProtoUtil::awaySide())[0]);
   all_color = Color("Black");
 }
 

@@ -67,7 +67,7 @@ void ScoreControl::createControls(Panel *control_panel) {
 
   home_score_label = team_controls_panel->label("Home");
   home_color_picker = team_controls_panel->colorPicker(
-      TeamColors::getInstance()->getColor(ProtoUtil::homeSide()));
+      singleton->teamColors()->getColor(ProtoUtil::homeSide()));
   home_name_entry = team_controls_panel->text("Home Team");
   home_score_entry = team_controls_panel->text("0");
 
@@ -81,7 +81,7 @@ void ScoreControl::createControls(Panel *control_panel) {
 
   away_score_label = team_controls_panel->label("Away");
   away_color_picker = team_controls_panel->colorPicker(
-      TeamColors::getInstance()->getColor(ProtoUtil::awaySide()));
+      singleton->teamColors()->getColor(ProtoUtil::awaySide()));
   away_name_entry = team_controls_panel->text("Away Team");
   away_score_entry = team_controls_panel->text("0");
 
@@ -153,7 +153,7 @@ void ScoreControl::addHomeAwayWidgetPair(Panel *panel, int row,
                                          const Widget &away_widget) {
   bool is_left = true;
   int col = 0;
-  for (auto team : TeamConfig::getInstance()->singleScreenOrder()) {
+  for (auto team : singleton->teamConfig()->singleScreenOrder()) {
     Button *minus_1 = home_minus_1.get();
     Button *plus_1 = home_plus_1.get();
     Button *plus_5 = home_plus_5.get();
@@ -173,19 +173,19 @@ void ScoreControl::addHomeAwayWidgetPair(Panel *panel, int row,
     // Bind the hotkeys the first pass through, then skip it on subsequent runs.
     if (row == 0) {
       if (is_left) {
-        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'z', minus_1->id());
+        singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, 'z', minus_1->id());
         minus_1->toolTip("Ctrl+z");
-        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'a', plus_1->id());
+        singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, 'a', plus_1->id());
         plus_1->toolTip("Ctrl+a");
-        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'q', plus_5->id());
+        singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, 'q', plus_5->id());
         plus_5->toolTip("Ctrl+q");
         is_left = false;
       } else {
-        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'x', minus_1->id());
+        singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, 'x', minus_1->id());
         minus_1->toolTip("Ctrl+x");
-        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 's', plus_1->id());
+        singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, 's', plus_1->id());
         plus_1->toolTip("Ctrl+s");
-        HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, 'w', plus_5->id());
+        singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, 'w', plus_5->id());
         plus_5->toolTip("Ctrl+w");
       }
     }
@@ -298,9 +298,9 @@ auto ScoreControl::introLines(bool isHome)
 
 void ScoreControl::updateScreenText(ScreenText *screen_text) {
   home_color_picker->setColor(
-      TeamColors::getInstance()->getColor(ProtoUtil::homeSide()));
+      singleton->teamColors()->getColor(ProtoUtil::homeSide()));
   away_color_picker->setColor(
-      TeamColors::getInstance()->getColor(ProtoUtil::awaySide()));
+      singleton->teamColors()->getColor(ProtoUtil::awaySide()));
 
   std::vector<proto::RenderableText> home_update;
   std::vector<proto::RenderableText> away_update;
@@ -344,10 +344,10 @@ void ScoreControl::awayUpdated() { updatePreview(); }
 void ScoreControl::awayNameUpdated() { updatePreview(); }
 
 void ScoreControl::colorChanged() {
-  TeamColors::getInstance()->setColor(ProtoUtil::homeSide(),
-                                      home_color_picker->color());
-  TeamColors::getInstance()->setColor(ProtoUtil::awaySide(),
-                                      away_color_picker->color());
+  singleton->teamColors()->setColor(ProtoUtil::homeSide(),
+                                    home_color_picker->color());
+  singleton->teamColors()->setColor(ProtoUtil::awaySide(),
+                                    away_color_picker->color());
 
   updatePreview();
 }

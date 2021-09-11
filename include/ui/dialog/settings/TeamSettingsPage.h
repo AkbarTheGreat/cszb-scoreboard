@@ -21,8 +21,10 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 #include <vector>  // for vector
 
+#include "ScoreboardCommon.h"
 #include "ui/dialog/settings/SettingsPage.h"       // for SettingsPage
 #include "ui/dialog/settings/TeamSettingsPanel.h"  // for TeamSettingsPanel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -31,13 +33,18 @@ class Panel;
 
 class TeamSettingsPage : public SettingsPage {
  public:
-  explicit TeamSettingsPage(swx::Panel *wx);
+  explicit TeamSettingsPage(swx::Panel *wx)
+      : TeamSettingsPage(wx, Singleton::getInstance()) {}
   void saveSettings() override;
   void swapTeams(int a, int b);
   auto validateSettings() -> bool override;
 
+  PUBLIC_TEST_ONLY
+  TeamSettingsPage(swx::Panel *wx, Singleton *singleton);
+
  private:
   std::vector<std::unique_ptr<TeamSettingsPanel>> team_settings_panels;
+  Singleton *singleton;
 };
 
 }  // namespace cszb_scoreboard

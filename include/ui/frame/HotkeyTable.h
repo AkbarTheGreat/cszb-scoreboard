@@ -26,18 +26,19 @@ limitations under the License.
 
 #include <vector>  // for vector
 
+#include "util/Singleton.h"
+
 namespace cszb_scoreboard {
 class Frame;
 
 class HotkeyTable {
  public:
-  static auto getInstance() -> HotkeyTable *;
+  explicit HotkeyTable(SingletonClass c) {}
   void addHotkey(int modifier_flags, int key_code, wxWindowID widget_id);
   void installHotkeys(Frame *main_window);
 
  private:
   std::vector<wxAcceleratorEntry> accel_entries;
-  HotkeyTable();
 };
 
 }  // namespace cszb_scoreboard

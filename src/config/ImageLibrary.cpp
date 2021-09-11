@@ -38,13 +38,15 @@ void insertIntoSortedVector(std::vector<std::string> *vect,
   }
 }
 
-ImageLibrary::ImageLibrary(proto::ImageLibrary library) {
-  this->library = std::move(library);
-}
+ImageLibrary::ImageLibrary(SingletonClass c)
+    : ImageLibrary(
+          c, Singleton::getInstance(),
+          Singleton::getInstance()->persistence()->loadImageLibrary()) {}
 
-auto ImageLibrary::getInstance() -> ImageLibrary * {
-  static ImageLibrary singleton;
-  return &singleton;
+ImageLibrary::ImageLibrary(SingletonClass c, Singleton *singleton,
+                           proto::ImageLibrary library) {
+  this->singleton = singleton;
+  this->library = std::move(library);
 }
 
 auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
@@ -109,7 +111,7 @@ void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
 void ImageLibrary::clearLibrary() { library.Clear(); }
 
 void ImageLibrary::saveLibrary() {
-  Persistence::getInstance()->saveImageLibrary(library);
+  singleton->persistence()->saveImageLibrary(library);
 }
 
 auto ImageLibrary::search(const std::string &query) -> ImageSearchResults {

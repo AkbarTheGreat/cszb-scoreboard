@@ -27,13 +27,14 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"  // for ImageSearchResults, ImageLibrary
 #include "image_library.pb.h"     // for ImageInfo, ImageLibrary
+#include "test/mocks/MockSingleton.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 
-auto testLibrary() -> ImageLibrary {
+auto testLibrary(MockSingleton *singleton) -> ImageLibrary {
   proto::ImageLibrary library;
 
   // Add a corgi
@@ -69,7 +70,7 @@ auto testLibrary() -> ImageLibrary {
   image->add_tags("neutral");
   image->add_tags("stall");
 
-  return ImageLibrary(library);
+  return ImageLibrary(SingletonClass{}, singleton, library);
 }
 
 // A couple of convenience defines to handle vector comparisons
@@ -120,7 +121,8 @@ auto filesystemPathVector(const std::vector<std::string> &in)
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
-  ImageLibrary library = testLibrary();
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
   std::vector<std::string> tags = library.allTags();
   // Check that they're in the correct (alphabetical) order.
   ASSERT_STR_VECTOR(tags, {"cute", "dog", "gender", "neutral", "rodent",
@@ -136,7 +138,8 @@ TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
 // Searches for full single words match the relevant tag if it exists.
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, FullWordSearches) {
-  ImageLibrary library = testLibrary();
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
 
   // Simple search works
   auto result = library.search("dog");
@@ -163,7 +166,8 @@ TEST(ImageLibraryTest, FullWordSearches) {
 // Searches for words that are not a tag return all partially matching tags.
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, PartialWordSearches) {
-  ImageLibrary library = testLibrary();
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
   // Simple search works
   auto result = library.search("do");
   ASSERT_STR_VECTOR(result.matchedTags(), {"dog"});
@@ -198,7 +202,8 @@ TEST(ImageLibraryTest, PartialWordSearches) {
 // Makes sure that the de-duplication logic works correctly
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, DeduplicatingSearches) {
-  ImageLibrary library = testLibrary();
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
   // This single-letter search should match 3/4 images
   auto result = library.search("c");
   ASSERT_STR_VECTOR(result.matchedTags(), {"capybara", "corgi", "cute"});

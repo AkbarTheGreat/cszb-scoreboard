@@ -30,6 +30,7 @@ limitations under the License.
 #include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
 #include "ui/widget/Panel.h"    // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class RenderContext;
@@ -43,8 +44,11 @@ enum class OverlayScreenPosition { Centered, BottomLeft };
 class ScreenTextSide : public Panel {
  public:
   ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
-                 const proto::ScreenSide &side, Size size);
-  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size);
+                 const proto::ScreenSide &side, Size size)
+      : ScreenTextSide(wx, initial_text, side, size, Singleton::getInstance()) {
+  }
+  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size)
+      : ScreenTextSide(wx, source_side, size, Singleton::getInstance()) {}
 
   void addText(const proto::RenderableText &text,
                const proto::ScreenSide &side);
@@ -70,6 +74,11 @@ class ScreenTextSide : public Panel {
   auto isSide(const proto::ScreenSide &side) -> bool;
 
   PUBLIC_TEST_ONLY
+  ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
+                 const proto::ScreenSide &side, Size size,
+                 Singleton *singleton);
+  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size,
+                 Singleton *singleton);
   static auto getTextExtent(RenderContext *renderer, const std::string &text)
       -> Size;
 
@@ -85,7 +94,10 @@ class ScreenTextSide : public Panel {
   bool image_is_scaled;
   proto::ScreenSide screen_side;
   std::vector<proto::RenderableText> texts;
+  Singleton *singleton;
 
+  ScreenTextSide(Singleton *singleton, swx::Panel *wx,
+                 const proto::ScreenSide &side);
   static auto ratio(const Size &size) -> float;
   static auto scaleImage(const Image &image, const Size &target_size) -> Image;
   void autoFitText(RenderContext *renderer, proto::RenderableText *text);

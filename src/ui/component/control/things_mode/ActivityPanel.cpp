@@ -43,14 +43,16 @@ static const char *BULLET = "\u2022";
 
 ActivityPanel::ActivityPanel(swx::Panel *wx,
                              ScreenTextController *owning_controller,
-                             const proto::ScreenSide &side)
+                             const proto::ScreenSide &side,
+                             Singleton *singleton)
     : Panel(wx) {
   assert(INITIAL_NUMBER_OF_ACTIVITIES >= ACTIVITIES_FOR_SIZING);
   this->owning_controller = owning_controller;
   this->side = side;
+  this->singleton = singleton;
   activity_half = panel();
   replacement_half = panel();
-  color_picker = colorPicker(TeamColors::getInstance()->getColor(side));
+  color_picker = colorPicker(singleton->teamColors()->getColor(side));
 
   // Add only as many activites as we want the initial pane size to be sized
   // for.
@@ -173,7 +175,7 @@ void ActivityPanel::updateNotify() {
 }
 
 void ActivityPanel::colorChanged() {
-  TeamColors::getInstance()->setColor(side, color_picker->color());
+  singleton->teamColors()->setColor(side, color_picker->color());
 
   owning_controller->updatePreview();
 }
@@ -205,8 +207,8 @@ void ActivityPanel::swapActivities(int a, int b) {
 }
 
 auto ActivityPanel::getColor() -> Color {
-  color_picker->setColor(TeamColors::getInstance()->getColor(side));
-  return TeamColors::getInstance()->getColor(side);
+  color_picker->setColor(singleton->teamColors()->getColor(side));
+  return singleton->teamColors()->getColor(side);
 }
 
 auto ActivityPanel::replacementPanel() -> ReplacementPanel * {

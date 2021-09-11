@@ -18,14 +18,17 @@ limitations under the License.
 */
 #pragma once
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"  // for DisplayConfig, DisplayInfo, ScreenSide (ptr o...
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 
 class DisplayConfig {
  public:
-  static auto getInstance() -> DisplayConfig *;
-  static auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
+  DisplayConfig(SingletonClass c)
+      : DisplayConfig(c, Singleton::getInstance()) {}
+  auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
   void detectDisplays();
   auto displayDetails(int index) -> proto::DisplayInfo;
   auto numberOfDisplays() -> int;
@@ -45,9 +48,12 @@ class DisplayConfig {
   void setWindowWidth(int width);
   void setWindowHeight(int height);
 
+  PUBLIC_TEST_ONLY
+  DisplayConfig(SingletonClass c, Singleton *singleton);
+
  private:
   proto::DisplayConfig display_config;
-  DisplayConfig();
+  Singleton *singleton;
   void detectExternalMonitors();
   void setupWindowedMode();
 };

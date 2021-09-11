@@ -18,14 +18,16 @@ limitations under the License.
 */
 #pragma once
 
+#include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "image_library.pb.h"
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 
 class Persistence {
  public:
-  static auto getInstance() -> Persistence *;
+  Persistence(SingletonClass c) : Persistence(c, Singleton::getInstance()) {}
   auto loadDisplays() -> proto::DisplayConfig;
   void saveDisplays(const proto::DisplayConfig &display_config);
   auto loadTeams() -> proto::TeamConfig;
@@ -33,10 +35,13 @@ class Persistence {
   auto loadImageLibrary() -> proto::ImageLibrary;
   void saveImageLibrary(const proto::ImageLibrary &library);
 
+  PUBLIC_TEST_ONLY
+  Persistence(SingletonClass c, Singleton *singleton);
+
  private:
   proto::ScoreboardConfig full_config;
   proto::ImageLibrary image_library;
-  Persistence();
+  Singleton *singleton;
   void loadConfigFromDisk();
   void saveConfigToDisk();
   void loadImageLibraryFromDisk();

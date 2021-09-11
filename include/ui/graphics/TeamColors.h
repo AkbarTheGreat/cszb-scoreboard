@@ -20,6 +20,9 @@ limitations under the License.
 
 #include <ui/graphics/Color.h>  // for Color
 
+#include "ScoreboardCommon.h"
+#include "util/Singleton.h"
+
 namespace cszb_scoreboard {
 namespace proto {
 class ScreenSide;
@@ -27,12 +30,14 @@ class ScreenSide;
 
 class TeamColors {
  public:
-  static auto getInstance() -> TeamColors *;
+  TeamColors(SingletonClass c) : TeamColors(c, Singleton::getInstance()) {}
   auto getColor(const proto::ScreenSide &side) -> Color;
   void setColor(const proto::ScreenSide &side, const Color &color);
 
+  PUBLIC_TEST_ONLY
+  TeamColors(SingletonClass c, Singleton *singleton);
+
  private:
-  TeamColors();
   Color home_color;
   Color away_color;
   Color all_color;

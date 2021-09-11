@@ -39,14 +39,15 @@ const std::string ARROW_TOOL_TIP =
 
 TeamSettingsPanel::TeamSettingsPanel(swx::Panel *wx, int team_index,
                                      proto::TeamInfo_TeamType team,
-                                     TeamSettingsPage *parent)
+                                     TeamSettingsPage *parent,
+                                     Singleton *singleton)
     : Panel(wx) {
   this->parent = parent;
   index = team_index;
   team_type = team;
 
   // Label for this display
-  team_label = label(TeamConfig::getInstance()->teamName(team_type));
+  team_label = label(singleton->teamConfig()->teamName(team_type));
   team_label->bold(true);
   addWidget(*team_label, 0, 0);
 
@@ -54,14 +55,14 @@ TeamSettingsPanel::TeamSettingsPanel(swx::Panel *wx, int team_index,
   if (index == 0) {
     up_button->disable();
   }
-  if (index >= TeamConfig::getInstance()->numberOfTeams() - 1) {
+  if (index >= singleton->teamConfig()->numberOfTeams() - 1) {
     down_button->disable();
   }
   addWidget(*button_panel, 0, 1);
 
   default_color_label = label("Default Color");
   addWidget(*default_color_label, 1, 0);
-  color_picker = colorPicker(TeamConfig::getInstance()->teamColor(team));
+  color_picker = colorPicker(singleton->teamConfig()->teamColor(team));
   addWidget(*color_picker, 1, 1);
 
   runSizer();

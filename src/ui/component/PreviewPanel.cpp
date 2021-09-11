@@ -30,10 +30,12 @@ namespace cszb_scoreboard {
 
 class ScreenText;
 
-PreviewPanel::PreviewPanel(swx::Panel *wx) : DraggablePanel(wx) {
-  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
+PreviewPanel::PreviewPanel(swx::Panel *wx, Singleton *singleton)
+    : DraggablePanel(wx) {
+  this->singleton = singleton;
+  for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
-        DisplayConfig::getInstance()->displayDetails(i);
+        singleton->displayConfig()->displayDetails(i);
     std::vector<proto::ScreenSide> sides;
     if (display_info.side().error()) {
       sides.emplace_back(proto::ScreenSide());
@@ -94,9 +96,9 @@ void PreviewPanel::updatePreviewsFromSettings() {
   // needs to deal with that case, too.
 
   int screen_index = 0;
-  for (int i = 0; i < DisplayConfig::getInstance()->numberOfDisplays(); ++i) {
+  for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
     proto::DisplayInfo display_info =
-        DisplayConfig::getInstance()->displayDetails(i);
+        singleton->displayConfig()->displayDetails(i);
     if (screen_index < screens.size() &&
         (display_info.side().error() || display_info.side().home() ||
          display_info.side().away())) {

@@ -25,6 +25,7 @@ limitations under the License.
 #include "ScoreboardCommon.h"    // for PUBLIC_TEST_ONLY
 #include "config/Persistence.h"  // for Persistence
 #include "image_library.pb.h"    // for ImageInfo, ImageLibrary
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class FilesystemPath;
@@ -46,7 +47,7 @@ class ImageSearchResults {
 
 class ImageLibrary {
  public:
-  static auto getInstance() -> ImageLibrary *;
+  ImageLibrary(SingletonClass c);
   // Returns all unique tags, sorted
   auto allFilenames() -> std::vector<FilesystemPath>;
   auto allTags(bool include_name = false) -> std::vector<std::string>;
@@ -62,12 +63,12 @@ class ImageLibrary {
   PUBLIC_TEST_ONLY
   // Test-available constructor which initializes this object from an in-memory
   // proto.
-  explicit ImageLibrary(proto::ImageLibrary library);
+  ImageLibrary(SingletonClass c, Singleton *singleton,
+               proto::ImageLibrary library);
 
  private:
   proto::ImageLibrary library;
-  ImageLibrary()
-      : ImageLibrary(Persistence::getInstance()->loadImageLibrary()) {}
+  Singleton *singleton;
   auto emptySearch() -> ImageSearchResults;
   auto exactMatchSearch(const std::string &query) -> ImageSearchResults;
   auto infoByFile(const FilesystemPath &filename) -> proto::ImageInfo;

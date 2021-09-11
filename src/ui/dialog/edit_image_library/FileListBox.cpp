@@ -31,9 +31,11 @@ namespace cszb_scoreboard {
 
 const int64_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
-FileListBox::FileListBox(swx::Panel *wx, const std::string &title) : Panel(wx) {
+FileListBox::FileListBox(swx::Panel *wx, const std::string &title,
+                         Singleton *singleton)
+    : Panel(wx) {
   box = listBox(title);
-  updateStrings(ImageLibrary::getInstance()->allFilenames());
+  updateStrings(singleton->imageLibrary()->allFilenames());
   bindEvents();
   addWidget(*box, 0, 0, 0);
   runSizer();

@@ -41,13 +41,14 @@ struct Size;
 const int BORDER_SIZE = 0;
 
 MainView::MainView(const std::string &title, const Position &pos,
-                   const Size &size)
+                   const Size &size, Singleton *singleton)
     : Frame(title, pos, size) {
+  this->singleton = singleton;
   createMenu();
-  setStatusBar("Welcome to ComedySportz Scoreboard, " +
-               StringUtil::intToString(
-                   DisplayConfig::getInstance()->numberOfDisplays()) +
-               " displays found.");
+  setStatusBar(
+      "Welcome to ComedySportz Scoreboard, " +
+      StringUtil::intToString(singleton->displayConfig()->numberOfDisplays()) +
+      " displays found.");
 
   preview_panel = std::make_unique<PreviewPanel>(childPanel());
   control_panel =
@@ -57,14 +58,14 @@ MainView::MainView(const std::string &title, const Position &pos,
   positionWidgets();
   bindEvents();
 
-  if (CommandArgs::getInstance()->autoUpdate()) {
+  if (singleton->commandArgs()->autoUpdate()) {
     update_timer = std::make_unique<UpdateTimer>(this);
   }
 
   // Set focus to the control_panel so that tab movement works correctly without
   // an initial click.
   control_panel->focus();
-  HotkeyTable::getInstance()->installHotkeys(this);
+  singleton->hotkeyTable()->installHotkeys(this);
 }
 
 void MainView::createMenu() {
@@ -99,7 +100,8 @@ void MainView::positionWidgets() {
 }
 
 void MainView::bindEvents() {
-  bind(wxEVT_CLOSE_WINDOW, [](wxCloseEvent &event) -> void { onClose(); });
+  bind(wxEVT_CLOSE_WINDOW,
+       [this](wxCloseEvent &event) -> void { this->onClose(); });
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
       [this](wxCommandEvent &event) -> void { this->showSettings(); },
@@ -154,7 +156,7 @@ void MainView::onSettingsClose() {
 void MainView::onClose() {
   // The following call deletes the pointer to this object, so should always be
   // done last.
-  FrameManager::getInstance()->exitFrames();
+  singleton->frameManager()->exitFrames();
 }
 
 }  // namespace cszb_scoreboard

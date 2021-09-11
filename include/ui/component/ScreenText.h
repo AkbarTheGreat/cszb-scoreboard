@@ -22,9 +22,11 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
+#include "ScoreboardCommon.h"
 #include "config/Position.h"              // for Size
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide (ptr only)
 #include "ui/widget/Panel.h"              // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class Color;
@@ -41,7 +43,8 @@ class Panel;
 
 class ScreenText : public Panel {
  public:
-  explicit ScreenText(swx::Panel *wx) : Panel(wx) {}
+  explicit ScreenText(swx::Panel *wx)
+      : ScreenText(wx, Singleton::getInstance()) {}
   void setupPreview(const std::string &initial_text,
                     const std::vector<proto::ScreenSide> &sides, Size size);
 
@@ -79,6 +82,8 @@ class ScreenText : public Panel {
   void setAutoFit(bool auto_fit, const proto::ScreenSide &side);
   auto sides() -> std::vector<ScreenTextSide *> { return text_sides; }
 
+  PUBLIC_TEST_ONLY
+  ScreenText(swx::Panel *wx, Singleton *singleton);
 #ifdef SCOREBOARD_TESTING
   auto sidePanel(int index) -> ScreenTextSide * { return sides()[index]; }
 #endif
@@ -86,6 +91,7 @@ class ScreenText : public Panel {
  private:
   std::vector<ScreenTextSide *> text_sides;
   bool is_single_view = false;
+  Singleton *singleton;
 
   void autosplitDisplays(const proto::ScreenSide &side);
   void initializeSides(const std::vector<ScreenTextSide *> &text_sides);

@@ -30,22 +30,23 @@ namespace cszb_scoreboard {
 // Retry every six hours to look for an update.
 constexpr int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
 
-UpdateTimer::UpdateTimer(Frame *main_view)
+UpdateTimer::UpdateTimer(Frame *main_view, Singleton *singleton)
     : PersistentTimer(AUTO_UPDATE_DELAY,
                       [this]() -> void { this->execute(); }) {
   this->main_view = main_view;
+  this->singleton = singleton;
   // First time through, remove an old auto-update.
-  AutoUpdate::removeOldUpdate();
+  singleton->autoUpdate()->removeOldUpdate();
   execute();
 }
 
 void UpdateTimer::execute() {
   bool new_version_available =
-      AutoUpdate::getInstance()->checkForUpdate(SCOREBOARD_VERSION);
+      singleton->autoUpdate()->checkForUpdate(SCOREBOARD_VERSION);
   if (new_version_available) {
-    if (AutoUpdate::getInstance()->updateIsDownloadable()) {
+    if (singleton->autoUpdate()->updateIsDownloadable()) {
       main_view->setStatusBar("New version found, downloading...");
-      if (AutoUpdate::getInstance()->updateInPlace()) {
+      if (singleton->autoUpdate()->updateInPlace()) {
         main_view->setStatusBar(
             "Auto-update downloaded.  Please restart to apply.");
       } else {

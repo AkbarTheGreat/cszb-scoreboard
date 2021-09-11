@@ -31,6 +31,10 @@ class Image;
 const float TOP_OR_BOTTOM_MARGIN = 2;
 const int BORDER_SIZE = 0;
 
+ScreenText::ScreenText(swx::Panel *wx, Singleton *singleton) : Panel(wx) {
+  this->singleton = singleton;
+}
+
 void ScreenText::setupPreview(const std::string &initial_text,
                               const std::vector<proto::ScreenSide> &sides,
                               Size size) {
@@ -40,7 +44,7 @@ void ScreenText::setupPreview(const std::string &initial_text,
   Size split_size = splitScreenSize(size.width, size.height, sides.size());
 
   std::vector<proto::TeamInfo_TeamType> screen_order =
-      TeamConfig::getInstance()->singleScreenOrder();
+      singleton->teamConfig()->singleScreenOrder();
   // Add the error value to the back, so it can still be created if needed
   screen_order.push_back(proto::TeamInfo_TeamType_TEAM_ERROR);
 

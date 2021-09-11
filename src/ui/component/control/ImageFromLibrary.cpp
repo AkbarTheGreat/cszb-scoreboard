@@ -172,15 +172,15 @@ void ImageFromLibrary::selectImage(ImagePreview *image) {
 
   if (screen_selection->allSelected()) {
     all_screen_image = Image(*filename);
-    all_screen_image_name = ImageLibrary::getInstance()->name(*filename);
+    all_screen_image_name = singleton->imageLibrary()->name(*filename);
     current_image_label->set(all_screen_image_name);
   } else if (screen_selection->awaySelected()) {
     away_screen_image = Image(*filename);
-    away_screen_image_name = ImageLibrary::getInstance()->name(*filename);
+    away_screen_image_name = singleton->imageLibrary()->name(*filename);
     current_image_label->set(away_screen_image_name);
   } else {
     home_screen_image = Image(*filename);
-    home_screen_image_name = ImageLibrary::getInstance()->name(*filename);
+    home_screen_image_name = singleton->imageLibrary()->name(*filename);
     current_image_label->set(home_screen_image_name);
   }
 
@@ -193,7 +193,7 @@ void ImageFromLibrary::setImages(const std::string &search,
   current_image_page = page_number;
 
   ImageSearchResults results =
-      ImageLibrary::getInstance()->search(std::string(search));
+      singleton->imageLibrary()->search(std::string(search));
 
   if (search.empty()) {
     tag_list_label->set("");
@@ -229,8 +229,7 @@ void ImageFromLibrary::setImages(const std::string &search,
 
   for (int i = start_num; i < stop_num; i++) {
     image_previews[i - start_num]->setImage(files[i]);
-    image_names[i - start_num]->set(
-        ImageLibrary::getInstance()->name(files[i]));
+    image_names[i - start_num]->set(singleton->imageLibrary()->name(files[i]));
   }
 
   for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {

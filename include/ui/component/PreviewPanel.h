@@ -27,6 +27,7 @@ limitations under the License.
 #include "ScoreboardCommon.h"            // for PUBLIC_TEST_ONLY
 #include "ui/component/ScreenPreview.h"  // for ScreenPreview
 #include "ui/widget/DraggablePanel.h"    // for DraggablePanel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class ScreenText;
@@ -37,7 +38,8 @@ class Panel;
 
 class PreviewPanel : public DraggablePanel {
  public:
-  explicit PreviewPanel(swx::Panel *wx);
+  explicit PreviewPanel(swx::Panel *wx)
+      : PreviewPanel(wx, Singleton::getInstance()) {}
 
   void blackout();
   void forAllScreens(const std::function<void(ScreenPreview *)> &lambda);
@@ -46,11 +48,12 @@ class PreviewPanel : public DraggablePanel {
   void updatePreviewsFromSettings();
 
   PUBLIC_TEST_ONLY
+  explicit PreviewPanel(swx::Panel *wx, Singleton *singleton);
   auto preview(int index) -> ScreenPreview *;
 
  private:
-  // Contains a view of the screens, does not own the screens themselves.
   std::vector<std::unique_ptr<ScreenPreview>> screens;
+  Singleton *singleton;
   auto numPreviews() -> int;
   void positionWidgets();
 };

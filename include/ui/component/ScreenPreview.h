@@ -24,11 +24,13 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
+#include "ScoreboardCommon.h"
 #include "config/Position.h"               // for Size
 #include "ui/component/ScreenText.h"       // for ScreenText
 #include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 #include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
 #include "ui/widget/Panel.h"               // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class Color;
@@ -46,7 +48,8 @@ class Panel;
 class ScreenPreview : public Panel {
  public:
   ScreenPreview(swx::Panel *wx, std::vector<proto::ScreenSide> sides,
-                int monitor_number);
+                int monitor_number)
+      : ScreenPreview(wx, sides, monitor_number, Singleton::getInstance()) {}
   void sendToPresenter(ScreenText *screen_text);
   void sendToPresenter();
   void blackoutPresenter();
@@ -78,11 +81,16 @@ class ScreenPreview : public Panel {
     screen_text->setImage(image, side);
   }
 
+  PUBLIC_TEST_ONLY
+  ScreenPreview(swx::Panel *wx, std::vector<proto::ScreenSide> sides,
+                int monitor_number, Singleton *singleton);
+
  private:
   std::unique_ptr<ScreenText> screen_text;
   ScreenPresenter *presenter;
   std::unique_ptr<ScreenThumbnail> thumbnail;
-  static auto previewSize(int monitor_number) -> Size;
+  Singleton *singleton;
+  auto previewSize(int monitor_number) -> Size;
   void positionWidgets();
 };
 }  // namespace cszb_scoreboard

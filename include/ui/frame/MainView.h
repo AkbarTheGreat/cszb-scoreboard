@@ -21,12 +21,14 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 #include <string>  // for string
 
+#include "ScoreboardCommon.h"
 #include "ui/component/ControlPanel.h"     // for ControlPanel
 #include "ui/component/PreviewPanel.h"     // for PreviewPanel
 #include "ui/component/QuickStatePanel.h"  // for QuickStatePanel
 #include "ui/dialog/SettingsDialog.h"      // for SettingsDialog
 #include "ui/event/UpdateTimer.h"          // for UpdateTimer
 #include "ui/widget/Frame.h"               // for Frame
+#include "util/Singleton.h"
 
 class wxNotebook;
 
@@ -36,10 +38,15 @@ struct Size;
 
 class MainView : public Frame {
  public:
-  MainView(const std::string &title, const Position &pos, const Size &size);
+  MainView(const std::string &title, const Position &pos, const Size &size)
+      : MainView(title, pos, size, Singleton::getInstance()) {}
   auto controlPanel() -> ControlPanel * { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
   void onSettingsClose();
+
+  PUBLIC_TEST_ONLY
+  MainView(const std::string &title, const Position &pos, const Size &size,
+           Singleton *singleton);
 
  private:
   void bindEvents();
@@ -49,7 +56,7 @@ class MainView : public Frame {
   void positionWidgets();
   void onExit();
   static void onAbout();
-  static void onClose();
+  void onClose();
   void onSettingsChange();
   void showSettings();
 
@@ -58,6 +65,7 @@ class MainView : public Frame {
   std::unique_ptr<PreviewPanel> preview_panel;
   std::unique_ptr<QuickStatePanel> quick_state;
   std::unique_ptr<UpdateTimer> update_timer;
+  Singleton *singleton;
 };
 
 }  // namespace cszb_scoreboard

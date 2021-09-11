@@ -41,11 +41,13 @@ class PropertySheetDialog;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
-                                               ImageFromLibrary *parent)
+                                               ImageFromLibrary *parent,
+                                               Singleton *singleton)
     : TabbedDialog(wx) {
   this->parent = parent;
+  this->singleton = singleton;
 
-  images = ImageLibrary::getInstance()->imageMap();
+  images = singleton->imageLibrary()->imageMap();
   box_panel = panel();
   file_list =
       std::make_unique<FileListBox>(box_panel->childPanel(), "Filename");
@@ -109,7 +111,7 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  ImageLibrary::getInstance()->clearLibrary();
+  singleton->imageLibrary()->clearLibrary();
   for (const auto &filename : file_list->getFilenames()) {
     std::vector<std::string> tags;
     for (const auto &tag : images[filename].tags()) {
@@ -118,10 +120,10 @@ void EditImageLibraryDialog::saveSettings() {
         tags.push_back(tag);
       }
     }
-    ImageLibrary::getInstance()->addImage(filename, images[filename].name(),
-                                          tags);
+    singleton->imageLibrary()->addImage(filename, images[filename].name(),
+                                        tags);
   }
-  ImageLibrary::getInstance()->saveLibrary();
+  singleton->imageLibrary()->saveLibrary();
 }
 
 void EditImageLibraryDialog::fileSelected(wxListEvent *event) {

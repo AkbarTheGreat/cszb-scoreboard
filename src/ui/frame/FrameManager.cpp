@@ -47,11 +47,6 @@ auto FrameManager::createScreenPresenter(int monitor_number,
   return temporary;
 }
 
-auto FrameManager::getInstance() -> FrameManager * {
-  static FrameManager singleton;
-  return &singleton;
-}
-
 void FrameManager::exitFrames() {
   // Deletes all of the unique_ptrs to these frames, allowing them to be cleaned
   frames.clear();

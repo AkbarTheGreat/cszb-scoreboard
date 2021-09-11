@@ -36,16 +36,17 @@ class Panel;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
-                                           swx::Panel *wx)
+                                           swx::Panel *wx, Singleton *singleton)
     : Panel(wx) {
+  this->singleton = singleton;
   this->preview_panel = preview_panel;
 }
 
 void ScreenTextController::initializeWidgets() {
   update_screens = button("Send to Monitors");
   update_screens->toolTip("Ctrl+Space");
-  HotkeyTable::getInstance()->addHotkey(wxACCEL_CTRL, WXK_SPACE,
-                                        update_screens->id());
+  singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, WXK_SPACE,
+                                      update_screens->id());
   control_panel = std::make_unique<Panel>(childPanel());
   createControls(control_panel.get());
   positionWidgets();
