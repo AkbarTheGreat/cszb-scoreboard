@@ -47,7 +47,7 @@ struct SingletonClass {};
 // using MockSingleton.
 class Singleton {
  public:
-  virtual ~Singleton(){};
+  virtual ~Singleton() = default;
   static auto getInstance() -> Singleton*;
 
   virtual auto autoUpdate() -> AutoUpdate* = 0;
@@ -66,19 +66,19 @@ class Singleton {
 
 class SingletonImpl : public Singleton {
  public:
-  ~SingletonImpl();
-  auto autoUpdate() -> AutoUpdate*;
-  auto commandArgs() -> CommandArgs*;
-  auto displayConfig() -> DisplayConfig*;
-  auto frameManager() -> FrameManager*;
-  auto hotkeyTable() -> HotkeyTable*;
-  auto imageLibrary() -> ImageLibrary*;
-  auto persistence() -> Persistence*;
-  auto teamColors() -> TeamColors*;
-  auto teamConfig() -> TeamConfig*;
+  ~SingletonImpl() override;
+  auto autoUpdate() -> AutoUpdate* override;
+  auto commandArgs() -> CommandArgs* override;
+  auto displayConfig() -> DisplayConfig* override;
+  auto frameManager() -> FrameManager* override;
+  auto hotkeyTable() -> HotkeyTable* override;
+  auto imageLibrary() -> ImageLibrary* override;
+  auto persistence() -> Persistence* override;
+  auto teamColors() -> TeamColors* override;
+  auto teamConfig() -> TeamConfig* override;
 
   void generateCommandArgs(const wxCmdLineParser& parser, int argc,
-                           const wxCmdLineArgsArray& argv);
+                           const wxCmdLineArgsArray& argv) override;
 
  protected:
   // This class uses raw pointers to avoid over-circular reliance on the headers

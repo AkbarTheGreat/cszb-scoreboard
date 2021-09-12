@@ -49,7 +49,8 @@ class ScreenPreview : public Panel {
  public:
   ScreenPreview(swx::Panel *wx, std::vector<proto::ScreenSide> sides,
                 int monitor_number)
-      : ScreenPreview(wx, sides, monitor_number, Singleton::getInstance()) {}
+      : ScreenPreview(wx, std::move(sides), monitor_number,
+                      Singleton::getInstance()) {}
   void sendToPresenter(ScreenText *screen_text);
   void sendToPresenter();
   void blackoutPresenter();

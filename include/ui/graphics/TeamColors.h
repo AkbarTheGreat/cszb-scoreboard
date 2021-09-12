@@ -30,7 +30,8 @@ class ScreenSide;
 
 class TeamColors {
  public:
-  TeamColors(SingletonClass c) : TeamColors(c, Singleton::getInstance()) {}
+  explicit TeamColors(SingletonClass c)
+      : TeamColors(c, Singleton::getInstance()) {}
   auto getColor(const proto::ScreenSide &side) -> Color;
   void setColor(const proto::ScreenSide &side, const Color &color);
 

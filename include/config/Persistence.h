@@ -27,7 +27,8 @@ namespace cszb_scoreboard {
 
 class Persistence {
  public:
-  Persistence(SingletonClass c) : Persistence(c, Singleton::getInstance()) {}
+  explicit Persistence(SingletonClass c)
+      : Persistence(c, Singleton::getInstance()) {}
   auto loadDisplays() -> proto::DisplayConfig;
   void saveDisplays(const proto::DisplayConfig &display_config);
   auto loadTeams() -> proto::TeamConfig;

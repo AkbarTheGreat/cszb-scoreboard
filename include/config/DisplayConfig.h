@@ -26,7 +26,7 @@ namespace cszb_scoreboard {
 
 class DisplayConfig {
  public:
-  DisplayConfig(SingletonClass c)
+  explicit DisplayConfig(SingletonClass c)
       : DisplayConfig(c, Singleton::getInstance()) {}
   auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
   void detectDisplays();

@@ -37,7 +37,7 @@ struct Size;
 
 class FrameManager {
  public:
-  FrameManager(SingletonClass c) {}
+  explicit FrameManager(SingletonClass c) {}
   auto createMainView(const std::string &title, const Position &pos,
                       const Size &size) -> MainView *;
   auto createScreenPresenter(int monitor_number, const ScreenText &preview)

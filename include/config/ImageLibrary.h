@@ -47,7 +47,7 @@ class ImageSearchResults {
 
 class ImageLibrary {
  public:
-  ImageLibrary(SingletonClass c);
+  explicit ImageLibrary(SingletonClass c);
   // Returns all unique tags, sorted
   auto allFilenames() -> std::vector<FilesystemPath>;
   auto allTags(bool include_name = false) -> std::vector<std::string>;

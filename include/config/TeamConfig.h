@@ -30,7 +30,8 @@ namespace cszb_scoreboard {
 
 class TeamConfig {
  public:
-  TeamConfig(SingletonClass c) : TeamConfig(c, Singleton::getInstance()) {}
+  explicit TeamConfig(SingletonClass c)
+      : TeamConfig(c, Singleton::getInstance()) {}
   auto numberOfTeams() -> int;
   void saveSettings();
   void setColor(proto::TeamInfo_TeamType team, const Color &color);
