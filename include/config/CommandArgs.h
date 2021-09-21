@@ -52,7 +52,6 @@ class CommandArgs {
   auto commandPath() -> FilesystemPath;
 
  private:
-  static std::unique_ptr<CommandArgs> singleton_instance;
   bool auto_update, reset_config;
   FilesystemPath command_path;
 };

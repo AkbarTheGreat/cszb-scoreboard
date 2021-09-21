@@ -27,8 +27,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-std::unique_ptr<CommandArgs> CommandArgs::singleton_instance;
-
 void CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
                                         const wxCmdLineArgsArray &argv)
     {
