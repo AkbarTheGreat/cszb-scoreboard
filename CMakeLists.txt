@@ -158,21 +158,22 @@ endmacro()
 
 enable_testing()
 
-package_add_test(AutoUpdateTest    test/AutoUpdateTest.cpp   src/util/AutoUpdate.cpp
-                                                             src/config/CommandArgs.cpp
-                                                             src/util/HttpReader.cpp
-                                                             src/util/StringUtil.cpp
-                                                             test/mocks/MockHttpReader.h
-                                                             test/mocks/MockSingleton.h
-                                                             )
-package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp src src/config/ImageLibrary.cpp
-                                                             src/config/Persistence.cpp
-                                                             src/util/FilesystemPath.cpp
-                                                             test/mocks/MockSingleton.h
-                                                             )
-package_add_test(ProtoUtilTest     test/ProtoUtilTest.cpp    src/util/ProtoUtil.cpp
-                                                             src/ui/graphics/Color.cpp
-                                                             )
+package_add_test(AutoUpdateTest    test/AutoUpdateTest.cpp    src/util/AutoUpdate.cpp
+                                                              src/config/CommandArgs.cpp
+                                                              src/util/HttpReader.cpp
+                                                              src/util/StringUtil.cpp
+                                                              test/mocks/MockHttpReader.h
+                                                              test/mocks/MockSingleton.h
+                                                              )
+package_add_test(CommandArgsTest   test/CommandArgsTest.cpp   src/config/CommandArgs.cpp)
+package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp
+                                                              src/config/Persistence.cpp
+                                                              src/util/FilesystemPath.cpp
+                                                              test/mocks/MockSingleton.h
+                                                              )
+package_add_test(ProtoUtilTest     test/ProtoUtilTest.cpp     src/util/ProtoUtil.cpp
+                                                              src/ui/graphics/Color.cpp
+                                                              )
 
 
 package_add_ui_test(ScreenPreviewTest   test/ScreenPreviewTest.cpp)
