@@ -128,7 +128,7 @@ make cszb-scoreboard'''
             outputFileEnding: '.memcheck',
             programOptions: ' ',
             removeOldReports: true,
-            suppressionFiles: 'etc/valgrind_suppressions.supp',
+            suppressionFiles: '../../../etc/valgrind_suppressions.supp',
             tool: [$class: 'ValgrindToolMemcheck',
               leakCheckLevel: 'full',
               showReachable: true,
