@@ -29,12 +29,12 @@ class Persistence {
  public:
   explicit Persistence(SingletonClass c)
       : Persistence(c, Singleton::getInstance()) {}
-  auto loadDisplays() -> proto::DisplayConfig;
-  void saveDisplays(const proto::DisplayConfig &display_config);
-  auto loadTeams() -> proto::TeamConfig;
-  void saveTeams(const proto::TeamConfig &team_config);
-  auto loadImageLibrary() -> proto::ImageLibrary;
-  void saveImageLibrary(const proto::ImageLibrary &library);
+  virtual auto loadDisplays() -> proto::DisplayConfig;
+  virtual void saveDisplays(const proto::DisplayConfig &display_config);
+  virtual auto loadTeams() -> proto::TeamConfig;
+  virtual void saveTeams(const proto::TeamConfig &team_config);
+  virtual auto loadImageLibrary() -> proto::ImageLibrary;
+  virtual void saveImageLibrary(const proto::ImageLibrary &library);
 
   PUBLIC_TEST_ONLY
   Persistence(SingletonClass c, Singleton *singleton);

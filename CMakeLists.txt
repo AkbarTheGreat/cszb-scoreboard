@@ -95,13 +95,13 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 # Protobuf files.
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
-add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES} "include/ui/widget/Frame.h")
+add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
 set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
 protobuf_generate(TARGET scoreboard_proto)
 target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
 
 
-add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC} "include/ui/widget/Frame.h")
+add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
 set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
@@ -123,7 +123,7 @@ list(APPEND TEST_ONLY_SRC
     "test/TestUtil.cpp"
 )
 
-add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC} "include/ui/widget/Frame.h")
+add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
 set_target_properties(scoreboard_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(scoreboard_test_classes PUBLIC SCOREBOARD_TESTING)
 target_link_libraries(scoreboard_test_classes PRIVATE ${wxWidgets_LIBRARIES}
@@ -132,7 +132,7 @@ target_link_libraries(scoreboard_test_classes PRIVATE ${wxWidgets_LIBRARIES}
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
 macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
-    add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN} "include/ui/widget/Frame.h")
+    add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN})
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     if (INTEGRATION_TEST)
         target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_INTEGRATION_TEST)
@@ -162,14 +162,15 @@ package_add_test(AutoUpdateTest    test/AutoUpdateTest.cpp    src/util/AutoUpdat
                                                               src/config/CommandArgs.cpp
                                                               src/util/HttpReader.cpp
                                                               src/util/StringUtil.cpp
-                                                              test/mocks/MockHttpReader.h
-                                                              test/mocks/MockSingleton.h
                                                               )
 package_add_test(CommandArgsTest   test/CommandArgsTest.cpp   src/config/CommandArgs.cpp)
+package_add_test(DisplayConfigTest test/DisplayConfigTest.cpp src/config/DisplayConfig.cpp
+                                                              src/config/Persistence.cpp
+                                                              src/util/ProtoUtil.cpp
+                                                              )
 package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp
                                                               src/config/Persistence.cpp
                                                               src/util/FilesystemPath.cpp
-                                                              test/mocks/MockSingleton.h
                                                               )
 package_add_test(ProtoUtilTest     test/ProtoUtilTest.cpp     src/util/ProtoUtil.cpp
                                                               src/ui/graphics/Color.cpp
