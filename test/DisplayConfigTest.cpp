@@ -60,10 +60,12 @@ class DisplayConfigTest : public ::testing::Test {
     proto::DisplayInfo *display_info = config->add_displays();
     // NOLINTNEXTLINE(readability-magic-numbers)
     displaySize(display_info, 5, 10, 1024, 768);
+    display_info->set_id(0);
     display_info->mutable_side()->set_control(true);
     display_info->mutable_side()->set_home(true);
     display_info = config->add_displays();
     // NOLINTNEXTLINE(readability-magic-numbers)
+    display_info->set_id(1);
     displaySize(display_info, 25, 30, 640, 480);
     display_info->mutable_side()->set_away(true);
     return config;
@@ -72,7 +74,6 @@ class DisplayConfigTest : public ::testing::Test {
  private:
   void displaySize(proto::DisplayInfo *display_info, int32_t x, int32_t y,
                    int32_t width, int32_t height) {
-    display_info->set_id(display_config->displays_size());
     display_info->mutable_dimensions()->set_x(x);
     display_info->mutable_dimensions()->set_y(y);
     display_info->mutable_dimensions()->set_width(width);
