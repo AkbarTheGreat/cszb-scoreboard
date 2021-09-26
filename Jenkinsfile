@@ -15,7 +15,7 @@ pipeline {
           }
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
-            cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true'
+            cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
             )
           }
         }
@@ -45,7 +45,7 @@ pipeline {
           }
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
-            cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake'
+            cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DINTEGRATION_TEST=false'
             )
           }
         }
@@ -95,24 +95,16 @@ make cszb-scoreboard'''
     stage('Debug Test') {
       steps {
         retry(count: 3) {
-          wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-            ctest(installation: 'AutoInstall', workingDir: 'out/build/Debug', arguments: '-T Test --output-on-failure --no-compress-output')
-          }
-
+          runTests('Debug', runFullPipeline())
         }
-
       }
     }
 
     stage('Release Test') {
       steps {
         retry(count: 3) {
-          wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-            ctest(installation: 'AutoInstall', workingDir: 'out/build/Release', arguments: '-T Test --output-on-failure --no-compress-output')
-          }
-
+          runTests('Release', runFullPipeline())
         }
-
       }
     }
     stage('Valgrind') {
@@ -199,6 +191,12 @@ make cszb-scoreboard'''
     }
 
   }
+}
+
+def runTests(testDir, isIntegration) {
+    wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+        ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
+    }
 }
 
 // Originally suggested by https://stackoverflow.com/a/58624083 to determine when a job is started by a timer, expanded to cover all cases where we want to run a full pipeline.
