@@ -119,7 +119,7 @@ finalize_vcpkg_code(${PROJECT_NAME})
 # Testing specific code follows.
 
 list(APPEND TEST_ONLY_SRC
-    "test/GuiTest.cpp"
+    "test/integration/GuiTest.cpp"
 )
 
 add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
@@ -157,28 +157,30 @@ endmacro()
 
 enable_testing()
 
-package_add_test(AutoUpdateTest    test/AutoUpdateTest.cpp    src/util/AutoUpdate.cpp
-                                                              src/config/CommandArgs.cpp
-                                                              src/util/HttpReader.cpp
-                                                              src/util/StringUtil.cpp
-                                                              )
-package_add_test(CommandArgsTest   test/CommandArgsTest.cpp   src/config/CommandArgs.cpp)
-package_add_test(DisplayConfigTest test/DisplayConfigTest.cpp src/config/DisplayConfig.cpp
-                                                              src/config/Persistence.cpp
-                                                              src/util/ProtoUtil.cpp
-                                                              )
-package_add_test(ImageLibraryTest  test/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp
-                                                              src/config/Persistence.cpp
-                                                              src/util/FilesystemPath.cpp
-                                                              )
-package_add_test(ProtoUtilTest     test/ProtoUtilTest.cpp     src/util/ProtoUtil.cpp
-                                                              src/ui/graphics/Color.cpp
-                                                              )
+# config/ tests
+package_add_test(CommandArgsTest   test/unit/config/CommandArgsTest.cpp   src/config/CommandArgs.cpp)
+package_add_test(DisplayConfigTest test/unit/config/DisplayConfigTest.cpp src/config/DisplayConfig.cpp
+                                                                          src/config/Persistence.cpp
+                                                                          src/util/ProtoUtil.cpp
+                                                                          )
+package_add_test(ImageLibraryTest  test/unit/config/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp
+                                                                          src/config/Persistence.cpp
+                                                                          src/util/FilesystemPath.cpp
+                                                                          )
+# util/ tests
+package_add_test(AutoUpdateTest test/unit/util/AutoUpdateTest.cpp src/util/AutoUpdate.cpp
+                                                                  src/config/CommandArgs.cpp
+                                                                  src/util/HttpReader.cpp
+                                                                  src/util/StringUtil.cpp
+                                                                  )
+package_add_test(ProtoUtilTest  test/unit/util/ProtoUtilTest.cpp  src/util/ProtoUtil.cpp
+                                                                  src/ui/graphics/Color.cpp
+                                                                  )
 
 
-package_add_ui_test(ScreenPreviewTest   test/ScreenPreviewTest.cpp)
-package_add_ui_test(TextEntryTest       test/TextEntryTest.cpp)
-package_add_ui_test(ScreenTextSideTest  test/ScreenTextSideTest.cpp)
+package_add_ui_test(ScreenPreviewTest   test/integration/ScreenPreviewTest.cpp)
+package_add_ui_test(TextEntryTest       test/integration/TextEntryTest.cpp)
+package_add_ui_test(ScreenTextSideTest  test/integration/ScreenTextSideTest.cpp)
  
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)

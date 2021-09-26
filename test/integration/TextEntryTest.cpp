@@ -25,7 +25,7 @@ limitations under the License.
 #include "config.pb.h"                       // for DisplayInfo, ScreenSide
 #include "config/DisplayConfig.h"            // for DisplayConfig
 #include "gtest/gtest_pred_impl.h"           // for ASSERT_LT, TEST_F
-#include "test/GuiTest.h"                    // for WX_A, ImageAnalysis, Gui...
+#include "test/integration/GuiTest.h"        // for WX_A, ImageAnalysis, Gui...
 #include "ui/component/ScreenPreview.h"      // for ScreenPreview
 #include "ui/component/ScreenText.h"         // for ScreenText
 #include "ui/component/ScreenTextSide.h"     // for ScreenTextSide

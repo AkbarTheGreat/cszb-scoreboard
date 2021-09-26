@@ -24,7 +24,7 @@ limitations under the License.
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
 #include "gtest/gtest_pred_impl.h"
-#include "test/GuiTest.h"
+#include "test/integration/GuiTest.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/ScreenText.h"
 #include "ui/component/ScreenTextSide.h"

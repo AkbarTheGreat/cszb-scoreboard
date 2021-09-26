@@ -19,7 +19,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "test/GuiTest.h"
+#include "test/integration/GuiTest.h"
 
 #include <wx/init.h>  // for wxEntryCleanup, wxEntryStart
 

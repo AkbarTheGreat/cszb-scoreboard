@@ -25,7 +25,7 @@ limitations under the License.
 #include <memory>  // for unique_ptr, allocator, make...
 
 #include "config/Position.h"              // for Size
-#include "test/GuiTest.h"                 // for GuiTest
+#include "test/integration/GuiTest.h"     // for GuiTest
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
 #include "ui/widget/Frame.h"              // for Frame
 #include "ui/widget/RenderContext.h"      // for RenderContext
