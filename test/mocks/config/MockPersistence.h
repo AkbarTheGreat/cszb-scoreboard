@@ -20,7 +20,7 @@ limitations under the License.
 
 #include "config/Persistence.h"
 #include "gmock/gmock.h"
-#include "test/mocks/MockSingleton.h"
+#include "test/mocks/util/MockSingleton.h"
 
 namespace cszb_scoreboard::test {
 

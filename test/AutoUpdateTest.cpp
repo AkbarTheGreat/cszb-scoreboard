@@ -29,8 +29,8 @@ limitations under the License.
 #include <vector>
 
 #include "gtest/gtest_pred_impl.h"
-#include "test/mocks/MockHttpReader.h"
-#include "test/mocks/MockSingleton.h"
+#include "test/mocks/util/MockHttpReader.h"
+#include "test/mocks/util/MockSingleton.h"
 #include "util/AutoUpdate.h"
 #include "util/HttpReader.h"
 

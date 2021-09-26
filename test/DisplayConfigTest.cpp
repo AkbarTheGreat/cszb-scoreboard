@@ -20,8 +20,8 @@ limitations under the License.
 
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
-#include "test/mocks/MockPersistence.h"
-#include "test/mocks/MockSingleton.h"
+#include "test/mocks/config/MockPersistence.h"
+#include "test/mocks/util/MockSingleton.h"
 
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"

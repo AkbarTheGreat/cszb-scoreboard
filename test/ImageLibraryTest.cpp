@@ -27,7 +27,7 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"  // for ImageSearchResults, ImageLibrary
 #include "image_library.pb.h"     // for ImageInfo, ImageLibrary
-#include "test/mocks/MockSingleton.h"
+#include "test/mocks/util/MockSingleton.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"
