@@ -109,29 +109,7 @@ make cszb-scoreboard'''
     }
     stage('Valgrind') {
       steps {
-        wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-          runValgrind (
-            childSilentAfterFork: false,
-            excludePattern: 'donotexcludeanything',
-            generateSuppressions: true,
-            ignoreExitCode: true,
-            includePattern: 'out/build/Debug/*Test',
-            outputDirectory: 'out/build/Debug',
-            outputFileEnding: '.memcheck',
-            programOptions: ' ',
-            removeOldReports: true,
-            suppressionFiles: '../../../etc/valgrind_suppressions.supp',
-            tool: [$class: 'ValgrindToolMemcheck',
-              leakCheckLevel: 'full',
-              showReachable: true,
-              trackOrigins: true,
-              undefinedValueErrors: true],
-            traceChildren: true,
-            valgrindExecutable: '/usr/bin/valgrind',
-            valgrindOptions: ' ',
-            workingDirectory: 'out/build/Debug'
-          )
-        }
+        valgrindRun(runFullPipeline())
         
         publishValgrind (
           failBuildOnInvalidReports: false,
@@ -191,6 +169,40 @@ make cszb-scoreboard'''
     }
 
   }
+}
+
+def valgrindRun(isIntegration) {
+    if (isIntegration) {
+        wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
+            executeValgrind()
+        }
+    } else {
+        executeValgrind()
+    }
+}
+
+def executeValgrind() {
+    runValgrind (
+        childSilentAfterFork: false,
+        excludePattern: 'donotexcludeanything',
+        generateSuppressions: true,
+        ignoreExitCode: true,
+        includePattern: 'out/build/Debug/*Test',
+        outputDirectory: 'out/build/Debug',
+        outputFileEnding: '.memcheck',
+        programOptions: ' ',
+        removeOldReports: true,
+        suppressionFiles: '../../../etc/valgrind_suppressions.supp',
+        tool: [$class: 'ValgrindToolMemcheck',
+            leakCheckLevel: 'full',
+            showReachable: true,
+            trackOrigins: true,
+            undefinedValueErrors: true],
+        traceChildren: true,
+        valgrindExecutable: '/usr/bin/valgrind',
+        valgrindOptions: ' ',
+        workingDirectory: 'out/build/Debug'
+    )
 }
 
 def runTests(testDir, isIntegration) {
