@@ -53,7 +53,7 @@ class DisplayConfigTest : public ::testing::Test {
 
   void TearDown() override {}
 
-  auto defaultConfig() -> std::unique_ptr<proto::DisplayConfig> {
+  static auto defaultConfig() -> std::unique_ptr<proto::DisplayConfig> {
     auto config = std::make_unique<proto::DisplayConfig>();
     config->set_enable_windowed_mode(true);
     config->set_window_count(2);
@@ -65,15 +65,15 @@ class DisplayConfigTest : public ::testing::Test {
     display_info->mutable_side()->set_home(true);
     display_info = config->add_displays();
     // NOLINTNEXTLINE(readability-magic-numbers)
-    display_info->set_id(1);
     displaySize(display_info, 25, 30, 640, 480);
+    display_info->set_id(1);
     display_info->mutable_side()->set_away(true);
     return config;
   }
 
  private:
-  void displaySize(proto::DisplayInfo *display_info, int32_t x, int32_t y,
-                   int32_t width, int32_t height) {
+  static void displaySize(proto::DisplayInfo *display_info, int32_t x,
+                          int32_t y, int32_t width, int32_t height) {
     display_info->mutable_dimensions()->set_x(x);
     display_info->mutable_dimensions()->set_y(y);
     display_info->mutable_dimensions()->set_width(width);
