@@ -120,7 +120,6 @@ finalize_vcpkg_code(${PROJECT_NAME})
 
 list(APPEND TEST_ONLY_SRC
     "test/GuiTest.cpp"
-    "test/TestUtil.cpp"
 )
 
 add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})

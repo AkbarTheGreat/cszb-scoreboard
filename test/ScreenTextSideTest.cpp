@@ -25,7 +25,7 @@ limitations under the License.
 #include <memory>  // for unique_ptr, allocator, make...
 
 #include "config/Position.h"              // for Size
-#include "test/TestUtil.h"                // for TestUtil
+#include "test/GuiTest.h"                 // for GuiTest
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
 #include "ui/widget/Frame.h"              // for Frame
 #include "ui/widget/RenderContext.h"      // for RenderContext
@@ -74,7 +74,7 @@ class ScreenTextSideTest : public testing::Test {
 
   void SetUp() override {
     app = new TestApp();
-    TestUtil::startApp(app);
+    GuiTest::startApp(app);
   }
 
   void TearDown() override {

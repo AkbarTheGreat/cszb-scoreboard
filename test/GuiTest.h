@@ -22,6 +22,7 @@ limitations under the License.
 #pragma once
 
 #include <gtest/gtest.h>  // IWYU pragma: keep for Test
+#include <wx/app.h>       // IWYU pragma: keep for wxApp
 #include <wx/dcclient.h>  // for wxClientDC
 #include <wx/gdicmn.h>    // for wxRect
 #include <wx/uiaction.h>  // for wxUIActionSimulator
@@ -79,6 +80,9 @@ class ImageAnalysis {
 };
 
 class GuiTest : public testing::Test {
+ public:
+  static void startApp(wxApp *app);
+
  protected:
   Scoreboard *app;
   wxUIActionSimulator act;

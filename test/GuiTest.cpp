@@ -21,12 +21,12 @@ limitations under the License.
 
 #include "test/GuiTest.h"
 
-#include <wx/init.h>  // for wxEntryCleanup
+#include <wx/init.h>  // for wxEntryCleanup, wxEntryStart
 
+#include <array>    // for array
 #include <utility>  // for pair
 
 #include "cszb-scoreboard.h"                            // for Scoreboard
-#include "test/TestUtil.h"                              // for TestUtil
 #include "ui/component/ControlPanel.h"                  // for ControlPanel
 #include "ui/component/PreviewPanel.h"                  // for PreviewPanel
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
@@ -37,6 +37,7 @@ limitations under the License.
 #include "ui/widget/swx/Panel.h"                        // for Panel
 #include "util/Singleton.h"
 #include "wx/window.h"  // for wxWindow
+// IWYU pragma: no_include <wx/gtk/app.h>
 
 namespace cszb_scoreboard {
 class ScreenPreview;
@@ -46,15 +47,27 @@ namespace cszb_scoreboard::test {
 
 const int TEXT_ENTRY_TAB_INDEX = 4;
 
+const std::array<const char *, 2> TEST_ARGV = {
+    {{"scoreboard_testing.exe"}, {"-n"}}};
+
 void GuiTest::SetUp() {
   app = new Scoreboard();
-  TestUtil::startApp(app);
+  startApp(app);
   mainView()->updateWindow();
 }
 
 void GuiTest::TearDown() {
   Scoreboard::close();
   wxEntryCleanup();
+}
+
+void GuiTest::startApp(wxApp *app) {
+  wxApp::SetInstance(app);
+  // Argument to wxEntryStart cannot be const, so copy to a non-const before
+  // calling.
+  int argc = TEST_ARGV.size();
+  wxEntryStart(argc, const_cast<char **>(TEST_ARGV.data()));
+  app->OnInit();
 }
 
 auto GuiTest::mainView() -> MainView * {
