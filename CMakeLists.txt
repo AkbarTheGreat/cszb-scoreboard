@@ -152,7 +152,9 @@ macro(package_add_test TESTNAME)
 endmacro()
 
 macro(package_add_ui_test TESTNAME)
-	package_add_test(${TESTNAME} ${ARGN} $<TARGET_OBJECTS:scoreboard_test_classes> )
+    if (INTEGRATION_TEST)
+	    package_add_test(${TESTNAME} ${ARGN} $<TARGET_OBJECTS:scoreboard_test_classes> )
+    endif()
 endmacro()
 
 enable_testing()
