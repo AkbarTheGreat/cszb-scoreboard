@@ -26,7 +26,7 @@ limitations under the License.
 #include <string>  // for string
 
 #include "ui/frame/MainView.h"  // for MainView
-#include "ui/widget/display.h"
+#include "ui/widget/Display.h"
 #include "util/Singleton.h"
 
 namespace cszb_scoreboard {
