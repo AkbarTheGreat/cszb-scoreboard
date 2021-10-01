@@ -47,6 +47,8 @@ auto FrameManager::createScreenPresenter(int monitor_number,
   return temporary;
 }
 
+auto FrameManager::monitor(uint32_t index) -> Display { return Display(index); }
+
 void FrameManager::exitFrames() {
   // Deletes all of the unique_ptrs to these frames, allowing them to be cleaned
   frames.clear();

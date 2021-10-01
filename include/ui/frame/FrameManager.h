@@ -26,6 +26,7 @@ limitations under the License.
 #include <string>  // for string
 
 #include "ui/frame/MainView.h"  // for MainView
+#include "ui/widget/display.h"
 #include "util/Singleton.h"
 
 namespace cszb_scoreboard {
@@ -38,12 +39,15 @@ struct Size;
 class FrameManager {
  public:
   explicit FrameManager(SingletonClass c) {}
-  auto createMainView(const std::string &title, const Position &pos,
-                      const Size &size) -> MainView *;
-  auto createScreenPresenter(int monitor_number, const ScreenText &preview)
+  virtual auto createMainView(const std::string &title, const Position &pos,
+                              const Size &size) -> MainView *;
+  virtual auto createScreenPresenter(int monitor_number,
+                                     const ScreenText &preview)
       -> ScreenPresenter *;
-  inline auto mainView() -> MainView * { return main_view.get(); }
-  void exitFrames();
+  virtual auto mainView() -> MainView * { return main_view.get(); }
+  virtual void exitFrames();
+  virtual auto monitorCount() -> int32_t { return Display::numDisplays(); }
+  virtual auto monitor(uint32_t index) -> Display;
 
  private:
   std::unique_ptr<MainView> main_view;

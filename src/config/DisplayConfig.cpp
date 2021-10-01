@@ -19,7 +19,6 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
-#include <wx/display.h>
 #include <wx/gdicmn.h>
 
 #include <cassert>
@@ -28,6 +27,7 @@ limitations under the License.
 #include "config/Persistence.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/frame/MainView.h"
+#include "ui/widget/Display.h"
 #include "ui/widget/Frame.h"
 #include "util/Log.h"
 #include "util/ProtoUtil.h"
@@ -63,9 +63,9 @@ void DisplayConfig::detectDisplays() {
 }
 
 void DisplayConfig::detectExternalMonitors() {
-  int numscreens = wxDisplay::GetCount();
+  uint32_t numscreens = singleton->frameManager()->monitorCount();
 
-#ifdef SCOREBOARD_TESTING
+#ifdef SCOREBOARD_INTEGRATION_TEST
   // Force this to be 1 screen for tests, as all of our testing assumed that to
   // be the case anyway.
   numscreens = 1;
@@ -86,12 +86,11 @@ void DisplayConfig::detectExternalMonitors() {
   display_config.clear_displays();
   bool set_home = true;
 
-  for (int i = 0; i < numscreens; i++) {
+  for (uint32_t i = 0; i < numscreens; i++) {
     proto::DisplayInfo *display_info = display_config.add_displays();
     display_info->set_id(i);
-    wxDisplay display(i);
-    ProtoUtil::protoRct(display.GetGeometry(),
-                        display_info->mutable_dimensions());
+    Display display = singleton->frameManager()->monitor(i);
+    display.geometry(display_info->mutable_dimensions());
     if (isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);
       if (numscreens == 1) {

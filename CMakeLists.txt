@@ -163,6 +163,9 @@ enable_testing()
 package_add_test(CommandArgsTest   test/unit/config/CommandArgsTest.cpp   src/config/CommandArgs.cpp)
 package_add_test(DisplayConfigTest test/unit/config/DisplayConfigTest.cpp src/config/DisplayConfig.cpp
                                                                           src/config/Persistence.cpp
+                                                                          src/config/Position.cpp
+                                                                          src/ui/frame/FrameManager.cpp
+                                                                          src/ui/widget/Display.cpp
                                                                           src/util/ProtoUtil.cpp
                                                                           )
 package_add_test(ImageLibraryTest  test/unit/config/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp

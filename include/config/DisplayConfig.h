@@ -50,6 +50,7 @@ class DisplayConfig {
 
   PUBLIC_TEST_ONLY
   DisplayConfig(SingletonClass c, Singleton *singleton);
+  proto::DisplayConfig displayConfig() { return display_config; }
 
  private:
   proto::DisplayConfig display_config;
