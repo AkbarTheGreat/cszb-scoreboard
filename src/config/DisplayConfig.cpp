@@ -183,8 +183,7 @@ auto DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool {
     return true;  // Guess that screen 0 is our primary, as we haven't created
                   // our main window yet.
   }
-  wxPoint main_size = main_view->position();
-  return (ProtoUtil::wxRct(display_info->dimensions()).Contains(main_size));
+  return main_view->position().isContainedIn(display_info->dimensions());
 }
 
 auto DisplayConfig::windowedMode() -> bool {

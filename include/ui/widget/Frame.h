@@ -72,7 +72,7 @@ class Frame : public Widget {
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
     wx->SetAcceleratorTable(wxAcceleratorTable(keys.size(), keys.data()));
   }
-  auto position() -> wxPoint { return wx->GetPosition(); }
+  auto position() -> Position { return Position::fromWx(wx->GetPosition()); }
   void setStatusBar(const wxString &text);
   auto show(bool show) -> bool { return wx->Show(show); }
   void updateWindow() { wx->Update(); }
