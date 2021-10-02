@@ -22,9 +22,15 @@ limitations under the License.
 
 namespace cszb_scoreboard::swx {
 
-class Display : public wxDisplay {
+class Display {
  public:
-  Display(unsigned int index = 0) : wxDisplay(index) {}
+  virtual auto IsPrimary() -> bool = 0;
+  virtual auto GetGeometry() -> wxRect = 0;
+};
+
+class DisplayImpl : public Display, wxDisplay {
+ public:
+  DisplayImpl(unsigned int index = 0) : wxDisplay(index) {}
 
   virtual auto IsPrimary() -> bool { return wxDisplay::IsPrimary(); }
   virtual auto GetGeometry() -> wxRect { return wxDisplay::GetGeometry(); }

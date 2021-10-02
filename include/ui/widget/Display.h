@@ -29,7 +29,7 @@ namespace cszb_scoreboard {
 
 class Display {
  public:
-  Display(unsigned int index = 0);
+  Display(uint32_t index0);
 
   void geometry(proto::Rectangle* rectangle);
   auto isPrimary() -> bool { return wx->IsPrimary(); }

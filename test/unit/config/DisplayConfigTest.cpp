@@ -43,7 +43,8 @@ using ::testing::Return;
     md.set_report_moves(false);                    \
     md.ReportDifferencesToString(&diff_report);    \
     EXPECT_TRUE(md.Compare(expected, actual))      \
-        << "proto diff : " << diff_report;         \
+        << "proto diff:\n"                         \
+        << diff_report << "end proto diff";        \
   }
 
 namespace cszb_scoreboard {
@@ -169,7 +170,6 @@ TEST_F(DisplayConfigTest, NumberOfDisplays) {
   EXPECT_EQ(3, autoConfig.numberOfDisplays());
 }
 
-/* Skip this test for now -- it segfaults constructing a wxDisplay in some cases
 TEST_F(DisplayConfigTest, ExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
@@ -191,7 +191,6 @@ TEST_F(DisplayConfigTest, ExternalMonitorSetup) {
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());
 }
-*/
 
 }  // namespace test
 }  // namespace cszb_scoreboard

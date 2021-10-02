@@ -25,8 +25,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-Display ::Display(unsigned int index)
-    : Display(std::make_shared<swx::Display>(index)) {}
+Display ::Display(uint32_t index)
+    : Display(dynamic_pointer_cast<swx::Display, swx::DisplayImpl>(
+          std::make_shared<swx::DisplayImpl>(index))) {}
 
 void Display::geometry(proto::Rectangle* rectangle) {
   ProtoUtil::protoRct(wx->GetGeometry(), rectangle);
