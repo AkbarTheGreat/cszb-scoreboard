@@ -28,7 +28,7 @@ auto Position::fromWx(const wxPoint& wx) -> Position {
   return pos;
 }
 
-auto Position::isContainedIn(const proto::Rectangle& box) -> bool {
+auto Position::isContainedIn(const proto::Rectangle& box) const -> bool {
   return (x >= box.x() && y >= box.y() &&
           x <= static_cast<int64_t>(box.x()) + box.width() &&
           y <= static_cast<int64_t>(box.y()) + box.width());

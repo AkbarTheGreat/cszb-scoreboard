@@ -128,6 +128,7 @@ class DisplayConfigTest : public ::testing::Test {
     auto wx = std::make_shared<swx::MockDisplay>();
     EXPECT_CALL(*wx, IsPrimary).WillRepeatedly(Return(true));
     EXPECT_CALL(*wx, GetGeometry)
+        // NOLINTNEXTLINE(readability-magic-numbers)
         .WillRepeatedly(Return(wxRect(0, 0, 1024, 768)));
     return Display(wx);
   }
@@ -137,6 +138,7 @@ class DisplayConfigTest : public ::testing::Test {
     auto wx = std::make_shared<swx::MockDisplay>();
     EXPECT_CALL(*wx, IsPrimary).WillRepeatedly(Return(false));
     EXPECT_CALL(*wx, GetGeometry)
+        // NOLINTNEXTLINE(readability-magic-numbers)
         .WillRepeatedly(Return(wxRect(1024, 768, 1024, 768)));
     return Display(wx);
   }
@@ -146,6 +148,7 @@ class DisplayConfigTest : public ::testing::Test {
     auto wx = std::make_shared<swx::MockDisplay>();
     EXPECT_CALL(*wx, IsPrimary).WillRepeatedly(Return(false));
     EXPECT_CALL(*wx, GetGeometry)
+        // NOLINTNEXTLINE(readability-magic-numbers)
         .WillRepeatedly(Return(wxRect(2048, 1536, 640, 480)));
     return Display(wx);
   }
@@ -182,6 +185,7 @@ TEST_F(DisplayConfigTest, NumberOfDisplays) {
   EXPECT_EQ(3, autoConfig.numberOfDisplays());
 }
 
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
@@ -192,17 +196,22 @@ TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   DisplayConfig config(SingletonClass{}, singleton.get());
 
   proto::DisplayConfig expected;
-  expected.mutable_window_size()->set_width(1024);
-  expected.mutable_window_size()->set_height(768);
+  expected.mutable_window_size()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected.mutable_window_size()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   proto::DisplayInfo *expected_display = expected.add_displays();
-  expected_display->mutable_dimensions()->set_width(1024);
-  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_dimensions()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   expected_display->mutable_side()->set_control(true);
   expected_display->mutable_side()->set_error(true);
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());
 }
 
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
@@ -214,23 +223,32 @@ TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   DisplayConfig config(SingletonClass{}, singleton.get());
 
   proto::DisplayConfig expected;
-  expected.mutable_window_size()->set_width(1024);
-  expected.mutable_window_size()->set_height(768);
+  expected.mutable_window_size()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected.mutable_window_size()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   proto::DisplayInfo *expected_display = expected.add_displays();
-  expected_display->mutable_dimensions()->set_width(1024);
-  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_dimensions()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   expected_display->mutable_side()->set_control(true);
   expected_display = expected.add_displays();
   expected_display->set_id(1);
-  expected_display->mutable_dimensions()->set_x(1024);
-  expected_display->mutable_dimensions()->set_y(768);
-  expected_display->mutable_dimensions()->set_width(1024);
-  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_dimensions()->set_x(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_y(
+      768);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   expected_display->mutable_side()->set_home(true);
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());
 }
 
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
@@ -243,25 +261,37 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   DisplayConfig config(SingletonClass{}, singleton.get());
 
   proto::DisplayConfig expected;
-  expected.mutable_window_size()->set_width(1024);
-  expected.mutable_window_size()->set_height(768);
+  expected.mutable_window_size()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected.mutable_window_size()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   proto::DisplayInfo *expected_display = expected.add_displays();
-  expected_display->mutable_dimensions()->set_width(1024);
-  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_dimensions()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   expected_display->mutable_side()->set_control(true);
   expected_display = expected.add_displays();
   expected_display->set_id(1);
-  expected_display->mutable_dimensions()->set_x(1024);
-  expected_display->mutable_dimensions()->set_y(768);
-  expected_display->mutable_dimensions()->set_width(1024);
-  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_dimensions()->set_x(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_y(
+      768);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_width(
+      1024);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_height(
+      768);  // NOLINT(readability-magic-numbers)
   expected_display->mutable_side()->set_home(true);
   expected_display = expected.add_displays();
   expected_display->set_id(2);
-  expected_display->mutable_dimensions()->set_x(2048);
-  expected_display->mutable_dimensions()->set_y(1536);
-  expected_display->mutable_dimensions()->set_width(640);
-  expected_display->mutable_dimensions()->set_height(480);
+  expected_display->mutable_dimensions()->set_x(
+      2048);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_y(
+      1536);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_width(
+      640);  // NOLINT(readability-magic-numbers)
+  expected_display->mutable_dimensions()->set_height(
+      480);  // NOLINT(readability-magic-numbers)
   expected_display->mutable_side()->set_away(true);
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());

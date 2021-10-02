@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/gdicmn.h>  // for wxPoint, wxSize
 
 #include <cstdint>  // for int64_t
+
 #include "config.pb.h"
 
 namespace cszb_scoreboard {
@@ -31,7 +32,7 @@ struct Position {
   int64_t x, y;
   [[nodiscard]] auto toWx() const -> wxPoint { return wxPoint(x, y); }
   static auto fromWx(const wxPoint& wx) -> Position;
-  auto isContainedIn(const proto::Rectangle &box) -> bool;
+  [[nodiscard]] auto isContainedIn(const proto::Rectangle& box) const -> bool;
   auto operator==(const Position& rhs) const -> bool;
   auto operator!=(const Position& rhs) const -> bool;
   auto operator-() const -> Position;

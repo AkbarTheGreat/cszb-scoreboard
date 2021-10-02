@@ -29,7 +29,7 @@ namespace cszb_scoreboard {
 
 class Display {
  public:
-  Display(uint32_t index0);
+  explicit Display(uint32_t index);
 
   void geometry(proto::Rectangle* rectangle);
   auto isPrimary() -> bool { return wx->IsPrimary(); }
@@ -37,7 +37,9 @@ class Display {
   static auto numDisplays() -> uint32_t { return wxDisplay::GetCount(); }
 
   PUBLIC_TEST_ONLY
-  Display(std::shared_ptr<swx::Display> wx) { this->wx = wx; }
+  explicit Display(std::shared_ptr<swx::Display> wx) {
+    this->wx = std::move(wx);
+  }
 
  private:
   // This is a shared pointer for testing.  Otherwise it could just be a

@@ -24,24 +24,32 @@ namespace cszb_scoreboard::swx {
 
 class Frame {
  public:
-  virtual auto Close(bool force = false) -> bool = 0;
-  virtual auto CreateStatusBar(int number = 1, long style = wxSTB_DEFAULT_STYLE,
-                               wxWindowID id = 0,
-                               const wxString &name = wxStatusBarNameStr)
-      -> wxStatusBar * = 0;
+  virtual auto Close(bool force) -> bool = 0;
+  auto Close() -> bool { return Close(false); }
+  virtual auto CreateStatusBar(int number, int64_t style, wxWindowID id,
+                               const wxString &name) -> wxStatusBar * = 0;
+  auto CreateStatusBar(int number = 1, int64_t style = wxSTB_DEFAULT_STYLE,
+                       wxWindowID id = 0) -> wxStatusBar * {
+    return CreateStatusBar(number, style, id, wxStatusBarNameStr);
+  }
   virtual auto Destroy() -> bool = 0;
-  virtual auto GetPosition() const -> wxPoint = 0;
-  virtual auto GetWindowStyle() const -> long = 0;
-  virtual void Iconize(bool iconize = true) = 0;
+  [[nodiscard]] virtual auto GetPosition() const -> wxPoint = 0;
+  [[nodiscard]] virtual auto GetWindowStyle() const -> int64_t = 0;
+  virtual void Iconize(bool iconize) = 0;
+  void Iconize() { Iconize(true); }
   virtual void SetAcceleratorTable(const wxAcceleratorTable &accel) = 0;
   virtual void SetMenuBar(wxMenuBar *menuBar) = 0;
   virtual void SetPosition(const wxPoint &pt) = 0;
   virtual void SetSize(const wxSize &size) = 0;
-  virtual void SetStatusText(const wxString &text, int number = 0) = 0;
-  virtual void SetWindowStyle(long style) = 0;
-  virtual auto Show(bool show = true) -> bool = 0;
-  virtual auto ShowFullScreen(bool show, long style = wxFULLSCREEN_ALL)
-      -> bool = 0;
+  virtual void SetStatusText(const wxString &text, int number) = 0;
+  void SetStatusText(const wxString &text) { SetStatusText(text, 0); }
+  virtual void SetWindowStyle(int64_t style) = 0;
+  virtual auto Show(bool show) -> bool = 0;
+  auto Show() -> bool { return Show(true); }
+  virtual auto ShowFullScreen(bool show, int64_t style) -> bool = 0;
+  auto ShowFullScreen(bool show) -> bool {
+    return ShowFullScreen(show, wxFULLSCREEN_ALL);
+  }
   virtual void Update() = 0;
 };
 
@@ -54,37 +62,36 @@ class FrameImpl : public Frame, public wxFrame {
             const wxString &name = wxFrameNameStr)
       : wxFrame(parent, id, title, pos, size, style, name){};
 
-  virtual auto Close(bool force = false) -> bool {
-    return wxFrame::Close(force);
-  }
-  virtual auto CreateStatusBar(int number = 1, long style = wxSTB_DEFAULT_STYLE,
-                               wxWindowID id = 0,
-                               const wxString &name = wxStatusBarNameStr)
-      -> wxStatusBar * {
+  auto Close(bool force) -> bool override { return wxFrame::Close(force); }
+  auto CreateStatusBar(int number, int64_t style, wxWindowID id,
+                       const wxString &name) -> wxStatusBar * override {
     return wxFrame::CreateStatusBar(number, style, id, name);
   }
-  virtual auto Destroy() -> bool { return wxFrame::Destroy(); }
-  virtual auto GetPosition() const -> wxPoint { return wxFrame::GetPosition(); }
-  virtual auto GetWindowStyle() const -> long {
+  auto Destroy() -> bool override { return wxFrame::Destroy(); }
+  [[nodiscard]] auto GetPosition() const -> wxPoint override {
+    return wxFrame::GetPosition();
+  }
+  [[nodiscard]] auto GetWindowStyle() const -> int64_t override {
     return wxFrame::GetWindowStyle();
   }
-  virtual void Iconize(bool iconize = true) { wxFrame::Iconize(iconize); }
-  virtual void SetAcceleratorTable(const wxAcceleratorTable &accel) {
+  void Iconize(bool iconize) override { wxFrame::Iconize(iconize); }
+  void SetAcceleratorTable(const wxAcceleratorTable &accel) override {
     wxFrame::SetAcceleratorTable(accel);
   }
-  virtual void SetMenuBar(wxMenuBar *menuBar) { wxFrame::SetMenuBar(menuBar); }
-  virtual void SetPosition(const wxPoint &pt) { wxFrame::SetPosition(pt); }
-  virtual void SetSize(const wxSize &size) { wxFrame::SetSize(size); }
-  virtual void SetStatusText(const wxString &text, int number = 0) {
+  void SetMenuBar(wxMenuBar *menuBar) override { wxFrame::SetMenuBar(menuBar); }
+  void SetPosition(const wxPoint &pt) override { wxFrame::SetPosition(pt); }
+  void SetSize(const wxSize &size) override { wxFrame::SetSize(size); }
+  void SetStatusText(const wxString &text, int number) override {
     wxFrame::SetStatusText(text, number);
   }
-  virtual void SetWindowStyle(long style) { wxFrame::SetWindowStyle(style); }
-  virtual auto Show(bool show = true) -> bool { return wxFrame::Show(show); }
-  virtual auto ShowFullScreen(bool show, long style = wxFULLSCREEN_ALL)
-      -> bool {
+  void SetWindowStyle(int64_t style) override {
+    wxFrame::SetWindowStyle(style);
+  }
+  auto Show(bool show) -> bool override { return wxFrame::Show(show); }
+  auto ShowFullScreen(bool show, int64_t style) -> bool override {
     return wxFrame::ShowFullScreen(show, style);
   }
-  virtual void Update() { wxFrame::Update(); }
+  void Update() override { wxFrame::Update(); }
 };
 
 }  // namespace cszb_scoreboard::swx

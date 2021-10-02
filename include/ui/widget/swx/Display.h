@@ -30,10 +30,10 @@ class Display {
 
 class DisplayImpl : public Display, wxDisplay {
  public:
-  DisplayImpl(unsigned int index = 0) : wxDisplay(index) {}
+  explicit DisplayImpl(unsigned int index = 0) : wxDisplay(index) {}
 
-  virtual auto IsPrimary() -> bool { return wxDisplay::IsPrimary(); }
-  virtual auto GetGeometry() -> wxRect { return wxDisplay::GetGeometry(); }
+  auto IsPrimary() -> bool override { return wxDisplay::IsPrimary(); }
+  auto GetGeometry() -> wxRect override { return wxDisplay::GetGeometry(); }
 };
 
 }  // namespace cszb_scoreboard::swx
