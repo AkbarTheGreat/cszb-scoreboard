@@ -122,11 +122,12 @@ list(APPEND TEST_ONLY_SRC
     "test/integration/GuiTest.cpp"
 )
 
-add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
-set_target_properties(scoreboard_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_compile_definitions(scoreboard_test_classes PUBLIC SCOREBOARD_TESTING)
-target_compile_definitions(scoreboard_test_classes PUBLIC SCOREBOARD_INTEGRATION_TEST)
-target_link_libraries(scoreboard_test_classes PRIVATE ${wxWidgets_LIBRARIES}
+add_library(scoreboard_ui_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
+set_target_properties(scoreboard_ui_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_TESTING)
+target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_INTEGRATION_TEST)
+target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_UI_TEST)
+target_link_libraries(scoreboard_ui_test_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
@@ -154,7 +155,7 @@ endmacro()
 
 macro(package_add_ui_test TESTNAME)
     if (INTEGRATION_TEST)
-	    package_add_test(${TESTNAME} ${ARGN} $<TARGET_OBJECTS:scoreboard_test_classes> )
+	    package_add_test(${TESTNAME} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
     endif()
 endmacro()
 

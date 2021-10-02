@@ -82,13 +82,17 @@ class DisplayConfigTest : public ::testing::Test {
     main_view =
         std::make_unique<MockMainView>(main_view_frame.get(), singleton.get());
     EXPECT_CALL(*main_view_frame, Destroy)
-        .WillRepeatedly(Return(true));  // Uninteresting destruction in this test.
+        .WillRepeatedly(
+            Return(true));  // Uninteresting destruction in this test.
     EXPECT_CALL(*singleton, persistence).WillRepeatedly(Return(persist.get()));
     EXPECT_CALL(*singleton, frameManager)
         .WillRepeatedly(Return(frame_manager.get()));
     EXPECT_CALL(*frame_manager, mainView)
         .WillRepeatedly(Return(main_view.get()));
     EXPECT_CALL(*persist, saveDisplays).WillRepeatedly(Return());
+    // Default the main_view to be in monitor1()
+    EXPECT_CALL(*main_view_frame, GetPosition)
+        .WillRepeatedly(Return(wxPoint(1, 1)));
     // Since the config might change, only return it once.  Futher returns in a
     // test should specify what they want to happen.
     EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
@@ -178,8 +182,28 @@ TEST_F(DisplayConfigTest, NumberOfDisplays) {
   EXPECT_EQ(3, autoConfig.numberOfDisplays());
 }
 
-#ifdef INCOMPLETE_TEST
-TEST_F(DisplayConfigTest, ExternalMonitorSetup) {
+TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
+  persist->loadDisplays();
+  display_config.reset();
+  display_config = std::make_unique<proto::DisplayConfig>();
+  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  EXPECT_CALL(*frame_manager, monitorCount).WillOnce(Return(1));
+  EXPECT_CALL(*frame_manager, monitor(0)).WillRepeatedly(Return(monitor1()));
+  DisplayConfig config(SingletonClass{}, singleton.get());
+
+  proto::DisplayConfig expected;
+  expected.mutable_window_size()->set_width(1024);
+  expected.mutable_window_size()->set_height(768);
+  proto::DisplayInfo *expected_display = expected.add_displays();
+  expected_display->mutable_dimensions()->set_width(1024);
+  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_side()->set_control(true);
+  expected_display->mutable_side()->set_error(true);
+
+  EXPECT_PROTO_EQ(expected, config.displayConfig());
+}
+
+TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
   display_config = std::make_unique<proto::DisplayConfig>();
@@ -196,11 +220,52 @@ TEST_F(DisplayConfigTest, ExternalMonitorSetup) {
   expected_display->mutable_dimensions()->set_width(1024);
   expected_display->mutable_dimensions()->set_height(768);
   expected_display->mutable_side()->set_control(true);
-  expected_display->mutable_side()->set_error(true);
+  expected_display = expected.add_displays();
+  expected_display->set_id(1);
+  expected_display->mutable_dimensions()->set_x(1024);
+  expected_display->mutable_dimensions()->set_y(768);
+  expected_display->mutable_dimensions()->set_width(1024);
+  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_side()->set_home(true);
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());
 }
-#endif
+
+TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
+  persist->loadDisplays();
+  display_config.reset();
+  display_config = std::make_unique<proto::DisplayConfig>();
+  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  EXPECT_CALL(*frame_manager, monitorCount).WillOnce(Return(3));
+  EXPECT_CALL(*frame_manager, monitor(0)).WillRepeatedly(Return(monitor1()));
+  EXPECT_CALL(*frame_manager, monitor(1)).WillRepeatedly(Return(monitor2()));
+  EXPECT_CALL(*frame_manager, monitor(2)).WillRepeatedly(Return(monitor3()));
+  DisplayConfig config(SingletonClass{}, singleton.get());
+
+  proto::DisplayConfig expected;
+  expected.mutable_window_size()->set_width(1024);
+  expected.mutable_window_size()->set_height(768);
+  proto::DisplayInfo *expected_display = expected.add_displays();
+  expected_display->mutable_dimensions()->set_width(1024);
+  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_side()->set_control(true);
+  expected_display = expected.add_displays();
+  expected_display->set_id(1);
+  expected_display->mutable_dimensions()->set_x(1024);
+  expected_display->mutable_dimensions()->set_y(768);
+  expected_display->mutable_dimensions()->set_width(1024);
+  expected_display->mutable_dimensions()->set_height(768);
+  expected_display->mutable_side()->set_home(true);
+  expected_display = expected.add_displays();
+  expected_display->set_id(2);
+  expected_display->mutable_dimensions()->set_x(2048);
+  expected_display->mutable_dimensions()->set_y(1536);
+  expected_display->mutable_dimensions()->set_width(640);
+  expected_display->mutable_dimensions()->set_height(480);
+  expected_display->mutable_side()->set_away(true);
+
+  EXPECT_PROTO_EQ(expected, config.displayConfig());
+}
 
 }  // namespace test
 }  // namespace cszb_scoreboard

@@ -65,7 +65,7 @@ void DisplayConfig::detectDisplays() {
 void DisplayConfig::detectExternalMonitors() {
   uint32_t numscreens = singleton->frameManager()->monitorCount();
 
-#ifdef SCOREBOARD_INTEGRATION_TEST
+#ifdef SCOREBOARD_UI_TEST
   // Force this to be 1 screen for tests, as all of our testing assumed that to
   // be the case anyway.
   numscreens = 1;
