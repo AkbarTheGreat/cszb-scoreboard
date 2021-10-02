@@ -31,6 +31,7 @@ limitations under the License.
 #include <optional>  // for optional
 #include <string>    // for string
 #include <vector>    // for vector
+#include "ScoreboardCommon.h"
 
 #include "config/Position.h"                    // for Position, Size
 #include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
@@ -63,10 +64,8 @@ class Frame : public Widget {
   explicit Frame(const std::string &title,
                  const Position &pos = Position::fromWx(wxDefaultPosition),
                  const Size &size = Size::fromWx(wxDefaultSize))
-      : Frame(new swx::Frame(nullptr, wxID_ANY, title, pos.toWx(),
+      : Frame(new swx::FrameImpl(nullptr, wxID_ANY, title, pos.toWx(),
                              size.toWx())) {}
-  // Injectable constructor, for testing.
-  explicit Frame(swx::Frame *frame) { wx = frame; }
   virtual ~Frame() { _wx()->Destroy(); }
 
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
@@ -77,6 +76,10 @@ class Frame : public Widget {
   auto show(bool show) -> bool { return wx->Show(show); }
   void updateWindow() { wx->Update(); }
   void closeWindow() { wx->Close(true); }
+  
+  PUBLIC_TEST_ONLY
+  // Injectable constructor, for testing.
+  explicit Frame(swx::Frame *frame) { wx = frame; }
 
  protected:
   void alwaysOnTop(bool isOnTop);
@@ -91,24 +94,24 @@ class Frame : public Widget {
                    int64_t style = wxDEFAULT_DIALOG_STYLE,
                    const wxString &name = wxDialogNameStr)
       -> swx::PropertySheetDialog * {
-    return new swx::PropertySheetDialog(wx, id, title, pos, size, style, name);
+    return new swx::PropertySheetDialog(_wx(), id, title, pos, size, style, name);
   }
   auto childPanel(wxWindowID id = wxID_ANY,
                   const wxPoint &pos = wxDefaultPosition,
                   const wxSize &size = wxDefaultSize,
                   int64_t style = wxTAB_TRAVERSAL,
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
-    return new swx::Panel(wx, id, pos, size, style, name);
+    return new swx::Panel(_wx(), id, pos, size, style, name);
   }
   auto childNotebook(wxWindowID id = wxID_ANY,
                      const wxPoint &pos = wxDefaultPosition,
                      const wxSize &size = wxDefaultSize,
                      int64_t style = DEFAULT_NOTEBOOK_STYLE)
       -> swx::Notebook * {
-    return new swx::Notebook(wx, id, pos, size, style);
+    return new swx::Notebook(_wx(), id, pos, size, style);
   }
 
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto _wx() const -> wxWindow * override { return dynamic_cast<swx::FrameImpl*>(wx); }
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
   swx::Frame *wx;
