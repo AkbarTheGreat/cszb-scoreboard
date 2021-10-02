@@ -29,6 +29,7 @@ class Frame {
                                wxWindowID id = 0,
                                const wxString &name = wxStatusBarNameStr)
       -> wxStatusBar * = 0;
+  virtual auto Destroy() -> bool = 0;
   virtual auto GetPosition() const -> wxPoint = 0;
   virtual auto GetWindowStyle() const -> long = 0;
   virtual void Iconize(bool iconize = true) = 0;
@@ -62,6 +63,7 @@ class FrameImpl : public Frame, public wxFrame {
       -> wxStatusBar * {
     return wxFrame::CreateStatusBar(number, style, id, name);
   }
+  virtual auto Destroy() -> bool { return wxFrame::Destroy(); }
   virtual auto GetPosition() const -> wxPoint { return wxFrame::GetPosition(); }
   virtual auto GetWindowStyle() const -> long {
     return wxFrame::GetWindowStyle();

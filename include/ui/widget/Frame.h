@@ -66,7 +66,7 @@ class Frame : public Widget {
                  const Size &size = Size::fromWx(wxDefaultSize))
       : Frame(new swx::FrameImpl(nullptr, wxID_ANY, title, pos.toWx(),
                              size.toWx())) {}
-  virtual ~Frame() { _wx()->Destroy(); }
+  virtual ~Frame() { wx->Destroy(); }
 
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
     wx->SetAcceleratorTable(wxAcceleratorTable(keys.size(), keys.data()));
