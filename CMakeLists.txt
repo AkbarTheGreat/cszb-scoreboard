@@ -125,6 +125,7 @@ list(APPEND TEST_ONLY_SRC
 add_library(scoreboard_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
 set_target_properties(scoreboard_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(scoreboard_test_classes PUBLIC SCOREBOARD_TESTING)
+target_compile_definitions(scoreboard_test_classes PUBLIC SCOREBOARD_INTEGRATION_TEST)
 target_link_libraries(scoreboard_test_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
