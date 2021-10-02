@@ -28,6 +28,7 @@ limitations under the License.
 #include "ui/dialog/SettingsDialog.h"      // for SettingsDialog
 #include "ui/event/UpdateTimer.h"          // for UpdateTimer
 #include "ui/widget/Frame.h"               // for Frame
+#include "ui/widget/swx/Frame.h"
 #include "util/Singleton.h"
 
 class wxNotebook;
@@ -39,14 +40,15 @@ struct Size;
 class MainView : public Frame {
  public:
   MainView(const std::string &title, const Position &pos, const Size &size)
-      : MainView(title, pos, size, Singleton::getInstance()) {}
+      : MainView(new swx::FrameImpl(nullptr, wxID_ANY, title, pos.toWx(),
+                                    size.toWx()),
+                 Singleton::getInstance()) {}
   auto controlPanel() -> ControlPanel * { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
   void onSettingsClose();
 
   PUBLIC_TEST_ONLY
-  MainView(const std::string &title, const Position &pos, const Size &size,
-           Singleton *singleton);
+  MainView(swx::Frame *wx, Singleton *singleton);
 
  private:
   void bindEvents();

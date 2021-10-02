@@ -38,7 +38,7 @@ const std::string LOGO_SELECTION_STRING = "Logo files (png)|*.png";
 #ifdef SCOREBOARD_TESTING
 #define PUBLIC_TEST_ONLY public:
 #else
-#define PUBLIC_TEST_ONLY private:
+#define PUBLIC_TEST_ONLY protected:
 #endif
 
 }  // namespace cszb_scoreboard

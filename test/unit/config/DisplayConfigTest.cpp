@@ -52,10 +52,6 @@ namespace cszb_scoreboard {
 // Defining some constructors here so as to avoid having to link all of the
 // scoreboard for MockFrameManager
 
-MainView::MainView(const std::string &title, const Position &pos,
-                   const Size &size, Singleton *singleton)
-    : Frame(title, pos, size) {}
-
 ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
                                  Singleton *singleton)
     : Frame("Scoreboard") {}

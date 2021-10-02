@@ -40,9 +40,7 @@ struct Size;
 
 const int BORDER_SIZE = 0;
 
-MainView::MainView(const std::string &title, const Position &pos,
-                   const Size &size, Singleton *singleton)
-    : Frame(title, pos, size) {
+MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
   this->singleton = singleton;
   createMenu();
   setStatusBar(
