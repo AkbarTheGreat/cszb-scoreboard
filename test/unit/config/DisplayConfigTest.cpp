@@ -125,7 +125,7 @@ class DisplayConfigTest : public ::testing::Test {
     auto wx = std::make_shared<swx::MockDisplay>();
     EXPECT_CALL(*wx, IsPrimary).WillRepeatedly(Return(false));
     EXPECT_CALL(*wx, GetGeometry)
-        .WillRepeatedly(Return(wxRect(0, 0, 1024, 768)));
+        .WillRepeatedly(Return(wxRect(1024, 768, 1024, 768)));
     return Display(wx);
   }
 
@@ -134,7 +134,7 @@ class DisplayConfigTest : public ::testing::Test {
     auto wx = std::make_shared<swx::MockDisplay>();
     EXPECT_CALL(*wx, IsPrimary).WillRepeatedly(Return(false));
     EXPECT_CALL(*wx, GetGeometry)
-        .WillRepeatedly(Return(wxRect(0, 0, 640, 480)));
+        .WillRepeatedly(Return(wxRect(2048, 1536, 640, 480)));
     return Display(wx);
   }
 
