@@ -153,7 +153,6 @@ class DisplayConfigTest : public ::testing::Test {
     return Display(wx);
   }
 
- private:
   static void displaySize(proto::DisplayInfo *display_info, int32_t x,
                           int32_t y, int32_t width, int32_t height) {
     display_info->mutable_dimensions()->set_x(x);
@@ -201,10 +200,8 @@ TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   expected.mutable_window_size()->set_height(
       768);  // NOLINT(readability-magic-numbers)
   proto::DisplayInfo *expected_display = expected.add_displays();
-  expected_display->mutable_dimensions()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  displaySize(expected_display, 0, 0, 1024, 768);
   expected_display->mutable_side()->set_control(true);
   expected_display->mutable_side()->set_error(true);
 
@@ -228,21 +225,13 @@ TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   expected.mutable_window_size()->set_height(
       768);  // NOLINT(readability-magic-numbers)
   proto::DisplayInfo *expected_display = expected.add_displays();
-  expected_display->mutable_dimensions()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  displaySize(expected_display, 0, 0, 1024, 768);
   expected_display->mutable_side()->set_control(true);
   expected_display = expected.add_displays();
   expected_display->set_id(1);
-  expected_display->mutable_dimensions()->set_x(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_y(
-      768);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  displaySize(expected_display, 1024, 768, 1024, 768);
   expected_display->mutable_side()->set_home(true);
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());
@@ -266,32 +255,18 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   expected.mutable_window_size()->set_height(
       768);  // NOLINT(readability-magic-numbers)
   proto::DisplayInfo *expected_display = expected.add_displays();
-  expected_display->mutable_dimensions()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  displaySize(expected_display, 0, 0, 1024, 768);
   expected_display->mutable_side()->set_control(true);
   expected_display = expected.add_displays();
   expected_display->set_id(1);
-  expected_display->mutable_dimensions()->set_x(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_y(
-      768);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  displaySize(expected_display, 1024, 768, 1024, 768);
   expected_display->mutable_side()->set_home(true);
   expected_display = expected.add_displays();
   expected_display->set_id(2);
-  expected_display->mutable_dimensions()->set_x(
-      2048);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_y(
-      1536);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_width(
-      640);  // NOLINT(readability-magic-numbers)
-  expected_display->mutable_dimensions()->set_height(
-      480);  // NOLINT(readability-magic-numbers)
+  // NOLINTNEXTLINE(readability-magic-numbers)
+  displaySize(expected_display, 2048, 1536, 640, 480);
   expected_display->mutable_side()->set_away(true);
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());

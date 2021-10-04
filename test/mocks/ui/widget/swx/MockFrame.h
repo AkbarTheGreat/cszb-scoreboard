@@ -29,11 +29,11 @@ class MockFrame : public cszb_scoreboard::swx::Frame {
 
   MOCK_METHOD(bool, Close, (bool force), (override));
   MOCK_METHOD(wxStatusBar *, CreateStatusBar,
-              (int number, long style, wxWindowID id, const wxString &name),
+              (int number, int64_t style, wxWindowID id, const wxString &name),
               (override));
   MOCK_METHOD(bool, Destroy, (), (override));
   MOCK_METHOD(wxPoint, GetPosition, (), (const, override));
-  MOCK_METHOD(long, GetWindowStyle, (), (const, override));
+  MOCK_METHOD(int64_t, GetWindowStyle, (), (const, override));
   MOCK_METHOD(void, Iconize, (bool iconize), (override));
   MOCK_METHOD(void, SetAcceleratorTable, (const wxAcceleratorTable &accel),
               (override));
@@ -42,9 +42,9 @@ class MockFrame : public cszb_scoreboard::swx::Frame {
   MOCK_METHOD(void, SetSize, (const wxSize &size), (override));
   MOCK_METHOD(void, SetStatusText, (const wxString &text, int number),
               (override));
-  MOCK_METHOD(void, SetWindowStyle, (long style), (override));
+  MOCK_METHOD(void, SetWindowStyle, (int64_t style), (override));
   MOCK_METHOD(bool, Show, (bool show), (override));
-  MOCK_METHOD(bool, ShowFullScreen, (bool show, long style), (override));
+  MOCK_METHOD(bool, ShowFullScreen, (bool show, int64_t style), (override));
   MOCK_METHOD(void, Update, (), (override));
 };
 
