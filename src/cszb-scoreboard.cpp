@@ -19,7 +19,6 @@ limitations under the License.
 #include "cszb-scoreboard.h"
 
 #include <wx/app.h>       // IWYU pragma: keep for wxAppConsole
-#include <wx/chartype.h>  // for wxT
 #include <wx/cmdline.h>   // for wxCmdLineParser
 #include <wx/image.h>     // for wxInitAllImageHandlers
 
@@ -51,7 +50,7 @@ auto Scoreboard::OnInit() -> bool {
     return false;
   }
   wxInitAllImageHandlers();
-  LogDebug(wxT("Starting up main loop"));
+  LogDebug("Starting up main loop");
   Singleton::getInstance()
       ->frameManager()
       ->createMainView("ComedySportz Scoreboard",

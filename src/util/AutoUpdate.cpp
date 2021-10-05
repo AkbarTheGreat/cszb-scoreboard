@@ -109,7 +109,8 @@ auto AutoUpdate::checkForUpdate(const std::string &current_version,
   HttpResponse http_response = httpReader->read(LATEST_VERSION_URL);
   if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
-    LogDebug("Curl failure checking for update: %s", http_response.error);
+    LogDebug("Curl failure checking for update: %s",
+             http_response.error.c_str());
     return false;
   }
 
@@ -152,7 +153,8 @@ auto AutoUpdate::downloadUpdate(const std::string &url,
   HttpResponse http_response = httpReader->read(url.c_str());
   if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
-    LogDebug("Curl failure checking for update: %s", http_response.error);
+    LogDebug("Curl failure checking for update: %s",
+             http_response.error.c_str());
     return false;
   }
 
@@ -192,7 +194,7 @@ auto AutoUpdate::updateInPlace() -> bool {
     return false;
   }
   LogDebug("Writing auto-update to %s",
-           singleton->commandArgs()->commandPath().string());
+           singleton->commandArgs()->commandPath().c_str());
 
   FilesystemPath executable_path = singleton->commandArgs()->commandPath();
   FilesystemPath backup_path = backupPath();
