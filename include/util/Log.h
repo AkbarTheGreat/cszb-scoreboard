@@ -17,9 +17,9 @@ limitations under the License.
 */
 #pragma once
 
-#ifdef INTEGRATION_TEST
+#ifdef SCOREBOARD_TESTING
 #define LogDebug(...) fprintf(stderr, __VA_ARGS__)
-#else  // INTEGRATION_TEST
+#else  // SCOREBOARD_TESTING
 #include <wx/wx.h>
 #define LogDebug(...) wxLogDebug(__VA_ARGS__)
-#endif  // INTEGRATION_TEST
+#endif  // SCOREBOARD_TESTING
