@@ -61,6 +61,9 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
 
 namespace test {
 
+constexpr int32_t EXPECTED_DEFAULT_WINDOW_WIDTH = 1024;
+constexpr int32_t EXPECTED_DEFAULT_WINDOW_HEIGHT = 768;
+
 class DisplayConfigTest : public ::testing::Test {
  protected:
   std::unique_ptr<proto::DisplayConfig> display_config;
@@ -185,7 +188,29 @@ TEST_F(DisplayConfigTest, NumberOfDisplays) {
 }
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+TEST_F(DisplayConfigTest, ExternalConfigSkipsIfCountIsIdentical) {
+  // Load display to flush the call expected in SetUp.
+  persist->loadDisplays();
+  display_config->set_enable_windowed_mode(false);
+  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  EXPECT_CALL(*frame_manager, monitorCount).WillOnce(Return(2));
+  EXPECT_CALL(*frame_manager, monitor(0)).WillRepeatedly(Return(monitor1()));
+  EXPECT_CALL(*frame_manager, monitor(1)).WillRepeatedly(Return(monitor2()));
+  DisplayConfig config(SingletonClass{}, singleton.get());
+
+  // Display 1 would change as well as some other details if it was actually
+  // re-calculating after removing windowed_mode.
+  std::unique_ptr<proto::DisplayConfig> expected = defaultConfig();
+  expected->set_enable_windowed_mode(false);
+  expected->mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
+  expected->mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
+
+  EXPECT_PROTO_EQ(*expected, config.displayConfig());
+}
+
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
+  // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
   display_config.reset();
   display_config = std::make_unique<proto::DisplayConfig>();
@@ -210,6 +235,7 @@ TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
+  // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
   display_config.reset();
   display_config = std::make_unique<proto::DisplayConfig>();
@@ -239,6 +265,7 @@ TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
 
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
+  // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
   display_config.reset();
   display_config = std::make_unique<proto::DisplayConfig>();
