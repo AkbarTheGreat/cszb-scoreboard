@@ -18,8 +18,16 @@ limitations under the License.
 #pragma once
 
 #ifdef SCOREBOARD_TESTING
-#define LogDebug(...) fprintf(stderr, __VA_ARGS__)
-#else  // SCOREBOARD_TESTING
+#ifdef SCOREBOARD_ENABLE_LOGGING
+#define LogDebug(...)             \
+  {                               \
+    fprintf(stderr, __VA_ARGS__); \
+    fprintf(stderr, "\n");        \
+  }
+#else  // SCOREBOARD_ENABLE_LOGGING
+#define LogDebug(...)
+#endif  // SCOREBOARD_ENABLE_LOGGING
+#else   // SCOREBOARD_TESTING
 #include <wx/wx.h>
 #define LogDebug(...) wxLogDebug(__VA_ARGS__)
 #endif  // SCOREBOARD_TESTING
