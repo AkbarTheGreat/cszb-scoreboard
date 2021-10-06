@@ -1,5 +1,8 @@
 /*
-util/Log.h: Logging methods.  Redirect to wxWidgets logging in normal execution
+util/Log.h: Logging methods.  Redirect to wxWidgets logging in normal execution.
+Disables logging in tests entirely by default.  To enable logging in tests (to
+stderr instead of wxLog), configure Cmake with
+-DCMAKE_CXX_FLAGS="-DSCOREBOARD_ENABLE_LOGGING".
 
 Copyright 2021 Tracy Beck
 

@@ -139,13 +139,11 @@ make cszb-scoreboard'''
           buildDir: 'out/build/Coverage',
           buildType: 'Debug',
           cleanBuild: true,
-          cmakeArgs: '-DENABLE_CODE_COVERAGE=true')
+          cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
         retry(count: 3) {
-          wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-            sh '''cd out/build/Coverage
-                  make -j2 all cszb-scoreboard-xml-coverage
-               '''
-          }
+          sh '''cd out/build/Coverage
+            make -j2 all cszb-scoreboard-xml-coverage
+          '''
         }
         cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
       }
