@@ -220,10 +220,8 @@ TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   DisplayConfig config(SingletonClass{}, singleton.get());
 
   proto::DisplayConfig expected;
-  expected.mutable_window_size()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected.mutable_window_size()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  expected.mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
+  expected.mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
   proto::DisplayInfo *expected_display = expected.add_displays();
   // NOLINTNEXTLINE(readability-magic-numbers)
   displaySize(expected_display, 0, 0, 1024, 768);
@@ -246,10 +244,8 @@ TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   DisplayConfig config(SingletonClass{}, singleton.get());
 
   proto::DisplayConfig expected;
-  expected.mutable_window_size()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected.mutable_window_size()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  expected.mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
+  expected.mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
   proto::DisplayInfo *expected_display = expected.add_displays();
   // NOLINTNEXTLINE(readability-magic-numbers)
   displaySize(expected_display, 0, 0, 1024, 768);
@@ -277,10 +273,8 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   DisplayConfig config(SingletonClass{}, singleton.get());
 
   proto::DisplayConfig expected;
-  expected.mutable_window_size()->set_width(
-      1024);  // NOLINT(readability-magic-numbers)
-  expected.mutable_window_size()->set_height(
-      768);  // NOLINT(readability-magic-numbers)
+  expected.mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
+  expected.mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
   proto::DisplayInfo *expected_display = expected.add_displays();
   // NOLINTNEXTLINE(readability-magic-numbers)
   displaySize(expected_display, 0, 0, 1024, 768);
@@ -297,6 +291,33 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   expected_display->mutable_side()->set_away(true);
 
   EXPECT_PROTO_EQ(expected, config.displayConfig());
+}
+
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+TEST_F(DisplayConfigTest, SetSide) {
+  DisplayConfig config(SingletonClass{}, singleton.get());
+  auto *newSide = new proto::ScreenSide();
+  newSide->set_away(false);
+  newSide->set_extra(true);
+  config.setSide(1, *newSide);
+  std::unique_ptr<proto::DisplayConfig> expected = defaultConfig();
+  expected->mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
+  expected->mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
+  expected->mutable_displays(1)->set_allocated_side(newSide);
+  EXPECT_PROTO_EQ(*expected, config.displayConfig());
+}
+
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+TEST_F(DisplayConfigTest, SetDisplayId) {
+  DisplayConfig config(SingletonClass{}, singleton.get());
+  EXPECT_TRUE(
+      config.setDisplayId(1, 15));  // NOLINT (readability-magic-numbers)
+  std::unique_ptr<proto::DisplayConfig> expected = defaultConfig();
+  expected->mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
+  expected->mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
+  expected->mutable_displays(1)->set_id(
+      15);  // NOLINT (readability-magic-numbers)
+  EXPECT_PROTO_EQ(*expected, config.displayConfig());
 }
 
 }  // namespace test
