@@ -63,6 +63,10 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_definitions(-DwxDEBUG_LEVEL=0)
 endif()
 
+if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+    add_definitions(-DSCOREBOARD_DEBUG)
+endif()
+
 set(LINT_OPTION, "")
 
 # Clang tidy piece adapted from https://gitlab.kitware.com/cmake/cmake/-/issues/18926

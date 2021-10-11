@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
+#include "test/TestUtil.h"
 #include "test/mocks/config/MockPersistence.h"
 #include "test/mocks/ui/frame/MockFrameManager.h"
 #include "test/mocks/ui/frame/MockMainView.h"
@@ -318,6 +319,15 @@ TEST_F(DisplayConfigTest, SetDisplayId) {
   expected->mutable_displays(1)->set_id(
       15);  // NOLINT (readability-magic-numbers)
   EXPECT_PROTO_EQ(*expected, config.displayConfig());
+
+  // Setting the same display a second time should return false and change
+  // nothing.
+  EXPECT_FALSE(
+      config.setDisplayId(1, 15));  // NOLINT (readability-magic-numbers)
+  EXPECT_PROTO_EQ(*expected, config.displayConfig());
+
+  EXPECT_ASSERT(config.setDisplayId(-1, 1));
+  EXPECT_ASSERT(config.setDisplayId(3, 1));
 }
 
 }  // namespace test

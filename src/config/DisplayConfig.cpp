@@ -156,6 +156,7 @@ void DisplayConfig::setSide(int index, proto::ScreenSide side) {
 }
 
 auto DisplayConfig::setDisplayId(int index, int id) -> bool {
+  assert(index < display_config.displays_size() && index >= 0);
   if (display_config.mutable_displays(index)->id() == id) {
     return false;
   }
