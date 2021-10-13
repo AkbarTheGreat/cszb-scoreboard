@@ -28,6 +28,7 @@ limitations under the License.
 #include "ui/component/control/ScoreControl.h"      // for ScoreControl
 #include "ui/component/control/TextEntry.h"         // for TextEntry
 #include "ui/component/control/ThingsMode.h"        // for ThingsMode
+#include "ui/component/control/TimerSetup.h"
 
 namespace cszb_scoreboard {
 class PreviewPanel;
@@ -50,6 +51,8 @@ ControlPanel::ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
                 "5/6 Things");
   addController(std::move(TextEntry::Create(preview_panel, childPanel())),
                 "Text");
+  addController(std::move(TimerSetup::Create(preview_panel, childPanel())),
+                "Timer");
 
   bindEvents();
 
