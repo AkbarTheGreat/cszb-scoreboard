@@ -22,14 +22,20 @@ limitations under the License.
 
 namespace cszb_scoreboard::swx {
 
-class Panel : public wxPanel {
+class Panel {
  public:
-  explicit Panel(wxWindow *parent, wxWindowID id = wxID_ANY,
-                 const wxPoint &pos = wxDefaultPosition,
-                 const wxSize &size = wxDefaultSize,
-                 int64_t style = wxTAB_TRAVERSAL,
-                 const wxString &name = wxPanelNameStr)
+  virtual auto asWx() -> wxPanel * { return nullptr; }
+};
+
+class PanelImpl : public Panel, public wxPanel {
+ public:
+  explicit PanelImpl(wxWindow *parent, wxWindowID id = wxID_ANY,
+                     const wxPoint &pos = wxDefaultPosition,
+                     const wxSize &size = wxDefaultSize,
+                     int64_t style = wxTAB_TRAVERSAL,
+                     const wxString &name = wxPanelNameStr)
       : wxPanel(parent, id, pos, size, style, name) {}
+  auto asWx() -> wxPanel * override { return this; }
 };
 
 }  // namespace cszb_scoreboard::swx

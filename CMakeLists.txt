@@ -178,6 +178,11 @@ package_add_test(ImageLibraryTest  test/unit/config/ImageLibraryTest.cpp  src sr
                                                                           src/config/Persistence.cpp
                                                                           src/util/FilesystemPath.cpp
                                                                           )
+# ui/ tests
+package_add_test(TimerSetupTest test/unit/ui/component/control/TimerSetupTest.cpp src/ui/component/control/TimerSetup.cpp
+                                                                                  src/config/CommandArgs.cpp
+                                                                                  )
+
 # util/ tests
 package_add_test(AutoUpdateTest test/unit/util/AutoUpdateTest.cpp src/util/AutoUpdate.cpp
                                                                   src/config/CommandArgs.cpp

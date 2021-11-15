@@ -28,7 +28,18 @@ auto TimerSetup ::Create(PreviewPanel *preview_panel, swx::Panel *wx)
   return control;
 }
 
-void TimerSetup::createControls(Panel *control_panel) {}
+void TimerSetup::createControls(Panel *control_panel) {
+  minutes_label = control_panel->label("Minutes");
+  minutes_text = control_panel->text("5");
+  seconds_label = control_panel->label("Seconds");
+  seconds_text = control_panel->text("0");
+
+  control_panel->addWidget(*minutes_label, 0, 0);
+  control_panel->addWidget(*minutes_text, 0, 1);
+  control_panel->addWidget(*seconds_label, 1, 0);
+  control_panel->addWidget(*seconds_text, 1, 1);
+  control_panel->runSizer();
+}
 
 void TimerSetup::updateScreenText(ScreenText *screen_text) {}
 

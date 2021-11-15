@@ -21,7 +21,9 @@ limitations under the License.
 
 #include "ui/component/ScreenText.h"
 #include "ui/component/control/ScreenTextController.h"
+#include "ui/widget/Label.h"
 #include "ui/widget/Panel.h"
+#include "ui/widget/Text.h"
 #include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
@@ -36,6 +38,10 @@ class TimerSetup : public ScreenTextController {
  private:
   void createControls(Panel *control_panel) override;
   void updateScreenText(ScreenText *screen_text) override;
+  std::unique_ptr<Label> minutes_label;
+  std::unique_ptr<Label> seconds_label;
+  std::unique_ptr<Text> minutes_text;
+  std::unique_ptr<Text> seconds_text;
 };
 
 }  // namespace cszb_scoreboard
