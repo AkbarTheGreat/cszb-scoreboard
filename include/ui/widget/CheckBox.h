@@ -25,16 +25,16 @@ namespace cszb_scoreboard {
 
 class CheckBox : public Widget {
  public:
-  explicit CheckBox(swx::CheckBox *check) { wx = check; }
+  explicit CheckBox(swx::CheckBox *check) { _wx = check; }
 
-  [[nodiscard]] auto checked() const -> bool { return wx->GetValue(); }
-  void setChecked(bool checked) { wx->SetValue(checked); }
+  [[nodiscard]] auto checked() const -> bool { return _wx->GetValue(); }
+  void setChecked(bool checked) { _wx->SetValue(checked); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::CheckBox *wx;
+  swx::CheckBox *_wx;
 };
 
 }  // namespace cszb_scoreboard

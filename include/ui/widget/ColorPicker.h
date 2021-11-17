@@ -27,21 +27,21 @@ namespace cszb_scoreboard {
 
 class ColorPicker : public Widget {
  public:
-  explicit ColorPicker(swx::ColourPickerCtrl *picker) { wx = picker; }
+  explicit ColorPicker(swx::ColourPickerCtrl *picker) { _wx = picker; }
 
   void bind(const wxEventTypeTag<wxColourPickerEvent> &eventType,
             const std::function<void(wxColourPickerEvent &)> &lambda,
             int id = wxID_ANY) {
-    _wx()->Bind(eventType, lambda, id);
+    wx()->Bind(eventType, lambda, id);
   }
-  auto color() -> Color { return Color(wx->GetColour()); }
-  void setColor(const Color &color) { wx->SetColour(color); }
+  auto color() -> Color { return Color(_wx->GetColour()); }
+  void setColor(const Color &color) { _wx->SetColour(color); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::ColourPickerCtrl *wx;
+  swx::ColourPickerCtrl *_wx;
 };
 
 }  // namespace cszb_scoreboard

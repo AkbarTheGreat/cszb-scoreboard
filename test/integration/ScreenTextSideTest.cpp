@@ -86,7 +86,7 @@ class ScreenTextSideTest : public testing::Test {
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(ScreenTextSideTest, getExtents) {
   std::unique_ptr<RenderContext> renderer =
-      RenderContext::forWidget(screenText()->wx);
+      RenderContext::forWidget(screenText()->wx());
 
   Size size = ScreenTextSide::getTextExtent(renderer.get(), "Test Text");
   int line_width = size.width;

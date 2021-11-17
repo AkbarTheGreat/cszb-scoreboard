@@ -23,13 +23,13 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 void Label::bold(bool is_bold) {
-  wxFont font = wx->GetFont();
+  wxFont font = wx()->GetFont();
   if (is_bold) {
     font.SetWeight(wxFONTWEIGHT_BOLD);
   } else {
     font.SetWeight(wxFONTWEIGHT_NORMAL);
   }
-  wx->SetFont(font);
+  wx()->SetFont(font);
 }
 
 }  // namespace cszb_scoreboard

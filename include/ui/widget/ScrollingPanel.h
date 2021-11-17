@@ -34,10 +34,10 @@ class ScrollingPanel : public Panel {
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
-  swx::ScrolledWindow *wx;
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  swx::ScrolledWindow *_wx;
 };
 
 }  // namespace cszb_scoreboard

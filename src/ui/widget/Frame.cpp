@@ -29,10 +29,10 @@ namespace cszb_scoreboard {
 
 void Frame::alwaysOnTop(bool isOnTop) {
   if (isOnTop) {
-    wx->SetWindowStyle(wx->GetWindowStyle() | wxSTAY_ON_TOP);
+    wx()->SetWindowStyle(wx()->GetWindowStyle() | wxSTAY_ON_TOP);
   } else {
     int64_t styleMask = 0L ^ wxSTAY_ON_TOP;
-    wx->SetWindowStyle(wx->GetWindowStyle() & styleMask);
+    wx()->SetWindowStyle(wx()->GetWindowStyle() & styleMask);
   }
 }
 
@@ -49,20 +49,20 @@ void Frame::menuBar(const std::vector<MenuCategory> &menu) {
     }
     menu_bar->Append(menu_cat, category.name);
   }
-  wx->SetMenuBar(menu_bar);
+  _wx->SetMenuBar(menu_bar);
 }
 
 void Frame::setDimensions(const Position &position, const Size &size) {
-  wx->SetSize(size.toWx());
-  wx->SetPosition(position.toWx());
+  wx()->SetSize(size.toWx());
+  wx()->SetPosition(position.toWx());
 }
 
 void Frame::setStatusBar(const wxString &text) {
   if (!hasStatusBar) {
     hasStatusBar = true;
-    wx->CreateStatusBar();
+    _wx->CreateStatusBar();
   }
-  wx->SetStatusText(text);
+  _wx->SetStatusText(text);
 }
 
 }  // namespace cszb_scoreboard

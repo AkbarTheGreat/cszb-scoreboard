@@ -26,19 +26,19 @@ namespace cszb_scoreboard {
 class SearchBox : public Widget {
  public:
   SearchBox(swx::SearchCtrl *search, const std::string &initial_text) {
-    wx = search;
-    wx->SetDescriptiveText(initial_text);
+    _wx = search;
+    _wx->SetDescriptiveText(initial_text);
   }
 
-  void showSearchButton(bool show) { wx->ShowSearchButton(show); }
-  void showCancelButton(bool show) { wx->ShowCancelButton(show); }
-  auto value() -> std::string { return wx->GetValue().ToStdString(); }
+  void showSearchButton(bool show) { _wx->ShowSearchButton(show); }
+  void showCancelButton(bool show) { _wx->ShowCancelButton(show); }
+  auto value() -> std::string { return _wx->GetValue().ToStdString(); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::SearchCtrl *wx;
+  swx::SearchCtrl *_wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -37,19 +37,19 @@ namespace cszb_scoreboard {
 
 class ListBox : public Widget {
  public:
-  explicit ListBox(swx::EditableListBox *list_box) { wx = list_box; }
+  explicit ListBox(swx::EditableListBox *list_box) { _wx = list_box; }
 
   void bind(const wxEventTypeTag<wxListEvent> &eventType,
             const std::function<void(wxListEvent &)> &lambda,
             int id = wxID_ANY) {
-    wx->Bind(eventType, lambda, id);
+    wx()->Bind(eventType, lambda, id);
   }
 
   // Bind an event against the "New" button on this list.
   void bindNew(const wxEventTypeTag<wxCommandEvent> &eventType,
                const std::function<void(wxCommandEvent &)> &lambda,
                int id = wxID_ANY) {
-    wx->GetNewButton()->Bind(eventType, lambda, id);
+    _wx->GetNewButton()->Bind(eventType, lambda, id);
   }
   auto listSize() -> int64_t;
   auto selectedIndex() -> int64_t;
@@ -59,10 +59,10 @@ class ListBox : public Widget {
   void setStrings(const std::vector<std::string> &strings);
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::EditableListBox *wx;
+  swx::EditableListBox *_wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -32,19 +32,19 @@ class Display {
   explicit Display(uint32_t index);
 
   void geometry(proto::Rectangle* rectangle);
-  auto isPrimary() -> bool { return wx->IsPrimary(); }
+  auto isPrimary() -> bool { return _wx->IsPrimary(); }
 
   static auto numDisplays() -> uint32_t { return wxDisplay::GetCount(); }
 
   PUBLIC_TEST_ONLY
   explicit Display(std::shared_ptr<swx::Display> wx) {
-    this->wx = std::move(wx);
+    this->_wx = std::move(wx);
   }
 
  private:
   // This is a shared pointer for testing.  Otherwise it could just be a
   // unique_ptr.
-  std::shared_ptr<swx::Display> wx;
+  std::shared_ptr<swx::Display> _wx;
 };
 
 }  // namespace cszb_scoreboard

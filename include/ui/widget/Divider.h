@@ -25,13 +25,13 @@ namespace cszb_scoreboard {
 
 class Divider : public Widget {
  public:
-  explicit Divider(swx::StaticLine *line) { wx = line; }
+  explicit Divider(swx::StaticLine *line) { _wx = line; }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::StaticLine *wx;
+  swx::StaticLine *_wx;
 };
 
 }  // namespace cszb_scoreboard

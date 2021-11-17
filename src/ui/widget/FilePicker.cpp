@@ -28,13 +28,13 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-FilePicker::~FilePicker() { delete wx; }
+FilePicker::~FilePicker() { delete _wx; }
 
 auto FilePicker::selectFile() -> std::optional<FilesystemPath> {
-  if (wx->ShowModal() == wxID_CANCEL) {
+  if (_wx->ShowModal() == wxID_CANCEL) {
     return std::nullopt;
   }
-  return FilesystemPath(std::string(wx->GetPath()));
+  return FilesystemPath(std::string(_wx->GetPath()));
 }
 
 }  // namespace cszb_scoreboard
