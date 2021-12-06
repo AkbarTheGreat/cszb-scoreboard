@@ -35,7 +35,7 @@ namespace cszb_scoreboard {
 void Widget::addWidgetWithSpan(const Widget &widget, int row, int column,
                                int row_span, int column_span, int border_size,
                                int flag) {
-  sizer()->Add(widget._wx(), wxGBPosition(row, column),
+  sizer()->Add(widget.wx(), wxGBPosition(row, column),
                wxGBSpan(row_span, column_span), flag, border_size);
 }
 
@@ -52,7 +52,7 @@ auto Widget::widgetAtIndex(int row, int column) -> wxWindow * {
 }
 
 void Widget::moveWidget(Widget *widget, int row, int column) {
-  sizer()->SetItemPosition(widget->_wx(), wxGBPosition(row, column));
+  sizer()->SetItemPosition(widget->wx(), wxGBPosition(row, column));
 }
 
 auto getOrderedRepresentation(wxGridBagSizer *sizer)
@@ -125,11 +125,11 @@ auto Widget::sizer() -> swx::Sizer * {
 // that here.
 void Widget::bind(const wxEventTypeTag<wxPaintEvent> &eventType,
                   const std::function<void(RenderContext *)> &lambda, int id) {
-  _wx()->Bind(
+  wx()->Bind(
       eventType,
       [this, lambda](wxPaintEvent &event) -> void {
         std::unique_ptr<RenderContext> render_context =
-            RenderContext::forEvent(_wx());
+            RenderContext::forEvent(wx());
         lambda(render_context.get());
       },
       id);

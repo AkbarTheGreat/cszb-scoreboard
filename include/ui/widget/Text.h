@@ -26,21 +26,21 @@ namespace cszb_scoreboard {
 
 class Text : public Widget {
  public:
-  explicit Text(swx::TextCtrl *label) { wx = label; }
+  explicit Text(swx::TextCtrl *label) { _wx = label; }
 
-  void clear() { wx->Clear(); }
-  void disable() { wx->Disable(); }
-  void enable() { wx->Enable(); }
-  void focus() { wx->SetFocus(); }
-  void setValue(const std::string &value) { wx->SetValue(value); }
-  void setValue(int value) { wx->SetValue(StringUtil::intToString(value)); }
-  auto value() -> std::string { return wx->GetValue().ToStdString(); }
+  void clear() { _wx->Clear(); }
+  void disable() { wx()->Disable(); }
+  void enable() { wx()->Enable(); }
+  void focus() { wx()->SetFocus(); }
+  void setValue(const std::string &value) { _wx->SetValue(value); }
+  void setValue(int value) { _wx->SetValue(StringUtil::intToString(value)); }
+  auto value() -> std::string { return _wx->GetValue().ToStdString(); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::TextCtrl *wx;
+  swx::TextCtrl *_wx;
 };
 
 }  // namespace cszb_scoreboard

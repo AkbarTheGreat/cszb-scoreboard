@@ -45,22 +45,22 @@ class Widget {
   void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
             const std::function<void(wxCloseEvent &)> &lambda,
             int id = wxID_ANY) const {
-    _wx()->Bind(eventType, lambda, id);
+    wx()->Bind(eventType, lambda, id);
   }
   void bind(const wxEventTypeTag<wxCommandEvent> &eventType,
             const std::function<void(wxCommandEvent &)> &lambda,
             int id = wxID_ANY) const {
-    _wx()->Bind(eventType, lambda, id);
+    wx()->Bind(eventType, lambda, id);
   }
   void bind(const wxEventTypeTag<wxKeyEvent> &eventType,
             const std::function<void(wxKeyEvent &)> &lambda,
             int id = wxID_ANY) const {
-    _wx()->Bind(eventType, lambda, id);
+    wx()->Bind(eventType, lambda, id);
   }
   void bind(const wxEventTypeTag<wxMouseEvent> &eventType,
             const std::function<void(wxMouseEvent &)> &lambda,
             int id = wxID_ANY) const {
-    _wx()->Bind(eventType, lambda, id);
+    wx()->Bind(eventType, lambda, id);
   }
   // A wxPaintEvent wraps more functionality than others, in that it creates a
   // renderable context for use in rendering to the window implicitly, which may
@@ -68,18 +68,18 @@ class Widget {
   void bind(const wxEventTypeTag<wxPaintEvent> &eventType,
             const std::function<void(RenderContext *)> &lambda,
             int id = wxID_ANY);
-  void focus() const { _wx()->SetFocus(); }
+  void focus() const { wx()->SetFocus(); }
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
-  void runSizer() { _wx()->SetSizerAndFit(sizer()); }
+  void runSizer() { wx()->SetSizerAndFit(sizer()); }
   // Reparents this widget to another widget for layout purposes
-  void setParent(Widget *parent) const { _wx()->Reparent(parent->_wx()); }
+  void setParent(Widget *parent) const { wx()->Reparent(parent->wx()); }
 
   // This should be moved to protected when the conversion is complete.
   auto sizer() -> swx::Sizer *;
 
-  [[nodiscard]] virtual auto _wx() const -> wxWindow * = 0;
+  [[nodiscard]] virtual auto wx() const -> wxWindow * = 0;
 
  private:
   // wxWidget will clean up our sizer for us, so keep it as an unmanaged

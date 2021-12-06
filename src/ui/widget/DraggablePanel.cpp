@@ -28,7 +28,7 @@ class Panel;
 }  // namespace swx
 
 DraggablePanel::DraggablePanel(swx::Panel *panel) : Panel(panel) {
-  aui_manager.SetManagedWindow(_wx());
+  aui_manager.SetManagedWindow(wx());
 }
 
 DraggablePanel::~DraggablePanel() { aui_manager.UnInit(); }
@@ -38,9 +38,9 @@ void DraggablePanel::addWidget(const Widget &widget) {
   pane_style.CenterPane();
   pane_style.Top();
   pane_style.CloseButton(false);
-  pane_style.MinSize(widget._wx()->GetSize());
+  pane_style.MinSize(widget.wx()->GetSize());
 
-  aui_manager.AddPane(widget._wx(), pane_style);
+  aui_manager.AddPane(widget.wx(), pane_style);
 }
 
 }  // namespace cszb_scoreboard

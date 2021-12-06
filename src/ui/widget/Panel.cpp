@@ -57,16 +57,16 @@ namespace cszb_scoreboard {
 
 Panel::~Panel() {
   if (should_self_delete) {
-    _wx()->Destroy();
+    wx()->Destroy();
   }
 }
 
-auto Panel::size() const -> Size { return Size::fromWx(_wx()->GetSize()); }
+auto Panel::size() const -> Size { return Size::fromWx(wx()->GetSize()); }
 
-auto Panel::childPanel() const -> swx::Panel * { return new swx::Panel(_wx()); }
+auto Panel::childPanel() const -> swx::Panel * { return new swx::Panel(wx()); }
 
 auto Panel::childPanel(int width, int height) const -> swx::Panel * {
-  return new swx::Panel(_wx(), wxID_ANY, wxDefaultPosition,
+  return new swx::Panel(wx(), wxID_ANY, wxDefaultPosition,
                         wxSize(width, height));
 }
 
@@ -74,25 +74,25 @@ auto Panel::button(const std::string &label, bool exact_fit) const
     -> std::unique_ptr<Button> {
   if (exact_fit) {
     return std::make_unique<Button>(
-        new swx::Button(_wx(), wxID_ANY, label, wxDefaultPosition,
-                        wxDefaultSize, wxBU_EXACTFIT));
+        new swx::Button(wx(), wxID_ANY, label, wxDefaultPosition, wxDefaultSize,
+                        wxBU_EXACTFIT));
   }
-  return std::make_unique<Button>(new swx::Button(_wx(), wxID_ANY, label));
+  return std::make_unique<Button>(new swx::Button(wx(), wxID_ANY, label));
 }
 
 auto Panel::checkBox(const std::string &label) const
     -> std::unique_ptr<CheckBox> {
-  return std::make_unique<CheckBox>(new swx::CheckBox(_wx(), wxID_ANY, label));
+  return std::make_unique<CheckBox>(new swx::CheckBox(wx(), wxID_ANY, label));
 }
 
 auto Panel::colorPicker(const wxColour &initial_color) const
     -> std::unique_ptr<ColorPicker> {
   return std::make_unique<ColorPicker>(
-      new swx::ColourPickerCtrl(_wx(), wxID_ANY, initial_color));
+      new swx::ColourPickerCtrl(wx(), wxID_ANY, initial_color));
 }
 
 auto Panel::divider() const -> std::unique_ptr<Divider> {
-  return std::make_unique<Divider>(new swx::StaticLine(_wx()));
+  return std::make_unique<Divider>(new swx::StaticLine(wx()));
 }
 
 // Get a FilePicker to open an existing file.
@@ -100,17 +100,17 @@ auto Panel::openFilePicker(const std::string &title,
                            const std::string &selectionMode) const
     -> std::unique_ptr<FilePicker> {
   return std::make_unique<FilePicker>(new swx::FileDialog(
-      wx, title, "", "", selectionMode, wxFD_OPEN | wxFD_FILE_MUST_EXIST));
+      wx(), title, "", "", selectionMode, wxFD_OPEN | wxFD_FILE_MUST_EXIST));
 }
 
 auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {
-  return std::make_unique<Label>(new swx::StaticText(_wx(), wxID_ANY, text));
+  return std::make_unique<Label>(new swx::StaticText(wx(), wxID_ANY, text));
 }
 
 auto Panel::listBox(const std::string &title) const
     -> std::unique_ptr<ListBox> {
   return std::make_unique<ListBox>(
-      new swx::EditableListBox(_wx(), wxID_ANY, title));
+      new swx::EditableListBox(wx(), wxID_ANY, title));
 }
 
 auto Panel::panel(bool self_managed) const -> std::unique_ptr<Panel> {
@@ -133,24 +133,24 @@ auto Panel::radio(const std::string &name, const char *const *choices,
     wx_choices[i] = choices[i];
   }
   return std::make_unique<Radio>(
-      new swx::RadioBox(_wx(), wxID_ANY, name, wxDefaultPosition, wxDefaultSize,
+      new swx::RadioBox(wx(), wxID_ANY, name, wxDefaultPosition, wxDefaultSize,
                         wx_choices.size(), wx_choices.data(), 0, style));
 }
 
 auto Panel::radioButton() const -> std::unique_ptr<RadioButton> {
   return std::make_unique<RadioButton>(new swx::RadioButton(
-      _wx(), wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxRB_SINGLE));
+      wx(), wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxRB_SINGLE));
 }
 
 auto Panel::scrollingPanel() const -> std::unique_ptr<ScrollingPanel> {
   return std::make_unique<ScrollingPanel>(new swx::ScrolledWindow(
-      _wx(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL));
+      wx(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL));
 }
 
 auto Panel::searchBox(const std::string &initial_text) const
     -> std::unique_ptr<SearchBox> {
   auto search_box = std::make_unique<SearchBox>(
-      new swx::SearchCtrl(_wx(), wxID_ANY), initial_text);
+      new swx::SearchCtrl(wx(), wxID_ANY), initial_text);
   search_box->showSearchButton(false);
   search_box->showCancelButton(true);
   return search_box;
@@ -160,16 +160,15 @@ auto Panel::text(const std::string &initial_text, bool multi_line) const
     -> std::unique_ptr<Text> {
   if (multi_line) {
     return std::make_unique<Text>(
-        new swx::TextCtrl(_wx(), wxID_ANY, initial_text, wxDefaultPosition,
+        new swx::TextCtrl(wx(), wxID_ANY, initial_text, wxDefaultPosition,
                           wxSize(-1, -1), wxTE_MULTILINE));
   }
   return std::make_unique<Text>(
-      new swx::TextCtrl(_wx(), wxID_ANY, initial_text));
+      new swx::TextCtrl(wx(), wxID_ANY, initial_text));
 }
 
 auto Panel::toggle(const std::string &label) const -> std::unique_ptr<Toggle> {
-  return std::make_unique<Toggle>(
-      new swx::ToggleButton(_wx(), wxID_ANY, label));
+  return std::make_unique<Toggle>(new swx::ToggleButton(wx(), wxID_ANY, label));
 }
 
 }  // namespace cszb_scoreboard

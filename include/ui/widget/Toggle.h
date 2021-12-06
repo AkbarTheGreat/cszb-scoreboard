@@ -25,16 +25,16 @@ namespace cszb_scoreboard {
 
 class Toggle : public Widget {
  public:
-  explicit Toggle(swx::ToggleButton *button) { wx = button; }
+  explicit Toggle(swx::ToggleButton *button) { _wx = button; }
 
-  void setLabel(const std::string &label) { wx->SetLabelText(label); }
-  auto value() -> bool { return wx->GetValue(); }
+  void setLabel(const std::string &label) { _wx->SetLabelText(label); }
+  auto value() -> bool { return _wx->GetValue(); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::ToggleButton *wx;
+  swx::ToggleButton *_wx;
 };
 
 }  // namespace cszb_scoreboard

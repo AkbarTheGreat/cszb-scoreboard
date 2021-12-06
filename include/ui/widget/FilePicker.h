@@ -31,14 +31,14 @@ class FilesystemPath;
 
 class FilePicker : public Widget {
  public:
-  explicit FilePicker(swx::FileDialog *dialog) { wx = dialog; }
+  explicit FilePicker(swx::FileDialog *dialog) { _wx = dialog; }
   ~FilePicker();
 
   auto selectFile() -> std::optional<FilesystemPath>;
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
-  swx::FileDialog *wx;
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  swx::FileDialog *_wx;
 };
 
 }  // namespace cszb_scoreboard

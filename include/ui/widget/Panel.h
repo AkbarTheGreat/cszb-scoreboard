@@ -54,7 +54,7 @@ class Toggle;
 
 class Panel : public Widget {
  public:
-  explicit Panel(swx::Panel *panel) { wx = panel; }
+  explicit Panel(swx::Panel *panel) { _wx = panel; }
   virtual ~Panel();
 
   // Methods to create internal widgets, like buttons or labels.
@@ -99,34 +99,34 @@ class Panel : public Widget {
                                  int64_t style = wxDEFAULT_DIALOG_STYLE,
                                  const wxString &name = wxDialogNameStr) const
       -> swx::PropertySheetDialog * {
-    return new swx::PropertySheetDialog(wx, id, title, pos, size, style, name);
+    return new swx::PropertySheetDialog(wx(), id, title, pos, size, style, name);
   }
   // Create a child wx entry, for new Panel object creation.
   [[nodiscard]] auto childPanel() const -> swx::Panel *;
   // Create a child wx entry, sized as large as the given rectangle.
   [[nodiscard]] auto childPanel(int width, int height) const -> swx::Panel *;
-  void hide() const { _wx()->Hide(); }
-  void refresh() const { _wx()->Refresh(); }
+  void hide() const { wx()->Hide(); }
+  void refresh() const { wx()->Refresh(); }
   // TODO(akbar): Get rid of this duplicate setSize method
-  void setSize(const wxSize &size) const { _wx()->SetSize(size); }
-  void setSize(const Size &size) const { _wx()->SetSize(size.toWx()); }
-  void show() const { _wx()->Show(); }
+  void setSize(const wxSize &size) const { wx()->SetSize(size); }
+  void setSize(const Size &size) const { wx()->SetSize(size.toWx()); }
+  void show() const { wx()->Show(); }
   // Temporary -- remove once we get rid of clients using wx_size
-  [[nodiscard]] auto wx_size() const -> wxSize { return _wx()->GetSize(); }
+  [[nodiscard]] auto wx_size() const -> wxSize { return wx()->GetSize(); }
   [[nodiscard]] auto size() const -> Size;
-  void toolTip(const std::string &tip) const { _wx()->SetToolTip(tip); }
-  void update() const { _wx()->Update(); }
+  void toolTip(const std::string &tip) const { wx()->SetToolTip(tip); }
+  void update() const { wx()->Update(); }
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
-  swx::Panel *wx;
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  protected:
   // If true, this panel will destory its own wxPanel object rather than rely
   // on the parent wxWidget to do it for us.
   bool should_self_delete = false;
 
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  swx::Panel *_wx;
 };
 
 }  // namespace cszb_scoreboard

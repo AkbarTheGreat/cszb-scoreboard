@@ -31,8 +31,8 @@ auto ListBox::selectedIndex() -> int64_t {
   if (listSize() == 0) {
     return -1;
   }
-  return wx->GetListCtrl()->GetNextItem(-1, wxLIST_NEXT_ALL,
-                                        wxLIST_STATE_SELECTED);
+  return _wx->GetListCtrl()->GetNextItem(-1, wxLIST_NEXT_ALL,
+                                         wxLIST_STATE_SELECTED);
 }
 
 void ListBox::selectItem(int64_t select_index) {
@@ -40,14 +40,14 @@ void ListBox::selectItem(int64_t select_index) {
     select_index = 0;
   }
 
-  wx->GetListCtrl()->SetItemState(select_index, wxLIST_STATE_SELECTED,
-                                  wxLIST_STATE_SELECTED);
+  _wx->GetListCtrl()->SetItemState(select_index, wxLIST_STATE_SELECTED,
+                                   wxLIST_STATE_SELECTED);
 }
 
 auto ListBox::strings() -> std::vector<std::string> {
   std::vector<std::string> strings;
   wxArrayString wx_strings;
-  wx->GetStrings(wx_strings);
+  _wx->GetStrings(wx_strings);
   for (const auto &entry : wx_strings) {
     strings.push_back(entry.ToStdString());
   }
@@ -59,7 +59,7 @@ void ListBox::setStrings(const std::vector<std::string> &strings) {
   for (const auto &entry : strings) {
     wx_strings.Add(entry.c_str());
   }
-  wx->SetStrings(wx_strings);
+  _wx->SetStrings(wx_strings);
 }
 
 }  // namespace cszb_scoreboard

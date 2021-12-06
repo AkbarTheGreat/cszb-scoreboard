@@ -24,14 +24,14 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 TabbedDialog::TabbedDialog(swx::PropertySheetDialog *dialog, int64_t buttons) {
-  wx = dialog;
-  wx->CreateButtons(buttons);
+  _wx = dialog;
+  _wx->CreateButtons(buttons);
 }
 
-TabbedDialog::~TabbedDialog() { wx->Destroy(); }
+TabbedDialog::~TabbedDialog() { wx()->Destroy(); }
 
 void TabbedDialog::addPage(const Panel &page, const std::string &name) {
-  wx->GetBookCtrl()->AddPage(page.wx, name);
+  _wx->GetBookCtrl()->AddPage(page.wx(), name);
 }
 
 auto TabbedDialog::panel() const -> std::unique_ptr<Panel> {

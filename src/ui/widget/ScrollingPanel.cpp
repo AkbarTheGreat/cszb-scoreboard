@@ -31,20 +31,20 @@ const int SCROLL_X_STEP = 0;
 const int SCROLL_Y_STEP = 20;
 
 ScrollingPanel::ScrollingPanel(swx::ScrolledWindow *panel) : Panel(nullptr) {
-  wx = panel;
+  _wx = panel;
 }
 
 void ScrollingPanel::runSizer() {
   static bool firstRun = true;
-  wx->SetSizer(sizer());
-  wx->FitInside();
-  wx->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
+  wx()->SetSizer(sizer());
+  wx()->FitInside();
+  _wx->ShowScrollbars(wxSHOW_SB_NEVER, wxSHOW_SB_ALWAYS);
   if (firstRun) {
     firstRun = false;
   } else {
     // Setting the scroll rate on the initial sizing breaks the scrollbars, but
     // it's necessary on subsequent runs.
-    wx->SetScrollRate(SCROLL_X_STEP, SCROLL_Y_STEP);
+    _wx->SetScrollRate(SCROLL_X_STEP, SCROLL_Y_STEP);
   }
 }
 

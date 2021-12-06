@@ -55,19 +55,19 @@ class TabbedDialog : public Widget {
                                 int64_t style = wxTAB_TRAVERSAL,
                                 const wxString &name = wxPanelNameStr) const
       -> swx::Panel * {
-    return new swx::Panel(wx->GetBookCtrl(), id, pos, size, style, name);
+    return new swx::Panel(_wx->GetBookCtrl(), id, pos, size, style, name);
   }
-  void close(bool force = true) { wx->Close(force); }
+  void close(bool force = true) { wx()->Close(force); }
   [[nodiscard]] auto panel() const -> std::unique_ptr<Panel>;
-  void runSizer() { wx->LayoutDialog(); }
-  void show() { wx->Show(); }
-  void sendEvent(wxEvent *event) { wx->ProcessEvent(*event); }
+  void runSizer() { _wx->LayoutDialog(); }
+  void show() { wx()->Show(); }
+  void sendEvent(wxEvent *event) { _wx->ProcessEvent(*event); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::PropertySheetDialog *wx;
+  swx::PropertySheetDialog *_wx;
 };
 
 }  // namespace cszb_scoreboard

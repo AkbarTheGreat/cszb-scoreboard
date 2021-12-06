@@ -28,17 +28,17 @@ namespace cszb_scoreboard {
 class Radio : public Widget {
  public:
   explicit Radio(swx::RadioBox *radio) {
-    wx = radio;
-    wx->SetSelection(0);
+    _wx = radio;
+    _wx->SetSelection(0);
   }
-  auto selection() -> int { return wx->GetSelection(); }
-  void setSelection(int sel) { wx->SetSelection(sel); }
+  auto selection() -> int { return _wx->GetSelection(); }
+  void setSelection(int sel) { _wx->SetSelection(sel); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::RadioBox *wx;
+  swx::RadioBox *_wx;
 };
 
 }  // namespace cszb_scoreboard

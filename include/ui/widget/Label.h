@@ -31,17 +31,17 @@ namespace cszb_scoreboard {
 
 class Label : public Widget {
  public:
-  explicit Label(swx::StaticText *label) { wx = label; }
-  void set(const std::string &label) { wx->SetLabelText(label); }
-  void setWithHotkey(const std::string &label) { wx->SetLabel(label); }
-  auto text() -> std::string { return wx->GetLabelText().ToStdString(); }
+  explicit Label(swx::StaticText *label) { _wx = label; }
+  void set(const std::string &label) { _wx->SetLabelText(label); }
+  void setWithHotkey(const std::string &label) { wx()->SetLabel(label); }
+  auto text() -> std::string { return _wx->GetLabelText().ToStdString(); }
   void bold(bool is_bold);
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::StaticText *wx;
+  swx::StaticText *_wx;
 };
 
 }  // namespace cszb_scoreboard

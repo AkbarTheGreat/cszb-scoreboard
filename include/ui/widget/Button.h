@@ -25,19 +25,19 @@ namespace cszb_scoreboard {
 
 class Button : public Widget {
  public:
-  explicit Button(swx::Button *button) { wx = button; }
+  explicit Button(swx::Button *button) { _wx = button; }
 
-  void disable() { wx->Disable(); }
-  void enable() { wx->Enable(); }
-  void hide() { wx->Hide(); }
-  auto id() -> int { return wx->GetId(); }
-  void toolTip(const std::string &tip) { wx->SetToolTip(tip); }
+  void disable() { wx()->Disable(); }
+  void enable() { wx()->Enable(); }
+  void hide() { wx()->Hide(); }
+  auto id() -> int { return wx()->GetId(); }
+  void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
 
  protected:
-  [[nodiscard]] auto _wx() const -> wxWindow * override { return wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
 
  private:
-  swx::Button *wx;
+  swx::Button *_wx;
 };
 
 }  // namespace cszb_scoreboard

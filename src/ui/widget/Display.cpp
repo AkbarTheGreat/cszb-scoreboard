@@ -30,7 +30,7 @@ Display ::Display(uint32_t index)
           std::make_shared<swx::DisplayImpl>(index))) {}
 
 void Display::geometry(proto::Rectangle* rectangle) {
-  ProtoUtil::protoRct(wx->GetGeometry(), rectangle);
+  ProtoUtil::protoRct(_wx->GetGeometry(), rectangle);
 }
 
 }  // namespace cszb_scoreboard
