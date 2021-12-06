@@ -102,7 +102,7 @@ class Frame : public Widget {
                   const wxSize &size = wxDefaultSize,
                   int64_t style = wxTAB_TRAVERSAL,
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
-    return new swx::Panel(wx(), id, pos, size, style, name);
+    return new swx::PanelImpl(wx(), id, pos, size, style, name);
   }
   auto childNotebook(wxWindowID id = wxID_ANY,
                      const wxPoint &pos = wxDefaultPosition,

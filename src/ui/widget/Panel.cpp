@@ -63,11 +63,13 @@ Panel::~Panel() {
 
 auto Panel::size() const -> Size { return Size::fromWx(wx()->GetSize()); }
 
-auto Panel::childPanel() const -> swx::Panel * { return new swx::Panel(wx()); }
+auto Panel::childPanel() const -> swx::Panel * {
+  return new swx::PanelImpl(wx());
+}
 
 auto Panel::childPanel(int width, int height) const -> swx::Panel * {
-  return new swx::Panel(wx(), wxID_ANY, wxDefaultPosition,
-                        wxSize(width, height));
+  return new swx::PanelImpl(wx(), wxID_ANY, wxDefaultPosition,
+                            wxSize(width, height));
 }
 
 auto Panel::button(const std::string &label, bool exact_fit) const

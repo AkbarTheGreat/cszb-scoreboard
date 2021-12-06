@@ -47,7 +47,7 @@ class Notebook : public Widget {
                   const wxSize &size = wxDefaultSize,
                   int64_t style = wxTAB_TRAVERSAL,
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
-    return new swx::Panel(wx(), id, pos, size, style, name);
+    return new swx::PanelImpl(wx(), id, pos, size, style, name);
   }
   void focus() const { wx()->SetFocus(); };
   [[nodiscard]] auto selection() const -> int { return _wx->GetSelection(); }

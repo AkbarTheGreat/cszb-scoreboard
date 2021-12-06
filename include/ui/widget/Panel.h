@@ -99,7 +99,8 @@ class Panel : public Widget {
                                  int64_t style = wxDEFAULT_DIALOG_STYLE,
                                  const wxString &name = wxDialogNameStr) const
       -> swx::PropertySheetDialog * {
-    return new swx::PropertySheetDialog(wx(), id, title, pos, size, style, name);
+    return new swx::PropertySheetDialog(wx(), id, title, pos, size, style,
+                                        name);
   }
   // Create a child wx entry, for new Panel object creation.
   [[nodiscard]] auto childPanel() const -> swx::Panel *;
@@ -119,7 +120,9 @@ class Panel : public Widget {
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow * override {
+    return dynamic_cast<swx::PanelImpl *>(_wx);
+  }
 
  protected:
   // If true, this panel will destory its own wxPanel object rather than rely

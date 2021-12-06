@@ -55,7 +55,7 @@ class TabbedDialog : public Widget {
                                 int64_t style = wxTAB_TRAVERSAL,
                                 const wxString &name = wxPanelNameStr) const
       -> swx::Panel * {
-    return new swx::Panel(_wx->GetBookCtrl(), id, pos, size, style, name);
+    return new swx::PanelImpl(_wx->GetBookCtrl(), id, pos, size, style, name);
   }
   void close(bool force = true) { wx()->Close(force); }
   [[nodiscard]] auto panel() const -> std::unique_ptr<Panel>;
