@@ -115,6 +115,7 @@ class ScreenTextSide : public Panel {
   void renderOverlayCentered(RenderContext *renderer);
   void renderScaledBackground(RenderContext *renderer);
   void renderText(RenderContext *renderer, proto::RenderableText *text);
+  void renderTimer(RenderContext *renderer);
   void renderAllText(RenderContext *renderer);
   void setBackground(const Color &color);
   auto topText(RenderContext *renderer, const std::string &text) -> Position;

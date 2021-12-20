@@ -19,14 +19,17 @@ limitations under the License.
 #pragma once
 
 #include "config/swx/image.h"  // for Image
+#include "ui/graphics/Color.h"  // for Color
 
 namespace cszb_scoreboard {
-class Color;
 struct Size;
 
 class BackgroundImage : public Image {
  public:
-  BackgroundImage(::cszb_scoreboard::Size size, Color color);
+  BackgroundImage(::cszb_scoreboard::Size size, Color color,
+                  unsigned char alpha);
+  BackgroundImage(::cszb_scoreboard::Size size, Color color)
+      : BackgroundImage(size, color, 255) {}
   static auto errorImage(::cszb_scoreboard::Size size) -> BackgroundImage;
 };
 

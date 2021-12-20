@@ -34,10 +34,12 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 // Margin for the top or bottom, as a percentage
-const float TOP_OR_BOTTOM_MARGIN = 2.0F;
-const float TOP_OR_BOTTOM_RATIO = TOP_OR_BOTTOM_MARGIN / 100;
-const float BOTTOM_CORNER_OVERLAY_SCALE = 0.30F;
-const float AUTOFIT_FONT_ADJUSTMENT = 0.5F;
+constexpr float TOP_OR_BOTTOM_MARGIN = 2.0F;
+constexpr float TOP_OR_BOTTOM_RATIO = TOP_OR_BOTTOM_MARGIN / 100;
+constexpr float BOTTOM_CORNER_OVERLAY_SCALE = 0.30F;
+constexpr float AUTOFIT_FONT_ADJUSTMENT = 0.5F;
+constexpr float TIMER_BACKGROUND_PCT = .25;
+constexpr float TIMER_FONT_SIZE = 10;
 
 ScreenTextSide::ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side,
                                Size size, Singleton *singleton)
@@ -335,6 +337,26 @@ void ScreenTextSide::renderText(RenderContext *renderer,
   renderer->drawText(text->text(), placement.x, placement.y);
 }
 
+void ScreenTextSide::renderTimer(RenderContext *renderer) {
+  proto::RenderableText timer_text;
+  timer_text.set_text("00:00");
+  timer_text.set_position(
+      proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_BOTTOM);
+  ProtoUtil::defaultFont(timer_text.mutable_font());
+  timer_text.mutable_font()->set_size(TIMER_FONT_SIZE);
+  renderer->setFont(timer_text.font(), size());
+  renderer->setTextColor(Color("white"));
+  Position placement = positionText(renderer, timer_text);
+
+  Size shade_size = size();
+  shade_size.height = shade_size.height * TIMER_BACKGROUND_PCT;
+  BackgroundImage shading = BackgroundImage(shade_size, Color("Black"), 128);
+
+  renderer->drawImage(shading, 0, size().height * (1 - TIMER_BACKGROUND_PCT),
+                      true);
+  renderer->drawText("1:23", placement.x, placement.y);
+}
+
 void ScreenTextSide::renderAllText(RenderContext *renderer) {
   for (auto &text : texts) {
     renderText(renderer, &text);
@@ -349,6 +371,7 @@ auto ScreenTextSide::getTextExtent(RenderContext *renderer,
 void ScreenTextSide::paintEvent(RenderContext *renderer) {
   renderBackground(renderer);
   renderAllText(renderer);
+  renderTimer(renderer);
 }
 
 void ScreenTextSide::setImage(const Image &image, bool is_scaled,
