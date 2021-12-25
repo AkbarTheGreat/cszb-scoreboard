@@ -1,7 +1,8 @@
 /*
-util/StringUtil.h: Convenience methods for dealing with wxStrings.
+util/TimerManager.cpp: Singleton which handles the current time left on the game
+timer.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,19 +16,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#pragma once
 
-#include <wx/string.h>  // for wxString
-
-#include <cstdint>  // for int64_t
+#include "util/TimerManager.h"
 
 namespace cszb_scoreboard {
 
-class StringUtil {
- public:
-  static auto intToString(int value) -> std::string;
-  static auto stringToInt(const std::string &string, int default_value = 0)
-      -> int64_t;
-};
+TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {
+  refresh_timer = std::make_unique<AutoRefreshTimer>();
+}
 
 }  // namespace cszb_scoreboard

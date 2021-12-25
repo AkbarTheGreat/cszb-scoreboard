@@ -35,6 +35,7 @@ class MockFrame : public cszb_scoreboard::swx::Frame {
   MOCK_METHOD(wxPoint, GetPosition, (), (const, override));
   MOCK_METHOD(int64_t, GetWindowStyle, (), (const, override));
   MOCK_METHOD(void, Iconize, (bool iconize), (override));
+  MOCK_METHOD(void, Refresh, (), (override));
   MOCK_METHOD(void, SetAcceleratorTable, (const wxAcceleratorTable &accel),
               (override));
   MOCK_METHOD(void, SetMenuBar, (wxMenuBar * menuBar), (override));

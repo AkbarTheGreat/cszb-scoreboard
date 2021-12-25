@@ -35,6 +35,7 @@ class MockSingleton : public Singleton {
   MOCK_METHOD(Persistence*, persistence, (), (override));
   MOCK_METHOD(TeamColors*, teamColors, (), (override));
   MOCK_METHOD(TeamConfig*, teamConfig, (), (override));
+  MOCK_METHOD(TimerManager*, timerManager, (), (override));
 
   MOCK_METHOD(void, generateCommandArgs,
               (const wxCmdLineParser& parser, int argc,

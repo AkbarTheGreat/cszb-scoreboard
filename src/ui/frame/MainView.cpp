@@ -64,6 +64,7 @@ MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
   // an initial click.
   control_panel->focus();
   singleton->hotkeyTable()->installHotkeys(this);
+  singleton->timerManager();
 }
 
 void MainView::createMenu() {

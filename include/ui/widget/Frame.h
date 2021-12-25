@@ -74,6 +74,7 @@ class Frame : public Widget {
   auto position() -> Position { return Position::fromWx(_wx->GetPosition()); }
   void setStatusBar(const wxString &text);
   auto show(bool show) -> bool { return _wx->Show(show); }
+  void refreshWindow() { _wx->Refresh(); }
   void updateWindow() { _wx->Update(); }
   void closeWindow() { _wx->Close(true); }
 

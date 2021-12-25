@@ -31,6 +31,7 @@ limitations under the License.
 #include "ui/frame/HotkeyTable.h"
 #include "ui/graphics/TeamColors.h"
 #include "util/AutoUpdate.h"
+#include "util/TimerManager.h"
 
 namespace cszb_scoreboard {
 
@@ -44,6 +45,7 @@ SingletonImpl::~SingletonImpl() {
   delete inst_persistence;
   delete inst_team_colors;
   delete inst_team_config;
+  delete inst_timer_manager;
 }
 
 auto Singleton::getInstance() -> Singleton* {
@@ -123,6 +125,13 @@ auto SingletonImpl::teamConfig() -> TeamConfig* {
     inst_team_config = new TeamConfig(SingletonClass{});
   }
   return inst_team_config;
+}
+
+auto SingletonImpl::timerManager() -> TimerManager* {
+  if (inst_timer_manager == nullptr) {
+    inst_timer_manager = new TimerManager(SingletonClass{});
+  }
+  return inst_timer_manager;
 }
 
 }  // namespace cszb_scoreboard

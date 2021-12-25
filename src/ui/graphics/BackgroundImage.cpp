@@ -36,7 +36,7 @@ BackgroundImage::BackgroundImage(::cszb_scoreboard::Size size, Color color,
   size_t ptr_size = size.width * size.height;
   unsigned char* alpha_ptr = (unsigned char*)malloc(ptr_size);
   if (alpha_ptr) {
-    std::memset(alpha_ptr, alpha, ptr_size);
+    memset(alpha_ptr, alpha, ptr_size);
     InitAlpha();
     SetAlpha(alpha_ptr);
   }

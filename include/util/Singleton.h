@@ -36,6 +36,7 @@ class ImageLibrary;
 class Persistence;
 class TeamColors;
 class TeamConfig;
+class TimerManager;
 
 // Singletons are created with this object as a reminder to developers not to
 // arbitrarily create them outside of test situations.  It's a friendly
@@ -59,6 +60,7 @@ class Singleton {
   virtual auto persistence() -> Persistence* = 0;
   virtual auto teamColors() -> TeamColors* = 0;
   virtual auto teamConfig() -> TeamConfig* = 0;
+  virtual auto timerManager() -> TimerManager* = 0;
 
   virtual void generateCommandArgs(const wxCmdLineParser& parser, int argc,
                                    const wxCmdLineArgsArray& argv) = 0;
@@ -76,6 +78,7 @@ class SingletonImpl : public Singleton {
   auto persistence() -> Persistence* override;
   auto teamColors() -> TeamColors* override;
   auto teamConfig() -> TeamConfig* override;
+  auto timerManager() -> TimerManager* override;
 
   void generateCommandArgs(const wxCmdLineParser& parser, int argc,
                            const wxCmdLineArgsArray& argv) override;
@@ -93,6 +96,7 @@ class SingletonImpl : public Singleton {
   Persistence* inst_persistence = nullptr;
   TeamColors* inst_team_colors = nullptr;
   TeamConfig* inst_team_config = nullptr;
+  TimerManager* inst_timer_manager = nullptr;
 };
 
 }  // namespace cszb_scoreboard

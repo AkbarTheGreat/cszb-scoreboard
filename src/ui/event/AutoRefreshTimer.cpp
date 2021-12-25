@@ -1,7 +1,8 @@
 /*
-util/StringUtil.h: Convenience methods for dealing with wxStrings.
+ui/event/AutoRefreshTimer.cpp: A timer which forces all of the frames to repaint
+periodically.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2021 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,19 +16,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#pragma once
 
-#include <wx/string.h>  // for wxString
+#include "ui/event/AutoRefreshTimer.h"
 
-#include <cstdint>  // for int64_t
+#include "ui/frame/FrameManager.h"
 
 namespace cszb_scoreboard {
 
-class StringUtil {
- public:
-  static auto intToString(int value) -> std::string;
-  static auto stringToInt(const std::string &string, int default_value = 0)
-      -> int64_t;
-};
+AutoRefreshTimer::AutoRefreshTimer(Singleton* singleton)
+    : PersistentTimer(1000, [this]() -> void { this->execute(); }) {
+  this->singleton = singleton;
+}
+
+void AutoRefreshTimer::execute() {
+  auto main = singleton->frameManager()->mainView();
+  if (!main) return;
+  main->refreshWindow();
+}
 
 }  // namespace cszb_scoreboard

@@ -22,18 +22,19 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-auto StringUtil::intToString(int value) -> wxString {
-  wxString string;
-  string.Printf(wxT("%d"), value);
-  return string;
+auto StringUtil::intToString(int value) -> std::string {
+  wxString wxs;
+  wxs.Printf(wxT("%d"), value);
+  return std::string(wxs.c_str());
 }
 
-auto StringUtil::stringToInt(const wxString &string, int default_value)
+auto StringUtil::stringToInt(const std::string &string, int default_value)
     -> int64_t {
+  wxString wxs = string;
   long value = default_value;  // NOLINT(google-runtime-int) Must be long to
                                // match string.ToLong() below.
-  if (string.IsNumber()) {
-    string.ToLong(&value);
+  if (wxs.IsNumber()) {
+    wxs.ToLong(&value);
   }
   return value;
 }

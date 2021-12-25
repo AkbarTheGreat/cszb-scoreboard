@@ -31,6 +31,10 @@ limitations under the License.
 #include "ui/widget/RenderContext.h"      // for RenderContext
 #include "util/ProtoUtil.h"               // for ProtoUtil
 
+// Temporary, probably -- used as I prove out the timer stuff.
+#include <util/StringUtil.h>
+#include <chrono>
+
 namespace cszb_scoreboard {
 
 // Margin for the top or bottom, as a percentage
@@ -349,12 +353,29 @@ void ScreenTextSide::renderTimer(RenderContext *renderer) {
   Position placement = positionText(renderer, timer_text);
 
   Size shade_size = size();
-  shade_size.height = shade_size.height * TIMER_BACKGROUND_PCT;
+  shade_size.height = static_cast<int64_t>(
+      static_cast<double>(shade_size.height) * TIMER_BACKGROUND_PCT);
   BackgroundImage shading = BackgroundImage(shade_size, Color("Black"), 128);
 
-  renderer->drawImage(shading, 0, size().height * (1 - TIMER_BACKGROUND_PCT),
+  renderer->drawImage(shading, 0,
+                      static_cast<int64_t>(static_cast<double>(size().height) *
+                                           (1 - TIMER_BACKGROUND_PCT)),
                       true);
-  renderer->drawText("1:23", placement.x, placement.y);
+  //  auto time =
+  //      std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
+  std::chrono::duration time =
+      std::chrono::system_clock::now().time_since_epoch();
+  std::chrono::duration minutes =
+      time - std::chrono::duration_cast<std::chrono::hours>(time);
+  std::chrono::duration seconds =
+      time - std::chrono::duration_cast<std::chrono::minutes>(time);
+  std::string curr_time =
+      StringUtil::intToString(
+          std::chrono::duration_cast<std::chrono::minutes>(minutes).count()) +
+      ":" +
+      StringUtil::intToString(
+          std::chrono::duration_cast<std::chrono::seconds>(seconds).count());
+  renderer->drawText(curr_time, placement.x, placement.y);
 }
 
 void ScreenTextSide::renderAllText(RenderContext *renderer) {

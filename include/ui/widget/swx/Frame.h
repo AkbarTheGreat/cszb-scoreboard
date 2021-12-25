@@ -37,6 +37,7 @@ class Frame {
   [[nodiscard]] virtual auto GetWindowStyle() const -> int64_t = 0;
   virtual void Iconize(bool iconize) = 0;
   void Iconize() { Iconize(true); }
+  virtual void Refresh() = 0;
   virtual void SetAcceleratorTable(const wxAcceleratorTable &accel) = 0;
   virtual void SetMenuBar(wxMenuBar *menuBar) = 0;
   virtual void SetPosition(const wxPoint &pt) = 0;
@@ -75,6 +76,7 @@ class FrameImpl : public Frame, public wxFrame {
     return wxFrame::GetWindowStyle();
   }
   void Iconize(bool iconize) override { wxFrame::Iconize(iconize); }
+  void Refresh() override { wxFrame::Refresh(); }
   void SetAcceleratorTable(const wxAcceleratorTable &accel) override {
     wxFrame::SetAcceleratorTable(accel);
   }
