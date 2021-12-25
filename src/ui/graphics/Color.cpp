@@ -35,7 +35,7 @@ static const float LUMINANCE_THRESHOLD = 0.5;
 // https://stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
 // as a way to calculate font color to contrast effectively against an arbitrary
 // background.
-auto Color::contrastColor() -> Color {
+auto Color::contrastColor() const -> Color {
   int intensity = 0;
 
   double luminance =

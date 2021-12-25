@@ -27,13 +27,6 @@ PersistentTimer::PersistentTimer(int period,
   held->Start(period, false);
 }
 
-PersistentTimer::~PersistentTimer() {
-  // We should delete the held timer here, but doing so causes a read exception
-  // on Windows, so we just leak it at present.  Since all of the timers we have
-  // right now last until the application closes, we can live with this
-  // (unfortunately).
-}
-
 PersistentTimer::HeldTimer::HeldTimer(const std::function<void()>& on_tick) {
   this->on_tick = on_tick;
 }

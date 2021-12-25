@@ -38,9 +38,12 @@ class PersistentTimer {
 
  public:
   PersistentTimer(int period, const std::function<void()> &on_tick);
-  virtual ~PersistentTimer();
 
  private:
+  // We should delete the held timer at destruction, but doing so causes a read
+  // exception on Windows, so we just leak it at present.  Since all of the
+  // timers we have right now last until the application closes, we can live
+  // with this (unfortunately).
   HeldTimer *held;
 };
 

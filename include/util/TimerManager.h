@@ -19,6 +19,8 @@ limitations under the License.
 
 #pragma once
 
+#include <memory>
+
 #include "ScoreboardCommon.h"
 #include "ui/event/AutoRefreshTimer.h"
 #include "util/Singleton.h"

@@ -33,6 +33,7 @@ limitations under the License.
 
 // Temporary, probably -- used as I prove out the timer stuff.
 #include <util/StringUtil.h>
+
 #include <chrono>
 
 namespace cszb_scoreboard {
@@ -44,6 +45,7 @@ constexpr float BOTTOM_CORNER_OVERLAY_SCALE = 0.30F;
 constexpr float AUTOFIT_FONT_ADJUSTMENT = 0.5F;
 constexpr float TIMER_BACKGROUND_PCT = .25;
 constexpr float TIMER_FONT_SIZE = 10;
+constexpr int TIMER_ALPHA = 128;
 
 ScreenTextSide::ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side,
                                Size size, Singleton *singleton)
@@ -131,7 +133,7 @@ void ScreenTextSide::setText(const std::string &text, int font_size,
   }
 }
 
-void ScreenTextSide::initializeForColor(Size size, Color color) {
+void ScreenTextSide::initializeForColor(Size size, const Color &color) {
   image_is_scaled = false;
   image = BackgroundImage(size, color);
   for (auto &text : texts) {
@@ -355,7 +357,8 @@ void ScreenTextSide::renderTimer(RenderContext *renderer) {
   Size shade_size = size();
   shade_size.height = static_cast<int64_t>(
       static_cast<double>(shade_size.height) * TIMER_BACKGROUND_PCT);
-  BackgroundImage shading = BackgroundImage(shade_size, Color("Black"), 128);
+  BackgroundImage shading =
+      BackgroundImage(shade_size, Color("Black"), TIMER_ALPHA);
 
   renderer->drawImage(shading, 0,
                       static_cast<int64_t>(static_cast<double>(size().height) *

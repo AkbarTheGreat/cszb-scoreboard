@@ -37,16 +37,21 @@ class Color : public wxColour {
   explicit Color(const wxColour &color) : wxColour(color) {}
 
   // Get red by anding by a full byte.
-  // NOLINTNEXTLINE(readability-magic-numbers)
-  inline auto red() -> unsigned char { return GetRGB() & 0xFF; }
+  [[nodiscard]] inline auto red() const -> unsigned char {
+    return GetRGB() & UCHAR_MAX;
+  }
   // Get green by shifting one byte and anding by a full byte.
-  // NOLINTNEXTLINE(readability-magic-numbers)
-  inline auto green() -> unsigned char { return (GetRGB() >> 8) & 0xFF; }
+  [[nodiscard]] inline auto green() const -> unsigned char {
+    // NOLINTNEXTLINE(readability-magic-numbers)
+    return (GetRGB() >> 8) & UCHAR_MAX;
+  }
   // Get blue by shifting two bytes and anding by a full byte.
-  // NOLINTNEXTLINE(readability-magic-numbers)
-  inline auto blue() -> unsigned char { return (GetRGB() >> 16) & 0xFF; }
+  [[nodiscard]] inline auto blue() const -> unsigned char {
+    // NOLINTNEXTLINE(readability-magic-numbers)
+    return (GetRGB() >> 16) & UCHAR_MAX;
+  }
   // Returns a good contrasting color for text over this background
-  auto contrastColor() -> Color;
+  [[nodiscard]] auto contrastColor() const -> Color;
 };
 
 }  // namespace cszb_scoreboard

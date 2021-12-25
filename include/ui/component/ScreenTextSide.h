@@ -106,7 +106,7 @@ class ScreenTextSide : public Panel {
   auto bottomText(RenderContext *renderer, const std::string &text) -> Position;
   auto centerText(RenderContext *renderer, const std::string &text) -> Position;
   void createBlackout();
-  void initializeForColor(Size size, Color color);
+  void initializeForColor(Size size, const Color &color);
   auto positionText(RenderContext *renderer, const proto::RenderableText &text)
       -> Position;
   void renderBackground(RenderContext *renderer);

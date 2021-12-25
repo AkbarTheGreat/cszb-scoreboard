@@ -23,14 +23,19 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+constexpr int REFRESH_RATE_MILLIS = 1000;
+
 AutoRefreshTimer::AutoRefreshTimer(Singleton* singleton)
-    : PersistentTimer(1000, [this]() -> void { this->execute(); }) {
+    : PersistentTimer(REFRESH_RATE_MILLIS,
+                      [this]() -> void { this->execute(); }) {
   this->singleton = singleton;
 }
 
 void AutoRefreshTimer::execute() {
-  auto main = singleton->frameManager()->mainView();
-  if (!main) return;
+  auto* main = singleton->frameManager()->mainView();
+  if (main == nullptr) {
+    return;
+  }
   main->refreshWindow();
 }
 

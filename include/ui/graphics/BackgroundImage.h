@@ -18,7 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include "config/swx/image.h"  // for Image
+#include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
 
 namespace cszb_scoreboard {
@@ -26,10 +26,10 @@ struct Size;
 
 class BackgroundImage : public Image {
  public:
-  BackgroundImage(::cszb_scoreboard::Size size, Color color,
+  BackgroundImage(::cszb_scoreboard::Size size, const Color &color,
                   unsigned char alpha);
-  BackgroundImage(::cszb_scoreboard::Size size, Color color)
-      : BackgroundImage(size, color, 255) {}
+  BackgroundImage(::cszb_scoreboard::Size size, const Color &color)
+      : BackgroundImage(size, color, UCHAR_MAX) {}
   static auto errorImage(::cszb_scoreboard::Size size) -> BackgroundImage;
 };
 

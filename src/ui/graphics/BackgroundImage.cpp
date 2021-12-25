@@ -28,14 +28,14 @@ namespace cszb_scoreboard {
 
 const int NUMBER_OF_SQUARES_HIGH = 8;
 
-BackgroundImage::BackgroundImage(::cszb_scoreboard::Size size, Color color,
-                                 unsigned char alpha)
+BackgroundImage::BackgroundImage(::cszb_scoreboard::Size size,
+                                 const Color& color, unsigned char alpha)
     : Image(size, true) {
   wxRect fullMask(0, 0, size.width, size.height);
   SetRGB(fullMask, color.red(), color.green(), color.blue());
   size_t ptr_size = size.width * size.height;
-  unsigned char* alpha_ptr = (unsigned char*)malloc(ptr_size);
-  if (alpha_ptr) {
+  auto* alpha_ptr = static_cast<unsigned char*>(malloc(ptr_size));
+  if (alpha_ptr != nullptr) {
     memset(alpha_ptr, alpha, ptr_size);
     InitAlpha();
     SetAlpha(alpha_ptr);
