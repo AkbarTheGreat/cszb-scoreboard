@@ -93,7 +93,9 @@ auto RenderContext::forEvent(wxWindow* wx) -> std::unique_ptr<RenderContext> {
 
 auto RenderContext::forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext> {
   auto renderer = std::make_unique<RenderContext>(Token{});
-  renderer->generic_context = std::make_unique<swx::ClientDC>(wx);
+  renderer->generic_context_unbuffered = std::make_unique<swx::ClientDC>(wx);
+  renderer->generic_context = std::make_unique<swx::BufferedClientDC>(
+      renderer->generic_context_unbuffered.get());
   return renderer;
 }
 

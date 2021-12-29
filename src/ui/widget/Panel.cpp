@@ -55,6 +55,13 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+Panel::Panel(swx::Panel *panel) {
+  _wx = panel;
+  if (panel) {
+    panel->setBackgroundStyle(wxBG_STYLE_PAINT);
+  }
+}
+
 Panel::~Panel() {
   if (should_self_delete) {
     wx()->Destroy();

@@ -25,6 +25,7 @@ namespace cszb_scoreboard::swx {
 class Panel {
  public:
   virtual auto asWx() -> wxPanel * { return nullptr; }
+  virtual void setBackgroundStyle(long style) = 0;
 };
 
 class PanelImpl : public Panel, public wxPanel {
@@ -36,6 +37,9 @@ class PanelImpl : public Panel, public wxPanel {
                      const wxString &name = wxPanelNameStr)
       : wxPanel(parent, id, pos, size, style, name) {}
   auto asWx() -> wxPanel * override { return this; }
+  void setBackgroundStyle(long style) override {
+    wxWindow::SetBackgroundStyle(static_cast<wxBackgroundStyle>(style));
+  }
 };
 
 }  // namespace cszb_scoreboard::swx

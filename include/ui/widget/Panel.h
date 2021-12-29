@@ -54,7 +54,7 @@ class Toggle;
 
 class Panel : public Widget {
  public:
-  explicit Panel(swx::Panel *panel) { _wx = panel; }
+  explicit Panel(swx::Panel *panel);
   virtual ~Panel();
 
   // Methods to create internal widgets, like buttons or labels.

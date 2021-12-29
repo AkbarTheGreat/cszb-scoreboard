@@ -1,5 +1,5 @@
 /*
-ui/widget/swx/PaintDC.h: A wrapper around wxBufferedPaintDC.
+ui/widget/swx/BufferedClientDC.h: A wrapper around wxBufferedDC.
 
 Copyright 2021 Tracy Beck
 
@@ -20,11 +20,13 @@ limitations under the License.
 
 #include <wx/dcbuffer.h>
 
+#include "ui/widget/swx/ClientDC.h"
+
 namespace cszb_scoreboard::swx {
 
-class PaintDC : public wxBufferedPaintDC {
+class BufferedClientDC : public wxBufferedDC {
  public:
-  explicit PaintDC(wxWindow* wx) : wxBufferedPaintDC(wx) {}
+  explicit BufferedClientDC(swx::ClientDC* dc) : wxBufferedDC(dc) {}
 };
 
 }  // namespace cszb_scoreboard::swx
