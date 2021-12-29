@@ -85,17 +85,25 @@ auto RenderContext::textExtent(const std::string& text) -> Size {
   return Size{.width = width, .height = height};
 }
 
+/* Gets a render context for a widget during a paint event.  This is the most
+ * common use case for a RenderContext, by far.
+ */
 auto RenderContext::forEvent(wxWindow* wx) -> std::unique_ptr<RenderContext> {
   auto renderer = std::make_unique<RenderContext>(Token{});
   renderer->event_context = std::make_unique<swx::PaintDC>(wx);
   return renderer;
 }
 
+/* Gets a render context for a widget outside of an event, for a one-off
+ * rendering.  Note that this is not buffered and so may add flicker when
+ * called.  Currently, this is test-only, so that's fine, but this may need an
+ * update if used in the application-proper.  (Note to future developers:  Doing
+ * so will require adding a destructor and ensuring that the buffered client DC
+ * is destroyed before the client DC).
+ */
 auto RenderContext::forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext> {
   auto renderer = std::make_unique<RenderContext>(Token{});
-  renderer->generic_context_unbuffered = std::make_unique<swx::ClientDC>(wx);
-  renderer->generic_context = std::make_unique<swx::BufferedClientDC>(
-      renderer->generic_context_unbuffered.get());
+  renderer->generic_context = std::make_unique<swx::ClientDC>(wx);
   return renderer;
 }
 

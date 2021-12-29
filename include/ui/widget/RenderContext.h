@@ -67,10 +67,8 @@ class RenderContext {
   // Any initialization of either of these objects should ensure that the other
   // is empty, as this object is only intended to represent one of these
   // contexts at a time.
-  std::unique_ptr<swx::BufferedClientDC> generic_context;
+  std::unique_ptr<swx::ClientDC> generic_context;
   std::unique_ptr<swx::PaintDC> event_context;
-
-  std::unique_ptr<swx::ClientDC> generic_context_unbuffered;
 
   void runAgainstActiveContext(const std::function<void(wxDC*)>& lambda);
 };
