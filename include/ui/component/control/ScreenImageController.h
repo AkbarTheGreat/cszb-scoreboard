@@ -5,7 +5,7 @@ background.  By default, this also does not support any text at all.  This is
 not intended to be used standalone, or as a polymorphic container pointer, but
 merely a way to abstract away common functionality.
 
-Copyright 2020-2021 Tracy Beck
+Copyright 2020-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

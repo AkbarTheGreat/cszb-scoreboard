@@ -2,7 +2,7 @@
 ui/widget/DraggablePanel.h: A panel where the contained objects are held by the
 wxWidgets Advanced UI (AUI) manager.
 
-Copyright 2021 Tracy Beck
+Copyright 2021-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

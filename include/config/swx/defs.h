@@ -3,7 +3,7 @@ config/swx/defs.h:  A simple wrapper around wx's defs header.  Wrappers like
 this exist to make it easier to spot where unexpected wx direct dependencies are
 creeping into our codebase.
 
-Copyright 2021 Tracy Beck
+Copyright 2021-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

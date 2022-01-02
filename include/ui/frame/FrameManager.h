@@ -5,7 +5,7 @@ all of these objects and any pointers returned from here should be considered
 non-authoritative.  All frame pointers are destroyed on exitFrames and any
 dangling references will then be invalid.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2019-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

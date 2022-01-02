@@ -2,7 +2,7 @@
 ui/component/control/ImagePreview.cpp: A preview thumbnail of an image,
 selectable to send to a ScreenText.
 
-Copyright 2020-2021 Tracy Beck
+Copyright 2020-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

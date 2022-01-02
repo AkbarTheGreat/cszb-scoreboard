@@ -1,7 +1,7 @@
 /*
 test/ScreenPreviewTest.cpp: Tests for ui/ScreenPreview
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2019-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
