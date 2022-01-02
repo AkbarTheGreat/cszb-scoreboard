@@ -57,7 +57,7 @@ namespace cszb_scoreboard {
 
 Panel::Panel(swx::Panel *panel) {
   _wx = panel;
-  if (panel) {
+  if (panel != nullptr) {
     panel->setBackgroundStyle(wxBG_STYLE_PAINT);
   }
 }
