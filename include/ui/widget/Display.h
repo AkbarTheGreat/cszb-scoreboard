@@ -4,7 +4,7 @@ within the widgets classes in that it owns it's underlying wx object and
 construct it itself in normal cases, and has an injectible constructor for
 testing.
 
-Copyright 2021 Tracy Beck
+Copyright 2021-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

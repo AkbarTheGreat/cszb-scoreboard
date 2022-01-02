@@ -2,7 +2,7 @@
 ui/dialog/settings/SettingsPage.h: A page in the settings notebook.  Handles
 loading data in from a config object and validating it before saving it.
 
-Copyright 2019-2021 Tracy Beck
+Copyright 2019-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

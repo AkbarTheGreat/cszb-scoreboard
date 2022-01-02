@@ -6,7 +6,7 @@ the cszb-scoreboard.
 If anyone is reading this hoping for a general purpose library, please be aware
 that this is absolutely not what you're looking for.
 
-Copyright 2020-2021 Tracy Beck
+Copyright 2020-2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
