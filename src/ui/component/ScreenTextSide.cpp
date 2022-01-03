@@ -30,11 +30,7 @@ limitations under the License.
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
 #include "ui/widget/RenderContext.h"      // for RenderContext
 #include "util/ProtoUtil.h"               // for ProtoUtil
-
-// Temporary, probably -- used as I prove out the timer stuff.
-#include <util/StringUtil.h>
-
-#include <chrono>
+#include "util/TimerManager.h"
 
 namespace cszb_scoreboard {
 
@@ -364,20 +360,7 @@ void ScreenTextSide::renderTimer(RenderContext *renderer) {
                       static_cast<int64_t>(static_cast<double>(size().height) *
                                            (1 - TIMER_BACKGROUND_PCT)),
                       true);
-  //  auto time =
-  //      std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
-  std::chrono::duration time =
-      std::chrono::system_clock::now().time_since_epoch();
-  std::chrono::duration minutes =
-      time - std::chrono::duration_cast<std::chrono::hours>(time);
-  std::chrono::duration seconds =
-      time - std::chrono::duration_cast<std::chrono::minutes>(time);
-  std::string curr_time =
-      StringUtil::intToString(
-          std::chrono::duration_cast<std::chrono::minutes>(minutes).count()) +
-      ":" +
-      StringUtil::intToString(
-          std::chrono::duration_cast<std::chrono::seconds>(seconds).count());
+  std::string curr_time = singleton->timerManager()->displayTime();
   renderer->drawText(curr_time, placement.x, placement.y);
 }
 

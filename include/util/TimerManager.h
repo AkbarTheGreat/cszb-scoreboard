@@ -19,6 +19,9 @@ limitations under the License.
 
 #pragma once
 
+#include <util/StringUtil.h>
+
+#include <chrono>
 #include <memory>
 
 #include "ScoreboardCommon.h"
@@ -31,12 +34,19 @@ class TimerManager {
  public:
   explicit TimerManager(SingletonClass c)
       : TimerManager(c, Singleton::getInstance()) {}
+  [[nodiscard]] auto timerOn() const -> bool { return timer_displayed; }
+  auto displayTime() -> std::string;
 
   PUBLIC_TEST_ONLY
   TimerManager(SingletonClass c, Singleton *singleton);
 
  private:
+  auto timeLeft() -> std::chrono::seconds;
+
   std::unique_ptr<AutoRefreshTimer> refresh_timer;
+  bool timer_displayed;
+  bool timer_running;
+  std::chrono::seconds timer_end;
 };
 
 }  // namespace cszb_scoreboard

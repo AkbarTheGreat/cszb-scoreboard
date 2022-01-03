@@ -25,7 +25,7 @@ namespace cszb_scoreboard {
 
 class StringUtil {
  public:
-  static auto intToString(int value) -> std::string;
+  static auto intToString(int value, int zero_pad = 0) -> std::string;
   static auto stringToInt(const std::string &string, int default_value = 0)
       -> int64_t;
 };

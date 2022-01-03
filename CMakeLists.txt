@@ -180,14 +180,16 @@ package_add_test(ImageLibraryTest  test/unit/config/ImageLibraryTest.cpp  src sr
                                                                           )
 
 # util/ tests
-package_add_test(AutoUpdateTest test/unit/util/AutoUpdateTest.cpp src/util/AutoUpdate.cpp
-                                                                  src/config/CommandArgs.cpp
-                                                                  src/util/HttpReader.cpp
-                                                                  src/util/StringUtil.cpp
-                                                                  )
-package_add_test(ProtoUtilTest  test/unit/util/ProtoUtilTest.cpp  src/util/ProtoUtil.cpp
-                                                                  src/ui/graphics/Color.cpp
-                                                                  )
+package_add_test(AutoUpdateTest  test/unit/util/AutoUpdateTest.cpp  src/util/AutoUpdate.cpp
+                                                                    src/config/CommandArgs.cpp
+                                                                    src/util/HttpReader.cpp
+                                                                    src/util/StringUtil.cpp
+                                                                    )
+package_add_test(ProtoUtilTest   test/unit/util/ProtoUtilTest.cpp   src/util/ProtoUtil.cpp
+                                                                    src/ui/graphics/Color.cpp
+                                                                    )
+package_add_test(StringUtilTest  test/unit/util/StringUtilTest.cpp  src/util/StringUtil.cpp
+                                                                    )
 
 
 package_add_ui_test(ScreenPreviewTest   test/integration/ScreenPreviewTest.cpp)

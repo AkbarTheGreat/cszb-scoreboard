@@ -23,6 +23,34 @@ namespace cszb_scoreboard {
 
 TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {
   refresh_timer = std::make_unique<AutoRefreshTimer>();
+  timer_displayed = true;
+  timer_running = true;
+  // TODO(#11):  Hard coded 5 minutes right now
+  timer_end = std::chrono::duration_cast<std::chrono::seconds>(
+                  std::chrono::system_clock::now().time_since_epoch()) +
+              std::chrono::minutes(5);  // NOLINT(readability-magic-numbers)
+}
+
+auto TimerManager::displayTime() -> std::string {
+  std::chrono::seconds time_left = timeLeft();
+
+  std::chrono::minutes minutes_left =
+      std::chrono::duration_cast<std::chrono::minutes>(time_left);
+  std::chrono::seconds seconds_left = time_left - minutes_left;
+
+  return StringUtil::intToString(minutes_left.count()) + ":" +
+         StringUtil::intToString(seconds_left.count(), 2);
+}
+
+auto TimerManager::timeLeft() -> std::chrono::seconds {
+  // TODO(#11): Handle pausing the timer here
+  std::chrono::seconds time_left =
+      timer_end - std::chrono::duration_cast<std::chrono::seconds>(
+                      std::chrono::system_clock::now().time_since_epoch());
+  if (timer_end < std::chrono::seconds(0)) {
+    return std::chrono::seconds(0);
+  }
+  return time_left;
 }
 
 }  // namespace cszb_scoreboard

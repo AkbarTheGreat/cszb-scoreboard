@@ -20,11 +20,25 @@ limitations under the License.
 
 #include <wx/chartype.h>
 
+#include <array>
+
 namespace cszb_scoreboard {
 
-auto StringUtil::intToString(int value) -> std::string {
+constexpr int32_t FORMAT_BUFFER_SIZE =
+    64;  // Only used when zero-padding int-to-string conversions
+
+auto StringUtil::intToString(int value, int zero_pad) -> std::string {
   wxString wxs;
-  wxs.Printf(wxT("%d"), value);
+  wxString format = wxT("%d");
+  // This is kind of a gross kludge and I don't love it, but it works for any
+  // suitably large zero_pad (and anything bigger than ~60 characters of pad
+  // seems unnecessary)
+  if (zero_pad > 0) {
+    std::array<char, FORMAT_BUFFER_SIZE> format_str;
+    snprintf(format_str.data(), format_str.size(), "%%0%dd", zero_pad);
+    format = wxString(format_str.data());
+  }
+  wxs.Printf(format, value);
   return std::string(wxs.c_str());
 }
 
