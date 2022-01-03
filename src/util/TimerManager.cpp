@@ -23,7 +23,7 @@ namespace cszb_scoreboard {
 
 TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {
   refresh_timer = std::make_unique<AutoRefreshTimer>();
-  timer_displayed = true;
+  timer_displayed = false;
   timer_running = true;
   // TODO(#11):  Hard coded 5 minutes right now
   timer_end = std::chrono::duration_cast<std::chrono::seconds>(

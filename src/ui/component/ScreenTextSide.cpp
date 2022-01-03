@@ -340,6 +340,11 @@ void ScreenTextSide::renderText(RenderContext *renderer,
 }
 
 void ScreenTextSide::renderTimer(RenderContext *renderer) {
+  // Do nothing if the timer is turned off.
+  if (!singleton->timerManager()->timerOn()) {
+    return;
+  }
+
   proto::RenderableText timer_text;
   timer_text.set_text("00:00");
   timer_text.set_position(
