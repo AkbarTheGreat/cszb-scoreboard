@@ -47,7 +47,7 @@ auto TimerManager::timeLeft() -> std::chrono::seconds {
   std::chrono::seconds time_left =
       timer_end - std::chrono::duration_cast<std::chrono::seconds>(
                       std::chrono::system_clock::now().time_since_epoch());
-  if (timer_end < std::chrono::seconds(0)) {
+  if (time_left < std::chrono::seconds(0)) {
     return std::chrono::seconds(0);
   }
   return time_left;
