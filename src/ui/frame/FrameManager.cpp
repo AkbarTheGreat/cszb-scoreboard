@@ -49,6 +49,15 @@ auto FrameManager::createScreenPresenter(int monitor_number,
 
 auto FrameManager::monitor(uint32_t index) -> Display { return Display(index); }
 
+void FrameManager::refreshFrames() {
+  if (main_view) {
+    main_view->refreshPreviews();
+  }
+  for (const auto &frame : frames) {
+    frame->refreshWindow();
+  }
+}
+
 void FrameManager::exitFrames() {
   // Deletes all of the unique_ptrs to these frames, allowing them to be cleaned
   frames.clear();

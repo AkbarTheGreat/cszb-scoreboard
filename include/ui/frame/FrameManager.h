@@ -45,6 +45,7 @@ class FrameManager {
                                      const ScreenText &preview)
       -> ScreenPresenter *;
   virtual auto mainView() -> MainView * { return main_view.get(); }
+  virtual void refreshFrames();
   virtual void exitFrames();
   virtual auto monitorCount() -> int32_t { return Display::numDisplays(); }
   virtual auto monitor(uint32_t index) -> Display;

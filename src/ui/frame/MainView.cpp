@@ -64,7 +64,6 @@ MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
   // an initial click.
   control_panel->focus();
   singleton->hotkeyTable()->installHotkeys(this);
-  singleton->timerManager();
 }
 
 void MainView::createMenu() {
@@ -156,6 +155,11 @@ void MainView::onClose() {
   // The following call deletes the pointer to this object, so should always be
   // done last.
   singleton->frameManager()->exitFrames();
+}
+
+void MainView::refreshPreviews() {
+  preview_panel->refresh();
+  quick_state->refresh();
 }
 
 }  // namespace cszb_scoreboard

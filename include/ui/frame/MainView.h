@@ -46,6 +46,7 @@ class MainView : public Frame {
   auto controlPanel() -> ControlPanel * { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
   void onSettingsClose();
+  void refreshPreviews();
 
   PUBLIC_TEST_ONLY
   MainView(swx::Frame *wx, Singleton *singleton);
