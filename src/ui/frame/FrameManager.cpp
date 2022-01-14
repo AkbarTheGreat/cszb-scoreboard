@@ -50,8 +50,8 @@ auto FrameManager::createScreenPresenter(int monitor_number,
 auto FrameManager::monitor(uint32_t index) -> Display { return Display(index); }
 
 void FrameManager::refreshFrames() {
-  if (main_view) {
-    main_view->refreshPreviews();
+  if (mainView() != nullptr) {
+    mainView()->refreshPreviews();
   }
   for (const auto &frame : frames) {
     frame->refreshWindow();

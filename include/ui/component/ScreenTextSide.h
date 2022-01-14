@@ -29,7 +29,7 @@ limitations under the License.
 #include "config/Position.h"    // for Position, Size
 #include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
-#include "ui/widget/Panel.h"    // for Panel
+#include "ui/widget/Canvas.h"   // for Panel
 #include "util/Singleton.h"
 
 namespace cszb_scoreboard {
@@ -41,7 +41,7 @@ class Panel;
 
 enum class OverlayScreenPosition { Centered, BottomLeft };
 
-class ScreenTextSide : public Panel {
+class ScreenTextSide : public Canvas {
  public:
   ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
                  const proto::ScreenSide &side, Size size)

@@ -78,7 +78,7 @@ ScreenTextSide::ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
 
 ScreenTextSide::ScreenTextSide(Singleton *singleton, swx::Panel *wx,
                                const proto::ScreenSide &side)
-    : Panel(wx) {
+    : Canvas(wx) {
   this->image_is_scaled = false;
   this->screen_side = side;
   this->singleton = singleton;

@@ -22,7 +22,10 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {
-  refresh_timer = std::make_unique<AutoRefreshTimer>();
+  // TODO(#11): When making methods to start/stop display & the timer, move the
+  // creation/destruction of refresh timer into the method that stops the timer,
+  // to avoid running the AutoRefreshTimer when we don't need it.
+  //refresh_timer = std::make_unique<AutoRefreshTimer>();
   timer_displayed = false;
   timer_running = true;
   // TODO(#11):  Hard coded 5 minutes right now

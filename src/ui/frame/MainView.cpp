@@ -157,9 +157,4 @@ void MainView::onClose() {
   singleton->frameManager()->exitFrames();
 }
 
-void MainView::refreshPreviews() {
-  preview_panel->refresh();
-  quick_state->refresh();
-}
-
 }  // namespace cszb_scoreboard

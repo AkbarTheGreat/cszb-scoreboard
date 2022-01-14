@@ -33,6 +33,7 @@ class MockFrameManager : public FrameManager {
   MOCK_METHOD(ScreenPresenter *, createScreenPresenter,
               (int monitor_number, const ScreenText &preview), (override));
   MOCK_METHOD(MainView *, mainView, (), (override));
+  MOCK_METHOD(void, refreshFrames, (), (override));
   MOCK_METHOD(void, exitFrames, (), (override));
   MOCK_METHOD(int32_t, monitorCount, (), (override));
   MOCK_METHOD(Display, monitor, (uint32_t index), (override));

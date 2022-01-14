@@ -85,6 +85,7 @@ class DisplayConfigTest : public ::testing::Test {
     main_view_frame = std::make_unique<swx::MockFrame>();
     main_view =
         std::make_unique<MockMainView>(main_view_frame.get(), singleton.get());
+    EXPECT_CALL(*main_view, refreshPreviews).WillRepeatedly(Return());
     EXPECT_CALL(*main_view_frame, Destroy)
         .WillRepeatedly(
             Return(true));  // Uninteresting destruction in this test.
