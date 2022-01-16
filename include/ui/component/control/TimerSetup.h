@@ -31,7 +31,8 @@ namespace cszb_scoreboard {
 class TimerSetup : public ScreenTextController {
  public:
   TimerSetup(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenTextController(preview_panel, wx) {}
+      : ScreenTextController(preview_panel, wx,
+                             /*display_update_screens=*/false) {}
   static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
       -> std::unique_ptr<TimerSetup>;
 

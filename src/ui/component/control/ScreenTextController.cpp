@@ -36,10 +36,13 @@ class Panel;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
-                                           swx::Panel *wx, Singleton *singleton)
+                                           swx::Panel *wx,
+                                           bool display_update_screens,
+                                           Singleton *singleton)
     : Panel(wx) {
   this->singleton = singleton;
   this->preview_panel = preview_panel;
+  this->display_update_screens_button = display_update_screens;
 }
 
 void ScreenTextController::initializeWidgets() {
@@ -58,6 +61,10 @@ void ScreenTextController::positionWidgets() {
   // stretch the the width of whatever the control_panel is.
   addWidgetWithSpan(*control_panel, 0, 0, 1, 2, NO_BORDER);
   addWidget(*update_screens, 1, 0);
+
+  if (!display_update_screens_button) {
+    update_screens->hide();
+  }
 
   runSizer();
 }
