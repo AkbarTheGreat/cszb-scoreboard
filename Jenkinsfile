@@ -64,28 +64,28 @@ pipeline {
           }
           steps {
             sh '''cd out/build/Linter
-make all'''
+make clean all'''
           }
         }
 
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
-make -j2 all'''
+make -j2 clean all'''
           }
         }
 
         stage('Release Build') {
           steps {
             sh '''cd out/build/Release
-make -j2 all'''
+make -j2 clean all'''
           }
         }
 
         stage('MacOS Build') {
           steps {
             sh '''cd out/build/osxcross
-make cszb-scoreboard'''
+make clean cszb-scoreboard'''
           }
         }
 
