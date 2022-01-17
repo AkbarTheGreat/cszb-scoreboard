@@ -24,6 +24,12 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+const std::string START_AND_SHOW = "Start and Show";
+const std::string START = "Start";
+const std::string PAUSE = "Pause";
+const std::string SHOW = "Show";
+const std::string HIDE = "Hide";
+
 auto TimerSetup ::Create(PreviewPanel *preview_panel, swx::Panel *wx)
     -> std::unique_ptr<TimerSetup> {
   auto control = std::make_unique<TimerSetup>(preview_panel, wx);
@@ -37,8 +43,8 @@ void TimerSetup::createControls(Panel *control_panel) {
   seconds_label = control_panel->label("Seconds");
   seconds_text = control_panel->text("0");
 
-  start_stop_button = control_panel->button("Start and Show");
-  show_hide_button = control_panel->button("Show");
+  start_stop_button = control_panel->toggle(START_AND_SHOW);
+  show_hide_button = control_panel->toggle(SHOW);
   reset_button = control_panel->button("Reset");
 
   positionWidgets(control_panel);
@@ -59,10 +65,10 @@ void TimerSetup::positionWidgets(Panel *control_panel) {
 
 void TimerSetup::bindEvents() {
   start_stop_button->bind(
-      wxEVT_COMMAND_BUTTON_CLICKED,
+      wxEVT_TOGGLEBUTTON,
       [this](wxCommandEvent &event) -> void { this->startOrStopTimer(); });
   show_hide_button->bind(
-      wxEVT_COMMAND_BUTTON_CLICKED,
+      wxEVT_TOGGLEBUTTON,
       [this](wxCommandEvent &event) -> void { this->showOrHideTimer(); });
   reset_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
@@ -80,6 +86,7 @@ void TimerSetup::startOrStopTimer() {
     singleton->timerManager()->startTimer();
     singleton->timerManager()->showTimer();
   }
+  fixButtons();
 }
 
 void TimerSetup::showOrHideTimer() {
@@ -89,6 +96,7 @@ void TimerSetup::showOrHideTimer() {
   } else {
     singleton->timerManager()->showTimer();
   }
+  fixButtons();
 }
 
 void TimerSetup::resetTimer() {
@@ -105,6 +113,35 @@ void TimerSetup::timeUpdated() {
   if (secondsFromText() != last_set_timer_seconds) {
     last_set_timer_seconds = secondsFromText();
     resetTimer();
+  }
+}
+
+void TimerSetup::fixButtons() {
+  if (singleton->timerManager()->timerOn() &&
+      singleton->timerManager()->timerRunning()) {
+    // Both Pressed.
+    start_stop_button->setLabel(PAUSE);
+    start_stop_button->press();
+    show_hide_button->setLabel(HIDE);
+    show_hide_button->press();
+  } else if (singleton->timerManager()->timerOn()) {
+    // Timer shown, but paused.
+    start_stop_button->setLabel(START);
+    start_stop_button->unpress();
+    show_hide_button->setLabel(HIDE);
+    show_hide_button->press();
+  } else if (singleton->timerManager()->timerRunning()) {
+    // Timer running, but hidden.
+    start_stop_button->setLabel(PAUSE);
+    start_stop_button->press();
+    show_hide_button->setLabel(SHOW);
+    show_hide_button->unpress();
+  } else {
+    // Paused and hidden.
+    start_stop_button->setLabel(START_AND_SHOW);
+    start_stop_button->unpress();
+    show_hide_button->setLabel(SHOW);
+    show_hide_button->unpress();
   }
 }
 

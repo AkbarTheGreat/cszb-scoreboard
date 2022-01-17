@@ -29,6 +29,9 @@ class Toggle : public Widget {
 
   void setLabel(const std::string &label) { _wx->SetLabelText(label); }
   auto value() -> bool { return _wx->GetValue(); }
+  void toggle() { _wx->SetValue(!_wx->GetValue()); }
+  void press() { _wx->SetValue(true); }
+  void unpress() { _wx->SetValue(false); }
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }

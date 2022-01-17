@@ -25,6 +25,7 @@ limitations under the License.
 #include "ui/widget/Label.h"
 #include "ui/widget/Panel.h"
 #include "ui/widget/Text.h"
+#include "ui/widget/Toggle.h"
 #include "ui/widget/swx/Panel.h"
 
 namespace cszb_scoreboard {
@@ -47,14 +48,15 @@ class TimerSetup : public ScreenTextController {
   void resetTimer();
   auto secondsFromText() -> int64_t;
   void timeUpdated();
+  void fixButtons();
 
   int64_t last_set_timer_seconds = 0;
   std::unique_ptr<Label> minutes_label;
   std::unique_ptr<Label> seconds_label;
   std::unique_ptr<Text> minutes_text;
   std::unique_ptr<Text> seconds_text;
-  std::unique_ptr<Button> start_stop_button;
-  std::unique_ptr<Button> show_hide_button;
+  std::unique_ptr<Toggle> start_stop_button;
+  std::unique_ptr<Toggle> show_hide_button;
   std::unique_ptr<Button> reset_button;
 };
 
