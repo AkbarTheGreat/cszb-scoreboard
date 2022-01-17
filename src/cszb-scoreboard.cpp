@@ -18,9 +18,9 @@ limitations under the License.
 
 #include "cszb-scoreboard.h"
 
-#include <wx/app.h>       // IWYU pragma: keep for wxAppConsole
-#include <wx/cmdline.h>   // for wxCmdLineParser
-#include <wx/image.h>     // for wxInitAllImageHandlers
+#include <wx/app.h>      // IWYU pragma: keep for wxAppConsole
+#include <wx/cmdline.h>  // for wxCmdLineParser
+#include <wx/image.h>    // for wxInitAllImageHandlers
 
 #include <array>   // for array
 #include <memory>  // for allocator

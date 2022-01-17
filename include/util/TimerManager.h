@@ -19,14 +19,15 @@ limitations under the License.
 
 #pragma once
 
-#include <util/StringUtil.h>
+#include <stdint.h>  // for int64_t
 
-#include <chrono>
-#include <memory>
+#include <chrono>  // for seconds
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
-#include "ScoreboardCommon.h"
-#include "ui/event/AutoRefreshTimer.h"
-#include "util/Singleton.h"
+#include "ScoreboardCommon.h"           // for PUBLIC_TEST_ONLY
+#include "ui/event/AutoRefreshTimer.h"  // for AutoRefreshTimer
+#include "util/Singleton.h"             // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
 

@@ -36,6 +36,7 @@ limitations under the License.
 #include "ui/widget/FilePicker.h"         // for FilePicker
 #include "util/FilesystemPath.h"          // for FilesystemPath
 #include "util/ProtoUtil.h"               // for ProtoUtil
+#include "util/Singleton.h"               // for Singleton
 #include "util/StringUtil.h"              // for StringUtil
 
 namespace cszb_scoreboard {

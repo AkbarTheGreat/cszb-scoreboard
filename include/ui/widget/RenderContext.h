@@ -24,10 +24,9 @@ limitations under the License.
 #include <memory>      // for unique_ptr
 #include <string>      // for string
 
-#include "config/Position.h"                 // for Size
-#include "ui/widget/swx/BufferedClientDC.h"  // for ClientDC
-#include "ui/widget/swx/ClientDC.h"          // for ClientDC
-#include "ui/widget/swx/PaintDC.h"           // for PaintDC
+#include "config/Position.h"         // for Size
+#include "ui/widget/swx/ClientDC.h"  // for ClientDC
+#include "ui/widget/swx/PaintDC.h"   // for PaintDC
 
 class wxDC;
 class wxWindow;
@@ -35,6 +34,7 @@ class wxWindow;
 namespace cszb_scoreboard {
 class Color;
 class Image;
+
 namespace proto {
 class Font;
 }  // namespace proto

@@ -21,7 +21,7 @@ limitations under the License.
 
 #include "test/integration/GuiTest.h"
 
-#include <wx/init.h>  // for wxEntryCleanup, wxEntryStart
+#include <wx/init.h>  // for wxEntryCleanup
 
 #include <array>    // for array
 #include <utility>  // for pair
@@ -34,9 +34,8 @@ limitations under the License.
 #include "ui/frame/FrameManager.h"                      // for FrameManager
 #include "ui/frame/MainView.h"                          // for MainView
 #include "ui/widget/Panel.h"                            // for Panel
-#include "ui/widget/swx/Panel.h"                        // for Panel
-#include "util/Singleton.h"
-#include "wx/window.h"  // for wxWindow
+#include "util/Singleton.h"                             // for Singleton
+#include "wx/window.h"                                  // for wxWindow
 // IWYU pragma: no_include <wx/gtk/app.h>
 
 namespace cszb_scoreboard {

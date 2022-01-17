@@ -18,12 +18,13 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/string.h>
+#include <wx/string.h>  // for wxString
 
-#include <string>
+#include <string>  // for string
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/StaticText.h"
+#include "ui/widget/Widget.h"          // for Widget
+#include "ui/widget/swx/StaticText.h"  // for StaticText
+#include "wx/window.h"                 // for wxWindow
 
 class wxWindow;
 

@@ -19,16 +19,23 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/component/ScreenText.h"
-#include "ui/component/control/ScreenTextController.h"
-#include "ui/widget/Button.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Panel.h"
-#include "ui/widget/Text.h"
-#include "ui/widget/Toggle.h"
-#include "ui/widget/swx/Panel.h"
+#include <stdint.h>  // for int64_t
+
+#include <memory>  // for unique_ptr
+
+#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
+#include "ui/widget/Button.h"                           // for Button
+#include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Text.h"                             // for Text
+#include "ui/widget/Toggle.h"                           // for Toggle
 
 namespace cszb_scoreboard {
+class Panel;
+class PreviewPanel;
+class ScreenText;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class TimerSetup : public ScreenTextController {
  public:

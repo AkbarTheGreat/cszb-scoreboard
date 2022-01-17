@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "config/Position.h"
 
+#include "config.pb.h"  // for Rectangle
+
 namespace cszb_scoreboard {
 
 auto Position::fromWx(const wxPoint& wx) -> Position {

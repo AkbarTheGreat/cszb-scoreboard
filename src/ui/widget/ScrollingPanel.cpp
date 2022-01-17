@@ -19,9 +19,10 @@ limitations under the License.
 
 #include "ui/widget/ScrollingPanel.h"
 
-#include <wx/scrolwin.h>
+#include <wx/scrolwin.h>  // for wxSHOW_SB_ALWAYS, wxSHOW_SB_NEVER
 
-#include "ui/widget/swx/Sizer.h"
+#include "ui/widget/swx/Sizer.h"  // for Sizer
+#include "wx/window.h"            // for wxWindow
 
 namespace cszb_scoreboard {
 

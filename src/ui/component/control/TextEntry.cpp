@@ -19,16 +19,18 @@ limitations under the License.
 
 #include "ui/component/control/TextEntry.h"
 
-#include <vector>
+#include <vector>  // for vector
 
-#include "config/TeamConfig.h"
-#include "config/swx/event.h"
-#include "ui/component/ScreenText.h"
-#include "util/ProtoUtil.h"
-#include "util/StringUtil.h"
+#include "config/TeamConfig.h"        // for TeamConfig
+#include "config/swx/event.h"         // for wxEVT_KEY_UP, wxEVT_COLOURPICKE...
+#include "ui/component/ScreenText.h"  // for ScreenText
+#include "util/ProtoUtil.h"           // for ProtoUtil
+#include "util/Singleton.h"           // for Singleton
+#include "util/StringUtil.h"          // for StringUtil
 
 namespace cszb_scoreboard {
 class PreviewPanel;
+
 namespace swx {
 class Panel;
 }  // namespace swx

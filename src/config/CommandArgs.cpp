@@ -19,17 +19,18 @@ limitations under the License.
 
 #include "config/CommandArgs.h"
 
-#include <wx/chartype.h>
-#include <wx/cmdargs.h>
-#include <wx/string.h>
+#include <wx/chartype.h>  // for wxT
+#include <wx/cmdargs.h>   // for wxCmdLineArgsArray
+#include <wx/string.h>    // for wxCStrData, wxString
 
-#include <stdexcept>
+#include <memory>  // for allocator
+
+#include "util/Singleton.h"  // for SingletonClass
 
 namespace cszb_scoreboard {
 
 void CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
-                                        const wxCmdLineArgsArray &argv)
-    {
+                               const wxCmdLineArgsArray &argv) {
   // TODO(akbar): This is always an absolute path on Windows, but may be a
   // relative path on Linux.  An update to always get an absolute path is
   // probably worthwhile.

@@ -16,23 +16,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gmock/gmock-actions.h>
-#include <gmock/gmock-matchers.h>
-#include <gmock/gmock-spec-builders.h>
-#include <gtest/gtest-matchers.h>
-#include <gtest/gtest-message.h>
-#include <gtest/gtest-test-part.h>
+#include <gmock/gmock-actions.h>        // for Return, ReturnAction
+#include <gmock/gmock-matchers.h>       // for HasSubstr, _
+#include <gmock/gmock-spec-builders.h>  // for EXPECT_CALL, MockSpec
+#include <gtest/gtest-matchers.h>       // for PolymorphicMatcher
+#include <gtest/gtest-message.h>        // for Message
+#include <gtest/gtest-test-part.h>      // for TestPartResult
 
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
+#include <memory>   // for allocator, unique_ptr
+#include <string>   // for basic_string<>::iterator
+#include <utility>  // for move
+#include <vector>   // for vector
 
-#include "gtest/gtest_pred_impl.h"
-#include "test/mocks/util/MockHttpReader.h"
-#include "test/mocks/util/MockSingleton.h"
-#include "util/AutoUpdate.h"
-#include "util/HttpReader.h"
+#include "gtest/gtest_pred_impl.h"           // for AssertionResult, Test
+#include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
+#include "test/mocks/util/MockSingleton.h"   // for MockSingleton
+#include "util/AutoUpdate.h"                 // for Version, AutoUpdate
+#include "util/HttpReader.h"                 // for HttpResponse
+#include "util/Singleton.h"                  // for SingletonClass
 
 using ::testing::_;
 using ::testing::HasSubstr;

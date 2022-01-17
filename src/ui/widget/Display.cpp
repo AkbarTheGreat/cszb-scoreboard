@@ -21,9 +21,12 @@ limitations under the License.
 
 #include "ui/widget/Display.h"
 
-#include "util/ProtoUtil.h"
+#include "util/ProtoUtil.h"  // for ProtoUtil
 
 namespace cszb_scoreboard {
+namespace proto {
+class Rectangle;
+}  // namespace proto
 
 Display ::Display(uint32_t index)
     : Display(dynamic_pointer_cast<swx::Display, swx::DisplayImpl>(

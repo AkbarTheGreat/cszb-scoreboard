@@ -19,10 +19,21 @@ limitations under the License.
 
 #include "ui/component/control/TimerSetup.h"
 
-#include "ui/frame/FrameManager.h"
-#include "util/TimerManager.h"
+#include <string>  // for string
+
+#include "config/swx/event.h"       // for wxEVT_KEY_UP, wxEVT_TOGGLEBUTTON
+#include "ui/frame/FrameManager.h"  // for FrameManager
+#include "ui/widget/Panel.h"        // for Panel
+#include "util/Singleton.h"         // for Singleton
+#include "util/StringUtil.h"        // for StringUtil
+#include "util/TimerManager.h"      // for TimerManager
 
 namespace cszb_scoreboard {
+class PreviewPanel;
+class ScreenText;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 const std::string START_AND_SHOW = "Start and Show";
 const std::string START = "Start";

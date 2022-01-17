@@ -19,7 +19,10 @@ limitations under the License.
 
 #include "ui/event/AutoRefreshTimer.h"
 
-#include "ui/frame/FrameManager.h"
+#include <functional>  // for function
+
+#include "ui/frame/FrameManager.h"      // for FrameManager
+#include "ui/widget/PersistentTimer.h"  // for PersistentTimer
 
 namespace cszb_scoreboard {
 

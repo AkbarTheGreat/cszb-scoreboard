@@ -18,18 +18,16 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/cmdline.h>
+#include <wx/cmdline.h>  // for wxCMD_LINE_SWITCH, wxCMD_LINE_NONE
 
-#include <array>
-#include <memory>
+#include <array>  // for array
 
-#include "util/FilesystemPath.h"
-#include "ScoreboardCommon.h"
-#include "util/Singleton.h"
+#include "util/FilesystemPath.h"  // for FilesystemPath
 
 class wxCmdLineArgsArray;
 
 namespace cszb_scoreboard {
+struct SingletonClass;
 
 // Used in cszb-scoreboard, but defiend here to keep places to edit to a minimum
 // when new flags are added.

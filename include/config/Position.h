@@ -23,9 +23,10 @@ limitations under the License.
 
 #include <cstdint>  // for int64_t
 
-#include "config.pb.h"
-
 namespace cszb_scoreboard {
+namespace proto {
+class Rectangle;
+}  // namespace proto
 
 struct Position {
  public:

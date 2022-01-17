@@ -21,11 +21,19 @@ limitations under the License.
 
 #pragma once
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"  // for ScreenSide, Font (ptr only), Color (p...
-#include "ui/widget/swx/Display.h"
+#include <stdint.h>      // for uint32_t
+#include <wx/display.h>  // for wxDisplay
+
+#include <memory>   // for shared_ptr, __shared_ptr_access
+#include <utility>  // for move
+
+#include "ScoreboardCommon.h"       // for PUBLIC_TEST_ONLY
+#include "ui/widget/swx/Display.h"  // for Display
 
 namespace cszb_scoreboard {
+namespace proto {
+class Rectangle;
+}  // namespace proto
 
 class Display {
  public:

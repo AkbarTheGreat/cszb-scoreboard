@@ -18,11 +18,13 @@ limitations under the License.
 */
 #pragma once
 
-#include "config/swx/image.h"   // for Image
-#include "ui/graphics/Color.h"  // for Color
+#include <limits.h>  // for UCHAR_MAX
+
+#include "config/Position.h"   // for Size
+#include "config/swx/image.h"  // for Image
 
 namespace cszb_scoreboard {
-struct Size;
+class Color;
 
 class BackgroundImage : public Image {
  public:

@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "ui/component/ScreenTextSide.h"
 
+#include <stdint.h>     // for int64_t
 #include <wx/gdicmn.h>  // for wxSize
 
 #include <memory>  // for allocator_traits<>::value_type
@@ -28,9 +29,10 @@ limitations under the License.
 #include "config/TeamConfig.h"            // for TeamConfig
 #include "config/swx/event.h"             // for wxEVT_PAINT
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
+#include "ui/widget/Panel.h"              // for Panel
 #include "ui/widget/RenderContext.h"      // for RenderContext
 #include "util/ProtoUtil.h"               // for ProtoUtil
-#include "util/TimerManager.h"
+#include "util/TimerManager.h"            // for TimerManager
 
 namespace cszb_scoreboard {
 

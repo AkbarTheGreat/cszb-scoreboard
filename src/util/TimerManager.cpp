@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "util/TimerManager.h"
 
+#include "util/StringUtil.h"  // for StringUtil
+
 namespace cszb_scoreboard {
 
 TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {

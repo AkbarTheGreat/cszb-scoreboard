@@ -22,16 +22,20 @@ limitations under the License.
 
 #include "util/Singleton.h"
 
-#include "config/CommandArgs.h"
-#include "config/DisplayConfig.h"
-#include "config/ImageLibrary.h"
-#include "config/Persistence.h"
-#include "config/TeamConfig.h"
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/HotkeyTable.h"
-#include "ui/graphics/TeamColors.h"
-#include "util/AutoUpdate.h"
-#include "util/TimerManager.h"
+#include <wx/cmdline.h>  // for wxCmdLineParser
+
+#include <stdexcept>  // for runtime_error
+
+#include "config/CommandArgs.h"      // for CommandArgs
+#include "config/DisplayConfig.h"    // for DisplayConfig
+#include "config/ImageLibrary.h"     // for ImageLibrary
+#include "config/Persistence.h"      // for Persistence
+#include "config/TeamConfig.h"       // for TeamConfig
+#include "ui/frame/FrameManager.h"   // for FrameManager
+#include "ui/frame/HotkeyTable.h"    // for HotkeyTable
+#include "ui/graphics/TeamColors.h"  // for TeamColors
+#include "util/AutoUpdate.h"         // for AutoUpdate
+#include "util/TimerManager.h"       // for TimerManager
 
 namespace cszb_scoreboard {
 

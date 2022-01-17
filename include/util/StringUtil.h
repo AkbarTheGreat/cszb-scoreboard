@@ -17,9 +17,8 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/string.h>  // for wxString
-
 #include <cstdint>  // for int64_t
+#include <string>   // for string
 
 namespace cszb_scoreboard {
 

@@ -31,6 +31,7 @@ limitations under the License.
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
 #include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog
 #include "util/FilesystemPath.h"                // for FilesystemPath
+#include "util/Singleton.h"                     // for Singleton
 
 namespace cszb_scoreboard {
 class PreviewPanel;

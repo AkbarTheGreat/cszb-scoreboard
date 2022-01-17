@@ -20,27 +20,25 @@ limitations under the License.
 */
 #pragma once
 
-#include <memory>  // for unique_ptr
-#include <string>  // for string
-#include <vector>  // for vector
+#include <memory>   // for unique_ptr
+#include <string>   // for string
+#include <utility>  // for move
+#include <vector>   // for vector
 
-#include "ScoreboardCommon.h"
+#include "ScoreboardCommon.h"              // for PUBLIC_TEST_ONLY
+#include "config.pb.h"                     // for ScreenSide, RenderableText...
 #include "config/Position.h"               // for Size
 #include "ui/component/ScreenText.h"       // for ScreenText
 #include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 #include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
 #include "ui/widget/Panel.h"               // for Panel
-#include "util/Singleton.h"
+#include "util/Singleton.h"                // for Singleton
 
 namespace cszb_scoreboard {
 class Color;
 class ScreenPresenter;
 class Image;
 
-namespace proto {
-class RenderableText;
-class ScreenSide;
-}  // namespace proto
 namespace swx {
 class Panel;
 }  // namespace swx

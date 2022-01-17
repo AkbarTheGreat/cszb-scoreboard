@@ -18,24 +18,26 @@ limitations under the License.
 */
 #pragma once
 
+#include <wx/defs.h>    // for wxID_ANY
+#include <wx/string.h>  // for wxString
+
 #include <memory>  // for unique_ptr
 #include <string>  // for string
 
-#include "ScoreboardCommon.h"
+#include "ScoreboardCommon.h"              // for PUBLIC_TEST_ONLY
+#include "config/Position.h"               // for Position, Size
 #include "ui/component/ControlPanel.h"     // for ControlPanel
 #include "ui/component/PreviewPanel.h"     // for PreviewPanel
 #include "ui/component/QuickStatePanel.h"  // for QuickStatePanel
 #include "ui/dialog/SettingsDialog.h"      // for SettingsDialog
 #include "ui/event/UpdateTimer.h"          // for UpdateTimer
 #include "ui/widget/Frame.h"               // for Frame
-#include "ui/widget/swx/Frame.h"
-#include "util/Singleton.h"
+#include "ui/widget/swx/Frame.h"           // for FrameImpl, Frame (ptr only)
+#include "util/Singleton.h"                // for Singleton
 
 class wxNotebook;
 
 namespace cszb_scoreboard {
-struct Position;
-struct Size;
 
 class MainView : public Frame {
  public:

@@ -19,9 +19,10 @@ limitations under the License.
 
 #pragma once
 
-#include <ui/widget/PersistentTimer.h>
+#include <ui/widget/PersistentTimer.h>  // for PersistentTimer
 
-#include "util/Singleton.h"
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "util/Singleton.h"    // for Singleton
 
 namespace cszb_scoreboard {
 

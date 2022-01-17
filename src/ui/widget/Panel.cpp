@@ -55,9 +55,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-Panel::Panel(swx::Panel *panel) {
-  _wx = panel;
-}
+Panel::Panel(swx::Panel *panel) { _wx = panel; }
 
 Panel::~Panel() {
   if (should_self_delete) {

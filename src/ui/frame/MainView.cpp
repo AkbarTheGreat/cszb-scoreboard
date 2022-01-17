@@ -18,9 +18,7 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include <wx/string.h>  // for operator+, wxString
-
-#include <string>  // for string
+#include <string>  // for string, operator+, char_traits
 #include <vector>  // for vector
 
 #include "ScoreboardCommon.h"       // for SCOREBOARD_VERSION
@@ -35,8 +33,6 @@ limitations under the License.
 #include "util/StringUtil.h"        // for StringUtil
 
 namespace cszb_scoreboard {
-struct Position;
-struct Size;
 
 const int BORDER_SIZE = 0;
 

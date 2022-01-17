@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/accel.h>        // IWYU pragma: keep
+#include <wx/accel.h>        // for wxAcceleratorEntry (p...
 #include <wx/aui/auibook.h>  // for wxAUI_NB_SCROLL_BUTTONS
 #include <wx/dialog.h>       // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>       // for wxPoint, wxSize (ptr ...
@@ -32,15 +32,16 @@ limitations under the License.
 #include <string>    // for string
 #include <vector>    // for vector
 
-#include "ScoreboardCommon.h"
+#include "ScoreboardCommon.h"                   // for PUBLIC_TEST_ONLY
 #include "config/Position.h"                    // for Position, Size
 #include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
 #include "ui/widget/Widget.h"                   // for Widget
-#include "ui/widget/swx/Frame.h"                // for Frame
+#include "ui/widget/swx/Frame.h"                // for Frame, FrameImpl
 #include "ui/widget/swx/Notebook.h"             // for Notebook
-#include "ui/widget/swx/Panel.h"                // for Panel
+#include "ui/widget/swx/Panel.h"                // for PanelImpl, Panel (ptr...
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
-#include "wx/window.h"                          // for wxWindow
+
+class wxWindow;
 // IWYU pragma: no_include <wx/generic/accel.h>
 
 namespace cszb_scoreboard {

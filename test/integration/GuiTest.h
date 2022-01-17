@@ -33,6 +33,8 @@ limitations under the License.
 #include "gtest/gtest_pred_impl.h"  // for Test
 #include "wx/colour.h"              // for wxColour
 
+class wxApp;
+
 namespace cszb_scoreboard {
 class MainView;
 class Panel;

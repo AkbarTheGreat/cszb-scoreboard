@@ -19,18 +19,18 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
-#include <wx/gdicmn.h>
+#include <stdint.h>  // for uint32_t
 
-#include <cassert>
-#include <utility>
+#include <cassert>  // for assert
+#include <utility>  // for move
 
-#include "config/Persistence.h"
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/MainView.h"
-#include "ui/widget/Display.h"
-#include "ui/widget/Frame.h"
-#include "util/Log.h"
-#include "util/ProtoUtil.h"
+#include "config/Persistence.h"     // for Persistence
+#include "config/Position.h"        // for Position
+#include "ui/frame/FrameManager.h"  // for FrameManager
+#include "ui/frame/MainView.h"      // for MainView
+#include "ui/widget/Display.h"      // for Display
+#include "ui/widget/Frame.h"        // for Frame
+#include "util/Log.h"               // for LogDebug
 
 namespace cszb_scoreboard {
 

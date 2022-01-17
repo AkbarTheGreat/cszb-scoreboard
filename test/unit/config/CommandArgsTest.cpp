@@ -16,9 +16,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>  // IWYU pragma: keep
+#include <gtest/gtest-message.h>    // for Message
+#include <gtest/gtest-test-part.h>  // for TestPartResult
+#include <gtest/gtest.h>            // for Test (ptr only), TestInfo (ptr only)
+#include <wx/cmdargs.h>             // for wxCmdLineArgsArray
+#include <wx/cmdline.h>             // for wxCmdLineParser
 
-#include "config/CommandArgs.h"
+#include <array>   // for array
+#include <memory>  // for unique_ptr, allocator, make_unique
+
+#include "config/CommandArgs.h"   // for CommandArgs, ARG_LIST
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Singleton.h"       // for SingletonClass
 
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"

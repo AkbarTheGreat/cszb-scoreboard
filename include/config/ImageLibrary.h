@@ -22,13 +22,13 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
-#include "ScoreboardCommon.h"    // for PUBLIC_TEST_ONLY
-#include "config/Persistence.h"  // for Persistence
-#include "image_library.pb.h"    // for ImageInfo, ImageLibrary
-#include "util/Singleton.h"
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "image_library.pb.h"  // for ImageInfo, ImageLibrary
 
 namespace cszb_scoreboard {
 class FilesystemPath;
+class Singleton;
+struct SingletonClass;
 
 class ImageSearchResults {
  public:

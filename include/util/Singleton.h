@@ -20,8 +20,6 @@ limitations under the License.
 */
 #pragma once
 
-#include "ScoreboardCommon.h"
-
 class wxCmdLineParser;
 class wxCmdLineArgsArray;
 

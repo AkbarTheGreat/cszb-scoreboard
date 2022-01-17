@@ -16,19 +16,40 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <google/protobuf/util/message_differencer.h>
-#include <gtest/gtest.h>  // IWYU pragma: keep
+#include <gmock/gmock-actions.h>                       // for Return, Return...
+#include <gmock/gmock-matchers.h>                      // for _
+#include <gmock/gmock-spec-builders.h>                 // for EXPECT_CALL
+#include <google/protobuf/util/message_differencer.h>  // for MessageDiffere...
+#include <gtest/gtest-message.h>                       // for Message
+#include <gtest/gtest-test-part.h>                     // for TestPartResult
+#include <gtest/gtest.h>                               // for TestInfo (ptr ...
+#include <stdint.h>                                    // for int32_t
+#include <wx/gdicmn.h>                                 // for wxRect, wxPoint
 
-#include "config.pb.h"
-#include "config/DisplayConfig.h"
-#include "test/TestUtil.h"
-#include "test/mocks/config/MockPersistence.h"
-#include "test/mocks/ui/frame/MockFrameManager.h"
-#include "test/mocks/ui/frame/MockMainView.h"
-#include "test/mocks/ui/widget/swx/MockDisplay.h"
-#include "test/mocks/util/MockSingleton.h"
-#include "ui/component/ScreenPresenter.h"
-#include "ui/widget/Display.h"
+#include <memory>  // for unique_ptr
+#include <string>  // for string
+
+#include "config.pb.h"                             // for DisplayConfig
+#include "config/DisplayConfig.h"                  // for DisplayConfig
+#include "test/TestUtil.h"                         // for EXPECT_ASSERT
+#include "test/mocks/config/MockPersistence.h"     // for MockPersistence
+#include "test/mocks/ui/frame/MockFrameManager.h"  // for MockFrameManager
+#include "test/mocks/ui/frame/MockMainView.h"      // for MockMainView
+#include "test/mocks/ui/widget/swx/MockDisplay.h"  // for MockDisplay
+#include "test/mocks/ui/widget/swx/MockFrame.h"    // for MockFrame
+#include "test/mocks/util/MockSingleton.h"         // for MockSingleton
+#include "ui/component/ScreenPresenter.h"          // for ScreenPresenter
+#include "ui/frame/MainView.h"                     // for MainView
+#include "ui/widget/Display.h"                     // for Display
+#include "ui/widget/Frame.h"                       // for Frame
+#include "util/Singleton.h"                        // for SingletonClass
+
+namespace cszb_scoreboard {
+class ScreenText;
+namespace swx {
+class Frame;
+}  // namespace swx
+}  // namespace cszb_scoreboard
 
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"

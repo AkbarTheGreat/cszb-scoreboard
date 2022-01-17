@@ -18,6 +18,7 @@ limitations under the License.
 */
 #pragma once
 
+#include <limits.h>     // for UCHAR_MAX
 #include <wx/string.h>  // for wxString
 
 #include <cstdint>  // for uint64_t

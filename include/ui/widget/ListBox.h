@@ -29,6 +29,7 @@ limitations under the License.
 #include "config/swx/event.h"               // for wxEventTypeTag
 #include "ui/widget/Widget.h"               // for Widget
 #include "ui/widget/swx/EditableListBox.h"  // for EditableListBox
+#include "wx/window.h"                      // for wxWindow
 // IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
 class wxWindow;
