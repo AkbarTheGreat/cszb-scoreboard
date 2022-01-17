@@ -105,6 +105,7 @@ void TimerSetup::resetTimer() {
 }
 
 auto TimerSetup::secondsFromText() -> int64_t {
+  // NOLINTNEXTLINE (readability-magic-numbers)
   return StringUtil::stringToInt(minutes_text->value()) * 60 +
          StringUtil::stringToInt(seconds_text->value());
 }
