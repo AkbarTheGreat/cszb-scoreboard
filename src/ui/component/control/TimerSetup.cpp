@@ -19,6 +19,9 @@ limitations under the License.
 
 #include "ui/component/control/TimerSetup.h"
 
+#include "ui/frame/FrameManager.h"
+#include "util/TimerManager.h"
+
 namespace cszb_scoreboard {
 
 auto TimerSetup ::Create(PreviewPanel *preview_panel, swx::Panel *wx)
@@ -34,11 +37,75 @@ void TimerSetup::createControls(Panel *control_panel) {
   seconds_label = control_panel->label("Seconds");
   seconds_text = control_panel->text("0");
 
+  start_stop_button = control_panel->button("Start and Show");
+  show_hide_button = control_panel->button("Show");
+  reset_button = control_panel->button("Reset");
+
+  positionWidgets(control_panel);
+  bindEvents();
+  timeUpdated();
+}
+
+void TimerSetup::positionWidgets(Panel *control_panel) {
   control_panel->addWidget(*minutes_label, 0, 0);
   control_panel->addWidget(*minutes_text, 0, 1);
   control_panel->addWidget(*seconds_label, 1, 0);
   control_panel->addWidget(*seconds_text, 1, 1);
+  control_panel->addWidget(*start_stop_button, 0, 2);
+  control_panel->addWidget(*show_hide_button, 1, 2);
+  control_panel->addWidget(*reset_button, 2, 2);
   control_panel->runSizer();
+}
+
+void TimerSetup::bindEvents() {
+  start_stop_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->startOrStopTimer(); });
+  show_hide_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->showOrHideTimer(); });
+  reset_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->resetTimer(); });
+  minutes_text->bind(
+      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->timeUpdated(); });
+  seconds_text->bind(
+      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->timeUpdated(); });
+}
+
+void TimerSetup::startOrStopTimer() {
+  if (singleton->timerManager()->timerRunning()) {
+    singleton->timerManager()->pauseTimer();
+  } else {
+    singleton->timerManager()->startTimer();
+    singleton->timerManager()->showTimer();
+  }
+}
+
+void TimerSetup::showOrHideTimer() {
+  if (singleton->timerManager()->timerOn()) {
+    singleton->timerManager()->hideTimer();
+    singleton->frameManager()->refreshFrames();
+  } else {
+    singleton->timerManager()->showTimer();
+  }
+}
+
+void TimerSetup::resetTimer() {
+  int64_t timer = secondsFromText();
+  singleton->timerManager()->setTime(timer);
+}
+
+auto TimerSetup::secondsFromText() -> int64_t {
+  return StringUtil::stringToInt(minutes_text->value()) * 60 +
+         StringUtil::stringToInt(seconds_text->value());
+}
+
+void TimerSetup::timeUpdated() {
+  if (secondsFromText() != last_set_timer_seconds) {
+    last_set_timer_seconds = secondsFromText();
+    resetTimer();
+  }
 }
 
 void TimerSetup::updateScreenText(ScreenText *screen_text) {}

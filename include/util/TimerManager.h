@@ -35,7 +35,13 @@ class TimerManager {
   explicit TimerManager(SingletonClass c)
       : TimerManager(c, Singleton::getInstance()) {}
   [[nodiscard]] auto timerOn() const -> bool { return timer_displayed; }
+  [[nodiscard]] auto timerRunning() const -> bool { return timer_running; }
   auto displayTime() -> std::string;
+  void setTime(int64_t seconds);
+  void startTimer();
+  void pauseTimer();
+  void showTimer();
+  void hideTimer();
 
   PUBLIC_TEST_ONLY
   TimerManager(SingletonClass c, Singleton *singleton);
@@ -46,7 +52,10 @@ class TimerManager {
   std::unique_ptr<AutoRefreshTimer> refresh_timer;
   bool timer_displayed;
   bool timer_running;
+  // Tracks the time to the end of an active timer.
   std::chrono::seconds timer_end;
+  // Tracks the static time left of a paused timer.
+  std::chrono::seconds time_left;
 };
 
 }  // namespace cszb_scoreboard

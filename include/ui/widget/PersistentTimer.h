@@ -38,6 +38,7 @@ class PersistentTimer {
 
  public:
   PersistentTimer(int period, const std::function<void()> &on_tick);
+  void stop();
 
  private:
   // We should delete the held timer at destruction, but doing so causes a read

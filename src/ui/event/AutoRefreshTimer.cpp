@@ -23,7 +23,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-constexpr int REFRESH_RATE_MILLIS = 250; // 4 hz update frequency
+constexpr int REFRESH_RATE_MILLIS = 250;  // 4 hz update frequency
 
 AutoRefreshTimer::AutoRefreshTimer(Singleton* singleton)
     : PersistentTimer(REFRESH_RATE_MILLIS,
@@ -31,8 +31,6 @@ AutoRefreshTimer::AutoRefreshTimer(Singleton* singleton)
   this->singleton = singleton;
 }
 
-void AutoRefreshTimer::execute() {
-  singleton->frameManager()->refreshFrames();
-}
+void AutoRefreshTimer::execute() { singleton->frameManager()->refreshFrames(); }
 
 }  // namespace cszb_scoreboard

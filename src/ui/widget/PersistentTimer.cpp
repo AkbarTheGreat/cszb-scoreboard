@@ -27,6 +27,8 @@ PersistentTimer::PersistentTimer(int period,
   held->Start(period, false);
 }
 
+void PersistentTimer::stop() { held->Stop(); }
+
 PersistentTimer::HeldTimer::HeldTimer(const std::function<void()>& on_tick) {
   this->on_tick = on_tick;
 }

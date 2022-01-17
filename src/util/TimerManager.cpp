@@ -22,16 +22,46 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {
-  // TODO(#11): When making methods to start/stop display & the timer, move the
-  // creation/destruction of refresh timer into the method that stops the timer,
-  // to avoid running the AutoRefreshTimer when we don't need it.
-  //refresh_timer = std::make_unique<AutoRefreshTimer>();
   timer_displayed = false;
-  timer_running = true;
-  // TODO(#11):  Hard coded 5 minutes right now
+  timer_running = false;
+  time_left = std::chrono::minutes(
+      1);  // Just a valid default value, unimportant what it is.
+  timer_end = std::chrono::duration_cast<std::chrono::seconds>(
+      std::chrono::system_clock::now().time_since_epoch());
+}
+
+void TimerManager::setTime(int64_t seconds) {
+  auto new_time_left = std::chrono::seconds(seconds);
   timer_end = std::chrono::duration_cast<std::chrono::seconds>(
                   std::chrono::system_clock::now().time_since_epoch()) +
-              std::chrono::minutes(5);  // NOLINT(readability-magic-numbers)
+              new_time_left;
+  time_left = new_time_left;
+}
+
+void TimerManager::startTimer() {
+  if (!timer_running) {
+    timer_running = true;
+    timer_end = std::chrono::duration_cast<std::chrono::seconds>(
+                    std::chrono::system_clock::now().time_since_epoch()) +
+                time_left;
+  }
+}
+
+void TimerManager::pauseTimer() { timer_running = false; }
+
+void TimerManager::showTimer() {
+  if (!timer_displayed) {
+    timer_displayed = true;
+    refresh_timer = std::make_unique<AutoRefreshTimer>();
+  }
+}
+
+void TimerManager::hideTimer() {
+  if (timer_displayed) {
+    timer_displayed = false;
+    refresh_timer->stop();
+    refresh_timer.reset();
+  }
 }
 
 auto TimerManager::displayTime() -> std::string {
@@ -46,12 +76,13 @@ auto TimerManager::displayTime() -> std::string {
 }
 
 auto TimerManager::timeLeft() -> std::chrono::seconds {
-  // TODO(#11): Handle pausing the timer here
-  std::chrono::seconds time_left =
-      timer_end - std::chrono::duration_cast<std::chrono::seconds>(
-                      std::chrono::system_clock::now().time_since_epoch());
-  if (time_left < std::chrono::seconds(0)) {
-    return std::chrono::seconds(0);
+  if (timer_running) {
+    time_left =
+        timer_end - std::chrono::duration_cast<std::chrono::seconds>(
+                        std::chrono::system_clock::now().time_since_epoch());
+    if (time_left < std::chrono::seconds(0)) {
+      time_left = std::chrono::seconds(0);
+    }
   }
   return time_left;
 }
