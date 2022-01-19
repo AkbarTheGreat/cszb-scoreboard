@@ -21,11 +21,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <stdint.h>  // for int32_t, uint32_t
-
-#include <memory>  // for unique_ptr
-#include <set>     // for set
-#include <string>  // for string
+#include <cstdint>  // for int32_t, uint32_t
+#include <memory>   // for unique_ptr
+#include <set>      // for set
+#include <string>   // for string
 
 #include "ui/frame/MainView.h"  // for MainView
 #include "ui/widget/Display.h"  // for Display

@@ -19,9 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>  // for int64_t
-
-#include <memory>  // for unique_ptr
+#include <cstdint>  // for int64_t
+#include <memory>   // for unique_ptr
 
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/widget/Button.h"                           // for Button

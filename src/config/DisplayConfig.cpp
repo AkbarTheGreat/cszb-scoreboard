@@ -19,9 +19,8 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
-#include <stdint.h>  // for uint32_t
-
 #include <cassert>  // for assert
+#include <cstdint>  // for uint32_t
 #include <utility>  // for move
 
 #include "config/Persistence.h"     // for Persistence

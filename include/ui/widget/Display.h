@@ -21,9 +21,9 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>      // for uint32_t
 #include <wx/display.h>  // for wxDisplay
 
+#include <cstdint>  // for uint32_t
 #include <memory>   // for shared_ptr, __shared_ptr_access
 #include <utility>  // for move
 

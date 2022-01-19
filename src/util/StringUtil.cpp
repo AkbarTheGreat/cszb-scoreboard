@@ -18,11 +18,11 @@ limitations under the License.
 
 #include "util/StringUtil.h"
 
-#include <stdio.h>        // for snprintf
 #include <wx/chartype.h>  // for wxT
 #include <wx/string.h>    // for wxString, wxCStrData
 
-#include <array>  // for array
+#include <array>   // for array
+#include <cstdio>  // for snprintf
 
 namespace cszb_scoreboard {
 

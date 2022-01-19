@@ -23,11 +23,11 @@ limitations under the License.
 #include <gtest/gtest-message.h>                       // for Message
 #include <gtest/gtest-test-part.h>                     // for TestPartResult
 #include <gtest/gtest.h>                               // for TestInfo (ptr ...
-#include <stdint.h>                                    // for int32_t
 #include <wx/gdicmn.h>                                 // for wxRect, wxPoint
 
-#include <memory>  // for unique_ptr
-#include <string>  // for string
+#include <cstdint>  // for int32_t
+#include <memory>   // for unique_ptr
+#include <string>   // for string
 
 #include "config.pb.h"                             // for DisplayConfig
 #include "config/DisplayConfig.h"                  // for DisplayConfig

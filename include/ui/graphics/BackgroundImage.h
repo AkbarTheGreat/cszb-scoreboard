@@ -18,7 +18,7 @@ limitations under the License.
 */
 #pragma once
 
-#include <limits.h>  // for UCHAR_MAX
+#include <climits>  // for UCHAR_MAX
 
 #include "config/Position.h"   // for Size
 #include "config/swx/image.h"  // for Image

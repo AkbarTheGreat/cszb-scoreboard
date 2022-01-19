@@ -20,10 +20,10 @@ limitations under the License.
 
 #include "ui/component/ScreenTextSide.h"
 
-#include <stdint.h>     // for int64_t
 #include <wx/gdicmn.h>  // for wxSize
 
-#include <memory>  // for allocator_traits<>::value_type
+#include <cstdint>  // for int64_t
+#include <memory>   // for allocator_traits<>::value_type
 
 #include "config/Position.h"              // for Size, Position
 #include "config/TeamConfig.h"            // for TeamConfig

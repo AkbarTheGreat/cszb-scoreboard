@@ -19,11 +19,10 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>  // for int64_t
-
-#include <chrono>  // for seconds
-#include <memory>  // for unique_ptr
-#include <string>  // for string
+#include <chrono>   // for seconds
+#include <cstdint>  // for int64_t
+#include <memory>   // for unique_ptr
+#include <string>   // for string
 
 #include "ScoreboardCommon.h"           // for PUBLIC_TEST_ONLY
 #include "ui/event/AutoRefreshTimer.h"  // for AutoRefreshTimer
