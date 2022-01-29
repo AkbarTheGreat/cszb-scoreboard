@@ -30,6 +30,23 @@ class FilesystemPath;
 class Singleton;
 struct SingletonClass;
 
+class CaseOptionalString {
+ public:
+  explicit CaseOptionalString(const std::string &str);
+  [[nodiscard]] auto string() const -> std::string { return value; }
+  [[nodiscard]] auto compare(const CaseOptionalString &b) const noexcept -> int;
+  auto operator==(const CaseOptionalString &b) const noexcept -> bool;
+  auto operator!=(const CaseOptionalString &b) const noexcept -> bool;
+  auto operator<(const CaseOptionalString &b) const noexcept -> bool;
+  auto operator<=(const CaseOptionalString &b) const noexcept -> bool;
+  auto operator>(const CaseOptionalString &b) const noexcept -> bool;
+  auto operator>=(const CaseOptionalString &b) const noexcept -> bool;
+
+ private:
+  std::string value;
+  std::string lowercase;
+};
+
 class ImageSearchResults {
  public:
   auto filenames() -> std::vector<FilesystemPath>;
@@ -38,10 +55,10 @@ class ImageSearchResults {
  private:
   ImageSearchResults(const std::vector<proto::ImageInfo> &matched_images,
                      const std::string &search_string,
-                     const std::vector<std::string> &matched_tag_list);
+                     const std::vector<CaseOptionalString> &matched_tag_list);
   std::vector<proto::ImageInfo> matched_images;
   std::string search_string;
-  std::vector<std::string> matched_tag_list;
+  std::vector<CaseOptionalString> matched_tag_list;
   friend class ImageLibrary;
 };
 
@@ -50,7 +67,8 @@ class ImageLibrary {
   explicit ImageLibrary(SingletonClass c);
   // Returns all unique tags, sorted
   auto allFilenames() -> std::vector<FilesystemPath>;
-  auto allTags(bool include_name = false) -> std::vector<std::string>;
+  auto allTags(bool include_name = false) const
+      -> std::vector<CaseOptionalString>;
   auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
   auto name(const FilesystemPath &filename) -> std::string;
   void addImage(const FilesystemPath &file, const std::string &name,
@@ -58,7 +76,7 @@ class ImageLibrary {
   void clearLibrary();
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;
-  auto tags(const FilesystemPath &filename) -> std::vector<std::string>;
+  auto tags(const FilesystemPath &filename) -> std::vector<CaseOptionalString>;
 
   PUBLIC_TEST_ONLY
   // Test-available constructor which initializes this object from an in-memory

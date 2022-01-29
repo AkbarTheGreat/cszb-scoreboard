@@ -64,12 +64,12 @@ auto testLibrary(MockSingleton *singleton) -> ImageLibrary {
 
   // Add a bathroom
   image = library.add_images();
-  image->set_name("bathroom");
+  image->set_name("Bathroom");
   image->set_file_path(
       "/test/but-why.jpg");  // Because we can use (s)tall for partial matches
   image->add_tags("gender");
   image->add_tags("neutral");
-  image->add_tags("stall");
+  image->add_tags("Stall");
 
   return ImageLibrary(SingletonClass{}, singleton, library);
 }
@@ -120,20 +120,33 @@ auto filesystemPathVector(const std::vector<std::string> &in)
   return out;
 }
 
+auto tagStrings(const ImageLibrary &library, bool include_name = false)
+    -> std::vector<std::string> {
+  std::vector<CaseOptionalString> tags = library.allTags(include_name);
+  std::vector<std::string> tag_strings;
+  for (const auto &tag : tags) {
+    //  These vectors are small enough that the extra code isn't worthwhile, so
+    //  waive this lint error.
+    // NOLINTNEXTLINE(performance-inefficient-vector-operation)
+    tag_strings.emplace_back(tag.string());
+  }
+  return tag_strings;
+}
+
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
-  std::vector<std::string> tags = library.allTags();
+  std::vector<std::string> tags = tagStrings(library);
   // Check that they're in the correct (alphabetical) order.
   ASSERT_STR_VECTOR(tags, {"cute", "dog", "gender", "neutral", "rodent",
-                           "short", "stall", "tall"});
+                           "short", "Stall", "tall"});
 
-  tags = library.allTags(true);
+  tags = tagStrings(library, true);
   // Check that image names are now included approprately.
   ASSERT_STR_VECTOR(
-      tags, {"bathroom", "capybara", "corgi", "cute", "dog", "gender",
-             "great dane", "neutral", "rodent", "short", "stall", "tall"});
+      tags, {"Bathroom", "capybara", "corgi", "cute", "dog", "gender",
+             "great dane", "neutral", "rodent", "short", "Stall", "tall"});
 }
 
 // Searches for full single words match the relevant tag if it exists.
@@ -177,7 +190,7 @@ TEST(ImageLibraryTest, PartialWordSearches) {
 
   // Potentially conflicting search doesn't collide
   result = library.search("tal");
-  ASSERT_STR_VECTOR(result.matchedTags(), {"stall", "tall"});
+  ASSERT_STR_VECTOR(result.matchedTags(), {"Stall", "tall"});
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/great_dane.jpg", "/test/but-why.jpg"});
 
@@ -189,7 +202,7 @@ TEST(ImageLibraryTest, PartialWordSearches) {
   // Empty search returns everything
   result = library.search("");
   ASSERT_STR_VECTOR(result.matchedTags(), {"cute", "dog", "gender", "neutral",
-                                           "rodent", "short", "stall", "tall"});
+                                           "rodent", "short", "Stall", "tall"});
   ASSERT_PATH_VECTOR(result.filenames(),
                      {"/test/corgi.jpg", "/test/great_dane.jpg",
                       "/test/capy.jpg", "/test/but-why.jpg"});
@@ -211,6 +224,19 @@ TEST(ImageLibraryTest, DeduplicatingSearches) {
   ASSERT_PATH_VECTOR(
       result.filenames(),
       {"/test/corgi.jpg", "/test/great_dane.jpg", "/test/capy.jpg"});
+}
+
+// Makes sure that case insensitive searches work correctly -- disabled while
+// functionality is being added.
+//
+// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+TEST(ImageLibraryTest, DISABLED_CaseInsensitiveSearches) {
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
+  // This single-letter search should match 3/4 images
+  auto result = library.search("bath");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"Bathroom"});
+  ASSERT_PATH_VECTOR(result.filenames(), {"/test/but-why.jpg"});
 }
 
 }  // namespace cszb_scoreboard::test
