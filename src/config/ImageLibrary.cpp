@@ -162,18 +162,19 @@ auto ImageLibrary::exactMatchSearch(const std::string &query)
 
 auto ImageLibrary::partialMatchSearch(const std::string &query)
     -> ImageSearchResults {
+  CaseOptionalString lower_query(query);
   std::vector<proto::ImageInfo> matched_images;
   std::vector<CaseOptionalString> matched_tags;
   for (const auto &image : library.images()) {
     bool image_matched = false;
-    if (image.name().find(query) != std::string::npos) {
+    if (CaseOptionalString(image.name()).find(lower_query) !=
+        std::string::npos) {
       matched_images.push_back(image);
       insertIntoSortedVector(&matched_tags, image.name());
       image_matched = true;
     }
     for (const auto &tag : image.tags()) {
-      if (std::search(tag.begin(), tag.end(), query.begin(), query.end()) !=
-          tag.end()) {
+      if (CaseOptionalString(tag).substring(lower_query)) {
         if (!image_matched) {
           matched_images.push_back(image);
         }
@@ -215,6 +216,16 @@ CaseOptionalString::CaseOptionalString(const std::string &str) {
   lowercase = str;
   std::transform(lowercase.begin(), lowercase.end(), lowercase.begin(),
                  [](unsigned char c) { return std::tolower(c); });
+}
+
+auto CaseOptionalString::find(const CaseOptionalString &b, size_t offset) const
+    -> size_t {
+  return lowercase.find(b.lowercase, offset);
+}
+
+auto CaseOptionalString::substring(const CaseOptionalString &b) const -> bool {
+  return std::search(lowercase.begin(), lowercase.end(), b.lowercase.begin(),
+                     b.lowercase.end()) != lowercase.end();
 }
 
 auto CaseOptionalString::compare(const CaseOptionalString &b) const noexcept

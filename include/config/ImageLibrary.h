@@ -33,7 +33,11 @@ struct SingletonClass;
 class CaseOptionalString {
  public:
   explicit CaseOptionalString(const std::string &str);
+  [[nodiscard]] auto lower() const -> std::string { return lowercase; }
   [[nodiscard]] auto string() const -> std::string { return value; }
+  [[nodiscard]] auto find(const CaseOptionalString &b, size_t offset = 0) const
+      -> size_t;
+  [[nodiscard]] auto substring(const CaseOptionalString &b) const -> bool;
   [[nodiscard]] auto compare(const CaseOptionalString &b) const noexcept -> int;
   auto operator==(const CaseOptionalString &b) const noexcept -> bool;
   auto operator!=(const CaseOptionalString &b) const noexcept -> bool;

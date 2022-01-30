@@ -226,15 +226,16 @@ TEST(ImageLibraryTest, DeduplicatingSearches) {
       {"/test/corgi.jpg", "/test/great_dane.jpg", "/test/capy.jpg"});
 }
 
-// Makes sure that case insensitive searches work correctly -- disabled while
-// functionality is being added.
-//
+// Makes sure that case insensitive searches work correctly
 // NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
-TEST(ImageLibraryTest, DISABLED_CaseInsensitiveSearches) {
+TEST(ImageLibraryTest, CaseInsensitiveSearches) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
   // This single-letter search should match 3/4 images
-  auto result = library.search("bath");
+  auto result = library.search("stall");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"Stall"});
+  ASSERT_PATH_VECTOR(result.filenames(), {"/test/but-why.jpg"});
+  result = library.search("bath");
   ASSERT_STR_VECTOR(result.matchedTags(), {"Bathroom"});
   ASSERT_PATH_VECTOR(result.filenames(), {"/test/but-why.jpg"});
 }
