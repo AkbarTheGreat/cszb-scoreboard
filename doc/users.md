@@ -129,6 +129,16 @@ _(image taken in version 0.9.1, some visuals may have changed)_
 
 This tab is pretty straight-forward.  You type in text to be shown and it displays.  The font size is a relative font, so it's less important to know what 10 or 20 means other than 20 is twice as large as 10.  Additionally, if the text outgrows a screen, it will be auto-scaled down, so the font size is the maximum font size.
 
+### Timer
+
+![alt](img/timer_initial.png "Timer")
+_(image taken in version 1.1.0, some visuals may have changed)_
+
+This tab controls a timer which overlays on every other view.  The view you see in the preview pane will be the last tab you were in, timers are either shown on all windows (previews/thumbnails/external monitors) or none at all.  The three buttons present start/pause the timer, show/hide the timer, and reset the timer to it's specified value (in the fields to the left), respectively.  Changing the value of the timer in the numeric fields implicitly resets the timer to the new value, even if the timer is currently running.  Once running, the timer looks like this:
+
+![alt](img/timer_running.png "Timer in progress")
+_(image taken in version 1.1.0, some visuals may have changed)_
+
 ## Quick States
 
 ![alt](img/quick_state.png "Quick States")

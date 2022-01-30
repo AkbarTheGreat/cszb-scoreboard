@@ -73,7 +73,7 @@ possible I've noted which ones are considered gating for a 1.0 release.
 * ~~A saved image library with support for tags and filtering.~~
 * ~~Hotkey support for queueing up pre-set images or text.~~
 * ~~Hotkey support for increasing scores rapidly.~~
-* A countdown timer.
+* ~~A countdown timer.~~
 * Slide-show functionality for pre-show slides.
 * Transition animation support.
 * Video playback, with audio.
