@@ -24,7 +24,6 @@ limitations under the License.
 #include "ScoreboardCommon.h"       // for SCOREBOARD_VERSION
 #include "config/CommandArgs.h"     // for CommandArgs
 #include "config/DisplayConfig.h"   // for DisplayConfig
-#include "config/swx/defs.h"        // for wxID_ABOUT, wxID_EXIT, wxID_SEPAR...
 #include "config/swx/event.h"       // for wxEVT_COMMAND_MENU_SELECTED, wxEV...
 #include "ui/component/Menu.h"      // for DISPLAY_BLACK_OUT, GENERAL_SETTINGS
 #include "ui/frame/FrameManager.h"  // for FrameManager

@@ -19,7 +19,6 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/accel.h>        // for wxAcceleratorEntry (p...
 #include <wx/aui/auibook.h>  // for wxAUI_NB_SCROLL_BUTTONS
 #include <wx/dialog.h>       // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>       // for wxPoint, wxSize (ptr ...
@@ -42,6 +41,7 @@ limitations under the License.
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 
 class wxWindow;
+class wxAcceleratorEntry;
 // IWYU pragma: no_include <wx/generic/accel.h>
 
 namespace cszb_scoreboard {

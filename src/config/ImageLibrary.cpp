@@ -20,6 +20,7 @@ limitations under the License.
 #include "config/ImageLibrary.h"
 
 #include <algorithm>   // for binary_search, find, lower_bound
+#include <cctype>      // for tolower
 #include <filesystem>  // for operator<
 #include <utility>     // for move
 

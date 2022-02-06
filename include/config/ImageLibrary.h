@@ -18,9 +18,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <map>     // for map
-#include <string>  // for string
-#include <vector>  // for vector
+#include <cstddef>  // for size_t
+#include <map>      // for map
+#include <string>   // for string, basic_string
+#include <vector>   // for vector
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "image_library.pb.h"  // for ImageInfo, ImageLibrary

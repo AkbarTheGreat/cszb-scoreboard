@@ -26,8 +26,6 @@ limitations under the License.
 #include "ui/widget/swx/StaticText.h"  // for StaticText
 #include "wx/window.h"                 // for wxWindow
 
-class wxWindow;
-
 namespace cszb_scoreboard {
 
 class Label : public Widget {

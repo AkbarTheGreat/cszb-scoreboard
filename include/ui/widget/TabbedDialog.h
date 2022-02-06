@@ -37,7 +37,6 @@ limitations under the License.
 // IWYU pragma: no_include <wx/bookctrl.h>
 
 class wxEvent;
-class wxWindow;
 
 namespace cszb_scoreboard {
 

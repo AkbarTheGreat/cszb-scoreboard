@@ -32,8 +32,6 @@ limitations under the License.
 #include "wx/window.h"                      // for wxWindow
 // IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
 
-class wxWindow;
-
 namespace cszb_scoreboard {
 
 class ListBox : public Widget {
