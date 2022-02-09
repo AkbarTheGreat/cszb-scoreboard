@@ -25,6 +25,7 @@ limitations under the License.
 
 #include "ui/component/control/ImageFromLibrary.h"  // for ImageFromLibrary
 #include "ui/component/control/LocalImage.h"        // for LocalImage
+#include "ui/component/control/ImageSearch.h"        // for LocalImage
 #include "ui/component/control/ScoreControl.h"      // for ScoreControl
 #include "ui/component/control/TextEntry.h"         // for TextEntry
 #include "ui/component/control/ThingsMode.h"        // for ThingsMode
@@ -45,6 +46,8 @@ ControlPanel::ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
   addController(
       std::move(ImageFromLibrary::Create(preview_panel, childPanel())),
       "Image Library");
+  addController(std::move(ImageSearch::Create(preview_panel, childPanel())),
+                "Image Search");
   addController(std::move(LocalImage::Create(preview_panel, childPanel())),
                 "Load Image");
   addController(std::move(ThingsMode::Create(preview_panel, childPanel())),
