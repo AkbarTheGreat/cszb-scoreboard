@@ -25,6 +25,7 @@ limitations under the License.
 
 #include <vector>  // for vector
 
+#include "ui/widget/Browser.h"
 #include "ui/widget/Button.h"                // for Button
 #include "ui/widget/CheckBox.h"              // for CheckBox
 #include "ui/widget/ColorPicker.h"           // for ColorPicker
@@ -51,6 +52,7 @@ limitations under the License.
 #include "ui/widget/swx/StaticText.h"        // for StaticText
 #include "ui/widget/swx/TextCtrl.h"          // for TextCtrl
 #include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
+#include "ui/widget/swx/WebView.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
@@ -82,6 +84,10 @@ auto Panel::button(const std::string &label, bool exact_fit) const
                         wxBU_EXACTFIT));
   }
   return std::make_unique<Button>(new swx::Button(wx(), wxID_ANY, label));
+}
+
+auto Panel::browser(std::string url) const -> std::unique_ptr<Browser> {
+  return std::make_unique<Browser>(new swx::WebView(wx(), url));
 }
 
 auto Panel::checkBox(const std::string &label) const

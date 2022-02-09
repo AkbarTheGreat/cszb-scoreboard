@@ -40,6 +40,7 @@ namespace cszb_scoreboard {
 
 class ScrollingPanel;
 class Button;
+class Browser;
 class CheckBox;
 class ColorPicker;
 class Divider;
@@ -61,6 +62,7 @@ class Panel : public Widget {
   [[nodiscard]] auto button(const std::string &label,
                             bool exact_fit = false) const
       -> std::unique_ptr<Button>;
+  [[nodiscard]] auto browser(std::string url) const -> std::unique_ptr<Browser>;
   [[nodiscard]] auto checkBox(const std::string &label) const
       -> std::unique_ptr<CheckBox>;
   [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
