@@ -86,7 +86,7 @@ auto Panel::button(const std::string &label, bool exact_fit) const
   return std::make_unique<Button>(new swx::Button(wx(), wxID_ANY, label));
 }
 
-auto Panel::browser(std::string url) const -> std::unique_ptr<Browser> {
+auto Panel::browser(const std::string &url) const -> std::unique_ptr<Browser> {
   return std::make_unique<Browser>(new swx::WebView(wx(), url));
 }
 

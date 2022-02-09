@@ -28,15 +28,17 @@ namespace cszb_scoreboard::swx {
 
 class WebView {
  public:
-  WebView(wxWindow *parent, const wxString &url = wxWebViewDefaultURLStr,
-          wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition,
-          const wxSize &size = wxDefaultSize,
-          const wxString &backend = wxWebViewBackendDefault, long style = 0,
-          const wxString &name = wxWebViewNameStr) {
+  explicit WebView(wxWindow *parent,
+                   const wxString &url = wxWebViewDefaultURLStr,
+                   wxWindowID id = wxID_ANY,
+                   const wxPoint &pos = wxDefaultPosition,
+                   const wxSize &size = wxDefaultSize,
+                   const wxString &backend = wxWebViewBackendDefault,
+                   int64_t style = 0, const wxString &name = wxWebViewNameStr) {
     _wx = wxWebView::New(parent, id, url, pos, size, backend, style, name);
   }
 
-  wxWebView *wx() { return _wx; }
+  auto wx() -> wxWebView * { return _wx; }
 
  private:
   wxWebView *_wx;
