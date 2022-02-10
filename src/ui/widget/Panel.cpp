@@ -181,4 +181,8 @@ auto Panel::toggle(const std::string &label) const -> std::unique_ptr<Toggle> {
   return std::make_unique<Toggle>(new swx::ToggleButton(wx(), wxID_ANY, label));
 }
 
+void Panel::setBorder(bool has_border) {
+  wx()->SetWindowStyle(has_border ? wxBORDER_SIMPLE : wxBORDER_DEFAULT);
+}
+
 }  // namespace cszb_scoreboard
