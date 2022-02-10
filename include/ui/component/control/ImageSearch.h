@@ -1,5 +1,6 @@
 /*
-ui/component/control/ImageSearch.h: Handles searching for images from a webview for quick use as a bit.
+ui/component/control/ImageSearch.h: Handles searching for images from a webview
+for quick use as a bit.
 
 Copyright 2022 Tracy Beck
 
@@ -21,9 +22,10 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 
 #include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
-#include "ui/widget/Button.h"                            // for Button
-#include "ui/widget/Panel.h"                             // for Panel
+#include "ui/widget/Browser.h"
+#include "ui/widget/Button.h"  // for Button
 #include "ui/widget/Label.h"
+#include "ui/widget/Panel.h"  // for Panel
 
 namespace cszb_scoreboard {
 class PreviewPanel;
@@ -42,6 +44,7 @@ class ImageSearch : public ScreenImageController {
  private:
   std::unique_ptr<Panel> drop_target;
   std::unique_ptr<Label> drop_text;
+  std::unique_ptr<Browser> browser;
 
   void bindEvents();
   void createControls(Panel *control_panel) override;

@@ -20,7 +20,8 @@ limitations under the License.
 
 #include <functional>  // for function
 
-#include "ScoreboardCommon.h"     // for DEFAULT_BORDER_SIZE
+#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
+#include "config/Position.h"
 #include "config/swx/defs.h"      // for wxID_ANY, wxALL, wxGROW
 #include "config/swx/event.h"     // for wxEventTypeTag, wxCloseEvent (ptr o...
 #include "ui/widget/swx/Sizer.h"  // for Sizer
@@ -33,6 +34,12 @@ const int NO_BORDER = 0;
 
 class Widget {
  public:
+  void addWidget(Widget &widget, int row, int column, const Size &widget_size,
+                 int border_size = DEFAULT_BORDER_SIZE,
+                 int flag = wxALL | wxGROW) {
+    widget.setMinSize(widget_size);
+    addWidget(widget, row, column, border_size, flag);
+  }
   void addWidget(const Widget &widget, int row, int column,
                  int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
@@ -73,6 +80,7 @@ class Widget {
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
   void runSizer() { wx()->SetSizerAndFit(sizer()); }
+  void setMinSize(Size size) { wx()->SetMinSize(size.toWx()); }
   // Reparents this widget to another widget for layout purposes
   void setParent(Widget *parent) const { wx()->Reparent(parent->wx()); }
 

@@ -42,6 +42,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const std::string DROP_MESSAGE = "<Drop Image Here To Load>";
 const Size DROP_TARGET_SIZE{.width = 120, .height = 480};
+const Size BROWSER_SIZE{.width = 640, .height = 480};
 const int DROP_TARGET_BORDER = 50;
 
 auto ImageSearch::Create(PreviewPanel *preview_panel, swx::Panel *wx)
@@ -57,6 +58,7 @@ void ImageSearch::createControls(Panel *control_panel) {
   drop_target = control_panel->panel();
   drop_target->setSize(DROP_TARGET_SIZE);
   drop_text = drop_target->label(DROP_MESSAGE);
+  browser = control_panel->browser("https://images.google.com");
 
   all_screen_image_name = "";
   away_screen_image_name = "";
@@ -68,10 +70,12 @@ void ImageSearch::createControls(Panel *control_panel) {
 }
 
 void ImageSearch::positionWidgets(Panel *control_panel) {
-  drop_target->addWidget(*drop_text, 0, 0, DROP_TARGET_BORDER, wxTOP | wxBOTTOM);
+  drop_target->addWidget(*drop_text, 0, 0, DROP_TARGET_BORDER,
+                         wxTOP | wxBOTTOM);
   control_panel->addWidget(*drop_target, 0, 0, NO_BORDER);
   control_panel->addWidget(*current_image_label, 1, 0);
   control_panel->addWidget(*screen_selection, 0, 1, NO_BORDER);
+  control_panel->addWidget(*browser, 0, 2, BROWSER_SIZE, NO_BORDER);
 
   drop_target->runSizer();
   control_panel->runSizer();
