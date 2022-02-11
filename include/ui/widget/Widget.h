@@ -34,8 +34,8 @@ const int NO_BORDER = 0;
 
 class Widget {
  public:
-  void addWidget(Widget &widget, int row, int column, const Size &widget_size,
-                 int border_size = DEFAULT_BORDER_SIZE,
+  void addWidget(const Widget &widget, int row, int column,
+                 const Size &widget_size, int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
     widget.setMinSize(widget_size);
     addWidget(widget, row, column, border_size, flag);
@@ -80,7 +80,7 @@ class Widget {
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
   void runSizer() { wx()->SetSizerAndFit(sizer()); }
-  void setMinSize(Size size) { wx()->SetMinSize(size.toWx()); }
+  void setMinSize(Size size) const { wx()->SetMinSize(size.toWx()); }
   // Reparents this widget to another widget for layout purposes
   void setParent(Widget *parent) const { wx()->Reparent(parent->wx()); }
 
