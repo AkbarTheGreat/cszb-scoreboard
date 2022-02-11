@@ -32,6 +32,9 @@ setenv MACOSX_DEPLOYMENT_TARGET 10.7
 osxcross-macports install gtest curl expat 
 osxcross-macports install zlib gtest libiconv ncurses gettext libunistring libidn2 libffi bzip2 libedit pcre glib2 libpsl openssl curl-ca-bundle curl expat jsoncpp-devel
 
+Addendum:  Get webkit for webview in wxWidgets:
+osxcross-macports install webkit-gtk
+
 These two appear to only have dylibs.  So we may need to build them ourselves.
 
 osxcross-macports install protobuf3-cpp
