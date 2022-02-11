@@ -82,12 +82,13 @@ make -j2 all'''
           }
         }
 
-        stage('MacOS Build') {
-          steps {
-            sh '''cd out/build/osxcross
-make scoreboard_proto cszb-scoreboard'''
-          }
-        }
+// Disabling while I figure out OSXcross builds with WebKit.  This shouldn't be merged before I Fix this.
+//        stage('MacOS Build') {
+//          steps {
+//            sh '''cd out/build/osxcross
+//make scoreboard_proto cszb-scoreboard'''
+//          }
+//        }
 
       }
     }
