@@ -178,6 +178,7 @@ void ScreenTextSide::renderScaledBackground(RenderContext *renderer) {
   Image scaled_image = scaleImage(image, size());
   int x = (size().width - scaled_image.size().width) / 2;
   int y = (size().height - scaled_image.size().height) / 2;
+  renderer->drawImage(blackout_image, 0, 0);
   renderer->drawImage(scaled_image, x, y);
 }
 

@@ -63,7 +63,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
 }
 
 void ScreenPresenter::positionWidgets() {
-  addWidget(*screen_text, 0, 0);
+  addWidget(*screen_text, 0, 0, NO_BORDER);
   runSizer();
 }
 }  // namespace cszb_scoreboard
