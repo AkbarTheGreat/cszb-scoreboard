@@ -61,7 +61,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/lib/wxmsw31ud_core.lib
 			${wxWidgets_LIB_DIR}/lib/wxbase31ud.lib
 			${wxWidgets_LIB_DIR}/lib/wxregexud.lib
-			${wxWidgets_LIB_DIR}/lib/jpegd.lib
+			${wxWidgets_LIB_DIR}/lib/jpeg.lib
 			${wxWidgets_LIB_DIR}/lib/libpng16d.lib
 			${wxWidgets_LIB_DIR}/lib/lzmad.lib
 			${wxWidgets_LIB_DIR}/lib/tiffd.lib
