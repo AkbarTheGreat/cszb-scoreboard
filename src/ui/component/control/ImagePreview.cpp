@@ -63,6 +63,7 @@ void ImagePreview::paintEvent(RenderContext *renderer) {
   int x = (size().width - image_width) / 2;
   int y = (size().height - image_height) / 2;
 
+  renderer->drawImage(BackgroundImage(size(), Color("Black")), 0, 0);
   renderer->drawImage(scaled_image, x, y);
 }
 
