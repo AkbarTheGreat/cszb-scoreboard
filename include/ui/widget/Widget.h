@@ -37,13 +37,21 @@ class Widget {
   void addWidget(const Widget &widget, int row, int column,
                  const Size &widget_size, int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
-    widget.setMinSize(widget_size);
-    addWidget(widget, row, column, border_size, flag);
+    addWidgetWithSpan(widget, row, column, 1, 1, widget_size, border_size,
+                      flag);
   }
   void addWidget(const Widget &widget, int row, int column,
                  int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
     addWidgetWithSpan(widget, row, column, 1, 1, border_size, flag);
+  }
+  void addWidgetWithSpan(const Widget &widget, int row, int column,
+                         int row_span, int column_span, const Size &widget_size,
+                         int border_size = DEFAULT_BORDER_SIZE,
+                         int flag = wxALL | wxGROW) {
+    widget.setMinSize(widget_size);
+    addWidgetWithSpan(widget, row, column, row_span, column_span, border_size,
+                      flag);
   }
   void addWidgetWithSpan(const Widget &widget, int row, int column,
                          int row_span, int column_span,
