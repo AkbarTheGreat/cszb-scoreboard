@@ -44,7 +44,7 @@ class ScreenPreview;
 
 namespace cszb_scoreboard::test {
 
-const int TEXT_ENTRY_TAB_INDEX = 4;
+const int TEXT_ENTRY_TAB_INDEX = 5;
 
 const std::array<const char *, 2> TEST_ARGV = {
     {{"scoreboard_testing.exe"}, {"-n"}}};
