@@ -24,6 +24,7 @@ limitations under the License.
 #include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
 #include "ui/widget/Browser.h"
 #include "ui/widget/Button.h"  // for Button
+#include "ui/widget/DragAndDropHandler.h"
 #include "ui/widget/Label.h"
 #include "ui/widget/Panel.h"  // for Panel
 
@@ -46,10 +47,12 @@ class ImageSearch : public ScreenImageController {
   std::unique_ptr<Label> drop_text;
   std::unique_ptr<Browser> browser;
   std::unique_ptr<Button> reset_button;
+  std::unique_ptr<DragAndDropHandler> drag_handler;
 
   void bindEvents();
   void createControls(Panel *control_panel) override;
   void positionWidgets(Panel *control_panel) override;
+  void onURLDrop(const std::string &text);
 };
 
 }  // namespace cszb_scoreboard

@@ -92,6 +92,16 @@ void ImageSearch::positionWidgets(Panel *control_panel) {
   control_panel->runSizer();
 }
 
-void ImageSearch::bindEvents() {}
+void ImageSearch::bindEvents() {
+  drag_handler = std::make_unique<DragAndDropHandler>(
+      drop_target.get(),
+      [this](int32_t x, int32_t y, const std::string &url) -> void {
+        this->onURLDrop(url);
+      });
+}
+
+void ImageSearch::onURLDrop(const std::string &url) {
+  wxLogDebug("onURLDrop: %s", url);
+}
 
 }  // namespace cszb_scoreboard
