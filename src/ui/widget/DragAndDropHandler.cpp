@@ -44,7 +44,7 @@ auto HeldTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
   return def;
 }
 
-bool HeldTarget::OnDrop(wxCoord x, wxCoord y) { return true; }
+auto HeldTarget::OnDrop(wxCoord x, wxCoord y) -> bool { return true; }
 
 DragAndDropHandler ::DragAndDropHandler(
     Widget *owner,

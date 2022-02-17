@@ -95,8 +95,8 @@ void ImageSearch::positionWidgets(Panel *control_panel) {
 void ImageSearch::bindEvents() {
   drag_handler = std::make_unique<DragAndDropHandler>(
       drop_target.get(),
-      [this](int32_t x, int32_t y, const std::string &url) -> void {
-        this->onURLDrop(url);
+      [](int32_t x, int32_t y, const std::string &url) -> void {
+        onURLDrop(url);
       });
 }
 

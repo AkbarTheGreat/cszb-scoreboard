@@ -25,7 +25,7 @@ namespace cszb_scoreboard::swx {
 
 class DropTarget : public wxDropTarget {
  public:
-  DropTarget(wxDataObject *data = NULL) : wxDropTarget(data) {}
+  explicit DropTarget(wxDataObject *data = nullptr) : wxDropTarget(data) {}
 };
 
 }  // namespace cszb_scoreboard::swx
