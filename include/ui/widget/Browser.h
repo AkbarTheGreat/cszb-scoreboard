@@ -26,6 +26,7 @@ namespace cszb_scoreboard {
 class Browser : public Widget {
  public:
   explicit Browser(swx::WebView *web_view) { _wx = web_view; }
+  void setURL(const std::string &url) { _wx->LoadURL(url); }
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow * override { return _wx->wx(); }

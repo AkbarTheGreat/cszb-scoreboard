@@ -33,6 +33,11 @@ class HttpReader {
  public:
   virtual ~HttpReader() = default;
   virtual auto read(const char *url) -> HttpResponse;
+  // Reads binary data, following redirects if there are any.  Binary data is
+  // populated into the bin_data char vector and should be packed into a
+  // suitable object using the vector's data member.
+  auto readBinary(const char *url, std::vector<char> *bin_data,
+                  int redirect_depth = 0) -> bool;
 };
 
 }  // namespace cszb_scoreboard

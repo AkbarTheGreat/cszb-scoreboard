@@ -75,8 +75,8 @@ class AutoUpdate {
   std::unique_ptr<HttpReader> httpReader;
   Singleton *singleton;
   auto backupPath() -> FilesystemPath;
-  auto downloadUpdate(const std::string &url, std::vector<char> *update_data,
-                      int redirect_depth = 0) -> bool;
+  auto downloadUpdate(const std::string &url, std::vector<char> *update_data)
+      -> bool;
 };
 
 }  // namespace cszb_scoreboard

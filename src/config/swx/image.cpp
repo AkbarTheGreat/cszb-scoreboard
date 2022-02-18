@@ -20,6 +20,7 @@ limitations under the License.
 #include "config/swx/image.h"
 
 #include <wx/gdicmn.h>  // for wxPoint, wxRect
+#include <wx/mstream.h>
 
 #include "ui/graphics/Color.h"  // for Color
 
@@ -32,6 +33,12 @@ auto Image::size() -> ::cszb_scoreboard::Size {
 void Image::setColor(const Color &color) {
   wxRect dimensions(wxPoint(0, 0), GetSize());
   SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
+}
+
+auto Image::FromData(const std::vector<char> &bin_data) -> Image {
+  wxMemoryInputStream inputStream(bin_data.data(), bin_data.size());
+  wxImage img(inputStream, wxBITMAP_TYPE_ANY, -1);
+  return Image(img);
 }
 
 }  // namespace cszb_scoreboard

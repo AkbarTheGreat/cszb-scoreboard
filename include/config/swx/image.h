@@ -22,6 +22,8 @@ limitations under the License.
 #include <wx/image.h>   // for wxImage
 #include <wx/string.h>  // for wxString
 
+#include <vector>
+
 #include "config/Position.h"      // for Size
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "wx/bitmap.h"            // for wxBitmap
@@ -40,6 +42,9 @@ class Image : public wxImage {
       : wxImage(sz.toWx(), clear) {}
   explicit Image(const wxBitmap &bmp) : wxImage(bmp.ConvertToImage()) {}
   explicit Image(const FilesystemPath &file) : wxImage(file.string()) {}
+
+  // Generate an Image from data in memory
+  static auto FromData(const std::vector<char> &bin_data) -> Image;
 
   // Custom methods
   auto size() -> ::cszb_scoreboard::Size;

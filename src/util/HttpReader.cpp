@@ -21,8 +21,15 @@ limitations under the License.
 #include <curl/curl.h>
 
 #include <cstring>
+#include <regex>  // for match_results<>::_Base_type, regex_...
+
+#include "util/Log.h"  // for LogDebug
 
 namespace cszb_scoreboard {
+
+constexpr int MAX_REDIRECT_ATTEMPTS = 5;
+constexpr int MIN_HTTP_RESPONSE_SIZE = 50;
+constexpr int MAX_HTTP_RESPONSE_SIZE = 1000;
 
 auto curlCallback(void *new_content, size_t byte_size, size_t size,
                   void *page_content) -> size_t {
@@ -75,6 +82,69 @@ auto HttpReader::read(const char *url) -> HttpResponse {
   }
 
   return http_response;
+}
+
+auto getHref(const std::string &html) -> std::string {
+  const std::string href_prefix = "href=\"";
+  size_t href_start = html.find(href_prefix, 0) + href_prefix.length();
+  size_t href_end = html.find('"', href_start);
+
+  if (href_start == -1 || href_end == -1) {
+    return "";
+  }
+
+  std::string raw_href = html.substr(href_start, href_end - href_start);
+  std::regex regex("&amp;");
+  return std::regex_replace(raw_href, regex, "&");
+}
+
+// Returns "" if it's not a redirect
+auto isRedirect(const std::vector<char> &http_data) -> std::string {
+  if (http_data.size() > MAX_HTTP_RESPONSE_SIZE ||
+      http_data.size() < MIN_HTTP_RESPONSE_SIZE) {
+    return "";
+  }
+  // Check to see if it looks like an html page.
+  if (http_data[0] != '<' || http_data[1] != 'h' || http_data[2] != 't' ||
+      http_data[3] != 'm' || http_data[4] != 'l' ||
+      http_data[5] != '>') {  // NOLINT(readability-magic-numbers) 5 is not
+                              // really magic here.
+    return "";
+  }
+  return getHref(http_data.data());
+}
+
+auto HttpReader::readBinary(const char *url, std::vector<char> *bin_data,
+                            int redirect_depth) -> bool {
+  if (redirect_depth > MAX_REDIRECT_ATTEMPTS) {
+    LogDebug("Too many redirects.  Cancelling update.");
+    return false;
+  }
+
+  HttpResponse http_response = read(url);
+  if (!http_response.error.empty()) {
+    // Log an error, but otherwise ignore it, for user convenience.
+    LogDebug("Curl failure checking for update: %s",
+             http_response.error.c_str());
+    return false;
+  }
+
+  std::string redirect = isRedirect(http_response.response);
+
+  if (!redirect.empty()) {
+    bin_data->resize(0);
+    return readBinary(redirect.c_str(), bin_data, ++redirect_depth);
+  }
+
+  *bin_data = http_response.response;
+
+  // Since we're assuming that this is binary, we've added a null at the end we
+  // now need to shed.
+  if (bin_data->size() > 1) {
+    bin_data->resize(bin_data->size() - 1);
+  }
+
+  return true;
 }
 
 }  // namespace cszb_scoreboard

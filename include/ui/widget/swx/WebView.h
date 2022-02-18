@@ -40,6 +40,8 @@ class WebView {
 
   auto wx() -> wxWebView * { return _wx; }
 
+  void LoadURL(const std::string &url) { _wx->LoadURL(url); }
+
  private:
   wxWebView *_wx;
 };

@@ -52,7 +52,8 @@ class ImageSearch : public ScreenImageController {
   void bindEvents();
   void createControls(Panel *control_panel) override;
   void positionWidgets(Panel *control_panel) override;
-  static void onURLDrop(const std::string &url);
+  void onURLDrop(const std::string &url);
+  void resetURL();
 };
 
 }  // namespace cszb_scoreboard

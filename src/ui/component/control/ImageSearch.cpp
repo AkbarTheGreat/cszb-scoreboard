@@ -33,6 +33,7 @@ limitations under the License.
 #include "ui/widget/Widget.h"                   // for NO_BORDER
 #include "util/Clipboard.h"                     // for Clipboard
 #include "util/FilesystemPath.h"                // for FilesystemPath
+#include "util/HttpReader.h"
 
 namespace cszb_scoreboard {
 
@@ -41,9 +42,10 @@ class PreviewPanel;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const std::string DROP_MESSAGE = "<Drop Image Here To Load>";
-const Size DROP_TARGET_SIZE{.width = 120, .height = 360};
-const Size BROWSER_SIZE{.width = 720, .height = 360};
-const int DROP_TARGET_BORDER = 50;
+const std::string URL = "https://images.google.com";
+constexpr Size DROP_TARGET_SIZE{.width = 120, .height = 360};
+constexpr Size BROWSER_SIZE{.width = 720, .height = 360};
+constexpr int DROP_TARGET_BORDER = 50;
 
 auto ImageSearch::Create(PreviewPanel *preview_panel, swx::Panel *wx)
     -> std::unique_ptr<ImageSearch> {
@@ -58,7 +60,7 @@ void ImageSearch::createControls(Panel *control_panel) {
   drop_target = control_panel->panel();
   drop_target->setBorder();
   drop_text = drop_target->label(DROP_MESSAGE);
-  browser = control_panel->browser("https://images.google.com");
+  browser = control_panel->browser(URL);
   reset_button_panel = control_panel->panel();
   reset_button = reset_button_panel->button("Reset\nBrowser", true);
 
@@ -95,13 +97,30 @@ void ImageSearch::positionWidgets(Panel *control_panel) {
 void ImageSearch::bindEvents() {
   drag_handler = std::make_unique<DragAndDropHandler>(
       drop_target.get(),
-      [](int32_t x, int32_t y, const std::string &url) -> void {
-        onURLDrop(url);
+      [this](int32_t x, int32_t y, const std::string &url) -> void {
+        this->onURLDrop(url);
       });
+  reset_button->bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                     [this](wxCommandEvent &e) -> void { this->resetURL(); });
 }
 
 void ImageSearch::onURLDrop(const std::string &url) {
-  wxLogDebug("onURLDrop: %s", url);
+  HttpReader reader;
+  std::vector<char> image_data;
+  reader.readBinary(url.c_str(), &image_data);
+  Image urlImage = Image::FromData(image_data);
+  if (screen_selection->allSelected()) {
+    all_screen_image = urlImage;
+  } else if (screen_selection->awaySelected()) {
+    away_screen_image = urlImage;
+  } else {
+    home_screen_image = urlImage;
+  }
+
+  control_panel->update();
+  updatePreview();
 }
+
+void ImageSearch::resetURL() { browser->setURL(URL); }
 
 }  // namespace cszb_scoreboard

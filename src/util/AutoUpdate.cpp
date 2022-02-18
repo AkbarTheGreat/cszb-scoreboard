@@ -24,7 +24,6 @@ limitations under the License.
 
 #include <cstddef>  // for size_t
 #include <fstream>  // IWYU pragma: keep for fstream
-#include <regex>    // for match_results<>::_Base_type, regex_...
 #include <sstream>  // for basic_stringbuf<>::int_type, operator|
 
 #include "config/CommandArgs.h"   // for CommandArgs
@@ -54,44 +53,10 @@ const char *LATEST_VERSION_URL =
     "https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases/"
     "latest";
 
-const int MIN_HTTP_RESPONSE_SIZE = 50;
-const int MAX_HTTP_RESPONSE_SIZE = 1000;
-const int MAX_REDIRECT_ATTEMPTS = 5;
-
 AutoUpdate::AutoUpdate(SingletonClass c, Singleton *singleton,
                        std::unique_ptr<HttpReader> reader) {
   this->singleton = singleton;
   httpReader = std::move(reader);
-}
-
-auto getHref(const std::string &html) -> std::string {
-  const std::string href_prefix = "href=\"";
-  size_t href_start = html.find(href_prefix, 0) + href_prefix.length();
-  size_t href_end = html.find('"', href_start);
-
-  if (href_start == -1 || href_end == -1) {
-    return "";
-  }
-
-  std::string raw_href = html.substr(href_start, href_end - href_start);
-  std::regex regex("&amp;");
-  return std::regex_replace(raw_href, regex, "&");
-}
-
-// Returns "" if it's not a redirect
-auto isRedirect(const std::vector<char> &http_data) -> std::string {
-  if (http_data.size() > MAX_HTTP_RESPONSE_SIZE ||
-      http_data.size() < MIN_HTTP_RESPONSE_SIZE) {
-    return "";
-  }
-  // Check to see if it looks like an html page.
-  if (http_data[0] != '<' || http_data[1] != 'h' || http_data[2] != 't' ||
-      http_data[3] != 'm' || http_data[4] != 'l' ||
-      http_data[5] != '>') {  // NOLINT(readability-magic-numbers) 5 is not
-                              // really magic here.
-    return "";
-  }
-  return getHref(http_data.data());
 }
 
 auto AutoUpdate::backupPath() -> FilesystemPath {
@@ -143,41 +108,16 @@ auto AutoUpdate::checkForUpdate(const std::string &current_version,
 }
 
 auto AutoUpdate::downloadUpdate(const std::string &url,
-                                std::vector<char> *update_data,
-                                int redirect_depth) -> bool {
-  if (redirect_depth > MAX_REDIRECT_ATTEMPTS) {
-    LogDebug("Too many redirects.  Cancelling update.");
+                                std::vector<char> *update_data) -> bool {
+  if (!httpReader->readBinary(url.c_str(), update_data)) {
     return false;
   }
 
-  HttpResponse http_response = httpReader->read(url.c_str());
-  if (!http_response.error.empty()) {
-    // Log an error, but otherwise ignore it, for user convenience.
-    LogDebug("Curl failure checking for update: %s",
-             http_response.error.c_str());
-    return false;
-  }
-
-  std::string redirect = isRedirect(http_response.response);
-
-  if (!redirect.empty()) {
-    update_data->resize(0);
-    return downloadUpdate(redirect, update_data, ++redirect_depth);
-  }
-
-  if (http_response.response.size() - 1 != update_size) {
+  if (update_data->size() != update_size) {
     LogDebug("Problem with update!  Expected %d bytes, but got %d.",
-             update_size, static_cast<int>(http_response.response.size() - 1));
-    LogDebug("Data: %s.", http_response.response.data());
+             update_size, static_cast<int>(update_data->size()));
+    LogDebug("Data: %s.", update_data->data());
     return false;
-  }
-
-  *update_data = http_response.response;
-
-  // Presuming that this is binary, we've added a null at the end we now need to
-  // shed.
-  if (update_data->size() > 1) {
-    update_data->resize(update_data->size() - 1);
   }
 
   return true;
