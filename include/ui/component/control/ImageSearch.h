@@ -43,7 +43,7 @@ class ImageSearch : public ScreenImageController {
       -> std::unique_ptr<ImageSearch>;
 
  private:
-  std::unique_ptr<Panel> drop_target, reset_button_panel;
+  std::unique_ptr<Panel> inner_panel, drop_target, reset_button_panel;
   std::unique_ptr<Label> drop_text;
   std::unique_ptr<Browser> browser;
   std::unique_ptr<Button> reset_button;

@@ -57,11 +57,14 @@ auto ImageSearch::Create(PreviewPanel *preview_panel, swx::Panel *wx)
 
 void ImageSearch::createControls(Panel *control_panel) {
   ScreenImageController::createControls(control_panel);
-  drop_target = control_panel->panel();
+  inner_panel = control_panel->panel();
+  screen_selection->setParent(inner_panel.get());
+
+  drop_target = inner_panel->panel();
   drop_target->setBorder();
   drop_text = drop_target->label(DROP_MESSAGE);
-  browser = control_panel->browser(URL);
-  reset_button_panel = control_panel->panel();
+  browser = inner_panel->browser(URL);
+  reset_button_panel = inner_panel->panel();
   reset_button = reset_button_panel->button("Reset\nBrowser", true);
 
   all_screen_image_name = "";
@@ -74,24 +77,24 @@ void ImageSearch::createControls(Panel *control_panel) {
 }
 
 void ImageSearch::positionWidgets(Panel *control_panel) {
+  control_panel->addWidget(*inner_panel, 0, 0);
   drop_target->addWidget(*drop_text, 0, 0, DROP_TARGET_SIZE.height / 2, wxTOP);
   reset_button_panel->addWidget(*reset_button, 0, 0, NO_BORDER);
 
-  control_panel->addWidgetWithSpan(*drop_target, 0, 0, 2, 1, DROP_TARGET_SIZE,
-                                   NO_BORDER);
+  inner_panel->addWidgetWithSpan(*drop_target, 0, 0, 2, 1, DROP_TARGET_SIZE,
+                                 NO_BORDER);
 
-  control_panel->addWidget(*screen_selection, 0, 1, NO_BORDER);
-  control_panel->addWidget(*reset_button_panel, 1, 1, NO_BORDER);
+  inner_panel->addWidget(*screen_selection, 0, 1, NO_BORDER);
+  inner_panel->addWidget(*reset_button_panel, 1, 1, NO_BORDER);
 
-  control_panel->addWidgetWithSpan(*browser, 0, 2, 2, 1, BROWSER_SIZE,
-                                   NO_BORDER);
+  inner_panel->addWidgetWithSpan(*browser, 0, 2, 2, 1, BROWSER_SIZE, NO_BORDER);
 
   // I have to put this empty label somewhere to be compliant, so I just shove
   // it at the bottom.
-  control_panel->addWidget(*current_image_label, 2, 0);
+  inner_panel->addWidget(*current_image_label, 2, 0);
 
   drop_target->runSizer();
-  control_panel->runSizer();
+  inner_panel->runSizer();
 }
 
 void ImageSearch::bindEvents() {
