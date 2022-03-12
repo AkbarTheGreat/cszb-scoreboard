@@ -43,12 +43,13 @@ our $APP_CONTAINER = 'CszbScoreboard.app/Contents';
 our $APP_BIN = $APP_CONTAINER . '/MacOS';
 our $APP_RESOURCES = $APP_CONTAINER .  '/Resources';
 
-my ($opt_help, $opt_version, $opt_dry_run);
+my ($opt_help, $opt_version, $opt_dry_run, $opt_test_build);
 
 my %options = (
-    'help|?'    => {'val'=>\$opt_help,'help'=>'This help'},
-    'version=s' => {'val'=>\$opt_version,'help'=>'Version to release (required)'},
-    'dry_run'   => {'val'=>\$opt_dry_run,'help'=>'Dry run only. (do not upload to git)'},
+    'help|?'     => {'val'=>\$opt_help,'help'=>'This help'},
+    'version=s'  => {'val'=>\$opt_version,'help'=>'Version to release (required)'},
+    'dry_run'    => {'val'=>\$opt_dry_run,'help'=>'Dry run only. (do not upload to git)'},
+    'test_build' => {'val'=>\$opt_test_build,'help'=>'Build a debug version for testing. (implies dry_run)'},
 );
 
 sub usage {
@@ -67,6 +68,7 @@ sub parse_options {
     GetOptions(%parseable_options) or usage();
     usage() if $opt_help;
     usage unless $opt_version;
+    $opt_dry_run = 1 if $opt_test_build;
 }
 
 
@@ -83,11 +85,12 @@ sub build_release {
   setup_env();
   mkpath $BUILD_PATH;
   chdir $BUILD_PATH;
+  my $release_type = $opt_test_build?'Debug':'Release';
   system 'cmake'
     . ' -DCMAKE_OSX_DEPLOYMENT_TARGET=' . $OSX_VERSION
     . ' -DCMAKE_TOOLCHAIN_FILE=' . $ENV{'OSXCROSS_TARGET_DIR'}
                                  . '/toolchain.cmake'
-    . ' -DCMAKE_BUILD_TYPE=Release'
+    . ' -DCMAKE_BUILD_TYPE=' . $release_type
     . ' ' . $BASE_DIR;
   system 'make cszb-scoreboard';
 }
