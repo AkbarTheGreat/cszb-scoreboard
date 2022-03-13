@@ -39,6 +39,7 @@ class Display {
  public:
   explicit Display(uint32_t index);
 
+  auto debugString() -> std::string;
   void geometry(proto::Rectangle* rectangle);
   auto isPrimary() -> bool { return _wx->IsPrimary(); }
 

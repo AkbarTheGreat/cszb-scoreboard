@@ -36,4 +36,12 @@ void Display::geometry(proto::Rectangle* rectangle) {
   ProtoUtil::protoRct(_wx->GetGeometry(), rectangle);
 }
 
+auto Display::debugString() -> std::string {
+  wxRect geo = _wx->GetGeometry();
+  std::array<char, 256> format_str;
+  snprintf(format_str.data(), format_str.size(), "%dx%d", geo.GetWidth(),
+           geo.GetHeight());
+  return std::string(format_str.data());
+}
+
 }  // namespace cszb_scoreboard
