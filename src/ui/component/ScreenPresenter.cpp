@@ -39,6 +39,7 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
     // Set external monitors to be always on top, fullscreen.
     alwaysOnTop(true);
     fullScreen(true);
+    show(true);
   }
 
 #ifdef SCOREBOARD_TESTING
