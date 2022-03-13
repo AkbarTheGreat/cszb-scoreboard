@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "ui/widget/Display.h"
 
+#include <array>
 #include "util/ProtoUtil.h"  // for ProtoUtil
 
 namespace cszb_scoreboard {
