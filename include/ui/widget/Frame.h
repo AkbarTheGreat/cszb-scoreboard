@@ -85,7 +85,7 @@ class Frame : public Widget {
 
  protected:
   void alwaysOnTop(bool isOnTop);
-  void fullScreen(bool show) { _wx->ShowFullScreen(show); }
+  void fullScreen(bool show) { _wx->EnableFullScreenView(true); _wx->ShowFullScreen(show); }
   void minimize() { _wx->Iconize(); }
   void menuBar(const std::vector<MenuCategory> &menu);
   void setDimensions(const Position &position, const Size &size);
