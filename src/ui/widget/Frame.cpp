@@ -37,6 +37,11 @@ void Frame::alwaysOnTop(bool isOnTop) {
   }
 }
 
+void Frame::fullScreen(bool show) {
+  _wx->EnableFullScreenView(true);
+  _wx->ShowFullScreen(show);
+}
+
 void Frame::menuBar(const std::vector<MenuCategory> &menu) {
   auto *menu_bar = new wxMenuBar();
   for (const auto &category : menu) {

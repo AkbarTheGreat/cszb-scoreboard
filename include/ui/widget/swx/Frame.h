@@ -33,7 +33,7 @@ class Frame {
     return CreateStatusBar(number, style, id, wxStatusBarNameStr);
   }
   virtual auto Destroy() -> bool = 0;
-  virtual auto EnableFullScreenView(bool enable=true) -> bool = 0;
+  virtual auto EnableFullScreenView(bool enable) -> bool = 0;
   [[nodiscard]] virtual auto GetPosition() const -> wxPoint = 0;
   [[nodiscard]] virtual auto GetWindowStyle() const -> int64_t = 0;
   virtual void Iconize(bool iconize) = 0;
@@ -70,7 +70,9 @@ class FrameImpl : public Frame, public wxFrame {
     return wxFrame::CreateStatusBar(number, style, id, name);
   }
   auto Destroy() -> bool override { return wxFrame::Destroy(); }
-  auto EnableFullScreenView(bool enable) -> bool override { return wxFrame::EnableFullScreenView(enable); }
+  auto EnableFullScreenView(bool enable) -> bool override {
+    return wxFrame::EnableFullScreenView(enable);
+  }
   [[nodiscard]] auto GetPosition() const -> wxPoint override {
     return wxFrame::GetPosition();
   }

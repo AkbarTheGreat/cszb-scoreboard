@@ -32,6 +32,7 @@ class MockFrame : public cszb_scoreboard::swx::Frame {
               (int number, int64_t style, wxWindowID id, const wxString &name),
               (override));
   MOCK_METHOD(bool, Destroy, (), (override));
+  MOCK_METHOD(bool, EnableFullScreenView, (bool), (override));
   MOCK_METHOD(wxPoint, GetPosition, (), (const, override));
   MOCK_METHOD(int64_t, GetWindowStyle, (), (const, override));
   MOCK_METHOD(void, Iconize, (bool iconize), (override));

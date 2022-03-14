@@ -22,9 +22,13 @@ limitations under the License.
 #include "ui/widget/Display.h"
 
 #include <array>
+
 #include "util/ProtoUtil.h"  // for ProtoUtil
 
 namespace cszb_scoreboard {
+
+constexpr int DEBUG_STRING_BUFFER_SIZE = 256;
+
 namespace proto {
 class Rectangle;
 }  // namespace proto
@@ -39,7 +43,7 @@ void Display::geometry(proto::Rectangle* rectangle) {
 
 auto Display::debugString() -> std::string {
   wxRect geo = _wx->GetGeometry();
-  std::array<char, 256> format_str;
+  std::array<char, DEBUG_STRING_BUFFER_SIZE> format_str;
   snprintf(format_str.data(), format_str.size(), "%dx%d", geo.GetWidth(),
            geo.GetHeight());
   return std::string(format_str.data());
