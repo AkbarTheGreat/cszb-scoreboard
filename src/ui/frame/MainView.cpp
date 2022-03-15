@@ -64,7 +64,7 @@ MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
 void MainView::createMenu() {
   std::vector<MenuItem> general;
   general.emplace_back(MenuItem{.id = GENERAL_SETTINGS,
-                                .name = "&Settings",
+                                .name = "&Settings\tCtrl-,",
                                 .description = "Configure the scoreboard"});
   general.emplace_back(MenuItem{.id = wxID_SEPARATOR});
   general.emplace_back(MenuItem{.id = wxID_EXIT});

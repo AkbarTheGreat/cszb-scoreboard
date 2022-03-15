@@ -89,6 +89,7 @@ void DisplayConfig::detectExternalMonitors() {
     proto::DisplayInfo *display_info = display_config.add_displays();
     display_info->set_id(i);
     Display display = singleton->frameManager()->monitor(i);
+    LogDebug("Display %d detected: %s", i, display.debugString().c_str());
     display.geometry(display_info->mutable_dimensions());
     if (isPrimaryDisplay(display_info)) {
       display_info->mutable_side()->set_control(true);

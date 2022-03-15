@@ -53,6 +53,9 @@ auto ProtoUtil::wxClr(const proto::Color &input) -> Color {
 auto ProtoUtil::wxScaledFont(const proto::Font &input, const wxSize &scale_size)
     -> wxFont {
   int scaled_size = scale_size.GetHeight() * input.size() / SCALE_FACTOR;
+  if (scaled_size == 0) {
+    scaled_size = 1;
+  }
 
   wxFontInfo font_info(scaled_size);
 
