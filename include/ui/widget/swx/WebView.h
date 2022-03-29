@@ -59,9 +59,11 @@ class WebView {
     //_wx->Create(parent, id, url, pos, size);
 
     // Log backend information
+    /* Broken on Linux -- disabling temporarily 
     LogDebug("Backend: %s Version: %s", _wx->GetClassInfo()->GetClassName(),
              wxWebView::GetBackendVersionInfo().ToString());
     LogDebug("User Agent: %s", _wx->GetUserAgent());
+    */
   }
 
   auto wx() -> wxWebView * { return _wx; }
