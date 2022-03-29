@@ -22,7 +22,7 @@ limitations under the License.
 #pragma once
 
 #include <wx/filesys.h>
-#include <wx/msw/webview_edge.h>
+//#include <wx/msw/webview_edge.h>
 #include <wx/stdpaths.h>
 #include <wx/webview.h>
 #include <wx/wx.h>
@@ -43,6 +43,7 @@ class WebView {
     // Check if a fixed version of edge is present in
     // $executable_path/edge_fixed and use it.
     // TODO(akbar): I believe this is required for Windows usage of WebKit2, but verify it at some point.
+    /*
     wxFileName edgeFixedDir(wxStandardPaths::Get().GetExecutablePath());
     edgeFixedDir.SetFullName("");
     edgeFixedDir.AppendDir("edge_fixed");
@@ -50,7 +51,7 @@ class WebView {
       wxWebViewEdge::MSWSetBrowserExecutableDir(edgeFixedDir.GetFullPath());
       wxLogMessage("Using fixed edge version");
     }
-#
+    */
     //_wx = wxWebView::New(parent, id, url, pos, size, backend, style, name);
 
     _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge, style, name);
