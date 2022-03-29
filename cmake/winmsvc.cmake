@@ -3,6 +3,8 @@
 
 # Modifications made later by Tracy Beck for cszb-scoreboard, under the Apache license.
 
+# Set WXWIDGETS_INSTALL_DIR to wherever WxWidgets is installed on your local machine for non-vcpkg builds.
+
 if(NOT LINKING_TYPE)
     message(FATAL_ERROR "Please specify -DLINKING_TYPE=static or -DLINKING_TYPE=dynamic")
     return()
@@ -50,95 +52,81 @@ else()
     add_definitions(-D_UNICODE -DUNICODE -DWXUSINGDLL -DwxUSE_GUI=1 -D__WXMSW__)
 endif()
 
-set(WXWIDGETS_INSTALL_DIR  "C:/Users/akbar/source/repos/wxWidgets/out/install/x64-Debug")
-
 if (WXWIDGETS_INSTALL_DIR)
-	set(WXWIDGETS_BUILT_LIBS_DIR  "${WXWIDGETS_INSTALL_DIR}/lib/vc_x64_lib")
-	add_definitions(-D_DEBUG)
-	include_directories(SYSTEM INTERFACE ${WXWIDGETS_BUILT_LIBS_DIR}/mswud "${WXWIDGETS_INSTALL_DIR}/include" ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
-	set(wxWidgets_LIBRARIES 
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxbase31ud.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxbase31ud_net.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_aui.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_core.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_gl.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_html.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_media.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_propgrid.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_qa.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_ribbon.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_richtext.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_stc.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_webview.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxmsw31ud_xrc.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxregexud.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxjpegd.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxpngd.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxtiffd.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/wxzlibd.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/WebView2LoaderStatic.lib
-			${WXWIDGETS_BUILT_LIBS_DIR}/WebView2Guid.lib
-	)
-else()
-	if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
-		add_definitions(-D_DEBUG)
-		include_directories(SYSTEM INTERFACE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/mswud ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
-		set(wxWidgets_LIB_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug)
-		if(LINKING_TYPE MATCHES "static")
-			set(wxWidgets_LIBRARIES 
-				${wxWidgets_LIB_DIR}/lib/wxbase31ud_net.lib
-				${wxWidgets_LIB_DIR}/lib/wxmsw31ud_aui.lib
-				${wxWidgets_LIB_DIR}/lib/wxmsw31ud_core.lib
-				${wxWidgets_LIB_DIR}/lib/wxmsw31ud_webview.lib
-				${wxWidgets_LIB_DIR}/lib/wxbase31ud.lib
-				${wxWidgets_LIB_DIR}/lib/wxregexud.lib
-				${wxWidgets_LIB_DIR}/lib/jpeg.lib
-				${wxWidgets_LIB_DIR}/lib/libpng16d.lib
-				${wxWidgets_LIB_DIR}/lib/lzmad.lib
-				${wxWidgets_LIB_DIR}/lib/tiffd.lib
-				${wxWidgets_LIB_DIR}/lib/zlibd.lib
-			)
-		else()
-			set(wxWidgets_LIBRARIES
-				${wxWidgets_LIB_DIR}/bin/wxbase313ud_net_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/wxmsw313ud_aui_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/wxmsw313ud_core_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/lib/wxmsw313ud_webview_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/wxbase313ud_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/libpng16d.dll
-				${wxWidgets_LIB_DIR}/bin/zlibd1.dll
-			)
-		endif()
-	elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
-		include_directories(SYSTEM INTERFACE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/mswu ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
-		set(wxWidgets_LIB_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
-		if(LINKING_TYPE MATCHES "static")
-			set(wxWidgets_LIBRARIES 
-				${wxWidgets_LIB_DIR}/lib/wxbase31u_net.lib
-				${wxWidgets_LIB_DIR}/lib/wxmsw31u_aui.lib
-				${wxWidgets_LIB_DIR}/lib/wxmsw31u_core.lib
-				${wxWidgets_LIB_DIR}/lib/wxmsw31u_webview.lib
-				${wxWidgets_LIB_DIR}/lib/wxbase31u.lib
-				${wxWidgets_LIB_DIR}/lib/wxregexu.lib
-				${wxWidgets_LIB_DIR}/lib/jpeg.lib
-				${wxWidgets_LIB_DIR}/lib/libpng16.lib
-				${wxWidgets_LIB_DIR}/lib/lzma.lib
-				${wxWidgets_LIB_DIR}/lib/tiff.lib
-				${wxWidgets_LIB_DIR}/lib/zlib.lib
-			)
-		else()
-			set(wxWidgets_LIBRARIES
-				${wxWidgets_LIB_DIR}/bin/wxbase313u_net_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/wxmsw313u_aui_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/wxmsw313u_core_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/lib/wxmsw313u_webview_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/wxbase313u_vc_x64_custom.dll
-				${wxWidgets_LIB_DIR}/bin/libpng16.dll
-				${wxWidgets_LIB_DIR}/bin/zlib1.dll
-			)
-		endif()
-	endif()
+	set (wxWidgets_wxrc_EXECUTABLE "${WXWIDGETS_INSTALL_DIR}/bin/wxrc.exe")
 endif()
+
+set(VCPKG_BASE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
+
+if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+	add_definitions(-D_DEBUG)
+	if (WXWIDGETS_INSTALL_DIR)
+		set(wxWidgets_LIB_DIR  "${WXWIDGETS_INSTALL_DIR}/lib/vc_x64_lib")
+		include_directories(SYSTEM INTERFACE ${wxWidgets_LIB_DIR}/mswud ${WXWIDGETS_INSTALL_DIR}/include ${VCPKG_BASE}/include)
+		set(wxWidgets_LIBRARIES 
+			${wxWidgets_LIB_DIR}/wxjpegd.lib
+			${wxWidgets_LIB_DIR}/wxpngd.lib
+			${wxWidgets_LIB_DIR}/wxtiffd.lib
+			${wxWidgets_LIB_DIR}/wxzlibd.lib
+		)
+	else() # Using VCPKG
+		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/debug/lib)
+		include_directories(SYSTEM INTERFACE ${VCPKG_BASE}/debug/lib/mswud ${VCPKG_BASE}/include)
+		set(wxWidgets_LIBRARIES 
+			${wxWidgets_LIB_DIR}/jpeg.lib
+			${wxWidgets_LIB_DIR}/libpng16d.lib
+			${wxWidgets_LIB_DIR}/lzmad.lib
+			${wxWidgets_LIB_DIR}/tiffd.lib
+			${wxWidgets_LIB_DIR}/zlibd.lib
+		)
+	endif() # if WXWIDGETS_INSTALL_DIR
+	if(LINKING_TYPE MATCHES "static")
+		set(wxWidgets_LIBRARIES 
+			${wxWidgets_LIBRARIES}
+			${wxWidgets_LIB_DIR}/wxbase31ud_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw31ud_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw31ud_core.lib
+			${wxWidgets_LIB_DIR}/wxbase31ud.lib
+			${wxWidgets_LIB_DIR}/wxregexud.lib
+		)
+	else() # Dynamic linking
+		message(FATAL_ERROR "Dynamic linking not currently supported.")
+	endif() # if LINKING_TYPE == "static"
+elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
+	set(VCPKG_BASE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
+	if (WXWIDGETS_INSTALL_DIR)
+		set(wxWidgets_LIB_DIR  "${WXWIDGETS_INSTALL_DIR}/lib/vc_x64_lib")
+		include_directories(SYSTEM INTERFACE ${wxWidgets_LIB_DIR}/mswu ${WXWIDGETS_INSTALL_DIR}/include ${VCPKG_BASE}/include)
+		set(wxWidgets_LIBRARIES 
+			${wxWidgets_LIB_DIR}/wxjpeg.lib
+			${wxWidgets_LIB_DIR}/wxpng.lib
+			${wxWidgets_LIB_DIR}/wxtiff.lib
+			${wxWidgets_LIB_DIR}/wxzlib.lib
+		)
+	else() # Using VCPKG
+		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/lib)
+		include_directories(SYSTEM INTERFACE ${VCPKG_BASE}/lib/mswu ${VCPKG_BASE}/inclde)
+		set(wxWidgets_LIBRARIES 
+			${wxWidgets_LIB_DIR}/jpeg.lib
+			${wxWidgets_LIB_DIR}/libpng16.lib
+			${wxWidgets_LIB_DIR}/lzma.lib
+			${wxWidgets_LIB_DIR}/tiff.lib
+			${wxWidgets_LIB_DIR}/zlib.lib
+		)
+	endif() # if WXWIDGETS_INSTALL_DIR
+	if(LINKING_TYPE MATCHES "static")
+		set(wxWidgets_LIBRARIES 
+			${wxWidgets_LIBRARIES}
+			${wxWidgets_LIB_DIR}/wxbase31u_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw31u_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw31u_core.lib
+			${wxWidgets_LIB_DIR}/wxbase31u.lib
+			${wxWidgets_LIB_DIR}/wxregexu.lib
+		)
+	else() # Dynamic linking
+		message(FATAL_ERROR "Dynamic linking not currently supported.")
+	endif() # if LINKING_TYPE == "static"
+endif() # if CMAKE_BUILD_TYPE == "Debug"
 
 set(wxWidgets_LIBRARIES
 	${wxWidgets_LIBRARIES}
