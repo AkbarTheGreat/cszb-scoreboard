@@ -59,6 +59,7 @@ void ImageSearch::createControls(Panel *control_panel) {
   ScreenImageController::createControls(control_panel);
   inner_panel = control_panel->panel();
   screen_selection->setParent(inner_panel.get());
+  current_image_label->setParent(inner_panel.get());
 
   drop_target = inner_panel->panel();
   drop_target->setBorder();

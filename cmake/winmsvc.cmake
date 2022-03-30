@@ -68,6 +68,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/wxpngd.lib
 			${wxWidgets_LIB_DIR}/wxtiffd.lib
 			${wxWidgets_LIB_DIR}/wxzlibd.lib
+			${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
 		)
 	else() # Using VCPKG
 		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/debug/lib)
@@ -103,6 +104,7 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 			${wxWidgets_LIB_DIR}/wxpng.lib
 			${wxWidgets_LIB_DIR}/wxtiff.lib
 			${wxWidgets_LIB_DIR}/wxzlib.lib
+			${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
 		)
 	else() # Using VCPKG
 		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/lib)

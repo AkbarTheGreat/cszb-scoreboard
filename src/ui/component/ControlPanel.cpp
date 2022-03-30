@@ -24,11 +24,11 @@ limitations under the License.
 #include <utility>  // for move
 
 #include "ui/component/control/ImageFromLibrary.h"  // for ImageFromLibrary
-#include "ui/component/control/LocalImage.h"        // for LocalImage
-#include "ui/component/control/ImageSearch.h"        // for LocalImage
-#include "ui/component/control/ScoreControl.h"      // for ScoreControl
-#include "ui/component/control/TextEntry.h"         // for TextEntry
-#include "ui/component/control/ThingsMode.h"        // for ThingsMode
+#include "ui/component/control/ImageSearch.h"
+#include "ui/component/control/LocalImage.h"    // for LocalImage
+#include "ui/component/control/ScoreControl.h"  // for ScoreControl
+#include "ui/component/control/TextEntry.h"     // for TextEntry
+#include "ui/component/control/ThingsMode.h"    // for ThingsMode
 #include "ui/component/control/TimerSetup.h"
 
 namespace cszb_scoreboard {
