@@ -54,7 +54,8 @@ class WebView {
     */
     //_wx = wxWebView::New(parent, id, url, pos, size, backend, style, name);
 
-    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge, style, name);
+    //_wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge, style, name);
+    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendWebKit, style, name);
     //_wx = wxWebView::New();
     //_wx->Create(parent, id, url, pos, size);
 
