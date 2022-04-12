@@ -58,9 +58,10 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
   LogDebug("ScreenPresenter %d: %d,%d", (int)monitor_number,
            (int)screen_size.width, (int)screen_size.height);
 
+  positionWidgets();
+
   setDimensions(screen_pos, screen_size);
   screen_text->setupPresenter(preview, screen_size);
-  positionWidgets();
 }
 
 void ScreenPresenter::positionWidgets() {
