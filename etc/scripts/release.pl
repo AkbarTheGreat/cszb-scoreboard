@@ -47,7 +47,7 @@ our $VCPKG_CMAKE = 'C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake',
 our $GIT_CMD = 'C:/Program Files/Git/cmd/git.exe';
 our $VS19_GEN_STRING = 'Visual Studio 16 2019';
 our $VS22_GEN_STRING = 'Visual Studio 17 2022';
-our $VS22_CMAKE_ROOT = 'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin';
+our $VS22_CMAKE_ROOT = 'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/';
 our $VS19_CMAKE_ROOT = 'C:/PROGRAM FILES (X86)/MICROSOFT VISUAL STUDIO/2019/COMMUNITY/COMMON7/IDE/COMMONEXTENSIONS/MICROSOFT/CMAKE/CMake/bin/';
 
 our $CMAKE_ROOT = $VS_VERSION == 22 ? $VS22_CMAKE_ROOT : $VS19_CMAKE_ROOT;
