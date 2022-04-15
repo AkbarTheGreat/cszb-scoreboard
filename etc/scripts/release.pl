@@ -45,15 +45,16 @@ our $VS_VERSION = 22;
 # These should be the parts that are very specific to my machine
 our $VCPKG_CMAKE = 'C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake',
 our $GIT_CMD = 'C:/Program Files/Git/cmd/git.exe';
-our $CMAKE_CMD = $CMAKE_ROOT . 'cmake.exe';
-our $CTEST_CMD = $CMAKE_ROOT . 'ctest.exe';
 our $VS19_GEN_STRING = 'Visual Studio 16 2019';
-our $VS19_GEN_STRING = 'Visual Studio 17 2022';
-our $VS22_CMAKE_ROOT = 'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin';
+our $VS22_GEN_STRING = 'Visual Studio 17 2022';
+our $VS22_CMAKE_ROOT = 'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/';
 our $VS19_CMAKE_ROOT = 'C:/PROGRAM FILES (X86)/MICROSOFT VISUAL STUDIO/2019/COMMUNITY/COMMON7/IDE/COMMONEXTENSIONS/MICROSOFT/CMAKE/CMake/bin/';
 
 our $CMAKE_ROOT = $VS_VERSION == 22 ? $VS22_CMAKE_ROOT : $VS19_CMAKE_ROOT;
-our $GEN_STRING = $VS_VERSION == 22 ? $VS22_GEN_STRING : $VS22_GEN_STRING;
+our $GEN_STRING = $VS_VERSION == 22 ? $VS22_GEN_STRING : $VS19_GEN_STRING;
+
+our $CMAKE_CMD = $CMAKE_ROOT . 'cmake.exe';
+our $CTEST_CMD = $CMAKE_ROOT . 'ctest.exe';
 
 my ($opt_help, $opt_version, $opt_dry_run, $opt_keep_dir, $opt_skip_git);
 
