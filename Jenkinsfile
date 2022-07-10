@@ -56,18 +56,6 @@ pipeline {
 
     stage('Build') {
       parallel {
-        stage('Lint Build') {
-          when {
-            expression {
-              return runFullPipeline()
-            }
-          }
-          steps {
-            sh '''cd out/build/Linter
-make all'''
-          }
-        }
-
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
@@ -90,6 +78,18 @@ make -j2 all'''
 //          }
 //        }
 
+      }
+    }
+
+    stage('Lint Build') {
+      when {
+        expression {
+          return runFullPipeline()
+        }
+      }
+      steps {
+        sh '''cd out/build/Linter
+make all'''
       }
     }
 
