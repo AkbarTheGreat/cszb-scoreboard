@@ -56,18 +56,6 @@ pipeline {
 
     stage('Build') {
       parallel {
-        stage('Lint Build') {
-          when {
-            expression {
-              return runFullPipeline()
-            }
-          }
-          steps {
-            sh '''cd out/build/Linter
-make all'''
-          }
-        }
-
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
@@ -89,6 +77,18 @@ make scoreboard_proto cszb-scoreboard'''
           }
         }
 
+      }
+    }
+
+    stage('Lint Build') {
+      when {
+        expression {
+          return runFullPipeline()
+        }
+      }
+      steps {
+        sh '''cd out/build/Linter
+make all'''
       }
     }
 
