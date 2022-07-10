@@ -111,6 +111,7 @@ void ImageSearch::bindEvents() {
 void ImageSearch::onURLDrop(const std::string &url) {
   HttpReader reader;
   std::vector<char> image_data;
+  LogDebug("Url dropped: %s", url);
   reader.readBinary(url.c_str(), &image_data);
   Image urlImage = Image::FromData(image_data);
   if (screen_selection->allSelected()) {
