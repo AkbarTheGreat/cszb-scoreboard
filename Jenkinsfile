@@ -142,7 +142,7 @@ make all'''
           cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
         retry(count: 3) {
           sh '''cd out/build/Coverage
-            make -j2 all cszb-scoreboard-xml-coverage
+            make all cszb-scoreboard-xml-coverage
           '''
         }
         cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
