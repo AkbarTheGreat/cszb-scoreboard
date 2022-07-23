@@ -25,12 +25,13 @@ limitations under the License.
 
 #include <vector>  // for vector
 
-#include "ui/widget/Button.h"                // for Button
-#include "ui/widget/CheckBox.h"              // for CheckBox
-#include "ui/widget/ColorPicker.h"           // for ColorPicker
-#include "ui/widget/Divider.h"               // for Divider
-#include "ui/widget/FilePicker.h"            // for FilePicker
-#include "ui/widget/Label.h"                 // for Label
+#include "ui/widget/Button.h"       // for Button
+#include "ui/widget/CheckBox.h"     // for CheckBox
+#include "ui/widget/ColorPicker.h"  // for ColorPicker
+#include "ui/widget/Divider.h"      // for Divider
+#include "ui/widget/FilePicker.h"   // for FilePicker
+#include "ui/widget/Label.h"        // for Label
+#include "ui/widget/LabelledArea.h"
 #include "ui/widget/ListBox.h"               // for ListBox
 #include "ui/widget/Radio.h"                 // for Radio
 #include "ui/widget/RadioButton.h"           // for RadioButton
@@ -47,10 +48,11 @@ limitations under the License.
 #include "ui/widget/swx/RadioButton.h"       // for RadioButton
 #include "ui/widget/swx/ScrolledWindow.h"    // for ScrolledWindow
 #include "ui/widget/swx/SearchCtrl.h"        // for SearchCtrl
-#include "ui/widget/swx/StaticLine.h"        // for StaticLine
-#include "ui/widget/swx/StaticText.h"        // for StaticText
-#include "ui/widget/swx/TextCtrl.h"          // for TextCtrl
-#include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
+#include "ui/widget/swx/StaticBox.h"
+#include "ui/widget/swx/StaticLine.h"    // for StaticLine
+#include "ui/widget/swx/StaticText.h"    // for StaticText
+#include "ui/widget/swx/TextCtrl.h"      // for TextCtrl
+#include "ui/widget/swx/ToggleButton.h"  // for ToggleButton
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
@@ -109,6 +111,11 @@ auto Panel::openFilePicker(const std::string &title,
 
 auto Panel::label(const std::string &text) const -> std::unique_ptr<Label> {
   return std::make_unique<Label>(new swx::StaticText(wx(), wxID_ANY, text));
+}
+auto Panel::labelledArea(const std::string &label) const
+    -> std::unique_ptr<LabelledArea> {
+  return std::make_unique<LabelledArea>(
+      new swx::StaticBoxImpl(wx(), wxID_ANY, label));
 }
 
 auto Panel::listBox(const std::string &title) const

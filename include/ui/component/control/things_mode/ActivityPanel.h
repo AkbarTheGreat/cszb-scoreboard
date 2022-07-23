@@ -30,6 +30,7 @@ limitations under the License.
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
 #include "ui/widget/Panel.h"                            // for Panel
 #include "util/Singleton.h"
+#include "ui/widget/LabelledArea.h"
 
 namespace cszb_scoreboard {
 class ReplacementPanel;
@@ -62,6 +63,7 @@ class ActivityPanel : public Panel {
                 const proto::ScreenSide &side, Singleton *singleton);
 
  private:
+  std::unique_ptr<LabelledArea> activity_label, replacement_label;
   std::unique_ptr<Panel> activity_half, replacement_half;
   std::unique_ptr<ColorPicker> color_picker;
   proto::ScreenSide side;
