@@ -20,18 +20,19 @@ limitations under the License.
 
 #pragma once
 
-//#include "ui/widget/Panel.h"
+#include <memory>
+
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/StaticBox.h"
 
 namespace cszb_scoreboard {
 
-    class Panel;
+class Panel;
 
 class LabelledArea : public Widget {
  public:
   explicit LabelledArea(swx::StaticBox *static_box);
-  [[nodiscard]] auto holds() -> Panel* { return held_panel.get(); }
+  [[nodiscard]] auto holds() -> Panel * { return held_panel.get(); }
 
  private:
   [[nodiscard]] auto wx() const -> wxWindow * override {

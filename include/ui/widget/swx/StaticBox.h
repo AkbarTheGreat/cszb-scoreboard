@@ -31,7 +31,7 @@ class StaticBoxImpl : public StaticBox, public wxStaticBox {
  public:
   explicit StaticBoxImpl(wxWindow *parent, wxWindowID id, const wxString &label,
                          const wxPoint &pos = wxDefaultPosition,
-                         const wxSize &size = wxDefaultSize, long style = 0,
+                         const wxSize &size = wxDefaultSize, int64_t style = 0,
                          const wxString &name = wxStaticBoxNameStr)
       : wxStaticBox(parent, id, label, pos, size, style, name) {}
   auto asWx() -> wxStaticBox * override { return this; }
