@@ -100,15 +100,8 @@ void ActivityPanel::positionWidgets() {
   }
   showReplacement(first_activity);
 
-  activity_half->runSizer();
-  replacement_half->runSizer();
-
   activity_label->holds()->addWidget(*activity_half, 0, 0, NO_BORDER);
-  activity_label->holds()->runSizer();
-  activity_label->runSizer();
   replacement_label->holds()->addWidget(*replacement_half, 0, 1, NO_BORDER);
-  replacement_label->holds()->runSizer();
-  replacement_label->runSizer();
 
   addWidget(*activity_label, 0, 0);
   addWidget(*replacement_label, 0, 1);

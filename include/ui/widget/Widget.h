@@ -72,7 +72,7 @@ class Widget {
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
-  void runSizer() { wx()->SetSizerAndFit(sizer()); }
+  void runSizer();
   // Reparents this widget to another widget for layout purposes
   void setParent(Widget *parent) const { wx()->Reparent(parent->wx()); }
 

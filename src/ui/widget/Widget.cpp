@@ -114,9 +114,23 @@ void Widget::removeRowFromSizer(int row) {
   }
 }
 
+void Widget::runSizer() {
+  auto table = getOrderedRepresentation(window_sizer);
+  for (int r = 0; r < table.size(); r++) {
+    for (int c = 0; c < table[r].size(); c++) {
+      if (table[r][c] == nullptr || table[r][c]->GetWindow() == nullptr) {
+        continue;
+      }
+      table[r][c]->GetWindow()->Layout();
+    }
+  }
+  wx()->SetSizerAndFit(sizer());
+}
+
 auto Widget::sizer() -> swx::Sizer * {
   if (window_sizer == nullptr) {
     window_sizer = new swx::Sizer();
+    wx()->SetSizer(window_sizer);
   }
   return window_sizer;
 }
