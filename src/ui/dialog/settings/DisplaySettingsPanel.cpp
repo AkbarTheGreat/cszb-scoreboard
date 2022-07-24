@@ -45,6 +45,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
   proto::DisplayInfo display_info =
       singleton->displayConfig()->displayDetails(index);
   this->display_id = display_info.id();
+  this->display_size = buildDisplaySize(display_info.dimensions());
 
   const proto::ScreenSide &screen_side = display_info.side();
   // Label for this display
@@ -84,10 +85,17 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
 
 void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel &other) {
   this->display_id = other.display_id;
+  this->display_size = other.display_size;
   copyCheckbox(*other.control_checkbox, this->control_checkbox.get());
   copyCheckbox(*other.home_checkbox, this->home_checkbox.get());
   copyCheckbox(*other.away_checkbox, this->away_checkbox.get());
   updateLabel();
+}
+
+auto DisplaySettingsPanel::buildDisplaySize(const proto::Rectangle &dimensions)
+    -> std::string {
+  return std::to_string(dimensions.height()) + "x" +
+         std::to_string(dimensions.width());
 }
 
 void DisplaySettingsPanel::copyCheckbox(const CheckBox &source,
@@ -96,7 +104,8 @@ void DisplaySettingsPanel::copyCheckbox(const CheckBox &source,
 }
 
 void DisplaySettingsPanel::updateLabel() {
-  display_label->set("Display " + std::to_string(display_id + 1));
+  display_label->set("Display " + std::to_string(display_id + 1) + " (" +
+                     display_size + ")");
 }
 
 void DisplaySettingsPanel::createButtonPanel() {
