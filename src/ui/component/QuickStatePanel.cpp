@@ -70,6 +70,7 @@ void QuickStateEntry::bindEvents(int id) {
   }
   if (id == -1) {
     command_button = '`';
+    initialized = true;
   }
   std::string tooltip = tooltipText(command_button);
 
