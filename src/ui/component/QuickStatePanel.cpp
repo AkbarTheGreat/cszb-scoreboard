@@ -93,7 +93,7 @@ void QuickStateEntry::bindEvents(int id) {
       [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
   set_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
+      [this](wxCommandEvent &event) -> void { this->setShortcut(); });
 
   singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, command_button,
                                       execute_button->id());
