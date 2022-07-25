@@ -302,19 +302,18 @@ auto ScoreControl::introLines(bool isHome)
 void ScoreControl::updateScreenText(ScreenText *screen_text) {
   updateScreenText(screen_text, team_intro_button->value());
   FrameManager *frameMgr = singleton->frameManager();
-  if (frameMgr) {
+  if (frameMgr != nullptr) {
     MainView *main = frameMgr->mainView();
-    if (main) {
+    if (main != nullptr) {
       ScreenText *quick_score = main->scoreQuickState();
-      if (quick_score) {
+      if (quick_score != nullptr) {
         updateScreenText(quick_score, false);
       }
     }
   }
 }
 
-void ScoreControl::updateScreenText(ScreenText *screen_text,
-                                    boolean team_intro) {
+void ScoreControl::updateScreenText(ScreenText *screen_text, bool team_intro) {
   home_color_picker->setColor(
       singleton->teamColors()->getColor(ProtoUtil::homeSide()));
   away_color_picker->setColor(

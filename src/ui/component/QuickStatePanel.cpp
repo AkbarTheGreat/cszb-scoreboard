@@ -113,7 +113,8 @@ void QuickStateEntry::setShortcut() {
   QuickStatePanel::setShortcut(this, singleton);
 }
 
-auto fillSingleCharTemplate(std::string tmpl, char replacement) -> std::string {
+auto QuickStateEntry::fillSingleCharTemplate(const std::string &tmpl, char replacement)
+    -> std::string {
   std::string buffer;
 
   size_t size = tmpl.length() + 2;
@@ -128,12 +129,13 @@ auto fillSingleCharTemplate(std::string tmpl, char replacement) -> std::string {
   return buffer;
 }
 
-auto setTooltipText(char command_character) -> std::string {
+auto QuickStateEntry::setTooltipText(char command_character) -> std::string {
   return fillSingleCharTemplate("Right Click (Ctrl+Alt+%c) to set",
                                 command_character);
 }
 
-auto executeTooltipText(char command_character) -> std::string {
+auto QuickStateEntry::executeTooltipText(char command_character)
+    -> std::string {
   return fillSingleCharTemplate("Left Click (Ctrl+%c) to send to monitors",
                                 command_character);
 }
@@ -141,10 +143,9 @@ auto executeTooltipText(char command_character) -> std::string {
 auto QuickStateEntry::tooltipText(char command_character) -> std::string {
   if (command_character == '`') {
     return executeTooltipText('~');
-  } else {
-    return setTooltipText(command_character) + "\n" +
-           executeTooltipText(command_character);
   }
+  return setTooltipText(command_character) + "\n" +
+         executeTooltipText(command_character);
 }
 
 QuickStatePanel::QuickStatePanel(swx::Panel *wx, Singleton *singleton)

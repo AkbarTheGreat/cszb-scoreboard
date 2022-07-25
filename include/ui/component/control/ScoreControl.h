@@ -61,7 +61,7 @@ class ScoreControl : public ScreenTextController {
   auto introLines(bool isHome) -> std::vector<proto::RenderableText>;
   auto scoreLines(bool isHome) -> std::vector<proto::RenderableText>;
   void updateScreenText(ScreenText *screen_text) override;
-  void updateScreenText(ScreenText *screen_text, boolean team_intro) ;
+  void updateScreenText(ScreenText *screen_text, bool team_intro) ;
   void awayUpdated();
   void awayNameUpdated();
   void awayAddOne();
