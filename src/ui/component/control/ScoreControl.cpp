@@ -298,6 +298,10 @@ auto ScoreControl::introLines(bool isHome)
 }
 
 void ScoreControl::updateScreenText(ScreenText *screen_text) {
+  updateScreenText(screen_text, team_intro_button->value()); 
+}
+
+void ScoreControl::updateScreenText(ScreenText * screen_text, boolean team_intro) {
   home_color_picker->setColor(
       singleton->teamColors()->getColor(ProtoUtil::homeSide()));
   away_color_picker->setColor(
@@ -308,7 +312,7 @@ void ScoreControl::updateScreenText(ScreenText *screen_text) {
 
   OverlayScreenPosition logo_position;
 
-  if (team_intro_button->value()) {
+  if (team_intro) {
     home_update = introLines(true);
     away_update = introLines(false);
     logo_position = OverlayScreenPosition::Centered;
