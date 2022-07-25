@@ -50,8 +50,10 @@ QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id, Singleton *singleton)
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
                Size{.width = PREVIEW_WIDTH, .height = PREVIEW_HEIGHT});
 
-  setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
-  setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+  if (id != -1) {
+    setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
+    setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+  }
 
   // These two buttons are always hidden and exist only to add hotkey support
   set_button = button("");
@@ -113,8 +115,8 @@ void QuickStateEntry::setShortcut() {
   QuickStatePanel::setShortcut(this, singleton);
 }
 
-auto QuickStateEntry::fillSingleCharTemplate(const std::string &tmpl, char replacement)
-    -> std::string {
+auto QuickStateEntry::fillSingleCharTemplate(const std::string &tmpl,
+                                             char replacement) -> std::string {
   std::string buffer;
 
   size_t size = tmpl.length() + 2;
