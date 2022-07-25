@@ -79,4 +79,8 @@ void ControlPanel::updateScreenTextFromSelected(ScreenText *screen_text) {
   controllers[selection()]->updateScreenText(screen_text);
 }
 
+auto ControlPanel::isSelected(ScreenTextController* controller) -> bool {
+  return controllers[selection()].get() == controller;
+}
+
 }  // namespace cszb_scoreboard

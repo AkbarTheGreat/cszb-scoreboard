@@ -23,9 +23,12 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config/swx/defs.h"
 #include "config/swx/event.h"
+#include "ui/component/ControlPanel.h"
 #include "ui/component/PreviewPanel.h"
 #include "ui/component/ScreenPreview.h"
+#include "ui/frame/FrameManager.h"
 #include "ui/frame/HotkeyTable.h"
+#include "ui/frame/MainView.h"
 #include "ui/widget/Widget.h"
 
 namespace cszb_scoreboard {
@@ -54,6 +57,22 @@ void ScreenTextController::initializeWidgets() {
   createControls(control_panel.get());
   positionWidgets();
   bindEvents();
+}
+
+auto ScreenTextController::isActive() -> bool {
+  FrameManager *frameMgr = singleton->frameManager();
+  if (frameMgr == nullptr) {
+    return false;
+  }
+  MainView *main = frameMgr->mainView();
+  if (main == nullptr) {
+    return false;
+  }
+  ControlPanel *control = main->controlPanel();
+  if (control == nullptr) {
+    return false;
+  }
+  return control->isSelected(this);
 }
 
 void ScreenTextController::positionWidgets() {

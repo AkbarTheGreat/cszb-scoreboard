@@ -58,8 +58,6 @@ MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
   // Set focus to the control_panel so that tab movement works correctly without
   // an initial click.
   control_panel->focus();
-  // Initialize the score quick panel.
-  control_panel->updateScreenTextFromSelected(quick_state->scorePanel());
   singleton->hotkeyTable()->installHotkeys(this);
 }
 

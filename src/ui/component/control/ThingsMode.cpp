@@ -108,6 +108,9 @@ void ThingsMode::bindEvents() {
 }
 
 void ThingsMode::updateScreenText(ScreenText *screen_text) {
+  if (!isActive()) {
+    return;
+  }
   ActivityPanel *selected_panel = all_activities_panel;
   if (screen_selection->allSelected()) {
     // Do nothing, already set

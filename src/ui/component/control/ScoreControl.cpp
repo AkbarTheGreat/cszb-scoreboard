@@ -300,7 +300,10 @@ auto ScoreControl::introLines(bool isHome)
 }
 
 void ScoreControl::updateScreenText(ScreenText *screen_text) {
-  updateScreenText(screen_text, team_intro_button->value());
+  if (isActive()) {
+    updateScreenText(screen_text, team_intro_button->value());
+  }
+
   FrameManager *frameMgr = singleton->frameManager();
   if (frameMgr != nullptr) {
     MainView *main = frameMgr->mainView();
