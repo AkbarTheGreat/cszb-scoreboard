@@ -55,6 +55,7 @@ class QuickStatePanel : public Panel {
       : QuickStatePanel(wx, Singleton::getInstance()) {}
   static void executeShortcut(QuickStateEntry *entry, Singleton *singleton);
   static void setShortcut(QuickStateEntry *entry, Singleton *singleton);
+  auto scorePanel() -> ScreenText* { return score_entry.get(); }
 
   PUBLIC_TEST_ONLY
   QuickStatePanel(swx::Panel *wx, Singleton *singleton);
@@ -62,6 +63,7 @@ class QuickStatePanel : public Panel {
  private:
   void positionWidgets();
 
+  std::unique_ptr<QuickStateEntry> score_entry;
   std::vector<std::unique_ptr<QuickStateEntry>> entries;
 };
 

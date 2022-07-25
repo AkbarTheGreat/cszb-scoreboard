@@ -68,14 +68,19 @@ void QuickStateEntry::bindEvents(int id) {
                   // digit number.
     command_button = '0';
   }
+  if (id == -1) {
+    command_button = '`';
+  }
   std::string tooltip = tooltipText(command_button);
 
   for (auto *side : sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
-    side->bind(wxEVT_RIGHT_UP,
-               [this](wxMouseEvent &event) -> void { this->setShortcut(); });
+    if (id >= 0) {
+      side->bind(wxEVT_RIGHT_UP,
+                 [this](wxMouseEvent &event) -> void { this->setShortcut(); });
+    }
     side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent &event) -> void {
       this->executeShortcut();
     });
@@ -107,23 +112,43 @@ void QuickStateEntry::setShortcut() {
   QuickStatePanel::setShortcut(this, singleton);
 }
 
-auto QuickStateEntry::tooltipText(char command_character) -> std::string {
-  std::string string_template =
-      "Right Click (Ctrl+Alt+%c) to set\nLeft Click (Ctrl+%c) to send to "
-      "monitors";
+auto fillSingleCharTemplate(std::string tmpl, char replacement) -> std::string {
   std::string buffer;
 
-  size_t size = string_template.length() + 2;
+  size_t size = tmpl.length() + 2;
   buffer.reserve(size + 1);
   buffer.resize(size);
 
-  snprintf(&buffer[0], size + 1, string_template.c_str(), command_character,
-           command_character);
+  snprintf(&buffer[0], size + 1, tmpl.c_str(), replacement);
+
+  // Remove any trailing null terminators
+  buffer.erase(std::find(buffer.begin(), buffer.end(), '\0'), buffer.end());
+
   return buffer;
+}
+
+auto setTooltipText(char command_character) -> std::string {
+  return fillSingleCharTemplate("Right Click (Ctrl+Alt+%c) to set",
+                                command_character);
+}
+
+auto executeTooltipText(char command_character) -> std::string {
+  return fillSingleCharTemplate("Left Click (Ctrl+%c) to send to monitors",
+                                command_character);
+}
+
+auto QuickStateEntry::tooltipText(char command_character) -> std::string {
+  if (command_character == '`') {
+    return executeTooltipText('~');
+  } else {
+    return setTooltipText(command_character) + "\n" +
+           executeTooltipText(command_character);
+  }
 }
 
 QuickStatePanel::QuickStatePanel(swx::Panel *wx, Singleton *singleton)
     : Panel(wx) {
+  score_entry = std::make_unique<QuickStateEntry>(childPanel(), -1, singleton);
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
     entries.push_back(std::move(
         std::make_unique<QuickStateEntry>(childPanel(), i, singleton)));
@@ -132,8 +157,9 @@ QuickStatePanel::QuickStatePanel(swx::Panel *wx, Singleton *singleton)
 }
 
 void QuickStatePanel::positionWidgets() {
+  addWidget(*score_entry, 0, 0);
   for (int i = 0; i < entries.size(); i++) {
-    addWidget(*entries[i], i, 0);
+    addWidget(*entries[i], i + 1, 0);
   }
 
   runSizer();
