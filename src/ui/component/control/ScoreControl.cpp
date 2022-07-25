@@ -30,14 +30,16 @@ limitations under the License.
 #include "config/swx/event.h"             // for wxEVT_COMMAND_BUTTON_CLICKED
 #include "ui/component/ScreenText.h"      // for ScreenText
 #include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
-#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxACCEL_CTRL
-#include "ui/graphics/Color.h"            // for Color
-#include "ui/graphics/TeamColors.h"       // for TeamColors
-#include "ui/widget/FilePicker.h"         // for FilePicker
-#include "util/FilesystemPath.h"          // for FilesystemPath
-#include "util/ProtoUtil.h"               // for ProtoUtil
-#include "util/Singleton.h"               // for Singleton
-#include "util/StringUtil.h"              // for StringUtil
+#include "ui/frame/FrameManager.h"
+#include "ui/frame/HotkeyTable.h"  // for HotkeyTable, wxACCEL_CTRL
+#include "ui/frame/MainView.h"
+#include "ui/graphics/Color.h"       // for Color
+#include "ui/graphics/TeamColors.h"  // for TeamColors
+#include "ui/widget/FilePicker.h"    // for FilePicker
+#include "util/FilesystemPath.h"     // for FilesystemPath
+#include "util/ProtoUtil.h"          // for ProtoUtil
+#include "util/Singleton.h"          // for Singleton
+#include "util/StringUtil.h"         // for StringUtil
 
 namespace cszb_scoreboard {
 class PreviewPanel;
@@ -298,10 +300,21 @@ auto ScoreControl::introLines(bool isHome)
 }
 
 void ScoreControl::updateScreenText(ScreenText *screen_text) {
-  updateScreenText(screen_text, team_intro_button->value()); 
+  updateScreenText(screen_text, team_intro_button->value());
+  FrameManager *frameMgr = singleton->frameManager();
+  if (frameMgr) {
+    MainView *main = frameMgr->mainView();
+    if (main) {
+      ScreenText *quick_score = main->scoreQuickState();
+      if (quick_score) {
+        updateScreenText(quick_score, false);
+      }
+    }
+  }
 }
 
-void ScoreControl::updateScreenText(ScreenText * screen_text, boolean team_intro) {
+void ScoreControl::updateScreenText(ScreenText *screen_text,
+                                    boolean team_intro) {
   home_color_picker->setColor(
       singleton->teamColors()->getColor(ProtoUtil::homeSide()));
   away_color_picker->setColor(
