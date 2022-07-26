@@ -33,6 +33,8 @@ endif()
 
 message(STATUS "VCPKG_TARGET_TRIPLET:${VCPKG_TARGET_TRIPLET}")
 
+set(WXWIDGET_VERSION "31")
+
 if (VCPKG_TARGET_TRIPLET MATCHES "static")
     message(STATUS "static")
     add_definitions(-D_UNICODE -DUNICODE -DwxUSE_GUI=1 -D__WXMSW__)
@@ -83,10 +85,10 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIBRARIES}
-			${wxWidgets_LIB_DIR}/wxbase33ud_net.lib
-			${wxWidgets_LIB_DIR}/wxmsw33ud_aui.lib
-			${wxWidgets_LIB_DIR}/wxmsw33ud_core.lib
-			${wxWidgets_LIB_DIR}/wxbase33ud.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}ud_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_core.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}ud.lib
 			${wxWidgets_LIB_DIR}/wxregexud.lib
 		)
 	else() # Dynamic linking
@@ -117,10 +119,10 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIBRARIES}
-			${wxWidgets_LIB_DIR}/wxbase33u_net.lib
-			${wxWidgets_LIB_DIR}/wxmsw33u_aui.lib
-			${wxWidgets_LIB_DIR}/wxmsw33u_core.lib
-			${wxWidgets_LIB_DIR}/wxbase33u.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}u_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_core.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}u.lib
 			${wxWidgets_LIB_DIR}/wxregexu.lib
 		)
 	else() # Dynamic linking
