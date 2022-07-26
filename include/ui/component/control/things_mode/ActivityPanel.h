@@ -28,9 +28,9 @@ limitations under the License.
 #include "ui/component/control/things_mode/Activity.h"  // for Activity
 #include "ui/graphics/Color.h"                          // for Color
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
-#include "ui/widget/Panel.h"                            // for Panel
-#include "util/Singleton.h"
 #include "ui/widget/LabelledArea.h"
+#include "ui/widget/Panel.h"  // for Panel
+#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 class ReplacementPanel;
