@@ -42,6 +42,7 @@ pipeline {
             OSXCROSS_TARGET = 'darwin19'
             OSXCROSS_HOST = 'x86_64-apple-darwin19'
             OSXCROSS_TARGET_DIR = '/opt/osxcross'
+            PATH = '/opt/osxcross/bin:$PATH'
           }
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
