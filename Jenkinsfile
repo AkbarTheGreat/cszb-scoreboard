@@ -72,6 +72,13 @@ make -j2 all'''
         }
 
         stage('MacOS Build') {
+          environment {
+            OSXCROSS_SDK = 'darwin19'
+            OSXCROSS_TARGET = 'darwin19'
+            OSXCROSS_HOST = 'x86_64-apple-darwin19'
+            OSXCROSS_TARGET_DIR = '/opt/osxcross'
+            PATH = '/opt/osxcross/bin:$PATH'
+          }
           steps {
             sh '''cd out/build/osxcross
 make scoreboard_proto cszb-scoreboard'''
