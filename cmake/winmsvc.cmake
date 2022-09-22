@@ -33,7 +33,9 @@ endif()
 
 message(STATUS "VCPKG_TARGET_TRIPLET:${VCPKG_TARGET_TRIPLET}")
 
-set(WXWIDGET_VERSION "31")
+if(NOT WXWIDGET_VERSION)
+	set(WXWIDGET_VERSION "31")
+endif()
 
 if (VCPKG_TARGET_TRIPLET MATCHES "static")
     message(STATUS "static")
