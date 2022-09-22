@@ -123,7 +123,7 @@ auto QuickStateEntry::fillSingleCharTemplate(const std::string &tmpl,
   buffer.reserve(size + 1);
   buffer.resize(size);
 
-  snprintf(&buffer[0], size + 1, tmpl.c_str(), replacement);
+  snprintf(buffer.data(), size + 1, tmpl.c_str(), replacement);
 
   // Remove any trailing null terminators
   buffer.erase(std::find(buffer.begin(), buffer.end(), '\0'), buffer.end());

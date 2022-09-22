@@ -78,7 +78,7 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
 auto FileListBox::selectedFilename() -> FilesystemPath {
   int64_t index = box->selectedIndex();
   if (index == -1 || index >= box->listSize()) {
-    return FilesystemPath();
+    return {};
   }
   return getFilenames()[index];
 }
