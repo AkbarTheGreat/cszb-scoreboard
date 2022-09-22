@@ -45,11 +45,9 @@ pipeline {
             PATH = '/opt/osxcross/bin:$PATH'
           }
           steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
+            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
               cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
-              )
-            }
+            )
           }
         }
       }
@@ -80,10 +78,8 @@ make -j2 all'''
             PATH = '/opt/osxcross/bin:$PATH'
           }
           steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''cd out/build/osxcross
-  make scoreboard_proto cszb-scoreboard'''
-            }
+            sh '''cd out/build/osxcross
+make scoreboard_proto cszb-scoreboard'''
           }
         }
       }
