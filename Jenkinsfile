@@ -166,7 +166,7 @@ make all'''
           skipNoTestFiles: true,
           stopProcessingIfError: true
         )])
-      deleteDir()
+      //deleteDir()
     }
   }
 }
