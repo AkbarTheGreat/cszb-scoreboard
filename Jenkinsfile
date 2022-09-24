@@ -72,11 +72,7 @@ make -j2 all'''
         stage('MacOS Build') {
           steps {
             sh '''cd out/build/osxcross
-set OSXCROSS_SDK='darwin19'
-set OSXCROSS_TARGET='darwin19'
-set OSXCROSS_HOST='x86_64-apple-darwin19'
-set OSXCROSS_TARGET_DIR='/opt/osxcross'
-set PATH='/opt/osxcross/bin:$PATH'
+export PATH=/opt/osxcross/bin:$PATH
 make scoreboard_proto cszb-scoreboard'''
           }
         }
@@ -166,7 +162,7 @@ make all'''
           skipNoTestFiles: true,
           stopProcessingIfError: true
         )])
-      //deleteDir()
+      deleteDir()
     }
   }
 }
