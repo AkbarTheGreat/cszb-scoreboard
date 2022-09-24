@@ -40,7 +40,6 @@ class ScreenPresenter : public Frame {
  private:
   int monitor_number;
   std::unique_ptr<ScreenText> screen_text;
-  void positionWidgets();
 };
 
 }  // namespace cszb_scoreboard

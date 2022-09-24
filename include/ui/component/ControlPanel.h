@@ -40,6 +40,7 @@ class ControlPanel : public Notebook {
  public:
   ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel);
   void updateScreenTextFromSelected(ScreenText *screen_text);
+  auto isSelected(ScreenTextController *controller) -> bool;
 
 #ifdef SCOREBOARD_TESTING
   auto textController(int index) -> ScreenTextController * {

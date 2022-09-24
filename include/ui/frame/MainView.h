@@ -39,6 +39,8 @@ class wxNotebook;
 
 namespace cszb_scoreboard {
 
+class ScreenText;
+
 class MainView : public Frame {
  public:
   MainView(const std::string &title, const Position &pos, const Size &size)
@@ -47,6 +49,7 @@ class MainView : public Frame {
                  Singleton::getInstance()) {}
   auto controlPanel() -> ControlPanel * { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
+  auto scoreQuickState() -> ScreenText * { return quick_state->scorePanel(); }
   void onSettingsClose();
   virtual void refreshPreviews() {
     preview_panel->refresh();

@@ -33,6 +33,10 @@ endif()
 
 message(STATUS "VCPKG_TARGET_TRIPLET:${VCPKG_TARGET_TRIPLET}")
 
+if(NOT WXWIDGET_VERSION)
+	set(WXWIDGET_VERSION "31")
+endif()
+
 if (VCPKG_TARGET_TRIPLET MATCHES "static")
     message(STATUS "static")
     add_definitions(-D_UNICODE -DUNICODE -DwxUSE_GUI=1 -D__WXMSW__)
@@ -84,11 +88,11 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIBRARIES}
-			${wxWidgets_LIB_DIR}/wxbase31ud_net.lib
-			${wxWidgets_LIB_DIR}/wxmsw31ud_aui.lib
-			${wxWidgets_LIB_DIR}/wxmsw31ud_core.lib
-			${wxWidgets_LIB_DIR}/wxmsw31ud_webview.lib
-			${wxWidgets_LIB_DIR}/wxbase31ud.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}ud_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_core.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_webview.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}ud.lib
 			${wxWidgets_LIB_DIR}/wxregexud.lib
 		)
 	else() # Dynamic linking
@@ -120,11 +124,11 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIBRARIES}
-			${wxWidgets_LIB_DIR}/wxbase31u_net.lib
-			${wxWidgets_LIB_DIR}/wxmsw31u_aui.lib
-			${wxWidgets_LIB_DIR}/wxmsw31u_core.lib
-			${wxWidgets_LIB_DIR}/wxmsw31u_webview.lib
-			${wxWidgets_LIB_DIR}/wxbase31u.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}u_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_core.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_webview.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}u.lib
 			${wxWidgets_LIB_DIR}/wxregexu.lib
 		)
 	else() # Dynamic linking
@@ -136,3 +140,7 @@ set(wxWidgets_LIBRARIES
 	${wxWidgets_LIBRARIES}
 	comctl32 Rpcrt4
 )
+
+# I hate doing this, but wxWidgets produces way too many warnings in this category and obscures problems in my code.
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+

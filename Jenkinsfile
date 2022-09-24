@@ -42,15 +42,14 @@ pipeline {
             OSXCROSS_TARGET = 'darwin19'
             OSXCROSS_HOST = 'x86_64-apple-darwin19'
             OSXCROSS_TARGET_DIR = '/opt/osxcross'
+            PATH = '/opt/osxcross/bin:$PATH'
           }
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
-            cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DINTEGRATION_TEST=false'
+              cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
             )
           }
         }
-
-
       }
     }
 
@@ -74,10 +73,10 @@ make -j2 all'''
 //        stage('MacOS Build') {
 //          steps {
 //            sh '''cd out/build/osxcross
+//export PATH=/opt/osxcross/bin:$PATH
 //make scoreboard_proto cszb-scoreboard'''
 //          }
 //        }
-
       }
     }
 
@@ -166,7 +165,6 @@ make all'''
         )])
       deleteDir()
     }
-
   }
 }
 

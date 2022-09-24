@@ -31,7 +31,9 @@ class Rectangle;
 struct Position {
  public:
   int64_t x, y;
-  [[nodiscard]] auto toWx() const -> wxPoint { return wxPoint(x, y); }
+  [[nodiscard]] auto toWx() const -> wxPoint {
+    return {static_cast<int>(x), static_cast<int>(y)};
+  }
   static auto fromWx(const wxPoint& wx) -> Position;
   [[nodiscard]] auto isContainedIn(const proto::Rectangle& box) const -> bool;
   auto operator==(const Position& rhs) const -> bool;
@@ -47,7 +49,9 @@ struct Position {
 struct Size {
  public:
   int64_t width, height;
-  [[nodiscard]] auto toWx() const -> wxSize { return wxSize(width, height); }
+  [[nodiscard]] auto toWx() const -> wxSize {
+    return {static_cast<int>(width), static_cast<int>(height)};
+  }
   static auto fromWx(const wxSize& wx) -> Size;
   auto operator==(const Size& rhs) const -> bool;
   auto operator!=(const Size& rhs) const -> bool;

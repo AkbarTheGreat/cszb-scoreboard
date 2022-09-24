@@ -108,6 +108,9 @@ void TextEntry::bindEvents() {
 auto TextEntry::textField() -> Text * { return text_entry.get(); }
 
 void TextEntry::updateScreenText(ScreenText *screen_text) {
+  if (!isActive()) {
+    return;
+  }
   // Send the combined text to both previews
   if (screen_selection->allSelected()) {
     screen_text->setAllText(all_text, all_font_size, all_color, true,

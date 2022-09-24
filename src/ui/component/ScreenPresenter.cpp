@@ -58,20 +58,10 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
   LogDebug("ScreenPresenter %d: %d,%d", (int)monitor_number,
            (int)screen_size.width, (int)screen_size.height);
 
-  // KLUDGE(akbar): This could use more work to not be a #ifdef for the two platforms, long term -- but bouncing back and forth between platforms for compatability is tricky business.
-#ifndef __APPLE__
-  positionWidgets();
-#endif
-
-  setDimensions(screen_pos, screen_size);
-  screen_text->setupPresenter(preview, screen_size);
-#ifdef __APPLE__
-  positionWidgets();
-#endif
-}
-
-void ScreenPresenter::positionWidgets() {
   addWidget(*screen_text, 0, 0, NO_BORDER);
+  screen_text->setupPresenter(preview, screen_size);
   runSizer();
+  setDimensions(screen_pos, screen_size);
 }
+
 }  // namespace cszb_scoreboard

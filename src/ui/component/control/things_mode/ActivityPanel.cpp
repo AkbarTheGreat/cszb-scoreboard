@@ -50,8 +50,10 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
   this->owning_controller = owning_controller;
   this->side = side;
   this->singleton = singleton;
-  activity_half = panel();
-  replacement_half = panel();
+  activity_label = labelledArea("Activities");
+  replacement_label = labelledArea("Replacements");
+  activity_half = activity_label->holds()->panel();
+  replacement_half = replacement_label->holds()->panel();
   color_picker = colorPicker(singleton->teamColors()->getColor(side));
 
   // Add only as many activites as we want the initial pane size to be sized
@@ -98,11 +100,11 @@ void ActivityPanel::positionWidgets() {
   }
   showReplacement(first_activity);
 
-  activity_half->runSizer();
-  replacement_half->runSizer();
+  activity_label->holds()->addWidget(*activity_half, 0, 0, NO_BORDER);
+  replacement_label->holds()->addWidget(*replacement_half, 0, 1, NO_BORDER);
 
-  addWidget(*activity_half, 0, 0);
-  addWidget(*replacement_half, 0, 1);
+  addWidget(*activity_label, 0, 0);
+  addWidget(*replacement_label, 0, 1);
   addWidget(*color_picker, 1, 0);
   runSizer();
 }

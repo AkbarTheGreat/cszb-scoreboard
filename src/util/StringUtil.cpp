@@ -41,7 +41,7 @@ auto StringUtil::intToString(int value, int zero_pad) -> std::string {
     format = wxString(format_str.data());
   }
   wxs.Printf(format, value);
-  return std::string(wxs.c_str());
+  return {wxs.c_str()};
 }
 
 auto StringUtil::stringToInt(const std::string &string, int default_value)
