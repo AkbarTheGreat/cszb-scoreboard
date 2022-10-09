@@ -46,6 +46,7 @@ class CommandArgs {
 
   // flag getters
   [[nodiscard]] auto autoUpdate() const -> bool;
+  [[nodiscard]] auto enableImageSearch() const -> bool;
   [[nodiscard]] auto resetConfig() const -> bool;
   auto commandPath() -> FilesystemPath;
 
