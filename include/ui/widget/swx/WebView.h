@@ -40,13 +40,14 @@ class WebView {
                    const wxString &backend = wxWebViewBackendDefault,
                    int64_t style = 0, const wxString &name = wxWebViewNameStr) {
 
-    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge, style, name);
-
-    // Log backend information
 #ifdef _WIN32
+    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge, style, name);
+    // Log backend information
     LogDebug("Backend: %s Version: %s", _wx->GetClassInfo()->GetClassName(),
              wxWebView::GetBackendVersionInfo().ToString());
     LogDebug("User Agent: %s", _wx->GetUserAgent());
+#else // #ifdef _WIN32
+    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendDefault, style, name);
 #endif // #ifdef _WIN32
   }
 
