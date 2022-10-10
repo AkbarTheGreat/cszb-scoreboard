@@ -44,6 +44,7 @@ set(OSX_FRAMEWORKS
 	"-framework AudioToolbox"
 	"-framework System"
 	"-framework OpenGL"
+	"-framework WebKit"
 	)
 
 set(wxWidgets_LINK_FLAGS
