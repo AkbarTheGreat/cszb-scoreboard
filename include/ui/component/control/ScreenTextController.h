@@ -62,6 +62,7 @@ class ScreenTextController : public Panel {
   ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx,
                        bool display_update_screens, Singleton *singleton);
   void initializeWidgets();
+  auto isActive() -> bool;
   auto previewPanel() -> PreviewPanel *;
   std::unique_ptr<Panel> control_panel;
   Singleton *singleton;

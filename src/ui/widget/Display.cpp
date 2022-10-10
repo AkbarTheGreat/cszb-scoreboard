@@ -46,7 +46,7 @@ auto Display::debugString() -> std::string {
   std::array<char, DEBUG_STRING_BUFFER_SIZE> format_str;
   snprintf(format_str.data(), format_str.size(), "%dx%d", geo.GetWidth(),
            geo.GetHeight());
-  return std::string(format_str.data());
+  return {format_str.data()};
 }
 
 }  // namespace cszb_scoreboard

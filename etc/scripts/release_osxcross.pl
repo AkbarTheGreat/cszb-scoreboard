@@ -92,7 +92,7 @@ sub build_release {
                                  . '/toolchain.cmake'
     . ' -DCMAKE_BUILD_TYPE=' . $release_type
     . ' ' . $BASE_DIR;
-  system 'make cszb-scoreboard';
+  system 'make scoreboard_proto cszb-scoreboard';
 }
 
 sub plist_content {

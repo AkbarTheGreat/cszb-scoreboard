@@ -25,6 +25,7 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/widget/Notebook.h"                         // for Notebook
+#include "util/Singleton.h"                             // for Singleton
 
 class wxAuiNotebookEvent;
 
@@ -38,8 +39,14 @@ class Notebook;
 
 class ControlPanel : public Notebook {
  public:
-  ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel);
+  ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
+      : ControlPanel(wx, preview_panel, Singleton::getInstance()) {}
   void updateScreenTextFromSelected(ScreenText *screen_text);
+  auto isSelected(ScreenTextController *controller) -> bool;
+
+  PUBLIC_TEST_ONLY
+  ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel,
+               Singleton *singleton);
 
 #ifdef SCOREBOARD_TESTING
   auto textController(int index) -> ScreenTextController * {

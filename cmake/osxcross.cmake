@@ -82,7 +82,7 @@ set(wxWidgets_LIBRARIES
 	${wxWidgets_LIB_DIR}/libwxscintilla-3.3.a
 	${wxWidgets_LIB_DIR}/libwxpng-3.3.a
 	${wxWidgets_LIB_DIR}/libwxtiff-3.3.a
-		
+
 	# TODO: Alphabetize these libs and deduplicate the list
 	${macports_lib_dir}/libiconv.a
 	${macports_lib_dir}/libpsl.a

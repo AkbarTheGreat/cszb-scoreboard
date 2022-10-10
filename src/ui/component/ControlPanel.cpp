@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <utility>  // for move
 
+#include "config/CommandArgs.h"
 #include "ui/component/control/ImageFromLibrary.h"  // for ImageFromLibrary
 #include "ui/component/control/ImageSearch.h"
 #include "ui/component/control/LocalImage.h"    // for LocalImage
@@ -39,15 +40,18 @@ namespace swx {
 class Notebook;
 }  // namespace swx
 
-ControlPanel::ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
+ControlPanel::ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel,
+                           Singleton *singleton)
     : Notebook(wx) {
   addController(std::move(ScoreControl::Create(preview_panel, childPanel())),
                 "Score");
   addController(
       std::move(ImageFromLibrary::Create(preview_panel, childPanel())),
       "Image Library");
-  addController(std::move(ImageSearch::Create(preview_panel, childPanel())),
-                "Image Search");
+  if (singleton->commandArgs()->enableImageSearch()) {
+    addController(std::move(ImageSearch::Create(preview_panel, childPanel())),
+                  "Image Search");
+  }
   addController(std::move(LocalImage::Create(preview_panel, childPanel())),
                 "Load Image");
   addController(std::move(ThingsMode::Create(preview_panel, childPanel())),
@@ -80,6 +84,10 @@ void ControlPanel::tabChanged(const wxAuiNotebookEvent &event) {
 
 void ControlPanel::updateScreenTextFromSelected(ScreenText *screen_text) {
   controllers[selection()]->updateScreenText(screen_text);
+}
+
+auto ControlPanel::isSelected(ScreenTextController *controller) -> bool {
+  return controllers[selection()].get() == controller;
 }
 
 }  // namespace cszb_scoreboard

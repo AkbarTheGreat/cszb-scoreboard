@@ -88,7 +88,7 @@ auto ImageLibrary::infoByFile(const FilesystemPath &filename)
       return image;
     }
   }
-  return proto::ImageInfo();
+  return {};
 }
 
 auto ImageLibrary::name(const FilesystemPath &filename) -> std::string {
@@ -139,7 +139,7 @@ auto ImageLibrary::emptySearch() -> ImageSearchResults {
   for (const auto &image : library.images()) {
     matched_images.push_back(image);
   }
-  return ImageSearchResults(matched_images, "", allTags());
+  return {matched_images, "", allTags()};
 }
 
 auto ImageLibrary::exactMatchSearch(const std::string &query)
@@ -153,12 +153,10 @@ auto ImageLibrary::exactMatchSearch(const std::string &query)
     }
   }
   if (matched_images.empty()) {
-    return ImageSearchResults(matched_images, query,
-                              std::vector<CaseOptionalString>());
+    return {matched_images, query, std::vector<CaseOptionalString>()};
   }
-  return ImageSearchResults(
-      matched_images, query,
-      std::vector<CaseOptionalString>({CaseOptionalString(query)}));
+  return {matched_images, query,
+          std::vector<CaseOptionalString>({CaseOptionalString(query)})};
 }
 
 auto ImageLibrary::partialMatchSearch(const std::string &query)
@@ -184,7 +182,7 @@ auto ImageLibrary::partialMatchSearch(const std::string &query)
       }
     }
   }
-  return ImageSearchResults(matched_images, query, matched_tags);
+  return {matched_images, query, matched_tags};
 }
 
 ImageSearchResults::ImageSearchResults(

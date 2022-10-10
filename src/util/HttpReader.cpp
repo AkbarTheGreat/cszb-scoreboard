@@ -64,6 +64,7 @@ auto HttpReader::read(const char *url) -> HttpResponse {
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA,
                    static_cast<void *>(&http_response.response));
   curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+  curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1);
 
 #ifdef __APPLE__
   curl_easy_setopt(curl_handle, CURLOPT_CAINFO, std::getenv("SSL_CERT_FILE"));

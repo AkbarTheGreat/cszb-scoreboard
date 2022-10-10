@@ -49,7 +49,9 @@ auto Color::contrastColor() const -> Color {
     intensity = BYTE_SIZE;  // dark colors - white font
   }
 
-  return Color(intensity, intensity, intensity);
+  return {static_cast<unsigned char>(intensity),
+          static_cast<unsigned char>(intensity),
+          static_cast<unsigned char>(intensity)};
 }
 
 }  // namespace cszb_scoreboard

@@ -16,9 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest-message.h>    // for Message
-#include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiR...
-#include <gtest/gtest.h>            // for Test (ptr only), TestInfo...
+#include <gtest/gtest.h>
 
 #include <filesystem>  // for operator<<, operator!=
 #include <sstream>     // for basic_stringbuf<>::int_type

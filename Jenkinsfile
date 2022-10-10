@@ -42,32 +42,19 @@ pipeline {
             OSXCROSS_TARGET = 'darwin19'
             OSXCROSS_HOST = 'x86_64-apple-darwin19'
             OSXCROSS_TARGET_DIR = '/opt/osxcross'
+            PATH = '/opt/osxcross/bin:$PATH'
           }
           steps {
             cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
-            cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DINTEGRATION_TEST=false'
+              cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
             )
           }
         }
-
-
       }
     }
 
     stage('Build') {
       parallel {
-        stage('Lint Build') {
-          when {
-            expression {
-              return runFullPipeline()
-            }
-          }
-          steps {
-            sh '''cd out/build/Linter
-make all'''
-          }
-        }
-
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
@@ -82,14 +69,28 @@ make -j2 all'''
           }
         }
 
+        stage('MacOS Build') {
+          steps {
 // Disabling while I figure out OSXcross builds with WebKit.  This shouldn't be merged before I Fix this.
-//        stage('MacOS Build') {
-//          steps {
-//            sh '''cd out/build/osxcross
-//make scoreboard_proto cszb-scoreboard'''
-//          }
-//        }
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''cd out/build/osxcross
+export PATH=/opt/osxcross/bin:$PATH
+make scoreboard_proto cszb-scoreboard'''
+            }
+          }
+        }
+      }
+    }
 
+    stage('Lint Build') {
+      when {
+        expression {
+          return runFullPipeline()
+        }
+      }
+      steps {
+        sh '''cd out/build/Linter
+make all'''
       }
     }
 
@@ -143,7 +144,7 @@ make -j2 all'''
           cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
         retry(count: 3) {
           sh '''cd out/build/Coverage
-            make -j2 all cszb-scoreboard-xml-coverage
+            make all cszb-scoreboard-xml-coverage
           '''
         }
         cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
@@ -166,7 +167,6 @@ make -j2 all'''
         )])
       deleteDir()
     }
-
   }
 }
 

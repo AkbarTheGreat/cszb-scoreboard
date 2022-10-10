@@ -50,8 +50,10 @@ QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id, Singleton *singleton)
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
                Size{.width = PREVIEW_WIDTH, .height = PREVIEW_HEIGHT});
 
-  setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
-  setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+  if (id != -1) {
+    setAllText("", 1, Color("Gray"), true, ProtoUtil::homeSide());
+    setAllText("", 1, Color("Gray"), true, ProtoUtil::awaySide());
+  }
 
   // These two buttons are always hidden and exist only to add hotkey support
   set_button = button("");
@@ -68,14 +70,20 @@ void QuickStateEntry::bindEvents(int id) {
                   // digit number.
     command_button = '0';
   }
+  if (id == -1) {
+    command_button = '`';
+    initialized = true;
+  }
   std::string tooltip = tooltipText(command_button);
 
   for (auto *side : sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
-    side->bind(wxEVT_RIGHT_UP,
-               [this](wxMouseEvent &event) -> void { this->setShortcut(); });
+    if (id >= 0) {
+      side->bind(wxEVT_RIGHT_UP,
+                 [this](wxMouseEvent &event) -> void { this->setShortcut(); });
+    }
     side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent &event) -> void {
       this->executeShortcut();
     });
@@ -87,7 +95,7 @@ void QuickStateEntry::bindEvents(int id) {
       [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
   set_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
+      [this](wxCommandEvent &event) -> void { this->setShortcut(); });
 
   singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, command_button,
                                       execute_button->id());
@@ -107,23 +115,44 @@ void QuickStateEntry::setShortcut() {
   QuickStatePanel::setShortcut(this, singleton);
 }
 
-auto QuickStateEntry::tooltipText(char command_character) -> std::string {
-  std::string string_template =
-      "Right Click (Ctrl+Alt+%c) to set\nLeft Click (Ctrl+%c) to send to "
-      "monitors";
+auto QuickStateEntry::fillSingleCharTemplate(const std::string &tmpl,
+                                             char replacement) -> std::string {
   std::string buffer;
 
-  size_t size = string_template.length() + 2;
+  size_t size = tmpl.length() + 2;
   buffer.reserve(size + 1);
   buffer.resize(size);
 
-  snprintf(&buffer[0], size + 1, string_template.c_str(), command_character,
-           command_character);
+  snprintf(buffer.data(), size + 1, tmpl.c_str(), replacement);
+
+  // Remove any trailing null terminators
+  buffer.erase(std::find(buffer.begin(), buffer.end(), '\0'), buffer.end());
+
   return buffer;
+}
+
+auto QuickStateEntry::setTooltipText(char command_character) -> std::string {
+  return fillSingleCharTemplate("Right Click (Ctrl+Alt+%c) to set",
+                                command_character);
+}
+
+auto QuickStateEntry::executeTooltipText(char command_character)
+    -> std::string {
+  return fillSingleCharTemplate("Left Click (Ctrl+%c) to send to monitors",
+                                command_character);
+}
+
+auto QuickStateEntry::tooltipText(char command_character) -> std::string {
+  if (command_character == '`') {
+    return executeTooltipText('~');
+  }
+  return setTooltipText(command_character) + "\n" +
+         executeTooltipText(command_character);
 }
 
 QuickStatePanel::QuickStatePanel(swx::Panel *wx, Singleton *singleton)
     : Panel(wx) {
+  score_entry = std::make_unique<QuickStateEntry>(childPanel(), -1, singleton);
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
     entries.push_back(std::move(
         std::make_unique<QuickStateEntry>(childPanel(), i, singleton)));
@@ -132,8 +161,9 @@ QuickStatePanel::QuickStatePanel(swx::Panel *wx, Singleton *singleton)
 }
 
 void QuickStatePanel::positionWidgets() {
+  addWidget(*score_entry, 0, 0);
   for (int i = 0; i < entries.size(); i++) {
-    addWidget(*entries[i], i, 0);
+    addWidget(*entries[i], i + 1, 0);
   }
 
   runSizer();

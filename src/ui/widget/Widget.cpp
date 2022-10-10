@@ -78,7 +78,8 @@ void Widget::removeColumnFromSizer(int column) {
   if (window_sizer == nullptr) {
     return;
   }
-  auto table = getOrderedRepresentation(window_sizer);
+  std::vector<std::vector<const wxGBSizerItem *>> table =
+      getOrderedRepresentation(window_sizer);
   for (int r = 0; r < table.size(); r++) {
     for (int c = 0; c < table[r].size(); c++) {
       if (table[r][c] == nullptr || table[r][c]->GetWindow() == nullptr) {
@@ -98,7 +99,8 @@ void Widget::removeRowFromSizer(int row) {
   if (window_sizer == nullptr) {
     return;
   }
-  auto table = getOrderedRepresentation(window_sizer);
+  std::vector<std::vector<const wxGBSizerItem *>> table =
+      getOrderedRepresentation(window_sizer);
   for (int r = 0; r < table.size(); r++) {
     for (int c = 0; c < table[r].size(); c++) {
       if (table[r][c] == nullptr || table[r][c]->GetWindow() == nullptr) {
@@ -114,9 +116,24 @@ void Widget::removeRowFromSizer(int row) {
   }
 }
 
+void Widget::runSizer() {
+  std::vector<std::vector<const wxGBSizerItem *>> table =
+      getOrderedRepresentation(window_sizer);
+  for (const auto &row : table) {
+    for (const auto &widget : row) {
+      if (widget == nullptr || widget->GetWindow() == nullptr) {
+        continue;
+      }
+      widget->GetWindow()->Layout();
+    }
+  }
+  wx()->SetSizerAndFit(sizer());
+}
+
 auto Widget::sizer() -> swx::Sizer * {
   if (window_sizer == nullptr) {
     window_sizer = new swx::Sizer();
+    wx()->SetSizer(window_sizer);
   }
   return window_sizer;
 }

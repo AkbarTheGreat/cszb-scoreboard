@@ -51,6 +51,9 @@ void ScreenImageController::bindEvents() {
 }
 
 void ScreenImageController::updateScreenText(ScreenText *screen_text) {
+  if (!isActive()) {
+    return;
+  }
   if (screen_selection->allSelected() && all_screen_image.IsOk()) {
     // Send the image to both screens
     screen_text->setAllText("", 1, Color("Black"), false, ProtoUtil::allSide());

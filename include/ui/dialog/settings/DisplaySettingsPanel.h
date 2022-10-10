@@ -50,12 +50,15 @@ class DisplaySettingsPanel : public Panel {
                        Singleton *singleton);
 
  private:
+  static auto buildDisplaySize(const proto::Rectangle &dimensions)
+      -> std::string;
   static void copyCheckbox(const CheckBox &source, CheckBox *target);
   void createButtonPanel();
   void moveDisplay(bool is_up_button);
   void updateLabel();
 
   int display_id;
+  std::string display_size;
   int index;
   std::unique_ptr<CheckBox> control_checkbox, home_checkbox, away_checkbox;
   std::unique_ptr<Label> display_label;

@@ -52,6 +52,7 @@ class Radio;
 class SearchBox;
 class Text;
 class Toggle;
+class LabelledArea;
 
 class Panel : public Widget {
  public:
@@ -74,6 +75,8 @@ class Panel : public Widget {
       -> std::unique_ptr<FilePicker>;
   [[nodiscard]] auto label(const std::string &text) const
       -> std::unique_ptr<Label>;
+  [[nodiscard]] auto labelledArea(const std::string &label) const
+      -> std::unique_ptr<LabelledArea>;
   [[nodiscard]] auto listBox(const std::string &title) const
       -> std::unique_ptr<ListBox>;
   [[nodiscard]] auto radio(const std::string &name, const char *const *choices,

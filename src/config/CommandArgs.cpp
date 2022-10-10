@@ -47,6 +47,12 @@ CommandArgs::CommandArgs(SingletonClass c) {
 }
 
 auto CommandArgs::autoUpdate() const -> bool { return auto_update; }
+auto CommandArgs::enableImageSearch() const -> bool {
+#ifdef _WIN32
+  return true;
+#endif  // #ifdef _WIN32
+  return false;
+}
 auto CommandArgs::resetConfig() const -> bool { return reset_config; }
 auto CommandArgs::commandPath() -> FilesystemPath { return command_path; }
 

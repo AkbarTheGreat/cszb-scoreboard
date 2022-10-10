@@ -20,10 +20,8 @@ limitations under the License.
 #include <gmock/gmock-matchers.h>                      // for _
 #include <gmock/gmock-spec-builders.h>                 // for EXPECT_CALL
 #include <google/protobuf/util/message_differencer.h>  // for MessageDiffere...
-#include <gtest/gtest-message.h>                       // for Message
-#include <gtest/gtest-test-part.h>                     // for TestPartResult
-#include <gtest/gtest.h>                               // for TestInfo (ptr ...
-#include <wx/gdicmn.h>                                 // for wxRect, wxPoint
+#include <gtest/gtest.h>
+#include <wx/gdicmn.h>  // for wxRect, wxPoint
 
 #include <cstdint>  // for int32_t
 #include <memory>   // for unique_ptr
