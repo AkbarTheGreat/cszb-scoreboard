@@ -25,7 +25,7 @@ endif()
 
 # I don't know exactly how to make this work better, but it's kind of fragile.
 # TODO: Find this cmake file dynamically.
-set(wxWidgets_USE_FILE /usr/share/cmake-3.16/Modules/UsewxWidgets.cmake)
+set(wxWidgets_USE_FILE /usr/share/cmake-3.36/Modules/UsewxWidgets.cmake)
 
 set(wx_root "${OSXCROSS_TARGET_DIR}/wxwidgets")
 set(wxWidgets_LIB_DIR ${wx_root}/lib)
@@ -53,44 +53,42 @@ set(wxWidgets_LINK_FLAGS
 
 
 set(wxWidgets_INCLUDE_DIRS
-	${wx_root}/lib/wx/include/osx_cocoa-unicode-static-3.1
-	${wx_root}/include/wx-3.1
+	${wx_root}/lib/wx/include/osx_cocoa-unicode-static-3.3
+	${wx_root}/include/wx-3.3
 	)
 
 set(wxWidgets_LIBRARY_DIRS ${wx_root}/lib)
 
 # There are likely a bunch of libraries in here we don't need.  The plan is to pare down this list.
 set(wxWidgets_LIBRARIES
-	${wxWidgets_LIB_DIR}/libwx_baseu-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_baseu_net-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_aui-3.1.a
-	${wxWidgets_LIB_DIR}/libwxjpeg-3.1.a
-	${wxWidgets_LIB_DIR}/libwxpng-3.1.a
-	${wxWidgets_LIB_DIR}/libwxtiff-3.1.a
-
+	${wxWidgets_LIB_DIR}/libwx_baseu-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_baseu_net-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_baseu_xml-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_adv-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_aui-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_html-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_media-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_propgrid-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_qa-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_ribbon-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_richtext-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_stc-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_webview-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_xrc-3.3-Darwin.a
+	${wxWidgets_LIB_DIR}/libwxjpeg-3.3.a
+	${wxWidgets_LIB_DIR}/libwxregexu-3.3.a
+	${wxWidgets_LIB_DIR}/libwxscintilla-3.3.a
+	${wxWidgets_LIB_DIR}/libwxpng-3.3.a
+	${wxWidgets_LIB_DIR}/libwxtiff-3.3.a
+		
+	# TODO: Alphabetize these libs and deduplicate the list
 	${macports_lib_dir}/libiconv.a
 	${macports_lib_dir}/libpsl.a
 	${macports_lib_dir}/libunistring.a
-
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_propgrid-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_richtext-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_xrc-3.1.a
-	${wxWidgets_LIB_DIR}/libwxscintilla-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_baseu_net-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_adv-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_html-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_qa-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_stc-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_baseu_xml-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_aui-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_media-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_ribbon-3.1.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_webview-3.1.a
-	${wxWidgets_LIB_DIR}/libwxregexu-3.1.a
-
-	${macports_lib_dir}/libasprintf.a
+	${macports_lib_dir}/libbrotlicommon-static.a
+	${macports_lib_dir}/libbrotlidec-static.a
+	#${macports_lib_dir}/libasprintf.a
 	${macports_lib_dir}/libbz2.a
 	${macports_lib_dir}/libcharset.a
 	${macports_lib_dir}/libcrypto.a
