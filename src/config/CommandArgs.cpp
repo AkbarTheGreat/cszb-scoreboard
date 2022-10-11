@@ -47,6 +47,8 @@ CommandArgs::CommandArgs(SingletonClass c) {
 }
 
 auto CommandArgs::autoUpdate() const -> bool { return auto_update; }
+// For consistency in call sites, leave this as a non-static method.
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 auto CommandArgs::enableImageSearch() const -> bool {
 #ifdef _WIN32
   return true;
