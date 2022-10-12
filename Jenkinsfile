@@ -55,6 +55,18 @@ pipeline {
 
     stage('Build') {
       parallel {
+        stage('Lint Build') {
+            when {
+                expression {
+                    return runFullPipeline()
+                }
+            }
+            steps {
+                sh '''cd out/build/Linter
+make all'''
+            }
+        }
+
         stage('Debug Build') {
           steps {
             sh '''cd out/build/Debug
@@ -76,18 +88,6 @@ export PATH=/opt/osxcross/bin:$PATH
 make scoreboard_proto cszb-scoreboard'''
           }
         }
-      }
-    }
-
-    stage('Lint Build') {
-      when {
-        expression {
-          return runFullPipeline()
-        }
-      }
-      steps {
-        sh '''cd out/build/Linter
-make all'''
       }
     }
 
@@ -141,7 +141,7 @@ make all'''
           cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
         retry(count: 3) {
           sh '''cd out/build/Coverage
-            make all cszb-scoreboard-xml-coverage
+            make -j3 all cszb-scoreboard-xml-coverage
           '''
         }
         cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
