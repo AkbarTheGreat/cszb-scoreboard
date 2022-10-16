@@ -74,7 +74,8 @@ class FilesystemPath {
 
  private:
   std::string path_string;
-};
+
+ public:
 #else
 // Simply alias to std::filesystem::path for non-Mac platforms.
 class FilesystemPath : public std::filesystem::path {
@@ -90,7 +91,12 @@ class FilesystemPath : public std::filesystem::path {
   static void rename(const FilesystemPath &a, const FilesystemPath &b) {
     std::filesystem::rename(a, b);
   }
-};
 #endif
+
+  static auto absolutePath(const std::string &root,
+                           const std::string &file_path) -> std::string;
+  static auto mostRelativePath(const std::string &root,
+                               const std::string &file_path) -> std::string;
+};
 
 }  // namespace cszb_scoreboard

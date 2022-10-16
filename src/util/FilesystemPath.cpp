@@ -73,4 +73,27 @@ void FilesystemPath::replace_filename(const std::string &new_filename) {
 
 #endif
 
+auto FilesystemPath::absolutePath(const std::string &root,
+                                  const std::string &file_path) -> std::string {
+  if (FilesystemPath(file_path).is_absolute()) {
+    return file_path;
+  }
+  return root + static_cast<char>(preferred_separator) + file_path;
+}
+
+// If file_path is already relative, returns file_path.  If file_path is
+// relative to root, returns the relative path.  Otherwise, returns file_path.
+auto FilesystemPath::mostRelativePath(const std::string &root,
+                                      const std::string &file_path)
+    -> std::string {
+  if (FilesystemPath(file_path).is_relative()) {
+    return file_path;
+  }
+  // Search for root at the start of the string.
+  if (file_path.rfind(root + static_cast<char>(preferred_separator), 0) == 0) {
+    return file_path.substr(root.length() + 1, std::string::npos);
+  }
+  return file_path;
+}
+
 }  // namespace cszb_scoreboard
