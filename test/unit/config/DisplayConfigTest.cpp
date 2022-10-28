@@ -186,7 +186,6 @@ class DisplayConfigTest : public ::testing::Test {
   }
 };
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, NumberOfDisplays) {
   // A two window setup returns the right count.
   DisplayConfig dualConfig(SingletonClass{}, singleton.get());
@@ -208,7 +207,6 @@ TEST_F(DisplayConfigTest, NumberOfDisplays) {
   EXPECT_EQ(3, autoConfig.numberOfDisplays());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, ExternalConfigSkipsIfCountIsIdentical) {
   // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
@@ -229,7 +227,6 @@ TEST_F(DisplayConfigTest, ExternalConfigSkipsIfCountIsIdentical) {
   EXPECT_PROTO_EQ(*expected, config.displayConfig());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
@@ -252,7 +249,6 @@ TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   EXPECT_PROTO_EQ(expected, config.displayConfig());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
@@ -280,7 +276,6 @@ TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   EXPECT_PROTO_EQ(expected, config.displayConfig());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
@@ -314,7 +309,6 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   EXPECT_PROTO_EQ(expected, config.displayConfig());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, SetSide) {
   DisplayConfig config(SingletonClass{}, singleton.get());
   auto *newSide = new proto::ScreenSide();
@@ -328,7 +322,6 @@ TEST_F(DisplayConfigTest, SetSide) {
   EXPECT_PROTO_EQ(*expected, config.displayConfig());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(DisplayConfigTest, SetDisplayId) {
   DisplayConfig config(SingletonClass{}, singleton.get());
   EXPECT_TRUE(
