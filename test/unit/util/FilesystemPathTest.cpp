@@ -37,7 +37,6 @@ const char *ABS_PATH_OUT_OF_ROOT = "/test2/path1/file1.ext";
 
 namespace cszb_scoreboard::test {
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(FilesystemPathTest, AbsolutePathConversions) {
   EXPECT_EQ(FilesystemPath::absolutePath(ROOT, RELATIVE_PATH_IN_ROOT),
             ABS_PATH_IN_ROOT);
@@ -45,7 +44,6 @@ TEST(FilesystemPathTest, AbsolutePathConversions) {
             ABS_PATH_OUT_OF_ROOT);
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(FilesystemPathTest, RelativePathConversions) {
   EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT, RELATIVE_PATH_IN_ROOT),
             RELATIVE_PATH_IN_ROOT);
