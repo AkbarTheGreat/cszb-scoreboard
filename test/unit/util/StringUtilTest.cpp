@@ -26,14 +26,12 @@ limitations under the License.
 
 namespace cszb_scoreboard::test {
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(StringUtilTest, ConvertsPositiveIntegersToStrings) {
   EXPECT_EQ(StringUtil::intToString(1), "1");
   EXPECT_EQ(StringUtil::intToString(20), "20");
   EXPECT_EQ(StringUtil::intToString(1234567890L), "1234567890");
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(StringUtilTest, ConvertsPositiveIntegersFromStrings) {
   EXPECT_EQ(StringUtil::stringToInt("1"), 1);
   EXPECT_EQ(StringUtil::stringToInt("20"), 20);
@@ -41,20 +39,17 @@ TEST(StringUtilTest, ConvertsPositiveIntegersFromStrings) {
             1234567890L);  // NOLINT(readability-magic-numbers)
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(StringUtilTest, ConvertsZeroBothDirections) {
   EXPECT_EQ(StringUtil::intToString(0), "0");
   EXPECT_EQ(StringUtil::stringToInt("0"), 0);
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(StringUtilTest, ConvertsNegativeIntegersToStrings) {
   EXPECT_EQ(StringUtil::intToString(-1), "-1");
   EXPECT_EQ(StringUtil::intToString(-20), "-20");
   EXPECT_EQ(StringUtil::intToString(-1234567890L), "-1234567890");
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(StringUtilTest, ConvertsNegativeIntegersFromStrings) {
   EXPECT_EQ(StringUtil::stringToInt("-1"), -1);
   EXPECT_EQ(StringUtil::stringToInt("-20"), -20);
@@ -62,7 +57,6 @@ TEST(StringUtilTest, ConvertsNegativeIntegersFromStrings) {
             -1234567890L);  // NOLINT(readability-magic-numbers)
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(StringUtilTest, ZeroPaddingWorksAsExpected) {
   EXPECT_EQ(StringUtil::intToString(1, 0), "1");
   EXPECT_EQ(StringUtil::intToString(1, 1), "1");

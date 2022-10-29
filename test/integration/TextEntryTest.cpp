@@ -73,7 +73,6 @@ class TextEntryTest : public GuiTest {
   }
 };
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST_F(TextEntryTest, TypingTest) {
   if (Singleton::getInstance()
           ->displayConfig()

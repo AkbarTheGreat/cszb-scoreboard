@@ -34,33 +34,38 @@ limitations under the License.
 
 namespace cszb_scoreboard::test {
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
+void assertErrorColors(const ImageAnalysis &analysis) {
+  // The error image on pane 0 is ~50% white, ~50% red with black text over
+  // part of it.  We rely on display config to tell us which kind of display
+  // we should be testing.
+  ASSERT_GT(analysis.colorPercentage(wxColour("Red")), 25);
+  ASSERT_LT(analysis.colorPercentage(wxColour("Red")), 70);
+  ASSERT_GT(analysis.colorPercentage(wxColour("White")), 25);
+  ASSERT_LT(analysis.colorPercentage(wxColour("White")), 70);
+  ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
+  ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 20);
+}
+
+void assertTeamColors(const ImageAnalysis &analysis) {
+  ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 70);
+  ASSERT_GT(analysis.colorPercentage(wxColour("White")), 1.25);
+  ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);
+}
+
 TEST_F(GuiTest, ScreenPreviewInitializationTest) {
   // Probably unnecessary to set the focus, but doing it anyway
   WX_A(mainView()->focus());
   WX_A(textEntry()->selectTeam(0));
   ImageAnalysis analysis(firstPreview()->screen()->sidePanel(0),
                          IA_MODE_QUARTER_SCAN);
-  std::vector<int> color_list = analysis.colorList();
-  int list_size = color_list.size();
   if (Singleton::getInstance()
           ->displayConfig()
           ->displayDetails(0)
           .side()
           .error()) {
-    // The error image on pane 0 is ~50% white, ~50% red with black text over
-    // part of it.  We rely on display config to tell us which kind of display
-    // we should be testing.
-    ASSERT_GT(analysis.colorPercentage(wxColour("Red")), 25);
-    ASSERT_LT(analysis.colorPercentage(wxColour("Red")), 70);
-    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 25);
-    ASSERT_LT(analysis.colorPercentage(wxColour("White")), 70);
-    ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
-    ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 20);
+    assertErrorColors(analysis);
   } else {
-    ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 70);
-    ASSERT_GT(analysis.colorPercentage(wxColour("White")), 1.25);
-    ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);
+    assertTeamColors(analysis);
   }
 }
 

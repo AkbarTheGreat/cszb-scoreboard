@@ -56,7 +56,6 @@ auto parseCommandLine(int argc, char **argv) -> std::unique_ptr<CommandArgs> {
   return cmd_args;
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(CommandArgsTest, AutoUpdateFlagWorksCorrectly) {
   const std::array<const char *, 2> single_letter = {
       {{"scoreboard_testing.exe"}, {"-n"}}};
@@ -69,7 +68,6 @@ TEST(CommandArgsTest, AutoUpdateFlagWorksCorrectly) {
   EXPECT_FALSE(parseCommandLine(ARG_ARR(full_word))->autoUpdate());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(CommandArgsTest, ResetConfigFlagWorksCorrectly) {
   const std::array<const char *, 2> single_letter = {
       {{"scoreboard_testing.exe"}, {"-r"}}};
@@ -82,7 +80,6 @@ TEST(CommandArgsTest, ResetConfigFlagWorksCorrectly) {
   EXPECT_TRUE(parseCommandLine(ARG_ARR(full_word))->resetConfig());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(CommandArgsTest, DefaultValuesAreCorrect) {
   const std::array<const char *, 1> no_args = {{{"scoreboard_testing.exe"}}};
 
@@ -92,7 +89,6 @@ TEST(CommandArgsTest, DefaultValuesAreCorrect) {
   EXPECT_FALSE(cmdArgs->resetConfig());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(CommandArgsTest, FlagsDoNotInteract) {
   // Defaults are still applied when the other flag is thrown.
   const std::array<const char *, 2> no_update = {
@@ -106,7 +102,6 @@ TEST(CommandArgsTest, FlagsDoNotInteract) {
   EXPECT_TRUE(parseCommandLine(ARG_ARR(reset_config))->autoUpdate());
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(CommandArgsTest, CommandIsFirstArgument) {
   const std::array<const char *, 1> no_args = {{{"scoreboard_testing.exe"}}};
 

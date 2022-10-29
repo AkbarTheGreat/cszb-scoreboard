@@ -44,7 +44,6 @@ auto testObject(std::unique_ptr<MockHttpReader> reader,
                                       std::move(reader));
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, VersionComparisons) {
   EXPECT_EQ(Version("1.2.3"), Version("1.2.3"));
   EXPECT_NE(Version("1.2.3"), Version("3.2.1"));
@@ -73,7 +72,6 @@ TEST(AutoUpdateTest, VersionComparisons) {
   EXPECT_LT(Version("1.2.0"), Version("1.2.3_extra_text"));
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, NewVersionFound) {
   std::string json = R"({
 "name":   "1.2.3",
@@ -96,7 +94,6 @@ TEST(AutoUpdateTest, NewVersionFound) {
   EXPECT_TRUE(updater->checkForUpdate("0.3.3"));
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, NoNewVersionFound) {
   std::string json = R"({
 "name":   "1.2.3",
@@ -119,7 +116,6 @@ TEST(AutoUpdateTest, NoNewVersionFound) {
   EXPECT_FALSE(updater->checkForUpdate("1.3.0"));
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, VersionDownloads) {
   std::string json = R"({
 "name":   "1.2.3",
@@ -156,7 +152,6 @@ TEST(AutoUpdateTest, VersionDownloads) {
 #ifdef SCOREBOARD_INTEGRATION_TEST
 // This tests that communication with github actually works, so we should test
 // it sparingly.
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(AutoUpdateTest, LiveServerTest) {
   MockSingleton singleton;
   AutoUpdate updater(SingletonClass{});
