@@ -167,11 +167,11 @@ void ImageAnalysis::countCenterlinePixels(const wxClientDC &dc,
   }
 }
 
-auto ImageAnalysis::colorPercentage(const wxColour &color) -> float {
+auto ImageAnalysis::colorPercentage(const wxColour &color) const -> float {
   if (color_percentages.find(color.GetRGB()) == color_percentages.end()) {
     return 0;
   }
-  return color_percentages[color.GetRGB()];
+  return color_percentages.at(color.GetRGB());
 }
 
 auto ImageAnalysis::colorAmount(const wxColour &color) -> float {

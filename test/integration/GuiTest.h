@@ -68,7 +68,7 @@ class ImageAnalysis {
   // Create an ImageAnalysis object where only x% of the pixels are sampled for
   // color counts, for speed.
   ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode);
-  auto colorPercentage(const wxColour &color) -> float;
+  auto colorPercentage(const wxColour &color) const -> float;
   auto colorAmount(const wxColour &color) -> float;
   auto colorList() -> std::vector<int>;
 

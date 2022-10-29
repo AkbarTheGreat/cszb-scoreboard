@@ -131,7 +131,6 @@ auto tagStrings(const ImageLibrary &library, bool include_name = false)
   return tag_strings;
 }
 
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
@@ -148,7 +147,6 @@ TEST(ImageLibraryTest, AllTagsBuildsCorrectly) {
 }
 
 // Searches for full single words match the relevant tag if it exists.
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, FullWordSearches) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
@@ -176,7 +174,6 @@ TEST(ImageLibraryTest, FullWordSearches) {
 }
 
 // Searches for words that are not a tag return all partially matching tags.
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, PartialWordSearches) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
@@ -212,7 +209,6 @@ TEST(ImageLibraryTest, PartialWordSearches) {
 }
 
 // Makes sure that the de-duplication logic works correctly
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, DeduplicatingSearches) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
@@ -225,7 +221,6 @@ TEST(ImageLibraryTest, DeduplicatingSearches) {
 }
 
 // Makes sure that case insensitive searches work correctly
-// NOLINTNEXTLINE until https://reviews.llvm.org/D90835 is released.
 TEST(ImageLibraryTest, CaseInsensitiveSearches) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
