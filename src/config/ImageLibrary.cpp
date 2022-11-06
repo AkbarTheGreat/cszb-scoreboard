@@ -56,7 +56,11 @@ ImageLibrary::ImageLibrary(SingletonClass c, Singleton *singleton,
 }
 
 auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
-  return search("").filenames();
+  std::vector<FilesystemPath> filenames;
+  for (const auto &image : library.images()) {
+    filenames.push_back(FilesystemPath(image.file_path()));
+  }
+  return filenames;
 }
 
 auto ImageLibrary::allTags(bool include_name) const
@@ -115,6 +119,10 @@ void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
   }
 }
 
+void ImageLibrary::removeLibraryRoot() {}
+
+void ImageLibrary::setLibraryRoot(const FilesystemPath &root) {}
+
 void ImageLibrary::clearLibrary() { library.Clear(); }
 
 void ImageLibrary::saveLibrary() {
@@ -134,10 +142,18 @@ auto ImageLibrary::search(const std::string &query) -> ImageSearchResults {
   return partialMatchSearch(query);
 }
 
+void ImageLibrary::addMatch(std::vector<proto::ImageInfo> *matched_images,
+                            const proto::ImageInfo &image) {
+  proto::ImageInfo image_copy(image);
+  image_copy.set_file_path(
+      FilesystemPath::absolutePath(library.library_root(), image.file_path()));
+  matched_images->push_back(image_copy);
+}
+
 auto ImageLibrary::emptySearch() -> ImageSearchResults {
   std::vector<proto::ImageInfo> matched_images;
   for (const auto &image : library.images()) {
-    matched_images.push_back(image);
+    addMatch(&matched_images, image);
   }
   return {matched_images, "", allTags()};
 }
@@ -149,7 +165,7 @@ auto ImageLibrary::exactMatchSearch(const std::string &query)
     if ((image.name() == query) ||
         (std::find(image.tags().begin(), image.tags().end(), query) !=
          image.tags().end())) {
-      matched_images.push_back(image);
+      addMatch(&matched_images, image);
     }
   }
   if (matched_images.empty()) {
@@ -168,14 +184,14 @@ auto ImageLibrary::partialMatchSearch(const std::string &query)
     bool image_matched = false;
     if (CaseOptionalString(image.name()).find(lower_query) !=
         std::string::npos) {
-      matched_images.push_back(image);
+      addMatch(&matched_images, image);
       insertIntoSortedVector(&matched_tags, image.name());
       image_matched = true;
     }
     for (const auto &tag : image.tags()) {
       if (CaseOptionalString(tag).substring(lower_query)) {
         if (!image_matched) {
-          matched_images.push_back(image);
+          addMatch(&matched_images, image);
         }
         image_matched = true;
         insertIntoSortedVector(&matched_tags, tag);

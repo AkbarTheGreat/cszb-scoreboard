@@ -70,14 +70,16 @@ class ImageSearchResults {
 class ImageLibrary {
  public:
   explicit ImageLibrary(SingletonClass c);
-  // Returns all unique tags, sorted
   auto allFilenames() -> std::vector<FilesystemPath>;
+  // Returns all unique tags, sorted
   auto allTags(bool include_name = false) const
       -> std::vector<CaseOptionalString>;
   auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
   auto name(const FilesystemPath &filename) -> std::string;
   void addImage(const FilesystemPath &file, const std::string &name,
                 const std::vector<std::string> &tags);
+  void removeLibraryRoot();
+  void setLibraryRoot(const FilesystemPath &root);
   void clearLibrary();
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;
@@ -96,6 +98,8 @@ class ImageLibrary {
   auto exactMatchSearch(const std::string &query) -> ImageSearchResults;
   auto infoByFile(const FilesystemPath &filename) -> proto::ImageInfo;
   auto partialMatchSearch(const std::string &query) -> ImageSearchResults;
+  void addMatch(std::vector<proto::ImageInfo> *matched_images,
+                const proto::ImageInfo &image);
 };
 
 }  // namespace cszb_scoreboard
