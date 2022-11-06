@@ -47,6 +47,14 @@ class FilesystemPath {
 
   [[nodiscard]] auto compare(const FilesystemPath &p) const -> int;
 
+  [[nodiscard]] auto is_absolute() const -> bool {
+    return path_string[0] == '/';
+  }
+
+  [[nodiscard]] auto is_relative() const -> bool {
+    return !is_absolute();
+  }
+
   friend auto operator<(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return a.compare(b) < 0;

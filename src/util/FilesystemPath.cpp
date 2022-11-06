@@ -28,6 +28,8 @@ namespace cszb_scoreboard {
 
 #ifdef __APPLE__
 
+constexpr char preferred_separator = '/';
+
 FilesystemPath::FilesystemPath() { path_string = ""; }
 
 FilesystemPath::FilesystemPath(const std::string &str) { path_string = str; }
