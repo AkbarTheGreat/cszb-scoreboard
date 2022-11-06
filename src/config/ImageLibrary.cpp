@@ -58,7 +58,7 @@ ImageLibrary::ImageLibrary(SingletonClass c, Singleton *singleton,
 auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> filenames;
   for (const auto &image : library.images()) {
-    filenames.push_back(FilesystemPath(image.file_path()));
+    filenames.emplace_back(FilesystemPath(image.file_path()));
   }
   return filenames;
 }
@@ -147,7 +147,7 @@ void ImageLibrary::addMatch(std::vector<proto::ImageInfo> *matched_images,
   proto::ImageInfo image_copy(image);
   image_copy.set_file_path(
       FilesystemPath::absolutePath(library.library_root(), image.file_path()));
-  matched_images->push_back(image_copy);
+  matched_images->emplace_back(image_copy);
 }
 
 auto ImageLibrary::emptySearch() -> ImageSearchResults {
