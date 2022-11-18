@@ -75,12 +75,21 @@ void FilesystemPath::replace_filename(const std::string &new_filename) {
 
 #endif
 
+auto FilesystemPath::stripTrailingSeparator(const std::string &path)
+    -> std::string {
+  if (path.at(path.length() - 1) == preferred_separator) {
+    return path.substr(0, path.length() - 1);
+  }
+  return path;
+}
+
 auto FilesystemPath::absolutePath(const std::string &root,
                                   const std::string &file_path) -> std::string {
   if (FilesystemPath(file_path).is_absolute()) {
     return file_path;
   }
-  return root + static_cast<char>(preferred_separator) + file_path;
+  return stripTrailingSeparator(root) + static_cast<char>(preferred_separator) +
+         file_path;
 }
 
 // If file_path is already relative, returns file_path.  If file_path is
@@ -91,9 +100,11 @@ auto FilesystemPath::mostRelativePath(const std::string &root,
   if (FilesystemPath(file_path).is_relative()) {
     return file_path;
   }
+  auto effective_root = stripTrailingSeparator(root);
   // Search for root at the start of the string.
-  if (file_path.rfind(root + static_cast<char>(preferred_separator), 0) == 0) {
-    return file_path.substr(root.length() + 1, std::string::npos);
+  if (file_path.rfind(effective_root + static_cast<char>(preferred_separator),
+                      0) == 0) {
+    return file_path.substr(effective_root.length() + 1, std::string::npos);
   }
   return file_path;
 }

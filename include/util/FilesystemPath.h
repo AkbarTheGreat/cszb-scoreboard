@@ -51,9 +51,7 @@ class FilesystemPath {
     return path_string[0] == '/';
   }
 
-  [[nodiscard]] auto is_relative() const -> bool {
-    return !is_absolute();
-  }
+  [[nodiscard]] auto is_relative() const -> bool { return !is_absolute(); }
 
   friend auto operator<(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
@@ -105,6 +103,9 @@ class FilesystemPath : public std::filesystem::path {
                            const std::string &file_path) -> std::string;
   static auto mostRelativePath(const std::string &root,
                                const std::string &file_path) -> std::string;
+
+ private:
+  static auto stripTrailingSeparator(const std::string &path) -> std::string;
 };
 
 }  // namespace cszb_scoreboard

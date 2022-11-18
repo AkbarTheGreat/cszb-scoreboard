@@ -24,12 +24,14 @@ limitations under the License.
 
 #ifdef _WIN32
 const char *ROOT = "C:\\test";
+const char *ROOT_WITH_SEP = "C:\\test\\";
 const char *RELATIVE_PATH_IN_ROOT = "path1\\file1.ext";
 const char *ABS_PATH_IN_ROOT = "C:\\test\\path1\\file1.ext";
 const char *ABS_PATH_OUT_OF_ROOT = "C:\\test2\\path1\\file1.ext";
 #else   // ifdef _WIN32
 // Treat Linux or Apple the same for testing
 const char *ROOT = "/test";
+const char *ROOT_WITH_SEP = "/test/";
 const char *RELATIVE_PATH_IN_ROOT = "path1/file1.ext";
 const char *ABS_PATH_IN_ROOT = "/test/path1/file1.ext";
 const char *ABS_PATH_OUT_OF_ROOT = "/test2/path1/file1.ext";
@@ -50,6 +52,19 @@ TEST(FilesystemPathTest, RelativePathConversions) {
   EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT, ABS_PATH_IN_ROOT),
             RELATIVE_PATH_IN_ROOT);
   EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT, ABS_PATH_OUT_OF_ROOT),
+            ABS_PATH_OUT_OF_ROOT);
+}
+
+TEST(FilesystemPathTest, TrailingPathSeparator) {
+  EXPECT_EQ(FilesystemPath::absolutePath(ROOT_WITH_SEP, RELATIVE_PATH_IN_ROOT),
+            ABS_PATH_IN_ROOT);
+  EXPECT_EQ(FilesystemPath::absolutePath(ROOT_WITH_SEP, ABS_PATH_OUT_OF_ROOT),
+            ABS_PATH_OUT_OF_ROOT);
+  EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT_WITH_SEP, RELATIVE_PATH_IN_ROOT),
+            RELATIVE_PATH_IN_ROOT);
+  EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT_WITH_SEP, ABS_PATH_IN_ROOT),
+            RELATIVE_PATH_IN_ROOT);
+  EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT_WITH_SEP, ABS_PATH_OUT_OF_ROOT),
             ABS_PATH_OUT_OF_ROOT);
 }
 
