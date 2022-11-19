@@ -132,17 +132,25 @@ void ImageLibrary::removeLibraryRoot() {
   library.clear_library_root();
 }
 
+void ImageLibrary::moveLibraryRoot(const FilesystemPath &root) {
+  std::string debug;
+  library.SerializeToString(&debug);
+  printf("PRE: %s\n", debug.c_str());
+  library.set_library_root(root.string());
+  library.SerializeToString(&debug);
+  printf("POST: %s\n", debug.c_str());
+}
+
 void ImageLibrary::setLibraryRoot(const FilesystemPath &root) {
   auto *images = library.mutable_images();
   for (auto &image : *images) {
     auto absPath =
         FilesystemPath::absolutePath(library.library_root(), image.file_path());
-    auto relPath = 
-        FilesystemPath::mostRelativePath(root.string(), absPath);
+    auto relPath = FilesystemPath::mostRelativePath(root.string(), absPath);
     image.set_file_path(
         FilesystemPath::mostRelativePath(root.string(), absPath));
   }
-  library.set_library_root(root.string());
+  moveLibraryRoot(root);
 }
 
 void ImageLibrary::clearLibrary() { library.Clear(); }

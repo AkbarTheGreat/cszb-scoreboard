@@ -80,6 +80,12 @@ class ImageLibrary {
                 const std::vector<std::string> &tags);
   auto libraryRoot() -> FilesystemPath;
   void removeLibraryRoot();
+  // moveLibraryRoot moves the root without changing any relative paths.  Use
+  // this if the entire directory was relocated and you want to shift them all
+  // at one time.
+  void moveLibraryRoot(const FilesystemPath &root);
+  // setLibraryRoot sets the root, updating every file to match the new relative
+  // location.  Use this if the root is changed, but no files are moved.
   void setLibraryRoot(const FilesystemPath &root);
   void clearLibrary();
   void saveLibrary();

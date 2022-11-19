@@ -247,10 +247,11 @@ TEST(ImageLibraryTest, DeduplicatingSearches) {
 TEST(ImageLibraryTest, CaseInsensitiveSearches) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
-  // This single-letter search should match 3/4 images
+  // This should match exactly one image
   auto result = library.search("stall");
   ASSERT_STR_VECTOR(result.matchedTags(), {"Stall"});
   ASSERT_PATH_VECTOR(result.filenames(), {LIB_ROOT + "but-why.jpg"});
+  // This should match exactly one image
   result = library.search("bath");
   ASSERT_STR_VECTOR(result.matchedTags(), {"Bathroom"});
   ASSERT_PATH_VECTOR(result.filenames(), {LIB_ROOT + "but-why.jpg"});
@@ -260,7 +261,6 @@ TEST(ImageLibraryTest, RemoveRoot) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
   library.removeLibraryRoot();
-  // This single-letter search should match 3/4 images
   std::vector<FilesystemPath> files = library.allFilenames();
   ASSERT_PATH_VECTOR(files,
                      {LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
@@ -268,11 +268,27 @@ TEST(ImageLibraryTest, RemoveRoot) {
   ASSERT_EQ(library.libraryRoot(), "");
 }
 
+TEST(ImageLibraryTest, MoveRoot) {
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
+  library.moveLibraryRoot(FilesystemPath(NONLIB_ROOT));
+  // The one relative path in the library (great_dane) moves implicitly, all
+  // other paths remain the same.
+  auto result = library.search("");
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {LIB_ROOT + "corgi.jpg", NONLIB_ROOT + "great_dane.jpg",
+                      NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"});
+  std::vector<FilesystemPath> files = library.allFilenames();
+  ASSERT_PATH_VECTOR(files,
+                     {LIB_ROOT + "corgi.jpg", "great_dane.jpg",
+                      NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"});
+  ASSERT_EQ(library.libraryRoot(), NONLIB_ROOT);
+}
+
 TEST(ImageLibraryTest, SetRoot) {
   MockSingleton singleton;
   ImageLibrary library = testLibrary(&singleton);
   library.setLibraryRoot(FilesystemPath(NONLIB_ROOT));
-  // This single-letter search should match 3/4 images
   std::vector<FilesystemPath> files = library.allFilenames();
   ASSERT_PATH_VECTOR(
       files, {LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg", "capy.jpg",
