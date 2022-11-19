@@ -256,4 +256,28 @@ TEST(ImageLibraryTest, CaseInsensitiveSearches) {
   ASSERT_PATH_VECTOR(result.filenames(), {LIB_ROOT + "but-why.jpg"});
 }
 
+TEST(ImageLibraryTest, RemoveRoot) {
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
+  library.removeLibraryRoot();
+  // This single-letter search should match 3/4 images
+  std::vector<FilesystemPath> files = library.allFilenames();
+  ASSERT_PATH_VECTOR(files,
+                     {LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
+                      NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"});
+  ASSERT_EQ(library.libraryRoot(), "");
+}
+
+TEST(ImageLibraryTest, SetRoot) {
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
+  library.setLibraryRoot(FilesystemPath(NONLIB_ROOT));
+  // This single-letter search should match 3/4 images
+  std::vector<FilesystemPath> files = library.allFilenames();
+  ASSERT_PATH_VECTOR(
+      files, {LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg", "capy.jpg",
+              LIB_ROOT + "but-why.jpg"});
+  ASSERT_EQ(library.libraryRoot(), NONLIB_ROOT);
+}
+
 }  // namespace cszb_scoreboard::test

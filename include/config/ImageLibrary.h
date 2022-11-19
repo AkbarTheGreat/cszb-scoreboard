@@ -78,6 +78,7 @@ class ImageLibrary {
   auto name(const FilesystemPath &filename) -> std::string;
   void addImage(const FilesystemPath &file, const std::string &name,
                 const std::vector<std::string> &tags);
+  auto libraryRoot() -> FilesystemPath;
   void removeLibraryRoot();
   void setLibraryRoot(const FilesystemPath &root);
   void clearLibrary();

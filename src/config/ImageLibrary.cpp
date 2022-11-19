@@ -119,9 +119,31 @@ void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
   }
 }
 
-void ImageLibrary::removeLibraryRoot() {}
+auto ImageLibrary::libraryRoot() -> FilesystemPath {
+  return FilesystemPath(library.library_root());
+}
 
-void ImageLibrary::setLibraryRoot(const FilesystemPath &root) {}
+void ImageLibrary::removeLibraryRoot() {
+  auto *images = library.mutable_images();
+  for (auto &image : *images) {
+    image.set_file_path(FilesystemPath::absolutePath(library.library_root(),
+                                                     image.file_path()));
+  }
+  library.clear_library_root();
+}
+
+void ImageLibrary::setLibraryRoot(const FilesystemPath &root) {
+  auto *images = library.mutable_images();
+  for (auto &image : *images) {
+    auto absPath =
+        FilesystemPath::absolutePath(library.library_root(), image.file_path());
+    auto relPath = 
+        FilesystemPath::mostRelativePath(root.string(), absPath);
+    image.set_file_path(
+        FilesystemPath::mostRelativePath(root.string(), absPath));
+  }
+  library.set_library_root(root.string());
+}
 
 void ImageLibrary::clearLibrary() { library.Clear(); }
 
