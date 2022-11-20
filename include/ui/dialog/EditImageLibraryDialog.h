@@ -24,12 +24,14 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "image_library.pb.h"                          // for ImageInfo
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-#include "ui/widget/Label.h"                           // for Label
-#include "ui/widget/ListBox.h"                         // for ListBox
-#include "ui/widget/Panel.h"                           // for Panel
-#include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
-#include "ui/widget/Text.h"                            // for Text
-#include "util/FilesystemPath.h"                       // for FilesystemPath
+#include "ui/widget/CheckBox.h"
+#include "ui/widget/Divider.h"
+#include "ui/widget/Label.h"         // for Label
+#include "ui/widget/ListBox.h"       // for ListBox
+#include "ui/widget/Panel.h"         // for Panel
+#include "ui/widget/TabbedDialog.h"  // for TabbedDialog
+#include "ui/widget/Text.h"          // for Text
+#include "util/FilesystemPath.h"     // for FilesystemPath
 #include "util/Singleton.h"
 
 class wxListEvent;
@@ -55,6 +57,10 @@ class EditImageLibraryDialog : public TabbedDialog {
   std::unique_ptr<Panel> box_panel;
   std::unique_ptr<Text> name_entry;
   std::unique_ptr<Label> name_label;
+  std::unique_ptr<Divider> root_divider;
+  std::unique_ptr<Text> root_entry;
+  std::unique_ptr<Label> root_label;
+  std::unique_ptr<CheckBox> root_move_checkbox;
   std::unique_ptr<ListBox> tag_list;
   std::map<FilesystemPath, proto::ImageInfo> images;
   ImageFromLibrary *parent;
@@ -68,6 +74,7 @@ class EditImageLibraryDialog : public TabbedDialog {
   void onOk();
   void onCancel();
   void nameUpdated();
+  void rootUpdated();
   void tagDeleted(const wxListEvent &event);
   void tagsUpdated(const wxListEvent &event);
 };
