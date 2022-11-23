@@ -123,18 +123,7 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  singleton->imageLibrary()->clearLibrary();
-  for (const auto &filename : file_list->getFilenames()) {
-    std::vector<std::string> tags;
-    for (const auto &tag : images[filename].tags()) {
-      // Strip out empty tags that're left by accident.
-      if (!tag.empty()) {
-        tags.push_back(tag);
-      }
-    }
-    singleton->imageLibrary()->addImage(filename, images[filename].name(),
-                                        tags);
-  }
+  singleton->imageLibrary()->updateFromImageMap(images, file_list->getFilenames());
   singleton->imageLibrary()->saveLibrary();
 }
 
