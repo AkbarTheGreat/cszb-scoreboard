@@ -82,6 +82,8 @@ class ImageLibrary {
   void updateFromImageMap(const std::map<FilesystemPath, proto::ImageInfo> &map,
                           const std::vector<FilesystemPath> &order);
   auto name(const FilesystemPath &filename) -> std::string;
+  void setName(const FilesystemPath &filename, std::string name);
+
   void addImage(const FilesystemPath &file, const std::string &name,
                 const std::vector<std::string> &tags);
   auto libraryRoot() -> FilesystemPath;
@@ -97,6 +99,7 @@ class ImageLibrary {
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;
   auto tags(const FilesystemPath &filename) -> std::vector<CaseOptionalString>;
+  void setTags(const FilesystemPath &filename, std::vector<std::string> tags);
 
   PUBLIC_TEST_ONLY
   // Test-available constructor which initializes this object from an in-memory

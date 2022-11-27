@@ -26,7 +26,8 @@ limitations under the License.
 
 #include "config/Persistence.h"   // for Persistence
 #include "util/FilesystemPath.h"  // for FilesystemPath
-#include "util/Singleton.h"       // for Singleton, SingletonClass
+#include "util/Log.h"
+#include "util/Singleton.h"  // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
 
@@ -124,6 +125,30 @@ auto ImageLibrary::infoByFile(const FilesystemPath &filename)
     }
   }
   return {};
+}
+
+void ImageLibrary::setName(const FilesystemPath &filename, std::string name) {
+  for (auto &image : *library.mutable_images()) {
+    if (image.file_path() == filename.string()) {
+      image.set_name(name);
+      return;
+    }
+  }
+  LogDebug("Attempt to set name of unknown file: %s", filename.c_str());
+}
+
+void ImageLibrary::setTags(const FilesystemPath &filename,
+                           std::vector<std::string> tags) {
+  for (auto &image : *library.mutable_images()) {
+    if (image.file_path() == filename.string()) {
+      image.clear_tags();
+      for (const auto &tag : tags) {
+        image.add_tags(tag);
+      }
+      return;
+    }
+  }
+  LogDebug("Attempt to set tags of unknown file: %s", filename.c_str());
 }
 
 auto ImageLibrary::name(const FilesystemPath &filename) -> std::string {
