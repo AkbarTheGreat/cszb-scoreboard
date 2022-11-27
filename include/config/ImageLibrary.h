@@ -67,6 +67,8 @@ class ImageSearchResults {
   friend class ImageLibrary;
 };
 
+class TemporaryImageLibrary;
+
 class ImageLibrary {
  public:
   explicit ImageLibrary(SingletonClass c);
@@ -75,7 +77,8 @@ class ImageLibrary {
   auto allTags(bool include_name = false) const
       -> std::vector<CaseOptionalString>;
   auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
-  void copyFrom(const ImageLibrary &other);
+  auto temporaryClone() -> std::unique_ptr<TemporaryImageLibrary>;
+  void copyFrom(const TemporaryImageLibrary &other);
   void updateFromImageMap(const std::map<FilesystemPath, proto::ImageInfo> &map,
                           const std::vector<FilesystemPath> &order);
   auto name(const FilesystemPath &filename) -> std::string;
@@ -101,6 +104,9 @@ class ImageLibrary {
   ImageLibrary(SingletonClass c, Singleton *singleton,
                proto::ImageLibrary library);
 
+ protected:
+  bool enable_persistence = true;
+
  private:
   proto::ImageLibrary library;
   Singleton *singleton;
@@ -110,6 +116,13 @@ class ImageLibrary {
   auto partialMatchSearch(const std::string &query) -> ImageSearchResults;
   void addMatch(std::vector<proto::ImageInfo> *matched_images,
                 const proto::ImageInfo &image);
+};
+
+// A non-singleton subclass of the singleton ImageLibrary which turns off all
+// persistence functionality in the ImageLibrary, but otherwise is editable.
+class TemporaryImageLibrary : public ImageLibrary {
+ public:
+  TemporaryImageLibrary(Singleton *singleton, proto::ImageLibrary library);
 };
 
 }  // namespace cszb_scoreboard

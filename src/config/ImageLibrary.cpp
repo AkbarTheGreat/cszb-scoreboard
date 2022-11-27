@@ -77,7 +77,13 @@ auto ImageLibrary::allTags(bool include_name) const
   return tags;
 }
 
-void ImageLibrary::copyFrom(const ImageLibrary &other) {
+auto ImageLibrary::temporaryClone() -> std::unique_ptr<TemporaryImageLibrary> {
+  proto::ImageLibrary library_copy;
+  library_copy.CopyFrom(library);
+  return std::make_unique<TemporaryImageLibrary>(singleton, library_copy);
+}
+
+void ImageLibrary::copyFrom(const TemporaryImageLibrary &other) {
   // Unlikely to ever change, but for completeness, re-assign the singleton
   // pointer.
   this->singleton = other.singleton;
@@ -181,7 +187,9 @@ void ImageLibrary::setLibraryRoot(const FilesystemPath &root) {
 void ImageLibrary::clearLibrary() { library.Clear(); }
 
 void ImageLibrary::saveLibrary() {
-  singleton->persistence()->saveImageLibrary(library);
+  if (enable_persistence) {
+    singleton->persistence()->saveImageLibrary(library);
+  }
 }
 
 auto ImageLibrary::search(const std::string &query) -> ImageSearchResults {
@@ -254,6 +262,12 @@ auto ImageLibrary::partialMatchSearch(const std::string &query)
     }
   }
   return {matched_images, query, matched_tags};
+}
+
+TemporaryImageLibrary::TemporaryImageLibrary(Singleton *singleton,
+                                             proto::ImageLibrary library)
+    : ImageLibrary(SingletonClass{}, singleton, library) {
+  enable_persistence = false;
 }
 
 ImageSearchResults::ImageSearchResults(
