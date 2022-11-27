@@ -59,7 +59,7 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   root_entry =
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
   root_label = box_panel->label("Library root");
-  root_move_checkbox = box_panel->checkBox("Have files moved to new root?");
+  root_move_checkbox = box_panel->checkBox("Have files already moved to new root?");
 
   tag_list = box_panel->listBox("Tags");
 
