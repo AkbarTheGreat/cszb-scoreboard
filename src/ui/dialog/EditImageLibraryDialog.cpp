@@ -47,7 +47,6 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   this->singleton = singleton;
 
   library = singleton->imageLibrary()->temporaryClone();
-  images = singleton->imageLibrary()->imageMap();
   box_panel = panel();
   file_list =
       std::make_unique<FileListBox>(box_panel->childPanel(), "Filename");
@@ -124,7 +123,6 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  library->updateFromImageMap(images, file_list->getFilenames());
   singleton->imageLibrary()->copyFrom(*library.get());
   singleton->imageLibrary()->saveLibrary();
 }
@@ -132,17 +130,17 @@ void EditImageLibraryDialog::saveSettings() {
 void EditImageLibraryDialog::fileSelected(wxListEvent *event) {
   FilesystemPath filename = file_list->selectedFilename();
 
-  name_entry->setValue(images[filename].name());
+  name_entry->setValue(library->name(filename));
   std::vector<std::string> tags;
-  for (const auto &tag : images[filename].tags()) {
-    tags.push_back(tag);
+  for (const auto &tag : library->tags(filename)) {
+    tags.push_back(tag.string());
   }
   tag_list->setStrings(tags);
   event->Skip();
 }
 
 void EditImageLibraryDialog::nameUpdated() {
-  images[file_list->selectedFilename()].set_name(name_entry->value());
+  library->setName(file_list->selectedFilename(), name_entry->value());
 }
 
 void EditImageLibraryDialog::rootUpdated() {}
@@ -155,10 +153,7 @@ void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
   tag_list->setStrings(tags);
 
   FilesystemPath filename = file_list->selectedFilename();
-  images[filename].clear_tags();
-  for (const auto &tag : tags) {
-    images[filename].add_tags(tag);
-  }
+  library->setTags(filename, tags);
 }
 
 void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
@@ -172,10 +167,7 @@ void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
   tag_list->setStrings(tags);
 
   FilesystemPath filename = file_list->selectedFilename();
-  images[filename].clear_tags();
-  for (const auto &tag : tags) {
-    images[filename].add_tags(tag);
-  }
+  library->setTags(filename, tags);
 }
 
 }  // namespace cszb_scoreboard
