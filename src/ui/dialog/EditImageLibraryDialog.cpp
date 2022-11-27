@@ -26,7 +26,6 @@ limitations under the License.
 #include <vector>      // for vector
 
 #include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
-#include "config/ImageLibrary.h"                       // for ImageLibrary
 #include "config/swx/defs.h"                           // for wxID_CANCEL
 #include "config/swx/event.h"                          // for wxListEvent
 #include "ui/component/control/ImageFromLibrary.h"     // for ImageFromLibrary
@@ -47,6 +46,7 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   this->parent = parent;
   this->singleton = singleton;
 
+  library = singleton->imageLibrary()->temporaryClone();
   images = singleton->imageLibrary()->imageMap();
   box_panel = panel();
   file_list =
@@ -59,7 +59,8 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   root_entry =
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
   root_label = box_panel->label("Library root");
-  root_move_checkbox = box_panel->checkBox("Have files already moved to new root?");
+  root_move_checkbox =
+      box_panel->checkBox("Have files already moved to new root?");
 
   tag_list = box_panel->listBox("Tags");
 
@@ -123,7 +124,8 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  singleton->imageLibrary()->updateFromImageMap(images, file_list->getFilenames());
+  library->updateFromImageMap(images, file_list->getFilenames());
+  singleton->imageLibrary()->copyFrom(*library.get());
   singleton->imageLibrary()->saveLibrary();
 }
 
