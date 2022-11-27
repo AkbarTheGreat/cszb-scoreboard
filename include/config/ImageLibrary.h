@@ -75,6 +75,7 @@ class ImageLibrary {
   auto allTags(bool include_name = false) const
       -> std::vector<CaseOptionalString>;
   auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
+  void copyFrom(const ImageLibrary &other);
   void updateFromImageMap(const std::map<FilesystemPath, proto::ImageInfo> &map,
                           const std::vector<FilesystemPath> &order);
   auto name(const FilesystemPath &filename) -> std::string;

@@ -77,6 +77,14 @@ auto ImageLibrary::allTags(bool include_name) const
   return tags;
 }
 
+void ImageLibrary::copyFrom(const ImageLibrary &other) {
+  // Unlikely to ever change, but for completeness, re-assign the singleton
+  // pointer.
+  this->singleton = other.singleton;
+  // Copy the incoming library to this one.
+  this->library.CopyFrom(other.library);
+}
+
 // This whole imageMap thing is set to be deprecated as it's fragile and kludgy
 auto ImageLibrary::imageMap() -> std::map<FilesystemPath, proto::ImageInfo> {
   std::map<FilesystemPath, proto::ImageInfo> image_map;
