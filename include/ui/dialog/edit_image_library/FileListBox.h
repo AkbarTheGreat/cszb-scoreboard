@@ -39,9 +39,8 @@ class Panel;
 
 class FileListBox : public Panel {
  public:
-  FileListBox(swx::Panel *wx, const std::string &title)
-      : FileListBox(wx, title, Singleton::getInstance()) {}
-
+  FileListBox(swx::Panel *wx, const std::string &title,
+              const std::vector<FilesystemPath> &file_list);
   void bind(const wxEventTypeTag<wxListEvent> &eventType,
             const std::function<void(wxListEvent &)> &lambda,
             int id = wxID_ANY) {
@@ -49,9 +48,6 @@ class FileListBox : public Panel {
   }
   auto getFilenames() -> std::vector<FilesystemPath>;
   auto selectedFilename() -> FilesystemPath;
-
-  PUBLIC_TEST_ONLY
-  FileListBox(swx::Panel *wx, const std::string &title, Singleton *singleton);
 
  protected:
   void bindEvents();

@@ -49,7 +49,8 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   library = singleton->imageLibrary()->temporaryClone();
   box_panel = panel();
   file_list =
-      std::make_unique<FileListBox>(box_panel->childPanel(), "Filename");
+      std::make_unique<FileListBox>(box_panel->childPanel(), "Filename",
+                                    singleton->imageLibrary()->allFilenames());
 
   name_entry = box_panel->text("");
   name_label = box_panel->label("Display name");
@@ -123,6 +124,8 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
+  // TODO: Deleting images is broken right now, and I think adding new ones is
+  // as well.
   singleton->imageLibrary()->copyFrom(*library.get());
   singleton->imageLibrary()->saveLibrary();
 }
