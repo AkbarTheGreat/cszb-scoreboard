@@ -111,7 +111,7 @@ void EditImageLibraryDialog::bindEvents() {
     this->tagDeleted(event);
   });
   file_list->setChangeCallback(
-      [this](const FilesystemPath &prev, const FilesystemPath curr) -> void {
+      [this](const FilesystemPath &prev, const FilesystemPath &curr) -> void {
         this->fileUpdated(prev, curr);
       });
 }
@@ -129,7 +129,7 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  singleton->imageLibrary()->copyFrom(*library.get());
+  singleton->imageLibrary()->copyFrom(*library);
   singleton->imageLibrary()->saveLibrary();
 }
 

@@ -102,7 +102,8 @@ auto ImageLibrary::infoByFile(const FilesystemPath &filename)
   return {};
 }
 
-void ImageLibrary::setName(const FilesystemPath &filename, std::string name) {
+void ImageLibrary::setName(const FilesystemPath &filename,
+                           const std::string &name) {
   for (auto &image : *library.mutable_images()) {
     if (image.file_path() == filename.string()) {
       image.set_name(name);
@@ -113,7 +114,7 @@ void ImageLibrary::setName(const FilesystemPath &filename, std::string name) {
 }
 
 void ImageLibrary::setTags(const FilesystemPath &filename,
-                           std::vector<std::string> tags) {
+                           const std::vector<std::string> &tags) {
   for (auto &image : *library.mutable_images()) {
     if (image.file_path() == filename.string()) {
       image.clear_tags();
@@ -162,7 +163,7 @@ void ImageLibrary::moveImage(const FilesystemPath &previous_path,
 
 void ImageLibrary::deleteImage(const FilesystemPath &file) {
   auto *images = library.mutable_images();
-  for (auto itr = images->begin(); itr < images->end();  itr++) {
+  for (auto itr = images->begin(); itr < images->end(); itr++) {
     if (FilesystemPath(itr->file_path()) == file) {
       images->erase(itr);
       return;
@@ -286,7 +287,7 @@ auto ImageLibrary::partialMatchSearch(const std::string &query)
 
 TemporaryImageLibrary::TemporaryImageLibrary(Singleton *singleton,
                                              proto::ImageLibrary library)
-    : ImageLibrary(SingletonClass{}, singleton, library) {
+    : ImageLibrary(SingletonClass{}, singleton, std::move(library)) {
   enable_persistence = false;
 }
 
