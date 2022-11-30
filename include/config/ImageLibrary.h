@@ -86,6 +86,8 @@ class ImageLibrary {
 
   void addImage(const FilesystemPath &file, const std::string &name,
                 const std::vector<std::string> &tags);
+  void moveImage(const FilesystemPath &previous_path, const FilesystemPath &new_path);
+  void deleteImage(const FilesystemPath &file);
   auto libraryRoot() -> FilesystemPath;
   void removeLibraryRoot();
   // moveLibraryRoot moves the root without changing any relative paths.  Use

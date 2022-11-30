@@ -296,4 +296,70 @@ TEST(ImageLibraryTest, SetRoot) {
   ASSERT_EQ(library.libraryRoot(), NONLIB_ROOT);
 }
 
+TEST(ImageLibraryTest, AddImage) {
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
+  library.addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
+  std::vector<FilesystemPath> files = library.allFilenames();
+  ASSERT_PATH_VECTOR(files, {LIB_ROOT + "corgi.jpg", "great_dane.jpg",
+                             NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg",
+                             "new-image.png"});
+  auto result = library.search("");
+  ASSERT_STR_VECTOR(result.matchedTags(),
+                    {"cute", "dog", "gender", "neutral", "rodent", "short",
+                     "Stall", "tag_test", "tall"});
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
+                      NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg",
+                      LIB_ROOT + "new-image.png"});
+}
+
+TEST(ImageLibraryTest, MoveImage) {
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
+  // No change as it's not an exact match.
+  library.moveImage(FilesystemPath("capy.jpg"),
+                    FilesystemPath("moved-image.png"));
+  std::vector<FilesystemPath> files = library.allFilenames();
+  ASSERT_PATH_VECTOR(files,
+                     {LIB_ROOT + "corgi.jpg", "great_dane.jpg",
+                      NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"});
+  // Changes for exact match.
+  library.moveImage(FilesystemPath(NONLIB_ROOT + "capy.jpg"),
+                    FilesystemPath("moved-image.png"));
+  files = library.allFilenames();
+  ASSERT_PATH_VECTOR(files, {LIB_ROOT + "corgi.jpg", "great_dane.jpg",
+                             "moved-image.png", LIB_ROOT + "but-why.jpg"});
+  // Search result also updates.
+  auto result = library.search("");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"cute", "dog", "gender", "neutral",
+                                           "rodent", "short", "Stall", "tall"});
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
+                      LIB_ROOT + "moved-image.png", LIB_ROOT + "but-why.jpg"});
+}
+
+TEST(ImageLibraryTest, DeleteImage) {
+  MockSingleton singleton;
+  ImageLibrary library = testLibrary(&singleton);
+  // No deletion as it's not an exact match.
+  library.deleteImage(FilesystemPath("capy.jpg"));
+  std::vector<FilesystemPath> files = library.allFilenames();
+  ASSERT_PATH_VECTOR(files,
+                     {LIB_ROOT + "corgi.jpg", "great_dane.jpg",
+                      NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"});
+  // Deletes an exact match.
+  library.deleteImage(FilesystemPath(NONLIB_ROOT + "capy.jpg"));
+  files = library.allFilenames();
+  ASSERT_PATH_VECTOR(files, {LIB_ROOT + "corgi.jpg", "great_dane.jpg",
+                             LIB_ROOT + "but-why.jpg"});
+  // Search result and tags also update.
+  auto result = library.search("");
+  ASSERT_STR_VECTOR(result.matchedTags(), {"cute", "dog", "gender", "neutral",
+                                           "short", "Stall", "tall"});
+  ASSERT_PATH_VECTOR(result.filenames(),
+                     {LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
+                      LIB_ROOT + "but-why.jpg"});
+}
+
 }  // namespace cszb_scoreboard::test

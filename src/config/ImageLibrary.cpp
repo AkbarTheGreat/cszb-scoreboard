@@ -175,6 +175,26 @@ void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
   }
 }
 
+void ImageLibrary::moveImage(const FilesystemPath &previous_path,
+                             const FilesystemPath &new_path) {
+  auto *images = library.mutable_images();
+  for (auto &image : *images) {
+    if (FilesystemPath(image.file_path()) == previous_path) {
+      image.set_file_path(new_path.string());
+    }
+  }
+}
+
+void ImageLibrary::deleteImage(const FilesystemPath &file) {
+  auto *images = library.mutable_images();
+  for (auto itr = images->begin(); itr < images->end();  itr++) {
+    if (FilesystemPath(itr->file_path()) == file) {
+      images->erase(itr);
+      return;
+    }
+  }
+}
+
 auto ImageLibrary::libraryRoot() -> FilesystemPath {
   return FilesystemPath(library.library_root());
 }
