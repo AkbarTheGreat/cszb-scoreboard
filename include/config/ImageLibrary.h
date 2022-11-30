@@ -76,17 +76,15 @@ class ImageLibrary {
   // Returns all unique tags, sorted
   auto allTags(bool include_name = false) const
       -> std::vector<CaseOptionalString>;
-  auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
   auto temporaryClone() -> std::unique_ptr<TemporaryImageLibrary>;
   void copyFrom(const TemporaryImageLibrary &other);
-  void updateFromImageMap(const std::map<FilesystemPath, proto::ImageInfo> &map,
-                          const std::vector<FilesystemPath> &order);
   auto name(const FilesystemPath &filename) -> std::string;
   void setName(const FilesystemPath &filename, std::string name);
 
   void addImage(const FilesystemPath &file, const std::string &name,
                 const std::vector<std::string> &tags);
-  void moveImage(const FilesystemPath &previous_path, const FilesystemPath &new_path);
+  void moveImage(const FilesystemPath &previous_path,
+                 const FilesystemPath &new_path);
   void deleteImage(const FilesystemPath &file);
   auto libraryRoot() -> FilesystemPath;
   void removeLibraryRoot();

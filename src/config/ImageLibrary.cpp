@@ -92,31 +92,6 @@ void ImageLibrary::copyFrom(const TemporaryImageLibrary &other) {
   this->library.CopyFrom(other.library);
 }
 
-// This whole imageMap thing is set to be deprecated as it's fragile and kludgy
-auto ImageLibrary::imageMap() -> std::map<FilesystemPath, proto::ImageInfo> {
-  std::map<FilesystemPath, proto::ImageInfo> image_map;
-  for (const auto &image : library.images()) {
-    image_map.emplace(FilesystemPath(image.file_path()), image);
-  }
-  return image_map;
-}
-
-void ImageLibrary::updateFromImageMap(
-    const std::map<FilesystemPath, proto::ImageInfo> &map,
-    const std::vector<FilesystemPath> &order) {
-  clearLibrary();
-  for (const auto &filename : order) {
-    std::vector<std::string> tags;
-    for (const auto &tag : map.at(filename).tags()) {
-      // Strip out empty tags that're left by accident.
-      if (!tag.empty()) {
-        tags.push_back(tag);
-      }
-    }
-    addImage(filename, map.at(filename).name(), tags);
-  }
-}
-
 auto ImageLibrary::infoByFile(const FilesystemPath &filename)
     -> proto::ImageInfo {
   for (auto image : library.images()) {
