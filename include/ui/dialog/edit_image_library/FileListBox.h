@@ -48,15 +48,24 @@ class FileListBox : public Panel {
   }
   auto getFilenames() -> std::vector<FilesystemPath>;
   auto selectedFilename() -> FilesystemPath;
+  // Callback takes old, then new path (or empty path for old/new for add/remove
+  // respectively)
+  void setChangeCallback(
+      const std::function<void(const FilesystemPath &, const FilesystemPath &)>
+          &callback);
 
  protected:
   void bindEvents();
   void newPressed();
+  void fileUpdated(const FilesystemPath &prev, const FilesystemPath &curr);
+  void fileDeleted(const FilesystemPath &file);
   void updateStrings(const std::vector<FilesystemPath> &filenames,
                      int64_t select_index = 0);
 
  private:
   std::unique_ptr<ListBox> box;
+  std::function<void(const FilesystemPath &, const FilesystemPath &)>
+      change_callback;
 };
 
 }  // namespace cszb_scoreboard

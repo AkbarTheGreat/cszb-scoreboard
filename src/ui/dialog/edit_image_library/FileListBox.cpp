@@ -44,6 +44,13 @@ FileListBox::FileListBox(swx::Panel *wx, const std::string &title,
 void FileListBox::bindEvents() {
   box->bindNew(wxEVT_BUTTON,
                [this](wxCommandEvent &event) -> void { this->newPressed(); });
+  box->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
+    this->fileUpdated(FilesystemPath(box->strings()[event.GetItem().GetId()]),
+                      FilesystemPath(event.GetItem().GetText().ToStdString()));
+  });
+  box->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent &event) -> void {
+    this->fileDeleted(FilesystemPath(event.GetItem().GetText().ToStdString()));
+  });
 }
 
 void FileListBox::newPressed() {
@@ -59,7 +66,17 @@ void FileListBox::newPressed() {
     }
     filenames.insert(std::next(filenames.begin(), new_index), *new_file);
     updateStrings(filenames, new_index);
+    change_callback(FilesystemPath(""), *new_file);
   }
+}
+
+void FileListBox::fileUpdated(const FilesystemPath &prev,
+                              const FilesystemPath &curr) {
+  change_callback(prev, curr);
+}
+
+void FileListBox::fileDeleted(const FilesystemPath &file) {
+  change_callback(file, FilesystemPath(""));
 }
 
 auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
@@ -95,6 +112,12 @@ void FileListBox::updateStrings(const std::vector<FilesystemPath> &filenames,
   if (!strings.empty()) {
     box->selectItem(select_index);
   }
+}
+
+void FileListBox::setChangeCallback(
+    const std::function<void(const FilesystemPath &, const FilesystemPath &)>
+        &callback) {
+  change_callback = callback;
 }
 
 }  // namespace cszb_scoreboard

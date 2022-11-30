@@ -30,6 +30,7 @@ limitations under the License.
 #include "config/swx/event.h"                          // for wxListEvent
 #include "ui/component/control/ImageFromLibrary.h"     // for ImageFromLibrary
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
+#include "util/Log.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
@@ -109,6 +110,10 @@ void EditImageLibraryDialog::bindEvents() {
   tag_list->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent &event) -> void {
     this->tagDeleted(event);
   });
+  file_list->setChangeCallback(
+      [this](const FilesystemPath &prev, const FilesystemPath curr) -> void {
+        this->fileUpdated(prev, curr);
+      });
 }
 
 void EditImageLibraryDialog::onOk() {
@@ -124,10 +129,31 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  // TODO: Deleting images is broken right now, and I think adding new ones is
-  // as well.
   singleton->imageLibrary()->copyFrom(*library.get());
   singleton->imageLibrary()->saveLibrary();
+}
+
+void EditImageLibraryDialog::fileUpdated(const FilesystemPath &prev,
+                                         const FilesystemPath &curr) {
+  FilesystemPath empty("");
+  if (prev == empty && curr == empty) {
+    LogDebug(
+        "fileUpdated called with empty/empty, unsure what to do with two empty "
+        "paths.");
+    return;
+  }
+  if (prev == empty) {
+    library->addImage(curr, "", {});
+    // New file.
+    return;
+  }
+  if (curr == empty) {
+    library->deleteImage(prev);
+    // Delete file.
+    return;
+  }
+  // Updating existing file.
+  library->moveImage(prev, curr);
 }
 
 void EditImageLibraryDialog::fileSelected(wxListEvent *event) {
