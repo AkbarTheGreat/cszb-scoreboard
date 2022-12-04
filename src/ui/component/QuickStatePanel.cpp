@@ -20,9 +20,10 @@ limitations under the License.
 
 #include <wx/wxcrtvararg.h>  // for snprintf
 
-#include <cstddef>  // for size_t
-#include <string>   // for string
-#include <utility>  // for move
+#include <algorithm>  // for find
+#include <cstddef>    // for size_t
+#include <string>     // for string, char_traits, operator+
+#include <utility>    // for move
 
 #include "config.pb.h"                    // for ScreenSide
 #include "config/Position.h"              // for Size

@@ -19,13 +19,17 @@ limitations under the License.
 #include <gmock/gmock-actions.h>        // for Return, ReturnAction
 #include <gmock/gmock-matchers.h>       // for HasSubstr, _
 #include <gmock/gmock-spec-builders.h>  // for EXPECT_CALL, MockSpec
-#include <gtest/gtest.h>
+#include <gtest/gtest-matchers.h>       // for PolymorphicMatcher
+#include <gtest/gtest-message.h>        // for Message
+#include <gtest/gtest-test-part.h>      // for TestPartResult
+#include <gtest/gtest.h>                // IWYU pragma: keep
 
 #include <memory>   // for allocator, unique_ptr
-#include <string>   // for basic_string<>::iterator
+#include <string>   // for string
 #include <utility>  // for move
 #include <vector>   // for vector
 
+#include "gtest/gtest_pred_impl.h"           // for AssertionResult, Test
 #include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
 #include "test/mocks/util/MockSingleton.h"   // for MockSingleton
 #include "util/AutoUpdate.h"                 // for Version, AutoUpdate

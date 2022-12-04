@@ -19,13 +19,14 @@ limitations under the License.
 #include "ui/widget/Widget.h"
 
 #include <wx/gbsizer.h>  // for wxGBSizerItem, wxGBPosition
-#include <wx/sizer.h>    // for wxSizerItem, wxSizerItemList
+#include <wx/sizer.h>    // for wxSizerItemList, wxSizerItemLis...
 
-#include <cstdint>  // for int64_t
+#include <cstdint>  // for int32_t
 #include <memory>   // for allocator_traits<>::value_type
 #include <vector>   // for vector
 
 #include "ui/widget/RenderContext.h"  // for RenderContext
+#include "ui/widget/swx/Sizer.h"      // for Sizer
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 class wxWindow;

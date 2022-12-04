@@ -19,12 +19,13 @@ limitations under the License.
 
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
+#include <wx/string.h>  // for wxString
+
 #include <iterator>  // for next
 #include <optional>  // for optional
-#include <string>    // for string
+#include <string>    // for string, basic_string
 
 #include "ScoreboardCommon.h"      // for IMAGE_SELECTION_STRING
-#include "config/ImageLibrary.h"   // for ImageLibrary
 #include "ui/widget/FilePicker.h"  // for FilePicker
 
 namespace cszb_scoreboard {

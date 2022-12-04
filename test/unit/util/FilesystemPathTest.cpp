@@ -16,11 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>
+#include <gtest/gtest-message.h>    // for Message
+#include <gtest/gtest-test-part.h>  // for TestPartResult
+#include <gtest/gtest.h>            // IWYU pragma: keep
 
 #include <memory>  // for allocator
 
-#include "util/FilesystemPath.h"
+#include "gtest/gtest_pred_impl.h"  // for Test, EXPECT_EQ, TEST
+#include "util/FilesystemPath.h"    // for FilesystemPath
 
 #ifdef _WIN32
 const char *ROOT = "C:\\test";
@@ -60,12 +63,14 @@ TEST(FilesystemPathTest, TrailingPathSeparator) {
             ABS_PATH_IN_ROOT);
   EXPECT_EQ(FilesystemPath::absolutePath(ROOT_WITH_SEP, ABS_PATH_OUT_OF_ROOT),
             ABS_PATH_OUT_OF_ROOT);
-  EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT_WITH_SEP, RELATIVE_PATH_IN_ROOT),
-            RELATIVE_PATH_IN_ROOT);
+  EXPECT_EQ(
+      FilesystemPath::mostRelativePath(ROOT_WITH_SEP, RELATIVE_PATH_IN_ROOT),
+      RELATIVE_PATH_IN_ROOT);
   EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT_WITH_SEP, ABS_PATH_IN_ROOT),
             RELATIVE_PATH_IN_ROOT);
-  EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT_WITH_SEP, ABS_PATH_OUT_OF_ROOT),
-            ABS_PATH_OUT_OF_ROOT);
+  EXPECT_EQ(
+      FilesystemPath::mostRelativePath(ROOT_WITH_SEP, ABS_PATH_OUT_OF_ROOT),
+      ABS_PATH_OUT_OF_ROOT);
 }
 
 }  // namespace cszb_scoreboard::test

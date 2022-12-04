@@ -19,15 +19,18 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"
 
+#include <stdio.h>  // for printf
+
 #include <algorithm>   // for binary_search, find, lower_bound
 #include <cctype>      // for tolower
-#include <filesystem>  // for operator<
+#include <compare>     // for operator<, strong_ordering
+#include <filesystem>  // for operator==, path
 #include <utility>     // for move
 
 #include "config/Persistence.h"   // for Persistence
 #include "util/FilesystemPath.h"  // for FilesystemPath
-#include "util/Log.h"
-#include "util/Singleton.h"  // for Singleton, SingletonClass
+#include "util/Log.h"             // for LogDebug
+#include "util/Singleton.h"       // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
 

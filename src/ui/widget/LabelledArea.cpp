@@ -20,9 +20,10 @@ limitations under the License.
 
 #include "ui/widget/LabelledArea.h"
 
-#include "ui/widget/Panel.h"
-#include "ui/widget/swx/Panel.h"
-#include "ui/widget/swx/StaticBox.h"
+#include <stdint.h>  // for int32_t
+
+#include "ui/widget/Panel.h"      // for Panel
+#include "ui/widget/swx/Panel.h"  // for PanelImpl
 
 namespace cszb_scoreboard {
 

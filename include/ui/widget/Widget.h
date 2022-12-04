@@ -20,14 +20,16 @@ limitations under the License.
 
 #include <functional>  // for function
 
-#include "ScoreboardCommon.h"     // for DEFAULT_BORDER_SIZE
-#include "config/swx/defs.h"      // for wxID_ANY, wxALL, wxGROW
-#include "config/swx/event.h"     // for wxEventTypeTag, wxCloseEvent (ptr o...
-#include "ui/widget/swx/Sizer.h"  // for Sizer
-#include "wx/window.h"            // for wxWindow
+#include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
+#include "config/swx/defs.h"   // for operator|, wxID_ANY, wxALL, wxGROW
+#include "config/swx/event.h"  // for wxEventTypeTag
+#include "wx/window.h"         // for wxWindow
 
 namespace cszb_scoreboard {
 class RenderContext;
+namespace swx {
+class Sizer;
+}  // namespace swx
 
 const int NO_BORDER = 0;
 

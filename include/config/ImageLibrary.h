@@ -19,7 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <cstddef>  // for size_t
-#include <map>      // for map
+#include <memory>   // for unique_ptr
 #include <string>   // for string, basic_string
 #include <vector>   // for vector
 

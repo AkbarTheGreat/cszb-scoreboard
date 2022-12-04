@@ -22,6 +22,7 @@ limitations under the License.
 #include "config.pb.h"             // for DisplayInfo, Rectangle
 #include "config/DisplayConfig.h"  // for DisplayConfig
 #include "config/Position.h"       // for Size, Position
+#include "ui/widget/Widget.h"      // for NO_BORDER
 #include "util/Log.h"              // for LogDebug
 
 namespace cszb_scoreboard {

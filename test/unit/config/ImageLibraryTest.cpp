@@ -16,14 +16,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>
+#include <gtest/gtest-message.h>    // for Message
+#include <gtest/gtest-test-part.h>  // for TestPartResult
+#include <gtest/gtest.h>            // IWYU pragma: keep
 
-#include <filesystem>  // for operator<<, operator!=
+#include <filesystem>  // for operator<<, operator==
 #include <sstream>     // for basic_stringbuf<>::int_type
-#include <string>      // for string, allocator, basic_...
+#include <string>      // for string, operator+, allocator
 #include <vector>      // for vector
 
-#include "config/ImageLibrary.h"            // for ImageSearchResults, Image...
+#include "config/ImageLibrary.h"            // for ImageLibrary, ImageSearch...
 #include "image_library.pb.h"               // for ImageInfo, ImageLibrary
 #include "test/mocks/util/MockSingleton.h"  // for MockSingleton
 #include "util/FilesystemPath.h"            // for FilesystemPath

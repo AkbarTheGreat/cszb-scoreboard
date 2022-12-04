@@ -16,14 +16,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>
-#include <wx/gdicmn.h>
+#include <gtest/gtest-message.h>    // for Message
+#include <gtest/gtest-test-part.h>  // for TestPartResult
+#include <gtest/gtest.h>            // IWYU pragma: keep
+#include <wx/gdicmn.h>              // for wxRect, wxTheColourDatabase, wxCo...
 
-#include <memory>
+#include <memory>  // for allocator
 
-#include "config.pb.h"
-#include "ui/graphics/Color.h"
-#include "util/ProtoUtil.h"
+#include "config.pb.h"              // for Color, Rectangle, TeamInfo_TeamTy...
+#include "gtest/gtest_pred_impl.h"  // for AssertionResult, EXPECT_EQ, EXPEC...
+#include "ui/graphics/Color.h"      // for Color
+#include "util/ProtoUtil.h"         // for ProtoUtil
 
 // extern wxColourDatabase *wxTheColourDatabase;
 
