@@ -38,6 +38,8 @@ use lib "$FindBin::RealBin";
 our $BUILD_PATH = 'out/iwyu';
 our $BASE_DIR = Cwd::cwd();
 
+our $IS_WSL = undef;
+
 my ($opt_help );
 my $opt_procs = 2;
 
@@ -74,9 +76,15 @@ sub status {
 sub cmake {
   mkpath $BUILD_PATH;
   chdir $BUILD_PATH;
+  my $iwyu = '/usr/bin/iwyu';
+  if ($IS_WSL) {
+    $ENV{'CC'} = '/usr/bin/clang';
+    $ENV{'CXX'} = '/usr/bin/clang++';
+    $iwyu = '/usr/local/bin/include-what-you-use';
+  }
   system 'cmake'
     . ' -DSKIP_LINT=true'
-    . ' -DCMAKE_CXX_INCLUDE_WHAT_YOU_USE="/usr/bin/iwyu;-Xiwyu;any;-Xiwyu;iwyu;-Xiwyu;args"'
+    . ' -DCMAKE_CXX_INCLUDE_WHAT_YOU_USE="' . $iwyu . ';-Xiwyu;any;-Xiwyu;iwyu;-Xiwyu;args"'
     . ' ' . $BASE_DIR;
 }
 
@@ -96,8 +104,16 @@ sub run_clangformat {
   system 'make -j${opt_procs} clangformat';
 }
 
+sub check_wsl {
+  my $uname = `uname -a`;
+  if ($uname =~ /WSL2/) {
+    $IS_WSL = 1;
+  }
+}
+
 sub main {
   parse_options();
+  check_wsl();
   status('Running include-what-you-use');
   my @iwyu = run_iwyu();
   status('iwyu complete, fixing includes in files');
