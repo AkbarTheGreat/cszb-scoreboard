@@ -59,6 +59,8 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   root_divider = box_panel->divider();
   root_entry =
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
+  root_entry->disable();
+  root_browse = box_panel->button("...", true);
   root_label = box_panel->label("Library root");
   root_move_checkbox =
       box_panel->checkBox("Have files already moved to new root?");
@@ -77,6 +79,7 @@ void EditImageLibraryDialog::positionWidgets() {
   box_panel->addWidgetWithSpan(*root_divider, 2, 0, 1, 3);
   box_panel->addWidget(*root_label, 3, 0);
   box_panel->addWidgetWithSpan(*root_entry, 3, 1, 1, 2);
+  box_panel->addWidgetWithSpan(*root_browse, 3, 3, 1, 1);
   box_panel->addWidgetWithSpan(*root_move_checkbox, 4, 0, 1, 3);
 
   box_panel->runSizer();
@@ -102,8 +105,9 @@ void EditImageLibraryDialog::bindEvents() {
   });
   name_entry->bind(wxEVT_KEY_UP,
                    [this](wxKeyEvent &event) -> void { this->nameUpdated(); });
-  root_entry->bind(wxEVT_KEY_UP,
-                   [this](wxKeyEvent &event) -> void { this->rootUpdated(); });
+  root_browse->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->rootBrowsePressed();
+  });
   tag_list->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
     this->tagsUpdated(event);
   });
@@ -172,7 +176,7 @@ void EditImageLibraryDialog::nameUpdated() {
   library->setName(file_list->selectedFilename(), name_entry->value());
 }
 
-void EditImageLibraryDialog::rootUpdated() {}
+void EditImageLibraryDialog::rootBrowsePressed() {}
 
 void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
   std::vector<std::string> tags = tag_list->strings();
