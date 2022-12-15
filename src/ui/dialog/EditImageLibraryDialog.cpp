@@ -30,6 +30,7 @@ limitations under the License.
 #include "config/swx/event.h"                          // for wxListEvent
 #include "ui/component/control/ImageFromLibrary.h"     // for ImageFromLibrary
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
+#include "ui/widget/DirectoryPicker.h"
 #include "util/Log.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
@@ -176,7 +177,16 @@ void EditImageLibraryDialog::nameUpdated() {
   library->setName(file_list->selectedFilename(), name_entry->value());
 }
 
-void EditImageLibraryDialog::rootBrowsePressed() {}
+void EditImageLibraryDialog::rootBrowsePressed() {
+  std::unique_ptr<DirectoryPicker> dialog =
+      box_panel->openDirectoryPicker("Select New Root", library->libraryRoot());
+  std::optional<FilesystemPath> new_root = dialog->selectDirectory();
+  if (new_root.has_value()) {
+    // Replace the existing root with the new one.
+    root_entry->setValue(new_root->string());
+    library->setLibraryRoot(*new_root);
+  }
+}
 
 void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
   std::vector<std::string> tags = tag_list->strings();

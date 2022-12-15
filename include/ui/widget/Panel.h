@@ -33,8 +33,9 @@ limitations under the License.
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
-#include "wx/colour.h"                          // for wxColour
-#include "wx/window.h"                          // for wxWindow
+#include "util/FilesystemPath.h"
+#include "wx/colour.h"  // for wxColour
+#include "wx/window.h"  // for wxWindow
 
 namespace cszb_scoreboard {
 
@@ -44,6 +45,7 @@ class CheckBox;
 class ColorPicker;
 class Divider;
 class FilePicker;
+class DirectoryPicker;
 class Label;
 class ListBox;
 class RadioButton;
@@ -67,6 +69,9 @@ class Panel : public Widget {
   [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
       -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
+  [[nodiscard]] auto openDirectoryPicker(
+      const std::string &title, const FilesystemPath &initial_dir) const
+      -> std::unique_ptr<DirectoryPicker>;
   [[nodiscard]] auto openFilePicker(const std::string &title,
                                     const std::string &selectionMode) const
       -> std::unique_ptr<FilePicker>;

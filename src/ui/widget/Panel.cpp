@@ -24,9 +24,10 @@ limitations under the License.
 
 #include <vector>  // for vector
 
-#include "ui/widget/Button.h"                // for Button
-#include "ui/widget/CheckBox.h"              // for CheckBox
-#include "ui/widget/ColorPicker.h"           // for ColorPicker
+#include "ui/widget/Button.h"       // for Button
+#include "ui/widget/CheckBox.h"     // for CheckBox
+#include "ui/widget/ColorPicker.h"  // for ColorPicker
+#include "ui/widget/DirectoryPicker.h"
 #include "ui/widget/Divider.h"               // for Divider
 #include "ui/widget/FilePicker.h"            // for FilePicker
 #include "ui/widget/Label.h"                 // for Label
@@ -98,6 +99,14 @@ auto Panel::colorPicker(const wxColour &initial_color) const
 
 auto Panel::divider() const -> std::unique_ptr<Divider> {
   return std::make_unique<Divider>(new swx::StaticLine(wx()));
+}
+
+// Get a DirectoryPicker to open an existing path.
+auto Panel::openDirectoryPicker(const std::string &title,
+                                const FilesystemPath &initial_dir) const
+    -> std::unique_ptr<DirectoryPicker> {
+  return std::make_unique<DirectoryPicker>(new swx::DirDialog(
+      wx(), title, initial_dir.string(), wxDD_DIR_MUST_EXIST));
 }
 
 // Get a FilePicker to open an existing file.
