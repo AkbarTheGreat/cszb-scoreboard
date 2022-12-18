@@ -16,24 +16,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/app.h>      // IWYU pragma: keep for wxAppConsole
-#include <wx/cmdline.h>  // for wxCmdLineParser
-#include <wx/image.h>    // for wxInitAllImageHandlers
+#include <wx/app.h>      // for wxIMPLEMENT_APP
+#include <wx/defs.h>     // for wxID_ANY
+#include <wx/event.h>    // for wxCloseEvent (ptr only)
+#include <wx/gtk/app.h>  // for wxApp
 
-#include <array>   // for array
-#include <memory>  // for allocator
+#include <cstdlib>  // for exit
+#include <memory>   // for unique_ptr, make_unique
 
-#include "config/CommandArgs.h"  // for ARG_LIST, CommandArgs
-#include "config/Persistence.h"
-#include "config/Position.h"  // for Position, Size
-#include "ui/dialog/EditImageLibraryDialog.h"
-#include "ui/frame/FrameManager.h"  // for FrameManager
-#include "ui/frame/MainView.h"      // for MainView
-#include "ui/widget/Frame.h"
-#include "ui/widget/swx/Frame.h"
-#include "ui/widget/swx/PropertySheetDialog.h"
-#include "util/Log.h"  // for LogDebug
-#include "util/Singleton.h"
+#include "config/Position.h"                    // for Position, Size
+#include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog
+#include "ui/widget/Frame.h"                    // for Frame
+#include "ui/widget/Panel.h"                    // for Panel
+#include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
+#include "util/Singleton.h"                     // for Singleton
 // IWYU pragma: no_include <wx/unix/app.h>
 
 namespace cszb_scoreboard {

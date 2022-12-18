@@ -21,19 +21,20 @@ limitations under the License.
 #include <map>     // for map
 #include <memory>  // for unique_ptr
 
-#include "ScoreboardCommon.h"
-#include "config/ImageLibrary.h"
+#include "ScoreboardCommon.h"                          // for PUBLIC_TEST_ONLY
+#include "config/ImageLibrary.h"                       // for TemporaryImage...
 #include "image_library.pb.h"                          // for ImageInfo
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-#include "ui/widget/CheckBox.h"
-#include "ui/widget/Divider.h"
-#include "ui/widget/Label.h"         // for Label
-#include "ui/widget/ListBox.h"       // for ListBox
-#include "ui/widget/Panel.h"         // for Panel
-#include "ui/widget/TabbedDialog.h"  // for TabbedDialog
-#include "ui/widget/Text.h"          // for Text
-#include "util/FilesystemPath.h"     // for FilesystemPath
-#include "util/Singleton.h"
+#include "ui/widget/Button.h"                          // for Button
+#include "ui/widget/CheckBox.h"                        // for CheckBox
+#include "ui/widget/Divider.h"                         // for Divider
+#include "ui/widget/Label.h"                           // for Label
+#include "ui/widget/ListBox.h"                         // for ListBox
+#include "ui/widget/Panel.h"                           // for Panel
+#include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
+#include "ui/widget/Text.h"                            // for Text
+#include "util/FilesystemPath.h"                       // for FilesystemPath
+#include "util/Singleton.h"                            // for Singleton
 
 class wxListEvent;
 

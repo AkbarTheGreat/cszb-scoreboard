@@ -31,11 +31,10 @@ limitations under the License.
 #include "config/Position.h"                    // for Size
 #include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
 #include "ui/widget/Widget.h"                   // for Widget
-#include "ui/widget/swx/Panel.h"                // for Panel
+#include "ui/widget/swx/Panel.h"                // for PanelImpl, Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
-#include "util/FilesystemPath.h"
-#include "wx/colour.h"  // for wxColour
-#include "wx/window.h"  // for wxWindow
+#include "wx/colour.h"                          // for wxColour
+#include "wx/window.h"                          // for wxWindow
 
 namespace cszb_scoreboard {
 
@@ -54,6 +53,7 @@ class SearchBox;
 class Text;
 class Toggle;
 class LabelledArea;
+class FilesystemPath;
 
 class Panel : public Widget {
  public:

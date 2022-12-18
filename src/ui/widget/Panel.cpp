@@ -20,14 +20,15 @@ limitations under the License.
 #include "ui/widget/Panel.h"
 
 #include <wx/anybutton.h>  // for wxBU_EXACTFIT
+#include <wx/dirdlg.h>     // for wxDD_DIR_MUST_EXIST
 #include <wx/filedlg.h>    // for wxFD_FILE_MUST_EXIST
 
 #include <vector>  // for vector
 
-#include "ui/widget/Button.h"       // for Button
-#include "ui/widget/CheckBox.h"     // for CheckBox
-#include "ui/widget/ColorPicker.h"  // for ColorPicker
-#include "ui/widget/DirectoryPicker.h"
+#include "ui/widget/Button.h"                // for Button
+#include "ui/widget/CheckBox.h"              // for CheckBox
+#include "ui/widget/ColorPicker.h"           // for ColorPicker
+#include "ui/widget/DirectoryPicker.h"       // for DirectoryPicker
 #include "ui/widget/Divider.h"               // for Divider
 #include "ui/widget/FilePicker.h"            // for FilePicker
 #include "ui/widget/Label.h"                 // for Label
@@ -42,6 +43,7 @@ limitations under the License.
 #include "ui/widget/swx/Button.h"            // for Button
 #include "ui/widget/swx/CheckBox.h"          // for CheckBox
 #include "ui/widget/swx/ColourPickerCtrl.h"  // for ColourPickerCtrl
+#include "ui/widget/swx/DirDialog.h"         // for DirDialog
 #include "ui/widget/swx/EditableListBox.h"   // for EditableListBox
 #include "ui/widget/swx/FileDialog.h"        // for FileDialog
 #include "ui/widget/swx/RadioBox.h"          // for RadioBox
@@ -53,6 +55,7 @@ limitations under the License.
 #include "ui/widget/swx/StaticText.h"        // for StaticText
 #include "ui/widget/swx/TextCtrl.h"          // for TextCtrl
 #include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
+#include "util/FilesystemPath.h"             // for FilesystemPath
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {

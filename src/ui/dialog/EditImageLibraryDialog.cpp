@@ -21,8 +21,9 @@ limitations under the License.
 
 #include <wx/string.h>  // for wxString
 
-#include <filesystem>  // for operator<
-#include <string>      // for string, basic_...
+#include <filesystem>  // for operator==, path
+#include <optional>    // for optional
+#include <string>      // for string
 #include <vector>      // for vector
 
 #include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
@@ -30,8 +31,8 @@ limitations under the License.
 #include "config/swx/event.h"                          // for wxListEvent
 #include "ui/component/control/ImageFromLibrary.h"     // for ImageFromLibrary
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-#include "ui/widget/DirectoryPicker.h"
-#include "util/Log.h"
+#include "ui/widget/DirectoryPicker.h"                 // for DirectoryPicker
+#include "util/Log.h"                                  // for LogDebug
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
