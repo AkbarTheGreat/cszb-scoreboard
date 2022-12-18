@@ -35,9 +35,8 @@ limitations under the License.
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 /* TODO
- * Update the paths in the edit library dialog after the new path is selected.
  * Add a way to clear the library root.
-*/
+ */
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -55,9 +54,8 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
 
   library = singleton->imageLibrary()->temporaryClone();
   box_panel = panel();
-  file_list =
-      std::make_unique<FileListBox>(box_panel->childPanel(), "Filename",
-                                    singleton->imageLibrary()->allFilenames());
+  file_list = std::make_unique<FileListBox>(box_panel->childPanel(), "Filename",
+                                            library->allFilenames());
 
   name_entry = box_panel->text("");
   name_label = box_panel->label("Display name");
@@ -187,6 +185,10 @@ void EditImageLibraryDialog::nameUpdated() {
   library->setName(file_list->selectedFilename(), name_entry->value());
 }
 
+void EditImageLibraryDialog::refreshFiles() {
+  file_list->setFilenames(library->allFilenames());
+}
+
 void EditImageLibraryDialog::rootBrowsePressed() {
   std::unique_ptr<DirectoryPicker> dialog =
       box_panel->openDirectoryPicker("Select New Root", library->libraryRoot());
@@ -194,7 +196,12 @@ void EditImageLibraryDialog::rootBrowsePressed() {
   if (new_root.has_value()) {
     // Replace the existing root with the new one.
     root_entry->setValue(new_root->string());
-    library->setLibraryRoot(*new_root);
+    if (root_move_checkbox->checked()) {
+      library->moveLibraryRoot(*new_root);
+    } else {
+      library->setLibraryRoot(*new_root);
+    }
+    refreshFiles();
   }
 }
 

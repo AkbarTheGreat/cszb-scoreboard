@@ -78,6 +78,7 @@ class EditImageLibraryDialog : public TabbedDialog {
   void onCancel();
   void fileUpdated(const FilesystemPath &prev, const FilesystemPath &curr);
   void nameUpdated();
+  void refreshFiles();
   void rootBrowsePressed();
   void tagDeleted(const wxListEvent &event);
   void tagsUpdated(const wxListEvent &event);

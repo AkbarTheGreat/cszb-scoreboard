@@ -93,6 +93,17 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
   return filenames;
 }
 
+void FileListBox::setFilenames(std::vector<FilesystemPath> files) {
+  std::vector<std::string> strings;
+
+  for (const auto &entry : files) {
+    strings.emplace_back(entry.string());
+  }
+
+  box->setStrings(strings);
+  box->selectItem(0);
+}
+
 auto FileListBox::selectedFilename() -> FilesystemPath {
   int64_t index = box->selectedIndex();
   if (index == -1 || index >= box->listSize()) {
