@@ -86,7 +86,15 @@ endif() # OSXCROSS_HOST
 include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
 file(GLOB SCOREBOARD_SRC
-    "src/*.cpp"
+    "src/cszb-scoreboard.cpp"
+    "src/*/*.cpp"
+    "src/*/*/*.cpp"
+    "src/*/*/*/*.cpp"
+    "src/*/*/*/*/*.cpp"
+)
+
+file(GLOB DIALOG_TEST_SRC
+    "src/dialog-test.cpp"
     "src/*/*.cpp"
     "src/*/*/*.cpp"
     "src/*/*/*/*.cpp"
@@ -112,12 +120,20 @@ set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTIO
 target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
-# Is this WIN32 bad for cross-platform?  Maybe?  It's untested.
+add_library(dialog_test_classes OBJECT ${DIALOG_TEST_SRC})
+set_target_properties(dialog_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_compile_definitions(dialog_test_classes PUBLIC FAKE_CONFIGURATION_FILES)
+target_link_libraries(dialog_test_classes PRIVATE ${wxWidgets_LIBRARIES}
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+
 add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
-
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+
+# A test target which is used for checking dialog edits more quickly than running entire application.
+add_executable("dialog-test" WIN32 $<TARGET_OBJECTS:dialog_test_classes> $<TARGET_OBJECTS:scoreboard_proto>)
+target_link_libraries("dialog-test" PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 finalize_vcpkg_code(${PROJECT_NAME})
@@ -174,6 +190,7 @@ package_add_test(DisplayConfigTest test/unit/config/DisplayConfigTest.cpp src/co
                                                                           src/config/Position.cpp
                                                                           src/ui/frame/FrameManager.cpp
                                                                           src/ui/widget/Display.cpp
+                                                                          src/ui/widget/Frame.cpp
                                                                           src/util/ProtoUtil.cpp
                                                                           )
 package_add_test(ImageLibraryTest  test/unit/config/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp
