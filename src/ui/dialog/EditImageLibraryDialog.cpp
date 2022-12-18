@@ -34,10 +34,6 @@ limitations under the License.
 #include "util/Log.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
-/* TODO
- * Add a way to clear the library root.
- */
-
 namespace cszb_scoreboard {
 namespace swx {
 class PropertySheetDialog;
@@ -65,6 +61,7 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
   root_entry->disable();
   root_browse = box_panel->button("Library root", true);
+  root_clear = box_panel->button("Clear root", true);
   root_move_checkbox =
       box_panel->checkBox("Have files already moved to new root?");
 
@@ -86,7 +83,8 @@ void EditImageLibraryDialog::positionWidgets() {
   box_panel->addWidgetWithSpan(*root_browse, 3, 0, 1, 1);
   box_panel->addWidgetWithSpan(*root_entry, 3, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_move_checkbox, 4, 0, 1, 4);
+  box_panel->addWidgetWithSpan(*root_move_checkbox, 4, 0, 1, 3);
+  box_panel->addWidgetWithSpan(*root_clear, 4, 3, 1, 1);
 
   box_panel->runSizer();
 
@@ -116,6 +114,9 @@ void EditImageLibraryDialog::bindEvents() {
                    [this](wxKeyEvent &event) -> void { this->nameUpdated(); });
   root_browse->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
     this->rootBrowsePressed();
+  });
+  root_clear->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->rootClearPressed();
   });
   tag_list->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
     this->tagsUpdated(event);
@@ -203,6 +204,12 @@ void EditImageLibraryDialog::rootBrowsePressed() {
     }
     refreshFiles();
   }
+}
+
+void EditImageLibraryDialog::rootClearPressed() {
+  root_entry->setValue("");
+  library->setLibraryRoot(FilesystemPath(""));
+  refreshFiles();
 }
 
 void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
