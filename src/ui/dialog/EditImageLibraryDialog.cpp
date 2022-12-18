@@ -34,6 +34,11 @@ limitations under the License.
 #include "util/Log.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
+/* TODO
+ * Update the paths in the edit library dialog after the new path is selected.
+ * Add a way to clear the library root.
+*/
+
 namespace cszb_scoreboard {
 namespace swx {
 class PropertySheetDialog;
@@ -61,8 +66,7 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   root_entry =
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
   root_entry->disable();
-  root_browse = box_panel->button("...", true);
-  root_label = box_panel->label("Library root");
+  root_browse = box_panel->button("Library root", true);
   root_move_checkbox =
       box_panel->checkBox("Have files already moved to new root?");
 
@@ -74,18 +78,17 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
 
 void EditImageLibraryDialog::positionWidgets() {
   box_panel->addWidgetWithSpan(*file_list, 0, 0, 1, 2);
-  box_panel->addWidgetWithSpan(*tag_list, 0, 2, 1, 1);
+  box_panel->addWidgetWithSpan(*tag_list, 0, 2, 1, 2);
 
   box_panel->addWidgetWithSpan(*name_label, 1, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*name_entry, 1, 1, 1, 2);
+  box_panel->addWidgetWithSpan(*name_entry, 1, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_divider, 2, 0, 1, 3);
+  box_panel->addWidgetWithSpan(*root_divider, 2, 0, 1, 4);
 
-  box_panel->addWidgetWithSpan(*root_label, 3, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*root_entry, 3, 1, 1, 2);
-  box_panel->addWidgetWithSpan(*root_browse, 3, 3, 1, 1);
+  box_panel->addWidgetWithSpan(*root_browse, 3, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*root_entry, 3, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_move_checkbox, 4, 0, 1, 3);
+  box_panel->addWidgetWithSpan(*root_move_checkbox, 4, 0, 1, 4);
 
   box_panel->runSizer();
 
