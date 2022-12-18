@@ -16,10 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/app.h>      // for wxIMPLEMENT_APP
-#include <wx/defs.h>     // for wxID_ANY
-#include <wx/event.h>    // for wxCloseEvent (ptr only)
-#include <wx/gtk/app.h>  // for wxApp
+#include <wx/app.h>    // for wxIMPLEMENT_APP
+#include <wx/defs.h>   // for wxID_ANY
+#include <wx/event.h>  // for wxCloseEvent (ptr only)
 
 #include <cstdlib>  // for exit
 #include <memory>   // for unique_ptr, make_unique
@@ -31,6 +30,7 @@ limitations under the License.
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 #include "util/Singleton.h"                     // for Singleton
 // IWYU pragma: no_include <wx/unix/app.h>
+// IWYU pragma: no_include <wx/gtk/app.h>
 
 namespace cszb_scoreboard {
 
@@ -61,8 +61,6 @@ class DialogTest : public wxApp {
   std::unique_ptr<EditImageLibraryDialog> dialog;
 };
 
-wxIMPLEMENT_APP(cszb_scoreboard::DialogTest);
-
 auto DialogTest::OnInit() -> bool {
   if (!wxApp::OnInit()) {
     return false;
@@ -80,3 +78,5 @@ auto DialogTest::OnInit() -> bool {
 }
 
 }  // namespace cszb_scoreboard
+
+wxIMPLEMENT_APP(cszb_scoreboard::DialogTest);
