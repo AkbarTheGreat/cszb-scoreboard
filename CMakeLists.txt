@@ -16,6 +16,10 @@
 
 cmake_minimum_required(VERSION 3.9.0)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
+
+set(CMAKE_IGNORE_PATH ".git")
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
@@ -24,14 +28,15 @@ SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
 
 set(CMAKE_CXX_STANDARD 20)
-set (Protobuf_BUILD_SHARED_LIBS OFF)
-set (Protobuf_MSVC_STATIC_RUNTIME ON)
+set(Protobuf_BUILD_SHARED_LIBS OFF)
+set(Protobuf_MSVC_STATIC_RUNTIME ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 set(JSON_CPP_LIB "jsoncpp_lib")
 
 set(LINKING_TYPE "dynamic" CACHE STRING "Link type")
 set(SKIP_LINT false CACHE BOOL "Skip Lint")
+set(CLANG_TIDY_ERRORS true CACHE BOOL "Lint warnings fail build")
 set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
 
 if(MSVC OR OSXCROSS_HOST)
@@ -104,8 +109,6 @@ file(GLOB DIALOG_TEST_SRC
 IF(WIN32)
     SET(SCOREBOARD_SRC ${SCOREBOARD_SRC} "resources/scoreboard.rc")
 ENDIF(WIN32)
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 # Protobuf files.
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
