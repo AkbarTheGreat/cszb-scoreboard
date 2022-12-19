@@ -18,8 +18,6 @@ cmake_minimum_required(VERSION 3.9.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
-set(CMAKE_IGNORE_PATH ".git")
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
