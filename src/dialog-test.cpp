@@ -68,7 +68,7 @@ auto DialogTest::OnInit() -> bool {
   frame = std::make_unique<TestFrame>();
   frame->show(true);
   Singleton::getInstance()->persistence();
-  auto prop_sheet =
+  auto *prop_sheet =
       new swx::PropertySheetDialog(frame->panel->wx(), wxID_ANY, "Test");
   dialog = std::make_unique<EditImageLibraryDialog>(prop_sheet, nullptr);
   dialog->bind(wxEVT_CLOSE_WINDOW,

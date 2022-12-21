@@ -29,7 +29,7 @@ class DirDialog : public wxDirDialog {
   explicit DirDialog(wxWindow *parent,
                      const wxString &message = wxDirSelectorPromptStr,
                      const wxString &defaultPath = wxEmptyString,
-                     long style = wxDD_DEFAULT_STYLE,
+                     int64_t style = wxDD_DEFAULT_STYLE,
                      const wxPoint &pos = wxDefaultPosition,
                      const wxSize &size = wxDefaultSize,
                      const wxString &name = wxDirDialogNameStr)

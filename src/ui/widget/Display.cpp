@@ -21,10 +21,10 @@ limitations under the License.
 
 #include "ui/widget/Display.h"
 
-#include <stdio.h>      // for snprintf
 #include <wx/gdicmn.h>  // for wxRect
 
-#include <array>  // for array
+#include <array>   // for array
+#include <cstdio>  // for snprintf
 
 #include "util/ProtoUtil.h"  // for ProtoUtil
 

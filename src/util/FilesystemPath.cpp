@@ -97,7 +97,7 @@ auto FilesystemPath::absolutePath(const std::string &root,
 auto FilesystemPath::mostRelativePath(const std::string &root,
                                       const std::string &file_path)
     -> std::string {
-  if (FilesystemPath(file_path).is_relative() || root == "") {
+  if (FilesystemPath(file_path).is_relative() || root.empty()) {
     return file_path;
   }
   auto effective_root = stripTrailingSeparator(root);
