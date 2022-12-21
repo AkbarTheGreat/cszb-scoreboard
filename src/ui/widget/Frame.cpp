@@ -30,7 +30,7 @@ namespace cszb_scoreboard {
 
 Frame::~Frame() {
   if (should_self_delete) {
-    wx()->Destroy();
+    _wx->Destroy();
   }
 }
 void Frame::alwaysOnTop(bool isOnTop) {
