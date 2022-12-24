@@ -29,6 +29,7 @@ class CheckBox : public Widget {
 
   [[nodiscard]] auto checked() const -> bool { return _wx->GetValue(); }
   void setChecked(bool checked) { _wx->SetValue(checked); }
+  void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }

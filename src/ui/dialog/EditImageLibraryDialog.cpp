@@ -62,9 +62,16 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
   root_entry->disable();
   root_browse = box_panel->button("Library root", true);
+  root_browse->toolTip("Set a new root directory for your library.");
   root_clear = box_panel->button("Clear root", true);
+  root_clear->toolTip(
+      "Clear the root directory for your library, all paths will be absolute.");
   root_move_checkbox =
       box_panel->checkBox("Have files already moved to new root?");
+  root_move_checkbox->toolTip(
+      "If checked, relative paths will be untouched.  If unchecked, all will "
+      "be reset to absolute and paths will be recacluated based on the new "
+      "root.");
 
   tag_list = box_panel->listBox("Tags");
 
