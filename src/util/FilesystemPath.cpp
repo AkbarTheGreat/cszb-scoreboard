@@ -1,5 +1,5 @@
 /*
-util/FilesystemPath.cpp: In most cases, a simple wrapper around
+util/FilesystemPath.cpp: In most cases, a moderately enhanced wrapper around
 std::filesystem::path. For cases where that support is unavailable, a simple
 stand-in which implements the functionality we need for our application.
 
@@ -75,9 +75,19 @@ void FilesystemPath::replace_filename(const std::string &new_filename) {
 
 #endif
 
+auto FilesystemPath::existsWithRoot(const std::string &root) -> bool {
+#ifdef __APPLE__
+  // TODO: This is incorrect, but will need some testing on an actual MacOS
+  // device when it's implemented.
+  return true;
+#else   // #ifdef __APPLE__
+  return std::filesystem::exists(absolutePath(root, this->string()));
+#endif  // #ifdef __APPLE__
+}
+
 auto FilesystemPath::stripTrailingSeparator(const std::string &path)
     -> std::string {
-  if (path.at(path.length() - 1) == preferred_separator) {
+  if (path.length() > 0 && path.at(path.length() - 1) == preferred_separator) {
     return path.substr(0, path.length() - 1);
   }
   return path;

@@ -1,5 +1,5 @@
 /*
-util/Path.h: In most cases, a simple wrapper around std::filesystem::path. For
+util/Path.h: In most cases, a moderately enhanced wrapper around std::filesystem::path. For
 cases where that support is unavailable, a simple stand-in which implements the
 functionality we need for our application.
 
@@ -83,7 +83,7 @@ class FilesystemPath {
 
  public:
 #else
-// Simply alias to std::filesystem::path for non-Mac platforms.
+// Enhanced alias to std::filesystem::path for non-Mac platforms.
 class FilesystemPath : public std::filesystem::path {
  public:
   FilesystemPath() = default;
@@ -99,6 +99,7 @@ class FilesystemPath : public std::filesystem::path {
   }
 #endif
 
+  auto existsWithRoot(const std::string &root) -> bool;
   static auto absolutePath(const std::string &root,
                            const std::string &file_path) -> std::string;
   static auto mostRelativePath(const std::string &root,

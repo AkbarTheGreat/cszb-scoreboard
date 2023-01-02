@@ -154,18 +154,23 @@ target_link_libraries(scoreboard_ui_test_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
-macro(package_add_test TESTNAME)
+function(package_add_test TESTNAME HAS_OWN_MAIN)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
     add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN})
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     if (INTEGRATION_TEST)
         target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_INTEGRATION_TEST)
     endif()
+    if (HAS_OWN_MAIN)
+        set(GTEST_LIBS ${GTEST_LIBRARIES} GTest::gmock)
+    else()
+        set(GTEST_LIBS ${GTEST_BOTH_LIBRARIES} GTest::gmock GTest::gmock_main)
+    endif()
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl
-                      ${GTEST_BOTH_LIBRARIES} GTest::gmock GTest::gmock_main)
+                      ${GTEST_LIBS})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
     gtest_discover_tests(${TESTNAME}
@@ -174,49 +179,56 @@ macro(package_add_test TESTNAME)
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
     )
     set_target_properties(${TESTNAME} PROPERTIES FOLDER test CXX_CLANG_TIDY "${LINT_OPTION}")
-endmacro()
+endfunction()
 
-macro(package_add_ui_test TESTNAME)
+function(package_add_ui_test TESTNAME HAS_OWN_MAIN)
     if (INTEGRATION_TEST)
-	    package_add_test(${TESTNAME} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
+	    package_add_test(${TESTNAME} ${HAS_OWN_MAIN} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
     endif()
-endmacro()
+endfunction()
 
 enable_testing()
 
 # config/ tests
-package_add_test(CommandArgsTest   test/unit/config/CommandArgsTest.cpp   src/config/CommandArgs.cpp)
-package_add_test(DisplayConfigTest test/unit/config/DisplayConfigTest.cpp src/config/DisplayConfig.cpp
-                                                                          src/config/Persistence.cpp
-                                                                          src/config/Position.cpp
-                                                                          src/ui/frame/FrameManager.cpp
-                                                                          src/ui/widget/Display.cpp
-                                                                          src/ui/widget/Frame.cpp
-                                                                          src/util/ProtoUtil.cpp
-                                                                          )
-package_add_test(ImageLibraryTest  test/unit/config/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp
-                                                                          src/config/Persistence.cpp
-                                                                          src/util/FilesystemPath.cpp
-                                                                          )
+package_add_test(CommandArgsTest   FALSE test/unit/config/CommandArgsTest.cpp
+                                          src/config/CommandArgs.cpp)
+package_add_test(DisplayConfigTest FALSE test/unit/config/DisplayConfigTest.cpp
+                                          src/config/DisplayConfig.cpp
+                                          src/config/Persistence.cpp
+                                          src/config/Position.cpp
+                                          src/ui/frame/FrameManager.cpp
+                                          src/ui/widget/Display.cpp
+                                          src/ui/widget/Frame.cpp
+                                          src/util/ProtoUtil.cpp
+)
+package_add_test(ImageLibraryTest  FALSE test/unit/config/ImageLibraryTest.cpp
+                                          src src/config/ImageLibrary.cpp
+                                          src/config/Persistence.cpp
+                                          src/util/FilesystemPath.cpp
+)
 
 # util/ tests
-package_add_test(AutoUpdateTest      test/unit/util/AutoUpdateTest.cpp      src/util/AutoUpdate.cpp
-                                                                            src/config/CommandArgs.cpp
-                                                                            src/util/HttpReader.cpp
-                                                                            src/util/StringUtil.cpp
-                                                                            )
-package_add_test(FilesystemPathTest  test/unit/util/FilesystemPathTest.cpp  src/util/FilesystemPath.cpp
-                                                                            )
-package_add_test(ProtoUtilTest       test/unit/util/ProtoUtilTest.cpp       src/util/ProtoUtil.cpp
-                                                                            src/ui/graphics/Color.cpp
-                                                                            )
-package_add_test(StringUtilTest      test/unit/util/StringUtilTest.cpp      src/util/StringUtil.cpp
-                                                                            )
+package_add_test(AutoUpdateTest      FALSE test/unit/util/AutoUpdateTest.cpp
+                                            src/util/AutoUpdate.cpp
+                                            src/config/CommandArgs.cpp
+                                            src/util/HttpReader.cpp
+                                            src/util/StringUtil.cpp
+)
+package_add_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
+                                            src/util/FilesystemPath.cpp
+)
+package_add_test(ProtoUtilTest       FALSE test/unit/util/ProtoUtilTest.cpp
+                                            src/util/ProtoUtil.cpp
+                                            src/ui/graphics/Color.cpp
+)
+package_add_test(StringUtilTest      FALSE test/unit/util/StringUtilTest.cpp
+                                            src/util/StringUtil.cpp
+)
 
 
-package_add_ui_test(ScreenPreviewTest   test/integration/ScreenPreviewTest.cpp)
-package_add_ui_test(TextEntryTest       test/integration/TextEntryTest.cpp)
-package_add_ui_test(ScreenTextSideTest  test/integration/ScreenTextSideTest.cpp)
+package_add_ui_test(ScreenPreviewTest   FALSE test/integration/ScreenPreviewTest.cpp)
+package_add_ui_test(TextEntryTest       FALSE test/integration/TextEntryTest.cpp)
+package_add_ui_test(ScreenTextSideTest  FALSE test/integration/ScreenTextSideTest.cpp)
  
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)
