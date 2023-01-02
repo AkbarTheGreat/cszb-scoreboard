@@ -44,7 +44,7 @@ const char *CURRENT_BINARY;
 
 // Has it's own main to get the current file from argv, as a means of finding a
 // valid file on the filesystem.
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
   ::testing::InitGoogleTest(&argc, argv);
   CURRENT_BINARY = argv[0];
   return RUN_ALL_TESTS();
