@@ -95,6 +95,10 @@ class ImageLibrary {
   // setLibraryRoot sets the root, updating every file to match the new relative
   // location.  Use this if the root is changed, but no files are moved.
   void setLibraryRoot(const FilesystemPath &root);
+  // smartUpdateLibraryRoot sets the root, and for relative paths in the library
+  // makes a best effort to set their location in a way that makes sense. Use
+  // this for most user operations where the root changes.
+  void smartUpdateLibraryRoot(const FilesystemPath &root);
   void clearLibrary();
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;

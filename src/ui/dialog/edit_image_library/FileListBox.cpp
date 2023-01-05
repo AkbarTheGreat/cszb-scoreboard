@@ -94,7 +94,8 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
 }
 
 void FileListBox::setFilenames(const std::vector<FilesystemPath> &files) {
-  std::vector<std::string> strings(files.size());
+  std::vector<std::string> strings;
+  strings.reserve(files.size());
 
   for (const auto &entry : files) {
     strings.emplace_back(entry.string());

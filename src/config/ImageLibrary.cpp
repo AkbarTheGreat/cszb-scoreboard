@@ -187,24 +187,46 @@ void ImageLibrary::removeLibraryRoot() {
 }
 
 void ImageLibrary::moveLibraryRoot(const FilesystemPath &root) {
-  std::string debug;
-  library.SerializeToString(&debug);
-  printf("PRE: %s\n", debug.c_str());
   library.set_library_root(root.string());
-  library.SerializeToString(&debug);
-  printf("POST: %s\n", debug.c_str());
 }
 
 void ImageLibrary::setLibraryRoot(const FilesystemPath &root) {
   auto *images = library.mutable_images();
   for (auto &image : *images) {
-    auto absPath =
+    std::string abs_path =
         FilesystemPath::absolutePath(library.library_root(), image.file_path());
-    auto relPath = FilesystemPath::mostRelativePath(root.string(), absPath);
-    image.set_file_path(
-        FilesystemPath::mostRelativePath(root.string(), absPath));
+    std::string rel_path =
+        FilesystemPath::mostRelativePath(root.string(), abs_path);
+    image.set_file_path(rel_path);
+    image.set_is_relative(FilesystemPath(rel_path).is_relative());
   }
   moveLibraryRoot(root);
+}
+
+void ImageLibrary::smartUpdateLibraryRoot(const FilesystemPath &root) {
+  // First, make all paths absolute with the best possible option.
+  auto *images = library.mutable_images();
+  const std::string new_root = root.string();
+  for (auto &image : *images) {
+    if (image.is_relative()) {
+      // * If only one path exists, use that one.
+      // * If both paths exist, prefer the new path.
+      // * If neither path is exists, leave the path as the original.
+      // * Ultimately, this boils down to -- is new path valid?  Use that.
+      // Otherwise, use the old one.
+      if (FilesystemPath(image.file_path()).existsWithRoot(root.string())) {
+        image.set_file_path(
+            FilesystemPath::absolutePath(root.string(), image.file_path()));
+      } else {
+        image.set_file_path(FilesystemPath::absolutePath(library.library_root(),
+                                                         image.file_path()));
+      }
+      image.set_is_relative(false);
+    }
+  }
+  // Now, do a regular setLibraryRoot to establish new relative paths and update
+  // the library root internally.
+  setLibraryRoot(root);
 }
 
 void ImageLibrary::clearLibrary() { library.Clear(); }

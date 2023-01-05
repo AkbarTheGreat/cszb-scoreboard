@@ -64,7 +64,6 @@ class EditImageLibraryDialog : public TabbedDialog {
   std::unique_ptr<Label> root_label;
   std::unique_ptr<Button> root_browse;
   std::unique_ptr<Button> root_clear;
-  std::unique_ptr<CheckBox> root_move_checkbox;
   std::unique_ptr<ListBox> tag_list;
   std::unique_ptr<TemporaryImageLibrary> library;
   std::map<FilesystemPath, proto::ImageInfo> images;
