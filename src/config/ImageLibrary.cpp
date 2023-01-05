@@ -60,6 +60,7 @@ ImageLibrary::ImageLibrary(SingletonClass c, Singleton *singleton,
 
 auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> filenames;
+  filenames.reserve(library.images_size());
   for (const auto &image : library.images()) {
     filenames.emplace_back(FilesystemPath(image.file_path()));
   }
@@ -326,6 +327,7 @@ ImageSearchResults::ImageSearchResults(
 
 auto ImageSearchResults::filenames() -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> files;
+  files.reserve(matched_images.size());
   for (const auto &image : matched_images) {
     files.emplace_back(FilesystemPath(image.file_path()));
   }

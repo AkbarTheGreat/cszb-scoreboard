@@ -84,6 +84,7 @@ void ScreenText::initializeSides(
     delete text_side;
   }
   this->text_sides.clear();
+  this->text_sides.reserve(text_sides.size());
 
   int col = 0;
   for (auto *text_side : text_sides) {
