@@ -83,6 +83,9 @@ make -j2 all'''
         }
 
         stage('MacOS Build') {
+          environment {
+            LD_LIBRARY_PATH = '/opt/osxcross/lib'
+          }
           steps {
             sh '''cd out/build/osxcross
 export PATH=/opt/osxcross/bin:$PATH
