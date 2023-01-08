@@ -38,6 +38,7 @@ pipeline {
 
         stage('MacOS Cmake Generation') {
           environment {
+            LD_LIBRARY_PATH = '/opt/osxcross/lib'
             OSXCROSS_SDK = 'darwin19'
             OSXCROSS_TARGET = 'darwin19'
             OSXCROSS_HOST = 'x86_64-apple-darwin19'
