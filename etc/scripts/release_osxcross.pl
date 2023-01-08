@@ -91,6 +91,7 @@ sub build_release {
     . ' -DCMAKE_TOOLCHAIN_FILE=' . $ENV{'OSXCROSS_TARGET_DIR'}
                                  . '/toolchain.cmake'
     . ' -DCMAKE_BUILD_TYPE=' . $release_type
+    . ' -DOPENSSL_ROOT_DIR=' . $ENV{'OSXCROSS_TARGET_DIR'} . '/macports/pkgs/opt/local/libexec/openssl3'
     . ' ' . $BASE_DIR;
   system 'make scoreboard_proto cszb-scoreboard';
 }
