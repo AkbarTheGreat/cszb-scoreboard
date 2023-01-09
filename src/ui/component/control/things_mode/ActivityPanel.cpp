@@ -245,7 +245,7 @@ auto ActivityPanel::previewText(int font_size)
     preview_text += std::string(BULLET) + " " + activity->previewText() + "\n";
   }
   std::vector<proto::RenderableText> return_vector;
-  return_vector.emplace_back(proto::RenderableText());
+  return_vector.emplace_back();
   return_vector.back().set_text(preview_text);
   return_vector.back().mutable_font()->set_size(font_size);
   return return_vector;

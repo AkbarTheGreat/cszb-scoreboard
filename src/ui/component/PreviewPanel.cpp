@@ -38,15 +38,15 @@ PreviewPanel::PreviewPanel(swx::Panel *wx, Singleton *singleton)
         singleton->displayConfig()->displayDetails(i);
     std::vector<proto::ScreenSide> sides;
     if (display_info.side().error()) {
-      sides.emplace_back(proto::ScreenSide());
+      sides.emplace_back();
       sides.back().set_error(true);
     }
     if (display_info.side().home()) {
-      sides.emplace_back(proto::ScreenSide());
+      sides.emplace_back();
       sides.back().set_home(true);
     }
     if (display_info.side().away()) {
-      sides.emplace_back(proto::ScreenSide());
+      sides.emplace_back();
       sides.back().set_away(true);
     }
     if (!sides.empty()) {

@@ -26,7 +26,7 @@ namespace cszb_scoreboard {
 
 void HotkeyTable::addHotkey(int modifier_flags, int key_code,
                             wxWindowID widget_id) {
-  accel_entries.emplace_back(wxAcceleratorEntry());
+  accel_entries.emplace_back();
   accel_entries.back().Set(modifier_flags, key_code, widget_id);
 }
 

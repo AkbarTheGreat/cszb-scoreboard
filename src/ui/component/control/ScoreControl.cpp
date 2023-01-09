@@ -263,10 +263,10 @@ auto ScoreControl::scoreLines(bool isHome)
     name_entry = home_name_entry.get();
   }
 
-  update.emplace_back(proto::RenderableText());
+  update.emplace_back();
   update.back().set_text(score_entry->value());
   update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
-  update.emplace_back(proto::RenderableText());
+  update.emplace_back();
   update.back().set_text(name_entry->value());
   update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
   update.back().set_position(
@@ -287,10 +287,10 @@ auto ScoreControl::introLines(bool isHome)
     intro_text = "Home";
   }
 
-  update.emplace_back(proto::RenderableText());
+  update.emplace_back();
   update.back().set_text(name_entry->value());
   update.back().mutable_font()->set_size(SCORE_FONT_SIZE);
-  update.emplace_back(proto::RenderableText());
+  update.emplace_back();
   update.back().set_text(intro_text);
   update.back().mutable_font()->set_size(TEAM_FONT_SIZE);
   update.back().set_position(

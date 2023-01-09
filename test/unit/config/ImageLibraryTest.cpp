@@ -125,7 +125,7 @@ auto filesystemPathVector(const std::vector<std::string> &in)
   std::vector<FilesystemPath> out;
   out.reserve(in.size());
   for (const auto &i : in) {
-    out.emplace_back(FilesystemPath(i));
+    out.emplace_back(i);
   }
   return out;
 }
