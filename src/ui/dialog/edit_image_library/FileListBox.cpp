@@ -68,7 +68,7 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
 
   for (const auto &entry : strings) {
     if (!entry.empty()) {
-      filenames.emplace_back(FilesystemPath(std::string(entry)));
+      filenames.emplace_back(std::string(entry));
     }
   }
 
