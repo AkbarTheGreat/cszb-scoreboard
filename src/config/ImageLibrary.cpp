@@ -62,7 +62,7 @@ auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> filenames;
   filenames.reserve(library.images_size());
   for (const auto &image : library.images()) {
-    filenames.emplace_back(FilesystemPath(image.file_path()));
+    filenames.emplace_back(image.file_path());
   }
   return filenames;
 }
