@@ -196,14 +196,16 @@ ImageSearchResults::ImageSearchResults(
 
 auto ImageSearchResults::filenames() -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> files;
+  files.reserve(matched_images.size());
   for (const auto &image : matched_images) {
-    files.emplace_back(FilesystemPath(image.file_path()));
+    files.emplace_back(image.file_path());
   }
   return files;
 }
 
 auto ImageSearchResults::matchedTags() -> std::vector<std::string> {
   std::vector<std::string> tags;
+  tags.reserve(matched_tag_list.size());
   for (const auto &tag : matched_tag_list) {
     tags.push_back(tag.string());
   }

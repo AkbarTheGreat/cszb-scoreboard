@@ -65,6 +65,7 @@ void ScreenText::setupPreview(const std::string &initial_text,
 void ScreenText::setupPresenter(const ScreenText &preview, Size size) {
   setSize(size);
   std::vector<ScreenTextSide *> text_sides;
+  text_sides.reserve(preview.text_sides.size());
 
   Size split_size =
       splitScreenSize(size.width, size.height, preview.text_sides.size());

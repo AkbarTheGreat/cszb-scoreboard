@@ -109,11 +109,9 @@ auto assertVectorEquality(const char *actual_expression,
 auto filesystemPathVector(const std::vector<std::string> &in)
     -> std::vector<FilesystemPath> {
   std::vector<FilesystemPath> out;
+  out.reserve(in.size());
   for (const auto &i : in) {
-    //  These vectors are small enough that the extra code isn't worthwhile, so
-    //  waive this lint error.
-    // NOLINTNEXTLINE(performance-inefficient-vector-operation)
-    out.emplace_back(FilesystemPath(i));
+    out.emplace_back(i);
   }
   return out;
 }
@@ -122,10 +120,8 @@ auto tagStrings(const ImageLibrary &library, bool include_name = false)
     -> std::vector<std::string> {
   std::vector<CaseOptionalString> tags = library.allTags(include_name);
   std::vector<std::string> tag_strings;
+  tag_strings.reserve(tags.size());
   for (const auto &tag : tags) {
-    //  These vectors are small enough that the extra code isn't worthwhile, so
-    //  waive this lint error.
-    // NOLINTNEXTLINE(performance-inefficient-vector-operation)
     tag_strings.emplace_back(tag.string());
   }
   return tag_strings;
