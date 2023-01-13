@@ -65,7 +65,8 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   root_browse->toolTip("Set a new root directory for your library.");
   root_clear = box_panel->button("Clear root", true);
   root_clear->toolTip(
-      "Clear the root directory for your library, all paths will be absolute.");
+      "Remove the root directory for your library, all paths will be "
+      "absolute.");
 
   tag_list = box_panel->listBox("Tags");
 
@@ -85,7 +86,7 @@ void EditImageLibraryDialog::positionWidgets() {
   box_panel->addWidgetWithSpan(*root_browse, 3, 0, 1, 1);
   box_panel->addWidgetWithSpan(*root_entry, 3, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_clear, 4, 3, 1, 1);
+  box_panel->addWidgetWithSpan(*root_clear, 4, 0, 1, 1);
 
   box_panel->runSizer();
 
