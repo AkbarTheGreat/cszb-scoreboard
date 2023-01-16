@@ -147,7 +147,10 @@ auto ImageLibrary::tags(const FilesystemPath &filename)
 void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
                             const std::vector<std::string> &tags) {
   proto::ImageInfo *new_image = library.add_images();
-  new_image->set_file_path(file.string());
+  FilesystemPath rel_path = FilesystemPath(
+      FilesystemPath::mostRelativePath(libraryRoot().string(), file.string()));
+  new_image->set_file_path(rel_path.string());
+  new_image->set_is_relative(rel_path.is_relative());
   new_image->set_name(name);
   for (const auto &tag : tags) {
     new_image->add_tags(tag);
@@ -156,10 +159,13 @@ void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
 
 void ImageLibrary::moveImage(const FilesystemPath &previous_path,
                              const FilesystemPath &new_path) {
+  FilesystemPath rel_path = FilesystemPath(FilesystemPath::mostRelativePath(
+      libraryRoot().string(), new_path.string()));
   auto *images = library.mutable_images();
   for (auto &image : *images) {
     if (FilesystemPath(image.file_path()) == previous_path) {
-      image.set_file_path(new_path.string());
+      image.set_file_path(rel_path.string());
+      image.set_is_relative(rel_path.is_relative());
     }
   }
 }

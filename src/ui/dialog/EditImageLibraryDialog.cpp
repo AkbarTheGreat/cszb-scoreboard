@@ -165,17 +165,21 @@ void EditImageLibraryDialog::fileUpdated(const FilesystemPath &prev,
     return;
   }
   if (prev == empty) {
-    library->addImage(curr, "", {});
     // New file.
+    library->addImage(curr, "", {});
+    file_list->selectIndex(library->allFilenames().size() - 1);
+    refreshFiles();
     return;
   }
   if (curr == empty) {
-    library->deleteImage(prev);
     // Delete file.
+    library->deleteImage(prev);
+    refreshFiles();
     return;
   }
   // Updating existing file.
   library->moveImage(prev, curr);
+  refreshFiles();
 }
 
 void EditImageLibraryDialog::fileSelected(wxListEvent *event) {
@@ -197,7 +201,9 @@ void EditImageLibraryDialog::nameUpdated() {
 }
 
 void EditImageLibraryDialog::refreshFiles() {
+  int64_t selected = file_list->selectedIndex();
   file_list->setFilenames(library->allFilenames());
+  file_list->selectIndex(selected);
 }
 
 void EditImageLibraryDialog::rootBrowsePressed() {

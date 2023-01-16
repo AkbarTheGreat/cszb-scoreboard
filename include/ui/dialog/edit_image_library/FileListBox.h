@@ -47,6 +47,8 @@ class FileListBox : public Panel {
   auto getFilenames() -> std::vector<FilesystemPath>;
   void setFilenames(const std::vector<FilesystemPath> &files);
   auto selectedFilename() -> FilesystemPath;
+  auto selectedIndex() -> int64_t { return box->selectedIndex(); }
+  void selectIndex(int64_t idx) { box->selectItem(idx); }
   // Callback takes old, then new path (or empty path for old/new for add/remove
   // respectively)
   void setChangeCallback(
