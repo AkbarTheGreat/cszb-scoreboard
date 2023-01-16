@@ -59,9 +59,10 @@ class EditImageLibraryDialog : public TabbedDialog {
   std::unique_ptr<Panel> box_panel;
   std::unique_ptr<Text> name_entry;
   std::unique_ptr<Label> name_label;
+  std::unique_ptr<Label> full_name_label;
+  std::unique_ptr<Text> full_name_entry;
   std::unique_ptr<Divider> root_divider;
   std::unique_ptr<Text> root_entry;
-  std::unique_ptr<Label> root_label;
   std::unique_ptr<Button> root_browse;
   std::unique_ptr<Button> root_clear;
   std::unique_ptr<ListBox> tag_list;

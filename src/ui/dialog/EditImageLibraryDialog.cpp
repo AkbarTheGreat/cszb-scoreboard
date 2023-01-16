@@ -57,6 +57,9 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   name_entry = box_panel->text("");
   name_label = box_panel->label("Display name");
 
+  full_name_label = box_panel->label("Filename");
+  full_name_entry = box_panel->text("");
+
   root_divider = box_panel->divider();
   root_entry =
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
@@ -81,12 +84,15 @@ void EditImageLibraryDialog::positionWidgets() {
   box_panel->addWidgetWithSpan(*name_label, 1, 0, 1, 1);
   box_panel->addWidgetWithSpan(*name_entry, 1, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_divider, 2, 0, 1, 4);
+  box_panel->addWidgetWithSpan(*full_name_label, 2, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*full_name_entry, 2, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_browse, 3, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*root_entry, 3, 1, 1, 3);
+  box_panel->addWidgetWithSpan(*root_divider, 3, 0, 1, 4);
 
-  box_panel->addWidgetWithSpan(*root_clear, 4, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*root_browse, 4, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*root_entry, 4, 1, 1, 3);
+
+  box_panel->addWidgetWithSpan(*root_clear, 5, 0, 1, 1);
 
   box_panel->runSizer();
 
@@ -176,6 +182,8 @@ void EditImageLibraryDialog::fileSelected(wxListEvent *event) {
   FilesystemPath filename = file_list->selectedFilename();
 
   name_entry->setValue(library->name(filename));
+  full_name_entry->setValue(FilesystemPath::absolutePath(
+      library->libraryRoot().string(), filename.string()));
   std::vector<std::string> tags;
   for (const auto &tag : library->tags(filename)) {
     tags.push_back(tag.string());
