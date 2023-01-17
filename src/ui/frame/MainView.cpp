@@ -67,6 +67,7 @@ void MainView::resetDisplays(bool is_initial) {
       " displays found.");
   singleton->frameManager()->clearPresenters();
   if (preview_panel) {
+    preview_panel->destroy();
     preview_panel.reset();
   }
   preview_panel = std::make_unique<PreviewPanel>(childPanel());
