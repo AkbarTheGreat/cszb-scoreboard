@@ -28,6 +28,8 @@ limitations under the License.
 #include "config/swx/event.h"      // for wxCommandEvent (ptr only), wxEVT_C...
 #include "ui/widget/Panel.h"       // for Panel
 #include "ui/widget/PopUp.h"
+#include "ui/frame/FrameManager.h"
+#include "ui/frame/MainView.h"
 #include "util/StringUtil.h"  // for StringUtil
 
 namespace cszb_scoreboard {
@@ -158,6 +160,7 @@ void DisplaySettingsPage::saveSettings() {
                                         display_settings_panels[i]->getSide());
   }
 
+    bool reset_displays = false;
   // If any of the windowed settings have chagned, re-detect display settings.
   if ((singleton->displayConfig()->windowedMode() !=
        enable_window_mode->checked()) ||
@@ -167,9 +170,10 @@ void DisplaySettingsPage::saveSettings() {
        StringUtil::stringToInt(window_width->value())) ||
       (singleton->displayConfig()->windowHeight() !=
        StringUtil::stringToInt(window_height->value()))) {
-    PopUp::Message(
-        "WARNING: Changes to windowed mode will require an application restart "
-        "to take effect.");
+    reset_displays = true;
+    //PopUp::Message(
+    //    "WARNING: Changes to windowed mode will require an application restart "
+    //    "to take effect.");
   }
 
   singleton->displayConfig()->setWindowedMode(enable_window_mode->checked());
@@ -181,6 +185,9 @@ void DisplaySettingsPage::saveSettings() {
       StringUtil::stringToInt(window_height->value()));
 
   singleton->displayConfig()->saveSettings();
+  if (reset_displays) {
+    singleton->frameManager()->mainView()->resetDisplays();
+  }
 }
 
 void DisplaySettingsPage::windowModeChanged() {

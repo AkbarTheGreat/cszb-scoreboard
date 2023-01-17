@@ -29,7 +29,6 @@ limitations under the License.
 #include "util/TimerManager.h"      // for TimerManager
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 class ScreenText;
 namespace swx {
 class Panel;
@@ -41,9 +40,8 @@ const std::string PAUSE = "Pause";
 const std::string SHOW = "Show";
 const std::string HIDE = "Hide";
 
-auto TimerSetup ::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> std::unique_ptr<TimerSetup> {
-  auto control = std::make_unique<TimerSetup>(preview_panel, wx);
+auto TimerSetup ::Create(swx::Panel *wx) -> std::unique_ptr<TimerSetup> {
+  auto control = std::make_unique<TimerSetup>(wx);
   control->initializeWidgets();
   return control;
 }

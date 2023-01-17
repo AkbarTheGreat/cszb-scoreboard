@@ -47,9 +47,13 @@ class MainView : public Frame {
       : MainView(new swx::FrameImpl(nullptr, wxID_ANY, title, pos.toWx(),
                                     size.toWx()),
                  Singleton::getInstance()) {}
+  void init();
   auto controlPanel() -> ControlPanel * { return control_panel.get(); }
   auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
-  auto scoreQuickState() -> ScreenText * { return quick_state->scorePanel(); }
+  void resetDisplays(bool is_initial = false);
+  auto scoreQuickState() -> ScreenText * {
+    return quick_state ? quick_state->scorePanel() : nullptr;
+  }
   void onSettingsClose();
   virtual void refreshPreviews() {
     preview_panel->refresh();

@@ -30,7 +30,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 class ActivityPanel;
-class PreviewPanel;
 class ScreenText;
 
 namespace swx {
@@ -39,10 +38,8 @@ class Panel;
 
 class ThingsMode : public ScreenTextController {
  public:
-  ThingsMode(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenTextController(preview_panel, wx) {}
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
-      -> std::unique_ptr<ThingsMode>;
+  ThingsMode(swx::Panel *wx) : ScreenTextController(wx) {}
+  static auto Create(swx::Panel *wx) -> std::unique_ptr<ThingsMode>;
   void textUpdated();
   void updateScreenText(ScreenText *screen_text) override;
 

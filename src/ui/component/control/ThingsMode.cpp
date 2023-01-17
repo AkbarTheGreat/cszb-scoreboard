@@ -33,16 +33,14 @@ limitations under the License.
 #include "util/ProtoUtil.h"                                     // for Proto...
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 static constexpr std::array<const char *, 2> PRESENTER_OPTIONS{
     {"Activity List", "Replacements"}};
 
-auto ThingsMode::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> std::unique_ptr<ThingsMode> {
-  auto entry = std::make_unique<ThingsMode>(preview_panel, wx);
+auto ThingsMode::Create(swx::Panel *wx) -> std::unique_ptr<ThingsMode> {
+  auto entry = std::make_unique<ThingsMode>(wx);
   entry->initializeWidgets();
   return entry;
 }

@@ -52,15 +52,14 @@ class ScreenTextController : public Panel {
   virtual void createControls(Panel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
    * Defaults to all screens, may be overridden for more control. */
-  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenTextController(preview_panel, wx,
+  ScreenTextController(swx::Panel *wx)
+      : ScreenTextController(wx,
                              /*display_update_screens=*/true) {}
-  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx,
-                       bool display_update_screens)
-      : ScreenTextController(preview_panel, wx, display_update_screens,
+  ScreenTextController(swx::Panel *wx, bool display_update_screens)
+      : ScreenTextController(wx, display_update_screens,
                              Singleton::getInstance()) {}
-  ScreenTextController(PreviewPanel *preview_panel, swx::Panel *wx,
-                       bool display_update_screens, Singleton *singleton);
+  ScreenTextController(swx::Panel *wx, bool display_update_screens,
+                       Singleton *singleton);
   void initializeWidgets();
   auto isActive() -> bool;
   auto previewPanel() -> PreviewPanel *;
@@ -68,8 +67,6 @@ class ScreenTextController : public Panel {
   Singleton *singleton;
 
  private:
-  // Weak reference to the global PreviewPanel, which this object does not own.
-  PreviewPanel *preview_panel;
   std::unique_ptr<Button> update_screens;
   bool display_update_screens_button;
 

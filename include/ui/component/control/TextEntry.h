@@ -32,7 +32,6 @@ limitations under the License.
 #include "ui/widget/Text.h"                             // for Text
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 class ScreenText;
 
 namespace swx {
@@ -41,9 +40,8 @@ class Panel;
 
 class TextEntry : public ScreenTextController {
  public:
-  TextEntry(PreviewPanel *preview_panel, swx::Panel *wx);
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
-      -> std::unique_ptr<TextEntry>;
+  TextEntry(swx::Panel *wx);
+  static auto Create(swx::Panel *wx) -> std::unique_ptr<TextEntry>;
   auto textField() -> Text *;
   void textUpdated();
 

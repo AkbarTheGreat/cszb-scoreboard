@@ -38,7 +38,7 @@ class Notebook;
 
 class ControlPanel : public Notebook {
  public:
-  ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel);
+  ControlPanel(swx::Notebook *wx);
   void updateScreenTextFromSelected(ScreenText *screen_text);
   auto isSelected(ScreenTextController *controller) -> bool;
 

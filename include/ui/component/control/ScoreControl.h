@@ -46,9 +46,9 @@ class Panel;
 
 class ScoreControl : public ScreenTextController {
  public:
-  ScoreControl(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenTextController(preview_panel, wx) {}
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
+  ScoreControl( swx::Panel *wx)
+      : ScreenTextController( wx) {}
+  static auto Create( swx::Panel *wx)
       -> std::unique_ptr<ScoreControl>;
 
  private:

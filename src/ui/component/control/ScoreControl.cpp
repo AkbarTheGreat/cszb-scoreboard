@@ -42,7 +42,6 @@ limitations under the License.
 #include "util/StringUtil.h"         // for StringUtil
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 class Widget;
 
 const int SCORE_FONT_SIZE = 20;
@@ -56,9 +55,8 @@ const std::string NO_LOGO_MESSAGE = "<No Logo Selected>";
 const std::string INTRO_MODE_LABEL = "Introduce Teams";
 const std::string SCORE_MODE_LABEL = "Show Scores";
 
-auto ScoreControl::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> std::unique_ptr<ScoreControl> {
-  auto control = std::make_unique<ScoreControl>(preview_panel, wx);
+auto ScoreControl::Create(swx::Panel *wx) -> std::unique_ptr<ScoreControl> {
+  auto control = std::make_unique<ScoreControl>(wx);
   control->initializeWidgets();
   return control;
 }

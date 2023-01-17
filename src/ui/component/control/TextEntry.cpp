@@ -29,7 +29,6 @@ limitations under the License.
 #include "util/StringUtil.h"          // for StringUtil
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 
 namespace swx {
 class Panel;
@@ -38,16 +37,14 @@ class Panel;
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-auto TextEntry::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> std::unique_ptr<TextEntry> {
-  auto entry = std::make_unique<TextEntry>(preview_panel, wx);
+auto TextEntry::Create(swx::Panel *wx) -> std::unique_ptr<TextEntry> {
+  auto entry = std::make_unique<TextEntry>(wx);
   entry->initializeWidgets();
   entry->updatePreview();
   return entry;
 }
 
-TextEntry::TextEntry(PreviewPanel *preview_panel, swx::Panel *wx)
-    : ScreenTextController(preview_panel, wx) {
+TextEntry::TextEntry(swx::Panel *wx) : ScreenTextController(wx) {
   home_text = "Home Team";
   away_text = "Away Team";
   all_text = "Enter Text";

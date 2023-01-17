@@ -33,7 +33,6 @@ limitations under the License.
 #include "ui/widget/SearchBox.h"  // for SearchBox
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 
 namespace swx {
 class Panel;
@@ -41,10 +40,8 @@ class Panel;
 
 class ImageFromLibrary : public ScreenImageController {
  public:
-  ImageFromLibrary(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenImageController(preview_panel, wx) {}
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
-      -> std::unique_ptr<ImageFromLibrary>;
+  ImageFromLibrary(swx::Panel *wx) : ScreenImageController(wx) {}
+  static auto Create(swx::Panel *wx) -> std::unique_ptr<ImageFromLibrary>;
   void onEditDialogClose();
 
  private:

@@ -45,6 +45,7 @@ class FrameManager {
   virtual auto createScreenPresenter(int monitor_number,
                                      const ScreenText &preview)
       -> ScreenPresenter *;
+  void clearPresenters();
   virtual auto mainView() -> MainView * { return main_view.get(); }
   virtual void refreshFrames();
   virtual void exitFrames();

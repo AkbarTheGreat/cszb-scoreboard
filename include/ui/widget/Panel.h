@@ -125,6 +125,7 @@ class Panel : public Widget {
   [[nodiscard]] auto size() const -> Size;
   void toolTip(const std::string &tip) const { wx()->SetToolTip(tip); }
   void update() const { wx()->Update(); }
+  void destroy() { delete _wx; }
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.

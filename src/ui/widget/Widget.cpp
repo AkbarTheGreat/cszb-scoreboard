@@ -59,6 +59,7 @@ void Widget::moveWidget(Widget *widget, int row, int column) {
 auto getOrderedRepresentation(wxGridBagSizer *sizer)
     -> std::vector<std::vector<const wxGBSizerItem *>> {
   std::vector<std::vector<const wxGBSizerItem *>> table;
+  if (sizer == nullptr) return table;
   for (auto *base : sizer->GetChildren()) {
     wxGBSizerItem *item = sizer->FindItem(base->GetWindow());
     int32_t row;
@@ -115,6 +116,20 @@ void Widget::removeRowFromSizer(int row) {
       }
     }
   }
+}
+
+void Widget::resetSizer() {
+  std::vector<std::vector<const wxGBSizerItem *>> table =
+      getOrderedRepresentation(window_sizer);
+  for (const auto &row : table) {
+    for (const auto &widget : row) {
+      if (widget == nullptr || widget->GetWindow() == nullptr) {
+        continue;
+      }
+      sizer()->Detach(widget->GetWindow());
+    }
+  }
+  wx()->SetSizerAndFit(sizer());
 }
 
 void Widget::runSizer() {

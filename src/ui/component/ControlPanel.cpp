@@ -31,28 +31,20 @@ limitations under the License.
 #include "ui/component/control/TimerSetup.h"
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 class ScreenText;
 
 namespace swx {
 class Notebook;
 }  // namespace swx
 
-ControlPanel::ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
-    : Notebook(wx) {
-  addController(std::move(ScoreControl::Create(preview_panel, childPanel())),
-                "Score");
-  addController(
-      std::move(ImageFromLibrary::Create(preview_panel, childPanel())),
-      "Image Library");
-  addController(std::move(LocalImage::Create(preview_panel, childPanel())),
-                "Load Image");
-  addController(std::move(ThingsMode::Create(preview_panel, childPanel())),
-                "5/6 Things");
-  addController(std::move(TextEntry::Create(preview_panel, childPanel())),
-                "Text");
-  addController(std::move(TimerSetup::Create(preview_panel, childPanel())),
-                "Timer");
+ControlPanel::ControlPanel(swx::Notebook *wx) : Notebook(wx) {
+  addController(std::move(ScoreControl::Create(childPanel())), "Score");
+  addController(std::move(ImageFromLibrary::Create(childPanel())),
+                "Image Library");
+  addController(std::move(LocalImage::Create(childPanel())), "Load Image");
+  addController(std::move(ThingsMode::Create(childPanel())), "5/6 Things");
+  addController(std::move(TextEntry::Create(childPanel())), "Text");
+  addController(std::move(TimerSetup::Create(childPanel())), "Timer");
 
   bindEvents();
 

@@ -37,15 +37,13 @@ const int BORDER_SIZE = 0;
 
 MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
   this->singleton = singleton;
-  createMenu();
-  setStatusBar(
-      "Welcome to ComedySportz Scoreboard, " +
-      StringUtil::intToString(singleton->displayConfig()->numberOfDisplays()) +
-      " displays found.");
+}
 
-  preview_panel = std::make_unique<PreviewPanel>(childPanel());
-  control_panel =
-      std::make_unique<ControlPanel>(childNotebook(), preview_panel.get());
+void MainView::init() {
+  createMenu();
+  resetDisplays(true);
+
+  control_panel = std::make_unique<ControlPanel>(childNotebook());
   quick_state = std::make_unique<QuickStatePanel>(childPanel());
 
   positionWidgets();
@@ -59,6 +57,22 @@ MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
   // an initial click.
   control_panel->focus();
   singleton->hotkeyTable()->installHotkeys(this);
+}
+
+void MainView::resetDisplays(bool is_initial) {
+  singleton->displayConfig()->detectDisplays();
+  setStatusBar(
+      "Welcome to ComedySportz Scoreboard, " +
+      StringUtil::intToString(singleton->displayConfig()->numberOfDisplays()) +
+      " displays found.");
+  singleton->frameManager()->clearPresenters();
+  if (preview_panel) {
+    preview_panel.reset();
+  }
+  preview_panel = std::make_unique<PreviewPanel>(childPanel());
+  if (!is_initial) {
+    positionWidgets();
+  }
 }
 
 void MainView::createMenu() {
@@ -86,6 +100,7 @@ void MainView::createMenu() {
 }
 
 void MainView::positionWidgets() {
+  resetSizer();
   addWidget(*preview_panel, 0, 0);
   addWidget(*control_panel, 1, 0);
   addWidgetWithSpan(*quick_state, 0, 1, 2, 1);
