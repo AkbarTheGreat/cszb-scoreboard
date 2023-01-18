@@ -78,21 +78,22 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
 }
 
 void EditImageLibraryDialog::positionWidgets() {
-  box_panel->addWidgetWithSpan(*file_list, 0, 0, 1, 2);
-  box_panel->addWidgetWithSpan(*tag_list, 0, 2, 1, 2);
+  int32_t row = 0;
+  box_panel->addWidgetWithSpan(*file_list, row, 0, 1, 2);
+  box_panel->addWidgetWithSpan(*tag_list, row, 2, 1, 2);
 
-  box_panel->addWidgetWithSpan(*name_label, 1, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*name_entry, 1, 1, 1, 3);
+  box_panel->addWidgetWithSpan(*name_label, ++row, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*name_entry, row, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*full_name_label, 2, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*full_name_entry, 2, 1, 1, 3);
+  box_panel->addWidgetWithSpan(*full_name_label, ++row, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*full_name_entry, row, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_divider, 3, 0, 1, 4);
+  box_panel->addWidgetWithSpan(*root_divider, ++row, 0, 1, 4);
 
-  box_panel->addWidgetWithSpan(*root_browse, 4, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*root_entry, 4, 1, 1, 3);
+  box_panel->addWidgetWithSpan(*root_browse, ++row, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*root_entry, row, 1, 1, 3);
 
-  box_panel->addWidgetWithSpan(*root_clear, 5, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*root_clear, ++row, 0, 1, 1);
 
   box_panel->runSizer();
 
