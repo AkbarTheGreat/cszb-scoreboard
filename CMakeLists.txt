@@ -196,7 +196,6 @@ package_add_test(DisplayConfigTest FALSE test/unit/config/DisplayConfigTest.cpp
                                           src/config/DisplayConfig.cpp
                                           src/config/Persistence.cpp
                                           src/config/Position.cpp
-                                          src/ui/frame/FrameManager.cpp
                                           src/ui/widget/Display.cpp
                                           src/ui/widget/Frame.cpp
                                           src/util/ProtoUtil.cpp
