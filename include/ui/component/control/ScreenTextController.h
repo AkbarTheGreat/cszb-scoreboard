@@ -52,7 +52,7 @@ class ScreenTextController : public Panel {
   virtual void createControls(Panel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
    * Defaults to all screens, may be overridden for more control. */
-  ScreenTextController(swx::Panel *wx)
+  explicit ScreenTextController(swx::Panel *wx)
       : ScreenTextController(wx,
                              /*display_update_screens=*/true) {}
   ScreenTextController(swx::Panel *wx, bool display_update_screens)

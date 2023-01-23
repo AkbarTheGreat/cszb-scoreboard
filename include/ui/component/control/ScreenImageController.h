@@ -46,7 +46,7 @@ class ScreenImageController : public ScreenTextController {
   std::string all_screen_image_name, home_screen_image_name,
       away_screen_image_name;
 
-  ScreenImageController(swx::Panel *wx) : ScreenTextController(wx) {}
+  explicit ScreenImageController(swx::Panel *wx) : ScreenTextController(wx) {}
   void bindEvents();
   void createControls(Panel *control_panel) override;
   virtual void positionWidgets(Panel *control_panel) = 0;

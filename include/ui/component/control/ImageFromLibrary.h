@@ -40,7 +40,7 @@ class Panel;
 
 class ImageFromLibrary : public ScreenImageController {
  public:
-  ImageFromLibrary(swx::Panel *wx) : ScreenImageController(wx) {}
+  explicit ImageFromLibrary(swx::Panel *wx) : ScreenImageController(wx) {}
   static auto Create(swx::Panel *wx) -> std::unique_ptr<ImageFromLibrary>;
   void onEditDialogClose();
 

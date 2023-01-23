@@ -46,10 +46,8 @@ class Panel;
 
 class ScoreControl : public ScreenTextController {
  public:
-  ScoreControl( swx::Panel *wx)
-      : ScreenTextController( wx) {}
-  static auto Create( swx::Panel *wx)
-      -> std::unique_ptr<ScoreControl>;
+  explicit ScoreControl(swx::Panel *wx) : ScreenTextController(wx) {}
+  static auto Create(swx::Panel *wx) -> std::unique_ptr<ScoreControl>;
 
  private:
   void addHomeAwayWidgetPair(Panel *panel, int row, const Widget &home_widget,

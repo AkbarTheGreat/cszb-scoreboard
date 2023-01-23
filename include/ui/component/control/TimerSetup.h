@@ -37,7 +37,7 @@ class Panel;
 
 class TimerSetup : public ScreenTextController {
  public:
-  TimerSetup(swx::Panel *wx)
+  explicit TimerSetup(swx::Panel *wx)
       : ScreenTextController(wx,
                              /*display_update_screens=*/false) {}
   static auto Create(swx::Panel *wx) -> std::unique_ptr<TimerSetup>;

@@ -33,7 +33,7 @@ class Panel;
 
 class LocalImage : public ScreenImageController {
  public:
-  LocalImage(swx::Panel *wx) : ScreenImageController(wx) {}
+  explicit LocalImage(swx::Panel *wx) : ScreenImageController(wx) {}
   static auto Create(swx::Panel *wx) -> std::unique_ptr<LocalImage>;
 
  private:

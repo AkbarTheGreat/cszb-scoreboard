@@ -40,7 +40,7 @@ class Panel;
 
 class TextEntry : public ScreenTextController {
  public:
-  TextEntry(swx::Panel *wx);
+  explicit TextEntry(swx::Panel *wx);
   static auto Create(swx::Panel *wx) -> std::unique_ptr<TextEntry>;
   auto textField() -> Text *;
   void textUpdated();

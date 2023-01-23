@@ -38,7 +38,7 @@ class Panel;
 
 class ThingsMode : public ScreenTextController {
  public:
-  ThingsMode(swx::Panel *wx) : ScreenTextController(wx) {}
+  explicit ThingsMode(swx::Panel *wx) : ScreenTextController(wx) {}
   static auto Create(swx::Panel *wx) -> std::unique_ptr<ThingsMode>;
   void textUpdated();
   void updateScreenText(ScreenText *screen_text) override;
