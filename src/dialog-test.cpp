@@ -23,8 +23,9 @@ limitations under the License.
 #include <cstdlib>  // for exit
 #include <memory>   // for unique_ptr, make_unique
 
-#include "config/Position.h"                    // for Position, Size
-#include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog
+#include "config/Position.h"                   // for Position, Size
+#include "ui/dialog/EditImageLibraryDialog.h"  // for EditImageLibraryDialog
+#include "ui/dialog/SettingsDialog.h"
 #include "ui/widget/Frame.h"                    // for Frame
 #include "ui/widget/Panel.h"                    // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
@@ -58,7 +59,8 @@ class DialogTest : public wxApp {
 
  private:
   std::unique_ptr<TestFrame> frame;
-  std::unique_ptr<EditImageLibraryDialog> dialog;
+  // std::unique_ptr<EditImageLibraryDialog> dialog;
+  std::unique_ptr<SettingsDialog> dialog;
 };
 
 auto DialogTest::OnInit() -> bool {
@@ -70,7 +72,8 @@ auto DialogTest::OnInit() -> bool {
   Singleton::getInstance()->persistence();
   auto *prop_sheet =
       new swx::PropertySheetDialog(frame->panel->wx(), wxID_ANY, "Test");
-  dialog = std::make_unique<EditImageLibraryDialog>(prop_sheet, nullptr);
+  // dialog = std::make_unique<EditImageLibraryDialog>(prop_sheet, nullptr);
+  dialog = std::make_unique<SettingsDialog>(prop_sheet, nullptr);
   dialog->bind(wxEVT_CLOSE_WINDOW,
                [this](wxCloseEvent &event) -> void { std::exit(0); });
   dialog->show();
