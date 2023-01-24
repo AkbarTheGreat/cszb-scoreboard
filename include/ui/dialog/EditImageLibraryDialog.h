@@ -26,7 +26,6 @@ limitations under the License.
 #include "image_library.pb.h"                          // for ImageInfo
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
 #include "ui/widget/Button.h"                          // for Button
-#include "ui/widget/CheckBox.h"                        // for CheckBox
 #include "ui/widget/Divider.h"                         // for Divider
 #include "ui/widget/Label.h"                           // for Label
 #include "ui/widget/ListBox.h"                         // for ListBox

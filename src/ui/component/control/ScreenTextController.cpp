@@ -38,8 +38,7 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-ScreenTextController::ScreenTextController(
-                                           swx::Panel *wx,
+ScreenTextController::ScreenTextController(swx::Panel *wx,
                                            bool display_update_screens,
                                            Singleton *singleton)
     : Panel(wx) {

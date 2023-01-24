@@ -18,11 +18,12 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult
-#include <gtest/gtest.h>            // IWYU pragma: keep
+#include <gtest/gtest.h>            // for Test (ptr only), TestInfo (ptr only)
 
-#include <memory>  // for allocator
+#include <filesystem>  // for path::preferred_separator
+#include <string>      // for allocator, string
 
-#include "gtest/gtest_pred_impl.h"  // for Test, EXPECT_EQ, TEST
+#include "gtest/gtest_pred_impl.h"  // for AssertionResult, Test, EXPECT_EQ
 #include "util/FilesystemPath.h"    // for FilesystemPath
 
 #ifdef _WIN32

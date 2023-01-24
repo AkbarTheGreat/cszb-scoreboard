@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "ui/dialog/EditImageLibraryDialog.h"
 
+#include <stdint.h>     // for int32_t, int64_t
 #include <wx/string.h>  // for wxString
 
 #include <filesystem>  // for operator==, path

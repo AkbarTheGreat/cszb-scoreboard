@@ -19,11 +19,10 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
-#include <google/protobuf/util/message_differencer.h>
+#include <google/protobuf/util/message_differencer.h>  // for MessageDiffere...
 
 #include <cassert>  // for assert
 #include <cstdint>  // for uint32_t
-#include <utility>  // for move
 
 #include "config/Persistence.h"     // for Persistence
 #include "config/Position.h"        // for Position

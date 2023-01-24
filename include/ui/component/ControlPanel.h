@@ -29,7 +29,6 @@ limitations under the License.
 class wxAuiNotebookEvent;
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 class ScreenText;
 
 namespace swx {

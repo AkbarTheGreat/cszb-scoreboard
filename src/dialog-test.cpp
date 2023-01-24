@@ -23,9 +23,8 @@ limitations under the License.
 #include <cstdlib>  // for exit
 #include <memory>   // for unique_ptr, make_unique
 
-#include "config/Position.h"                   // for Position, Size
-#include "ui/dialog/EditImageLibraryDialog.h"  // for EditImageLibraryDialog
-#include "ui/dialog/SettingsDialog.h"
+#include "config/Position.h"                    // for Position, Size
+#include "ui/dialog/SettingsDialog.h"           // for SettingsDialog
 #include "ui/widget/Frame.h"                    // for Frame
 #include "ui/widget/Panel.h"                    // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog

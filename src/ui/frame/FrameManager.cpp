@@ -34,7 +34,7 @@ struct Size;
 
 auto FrameManager::createMainView(const std::string &title, const Position &pos,
                                   const Size &size) -> MainView * {
-  main_view = std::make_unique<MainView>( title, pos, size);
+  main_view = std::make_unique<MainView>(title, pos, size);
   main_view->init();
   return main_view.get();
 }
@@ -59,10 +59,7 @@ void FrameManager::refreshFrames() {
   }
 }
 
-
-void FrameManager::clearPresenters() {
-  frames.clear();
-}
+void FrameManager::clearPresenters() { frames.clear(); }
 
 void FrameManager::exitFrames() {
   // Deletes all of the unique_ptrs to these frames, allowing them to be cleaned

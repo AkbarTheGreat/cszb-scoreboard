@@ -23,7 +23,7 @@ limitations under the License.
 #include <optional>  // for optional
 #include <vector>    // for vector
 
-#include "config/swx/image.h"
+#include "config/swx/image.h"                           // for Image
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/widget/Button.h"                           // for Button
 #include "ui/widget/ColorPicker.h"                      // for ColorPicker
@@ -33,7 +33,6 @@ limitations under the License.
 #include "ui/widget/Toggle.h"                           // for Toggle
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 class ScreenText;
 class Widget;
 

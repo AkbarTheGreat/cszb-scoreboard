@@ -1,7 +1,7 @@
 /*
-util/Path.h: In most cases, a moderately enhanced wrapper around std::filesystem::path. For
-cases where that support is unavailable, a simple stand-in which implements the
-functionality we need for our application.
+util/FilesystemPath.h: In most cases, a moderately enhanced wrapper around
+std::filesystem::path. For cases where that support is unavailable, a simple
+stand-in which implements the functionality we need for our application.
 
 Copyright 2020-2022 Tracy Beck
 
