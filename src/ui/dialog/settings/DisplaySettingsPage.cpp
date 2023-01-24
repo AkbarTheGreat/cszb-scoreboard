@@ -26,10 +26,10 @@ limitations under the License.
 #include "config/DisplayConfig.h"  // for DisplayConfig
 #include "config/swx/defs.h"       // for wxALL, wxGROW
 #include "config/swx/event.h"      // for wxCommandEvent (ptr only), wxEVT_C...
-#include "ui/widget/Panel.h"       // for Panel
-#include "ui/widget/PopUp.h"
 #include "ui/frame/FrameManager.h"
 #include "ui/frame/MainView.h"
+#include "ui/widget/Panel.h"  // for Panel
+#include "ui/widget/PopUp.h"
 #include "util/StringUtil.h"  // for StringUtil
 
 namespace cszb_scoreboard {
@@ -145,22 +145,23 @@ auto DisplaySettingsPage::validateSettings() -> bool {
 }
 
 void DisplaySettingsPage::saveSettings() {
-  bool warnedAboutOrderChange = false;
+  // This variable tracks if something has changed that will require the display
+  // presenters to be reset.
+  bool reset_displays = false;
 
   for (int i = 0; i < display_settings_panels.size(); ++i) {
     if (singleton->displayConfig()->setDisplayId(
-            i, display_settings_panels[i]->getDisplayId()) &&
-        !warnedAboutOrderChange) {
-      PopUp::Message(
-          "WARNING: You have changed monitor ordering.  To see this take "
-          "effect, you must restart the application.");
-      warnedAboutOrderChange = true;
+            i, display_settings_panels[i]->getDisplayId())) {
+      // If the display order was changed, reset the displays.
+      reset_displays = true;
     }
-    singleton->displayConfig()->setSide(i,
-                                        display_settings_panels[i]->getSide());
+    if (singleton->displayConfig()->setSide(
+            i, display_settings_panels[i]->getSide())) {
+      // If the display side was changed, reset the displays.
+      reset_displays = true;
+    }
   }
 
-    bool reset_displays = false;
   // If any of the windowed settings have chagned, re-detect display settings.
   if ((singleton->displayConfig()->windowedMode() !=
        enable_window_mode->checked()) ||
@@ -171,9 +172,6 @@ void DisplaySettingsPage::saveSettings() {
       (singleton->displayConfig()->windowHeight() !=
        StringUtil::stringToInt(window_height->value()))) {
     reset_displays = true;
-    //PopUp::Message(
-    //    "WARNING: Changes to windowed mode will require an application restart "
-    //    "to take effect.");
   }
 
   singleton->displayConfig()->setWindowedMode(enable_window_mode->checked());
@@ -185,6 +183,9 @@ void DisplaySettingsPage::saveSettings() {
       StringUtil::stringToInt(window_height->value()));
 
   singleton->displayConfig()->saveSettings();
+
+  // Something in the displays has changed -- reset them from the saved settings
+  // above.
   if (reset_displays) {
     singleton->frameManager()->mainView()->resetDisplays();
   }

@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "config/DisplayConfig.h"
 
+#include <google/protobuf/util/message_differencer.h>
+
 #include <cassert>  // for assert
 #include <cstdint>  // for uint32_t
 #include <utility>  // for move
@@ -147,12 +149,18 @@ void DisplayConfig::setupWindowedMode() {
   }
 }
 
-void DisplayConfig::setSide(int index, proto::ScreenSide side) {
+auto DisplayConfig::setSide(int index, const proto::ScreenSide &side) -> bool {
+  assert(index < display_config.displays_size() && index >= 0);
   // Allocated with new, since display_config will take ownership of it when
   // set.
-  auto *side_copy = new proto::ScreenSide(std::move(side));
+  google::protobuf::util::MessageDifferencer diff;
+  if (diff.Compare(display_config.displays(index).side(), side)) {
+    return false;
+  }
+  auto *side_copy = new proto::ScreenSide(side);
   display_config.mutable_displays(index)->clear_side();
   display_config.mutable_displays(index)->set_allocated_side(side_copy);
+  return true;
 }
 
 auto DisplayConfig::setDisplayId(int index, int id) -> bool {
@@ -165,6 +173,7 @@ auto DisplayConfig::setDisplayId(int index, int id) -> bool {
 }
 
 void DisplayConfig::saveSettings() {
+  LogDebug("Display Config Saving: %s", display_config.DebugString());
   singleton->persistence()->saveDisplays(display_config);
 }
 

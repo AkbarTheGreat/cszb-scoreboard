@@ -36,7 +36,7 @@ class DisplayConfig {
   // Set the display id to the given monitor index.  Returns true if this
   // was an effective change, false if the values were identical already.
   auto setDisplayId(int index, int id) -> bool;
-  void setSide(int index, proto::ScreenSide side);
+  auto setSide(int index, const proto::ScreenSide &side) -> bool;
 
   auto windowedMode() -> bool;
   auto windowedModeNumberOfWindows() -> int;
