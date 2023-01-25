@@ -52,11 +52,12 @@ class DisplaySettingsPage : public SettingsPage {
   void bindEvents();
   void createControls();
   void positionWidgets();
+  void populateDisplays();
   void windowModeChanged();
   void resetDisplaysPressed();
 
   std::vector<std::unique_ptr<DisplaySettingsPanel>> display_settings_panels;
-  std::unique_ptr<Panel> window_mode_panel;
+  std::unique_ptr<Panel> display_settings, window_mode_panel;
   std::unique_ptr<Label> number_of_windows_label, window_size_label,
       window_size_separator_label;
   std::unique_ptr<Text> number_of_windows, window_width, window_height;

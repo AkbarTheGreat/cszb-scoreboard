@@ -48,10 +48,9 @@ DisplaySettingsPage::DisplaySettingsPage(swx::Panel *wx, Singleton *singleton)
 }
 
 void DisplaySettingsPage::createControls() {
-  for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
-    display_settings_panels.push_back(
-        std::make_unique<DisplaySettingsPanel>(childPanel(), i, this));
-  }
+  display_settings = panel();
+
+  populateDisplays();
 
   separator_1 = divider();
   separator_2 = divider();
@@ -76,6 +75,18 @@ void DisplaySettingsPage::createControls() {
   windowModeChanged();
 }
 
+void DisplaySettingsPage::populateDisplays() {
+  for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
+    display_settings_panels.push_back(std::make_unique<DisplaySettingsPanel>(
+        display_settings->childPanel(), i, this));
+  }
+
+  int row = 0;
+  for (const auto &panel : display_settings_panels) {
+    display_settings->addWidget(*panel, row++, 0);
+  }
+}
+
 void DisplaySettingsPage::positionWidgets() {
   window_mode_panel->addWidgetWithSpan(*enable_window_mode, 0, 0, 1, 2);
 
@@ -90,10 +101,7 @@ void DisplaySettingsPage::positionWidgets() {
   window_mode_panel->runSizer();
 
   int row = 0;
-  for (const auto &panel : display_settings_panels) {
-    addWidget(*panel, row++, 0);
-  }
-
+  addWidget(*display_settings, row++, 0);
   addWidget(*separator_1, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
   addWidget(*window_mode_panel, row++, 0);
 
