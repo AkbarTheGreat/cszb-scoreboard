@@ -53,7 +53,8 @@ void DisplaySettingsPage::createControls() {
         std::make_unique<DisplaySettingsPanel>(childPanel(), i, this));
   }
 
-  separator_line = divider();
+  separator_1 = divider();
+  separator_2 = divider();
   window_mode_panel = panel();
 
   enable_window_mode = window_mode_panel->checkBox("Enable Window Mode");
@@ -69,6 +70,8 @@ void DisplaySettingsPage::createControls() {
   window_size_separator_label = window_mode_panel->label("x");
   window_height = window_mode_panel->text(
       std::to_string(singleton->displayConfig()->windowHeight()));
+
+  reset_displays = button("Redetect External Displays", /*exact_fit=*/true);
 
   windowModeChanged();
 }
@@ -91,8 +94,11 @@ void DisplaySettingsPage::positionWidgets() {
     addWidget(*panel, row++, 0);
   }
 
-  addWidget(*separator_line, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
+  addWidget(*separator_1, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
   addWidget(*window_mode_panel, row++, 0);
+
+  addWidget(*separator_2, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
+  addWidget(*reset_displays, row++, 0);
 
   runSizer();
 }
@@ -101,6 +107,9 @@ void DisplaySettingsPage::bindEvents() {
   enable_window_mode->bind(
       wxEVT_CHECKBOX,
       [this](wxCommandEvent &event) -> void { this->windowModeChanged(); });
+  reset_displays->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->resetDisplaysPressed();
+  });
 }
 
 /* Returns true if the display settings are allowable, presents a warning dialog
@@ -201,6 +210,13 @@ void DisplaySettingsPage::windowModeChanged() {
     window_width->disable();
     window_height->disable();
   }
+}
+
+void DisplaySettingsPage::resetDisplaysPressed() {
+  singleton->displayConfig()->detectDisplays(/*force_reload=*/true);
+  singleton->displayConfig()->saveSettings();
+  // Reset the ui from new newly  saved settings.
+  singleton->frameManager()->mainView()->resetDisplays();
 }
 
 void DisplaySettingsPage::swapDisplays(int a, int b) {

@@ -42,7 +42,7 @@ DisplayConfig::DisplayConfig(SingletonClass c, Singleton *singleton) {
   detectDisplays();
 }
 
-void DisplayConfig::detectDisplays() {
+void DisplayConfig::detectDisplays(bool force_reload) {
   display_config = singleton->persistence()->loadDisplays();
 
   // If we're in windowed mode, default to a reasonably sized window.
@@ -56,13 +56,13 @@ void DisplayConfig::detectDisplays() {
   if (display_config.enable_windowed_mode()) {
     setupWindowedMode();
   } else {
-    detectExternalMonitors();
+    detectExternalMonitors(force_reload);
   }
 
   saveSettings();
 }
 
-void DisplayConfig::detectExternalMonitors() {
+void DisplayConfig::detectExternalMonitors(bool force_reload) {
   uint32_t numscreens = singleton->frameManager()->monitorCount();
 
 #ifdef SCOREBOARD_UI_TEST
@@ -75,13 +75,17 @@ void DisplayConfig::detectExternalMonitors() {
   // otherwise, we'll re-initialize them.  In the future, we may get fancier
   // with trying to save the state of existing displays if new ones are added,
   // or something similar.
-  if (numscreens == display_config.displays_size()) {
+  if (numscreens == display_config.displays_size() && !force_reload) {
     LogDebug("Screen count did not change from %d, using saved config",
              numscreens);
     return;
   }
-  LogDebug("Screen count changed from %d to %d, reconfiguring",
-           display_config.displays_size(), numscreens);
+  if (force_reload) {
+    LogDebug("Reload forced, reconfiguring");
+  } else {
+    LogDebug("Screen count changed from %d to %d, reconfiguring",
+             display_config.displays_size(), numscreens);
+  }
 
   display_config.clear_displays();
   bool set_home = true;

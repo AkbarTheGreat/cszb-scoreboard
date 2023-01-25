@@ -29,7 +29,7 @@ class DisplayConfig {
   explicit DisplayConfig(SingletonClass c)
       : DisplayConfig(c, Singleton::getInstance()) {}
   auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
-  void detectDisplays();
+  void detectDisplays(bool force_reload = false);
   auto displayDetails(int index) -> proto::DisplayInfo;
   auto numberOfDisplays() -> int;
   void saveSettings();
@@ -55,7 +55,7 @@ class DisplayConfig {
  private:
   proto::DisplayConfig display_config;
   Singleton *singleton;
-  void detectExternalMonitors();
+  void detectExternalMonitors(bool force_reload);
   void setupWindowedMode();
 };
 }  // namespace cszb_scoreboard

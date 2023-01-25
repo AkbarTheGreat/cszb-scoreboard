@@ -24,11 +24,12 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "ui/dialog/settings/DisplaySettingsPanel.h"  // for DisplaySettings...
 #include "ui/dialog/settings/SettingsPage.h"          // for SettingsPage
-#include "ui/widget/CheckBox.h"                       // for CheckBox
-#include "ui/widget/Divider.h"                        // for Divider
-#include "ui/widget/Label.h"                          // for Label
-#include "ui/widget/Panel.h"                          // for Panel
-#include "ui/widget/Text.h"                           // for Text
+#include "ui/widget/Button.h"
+#include "ui/widget/CheckBox.h"  // for CheckBox
+#include "ui/widget/Divider.h"   // for Divider
+#include "ui/widget/Label.h"     // for Label
+#include "ui/widget/Panel.h"     // for Panel
+#include "ui/widget/Text.h"      // for Text
 #include "util/Singleton.h"
 
 namespace cszb_scoreboard {
@@ -52,6 +53,7 @@ class DisplaySettingsPage : public SettingsPage {
   void createControls();
   void positionWidgets();
   void windowModeChanged();
+  void resetDisplaysPressed();
 
   std::vector<std::unique_ptr<DisplaySettingsPanel>> display_settings_panels;
   std::unique_ptr<Panel> window_mode_panel;
@@ -59,7 +61,8 @@ class DisplaySettingsPage : public SettingsPage {
       window_size_separator_label;
   std::unique_ptr<Text> number_of_windows, window_width, window_height;
   std::unique_ptr<CheckBox> enable_window_mode;
-  std::unique_ptr<Divider> separator_line;
+  std::unique_ptr<Divider> separator_1, separator_2;
+  std::unique_ptr<Button> reset_displays;
   Singleton *singleton;
 };
 
