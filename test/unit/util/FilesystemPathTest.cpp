@@ -18,7 +18,7 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult
-#include <gtest/gtest.h>            // for Test (ptr only), TestInfo (ptr only)
+#include <gtest/gtest.h>            // IWYU pragma: keep for GTest
 
 #include <filesystem>  // for path::preferred_separator
 #include <string>      // for allocator, string
