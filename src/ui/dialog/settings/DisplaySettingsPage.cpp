@@ -76,14 +76,16 @@ void DisplaySettingsPage::createControls() {
 }
 
 void DisplaySettingsPage::populateDisplays() {
+  for (const auto &panel : display_settings_panels) {
+    panel->destroy();
+  }
+  display_settings_panels.clear();
+
+  int row = 0;
   for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
     display_settings_panels.push_back(std::make_unique<DisplaySettingsPanel>(
         display_settings->childPanel(), i, this));
-  }
-
-  int row = 0;
-  for (const auto &panel : display_settings_panels) {
-    display_settings->addWidget(*panel, row++, 0);
+    display_settings->addWidget(*display_settings_panels.back(), row++, 0);
   }
 }
 
@@ -231,6 +233,9 @@ void DisplaySettingsPage::resetDisplaysPressed() {
   singleton->displayConfig()->saveSettings();
   // Reset the ui from new newly  saved settings.
   singleton->frameManager()->mainView()->resetDisplays();
+
+  populateDisplays();
+  runSizer();
 }
 
 void DisplaySettingsPage::swapDisplays(int a, int b) {
