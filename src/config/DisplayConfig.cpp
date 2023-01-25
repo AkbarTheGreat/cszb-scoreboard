@@ -80,12 +80,10 @@ void DisplayConfig::detectExternalMonitors(bool force_reload) {
              numscreens);
     return;
   }
-  if (force_reload) {
-    LogDebug("Reload forced, reconfiguring");
-  } else {
-    LogDebug("Screen count changed from %d to %d, reconfiguring",
-             display_config.displays_size(), numscreens);
-  }
+  LogDebug(
+      "Either screen count changed from %d to %d, or reload was forced -- "
+      "reconfiguring",
+      display_config.displays_size(), numscreens);
 
   display_config.clear_displays();
   bool set_home = true;
