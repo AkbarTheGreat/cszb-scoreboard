@@ -213,6 +213,12 @@ void DisplaySettingsPage::windowModeChanged() {
 }
 
 void DisplaySettingsPage::resetDisplaysPressed() {
+  if (!PopUp::Confirmation(
+          "Warning",
+          "This will reset all of your display settings -- are you sure?")) {
+    return;
+  }
+
   singleton->displayConfig()->detectDisplays(/*force_reload=*/true);
   singleton->displayConfig()->saveSettings();
   // Reset the ui from new newly  saved settings.
