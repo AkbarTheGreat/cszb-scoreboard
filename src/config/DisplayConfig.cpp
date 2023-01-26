@@ -174,7 +174,7 @@ auto DisplayConfig::setDisplayId(int index, int id) -> bool {
 }
 
 void DisplayConfig::saveSettings() {
-  LogDebug("Display Config Saving: %s", display_config.DebugString());
+  LogDebug("Display Config Saving: %s", display_config.DebugString().c_str());
   singleton->persistence()->saveDisplays(display_config);
 }
 
