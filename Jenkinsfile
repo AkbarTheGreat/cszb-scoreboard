@@ -116,7 +116,7 @@ make -j2 all'''
                 when { expression { false } }
                 agent {
                     dockerfile {
-                        filename 'Dockerfile.osxcross'
+                        filename 'Dockerfile.standard'
                     }
                 }
                 stages {
