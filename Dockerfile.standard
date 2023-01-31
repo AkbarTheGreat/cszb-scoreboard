@@ -18,5 +18,5 @@ WORKDIR /src/cszb-scoreboard/out
 
 ENV USER root
 ENV DISPLAY localhost:0.0 
-CMD /usr/bin/tightvncserver :0 && cmake -DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true ../.. && make -j6 all test
+CMD /usr/bin/tightvncserver :0 && cmake -DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true ../ && make -j6 all test
 
