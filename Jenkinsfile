@@ -33,6 +33,22 @@ make all'''
 						}
 					}
                 }
+                post {
+					always {
+					archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
+					xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
+						skipped(failureThreshold: '0'),
+						failed(failureThreshold: '0')
+						], tools: [CTest(
+						pattern: 'out/build/*/Testing/**/*.xml',
+						deleteOutputFiles: true,
+						failIfNotNew: false,
+						skipNoTestFiles: true,
+						stopProcessingIfError: true
+						)])
+					deleteDir()
+					}
+				}
             }
             stage('Debug') {
                 agent {
@@ -82,6 +98,22 @@ make -j2 all'''
 						}
 					}
                 }
+                post {
+					always {
+					archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
+					xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
+						skipped(failureThreshold: '0'),
+						failed(failureThreshold: '0')
+						], tools: [CTest(
+						pattern: 'out/build/*/Testing/**/*.xml',
+						deleteOutputFiles: true,
+						failIfNotNew: false,
+						skipNoTestFiles: true,
+						stopProcessingIfError: true
+						)])
+					deleteDir()
+					}
+				}
             }
             stage('Release') {
                 agent {
@@ -111,6 +143,22 @@ make -j2 all'''
 						}
 					}
                 }
+                post {
+					always {
+					archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
+					xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
+						skipped(failureThreshold: '0'),
+						failed(failureThreshold: '0')
+						], tools: [CTest(
+						pattern: 'out/build/*/Testing/**/*.xml',
+						deleteOutputFiles: true,
+						failIfNotNew: false,
+						skipNoTestFiles: true,
+						stopProcessingIfError: true
+						)])
+					deleteDir()
+					}
+				}
             }
             stage('MacOS') {
                 when { expression { false } }
@@ -172,23 +220,6 @@ make scoreboard_proto cszb-scoreboard'''
     }
     
   }
-  post {
-    always {
-      archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
-      xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
-          skipped(failureThreshold: '0'),
-          failed(failureThreshold: '0')
-        ], tools: [CTest(
-          pattern: 'out/build/*/Testing/**/*.xml',
-          deleteOutputFiles: true,
-          failIfNotNew: false,
-          skipNoTestFiles: true,
-          stopProcessingIfError: true
-        )])
-      deleteDir()
-    }
-  }
-}
 
 def valgrindRun(isIntegration) {
     if (isIntegration) {
