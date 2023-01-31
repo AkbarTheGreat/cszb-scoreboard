@@ -14,14 +14,14 @@ pipeline {
                     }
                 }
                 stages {
-                    stage('Cmake Generation') {
+                    stage('Lint Cmake Generation') {
 						steps {
 							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
 									cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
 							)
 						}
 					}
-					stage('Build') {
+					stage('Lint Build') {
 						steps {
 							sh '''cd out/build/Linter
 make all'''
@@ -31,20 +31,20 @@ make all'''
             }
             stage('Debug') {
                 stages {
-                    stage('Cmake Generation') {
+                    stage('Debug Cmake Generation') {
 						steps {
 							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',
 									cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
 							)
 						}
 					}
-					stage('Build') {
+					stage('Debug Build') {
 						steps {
 							sh '''cd out/build/Debug
 make -j2 all'''
 						}
 					}
-					stage('Test') {
+					stage('Debug Test') {
 						steps {
 							retry(count: 3) {
 								runTests('Release', runFullPipeline())
@@ -75,20 +75,20 @@ make -j2 all'''
             }
             stage('Release') {
                 stages {
-                    stage('Cmake Generation') {
+                    stage('Release Cmake Generation') {
 						steps {
 							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
 									cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
 							)
 						}
 					}
-					stage('Build') {
+					stage('Release Build') {
 						steps {
 							sh '''cd out/build/Release
 make -j2 all'''
 						}
 					}
-					stage('Test') {
+					stage('Release Test') {
 						steps {
 							retry(count: 3) {
 								runTests('Debug', runFullPipeline())
@@ -99,7 +99,7 @@ make -j2 all'''
             }
             stage('MacOS') {
                 stages {
-                    stage('Cmake Generation') {
+                    stage('MacOS Cmake Generation') {
 						environment {
 							LD_LIBRARY_PATH = '/opt/osxcross/lib'
 							OSXCROSS_SDK = 'darwin19'
@@ -114,7 +114,7 @@ make -j2 all'''
 							)
 						}
 					}
-					stage('Build') {
+					stage('MacOS Build') {
 						environment {
 							LD_LIBRARY_PATH = '/opt/osxcross/lib'
 						}
