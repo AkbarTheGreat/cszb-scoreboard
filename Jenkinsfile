@@ -5,130 +5,120 @@ pipeline {
   }
 
   stages {
-    stage('Cmake Generation') {
-      parallel {
-        stage('Lint Build Cmake Generation') {
-          when {
-            expression {
-              return runFullPipeline()
-            }
-          }
-          steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
-            cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
-            )
-          }
-        }
-
-        stage('Debug Cmake Generation') {
-          steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',
-            cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
-            )
-          }
-        }
-
-        stage('Release Cmake Generation') {
-          steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
-            cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
-            )
-          }
-        }
-
-        stage('MacOS Cmake Generation') {
-          environment {
-            LD_LIBRARY_PATH = '/opt/osxcross/lib'
-            OSXCROSS_SDK = 'darwin19'
-            OSXCROSS_TARGET = 'darwin19'
-            OSXCROSS_HOST = 'x86_64-apple-darwin19'
-            OSXCROSS_TARGET_DIR = '/opt/osxcross'
-            PATH = '/opt/osxcross/bin:$PATH'
-          }
-          steps {
-            cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
-              cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
-            )
-          }
-        }
-      }
-    }
-
-    stage('Build') {
-      parallel {
-        stage('Lint Build') {
-            when {
-                expression {
-                    return runFullPipeline()
+    stage ('Build & Test') {
+        parallel {
+            stage('Lint') {
+                when {
+                    expression {
+                        return runFullPipeline()
+                    }
+                }
+                stage('Cmake Generation') {
+                    steps {
+                        cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
+                                   cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
+                        )
+                    }
+                }
+                stage('Build') {
+                    steps {
+                        sh '''cd out/build/Linter
+make all'''
+                    }
                 }
             }
-            steps {
-                sh '''cd out/build/Linter
-make all'''
+            stage('Debug') {
+                stage('Cmake Generation') {
+                    steps {
+                        cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',
+                                   cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
+                        )
+                    }
+                }
+                stage('Build') {
+                    steps {
+                        sh '''cd out/build/Debug
+make -j2 all'''
+				    }
+				}
+                stage('Test') {
+                    steps {
+						retry(count: 3) {
+						    runTests('Release', runFullPipeline())
+						}
+					}
+                }
+                stage('Valgrind') {
+					steps {
+						valgrindRun(runFullPipeline())
+
+						publishValgrind (
+						failBuildOnInvalidReports: false,
+						failBuildOnMissingReports: false,
+						failThresholdDefinitelyLost: '',
+						failThresholdInvalidReadWrite: '',
+						failThresholdTotal: '',
+						pattern: 'out/build/Debug/*.memcheck',
+						publishResultsForAbortedBuilds: false,
+						publishResultsForFailedBuilds: false,
+						sourceSubstitutionPaths: '',
+						unstableThresholdDefinitelyLost: '',
+						unstableThresholdInvalidReadWrite: '',
+						unstableThresholdTotal: ''
+						)
+				    }
+				}
             }
-        }
-
-        stage('Debug Build') {
-          steps {
-            sh '''cd out/build/Debug
+            stage('Release') {
+                stage('Cmake Generation') {
+                    steps {
+                        cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
+                                   cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
+                        )
+                    }
+                }
+                stage('Build') {
+                    steps {
+						sh '''cd out/build/Release
 make -j2 all'''
-          }
-        }
-
-        stage('Release Build') {
-          steps {
-            sh '''cd out/build/Release
-make -j2 all'''
-          }
-        }
-
-        stage('MacOS Build') {
-          environment {
-            LD_LIBRARY_PATH = '/opt/osxcross/lib'
-          }
-          steps {
-            sh '''cd out/build/osxcross
+					}
+	            }
+                stage('Test') {
+					steps {
+						retry(count: 3) {
+						    runTests('Debug', runFullPipeline())
+						}
+				    }
+				}
+            }
+            stage('MacOS') {
+                stage('Cmake Generation') {
+                    environment {
+						LD_LIBRARY_PATH = '/opt/osxcross/lib'
+						OSXCROSS_SDK = 'darwin19'
+						OSXCROSS_TARGET = 'darwin19'
+						OSXCROSS_HOST = 'x86_64-apple-darwin19'
+						OSXCROSS_TARGET_DIR = '/opt/osxcross'
+						PATH = '/opt/osxcross/bin:$PATH'
+					}
+					steps {
+						cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
+						           cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
+						)
+                    }
+                }
+                stage('Build') {
+                    environment {
+						LD_LIBRARY_PATH = '/opt/osxcross/lib'
+					}
+					steps {
+						sh '''cd out/build/osxcross
 export PATH=/opt/osxcross/bin:$PATH
 make scoreboard_proto cszb-scoreboard'''
-          }
+                    }
+                }
+            }
         }
-      }
-    }
-
-    stage('Debug Test') {
-      steps {
-        retry(count: 3) {
-          runTests('Debug', runFullPipeline())
-        }
-      }
-    }
-
-    stage('Release Test') {
-      steps {
-        retry(count: 3) {
-          runTests('Release', runFullPipeline())
-        }
-      }
-    }
-    stage('Valgrind') {
-      steps {
-        valgrindRun(runFullPipeline())
-        
-        publishValgrind (
-          failBuildOnInvalidReports: false,
-          failBuildOnMissingReports: false,
-          failThresholdDefinitelyLost: '',
-          failThresholdInvalidReadWrite: '',
-          failThresholdTotal: '',
-          pattern: 'out/build/Debug/*.memcheck',
-          publishResultsForAbortedBuilds: false,
-          publishResultsForFailedBuilds: false,
-          sourceSubstitutionPaths: '',
-          unstableThresholdDefinitelyLost: '',
-          unstableThresholdInvalidReadWrite: '',
-          unstableThresholdTotal: ''
-        )
-      }
     }
     stage('Coverage') {
       when {
