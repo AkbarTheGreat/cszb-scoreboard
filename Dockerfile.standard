@@ -11,12 +11,12 @@ RUN chmod 0600 /root/.vnc/passwd
 COPY etc/scripts/docker_dependencies.pl /src/docker_dependencies.pl
 RUN /src/docker_dependencies.pl
 
-WORKDIR /src
-RUN mkdir -p /src/cszb-scoreboard/out
-
 COPY ./ /src/cszb-scoreboard
+
+RUN mkdir -p /src/cszb-scoreboard/out
+WORKDIR /src/cszb-scoreboard/out
 
 ENV USER root
 ENV DISPLAY localhost:0.0 
-CMD /usr/bin/tightvncserver :0 && cd /src/cszb-scoreboard/out && cmake -DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true ../.. && make -j6 all test
+CMD /usr/bin/tightvncserver :0 && cmake -DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true ../.. && make -j6 all test
 
