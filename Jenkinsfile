@@ -60,20 +60,20 @@ make -j2 all'''
 								runTests('Release', runFullPipeline())
 							}
 						}
-					}
-					post {
-						always {
-						archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
-						xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
-							skipped(failureThreshold: '0'),
-							failed(failureThreshold: '0')
-							], tools: [CTest(
-							pattern: 'out/build/*/Testing/**/*.xml',
-							deleteOutputFiles: false,
-							failIfNotNew: false,
-							skipNoTestFiles: true,
-							stopProcessingIfError: true
-							)])
+					    post {
+							always {
+							archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
+							xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
+								skipped(failureThreshold: '0'),
+								failed(failureThreshold: '0')
+								], tools: [CTest(
+								pattern: 'out/build/*/Testing/**/*.xml',
+								deleteOutputFiles: false,
+								failIfNotNew: false,
+								skipNoTestFiles: true,
+								stopProcessingIfError: true
+								)])
+							}
 						}
 					}
 					stage('Valgrind') {
@@ -124,20 +124,20 @@ make -j2 all'''
 								runTests('Debug', runFullPipeline())
 							}
 						}
-					}
-					post {
-						always {
-						archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
-						xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
-							skipped(failureThreshold: '0'),
-							failed(failureThreshold: '0')
-							], tools: [CTest(
-							pattern: 'out/build/*/Testing/**/*.xml',
-							deleteOutputFiles: false,
-							failIfNotNew: false,
-							skipNoTestFiles: true,
-							stopProcessingIfError: true
-							)])
+					    post {
+							always {
+							archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
+							xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
+								skipped(failureThreshold: '0'),
+								failed(failureThreshold: '0')
+								], tools: [CTest(
+								pattern: 'out/build/*/Testing/**/*.xml',
+								deleteOutputFiles: false,
+								failIfNotNew: false,
+								skipNoTestFiles: true,
+								stopProcessingIfError: true
+								)])
+							}
 						}
 					}
                 }
