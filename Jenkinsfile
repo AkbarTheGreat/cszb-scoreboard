@@ -220,6 +220,7 @@ make scoreboard_proto cszb-scoreboard'''
     }
     
   }
+}
 
 def valgrindRun(isIntegration) {
     if (isIntegration) {
