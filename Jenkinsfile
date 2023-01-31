@@ -13,6 +13,11 @@ pipeline {
                         return runFullPipeline()
                     }
                 }
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.standard'
+                    }
+                }
                 stages {
                     stage('Lint Cmake Generation') {
 						steps {
@@ -30,6 +35,11 @@ make all'''
                 }
             }
             stage('Debug') {
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.standard'
+                    }
+                }
                 stages {
                     stage('Debug Cmake Generation') {
 						steps {
@@ -74,6 +84,11 @@ make -j2 all'''
                 }
             }
             stage('Release') {
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.standard'
+                    }
+                }
                 stages {
                     stage('Release Cmake Generation') {
 						steps {
@@ -98,6 +113,12 @@ make -j2 all'''
                 }
             }
             stage('MacOS') {
+                when { expression { false } }
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.osxcross'
+                    }
+                }
                 stages {
                     stage('MacOS Cmake Generation') {
 						environment {
