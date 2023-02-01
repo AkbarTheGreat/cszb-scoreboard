@@ -102,7 +102,7 @@ our $WXWIDGETS_REPO = $REPO_BASE . '/wxWidgets';
 our $WXWIDGETS_BUILD_DIR = $WXWIDGETS_REPO . '/osxcross';
 our $OSXCROSS_ORIGIN = 'https://github.com/tpoechtrager/osxcross.git';
 our $WXWIDGETS_ORIGIN = 'https://github.com/wxWidgets/wxWidgets.git';
-our $SDK_TARBALL = $REPO_BASE . '/' . $OSXCROSS_SDK . '.tar.xz';
+our $SDK_TARBALL = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.xz';
 
 my ($opt_help, $opt_action);
 
@@ -173,23 +173,31 @@ sub setup_osxcross_dep_env {
    $ENV{'OSXCROSS_TARGET_DIR'} = $OSXCROSS_INSTALL;
 }
 
+# Wrapper around system which allows us to die on any system failure easily.
+sub sys {
+	my (@args) = @_;
+	my $retval = system @args;
+	return unless $retval;
+	die 'System call failed: ' . "@args\n" . '  Died with exit code: ' . $retval . "\n  " . $?;
+}
+
 sub update_repo {
    my ($repo, $origin) = @_;
    if (-d $repo) {
       say 'Repo exists, resetting.';
       chdir $repo;
-      system 'git reset --hard';
+      sys('git', 'reset', '--hard');
    } else {
       say 'New repo, cloning.';
       chdir $REPO_BASE;
       mkpath $repo;
-      system 'git clone ' . $origin;
+      sys('git', 'clone', $origin);
    }
    chdir $repo;
    say 'PUlling repo for freshness.';
-   system 'git pull';
+   sys('git', 'pull');
    say 'Initializing git submodules.';
-   system 'git submodule update --init --recursive';
+   sys('git', 'submodule', 'update', '--init', '--recursive');
 }
 
 sub build_osxcross {
@@ -199,7 +207,7 @@ sub build_osxcross {
    say 'Copying SDK to tarballs.';
    rcopy($SDK_TARBALL, $OSXCROSS_REPO . '/tarballs/' . $OSXCROSS_SDK . '.tar.xz') or die 'Could not copy SDK to tarballs'; 
    say 'Building osxcross.';
-   system './build.sh';
+   sys('./build.sh');
    # patch macports for https://github.com/tpoechtrager/osxcross/issues/349
    say 'Patching macports script.';
    my $macports_file = $OSXCROSS_REPO . '/target/bin/osxcross-macports';
@@ -264,17 +272,17 @@ sub build_wxwidgets {
    mkpath($WXWIDGETS_BUILD_DIR);
    chdir($WXWIDGETS_BUILD_DIR);
    say 'Running cmake.';
-   system 'cmake ' .
-          '-DCMAKE_TOOLCHAIN_FILE=' . $OSXCROSS_INSTALL . '/toolchain.cmake ' .
-	  '-DCMAKE_INSTALL_NAME_TOOL=' . $OSXCROSS_INSTALL . '/bin/' . $OSXCROSS_HOST . '-install_name_tool ' .
-	  '-DCMAKE_INSTALL_PREFIX=' . $OSXCROSS_INSTALL . '/wxwidgets ' .
-	  '-DOSXCROSS_TARGET_DIR=' . $OSXCROSS_INSTALL . q{ } .
-	  '-DCMAKE_BUILD_TYPE=Release ' .
-	  '-DwxBUILD_PRECOMP=OFF ' .
-	  '-DwxBUILD_SHARED=OFF ' .
-	  '..';
+   sys($OSXCROSS_HOST . '-cmake',
+      '-DCMAKE_TOOLCHAIN_FILE=' . $OSXCROSS_INSTALL . '/toolchain.cmake',
+	  '-DCMAKE_INSTALL_NAME_TOOL=' . $OSXCROSS_INSTALL . '/bin/' . $OSXCROSS_HOST . '-install_name_tool',
+	  '-DCMAKE_INSTALL_PREFIX=' . $OSXCROSS_INSTALL . '/wxwidgets',
+	  '-DOSXCROSS_TARGET_DIR=' . $OSXCROSS_INSTALL,
+	  '-DCMAKE_BUILD_TYPE=Release',
+	  '-DwxBUILD_PRECOMP=OFF',
+	  '-DwxBUILD_SHARED=OFF',
+	  '..');
    say 'Building wxwidgets.';
-   system '/usr/bin/make -j2 all';
+   sys('/usr/bin/make', '-j2', 'all');
    return 1;
 }
 
@@ -284,30 +292,30 @@ sub install_macports {
    rmtree($OSXCROSS_REPO . '/target/macports');
    say 'Installing macports libraries.';
    # (The -s strips out dylibs for us).
-   system 'osxcross-macports install -s ' . join ' ', @MACPORTS_LIBS;
+   sys('osxcross-macports', 'install', '-s', @MACPORTS_LIBS);
    # These libs appear to only have dylibs.  So we don't strip them out.
-   system 'osxcross-macports install ' . join ' ', @MACPORTS_DYLIBS;
+   sys('osxcross-macports', 'install', @MACPORTS_DYLIBS);
 
 }
 
 sub install_osxcross {
    say 'Removing previously installed osxcross.';
-   system 'sudo rm -Rf ' . $OSXCROSS_INSTALL;
+   sys('rm', '-Rf', $OSXCROSS_INSTALL);
    say 'Copying osxcross target to ' . $OSXCROSS_INSTALL . '.';
-   system 'sudo cp -R ' . $OSXCROSS_REPO . '/target ' . $OSXCROSS_INSTALL;
+   sys('cp', '-R', $OSXCROSS_REPO . '/target', $OSXCROSS_INSTALL);
 }
 
 sub install_wxwidgets {
    say 'Installing wxwidgets.';
    chdir($WXWIDGETS_BUILD_DIR);
-   system 'sudo /usr/bin/make install';
+   sys('/usr/bin/make', 'install');
    return 1;
 }
 
 sub move_symlink {
    my ($link, $src) = @_;
-   system 'sudo rm ' . $link;
-   system 'sudo ln -s ' . $src . q{ } . $link;
+   sys('rm', $link);
+   sys('ln', '-s', $src, $link);
 }
 
 sub patch_files {

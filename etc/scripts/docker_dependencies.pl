@@ -89,11 +89,21 @@ sub setup_wxwidgets {
 }
 
 sub main {
+	my (@args) = @_;
+	my $full_build = 1;
+	$full_build = undef if $args[0] eq 'osxcross';
 	chdir($BASE_DIR);
-	setup_curl();
+
+	if ($full_build){
+		setup_curl();
+	}
+
 	setup_googletest();
-	setup_wxwidgets();
-	setup_protobuf();
+
+	if ($full_build){
+		setup_wxwidgets();
+		setup_protobuf();
+	}
 }
 
 main(@ARGV);

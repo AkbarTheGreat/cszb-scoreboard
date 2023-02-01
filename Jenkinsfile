@@ -62,12 +62,12 @@ make -j2 all'''
 						}
 					    post {
 							always {
-							archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
+							archiveArtifacts(artifacts: 'out/build/Debug/Testing/**/*.xml', fingerprint: true)
 							xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
 								skipped(failureThreshold: '0'),
 								failed(failureThreshold: '0')
 								], tools: [CTest(
-								pattern: 'out/build/*/Testing/**/*.xml',
+								pattern: 'out/build/Debug/Testing/**/*.xml',
 								deleteOutputFiles: false,
 								failIfNotNew: false,
 								skipNoTestFiles: true,
@@ -126,12 +126,12 @@ make -j2 all'''
 						}
 					    post {
 							always {
-							archiveArtifacts(artifacts: 'out/build/*/Testing/**/*.xml', fingerprint: true)
+							archiveArtifacts(artifacts: 'out/build/Release/Testing/**/*.xml', fingerprint: true)
 							xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
 								skipped(failureThreshold: '0'),
 								failed(failureThreshold: '0')
 								], tools: [CTest(
-								pattern: 'out/build/*/Testing/**/*.xml',
+								pattern: 'out/build/Release/Testing/**/*.xml',
 								deleteOutputFiles: false,
 								failIfNotNew: false,
 								skipNoTestFiles: true,
@@ -146,7 +146,8 @@ make -j2 all'''
                 when { expression { false } }
                 agent {
                     dockerfile {
-                        filename 'Dockerfile.standard'
+                        filename 'Dockerfile.osxcross'
+                        args '-v /usr/share/osx_tarballs:/usr/share/osx_tarballs'
                     }
                 }
                 stages {

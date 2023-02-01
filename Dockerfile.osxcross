@@ -2,10 +2,15 @@ FROM ubuntu:jammy
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt -y upgrade && apt -y install clang clang-tidy cmake cmake-curses-gui g++ git gcovr libcairo2-dev libexpat1-dev libgtk-3-dev libjpeg-dev libjsoncpp-dev libmspack-dev libnotify-dev libpng-dev libprotobuf-dev libsdl1.2-dev libsdl2-dev libsecret-1-dev libsoup2.4-dev libssl-dev libtiff-dev libwebkit2gtk-4.0-dev libx11-dev llvm-dev ninja-build openjdk-17-jre protobuf-compiler tightvncserver valgrind
+RUN apt -y install curl
 
 RUN cpan install File::Copy::Recursive File::Which List::AllUtils
 
+COPY etc/scripts/docker_dependencies.pl /src/docker_dependencies.pl
+#RUN /src/docker_dependencies.pl osxcross
+
 COPY etc/scripts/setup_osxcross_build.pl /src/setup_osxcross_build.pl
+COPY osx_tarballs/MacOSX10.15.sdk.tar.xz /usr/share/osx_tarballs/MacOSX10.15.sdk.tar.xz
 RUN cd /src && /src/setup_osxcross_build.pl
 
 COPY ./ /src/cszb-scoreboard
@@ -21,5 +26,5 @@ ENV OSXCROSS_HOST   x86_64-apple-darwin19
 ENV OSXCROSS_TARGET_DIR   /opt/osxcross
 ENV PATH   /opt/osxcross/bin:$PATH
 
-CMD cmake -DSKIP_LINT=true -DINTEGRATION_TEST=false ../ && make -j6 cszb-scoreboard
+CMD osxcross-cmake -DSKIP_LINT=true -DINTEGRATION_TEST=false ../ && make -j6 cszb-scoreboard
 
