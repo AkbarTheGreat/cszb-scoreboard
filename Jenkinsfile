@@ -16,6 +16,7 @@ pipeline {
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
+                        label 'Lint'
                     }
                 }
                 stages {
@@ -38,6 +39,7 @@ make all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
+                        label 'Debug'
                     }
                 }
                 stages {
@@ -102,6 +104,7 @@ make -j2 all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
+                        label 'Release'
                     }
                 }
                 stages {
@@ -147,6 +150,7 @@ make -j2 all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
+                        label 'MacOS'
                     }
                 }
                 stages {
