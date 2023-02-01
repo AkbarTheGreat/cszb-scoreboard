@@ -57,7 +57,7 @@ make -j2 all'''
 					stage('Debug Test') {
 						steps {
 							retry(count: 3) {
-								runTests('Release', runFullPipeline())
+								runTests('Debug', runFullPipeline())
 							}
 						}
 					    post {
@@ -121,7 +121,7 @@ make -j2 all'''
 					stage('Release Test') {
 						steps {
 							retry(count: 3) {
-								runTests('Debug', runFullPipeline())
+								runTests('Release', runFullPipeline())
 							}
 						}
 					    post {
