@@ -278,6 +278,7 @@ sub build_wxwidgets {
 	  '-DCMAKE_INSTALL_PREFIX=' . $OSXCROSS_INSTALL . '/wxwidgets',
 	  '-DOSXCROSS_TARGET_DIR=' . $OSXCROSS_INSTALL,
 	  '-DCMAKE_BUILD_TYPE=Release',
+      #'-DCMAKE_C_FLAGS=-Wno-undef-prefix',
 	  '-DwxBUILD_PRECOMP=OFF',
 	  '-DwxBUILD_SHARED=OFF',
 	  '..');
