@@ -8,6 +8,9 @@ RUN mkdir -p /root/.vnc
 RUN echo "pass" > /root/.vnc/passwd
 RUN chmod 0600 /root/.vnc/passwd
 
+ENV CXX /usr/bin/clang++
+ENV CC /usr/bin/clang
+
 COPY etc/scripts/docker_dependencies.pl /src/docker_dependencies.pl
 RUN /src/docker_dependencies.pl
 

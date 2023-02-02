@@ -94,15 +94,12 @@ sub main {
 	$full_build = undef if $args[0] eq 'osxcross';
 	chdir($BASE_DIR);
 
+	setup_googletest();
+	setup_protobuf();
+
 	if ($full_build){
 		setup_curl();
-	}
-
-	setup_googletest();
-
-	if ($full_build){
 		setup_wxwidgets();
-		setup_protobuf();
 	}
 }
 

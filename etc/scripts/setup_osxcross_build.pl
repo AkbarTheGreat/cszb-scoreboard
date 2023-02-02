@@ -52,9 +52,9 @@ our $OSXCROSS_INSTALL = '/opt/osxcross';
 our $OSX_VERSION = '10.12';
 our $OSXCROSS_VERSION = 1.4;
 our $OSXCROSS_OSX_VERSION_MIN = 10.9;
-our $OSXCROSS_TARGET = 'darwin19';
+our $OSXCROSS_TARGET = 'darwin21.4';
 our $OSXCROSS_HOST = 'x86_64-apple-' . $OSXCROSS_TARGET;
-our $OSXCROSS_SDK_VERSION = '10.15';
+our $OSXCROSS_SDK_VERSION = '12.3';
 our $OSXCROSS_SDK = 'MacOSX' . $OSXCROSS_SDK_VERSION . '.sdk';
 our $OSXCROSS_LIBLTO_PATH = '/usr/lib/llvm-14/lib';
 our $OSXCROSS_LINKER_VERSION = 609;
@@ -102,7 +102,7 @@ our $WXWIDGETS_REPO = $REPO_BASE . '/wxWidgets';
 our $WXWIDGETS_BUILD_DIR = $WXWIDGETS_REPO . '/osxcross';
 our $OSXCROSS_ORIGIN = 'https://github.com/tpoechtrager/osxcross.git';
 our $WXWIDGETS_ORIGIN = 'https://github.com/wxWidgets/wxWidgets.git';
-our $SDK_TARBALL = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.xz';
+our $SDK_TARBALL = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.bz2';
 
 my ($opt_help, $opt_action);
 
@@ -163,6 +163,8 @@ sub setup_osxcross_build_env {
    $ENV{'OSXCROSS_LINKER_VERSION'} = $OSXCROSS_LINKER_VERSION;
    $ENV{'PATH'} = $OSXCROSS_REPO . '/target/bin:' . $ENV{'PATH'};
    $ENV{'UNATTENDED'} = 1;
+   $ENV{'CXX'} = '/usr/bin/clang++';
+   $ENV{'CC'} = '/usr/bin/clang';
 }
 
 sub setup_osxcross_dep_env {
@@ -171,6 +173,8 @@ sub setup_osxcross_dep_env {
    $ENV{'OSXCROSS_TARGET'} = $OSXCROSS_TARGET;
    $ENV{'OSXCROSS_HOST'} = $OSXCROSS_HOST;
    $ENV{'OSXCROSS_TARGET_DIR'} = $OSXCROSS_INSTALL;
+   $ENV{'CXX'} = '/usr/bin/clang++';
+   $ENV{'CC'} = '/usr/bin/clang';
 }
 
 # Wrapper around system which allows us to die on any system failure easily.
@@ -205,7 +209,8 @@ sub build_osxcross {
    # Possibly allow for rebuilding in the future by running:
    # ./cleanup.sh
    say 'Copying SDK to tarballs.';
-   rcopy($SDK_TARBALL, $OSXCROSS_REPO . '/tarballs/' . $OSXCROSS_SDK . '.tar.xz') or die 'Could not copy SDK to tarballs'; 
+   say "rcopy($SDK_TARBALL, $OSXCROSS_REPO . '/tarballs/' . $OSXCROSS_SDK . '.tar.bz2')";
+   rcopy($SDK_TARBALL, $OSXCROSS_REPO . '/tarballs/' . $OSXCROSS_SDK . '.tar.bz2') or die 'Could not copy SDK to tarballs'; 
    say 'Building osxcross.';
    sys('./build.sh');
    # patch macports for https://github.com/tpoechtrager/osxcross/issues/349
@@ -272,18 +277,17 @@ sub build_wxwidgets {
    mkpath($WXWIDGETS_BUILD_DIR);
    chdir($WXWIDGETS_BUILD_DIR);
    say 'Running cmake.';
-   sys($OSXCROSS_HOST . '-cmake',
+   sys('cmake',
       '-DCMAKE_TOOLCHAIN_FILE=' . $OSXCROSS_INSTALL . '/toolchain.cmake',
 	  '-DCMAKE_INSTALL_NAME_TOOL=' . $OSXCROSS_INSTALL . '/bin/' . $OSXCROSS_HOST . '-install_name_tool',
 	  '-DCMAKE_INSTALL_PREFIX=' . $OSXCROSS_INSTALL . '/wxwidgets',
 	  '-DOSXCROSS_TARGET_DIR=' . $OSXCROSS_INSTALL,
 	  '-DCMAKE_BUILD_TYPE=Release',
-      #'-DCMAKE_C_FLAGS=-Wno-undef-prefix',
 	  '-DwxBUILD_PRECOMP=OFF',
 	  '-DwxBUILD_SHARED=OFF',
 	  '..');
    say 'Building wxwidgets.';
-   sys('/usr/bin/make', '-j2', 'all');
+   sys('/usr/bin/make', '-j6', 'all');
    return 1;
 }
 
@@ -356,7 +360,7 @@ sub wxwidgets {
    patch_wxwidgets();
    build_wxwidgets();
    install_wxwidgets();
-return 1;
+   return 1;
 }
 
 sub install {
