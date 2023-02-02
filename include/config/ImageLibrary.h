@@ -19,7 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <cstddef>  // for size_t
-#include <map>      // for map
+#include <memory>   // for unique_ptr
 #include <string>   // for string, basic_string
 #include <vector>   // for vector
 
@@ -67,27 +67,53 @@ class ImageSearchResults {
   friend class ImageLibrary;
 };
 
+class TemporaryImageLibrary;
+
 class ImageLibrary {
  public:
   explicit ImageLibrary(SingletonClass c);
-  // Returns all unique tags, sorted
   auto allFilenames() -> std::vector<FilesystemPath>;
+  // Returns all unique tags, sorted
   auto allTags(bool include_name = false) const
       -> std::vector<CaseOptionalString>;
-  auto imageMap() -> std::map<FilesystemPath, proto::ImageInfo>;
+  auto temporaryClone() -> std::unique_ptr<TemporaryImageLibrary>;
+  void copyFrom(const TemporaryImageLibrary &other);
   auto name(const FilesystemPath &filename) -> std::string;
+  void setName(const FilesystemPath &filename, const std::string &name);
+
   void addImage(const FilesystemPath &file, const std::string &name,
                 const std::vector<std::string> &tags);
+  void moveImage(const FilesystemPath &previous_path,
+                 const FilesystemPath &new_path);
+  void deleteImage(const FilesystemPath &file);
+  auto libraryRoot() -> FilesystemPath;
+  void removeLibraryRoot();
+  // moveLibraryRoot moves the root without changing any relative paths.  Use
+  // this if the entire directory was relocated and you want to shift them all
+  // at one time.
+  void moveLibraryRoot(const FilesystemPath &root);
+  // setLibraryRoot sets the root, updating every file to match the new relative
+  // location.  Use this if the root is changed, but no files are moved.
+  void setLibraryRoot(const FilesystemPath &root);
+  // smartUpdateLibraryRoot sets the root, and for relative paths in the library
+  // makes a best effort to set their location in a way that makes sense. Use
+  // this for most user operations where the root changes.
+  void smartUpdateLibraryRoot(const FilesystemPath &root);
   void clearLibrary();
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;
   auto tags(const FilesystemPath &filename) -> std::vector<CaseOptionalString>;
+  void setTags(const FilesystemPath &filename,
+               const std::vector<std::string> &tags);
 
   PUBLIC_TEST_ONLY
   // Test-available constructor which initializes this object from an in-memory
   // proto.
   ImageLibrary(SingletonClass c, Singleton *singleton,
                proto::ImageLibrary library);
+
+ protected:
+  bool enable_persistence = true;
 
  private:
   proto::ImageLibrary library;
@@ -96,6 +122,15 @@ class ImageLibrary {
   auto exactMatchSearch(const std::string &query) -> ImageSearchResults;
   auto infoByFile(const FilesystemPath &filename) -> proto::ImageInfo;
   auto partialMatchSearch(const std::string &query) -> ImageSearchResults;
+  void addMatch(std::vector<proto::ImageInfo> *matched_images,
+                const proto::ImageInfo &image);
+};
+
+// A non-singleton subclass of the singleton ImageLibrary which turns off all
+// persistence functionality in the ImageLibrary, but otherwise is editable.
+class TemporaryImageLibrary : public ImageLibrary {
+ public:
+  TemporaryImageLibrary(Singleton *singleton, proto::ImageLibrary library);
 };
 
 }  // namespace cszb_scoreboard

@@ -20,14 +20,15 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>
+#include <memory>  // for unique_ptr
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/StaticBox.h"
+#include "ui/widget/Panel.h"          // for Panel
+#include "ui/widget/Widget.h"         // for Widget
+#include "ui/widget/swx/StaticBox.h"  // for StaticBoxImpl, StaticBox
+
+class wxWindow;
 
 namespace cszb_scoreboard {
-
-class Panel;
 
 class LabelledArea : public Widget {
  public:

@@ -1,7 +1,8 @@
 /*
-ui/widget/CheckBox.h: A single checkbox button.
+ui/widget/DirectoryPicker.h: A modal (blocking other UI) dialog which pops up to
+select a directory from the file system.
 
-Copyright 2021-2022 Tracy Beck
+Copyright 2022 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,24 +19,26 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/CheckBox.h"
+#include <optional>  // for optional
+
+#include "ui/widget/Widget.h"  // for Widget
+#include "ui/widget/swx/DirDialog.h"
+
+class wxWindow;
 
 namespace cszb_scoreboard {
+class FilesystemPath;
 
-class CheckBox : public Widget {
+class DirectoryPicker : public Widget {
  public:
-  explicit CheckBox(swx::CheckBox *check) { _wx = check; }
+  explicit DirectoryPicker(swx::DirDialog *dialog) { _wx = dialog; }
+  ~DirectoryPicker();
 
-  [[nodiscard]] auto checked() const -> bool { return _wx->GetValue(); }
-  void setChecked(bool checked) { _wx->SetValue(checked); }
-  void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
+  auto selectDirectory() -> std::optional<FilesystemPath>;
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
-
- private:
-  swx::CheckBox *_wx;
+  swx::DirDialog *_wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -21,16 +21,18 @@ limitations under the License.
 
 #include <wx/string.h>  // for wxString
 
-#include <filesystem>  // for operator<
-#include <string>      // for string, basic_...
+#include <filesystem>  // for operator==, path
+#include <optional>    // for optional
+#include <string>      // for string
 #include <vector>      // for vector
 
 #include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
-#include "config/ImageLibrary.h"                       // for ImageLibrary
 #include "config/swx/defs.h"                           // for wxID_CANCEL
 #include "config/swx/event.h"                          // for wxListEvent
 #include "ui/component/control/ImageFromLibrary.h"     // for ImageFromLibrary
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
+#include "ui/widget/DirectoryPicker.h"                 // for DirectoryPicker
+#include "util/Log.h"                                  // for LogDebug
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
@@ -47,13 +49,27 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
   this->parent = parent;
   this->singleton = singleton;
 
-  images = singleton->imageLibrary()->imageMap();
+  library = singleton->imageLibrary()->temporaryClone();
   box_panel = panel();
-  file_list =
-      std::make_unique<FileListBox>(box_panel->childPanel(), "Filename");
+  file_list = std::make_unique<FileListBox>(box_panel->childPanel(), "Filename",
+                                            library->allFilenames());
 
   name_entry = box_panel->text("");
   name_label = box_panel->label("Display name");
+
+  full_name_label = box_panel->label("Filename");
+  full_name_entry = box_panel->text("");
+
+  root_divider = box_panel->divider();
+  root_entry =
+      box_panel->text(singleton->imageLibrary()->libraryRoot().string());
+  root_entry->disable();
+  root_browse = box_panel->button("Library root", true);
+  root_browse->toolTip("Set a new root directory for your library.");
+  root_clear = box_panel->button("Clear root", true);
+  root_clear->toolTip(
+      "Remove the root directory for your library, all paths will be "
+      "absolute.");
 
   tag_list = box_panel->listBox("Tags");
 
@@ -62,10 +78,22 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
 }
 
 void EditImageLibraryDialog::positionWidgets() {
-  box_panel->addWidget(*file_list, 0, 0);
-  box_panel->addWidget(*tag_list, 0, 1);
-  box_panel->addWidget(*name_label, 1, 0);
-  box_panel->addWidget(*name_entry, 1, 1);
+  int32_t row = 0;
+  box_panel->addWidgetWithSpan(*file_list, row, 0, 1, 2);
+  box_panel->addWidgetWithSpan(*tag_list, row, 2, 1, 2);
+
+  box_panel->addWidgetWithSpan(*name_label, ++row, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*name_entry, row, 1, 1, 3);
+
+  box_panel->addWidgetWithSpan(*full_name_label, ++row, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*full_name_entry, row, 1, 1, 3);
+
+  box_panel->addWidgetWithSpan(*root_divider, ++row, 0, 1, 4);
+
+  box_panel->addWidgetWithSpan(*root_browse, ++row, 0, 1, 1);
+  box_panel->addWidgetWithSpan(*root_entry, row, 1, 1, 3);
+
+  box_panel->addWidgetWithSpan(*root_clear, ++row, 0, 1, 1);
 
   box_panel->runSizer();
 
@@ -82,20 +110,33 @@ void EditImageLibraryDialog::bindEvents() {
       wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
   ImageFromLibrary *local_parent = parent;
-  bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
-    local_parent->onEditDialogClose();
-  });
+  // Allow the parent to be null -- for testing.
+  if (local_parent != nullptr) {
+    bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
+      local_parent->onEditDialogClose();
+    });
+  }
   file_list->bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent &event) -> void {
     this->fileSelected(&event);
   });
   name_entry->bind(wxEVT_KEY_UP,
                    [this](wxKeyEvent &event) -> void { this->nameUpdated(); });
+  root_browse->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->rootBrowsePressed();
+  });
+  root_clear->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->rootClearPressed();
+  });
   tag_list->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
     this->tagsUpdated(event);
   });
   tag_list->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent &event) -> void {
     this->tagDeleted(event);
   });
+  file_list->setChangeCallback(
+      [this](const FilesystemPath &prev, const FilesystemPath &curr) -> void {
+        this->fileUpdated(prev, curr);
+      });
 }
 
 void EditImageLibraryDialog::onOk() {
@@ -111,35 +152,77 @@ void EditImageLibraryDialog::onCancel() { close(); }
 auto EditImageLibraryDialog::validateSettings() -> bool { return true; }
 
 void EditImageLibraryDialog::saveSettings() {
-  singleton->imageLibrary()->clearLibrary();
-  for (const auto &filename : file_list->getFilenames()) {
-    std::vector<std::string> tags;
-    for (const auto &tag : images[filename].tags()) {
-      // Strip out empty tags that're left by accident.
-      if (!tag.empty()) {
-        tags.push_back(tag);
-      }
-    }
-    singleton->imageLibrary()->addImage(filename, images[filename].name(),
-                                        tags);
-  }
+  singleton->imageLibrary()->copyFrom(*library);
   singleton->imageLibrary()->saveLibrary();
+}
+
+void EditImageLibraryDialog::fileUpdated(const FilesystemPath &prev,
+                                         const FilesystemPath &curr) {
+  FilesystemPath empty("");
+  if (prev == empty && curr == empty) {
+    LogDebug(
+        "fileUpdated called with empty/empty, unsure what to do with two empty "
+        "paths.");
+    return;
+  }
+  if (prev == empty) {
+    // New file.
+    library->addImage(curr, "", {});
+    file_list->selectIndex(library->allFilenames().size() - 1);
+    refreshFiles();
+    return;
+  }
+  if (curr == empty) {
+    // Delete file.
+    library->deleteImage(prev);
+    refreshFiles();
+    return;
+  }
+  // Updating existing file.
+  library->moveImage(prev, curr);
+  refreshFiles();
 }
 
 void EditImageLibraryDialog::fileSelected(wxListEvent *event) {
   FilesystemPath filename = file_list->selectedFilename();
 
-  name_entry->setValue(images[filename].name());
+  name_entry->setValue(library->name(filename));
+  full_name_entry->setValue(FilesystemPath::absolutePath(
+      library->libraryRoot().string(), filename.string()));
   std::vector<std::string> tags;
-  for (const auto &tag : images[filename].tags()) {
-    tags.push_back(tag);
+  for (const auto &tag : library->tags(filename)) {
+    tags.push_back(tag.string());
   }
   tag_list->setStrings(tags);
   event->Skip();
 }
 
 void EditImageLibraryDialog::nameUpdated() {
-  images[file_list->selectedFilename()].set_name(name_entry->value());
+  library->setName(file_list->selectedFilename(), name_entry->value());
+}
+
+void EditImageLibraryDialog::refreshFiles() {
+  int64_t selected = file_list->selectedIndex();
+  file_list->setFilenames(library->allFilenames());
+  file_list->selectIndex(selected);
+}
+
+void EditImageLibraryDialog::rootBrowsePressed() {
+  std::unique_ptr<DirectoryPicker> dialog =
+      box_panel->openDirectoryPicker("Select New Root", library->libraryRoot());
+  std::optional<FilesystemPath> new_root = dialog->selectDirectory();
+  if (new_root.has_value()) {
+    // Replace the existing root with the new one.
+    root_entry->setValue(new_root->string());
+    library->smartUpdateLibraryRoot(*new_root);
+    refreshFiles();
+  }
+}
+
+void EditImageLibraryDialog::rootClearPressed() {
+  root_entry->setValue("");
+  library->setLibraryRoot(FilesystemPath(""));
+  refreshFiles();
 }
 
 void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
@@ -150,10 +233,7 @@ void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
   tag_list->setStrings(tags);
 
   FilesystemPath filename = file_list->selectedFilename();
-  images[filename].clear_tags();
-  for (const auto &tag : tags) {
-    images[filename].add_tags(tag);
-  }
+  library->setTags(filename, tags);
 }
 
 void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
@@ -167,10 +247,7 @@ void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
   tag_list->setStrings(tags);
 
   FilesystemPath filename = file_list->selectedFilename();
-  images[filename].clear_tags();
-  for (const auto &tag : tags) {
-    images[filename].add_tags(tag);
-  }
+  library->setTags(filename, tags);
 }
 
 }  // namespace cszb_scoreboard

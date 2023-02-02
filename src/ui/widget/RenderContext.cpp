@@ -23,6 +23,7 @@ limitations under the License.
 #include <wx/string.h>   // for wxString
 #include <wx/tokenzr.h>  // for wxStringTokenizer, wxTOKEN_RET_EMPTY_ALL
 
+#include "config.pb.h"          // for Font
 #include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
 #include "util/ProtoUtil.h"     // for ProtoUtil
@@ -31,9 +32,6 @@ limitations under the License.
 class wxWindow;
 
 namespace cszb_scoreboard {
-namespace proto {
-class Font;
-}  // namespace proto
 
 void RenderContext::drawImage(const Image& image, int64_t x, int64_t y,
                               bool use_mask) {

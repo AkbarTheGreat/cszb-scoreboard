@@ -67,7 +67,13 @@ class Frame : public Widget {
                  const Size &size = Size::fromWx(wxDefaultSize))
       : Frame(new swx::FrameImpl(nullptr, wxID_ANY, title, pos.toWx(),
                                  size.toWx())) {}
-  virtual ~Frame() { _wx->Destroy(); }
+  explicit Frame(const std::string &title, bool self_managed,
+                 const Position &pos = Position::fromWx(wxDefaultPosition),
+                 const Size &size = Size::fromWx(wxDefaultSize))
+      : Frame(title, pos, size) {
+    should_self_delete = self_managed;
+  }
+  virtual ~Frame();
 
   void installHotkeys(const std::vector<wxAcceleratorEntry> &keys) {
     _wx->SetAcceleratorTable(wxAcceleratorTable(keys.size(), keys.data()));
@@ -122,7 +128,8 @@ class Frame : public Widget {
   swx::Frame *_wx;
 
  private:
-  bool hasStatusBar = false;
+  bool has_status_bar = false;
+  bool should_self_delete = true;
 };
 
 }  // namespace cszb_scoreboard

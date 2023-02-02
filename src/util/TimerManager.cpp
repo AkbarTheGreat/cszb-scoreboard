@@ -19,6 +19,9 @@ limitations under the License.
 
 #include "util/TimerManager.h"
 
+#include <compare>  // for operator<, strong_ordering
+#include <ratio>    // for ratio
+
 #include "util/StringUtil.h"  // for StringUtil
 
 namespace cszb_scoreboard {

@@ -1,5 +1,5 @@
 /*
-util/Path.h: In most cases, a simple wrapper around std::filesystem::path. For
+util/Path.h: In most cases, a moderately enhanced wrapper around std::filesystem::path. For
 cases where that support is unavailable, a simple stand-in which implements the
 functionality we need for our application.
 
@@ -47,6 +47,12 @@ class FilesystemPath {
 
   [[nodiscard]] auto compare(const FilesystemPath &p) const -> int;
 
+  [[nodiscard]] auto is_absolute() const -> bool {
+    return path_string[0] == '/';
+  }
+
+  [[nodiscard]] auto is_relative() const -> bool { return !is_absolute(); }
+
   friend auto operator<(const FilesystemPath &a, const FilesystemPath &b)
       -> bool {
     return a.compare(b) < 0;
@@ -74,9 +80,10 @@ class FilesystemPath {
 
  private:
   std::string path_string;
-};
+
+ public:
 #else
-// Simply alias to std::filesystem::path for non-Mac platforms.
+// Enhanced alias to std::filesystem::path for non-Mac platforms.
 class FilesystemPath : public std::filesystem::path {
  public:
   FilesystemPath() = default;
@@ -90,7 +97,16 @@ class FilesystemPath : public std::filesystem::path {
   static void rename(const FilesystemPath &a, const FilesystemPath &b) {
     std::filesystem::rename(a, b);
   }
-};
 #endif
+
+  auto existsWithRoot(const std::string &root) -> bool;
+  static auto absolutePath(const std::string &root,
+                           const std::string &file_path) -> std::string;
+  static auto mostRelativePath(const std::string &root,
+                               const std::string &file_path) -> std::string;
+
+ private:
+  static auto stripTrailingSeparator(const std::string &path) -> std::string;
+};
 
 }  // namespace cszb_scoreboard

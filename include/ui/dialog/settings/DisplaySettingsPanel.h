@@ -19,14 +19,15 @@ limitations under the License.
 #pragma once
 
 #include <memory>  // for unique_ptr
+#include <string>  // for string
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"           // for ScreenSide
+#include "ScoreboardCommon.h"    // for PUBLIC_TEST_ONLY
+#include "config.pb.h"           // for Rectangle (ptr only), ScreenSide
 #include "ui/widget/Button.h"    // for Button
 #include "ui/widget/CheckBox.h"  // for CheckBox
 #include "ui/widget/Label.h"     // for Label
 #include "ui/widget/Panel.h"     // for Panel
-#include "util/Singleton.h"
+#include "util/Singleton.h"      // for Singleton
 
 namespace cszb_scoreboard {
 

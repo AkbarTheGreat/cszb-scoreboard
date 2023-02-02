@@ -29,6 +29,9 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 class RenderContext;
+namespace swx {
+class Sizer;
+}  // namespace swx
 
 const int NO_BORDER = 0;
 

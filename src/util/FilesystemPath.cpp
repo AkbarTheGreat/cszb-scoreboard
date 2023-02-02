@@ -1,5 +1,5 @@
 /*
-util/FilesystemPath.cpp: In most cases, a simple wrapper around
+util/FilesystemPath.cpp: In most cases, a moderately enhanced wrapper around
 std::filesystem::path. For cases where that support is unavailable, a simple
 stand-in which implements the functionality we need for our application.
 
@@ -27,6 +27,8 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 #ifdef __APPLE__
+
+constexpr char preferred_separator = '/';
 
 FilesystemPath::FilesystemPath() { path_string = ""; }
 
@@ -72,5 +74,49 @@ void FilesystemPath::replace_filename(const std::string &new_filename) {
 }
 
 #endif
+
+auto FilesystemPath::existsWithRoot(const std::string &root) -> bool {
+#ifdef __APPLE__
+  // TODO: This is incorrect, but will need some testing on an actual MacOS
+  // device when it's implemented.
+  return true;
+#else   // #ifdef __APPLE__
+  return std::filesystem::exists(absolutePath(root, this->string()));
+#endif  // #ifdef __APPLE__
+}
+
+auto FilesystemPath::stripTrailingSeparator(const std::string &path)
+    -> std::string {
+  if (path.length() > 0 && path.at(path.length() - 1) == preferred_separator) {
+    return path.substr(0, path.length() - 1);
+  }
+  return path;
+}
+
+auto FilesystemPath::absolutePath(const std::string &root,
+                                  const std::string &file_path) -> std::string {
+  if (FilesystemPath(file_path).is_absolute()) {
+    return file_path;
+  }
+  return stripTrailingSeparator(root) + static_cast<char>(preferred_separator) +
+         file_path;
+}
+
+// If file_path is already relative, returns file_path.  If file_path is
+// relative to root, returns the relative path.  Otherwise, returns file_path.
+auto FilesystemPath::mostRelativePath(const std::string &root,
+                                      const std::string &file_path)
+    -> std::string {
+  if (FilesystemPath(file_path).is_relative() || root.empty()) {
+    return file_path;
+  }
+  auto effective_root = stripTrailingSeparator(root);
+  // Search for root at the start of the string.
+  if (file_path.rfind(effective_root + static_cast<char>(preferred_separator),
+                      0) == 0) {
+    return file_path.substr(effective_root.length() + 1, std::string::npos);
+  }
+  return file_path;
+}
 
 }  // namespace cszb_scoreboard

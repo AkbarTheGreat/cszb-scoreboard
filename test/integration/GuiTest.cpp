@@ -52,7 +52,7 @@ const int TEXT_ENTRY_TAB_INDEX = 4;
 #endif  // #ifdef _WIN32
 
 const std::array<const char *, 2> TEST_ARGV = {
-    {{"scoreboard_testing.exe"}, {"-n"}}};
+    {"scoreboard_testing.exe", "-n"}};
 
 void GuiTest::SetUp() {
   app = new Scoreboard();

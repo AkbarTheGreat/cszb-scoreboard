@@ -24,13 +24,11 @@ limitations under the License.
 #include <string>      // for string
 #include <vector>      // for vector
 
-#include "ScoreboardCommon.h"
 #include "config/swx/defs.h"      // for wxID_ANY
 #include "config/swx/event.h"     // for wxEventTypeTag
 #include "ui/widget/ListBox.h"    // for ListBox
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
-#include "util/Singleton.h"
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -39,28 +37,36 @@ class Panel;
 
 class FileListBox : public Panel {
  public:
-  FileListBox(swx::Panel *wx, const std::string &title)
-      : FileListBox(wx, title, Singleton::getInstance()) {}
-
+  FileListBox(swx::Panel *wx, const std::string &title,
+              const std::vector<FilesystemPath> &file_list);
   void bind(const wxEventTypeTag<wxListEvent> &eventType,
             const std::function<void(wxListEvent &)> &lambda,
             int id = wxID_ANY) {
     box->bind(eventType, lambda, id);
   }
   auto getFilenames() -> std::vector<FilesystemPath>;
+  void setFilenames(const std::vector<FilesystemPath> &files);
   auto selectedFilename() -> FilesystemPath;
-
-  PUBLIC_TEST_ONLY
-  FileListBox(swx::Panel *wx, const std::string &title, Singleton *singleton);
+  auto selectedIndex() -> int64_t { return box->selectedIndex(); }
+  void selectIndex(int64_t idx) { box->selectItem(idx); }
+  // Callback takes old, then new path (or empty path for old/new for add/remove
+  // respectively)
+  void setChangeCallback(
+      const std::function<void(const FilesystemPath &, const FilesystemPath &)>
+          &callback);
 
  protected:
   void bindEvents();
   void newPressed();
+  void fileUpdated(const FilesystemPath &prev, const FilesystemPath &curr);
+  void fileDeleted(const FilesystemPath &file);
   void updateStrings(const std::vector<FilesystemPath> &filenames,
                      int64_t select_index = 0);
 
  private:
   std::unique_ptr<ListBox> box;
+  std::function<void(const FilesystemPath &, const FilesystemPath &)>
+      change_callback;
 };
 
 }  // namespace cszb_scoreboard

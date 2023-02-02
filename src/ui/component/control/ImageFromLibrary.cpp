@@ -66,6 +66,8 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
   search_box = search_panel->searchBox("Find by tag/name");
   tag_list_label = search_panel->label("");
 
+  image_previews.reserve(NUM_PREVIEWS);
+  image_names.reserve(NUM_PREVIEWS);
   for (int i = 0; i < NUM_PREVIEWS; i++) {
     image_previews.emplace_back(std::make_unique<ImagePreview>(
         image_preview_panel->childPanel(PREVIEW_WIDTH, PREVIEW_HEIGHT)));

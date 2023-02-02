@@ -25,6 +25,7 @@ limitations under the License.
 
 #include <cstdint>  // for uint32_t
 #include <memory>   // for shared_ptr, __shared_ptr_access
+#include <string>   // for string
 #include <utility>  // for move
 
 #include "ScoreboardCommon.h"       // for PUBLIC_TEST_ONLY

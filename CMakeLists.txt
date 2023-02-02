@@ -16,6 +16,8 @@
 
 cmake_minimum_required(VERSION 3.9.0)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
@@ -24,14 +26,15 @@ SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
 
 set(CMAKE_CXX_STANDARD 20)
-set (Protobuf_BUILD_SHARED_LIBS OFF)
-set (Protobuf_MSVC_STATIC_RUNTIME ON)
+set(Protobuf_BUILD_SHARED_LIBS OFF)
+set(Protobuf_MSVC_STATIC_RUNTIME ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 set(JSON_CPP_LIB "jsoncpp_lib")
 
 set(LINKING_TYPE "dynamic" CACHE STRING "Link type")
 set(SKIP_LINT false CACHE BOOL "Skip Lint")
+set(CLANG_TIDY_ERRORS true CACHE BOOL "Lint warnings fail build")
 set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
 
 if(MSVC OR OSXCROSS_HOST)
@@ -86,7 +89,15 @@ endif() # OSXCROSS_HOST
 include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
 file(GLOB SCOREBOARD_SRC
-    "src/*.cpp"
+    "src/cszb-scoreboard.cpp"
+    "src/*/*.cpp"
+    "src/*/*/*.cpp"
+    "src/*/*/*/*.cpp"
+    "src/*/*/*/*/*.cpp"
+)
+
+file(GLOB DIALOG_TEST_SRC
+    "src/dialog-test.cpp"
     "src/*/*.cpp"
     "src/*/*/*.cpp"
     "src/*/*/*/*.cpp"
@@ -96,8 +107,6 @@ file(GLOB SCOREBOARD_SRC
 IF(WIN32)
     SET(SCOREBOARD_SRC ${SCOREBOARD_SRC} "resources/scoreboard.rc")
 ENDIF(WIN32)
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 # Protobuf files.
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
@@ -112,12 +121,20 @@ set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTIO
 target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
-# Is this WIN32 bad for cross-platform?  Maybe?  It's untested.
+add_library(dialog_test_classes OBJECT ${DIALOG_TEST_SRC})
+set_target_properties(dialog_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_compile_definitions(dialog_test_classes PUBLIC FAKE_CONFIGURATION_FILES)
+target_link_libraries(dialog_test_classes PRIVATE ${wxWidgets_LIBRARIES}
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+
 add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
-
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
+                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+
+# A test target which is used for checking dialog edits more quickly than running entire application.
+add_executable("dialog-test" WIN32 $<TARGET_OBJECTS:dialog_test_classes> $<TARGET_OBJECTS:scoreboard_proto>)
+target_link_libraries("dialog-test" PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 finalize_vcpkg_code(${PROJECT_NAME})
@@ -137,18 +154,23 @@ target_link_libraries(scoreboard_ui_test_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
-macro(package_add_test TESTNAME)
+function(package_add_test TESTNAME HAS_OWN_MAIN)
     # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
     add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN})
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     if (INTEGRATION_TEST)
         target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_INTEGRATION_TEST)
     endif()
+    if (HAS_OWN_MAIN)
+        set(GTEST_LIBS ${GTEST_LIBRARIES} GTest::gmock)
+    else()
+        set(GTEST_LIBS ${GTEST_BOTH_LIBRARIES} GTest::gmock GTest::gmock_main)
+    endif()
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
     target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl
-                      ${GTEST_BOTH_LIBRARIES} GTest::gmock GTest::gmock_main)
+                      ${GTEST_LIBS})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
     gtest_discover_tests(${TESTNAME}
@@ -157,46 +179,56 @@ macro(package_add_test TESTNAME)
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
     )
     set_target_properties(${TESTNAME} PROPERTIES FOLDER test CXX_CLANG_TIDY "${LINT_OPTION}")
-endmacro()
+endfunction()
 
-macro(package_add_ui_test TESTNAME)
+function(package_add_ui_test TESTNAME HAS_OWN_MAIN)
     if (INTEGRATION_TEST)
-	    package_add_test(${TESTNAME} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
+	    package_add_test(${TESTNAME} ${HAS_OWN_MAIN} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
     endif()
-endmacro()
+endfunction()
 
 enable_testing()
 
 # config/ tests
-package_add_test(CommandArgsTest   test/unit/config/CommandArgsTest.cpp   src/config/CommandArgs.cpp)
-package_add_test(DisplayConfigTest test/unit/config/DisplayConfigTest.cpp src/config/DisplayConfig.cpp
-                                                                          src/config/Persistence.cpp
-                                                                          src/config/Position.cpp
-                                                                          src/ui/frame/FrameManager.cpp
-                                                                          src/ui/widget/Display.cpp
-                                                                          src/util/ProtoUtil.cpp
-                                                                          )
-package_add_test(ImageLibraryTest  test/unit/config/ImageLibraryTest.cpp  src src/config/ImageLibrary.cpp
-                                                                          src/config/Persistence.cpp
-                                                                          src/util/FilesystemPath.cpp
-                                                                          )
+package_add_test(CommandArgsTest   FALSE test/unit/config/CommandArgsTest.cpp
+                                          src/config/CommandArgs.cpp)
+package_add_test(DisplayConfigTest FALSE test/unit/config/DisplayConfigTest.cpp
+                                          src/config/DisplayConfig.cpp
+                                          src/config/Persistence.cpp
+                                          src/config/Position.cpp
+                                          src/ui/frame/FrameManager.cpp
+                                          src/ui/widget/Display.cpp
+                                          src/ui/widget/Frame.cpp
+                                          src/util/ProtoUtil.cpp
+)
+package_add_test(ImageLibraryTest  FALSE test/unit/config/ImageLibraryTest.cpp
+                                          src src/config/ImageLibrary.cpp
+                                          src/config/Persistence.cpp
+                                          src/util/FilesystemPath.cpp
+)
 
 # util/ tests
-package_add_test(AutoUpdateTest  test/unit/util/AutoUpdateTest.cpp  src/util/AutoUpdate.cpp
-                                                                    src/config/CommandArgs.cpp
-                                                                    src/util/HttpReader.cpp
-                                                                    src/util/StringUtil.cpp
-                                                                    )
-package_add_test(ProtoUtilTest   test/unit/util/ProtoUtilTest.cpp   src/util/ProtoUtil.cpp
-                                                                    src/ui/graphics/Color.cpp
-                                                                    )
-package_add_test(StringUtilTest  test/unit/util/StringUtilTest.cpp  src/util/StringUtil.cpp
-                                                                    )
+package_add_test(AutoUpdateTest      FALSE test/unit/util/AutoUpdateTest.cpp
+                                            src/util/AutoUpdate.cpp
+                                            src/config/CommandArgs.cpp
+                                            src/util/HttpReader.cpp
+                                            src/util/StringUtil.cpp
+)
+package_add_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
+                                            src/util/FilesystemPath.cpp
+)
+package_add_test(ProtoUtilTest       FALSE test/unit/util/ProtoUtilTest.cpp
+                                            src/util/ProtoUtil.cpp
+                                            src/ui/graphics/Color.cpp
+)
+package_add_test(StringUtilTest      FALSE test/unit/util/StringUtilTest.cpp
+                                            src/util/StringUtil.cpp
+)
 
 
-package_add_ui_test(ScreenPreviewTest   test/integration/ScreenPreviewTest.cpp)
-package_add_ui_test(TextEntryTest       test/integration/TextEntryTest.cpp)
-package_add_ui_test(ScreenTextSideTest  test/integration/ScreenTextSideTest.cpp)
+package_add_ui_test(ScreenPreviewTest   FALSE test/integration/ScreenPreviewTest.cpp)
+package_add_ui_test(TextEntryTest       FALSE test/integration/TextEntryTest.cpp)
+package_add_ui_test(ScreenTextSideTest  FALSE test/integration/ScreenTextSideTest.cpp)
  
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)

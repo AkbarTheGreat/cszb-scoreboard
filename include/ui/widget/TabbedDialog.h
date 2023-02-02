@@ -60,7 +60,8 @@ class TabbedDialog : public Widget {
   void close(bool force = true) { wx()->Close(force); }
   [[nodiscard]] auto panel() const -> std::unique_ptr<Panel>;
   void runSizer() { _wx->LayoutDialog(); }
-  void show() { wx()->Show(); }
+  void show() { _wx->Show(); }
+  void showWithFocus() { _wx->ShowModal(); }
   void sendEvent(wxEvent *event) { _wx->ProcessEvent(*event); }
 
  protected:

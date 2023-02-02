@@ -20,8 +20,8 @@ limitations under the License.
 #include "ui/widget/Panel.h"
 
 #include <wx/anybutton.h>  // for wxBU_EXACTFIT
+#include <wx/dirdlg.h>     // for wxDD_DIR_MUST_EXIST
 #include <wx/filedlg.h>    // for wxFD_FILE_MUST_EXIST
-#include <wx/textctrl.h>   // for wxTE_MULTILINE
 
 #include <vector>  // for vector
 
@@ -43,6 +43,7 @@ limitations under the License.
 #include "ui/widget/swx/Button.h"            // for Button
 #include "ui/widget/swx/CheckBox.h"          // for CheckBox
 #include "ui/widget/swx/ColourPickerCtrl.h"  // for ColourPickerCtrl
+#include "ui/widget/swx/DirDialog.h"         // for DirDialog
 #include "ui/widget/swx/EditableListBox.h"   // for EditableListBox
 #include "ui/widget/swx/FileDialog.h"        // for FileDialog
 #include "ui/widget/swx/RadioBox.h"          // for RadioBox
@@ -107,13 +108,21 @@ namespace cszb_scoreboard {
 		return std::make_unique<Divider>(new swx::StaticLine(wx()));
 	}
 
-	// Get a FilePicker to open an existing file.
-	auto Panel::openFilePicker(const std::string& title,
-		const std::string& selectionMode) const
-		-> std::unique_ptr<FilePicker> {
-		return std::make_unique<FilePicker>(new swx::FileDialog(
-			wx(), title, "", "", selectionMode, wxFD_OPEN | wxFD_FILE_MUST_EXIST));
-	}
+// Get a DirectoryPicker to open an existing path.
+auto Panel::openDirectoryPicker(const std::string &title,
+                                const FilesystemPath &initial_dir) const
+    -> std::unique_ptr<DirectoryPicker> {
+  return std::make_unique<DirectoryPicker>(new swx::DirDialog(
+      wx(), title, initial_dir.string(), wxDD_DIR_MUST_EXIST));
+}
+
+// Get a FilePicker to open an existing file.
+auto Panel::openFilePicker(const std::string &title,
+                           const std::string &selectionMode) const
+    -> std::unique_ptr<FilePicker> {
+  return std::make_unique<FilePicker>(new swx::FileDialog(
+      wx(), title, "", "", selectionMode, wxFD_OPEN | wxFD_FILE_MUST_EXIST));
+}
 
 	auto Panel::label(const std::string& text) const -> std::unique_ptr<Label> {
 		return std::make_unique<Label>(new swx::StaticText(wx(), wxID_ANY, text));

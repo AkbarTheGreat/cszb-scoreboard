@@ -31,7 +31,7 @@ limitations under the License.
 #include "config/Position.h"                    // for Size
 #include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
 #include "ui/widget/Widget.h"                   // for Widget
-#include "ui/widget/swx/Panel.h"                // for Panel
+#include "ui/widget/swx/Panel.h"                // for PanelImpl, Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 #include "wx/colour.h"                          // for wxColour
 #include "wx/window.h"                          // for wxWindow
@@ -45,6 +45,7 @@ class CheckBox;
 class ColorPicker;
 class Divider;
 class FilePicker;
+class DirectoryPicker;
 class Label;
 class ListBox;
 class RadioButton;
@@ -53,6 +54,7 @@ class SearchBox;
 class Text;
 class Toggle;
 class LabelledArea;
+class FilesystemPath;
 
 class Panel : public Widget {
  public:
@@ -70,6 +72,9 @@ class Panel : public Widget {
   [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
       -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
+  [[nodiscard]] auto openDirectoryPicker(
+      const std::string &title, const FilesystemPath &initial_dir) const
+      -> std::unique_ptr<DirectoryPicker>;
   [[nodiscard]] auto openFilePicker(const std::string &title,
                                     const std::string &selectionMode) const
       -> std::unique_ptr<FilePicker>;

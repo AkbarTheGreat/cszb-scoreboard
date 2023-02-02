@@ -19,12 +19,13 @@ limitations under the License.
 
 #include "ui/dialog/edit_image_library/FileListBox.h"
 
+#include <wx/string.h>  // for wxString
+
 #include <iterator>  // for next
 #include <optional>  // for optional
-#include <string>    // for string
+#include <string>    // for string, basic_string
 
 #include "ScoreboardCommon.h"      // for IMAGE_SELECTION_STRING
-#include "config/ImageLibrary.h"   // for ImageLibrary
 #include "ui/widget/FilePicker.h"  // for FilePicker
 
 namespace cszb_scoreboard {
@@ -32,10 +33,10 @@ namespace cszb_scoreboard {
 const int64_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
 FileListBox::FileListBox(swx::Panel *wx, const std::string &title,
-                         Singleton *singleton)
+                         const std::vector<FilesystemPath> &file_list)
     : Panel(wx) {
   box = listBox(title);
-  updateStrings(singleton->imageLibrary()->allFilenames());
+  updateStrings(file_list);
   bindEvents();
   addWidget(*box, 0, 0, 0);
   runSizer();
@@ -44,6 +45,13 @@ FileListBox::FileListBox(swx::Panel *wx, const std::string &title,
 void FileListBox::bindEvents() {
   box->bindNew(wxEVT_BUTTON,
                [this](wxCommandEvent &event) -> void { this->newPressed(); });
+  box->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
+    this->fileUpdated(FilesystemPath(box->strings()[event.GetItem().GetId()]),
+                      FilesystemPath(event.GetItem().GetText().ToStdString()));
+  });
+  box->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent &event) -> void {
+    this->fileDeleted(FilesystemPath(event.GetItem().GetText().ToStdString()));
+  });
 }
 
 void FileListBox::newPressed() {
@@ -59,7 +67,17 @@ void FileListBox::newPressed() {
     }
     filenames.insert(std::next(filenames.begin(), new_index), *new_file);
     updateStrings(filenames, new_index);
+    change_callback(FilesystemPath(""), *new_file);
   }
+}
+
+void FileListBox::fileUpdated(const FilesystemPath &prev,
+                              const FilesystemPath &curr) {
+  change_callback(prev, curr);
+}
+
+void FileListBox::fileDeleted(const FilesystemPath &file) {
+  change_callback(file, FilesystemPath(""));
 }
 
 auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
@@ -73,6 +91,18 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
   }
 
   return filenames;
+}
+
+void FileListBox::setFilenames(const std::vector<FilesystemPath> &files) {
+  std::vector<std::string> strings;
+  strings.reserve(files.size());
+
+  for (const auto &entry : files) {
+    strings.emplace_back(entry.string());
+  }
+
+  box->setStrings(strings);
+  box->selectItem(0);
 }
 
 auto FileListBox::selectedFilename() -> FilesystemPath {
@@ -95,6 +125,12 @@ void FileListBox::updateStrings(const std::vector<FilesystemPath> &filenames,
   if (!strings.empty()) {
     box->selectItem(select_index);
   }
+}
+
+void FileListBox::setChangeCallback(
+    const std::function<void(const FilesystemPath &, const FilesystemPath &)>
+        &callback) {
+  change_callback = callback;
 }
 
 }  // namespace cszb_scoreboard

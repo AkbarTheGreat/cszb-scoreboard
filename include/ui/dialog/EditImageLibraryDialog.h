@@ -21,16 +21,20 @@ limitations under the License.
 #include <map>     // for map
 #include <memory>  // for unique_ptr
 
-#include "ScoreboardCommon.h"
+#include "ScoreboardCommon.h"                          // for PUBLIC_TEST_ONLY
+#include "config/ImageLibrary.h"                       // for TemporaryImage...
 #include "image_library.pb.h"                          // for ImageInfo
 #include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
+#include "ui/widget/Button.h"                          // for Button
+#include "ui/widget/CheckBox.h"                        // for CheckBox
+#include "ui/widget/Divider.h"                         // for Divider
 #include "ui/widget/Label.h"                           // for Label
 #include "ui/widget/ListBox.h"                         // for ListBox
 #include "ui/widget/Panel.h"                           // for Panel
 #include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
 #include "ui/widget/Text.h"                            // for Text
 #include "util/FilesystemPath.h"                       // for FilesystemPath
-#include "util/Singleton.h"
+#include "util/Singleton.h"                            // for Singleton
 
 class wxListEvent;
 
@@ -55,7 +59,14 @@ class EditImageLibraryDialog : public TabbedDialog {
   std::unique_ptr<Panel> box_panel;
   std::unique_ptr<Text> name_entry;
   std::unique_ptr<Label> name_label;
+  std::unique_ptr<Label> full_name_label;
+  std::unique_ptr<Text> full_name_entry;
+  std::unique_ptr<Divider> root_divider;
+  std::unique_ptr<Text> root_entry;
+  std::unique_ptr<Button> root_browse;
+  std::unique_ptr<Button> root_clear;
   std::unique_ptr<ListBox> tag_list;
+  std::unique_ptr<TemporaryImageLibrary> library;
   std::map<FilesystemPath, proto::ImageInfo> images;
   ImageFromLibrary *parent;
   Singleton *singleton;
@@ -67,7 +78,11 @@ class EditImageLibraryDialog : public TabbedDialog {
   void fileSelected(wxListEvent *event);
   void onOk();
   void onCancel();
+  void fileUpdated(const FilesystemPath &prev, const FilesystemPath &curr);
   void nameUpdated();
+  void refreshFiles();
+  void rootBrowsePressed();
+  void rootClearPressed();
   void tagDeleted(const wxListEvent &event);
   void tagsUpdated(const wxListEvent &event);
 };

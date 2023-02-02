@@ -21,11 +21,14 @@ limitations under the License.
 
 #include <algorithm>   // for binary_search, find, lower_bound
 #include <cctype>      // for tolower
-#include <filesystem>  // for operator<
+#include <compare>     // for operator<, strong_ordering
+#include <cstdio>      // for printf
+#include <filesystem>  // for operator==, path
 #include <utility>     // for move
 
 #include "config/Persistence.h"   // for Persistence
 #include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Log.h"             // for LogDebug
 #include "util/Singleton.h"       // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
@@ -56,7 +59,12 @@ ImageLibrary::ImageLibrary(SingletonClass c, Singleton *singleton,
 }
 
 auto ImageLibrary::allFilenames() -> std::vector<FilesystemPath> {
-  return search("").filenames();
+  std::vector<FilesystemPath> filenames;
+  filenames.reserve(library.images_size());
+  for (const auto &image : library.images()) {
+    filenames.emplace_back(image.file_path());
+  }
+  return filenames;
 }
 
 auto ImageLibrary::allTags(bool include_name) const
@@ -73,12 +81,18 @@ auto ImageLibrary::allTags(bool include_name) const
   return tags;
 }
 
-auto ImageLibrary::imageMap() -> std::map<FilesystemPath, proto::ImageInfo> {
-  std::map<FilesystemPath, proto::ImageInfo> image_map;
-  for (const auto &image : library.images()) {
-    image_map.emplace(FilesystemPath(image.file_path()), image);
-  }
-  return image_map;
+auto ImageLibrary::temporaryClone() -> std::unique_ptr<TemporaryImageLibrary> {
+  proto::ImageLibrary library_copy;
+  library_copy.CopyFrom(library);
+  return std::make_unique<TemporaryImageLibrary>(singleton, library_copy);
+}
+
+void ImageLibrary::copyFrom(const TemporaryImageLibrary &other) {
+  // Unlikely to ever change, but for completeness, re-assign the singleton
+  // pointer.
+  this->singleton = other.singleton;
+  // Copy the incoming library to this one.
+  this->library.CopyFrom(other.library);
 }
 
 auto ImageLibrary::infoByFile(const FilesystemPath &filename)
@@ -89,6 +103,31 @@ auto ImageLibrary::infoByFile(const FilesystemPath &filename)
     }
   }
   return {};
+}
+
+void ImageLibrary::setName(const FilesystemPath &filename,
+                           const std::string &name) {
+  for (auto &image : *library.mutable_images()) {
+    if (image.file_path() == filename.string()) {
+      image.set_name(name);
+      return;
+    }
+  }
+  LogDebug("Attempt to set name of unknown file: %s", filename.c_str());
+}
+
+void ImageLibrary::setTags(const FilesystemPath &filename,
+                           const std::vector<std::string> &tags) {
+  for (auto &image : *library.mutable_images()) {
+    if (image.file_path() == filename.string()) {
+      image.clear_tags();
+      for (const auto &tag : tags) {
+        image.add_tags(tag);
+      }
+      return;
+    }
+  }
+  LogDebug("Attempt to set tags of unknown file: %s", filename.c_str());
 }
 
 auto ImageLibrary::name(const FilesystemPath &filename) -> std::string {
@@ -108,17 +147,101 @@ auto ImageLibrary::tags(const FilesystemPath &filename)
 void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
                             const std::vector<std::string> &tags) {
   proto::ImageInfo *new_image = library.add_images();
-  new_image->set_file_path(file.string());
+  FilesystemPath rel_path = FilesystemPath(
+      FilesystemPath::mostRelativePath(libraryRoot().string(), file.string()));
+  new_image->set_file_path(rel_path.string());
+  new_image->set_is_relative(rel_path.is_relative());
   new_image->set_name(name);
   for (const auto &tag : tags) {
     new_image->add_tags(tag);
   }
 }
 
+void ImageLibrary::moveImage(const FilesystemPath &previous_path,
+                             const FilesystemPath &new_path) {
+  FilesystemPath rel_path = FilesystemPath(FilesystemPath::mostRelativePath(
+      libraryRoot().string(), new_path.string()));
+  auto *images = library.mutable_images();
+  for (auto &image : *images) {
+    if (FilesystemPath(image.file_path()) == previous_path) {
+      image.set_file_path(rel_path.string());
+      image.set_is_relative(rel_path.is_relative());
+    }
+  }
+}
+
+void ImageLibrary::deleteImage(const FilesystemPath &file) {
+  auto *images = library.mutable_images();
+  for (auto itr = images->begin(); itr < images->end(); itr++) {
+    if (FilesystemPath(itr->file_path()) == file) {
+      images->erase(itr);
+      return;
+    }
+  }
+}
+
+auto ImageLibrary::libraryRoot() -> FilesystemPath {
+  return FilesystemPath(library.library_root());
+}
+
+void ImageLibrary::removeLibraryRoot() {
+  auto *images = library.mutable_images();
+  for (auto &image : *images) {
+    image.set_file_path(FilesystemPath::absolutePath(library.library_root(),
+                                                     image.file_path()));
+  }
+  library.clear_library_root();
+}
+
+void ImageLibrary::moveLibraryRoot(const FilesystemPath &root) {
+  library.set_library_root(root.string());
+}
+
+void ImageLibrary::setLibraryRoot(const FilesystemPath &root) {
+  auto *images = library.mutable_images();
+  for (auto &image : *images) {
+    std::string abs_path =
+        FilesystemPath::absolutePath(library.library_root(), image.file_path());
+    std::string rel_path =
+        FilesystemPath::mostRelativePath(root.string(), abs_path);
+    image.set_file_path(rel_path);
+    image.set_is_relative(FilesystemPath(rel_path).is_relative());
+  }
+  moveLibraryRoot(root);
+}
+
+void ImageLibrary::smartUpdateLibraryRoot(const FilesystemPath &root) {
+  // First, make all paths absolute with the best possible option.
+  auto *images = library.mutable_images();
+  const std::string new_root = root.string();
+  for (auto &image : *images) {
+    if (image.is_relative()) {
+      // * If only one path exists, use that one.
+      // * If both paths exist, prefer the new path.
+      // * If neither path is exists, leave the path as the original.
+      // * Ultimately, this boils down to -- is new path valid?  Use that.
+      // Otherwise, use the old one.
+      if (FilesystemPath(image.file_path()).existsWithRoot(root.string())) {
+        image.set_file_path(
+            FilesystemPath::absolutePath(root.string(), image.file_path()));
+      } else {
+        image.set_file_path(FilesystemPath::absolutePath(library.library_root(),
+                                                         image.file_path()));
+      }
+      image.set_is_relative(false);
+    }
+  }
+  // Now, do a regular setLibraryRoot to establish new relative paths and update
+  // the library root internally.
+  setLibraryRoot(root);
+}
+
 void ImageLibrary::clearLibrary() { library.Clear(); }
 
 void ImageLibrary::saveLibrary() {
-  singleton->persistence()->saveImageLibrary(library);
+  if (enable_persistence) {
+    singleton->persistence()->saveImageLibrary(library);
+  }
 }
 
 auto ImageLibrary::search(const std::string &query) -> ImageSearchResults {
@@ -134,10 +257,18 @@ auto ImageLibrary::search(const std::string &query) -> ImageSearchResults {
   return partialMatchSearch(query);
 }
 
+void ImageLibrary::addMatch(std::vector<proto::ImageInfo> *matched_images,
+                            const proto::ImageInfo &image) {
+  proto::ImageInfo image_copy(image);
+  image_copy.set_file_path(
+      FilesystemPath::absolutePath(library.library_root(), image.file_path()));
+  matched_images->emplace_back(image_copy);
+}
+
 auto ImageLibrary::emptySearch() -> ImageSearchResults {
   std::vector<proto::ImageInfo> matched_images;
   for (const auto &image : library.images()) {
-    matched_images.push_back(image);
+    addMatch(&matched_images, image);
   }
   return {matched_images, "", allTags()};
 }
@@ -149,7 +280,7 @@ auto ImageLibrary::exactMatchSearch(const std::string &query)
     if ((image.name() == query) ||
         (std::find(image.tags().begin(), image.tags().end(), query) !=
          image.tags().end())) {
-      matched_images.push_back(image);
+      addMatch(&matched_images, image);
     }
   }
   if (matched_images.empty()) {
@@ -168,14 +299,14 @@ auto ImageLibrary::partialMatchSearch(const std::string &query)
     bool image_matched = false;
     if (CaseOptionalString(image.name()).find(lower_query) !=
         std::string::npos) {
-      matched_images.push_back(image);
+      addMatch(&matched_images, image);
       insertIntoSortedVector(&matched_tags, image.name());
       image_matched = true;
     }
     for (const auto &tag : image.tags()) {
       if (CaseOptionalString(tag).substring(lower_query)) {
         if (!image_matched) {
-          matched_images.push_back(image);
+          addMatch(&matched_images, image);
         }
         image_matched = true;
         insertIntoSortedVector(&matched_tags, tag);
@@ -183,6 +314,12 @@ auto ImageLibrary::partialMatchSearch(const std::string &query)
     }
   }
   return {matched_images, query, matched_tags};
+}
+
+TemporaryImageLibrary::TemporaryImageLibrary(Singleton *singleton,
+                                             proto::ImageLibrary library)
+    : ImageLibrary(SingletonClass{}, singleton, std::move(library)) {
+  enable_persistence = false;
 }
 
 ImageSearchResults::ImageSearchResults(

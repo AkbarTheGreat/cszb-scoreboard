@@ -28,6 +28,11 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+Frame::~Frame() {
+  if (should_self_delete) {
+    _wx->Destroy();
+  }
+}
 void Frame::alwaysOnTop(bool isOnTop) {
   if (isOnTop) {
     wx()->SetWindowStyle(wx()->GetWindowStyle() | wxSTAY_ON_TOP);
@@ -64,8 +69,8 @@ void Frame::setDimensions(const Position &position, const Size &size) {
 }
 
 void Frame::setStatusBar(const wxString &text) {
-  if (!hasStatusBar) {
-    hasStatusBar = true;
+  if (!has_status_bar) {
+    has_status_bar = true;
     _wx->CreateStatusBar();
   }
   _wx->SetStatusText(text);
