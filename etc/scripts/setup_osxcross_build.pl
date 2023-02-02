@@ -297,9 +297,9 @@ sub install_macports {
    rmtree($OSXCROSS_REPO . '/target/macports');
    say 'Installing macports libraries.';
    # (The -s strips out dylibs for us).
-   sys('osxcross-macports', 'install', '-s', @MACPORTS_LIBS);
+   sys($OSXCROSS_REPO . '/target/bin/osxcross-macports', 'install', '-s', @MACPORTS_LIBS);
    # These libs appear to only have dylibs.  So we don't strip them out.
-   sys('osxcross-macports', 'install', @MACPORTS_DYLIBS);
+   sys($OSXCROSS_REPO . '/target/bin/osxcross-macports', 'install', @MACPORTS_DYLIBS);
 
 }
 
