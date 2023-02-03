@@ -10,7 +10,8 @@ RUN mkdir -p /root/.vnc
 RUN echo "pass" > /root/.vnc/passwd
 RUN chmod 0600 /root/.vnc/passwd
 
-COPY etc/scripts/docker_* /setup/
+COPY etc/scripts/docker_dependencies.pl /setup/docker_dependencies.pl
+COPY etc/scripts/docker_packages.sh /setup/docker_packages.sh
 RUN /setup/docker_packages.sh
 
 RUN /setup/docker_dependencies.pl
