@@ -5,6 +5,11 @@ pipeline {
   }
 
   stages {
+    stage('MacOS Prep') {
+      steps {
+        sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
+      }
+    }
     stage ('Build & Test') {
         parallel {
             stage('Lint') {
@@ -16,6 +21,7 @@ pipeline {
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
+                        reuseNode true
                     }
                 }
                 stages {
@@ -38,6 +44,7 @@ make all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
+                        reuseNode true
                     }
                 }
                 stages {
@@ -102,6 +109,7 @@ make -j2 all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
+                        reuseNode true
                     }
                 }
                 stages {
@@ -144,16 +152,12 @@ make -j2 all'''
             }
             stage('MacOS') {
                 stages {
-                stage('MacOS Prep') {
-			        steps {
-				        sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
-                    }
-                }
                 stage ('MacOS Build & Test') {
                 when { expression { false } }
                 agent {
                     dockerfile {
                         filename 'Dockerfile.osxcross'
+                        reuseNode true
                     }
                 }
                 stages {
