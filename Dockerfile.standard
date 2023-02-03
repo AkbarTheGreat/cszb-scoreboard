@@ -1,25 +1,24 @@
 FROM ubuntu:jammy
 
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt update && apt -y upgrade && apt -y install clang clang-tidy cmake cmake-curses-gui g++ git gcovr libcairo2-dev libexpat1-dev libgtk-3-dev libjpeg-dev libjsoncpp-dev libmspack-dev libnotify-dev libpng-dev libprotobuf-dev libsdl1.2-dev libsdl2-dev libsecret-1-dev libsoup2.4-dev libssl-dev libtiff-dev libwebkit2gtk-4.0-dev libx11-dev llvm-dev ninja-build openjdk-17-jre protobuf-compiler tightvncserver valgrind
+ENV CC /usr/bin/clang
+ENV CXX /usr/bin/clang++
+ENV DISPLAY localhost:0.0 
+ENV USER root
 
 # This is a very insecure password, obviously.  Don't trust this container to run long-term without tweaking this
 RUN mkdir -p /root/.vnc
 RUN echo "pass" > /root/.vnc/passwd
 RUN chmod 0600 /root/.vnc/passwd
 
-ENV CXX /usr/bin/clang++
-ENV CC /usr/bin/clang
+COPY etc/scripts/docker_* /setup/
+RUN /setup/docker_packages.sh
 
-COPY etc/scripts/docker_dependencies.pl /src/docker_dependencies.pl
-RUN /src/docker_dependencies.pl
+RUN /setup/docker_dependencies.pl
 
 COPY ./ /src/cszb-scoreboard
 
 RUN mkdir -p /src/cszb-scoreboard/out
 WORKDIR /src/cszb-scoreboard/out
 
-ENV USER root
-ENV DISPLAY localhost:0.0 
 CMD /usr/bin/tightvncserver :0 && cmake -DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true ../ && make -j6 all test
 

@@ -1,34 +1,28 @@
 FROM ubuntu:jammy
 
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt update && apt -y upgrade && apt -y install clang clang-tidy cmake cmake-curses-gui g++ git gcovr libcairo2-dev libexpat1-dev libgtk-3-dev libjpeg-dev libjsoncpp-dev libmspack-dev libnotify-dev libpng-dev libprotobuf-dev libsdl1.2-dev libsdl2-dev libsecret-1-dev libsoup2.4-dev libssl-dev libtiff-dev libwebkit2gtk-4.0-dev libx11-dev llvm-dev ninja-build openjdk-17-jre protobuf-compiler tightvncserver valgrind
-RUN apt -y install curl
-
-RUN cpan install File::Copy::Recursive File::Which List::AllUtils
-
-ENV CXX /usr/bin/clang++
 ENV CC /usr/bin/clang
+ENV CXX /usr/bin/clang++
+ENV LD_LIBRARY_PATH /opt/osxcross/lib
+ENV OSXCROSS_HOST x86_64-apple-darwin21.4
+ENV OSXCROSS_SDK darwin21.4
+ENV OSXCROSS_TARGET darwin21.4
+ENV OSXCROSS_TARGET_DIR /opt/osxcross
+ENV PATH /opt/osxcross/bin:$PATH
+ENV USER root
 
-COPY etc/scripts/docker_dependencies.pl /src/docker_dependencies.pl
-RUN /src/docker_dependencies.pl osxcross
+COPY osx_tarballs/MacOSX12.3.sdk.tar.bz2 /usr/share/osx_tarballs/MacOSX12.3.sdk.tar.bz2
+
+COPY etc/scripts/docker_* /setup/
+RUN /setup/docker_packages.sh osxcross
+RUN /setup/docker_dependencies.pl osxcross
 
 COPY etc/scripts/setup_osxcross_build.pl /src/setup_osxcross_build.pl
-COPY osx_tarballs/MacOSX10.15.sdk.tar.xz /usr/share/osx_tarballs/MacOSX10.15.sdk.tar.xz
-COPY osx_tarballs/MacOSX12.3.sdk.tar.bz2 /usr/share/osx_tarballs/MacOSX12.3.sdk.tar.bz2
 RUN cd /src && /src/setup_osxcross_build.pl
 
 COPY ./ /src/cszb-scoreboard
 
 RUN mkdir -p /src/cszb-scoreboard/out
 WORKDIR /src/cszb-scoreboard/out
-
-ENV USER root
-ENV LD_LIBRARY_PATH /opt/osxcross/lib
-ENV OSXCROSS_SDK   darwin21.4
-ENV OSXCROSS_TARGET   darwin21.4
-ENV OSXCROSS_HOST   x86_64-apple-darwin21.4
-ENV OSXCROSS_TARGET_DIR   /opt/osxcross
-ENV PATH   /opt/osxcross/bin:$PATH
 
 CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DSKIP_LINT=true -DINTEGRATION_TEST=false ../ && make -j6 cszb-scoreboard
 
