@@ -145,7 +145,9 @@ make -j2 all'''
             stage('MacOS') {
                 stages {
                 stage('MacOS Prep') {
-							sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
+			        steps {
+				        sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
+                    }
                 }
                 stage ('MacOS Build & Test') {
                 when { expression { false } }
