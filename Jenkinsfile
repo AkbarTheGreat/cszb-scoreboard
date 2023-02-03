@@ -143,11 +143,15 @@ make -j2 all'''
                 }
             }
             stage('MacOS') {
+                stages {
+                stage('MacOS Prep') {
+							sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
+                }
+                stage ('MacOS Build & Test') {
                 when { expression { false } }
                 agent {
                     dockerfile {
                         filename 'Dockerfile.osxcross'
-                        args '-v /usr/share/osx_tarballs:/usr/share/osx_tarballs'
                     }
                 }
                 stages {
@@ -176,6 +180,8 @@ export PATH=/opt/osxcross/bin:$PATH
 make scoreboard_proto cszb-scoreboard'''
 						}
 					}
+                }
+                }
                 }
             }
         }
