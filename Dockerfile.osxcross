@@ -10,7 +10,7 @@ ENV OSXCROSS_TARGET_DIR /opt/osxcross
 ENV PATH /opt/osxcross/bin:$PATH
 ENV USER root
 
-COPY osx_tarballs/MacOSX12.3.sdk.tar.bz2 /usr/share/osx_tarballs/MacOSX12.3.sdk.tar.bz2
+COPY osx_tarballs/* /usr/share/osx_tarballs/
 
 COPY etc/scripts/docker_* /setup/
 RUN /setup/docker_packages.sh osxcross
