@@ -227,6 +227,7 @@ sub build_osxcross {
       $line =~ s/\bopenssl dgst -ripemd160 -verify\b/openssl dgst -provider default -provider legacy -ripemd160 -verify/g;
       print {$out_fh} $line;
    }
+   sys('chmod', '755', $macports_file);
 }
 
 sub disable_osx_version_checking {
