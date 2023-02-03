@@ -151,9 +151,6 @@ make -j2 all'''
                 }
             }
             stage('MacOS') {
-                stages {
-                stage ('MacOS Build & Test') {
-                when { expression { false } }
                 agent {
                     dockerfile {
                         filename 'Dockerfile.osxcross'
@@ -186,8 +183,6 @@ export PATH=/opt/osxcross/bin:$PATH
 make scoreboard_proto cszb-scoreboard'''
 						}
 					}
-                }
-                }
                 }
             }
         }

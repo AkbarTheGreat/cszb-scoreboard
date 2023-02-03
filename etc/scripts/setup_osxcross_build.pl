@@ -68,7 +68,7 @@ our %VALID_ACTIONS = (
    'install' => sub{return install();},
    'all' => sub{return init() && osxcross() && wxwidgets() && install();},
 );
-our $OSXCROSS_PATCH_FILES = dirname($RealBin) . '/osxcross_patches/*';
+our $OSXCROSS_PATCH_FILES = $RealBin . '/osxcross_patches/*';
 
 # Macports libraries to be installed as static libs.
 our @MACPORTS_LIBS = qw(
@@ -326,7 +326,7 @@ sub move_symlink {
 
 sub patch_files {
    say 'Patching files in osxcross target.';
-   rcopy_glob($OSXCROSS_PATCH_FILES, $ENV{'OSXCROSS_TARGET_DIR'});
+   rcopy_glob($OSXCROSS_PATCH_FILES, $ENV{'OSXCROSS_TARGET_DIR'}) or die 'Could not copy patch files: ' . $!;
 }
 
 sub fix_links {

@@ -16,8 +16,9 @@ RUN /setup/docker_packages.sh osxcross
 RUN /setup/docker_dependencies.pl osxcross
 
 COPY osx_tarballs/MacOSX12.3.sdk.tar.bz2 /usr/share/osx_tarballs/MacOSX12.3.sdk.tar.bz2
-COPY etc/scripts/setup_osxcross_build.pl /src/setup_osxcross_build.pl
-RUN cd /src && /src/setup_osxcross_build.pl
+COPY etc/scripts/setup_osxcross_build.pl /setup/setup_osxcross_build.pl
+COPY etc/osxcross_patches /setup/osxcross_patches
+RUN cd /src && /setup/setup_osxcross_build.pl
 
 COPY ./ /src/cszb-scoreboard
 
