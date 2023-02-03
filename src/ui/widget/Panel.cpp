@@ -56,6 +56,8 @@ limitations under the License.
 #include "ui/widget/swx/TextCtrl.h"      // for TextCtrl
 #include "ui/widget/swx/ToggleButton.h"  // for ToggleButton
 #include "ui/widget/swx/WebView.h"
+#include "util/FilesystemPath.h"
+#include "ui/widget/DirectoryPicker.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
