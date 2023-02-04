@@ -146,8 +146,7 @@ our %VALID_ACTIONS = (
    'init' => sub{return init();},
    'osxcross' => sub{return osxcross();},
    'wxwidgets' => sub{return wxwidgets();},
-   'install' => sub{return install();},
-   'all' => sub{return init() && osxcross() && wxwidgets() && install();},
+   'all' => sub{return init() && osxcross() && wxwidgets()},
 );
 our $OSXCROSS_PATCH_FILES = $RealBin . '/osxcross_patches/*';
 
@@ -435,10 +434,6 @@ sub wxwidgets {
    build_wxwidgets();
    install_wxwidgets();
    return 1;
-}
-
-sub install {
-return 1;
 }
 
 sub main {
