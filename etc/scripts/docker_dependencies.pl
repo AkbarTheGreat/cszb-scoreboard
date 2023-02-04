@@ -119,6 +119,11 @@ our %VALID_ACTIONS = (
    'all' => sub{return init() && osxcross() && wxwidgets()},
 );
 our $OSXCROSS_PATCH_FILES = $RealBin . '/osxcross_patches/*';
+if (-d dirname($RealBin) . '/osxcross_patches/*'){
+	# For debug runs -- this doesn't come into play in normal docker setups
+	$OSXCROSS_PATCH_FILES = dirname($RealBin) . '/osxcross_patches/*';
+}
+
 
 # Macports libraries to be installed as static libs.
 our @MACPORTS_LIBS = qw(
@@ -149,7 +154,6 @@ our @MACPORTS_DYLIBS = qw(
 
 our $OSXCROSS_REPO = $BASE_DIR . '/osxcross';
 our $WXWIDGETS_REPO = $BASE_DIR . '/wxWidgets';
-our $WXWIDGETS_BUILD_DIR = $WXWIDGETS_REPO . '/out';
 our $SDK_TARBALL = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.bz2';
 
 my ($opt_help, $opt_action);
@@ -258,8 +262,6 @@ sub build_wxwidgets {
    # checks were passing spuriously and I was getting an undefined symbol.
    # This appears to be unnecessary now, but I should keep an eye on it.
    chdir($WXWIDGETS_REPO);
-   mkpath($WXWIDGETS_BUILD_DIR);
-   chdir($WXWIDGETS_BUILD_DIR);
    cmake('wxWidgets', 
       '-DCMAKE_TOOLCHAIN_FILE=' . $OSXCROSS_INSTALL . '/toolchain.cmake',
 	  '-DCMAKE_INSTALL_NAME_TOOL=' . $OSXCROSS_INSTALL . '/bin/' . $OSXCROSS_HOST . '-install_name_tool',
@@ -292,13 +294,6 @@ sub install_osxcross {
    sys('cp', '-R', $OSXCROSS_REPO . '/target', $OSXCROSS_INSTALL);
 }
 
-sub install_wxwidgets {
-   say 'Installing wxwidgets.';
-   chdir($WXWIDGETS_BUILD_DIR);
-   sys('/usr/bin/make', 'install');
-   return 1;
-}
-
 sub move_symlink {
    my ($link, $src) = @_;
    sys('rm', $link);
@@ -317,14 +312,6 @@ sub fix_links {
                 $link_root . 'libexec/openssl3/lib/libssl.a');
    move_symlink($link_root . 'lib/libcrypto.a',
                 $link_root . 'libexec/openssl3/lib/libcrypto.a');
-}
-
-sub init {
-   say 'Getting freshest osxcross repo.';
-   clone_repo('osxcross', 'https://github.com/tpoechtrager/osxcross.git');
-   say 'Getting freshest wxwidgets repo.';
-   clone_repo('wxWidgets', 'https://github.com/wxWidgets/wxWidgets.git');
-   return 1;
 }
 
 sub setup_curl {
@@ -352,15 +339,22 @@ sub setup_protobuf {
 }
 
 sub setup_wxwidgets {
+	my($osxcross) = @_;
 	say 'Setting up Wxwidgets';
 	clone_repo('wxWidgets', 'https://github.com/wxWidgets/wxWidgets.git', $WXWIDGETS_VERSION);
-	cmake('wxWidgets', '-DCMAKE_BUILD_TYPE=Debug', '-DwxBUILD_TOOLKIT=gtk3', '-DwxBUILD_STRIPPED_RELEASE=OFF', '-DwxUSE_WEBVIEW=ON');
-	build('wxWidgets');
+	if($osxcross) {
+		osxcross_dep_env();
+		patch_wxwidgets();
+		build_wxwidgets();
+	} else {
+		cmake('wxWidgets', '-DCMAKE_BUILD_TYPE=Debug', '-DwxBUILD_TOOLKIT=gtk3', '-DwxBUILD_STRIPPED_RELEASE=OFF', '-DwxUSE_WEBVIEW=ON');
+		build('wxWidgets');
+	}
 	install('wxWidgets');
 }
 
-
-sub osxcross {
+sub setup_osxcross {
+   clone_repo('osxcross', 'https://github.com/tpoechtrager/osxcross.git');
    osxcross_build_env();
    build_osxcross();
    install_macports();
@@ -370,29 +364,21 @@ sub osxcross {
    return 1;
 }
 
-sub wxwidgets {
-   osxcross_dep_env();
-   patch_wxwidgets();
-   build_wxwidgets();
-   install_wxwidgets();
-   return 1;
-}
-
 sub main {
 	my (@args) = @_;
-	my $full_build = 1;
-	$full_build = undef if $args[0] eq 'osxcross';
+	my $osxcross = undef;
+	$osxcross = 1 if $args[0] eq 'osxcross';
 	chdir($BASE_DIR);
 
 	setup_googletest();
 	setup_protobuf();
 
-	if ($full_build){
-		setup_curl();
-		setup_wxwidgets();
+	if ($osxcross){
+		setup_osxcross();
 	} else {
-		$VALID_ACTIONS{'all'}->(); 
+		setup_curl();
 	}
+	setup_wxwidgets($osxcross);
    say 'Successfully completed.';
 }
 
