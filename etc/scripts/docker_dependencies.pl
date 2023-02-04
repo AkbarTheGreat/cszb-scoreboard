@@ -119,7 +119,7 @@ our %VALID_ACTIONS = (
    'all' => sub{return init() && osxcross() && wxwidgets()},
 );
 our $OSXCROSS_PATCH_FILES = $RealBin . '/osxcross_patches/*';
-if (-d dirname($RealBin) . '/osxcross_patches/*'){
+if (-d dirname($RealBin) . '/osxcross_patches'){
 	# For debug runs -- this doesn't come into play in normal docker setups
 	$OSXCROSS_PATCH_FILES = dirname($RealBin) . '/osxcross_patches/*';
 }
