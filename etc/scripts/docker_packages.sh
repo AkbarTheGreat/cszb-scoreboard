@@ -37,13 +37,14 @@
 	tightvncserver \
 	valgrind
 
+echo "yes" | /usr/bin/cpan install \
+	File::Copy::Recursive \
+	File::Which \
+	List::AllUtils
+
 if [[ "$1" == "osxcross" ]]; then
 	/usr/bin/apt -y install \
 		curl
-	echo "yes" | /usr/bin/cpan install \
-		File::Copy::Recursive \
-		File::Which \
-		List::AllUtils
 #else
 # TODO -- break out non-osx dependencies
 fi

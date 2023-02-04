@@ -35,7 +35,6 @@ make scoreboard_proto cszb-scoreboard
 
 use 5.030;
 use Cwd;
-use Getopt::Long qw{GetOptions};
 use File::Basename qw{dirname};
 use File::Copy::Recursive qw{rcopy rcopy_glob};
 use File::Path qw{mkpath rmtree};
@@ -73,16 +72,18 @@ sub sys {
 sub clone_repo {
 	my ($subdir, $repo, $tag) = @_;
 	my $dir = $BASE_DIR . $subdir;
-	unless (-d $dir) {
-		sys('/usr/bin/git', 'clone', $repo, $dir);
+   unless (-d $dir) {
+      say 'New repo, cloning.';
+      sys('/usr/bin/git', 'clone', $repo, $dir);
 	}
 	chdir $dir;
 	if ($tag) {
 		sys('/usr/bin/git', 'fetch', '--all', '--tags');
 		sys('/usr/bin/git', 'checkout', 'tags/' . $tag);
 	}
+	say 'Initializing git submodules.';
 	sys('/usr/bin/git', 'submodule', 'update', '--init', '--recursive');
-	chdir $ENV{'HOME'};
+	chdir $BASE_DIR;
 }
 
 sub cmake {
@@ -92,56 +93,25 @@ sub cmake {
 	chdir $dir . '/out';
 	my $cmake_dir = '../';
 	$cmake_dir = '../cmake' if ($subdir eq 'protobuf');
+	say 'Running cmake.';
 	sys('/usr/bin/cmake', $cmake_dir, @args);
-	chdir $ENV{'HOME'};
+	chdir $BASE_DIR;
 }
 
 sub build {
 	my ($subdir) = @_;
 	chdir $BASE_DIR . $subdir . '/out';
-	sys('/usr/bin/make', '-j4', 'all');
+	say 'Building ' . $subdir;
+	sys('/usr/bin/make', '-j6', 'all');
 }
 
 sub install {
 	my ($subdir) = @_;
 	chdir $BASE_DIR . $subdir . '/out';
+	say 'Installing ' . $subdir;
 	sys('/usr/bin/make', 'install');
 }
 
-sub setup_curl {
-	say 'Setting up Curl';
-	clone_repo('curl', 'https://github.com/curl/curl.git', $CURL_VERSION);
-	cmake('curl', '-DBUILD_SHARED_LIBS=ON');
-	build('curl');
-	install('curl');
-}
-
-sub setup_googletest {
-	say 'Setting up Googletest';
-	clone_repo('googletest', 'https://github.com/google/googletest.git', $GTEST_VERSION);
-	cmake('googletest');
-	build('googletest');
-	install('googletest');
-}
-
-sub setup_protobuf {
-	say 'Setting up Protobuf';
-	clone_repo('protobuf', 'https://github.com/google/protobuf.git', $PROTOBUF_VERSION);
-	cmake('protobuf');
-	build('protobuf');
-	install('protobuf');
-}
-
-sub setup_wxwidgets {
-	say 'Setting up Wxwidgets';
-	clone_repo('wxWidgets', 'https://github.com/wxWidgets/wxWidgets.git', $WXWIDGETS_VERSION);
-	cmake('wxWidgets', '-DCMAKE_BUILD_TYPE=Debug', '-DwxBUILD_TOOLKIT=gtk3', '-DwxBUILD_STRIPPED_RELEASE=OFF', '-DwxUSE_WEBVIEW=ON');
-	build('wxWidgets');
-	install('wxWidgets');
-}
-
-our $START_DIR = Cwd::cwd();
-our $REPO_BASE = $START_DIR;
 our %VALID_ACTIONS = (
    'init' => sub{return init();},
    'osxcross' => sub{return osxcross();},
@@ -177,54 +147,14 @@ our @MACPORTS_DYLIBS = qw(
   protobuf3-cpp
 );
 
-our $OSXCROSS_REPO = $REPO_BASE . '/osxcross';
-our $WXWIDGETS_REPO = $REPO_BASE . '/wxWidgets';
-our $WXWIDGETS_BUILD_DIR = $WXWIDGETS_REPO . '/osxcross';
-our $OSXCROSS_ORIGIN = 'https://github.com/tpoechtrager/osxcross.git';
-our $WXWIDGETS_ORIGIN = 'https://github.com/wxWidgets/wxWidgets.git';
+our $OSXCROSS_REPO = $BASE_DIR . '/osxcross';
+our $WXWIDGETS_REPO = $BASE_DIR . '/wxWidgets';
+our $WXWIDGETS_BUILD_DIR = $WXWIDGETS_REPO . '/out';
 our $SDK_TARBALL = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.bz2';
 
 my ($opt_help, $opt_action);
 
-my %options = (
-   'help|?'     => {'val'=>\$opt_help,'help'=>'This help'},
-   'action:s'     => {'val'=>\$opt_action,'help'=>'Action to perform, may be: ' . join(', ', sort(keys %VALID_ACTIONS)) . ' (default: all)'},
-);
-
-sub usage {
-   say $0 . ': Setup OSXCross for use in developing the scoreboard.';
-   for my $opt (keys %options) {
-      say "\t" . $opt . ': ' . $options{$opt}{'help'};
-   }
-   exit 0;
-}
-
-sub valid_args {
-   if (none  {$_ eq $opt_action} keys %VALID_ACTIONS) {
-      warn 'Action "' . $opt_action . '" unrecognized.' . "\n";
-      return undef;
-   }
-   if (!-d $OSXCROSS_REPO || !-d $WXWIDGETS_REPO) {
-      if ($opt_action ne 'init' && $opt_action ne 'all') {
-         warn 'Repos not initialized in current directory, run init first or change into the base path for all repos.' . "\n";
-	 return undef;
-      }
-   }
-   return 1;
-}
-
-sub parse_options {
-   my %parseable_options;
-   for my $key (keys %options) {
-      $parseable_options{$key} = $options{$key}{'val'};
-   }
-   GetOptions(%parseable_options) or usage();
-   usage() if $opt_help;
-   $opt_action //= 'all';
-   usage() unless valid_args();
-}
-
-sub setup_osxcross_build_env {
+sub osxcross_build_env {
    $ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSXCROSS_OSX_VERSION_MIN;
    $ENV{'OSXCROSS_OSX_VERSION_MIN'} = $OSXCROSS_OSX_VERSION_MIN;
    $ENV{'OSXCROSS_VERSION'} = $OSXCROSS_VERSION;
@@ -247,33 +177,14 @@ sub setup_osxcross_build_env {
    $ENV{'CC'} = '/usr/bin/clang';
 }
 
-sub setup_osxcross_dep_env {
-   setup_osxcross_build_env();
+sub osxcross_dep_env {
+   osxcross_build_env();
    $ENV{'OSXCROSS_SDK'} = $OSXCROSS_TARGET;
    $ENV{'OSXCROSS_TARGET'} = $OSXCROSS_TARGET;
    $ENV{'OSXCROSS_HOST'} = $OSXCROSS_HOST;
    $ENV{'OSXCROSS_TARGET_DIR'} = $OSXCROSS_INSTALL;
    $ENV{'CXX'} = '/usr/bin/clang++';
    $ENV{'CC'} = '/usr/bin/clang';
-}
-
-sub update_repo {
-   my ($repo, $origin) = @_;
-   if (-d $repo) {
-      say 'Repo exists, resetting.';
-      chdir $repo;
-      sys('git', 'reset', '--hard');
-   } else {
-      say 'New repo, cloning.';
-      chdir $REPO_BASE;
-      mkpath $repo;
-      sys('git', 'clone', $origin);
-   }
-   chdir $repo;
-   say 'PUlling repo for freshness.';
-   sys('git', 'pull');
-   say 'Initializing git submodules.';
-   sys('git', 'submodule', 'update', '--init', '--recursive');
 }
 
 sub build_osxcross {
@@ -349,8 +260,7 @@ sub build_wxwidgets {
    chdir($WXWIDGETS_REPO);
    mkpath($WXWIDGETS_BUILD_DIR);
    chdir($WXWIDGETS_BUILD_DIR);
-   say 'Running cmake.';
-   sys('cmake',
+   cmake('wxWidgets', 
       '-DCMAKE_TOOLCHAIN_FILE=' . $OSXCROSS_INSTALL . '/toolchain.cmake',
 	  '-DCMAKE_INSTALL_NAME_TOOL=' . $OSXCROSS_INSTALL . '/bin/' . $OSXCROSS_HOST . '-install_name_tool',
 	  '-DCMAKE_INSTALL_PREFIX=' . $OSXCROSS_INSTALL . '/wxwidgets',
@@ -359,8 +269,7 @@ sub build_wxwidgets {
 	  '-DwxBUILD_PRECOMP=OFF',
 	  '-DwxBUILD_SHARED=OFF',
 	  '..');
-   say 'Building wxwidgets.';
-   sys('/usr/bin/make', '-j6', 'all');
+   build('wxWidgets');
    return 1;
 }
 
@@ -412,14 +321,47 @@ sub fix_links {
 
 sub init {
    say 'Getting freshest osxcross repo.';
-   update_repo($OSXCROSS_REPO, $OSXCROSS_ORIGIN);
+   clone_repo('osxcross', 'https://github.com/tpoechtrager/osxcross.git');
    say 'Getting freshest wxwidgets repo.';
-   update_repo($WXWIDGETS_REPO, $WXWIDGETS_ORIGIN);
+   clone_repo('wxWidgets', 'https://github.com/wxWidgets/wxWidgets.git');
    return 1;
 }
 
+sub setup_curl {
+	say 'Setting up Curl';
+	clone_repo('curl', 'https://github.com/curl/curl.git', $CURL_VERSION);
+	cmake('curl', '-DBUILD_SHARED_LIBS=ON');
+	build('curl');
+	install('curl');
+}
+
+sub setup_googletest {
+	say 'Setting up Googletest';
+	clone_repo('googletest', 'https://github.com/google/googletest.git', $GTEST_VERSION);
+	cmake('googletest');
+	build('googletest');
+	install('googletest');
+}
+
+sub setup_protobuf {
+	say 'Setting up Protobuf';
+	clone_repo('protobuf', 'https://github.com/google/protobuf.git', $PROTOBUF_VERSION);
+	cmake('protobuf');
+	build('protobuf');
+	install('protobuf');
+}
+
+sub setup_wxwidgets {
+	say 'Setting up Wxwidgets';
+	clone_repo('wxWidgets', 'https://github.com/wxWidgets/wxWidgets.git', $WXWIDGETS_VERSION);
+	cmake('wxWidgets', '-DCMAKE_BUILD_TYPE=Debug', '-DwxBUILD_TOOLKIT=gtk3', '-DwxBUILD_STRIPPED_RELEASE=OFF', '-DwxUSE_WEBVIEW=ON');
+	build('wxWidgets');
+	install('wxWidgets');
+}
+
+
 sub osxcross {
-   setup_osxcross_build_env();
+   osxcross_build_env();
    build_osxcross();
    install_macports();
    patch_files();
@@ -429,7 +371,7 @@ sub osxcross {
 }
 
 sub wxwidgets {
-   setup_osxcross_dep_env();
+   osxcross_dep_env();
    patch_wxwidgets();
    build_wxwidgets();
    install_wxwidgets();
