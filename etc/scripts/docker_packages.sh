@@ -7,12 +7,8 @@
 
 /usr/bin/apt -y install   \
 	clang \
-	clang-tidy \
 	cmake \
-	cmake-curses-gui \
-	g++ \
 	git \
-	gcovr \
 	libcairo2-dev \
 	libexpat1-dev \
 	libgtk-3-dev \
@@ -31,11 +27,7 @@
 	libwebkit2gtk-4.0-dev \
 	libx11-dev \
 	llvm-dev \
-	ninja-build \
-	openjdk-17-jre \
-	protobuf-compiler \
-	tightvncserver \
-	valgrind
+	ninja-build
 
 echo "yes" | /usr/bin/cpan install \
 	File::Copy::Recursive \
@@ -45,6 +37,26 @@ echo "yes" | /usr/bin/cpan install \
 if [[ "$1" == "osxcross" ]]; then
 	/usr/bin/apt -y install \
 		curl
-#else
-# TODO -- break out non-osx dependencies
+else
+	/usr/bin/apt -y install \
+		clang-tidy \
+		gcovr \
+		protobuf-compiler \
+		tightvncserver \
+		valgrind
 fi
+
+# You can run this with the dev argument in any existing container and get a bunch of interactive tools
+# that Akbar likes to have handy.  This is useless for headless runs, so I pulled them out.
+if [[ "$1" == "dev" ]]; then
+	/usr/bin/apt -y install \
+		curl \
+		cmake-curses-gui \
+		screen \
+		vim
+
+	/usr/bin/cpan install \
+		CPAN \
+		Perl::Tidy
+fi
+
