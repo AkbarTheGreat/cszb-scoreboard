@@ -175,6 +175,16 @@ sub osxcross_build_env {
    $ENV{'CC'}         = '/usr/bin/clang';
 }
 
+sub osxcross_dep_env {
+   osxcross_build_env();
+   $ENV{'OSXCROSS_SDK'}        = $OSXCROSS_TARGET;
+   $ENV{'OSXCROSS_TARGET'}     = $OSXCROSS_TARGET;
+   $ENV{'OSXCROSS_HOST'}       = $OSXCROSS_HOST;
+   $ENV{'OSXCROSS_TARGET_DIR'} = $OSXCROSS_INSTALL;
+   $ENV{'CXX'}                 = '/usr/bin/clang++';
+   $ENV{'CC'}                  = '/usr/bin/clang';
+}
+
 sub build_osxcross {
    chdir $OSXCROSS_REPO;
 
@@ -342,7 +352,7 @@ sub setup_wxwidgets {
    clone_repo( 'wxWidgets', 'https://github.com/wxWidgets/wxWidgets.git',
                $WXWIDGETS_VERSION );
    if ($osxcross) {
-      osxcross_build_env();
+      osxcross_dep_env();
       patch_wxwidgets_for_osx();
       cmake( 'wxWidgets',
              '-DCMAKE_TOOLCHAIN_FILE='
