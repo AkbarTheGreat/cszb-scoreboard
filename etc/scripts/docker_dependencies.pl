@@ -60,6 +60,42 @@ our $OSXCROSS_SDK = 'MacOSX' . $OSXCROSS_SDK_VERSION . '.sdk';
 our $OSXCROSS_LIBLTO_PATH = '/usr/lib/llvm-14/lib';
 our $OSXCROSS_LINKER_VERSION = 609;
 
+our $OSXCROSS_PATCH_FILES = $RealBin . '/osxcross_patches/*';
+if (-d dirname($RealBin) . '/osxcross_patches'){
+	# For debug runs -- this doesn't come into play in normal docker setups
+	$OSXCROSS_PATCH_FILES = dirname($RealBin) . '/osxcross_patches/*';
+}
+
+# Macports libraries to be installed as static libs.
+our @MACPORTS_LIBS = qw(
+  bzip2
+  curl
+  curl-ca-bundle
+  expat
+  gettext
+  glib2
+  gtest
+  libedit
+  libffi
+  libiconv
+  libidn2
+  libpsl
+  libunistring
+  ncurses
+  openssl
+  pcre
+  zlib
+);
+
+# These libraries only have dylibs, so we have to install those.
+our @MACPORTS_DYLIBS = qw(
+  jsoncpp-devel
+  protobuf3-cpp
+);
+
+our $OSXCROSS_REPO = $BASE_DIR . '/osxcross';
+our $WXWIDGETS_REPO = $BASE_DIR . '/wxWidgets';
+our $SDK_TARBALL = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.bz2';
 
 # Wrapper around system which allows us to die on any system failure easily.
 sub sys {
@@ -112,52 +148,6 @@ sub install {
 	sys('/usr/bin/make', 'install');
 }
 
-our %VALID_ACTIONS = (
-   'init' => sub{return init();},
-   'osxcross' => sub{return osxcross();},
-   'wxwidgets' => sub{return wxwidgets();},
-   'all' => sub{return init() && osxcross() && wxwidgets()},
-);
-our $OSXCROSS_PATCH_FILES = $RealBin . '/osxcross_patches/*';
-if (-d dirname($RealBin) . '/osxcross_patches'){
-	# For debug runs -- this doesn't come into play in normal docker setups
-	$OSXCROSS_PATCH_FILES = dirname($RealBin) . '/osxcross_patches/*';
-}
-
-
-# Macports libraries to be installed as static libs.
-our @MACPORTS_LIBS = qw(
-  bzip2
-  curl
-  curl-ca-bundle
-  expat
-  gettext
-  glib2
-  gtest
-  libedit
-  libffi
-  libiconv
-  libidn2
-  libpsl
-  libunistring
-  ncurses
-  openssl
-  pcre
-  zlib
-);
-
-# These libraries only have dylibs, so we have to install those.
-our @MACPORTS_DYLIBS = qw(
-  jsoncpp-devel
-  protobuf3-cpp
-);
-
-our $OSXCROSS_REPO = $BASE_DIR . '/osxcross';
-our $WXWIDGETS_REPO = $BASE_DIR . '/wxWidgets';
-our $SDK_TARBALL = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.bz2';
-
-my ($opt_help, $opt_action);
-
 sub osxcross_build_env {
    $ENV{'MACOSX_DEPLOYMENT_TARGET'} = $OSXCROSS_OSX_VERSION_MIN;
    $ENV{'OSXCROSS_OSX_VERSION_MIN'} = $OSXCROSS_OSX_VERSION_MIN;
@@ -177,16 +167,6 @@ sub osxcross_build_env {
    $ENV{'OSXCROSS_LINKER_VERSION'} = $OSXCROSS_LINKER_VERSION;
    $ENV{'PATH'} = $OSXCROSS_REPO . '/target/bin:' . $ENV{'PATH'};
    $ENV{'UNATTENDED'} = 1;
-   $ENV{'CXX'} = '/usr/bin/clang++';
-   $ENV{'CC'} = '/usr/bin/clang';
-}
-
-sub osxcross_dep_env {
-   osxcross_build_env();
-   $ENV{'OSXCROSS_SDK'} = $OSXCROSS_TARGET;
-   $ENV{'OSXCROSS_TARGET'} = $OSXCROSS_TARGET;
-   $ENV{'OSXCROSS_HOST'} = $OSXCROSS_HOST;
-   $ENV{'OSXCROSS_TARGET_DIR'} = $OSXCROSS_INSTALL;
    $ENV{'CXX'} = '/usr/bin/clang++';
    $ENV{'CC'} = '/usr/bin/clang';
 }
@@ -248,33 +228,17 @@ sub remove_bad_osx_constant {
    }
 }
 
-sub patch_wxwidgets {
+sub patch_wxwidgets_for_osx {
    # WxWidgets doesn't work with an SDK as old as I'm using because of one version-check macro -- while I can,
    # I'll patch it to keep my lowest necessary version of MacOS as low as possible.
    say 'Patching wxwidgets available.h.';
+   # At one point, I edited include/wx/osx/private/available.h because the builtin
+   # checks were passing spuriously and I was getting an undefined symbol.
+   # This appears to be unnecessary now, but I should keep an eye on it.
    disable_osx_version_checking($WXWIDGETS_REPO . '/include/wx/osx/private/available.h');
    disable_osx_version_checking($WXWIDGETS_REPO . '/src/png/pngrutil.c');
    remove_bad_osx_constant($WXWIDGETS_REPO . '/src/osx/cocoa/window.mm');
 }
-
-sub build_wxwidgets {
-   # At one point, I edited include/wx/osx/private/available.h because the builtin
-   # checks were passing spuriously and I was getting an undefined symbol.
-   # This appears to be unnecessary now, but I should keep an eye on it.
-   chdir($WXWIDGETS_REPO);
-   cmake('wxWidgets', 
-      '-DCMAKE_TOOLCHAIN_FILE=' . $OSXCROSS_INSTALL . '/toolchain.cmake',
-	  '-DCMAKE_INSTALL_NAME_TOOL=' . $OSXCROSS_INSTALL . '/bin/' . $OSXCROSS_HOST . '-install_name_tool',
-	  '-DCMAKE_INSTALL_PREFIX=' . $OSXCROSS_INSTALL . '/wxwidgets',
-	  '-DOSXCROSS_TARGET_DIR=' . $OSXCROSS_INSTALL,
-	  '-DCMAKE_BUILD_TYPE=Release',
-	  '-DwxBUILD_PRECOMP=OFF',
-	  '-DwxBUILD_SHARED=OFF',
-	  '..');
-   build('wxWidgets');
-   return 1;
-}
-
 
 sub install_macports {
    say 'Removing previously installed macports libraries.';
@@ -343,13 +307,24 @@ sub setup_wxwidgets {
 	say 'Setting up Wxwidgets';
 	clone_repo('wxWidgets', 'https://github.com/wxWidgets/wxWidgets.git', $WXWIDGETS_VERSION);
 	if($osxcross) {
-		osxcross_dep_env();
-		patch_wxwidgets();
-		build_wxwidgets();
+		osxcross_build_env();
+		patch_wxwidgets_for_osx();
+		cmake('wxWidgets',
+		      '-DCMAKE_TOOLCHAIN_FILE=' . $OSXCROSS_INSTALL . '/toolchain.cmake',
+			  '-DCMAKE_INSTALL_NAME_TOOL=' . $OSXCROSS_INSTALL . '/bin/' . $OSXCROSS_HOST . '-install_name_tool',
+			  '-DCMAKE_INSTALL_PREFIX=' . $OSXCROSS_INSTALL . '/wxwidgets',
+			  '-DOSXCROSS_TARGET_DIR=' . $OSXCROSS_INSTALL,
+			  '-DCMAKE_BUILD_TYPE=Release',
+			  '-DwxBUILD_PRECOMP=OFF',
+			  '-DwxBUILD_SHARED=OFF');
 	} else {
-		cmake('wxWidgets', '-DCMAKE_BUILD_TYPE=Debug', '-DwxBUILD_TOOLKIT=gtk3', '-DwxBUILD_STRIPPED_RELEASE=OFF', '-DwxUSE_WEBVIEW=ON');
-		build('wxWidgets');
+		cmake('wxWidgets',
+		      '-DCMAKE_BUILD_TYPE=Debug',
+			  '-DwxBUILD_TOOLKIT=gtk3',
+			  '-DwxBUILD_STRIPPED_RELEASE=OFF',
+			  '-DwxUSE_WEBVIEW=ON');
 	}
+	build('wxWidgets');
 	install('wxWidgets');
 }
 
@@ -361,7 +336,6 @@ sub setup_osxcross {
    patch_files();
    install_osxcross();
    fix_links();
-   return 1;
 }
 
 sub main {
@@ -379,7 +353,7 @@ sub main {
 		setup_curl();
 	}
 	setup_wxwidgets($osxcross);
-   say 'Successfully completed.';
+	say 'Successfully completed.';
 }
 
 main(@ARGV);
