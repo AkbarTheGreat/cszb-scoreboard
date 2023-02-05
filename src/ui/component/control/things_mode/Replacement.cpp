@@ -2,7 +2,7 @@
 ui/component/control/things_mode/Replacement.cpp: Represents a replacement in
 5/6 things.
 
-Copyright 2019-2022 Tracy Beck
+Copyright 2019-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-static const char *BULLET = "\u2022";
+static const char *BULLET = "\u2022-2023";
 
 Replacement::Replacement(ReplacementPanel *parent) {
   this->parent = parent;

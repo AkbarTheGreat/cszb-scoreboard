@@ -2,7 +2,7 @@
 ui/widget/Frame.h: A frame represents a free-standing window that is not a
 dialog.
 
-Copyright 2021-2022 Tracy Beck
+Copyright 2021-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

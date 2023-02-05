@@ -3,7 +3,7 @@ ui/component/control/ScreenImageController.h: A specialized ScreenTextController
 which handles sending images loaded from elsewhere, as opposed to a static
 background.  By default, this also does not support any text at all.
 
-Copyright 2020-2022 Tracy Beck
+Copyright 2020-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -4,7 +4,7 @@
 
 Sets up Docker dependencies which need to be built from a git repository.
 
-Copyright 2020-2022 Tracy Beck
+Copyright 2020-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,7 +1,7 @@
 /*
 ui/widget/Divider.h: A line which can be rendered to show a division in a UI.
 
-Copyright 2021-2022 Tracy Beck
+Copyright 2021-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
