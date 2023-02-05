@@ -95,6 +95,12 @@ our @MACPORTS_DYLIBS = qw(
     protobuf3-cpp
 );
 
+# These libraries don't exist in macports -- faking them seems to work ok?
+our @MACPORTS_FAKELIBS = qw(
+    geoclue2
+    graphviz
+);
+
 our $OSXCROSS_REPO  = $BASE_DIR . '/osxcross';
 our $WXWIDGETS_REPO = $BASE_DIR . '/wxWidgets';
 our $SDK_TARBALL    = '/usr/share/osx_tarballs/' . $OSXCROSS_SDK . '.tar.bz2';
@@ -282,6 +288,10 @@ sub install_macports {
    say 'Removing previously installed macports libraries.';
    rmtree( $OSXCROSS_REPO . '/target/macports' );
    say 'Installing macports libraries.';
+
+   # Install fake libs first, because they're often here due to dependencies
+   sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
+        'fake-install', @MACPORTS_FAKELIBS );
 
    # (The -s strips out dylibs for us).
    sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
