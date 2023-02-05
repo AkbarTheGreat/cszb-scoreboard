@@ -1,0 +1,9 @@
+#Perltidy configuration for scoreboard perl scripts.
+
+-pbp
+-nst
+-i=3
+-lp
+-cti=1
+-ce
+-b
