@@ -37,6 +37,9 @@ echo "yes" | /usr/bin/cpan install \
 if [[ "$1" == "osxcross" ]]; then
 	/usr/bin/apt -y install \
 		curl
+
+	/usr/bin/cpan install \
+		JSON
 else
 	/usr/bin/apt -y install \
 		clang-tidy \
