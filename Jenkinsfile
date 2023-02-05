@@ -5,12 +5,24 @@ pipeline {
   }
 
   stages {
+    stage('MacOS Prep') {
+      steps {
+        sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
+      }
+    }
     stage ('Build & Test') {
         parallel {
             stage('Lint') {
                 when {
                     expression {
                         return runFullPipeline()
+                    }
+                }
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.standard'
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_lint:latest"
+                        reuseNode true
                     }
                 }
                 stages {
@@ -30,6 +42,13 @@ make all'''
                 }
             }
             stage('Debug') {
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.standard'
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_debug:latest"
+                        reuseNode true
+                    }
+                }
                 stages {
                     stage('Debug Cmake Generation') {
 						steps {
@@ -89,6 +108,13 @@ make -j2 all'''
                 }
             }
             stage('Release') {
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.standard'
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_release:latest"
+                        reuseNode true
+                    }
+                }
                 stages {
                     stage('Release Cmake Generation') {
 						steps {
@@ -128,17 +154,15 @@ make -j2 all'''
                 }
             }
             stage('MacOS') {
-                when { expression { false } }
+                agent {
+                    dockerfile {
+                        filename 'Dockerfile.osxcross'
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_osx:latest"
+                        reuseNode true
+                    }
+                }
                 stages {
                     stage('MacOS Cmake Generation') {
-						environment {
-							LD_LIBRARY_PATH = '/opt/osxcross/lib'
-							OSXCROSS_SDK = 'darwin19'
-							OSXCROSS_TARGET = 'darwin19'
-							OSXCROSS_HOST = 'x86_64-apple-darwin19'
-							OSXCROSS_TARGET_DIR = '/opt/osxcross'
-							PATH = '/opt/osxcross/bin:$PATH'
-						}
 						steps {
 							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
 									cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'

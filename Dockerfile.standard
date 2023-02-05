@@ -1,0 +1,25 @@
+FROM ubuntu:jammy
+
+ENV CC /usr/bin/clang
+ENV CXX /usr/bin/clang++
+ENV DISPLAY localhost:0.0 
+ENV USER root
+
+# This is a very insecure password, obviously.  Don't trust this container to run long-term without tweaking this
+RUN mkdir -p /root/.vnc
+RUN echo "pass" > /root/.vnc/passwd
+RUN chmod 0600 /root/.vnc/passwd
+
+COPY etc/scripts/docker_dependencies.pl /setup/docker_dependencies.pl
+COPY etc/scripts/docker_packages.sh /setup/docker_packages.sh
+RUN /setup/docker_packages.sh
+
+RUN /setup/docker_dependencies.pl
+
+COPY ./ /src/cszb-scoreboard
+
+RUN mkdir -p /src/cszb-scoreboard/out
+WORKDIR /src/cszb-scoreboard/out
+
+CMD /usr/bin/tightvncserver :0 && cmake -DCMAKE_BUILD_TYPE=Debug -DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true ../ && make -j6 all test
+
