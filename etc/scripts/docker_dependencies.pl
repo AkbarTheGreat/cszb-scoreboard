@@ -67,7 +67,7 @@ if ( -d dirname($RealBin) . '/osxcross_patches' ) {
    $OSXCROSS_PATCH_FILES = dirname($RealBin) . '/osxcross_patches/*';
 }
 
-# Macports libraries to be installed as static libs.
+# Macports libraries to be installed.
 our @MACPORTS_LIBS = qw(
     bzip2
     curl
@@ -76,6 +76,7 @@ our @MACPORTS_LIBS = qw(
     gettext
     glib2
     gtest
+    jsoncpp-devel
     libedit
     libffi
     libiconv
@@ -85,13 +86,8 @@ our @MACPORTS_LIBS = qw(
     ncurses
     openssl
     pcre
-    zlib
-);
-
-# These libraries only have dylibs, so we have to install those.
-our @MACPORTS_DYLIBS = qw(
-    jsoncpp-devel
     protobuf3-cpp
+    zlib
 );
 
 our $OSXCROSS_REPO  = $BASE_DIR . '/osxcross';
@@ -282,14 +278,8 @@ sub install_macports {
    rmtree( $OSXCROSS_REPO . '/target/macports' );
    say 'Installing macports libraries.';
 
-   # (The -s strips out dylibs for us).
    sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
-        'install', '-s', @MACPORTS_LIBS );
-
-   # These libs appear to only have dylibs.  So we don't strip them out.
-   sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
-        'install', @MACPORTS_DYLIBS );
-
+        'install', @MACPORTS_LIBS );
 }
 
 sub install_osxcross {
