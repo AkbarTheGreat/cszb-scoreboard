@@ -85,6 +85,7 @@ our @MACPORTS_LIBS = qw(
     ncurses
     openssl
     pcre
+    webkit-gtk
     zlib
 );
 
