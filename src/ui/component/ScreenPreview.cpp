@@ -3,7 +3,7 @@ ui/ScreenPreview.cpp: This class manages the thumbnail preview of a monitor
 in the main window.  In addition, the preview owns the ScreenPresenter which
 displays to the actual monitor, dispatching the updated view when necessary.
 
-Copyright 2019-2022 Tracy Beck
+Copyright 2019-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

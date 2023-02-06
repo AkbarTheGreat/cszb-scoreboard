@@ -21,7 +21,7 @@ pipeline {
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_lint:latest"
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_lint_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }
@@ -45,7 +45,7 @@ make all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_debug:latest"
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }
@@ -111,7 +111,7 @@ make -j2 all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.standard'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_release:latest"
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_release_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }
@@ -157,7 +157,7 @@ make -j2 all'''
                 agent {
                     dockerfile {
                         filename 'Dockerfile.osxcross'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_osx:latest"
+                        additionalBuildArgs "--tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }

@@ -5,7 +5,7 @@
 This script builds a MacOS app bundle of the scoreboard using osxcross on a
 Linux machine.
 
-Copyright 2020-2022 Tracy Beck
+Copyright 2020-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ limitations under the License.
 
 use 5.030;
 use Cwd;
+use File::Basename qw(basename);
 use File::Copy;
 use File::Path qw(mkpath);
 use File::Which;
@@ -36,29 +37,39 @@ use lib "$FindBin::RealBin";
 use GitHub;
 
 our $BUILD_PATH    = 'out/osxcross';
+our $PACKAGE_PATH  = 'out/osxcross_package';
 our $BASE_DIR      = Cwd::cwd();
 our $OSX_VERSION   = '10.12';
-our $APP_CONTAINER = 'CszbScoreboard.app/Contents';
+our $APP_CONTAINER = $PACKAGE_PATH . '/CszbScoreboard.app/Contents';
 our $APP_BIN       = $APP_CONTAINER . '/MacOS';
 our $APP_RESOURCES = $APP_CONTAINER . '/Resources';
 
-my ( $opt_help, $opt_version, $opt_dry_run, $opt_test_build );
+our $DOCKER_TAG       = 'osxcross_release';
+our $DOCKER_CONTAINER = 'osxcross_release_exec';
+
+my ( $opt_help, $opt_version, $opt_dry_run, $opt_test_build, $opt_internal );
 
 my %options = (
-    'help|?'    => { 'val' => \$opt_help, 'help' => 'This help' },
-    'version=s' =>
-        { 'val' => \$opt_version, 'help' => 'Version to release (required)' },
-    'dry_run' => { 'val'  => \$opt_dry_run,
-                   'help' => 'Dry run only. (do not upload to git)'
-                 },
-    'test_build' => {
+   'help|?'    => { 'val' => \$opt_help, 'help' => 'This help' },
+   'version=s' =>
+       { 'val' => \$opt_version, 'help' => 'Version to release (required)' },
+   'dry_run' => { 'val'  => \$opt_dry_run,
+                  'help' => 'Dry run only. (do not upload to git)'
+                },
+   'test_build' => {
               'val'  => \$opt_test_build,
               'help' => 'Build a debug version for testing. (implies dry_run)'
-    },
+   },
+   'internal_run' => {
+      'val'  => \$opt_internal,
+      'help' =>
+          'Used to signify that this is inside of a docker container and should do actual work.'
+   },
 );
 
 sub usage {
-   say $0 . ': Release the Kraken!  Err, scoreboard.';
+   say $0
+       . ': Release the Kraken!  Err, scoreboard.  This builds an osxcross release, utilizing the osxcross Docker container.';
    for my $opt ( keys %options ) {
       say "\t" . $opt . ': ' . $options{$opt}{'help'};
    }
@@ -76,17 +87,8 @@ sub parse_options {
    $opt_dry_run = 1 if $opt_test_build;
 }
 
-sub setup_env {
-   my $osxcross_path = which 'osxcross';
-   $osxcross_path =~ s#/bin/osxcross$##;
-   $ENV{'OSXCROSS_SDK'}        = 'darwin19';
-   $ENV{'OSXCROSS_TARGET'}     = $ENV{'OSXCROSS_SDK'};
-   $ENV{'OSXCROSS_HOST'}       = 'x86_64-apple-' . $ENV{'OSXCROSS_SDK'};
-   $ENV{'OSXCROSS_TARGET_DIR'} = $osxcross_path;
-}
-
 sub build_release {
-   setup_env();
+   say 'Building release in ' . $BUILD_PATH;
    mkpath $BUILD_PATH;
    chdir $BUILD_PATH;
    my $release_type = $opt_test_build ? 'Debug' : 'Release';
@@ -183,12 +185,13 @@ sub copy_libraries {
 
 sub create_app_package {
    my ($version) = @_;
-   chdir $BUILD_PATH;
+   chdir $BASE_DIR;
    mkpath $APP_BIN;
    mkpath $APP_RESOURCES;
+   say $APP_CONTAINER . '/Info.plist';
    open my $out_fh, '>', $APP_CONTAINER . '/Info.plist';
    print {$out_fh} plist_content($version);
-   copy( './cszb-scoreboard', $APP_BIN . '/cszb-scoreboard' )
+   copy( $BUILD_PATH . '/cszb-scoreboard', $APP_BIN . '/cszb-scoreboard' )
        or die 'Copy of binary failed: ' . $!;
    copy( $BASE_DIR . '/resources/scoreboard.icns',
          $APP_RESOURCES . '/scoreboard.icns' )
@@ -207,14 +210,14 @@ sub create_app_package {
 }
 
 sub zip_package {
-   chdir $BUILD_PATH;
+   chdir $PACKAGE_PATH;
    system 'zip -r CszbScoreboard CszbScoreboard.app';
 }
 
 sub upload_to_github {
    my ($version) = @_;
 
-   chdir $BUILD_PATH;
+   chdir $PACKAGE_PATH;
 
    my $upload_path = GitHub::find_existing_release($version);
    unless ($upload_path) {
@@ -229,20 +232,80 @@ sub upload_to_github {
    }
 }
 
-sub main {
-   parse_options();
+sub internal_build {
+
    build_release();
    create_app_package($opt_version);
    say 'Release ' . $opt_version . ' created';
 
+   zip_package();
    if ($opt_dry_run) {
       say 'Dry run enabled, skipping upload to GitHub.';
    } else {
       say 'Uploading to GitHub.';
-      zip_package();
-      upload_to_github($opt_version);
-   }
 
+      # I think we can avoid ever doing this in here now?
+      #upload_to_github($opt_version);
+   }
+}
+
+sub build_docker {
+   say 'Building Docker image.';
+   system( '/usr/bin/docker', 'build', '-f',
+           $BASE_DIR . '/Dockerfile.osxcross',
+           '-t', $DOCKER_TAG, $BASE_DIR );
+}
+
+sub start_docker {
+   say 'Starting Docker container.';
+   mkpath( $BASE_DIR . q{/} . $PACKAGE_PATH );
+   system( '/usr/bin/docker',
+           'run',
+           '-v',
+           $BASE_DIR . q{/}
+               . $PACKAGE_PATH
+               . ':/src/cszb-scoreboard/'
+               . $PACKAGE_PATH,
+           '--name',
+           $DOCKER_CONTAINER,
+           '-dit',
+           $DOCKER_TAG,
+           '/bin/sh'
+         );
+}
+
+sub shutdown_docker {
+   say 'Shutting down Docker container.';
+   system( '/usr/bin/docker', 'rm', '-f', $DOCKER_CONTAINER );
+}
+
+sub docker_cmd {
+   my @cmd = @_;
+   system( '/usr/bin/docker', 'exec', '-w', '/src/cszb-scoreboard', '-it',
+           $DOCKER_CONTAINER, @cmd );
+}
+
+sub run_docker {
+   my @args = ( '--version', $opt_version, '--internal_run' );
+   push @args, '--dry_run'    if $opt_dry_run;
+   push @args, '--test_build' if $opt_test_build;
+
+   build_docker();
+   start_docker();
+
+   say 'Running build inside of Docker image.';
+   docker_cmd( 'etc/scripts/' . basename($0), @args );
+
+   shutdown_docker();
+}
+
+sub main {
+   parse_options();
+   if ($opt_internal) {
+      internal_build();
+   } else {
+      run_docker();
+   }
    say 'Process complete.';
 }
 
