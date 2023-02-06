@@ -109,6 +109,7 @@ sub build_release {
 
 sub plist_content {
    my ($version) = @_;
+   say 'Updating PList';
    my $plist_prefix = q{<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -153,26 +154,28 @@ sub fix_dylibs {
        . '-install_name_tool';
 
    my @libraries = `$otool -L $process_binary`;
-   for my $lib (@libraries) {
-      chomp($lib);
-      next unless $lib =~ s#^\s+/opt/local/lib/##;
-      $lib =~ s/\s+\(.*//;
+   for my $found_lib (@libraries) {
+      chomp($found_lib);
+      $found_lib =~ s/\s+\(.*//;
+      my $lib = $found_lib;
+      next unless $lib =~ s#^\s+/opt/local/##;
+      my $libname = basename($lib);
 
       my $source_lib
-          = $ENV{'OSXCROSS_TARGET_DIR'}
-          . '/macports/pkgs/opt/local/lib/'
-          . $lib;
-      my $target_lib = $APP_BIN . q{/} . $lib;
+          = $ENV{'OSXCROSS_TARGET_DIR'} . '/macports/pkgs/opt/local/' . $lib;
+      my $target_lib = $APP_BIN . q{/} . $libname;
+
+      die 'Library ' . $source_lib . ' not found!' unless -e $source_lib;
 
       unless ( -e $APP_BIN . q{/} . $lib ) {
          copy( $source_lib, $target_lib )
              or die 'Copy of library ' . $lib . ' failed: ' . $!;
       }
       system(   $install_name_tool
-              . ' -change /opt/local/lib/'
-              . $lib
+              . ' -change '
+              . $found_lib
               . ' @executable_path/'
-              . $lib . q{ }
+              . $libname . q{ }
               . $process_binary );
       fix_dylibs( $target_lib, @processed_libs );
    }
@@ -180,15 +183,16 @@ sub fix_dylibs {
 }
 
 sub copy_libraries {
+   say 'Copying dynamic libraries into package.';
    fix_dylibs( $APP_BIN . '/cszb-scoreboard' );
 }
 
 sub create_app_package {
    my ($version) = @_;
+   say 'Creating Package';
    chdir $BASE_DIR;
    mkpath $APP_BIN;
    mkpath $APP_RESOURCES;
-   say $APP_CONTAINER . '/Info.plist';
    open my $out_fh, '>', $APP_CONTAINER . '/Info.plist';
    print {$out_fh} plist_content($version);
    copy( $BUILD_PATH . '/cszb-scoreboard', $APP_BIN . '/cszb-scoreboard' )
@@ -210,6 +214,7 @@ sub create_app_package {
 }
 
 sub zip_package {
+   say 'Zipping package for Github';
    chdir $PACKAGE_PATH;
    system 'zip -r CszbScoreboard CszbScoreboard.app';
 }
@@ -233,20 +238,18 @@ sub upload_to_github {
 }
 
 sub internal_build {
-
    build_release();
    create_app_package($opt_version);
    say 'Release ' . $opt_version . ' created';
-
    zip_package();
-   if ($opt_dry_run) {
-      say 'Dry run enabled, skipping upload to GitHub.';
-   } else {
-      say 'Uploading to GitHub.';
 
-      # I think we can avoid ever doing this in here now?
-      #upload_to_github($opt_version);
-   }
+   #if ($opt_dry_run) {
+   #say 'Dry run enabled, skipping upload to GitHub.';
+   #} else {
+   # I think we can avoid ever doing this in here now?
+   #say 'Uploading to GitHub.';
+   #upload_to_github($opt_version);
+   #}
 }
 
 sub build_docker {
