@@ -10,6 +10,30 @@ pipeline {
         sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
       }
     }
+    stage('Standard Docker Build') {
+      agent {
+        dockerfile {
+          filename 'Dockerfile.standard'
+          additionalBuildArgs "--tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
+          reuseNode true
+        }
+      }
+      steps {
+        sh '''echo "Done"'''
+      }
+    }
+    stage('Osxcross Docker Build') {
+      agent {
+        dockerfile {
+          filename 'Dockerfile.osxcross'
+          additionalBuildArgs "--tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
+          reuseNode true
+        }
+      }
+      steps {
+        sh '''echo "Done"'''
+      }
+    }
     stage ('Build & Test') {
         parallel {
             stage('Lint') {
