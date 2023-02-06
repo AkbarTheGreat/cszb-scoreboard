@@ -4,7 +4,7 @@
 
 Sets up Docker dependencies which need to be built from a git repository.
 
-Copyright 2020-2022 Tracy Beck
+Copyright 2020-2023 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ if ( -d dirname($RealBin) . '/osxcross_patches' ) {
    $OSXCROSS_PATCH_FILES = dirname($RealBin) . '/osxcross_patches/*';
 }
 
-# Macports libraries to be installed as static libs.
+# Macports libraries to be installed.
 our @MACPORTS_LIBS = qw(
     bzip2
     curl
@@ -76,6 +76,7 @@ our @MACPORTS_LIBS = qw(
     gettext
     glib2
     gtest
+    jsoncpp-devel
     libedit
     libffi
     libiconv
@@ -85,14 +86,9 @@ our @MACPORTS_LIBS = qw(
     ncurses
     openssl
     pcre
+    protobuf3-cpp
     webkit-gtk
     zlib
-);
-
-# These libraries only have dylibs, so we have to install those.
-our @MACPORTS_DYLIBS = qw(
-    jsoncpp-devel
-    protobuf3-cpp
 );
 
 # These libraries don't exist in macports -- faking them seems to work ok?
@@ -293,14 +289,8 @@ sub install_macports {
    sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
         'fake-install', @MACPORTS_FAKELIBS );
 
-   # (The -s strips out dylibs for us).
    sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
-        'install', '-s', @MACPORTS_LIBS );
-
-   # These libs appear to only have dylibs.  So we don't strip them out.
-   sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
-        'install', @MACPORTS_DYLIBS );
-
+        'install', @MACPORTS_LIBS );
 }
 
 sub install_osxcross {
