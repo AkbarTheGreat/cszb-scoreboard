@@ -68,7 +68,7 @@ sub sys_tick {
 }
 
 sub usage {
-   say $0 . ': Make code pretty. (runs iwyu and clang-format)';
+   say $0 . ': Make code pretty. (runs perltidy, iwyu, and clang-format)';
    for my $opt ( keys %options ) {
       say "\t" . $opt . ': ' . $options{$opt}{'help'};
    }
