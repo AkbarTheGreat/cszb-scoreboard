@@ -44,13 +44,24 @@ my $opt_procs = 2;
 
 # No real options yet, but it makes pretty boilerplate.
 my %options = (
-            'help|?'      => { 'val' => \$opt_help, 'help' => 'This help' },
-            'processes=i' => {
-               'val'       => \$opt_procs,
-               'processes' =>
-                   'The number of jobs to run per build execution (default 2)'
-            },
+      'help|?'      => { 'val' => \$opt_help, 'help' => 'This help' },
+      'processes=i' => {
+         'val'  => \$opt_procs,
+         'help' => 'The number of jobs to run per build execution (default 2)'
+      },
 );
+
+sub sys {
+   my @args = @_;
+   system @args;
+}
+
+sub sys_tick {
+   my @args = @_;
+   push @args, '2>&1', '1>/dev/null';
+   my $cmd = join ' ', @args;
+   return `$cmd`;
+}
 
 sub usage {
    say $0 . ': Make code pretty. (runs iwyu and clang-format)';
@@ -79,23 +90,30 @@ sub status {
 sub cmake {
    mkpath $BUILD_PATH;
    chdir $BUILD_PATH;
+   $ENV{'CC'}  = '/usr/bin/clang';
+   $ENV{'CXX'} = '/usr/bin/clang++';
    my $iwyu = '/usr/bin/iwyu';
    if ($IS_WSL) {
-      $ENV{'CC'}  = '/usr/bin/clang';
-      $ENV{'CXX'} = '/usr/bin/clang++';
-      $iwyu       = '/usr/local/bin/include-what-you-use';
+      $iwyu = '/usr/local/bin/include-what-you-use';
    }
-   system 'cmake'
-       . ' -DSKIP_LINT=true'
-       . ' -DCMAKE_CXX_INCLUDE_WHAT_YOU_USE="'
-       . $iwyu
-       . ';-Xiwyu;any;-Xiwyu;iwyu;-Xiwyu;args"' . ' '
-       . $BASE_DIR;
+   sys( 'cmake',
+        '-DSKIP_LINT=true',
+        '-DCMAKE_CXX_INCLUDE_WHAT_YOU_USE="'
+            . $iwyu
+            . ';-Xiwyu;any;-Xiwyu;iwyu;-Xiwyu;args"',
+        $BASE_DIR
+      );
+}
+
+sub run_perltidy {
+   chdir $BASE_DIR . '/etc/scripts';
+   sys( 'perltidy', '-pro=.perltidy', '*.pl', '*.pm' );
+   unlink( glob('*.bak') );
 }
 
 sub run_iwyu {
    cmake();
-   return `make -j${opt_procs} clean all 2>&1 1>/dev/null`;
+   return sys_tick( 'make', '-j${opt_procs}', 'clean', 'all' );
 }
 
 sub run_fix_include {
@@ -106,7 +124,7 @@ sub run_fix_include {
 
 sub run_clangformat {
    cmake();
-   system 'make -j${opt_procs} clangformat';
+   sys( 'make', '-j${opt_procs}', 'clangformat' );
 }
 
 sub check_wsl {
@@ -119,6 +137,8 @@ sub check_wsl {
 sub main {
    parse_options();
    check_wsl();
+   status('Running perltidy');
+   run_perltidy();
    status('Running include-what-you-use');
    my @iwyu = run_iwyu();
    status('iwyu complete, fixing includes in files');
