@@ -39,7 +39,7 @@ our $BASE_DIR   = Cwd::cwd();
 
 our $IS_WSL = undef;
 
-my ($opt_help);
+my ( $opt_help, $opt_docker );
 my $opt_procs = 2;
 
 # No real options yet, but it makes pretty boilerplate.
@@ -48,6 +48,10 @@ my %options = (
       'processes=i' => {
          'val'  => \$opt_procs,
          'help' => 'The number of jobs to run per build execution (default 2)'
+      },
+      'docker' => {
+            'val'  => \$opt_docker,
+            'help' => 'Run commands inside of the standard docker container.',
       },
 );
 
@@ -113,7 +117,7 @@ sub run_perltidy {
 
 sub run_iwyu {
    cmake();
-   return sys_tick( 'make', '-j${opt_procs}', 'clean', 'all' );
+   return sys_tick( 'make', '-j' . $opt_procs, 'clean', 'all' );
 }
 
 sub run_fix_include {
@@ -124,7 +128,7 @@ sub run_fix_include {
 
 sub run_clangformat {
    cmake();
-   sys( 'make', '-j${opt_procs}', 'clangformat' );
+   sys( 'make', '-j' . $opt_procs, 'clangformat' );
 }
 
 sub check_wsl {
