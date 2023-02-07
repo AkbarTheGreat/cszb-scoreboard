@@ -28,8 +28,11 @@ limitations under the License.
 use 5.030;
 use strict;
 
-use File::Path   qw{make_path rmtree};
-use Getopt::Long qw{GetOptions};
+use Config;
+use File::Basename        qw{dirname};
+use File::Copy::Recursive qw{rcopy};
+use File::Path            qw{make_path rmtree};
+use Getopt::Long          qw{GetOptions};
 
 use FindBin;
 use lib "$FindBin::RealBin";
@@ -179,6 +182,19 @@ sub test {
    return run_cmd($CTEST_CMD);
 }
 
+sub build_osx {
+   chdir($repo_path);
+   my $source_path = dirname( dirname($FindBin::RealBin) );
+   if ( !$opt_dry_run ) {
+      rcopy( $source_path . '/osx_tarballs', $repo_path . '/osx_tarballs' )
+          or die 'Could not copy osx tarballs';
+   }
+   my $perl       = $Config{'perlpath'};
+   my $osx_script = $source_path . '/etc/scripts/build_osxcross.pl';
+   my @args       = ( '--version', $opt_version );
+   return run_cmd( $perl, $osx_script, @args );
+}
+
 sub commit_and_tag {
    die 'Incorrect number of arguments to commit_and_tag' if ( @_ != 0 );
 
@@ -218,6 +234,9 @@ sub main {
    if ( test() != 0 ) {
       die 'Error running tests: ' . $!;
    }
+   if ( build_osx() != 0 ) {
+      die 'Error building osx app: ' . $!;
+   }
    unless ($opt_skip_git) {
       if ( commit_and_tag() != 0 ) {
          die 'Error updating repo: ' . $!;
@@ -237,7 +256,18 @@ sub main {
         ) != 0
       )
    {
-      die 'Error adding file to release at Github: ' . $!;
+      die 'Error adding Windows file to release at Github: ' . $!;
+   }
+   if ( GitHub::upload_binary(
+                      $upload_path,
+                      'CszbScoreboard.zip',
+                      'MacOS',
+                      $repo_path . '/out/osxcross_package/CszbScoreboard.zip',
+                      $repo_path . '/out/osxcross_package/copy_test.zip'
+        ) != 0
+      )
+   {
+      die 'Error adding MacOS file to release at GitHub ' . $!;
    }
 
    # Clean up now that we're done.
