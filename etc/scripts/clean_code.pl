@@ -51,7 +51,7 @@ my %options = (
       },
       'docker' => {
             'val'  => \$opt_docker,
-            'help' => 'Run commands inside of the standard docker container.',
+            'help' => 'Run commands inside of the standard docker container. (Unimplemented)',
       },
 );
 
