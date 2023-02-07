@@ -34,8 +34,8 @@ use List::AllUtils qw(any);
 use FindBin;
 use lib "$FindBin::RealBin";
 
-our $BUILD_PATH = 'out/iwyu';
 our $BASE_DIR   = Cwd::cwd();
+our $BUILD_PATH = $BASE_DIR . '/out/iwyu';
 
 our $IS_WSL = undef;
 
