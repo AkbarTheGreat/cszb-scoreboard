@@ -88,6 +88,7 @@ TEST(FilesystemPathTest, FileExistence) {
   // The path for the currently running test -- we know this exists, so we use
   // it for existence testing.
   FilesystemPath abs_test_path = FilesystemPath(std::string(CURRENT_BINARY));
+  abs_test_path.make_preferred();
   std::string relative_root = abs_test_path.string().substr(
       0,
       abs_test_path.string().find_last_of(FilesystemPath::preferred_separator) +
