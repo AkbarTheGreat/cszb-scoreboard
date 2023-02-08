@@ -31,6 +31,9 @@ use Getopt::Long   qw{GetOptions};
 use List::AllUtils qw(any);
 use FindBin;
 
+use lib "$FindBin::RealBin";
+use Docker;
+
 our $BUILD_PATH    = 'out/osxcross';
 our $PACKAGE_PATH  = 'out/osxcross_package';
 our $BASE_DIR      = Cwd::cwd();
@@ -39,8 +42,7 @@ our $APP_CONTAINER = $PACKAGE_PATH . '/CszbScoreboard.app/Contents';
 our $APP_BIN       = $APP_CONTAINER . '/MacOS';
 our $APP_RESOURCES = $APP_CONTAINER . '/Resources';
 
-our $DOCKER_TAG       = 'osxcross_release';
-our $DOCKER_CONTAINER = 'osxcross_release_exec';
+our $DOCKER_TAG = 'osxcross_release';
 
 my ( $opt_help, $opt_version, $opt_dry_run, $opt_test_build, $opt_internal );
 
@@ -230,67 +232,23 @@ sub internal_build {
    return zip_package();
 }
 
-sub build_docker {
-   say 'Building Docker image.';
-   return
-       run_cmd( 'docker', 'build', '-f', $BASE_DIR . '/Dockerfile.osxcross',
-                '-t', $DOCKER_TAG, $BASE_DIR );
-}
-
-sub start_docker {
-   say 'Starting Docker container.';
-   mkpath( $BASE_DIR . q{/} . $PACKAGE_PATH );
-   return
-       run_cmd( 'docker',
-                'run',
-                '-v',
-                $BASE_DIR . q{/}
-                    . $PACKAGE_PATH
-                    . ':/src/cszb-scoreboard/'
-                    . $PACKAGE_PATH,
-                '--name',
-                $DOCKER_CONTAINER,
-                '-dit',
-                $DOCKER_TAG,
-                '/bin/sh'
-              );
-}
-
-sub shutdown_docker {
-   say 'Shutting down Docker container.';
-   return run_cmd( 'docker', 'rm', '-f', $DOCKER_CONTAINER );
-}
-
-sub docker_cmd {
-   my @cmd = @_;
-   return
-       run_cmd( 'docker', 'exec', '-w', '/src/cszb-scoreboard', '-it',
-                $DOCKER_CONTAINER, @cmd );
-}
-
 sub run_docker {
    my @args = ( '--version', $opt_version, '--internal_run' );
    push @args, '--test_build' if $opt_test_build;
 
-# All of these commands need to warn instead of die so that the docker shutdown can attempt to run regardless.
-   my $error = undef;
-   if ( build_docker() != 0 ) {
-      warn 'Error building docker container: ' . $!;
-      $error = 1;
-   }
-   if ( !$error && start_docker() != 0 ) {
-      warn 'Error starting docker container: ' . $!;
-   }
+   mkpath( $BASE_DIR . q{/} . $PACKAGE_PATH );
+   my $docker = Docker->new( 'build'   => 'osxcross',
+                             'name'    => $DOCKER_TAG,
+                             'verbose' => 1,
+                             'volumes' => {
+                                      $BASE_DIR . q{/}
+                                    . $PACKAGE_PATH => '/src/cszb-scoreboard/'
+                                    . $PACKAGE_PATH
+                             },
+                           );
 
    say 'Running build inside of Docker image.';
-   if ( !$error && docker_cmd( 'etc/scripts/' . basename($0), @args ) != 0 ) {
-      warn 'Error running docker command: ' . $!;
-   }
-
-   if ( shutdown_docker() != 0 ) {
-      die 'Error shutting docker down: ' . $!;
-   }
-   return $error;
+   return $docker->cmd( 'etc/scripts/' . basename($0), @args );
 }
 
 sub main {
