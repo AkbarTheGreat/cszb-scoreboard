@@ -47,16 +47,15 @@ my $opt_procs = 2;
 
 # No real options yet, but it makes pretty boilerplate.
 my %options = (
-   'help|?'      => { 'val' => \$opt_help, 'help' => 'This help' },
-   'processes=i' => {
+      'help|?'      => { 'val' => \$opt_help, 'help' => 'This help' },
+      'processes=i' => {
          'val'  => \$opt_procs,
          'help' => 'The number of jobs to run per build execution (default 2)'
-   },
-   'docker' => {
-      'val'  => \$opt_docker,
-      'help' =>
-          'Run commands inside of the standard docker container.',
-   },
+      },
+      'docker' => {
+            'val'  => \$opt_docker,
+            'help' => 'Run commands inside of the standard docker container.',
+      },
 );
 
 sub sys {
@@ -99,47 +98,51 @@ sub status {
 }
 
 sub docker {
-   my ( $mount_src, $starting_dir ) = @_;
    return undef unless $opt_docker;
-   state $built;
-   my %volumes;
-   if ($mount_src) {
-      $volumes{$BASE_DIR} = $DOCKER_ROOT;
-   }
-   my $docker = Docker->new( 'build'      => 'standard',
-                             'name'       => 'code_clean',
-                             'verbose'    => 1,
-                             'volumes'    => \%volumes,
-                             'skip_build' => $built,
+   my %volumes = ( $BASE_DIR => $DOCKER_ROOT );
+   my $docker = Docker->new( 'build'   => 'standard',
+                             'name'    => 'code_clean',
+                             'verbose' => 1,
+                             'volumes' => \%volumes,
                            );
-   $built = 1;
-   $docker->workdir($starting_dir)
-       if ($starting_dir);
+   $docker->cmd( 'apt', '-y', 'install', 'iwyu', 'clang-format' );
+
+# This is a hack to deal with iwyu being compiled against a different clang version.
+   $docker->cmd( 'ln', '-s', '/usr/lib/clang/14', '/usr/lib/clang/13.0.1' );
+   $docker->cmd( 'cpan', 'install', 'Perl::Tidy' );
    return $docker;
 }
 
-sub cmake {
-   my ($docker)  = @_;
-   my $iwyu      = '/usr/bin/iwyu';
-   my $code_path = $BASE_DIR;
+sub workdir {
+   my ( $docker, $dir ) = @_;
    if ($docker) {
-      $code_path = $DOCKER_ROOT;
-      $docker->cmd( 'mkdir', '-p', $DOCKER_BUILD_PATH );
-      $docker->workdir($DOCKER_BUILD_PATH);
-      $docker->cmd( 'apt', '-y', 'install', 'iwyu', 'clang-format' );
-
-# This is a hack to deal with iwyu being compiled against a different clang version.
-      $docker->cmd( 'ln', '-s', '/usr/lib/clang/14',
-                    '/usr/lib/clang/13.0.1' );
+      $docker->cmd( 'mkdir', '-p', $dir );
+      $docker->workdir($dir);
    } else {
-      mkpath $BUILD_PATH;
-      chdir $BUILD_PATH;
+      if ( $dir !~ /^\// ) {
+         $dir = $BASE_DIR . q{/} . $dir;
+      }
+      mkpath $dir;
+      chdir $dir;
+   }
+}
+
+sub cmake {
+   my ($docker)   = @_;
+   my $iwyu       = '/usr/bin/iwyu';
+   my $code_path  = $BASE_DIR;
+   my $build_path = $BUILD_PATH;
+   if ($docker) {
+      $code_path  = $DOCKER_ROOT;
+      $build_path = $DOCKER_BUILD_PATH;
+   } else {
       $ENV{'CC'}  = '/usr/bin/clang';
       $ENV{'CXX'} = '/usr/bin/clang++';
       if ($IS_WSL) {
          $iwyu = '/usr/local/bin/include-what-you-use';
       }
    }
+   workdir( $docker, $build_path );
    sys( $docker,
         'cmake',
         '-DSKIP_LINT=true',
@@ -151,17 +154,16 @@ sub cmake {
 }
 
 sub run_perltidy {
-   chdir $BASE_DIR . '/etc/scripts';
-   my $docker = docker( 'mount_src', 'etc/scripts' );
+   my ($docker) = @_;
+   workdir( $docker, 'etc/scripts' );
    if ($docker) {
-      sys( $docker, 'cpan', 'install', 'Perl::Tidy' );
    }
    sys( $docker, 'perltidy', '-pro=.perltidy', '*.pl', '*.pm' );
-   unlink( glob('*.bak') );
+   unlink( glob( $BASE_DIR . '/etc/scripts/*.bak' ) );
 }
 
 sub run_iwyu {
-   my $docker = docker('mount_src');
+   my ($docker) = (@_);
 
    cmake($docker);
 
@@ -175,11 +177,11 @@ sub run_iwyu {
 sub run_fix_include {
    my ($docker) = @_;
    sys_io( $docker, 'cat', 'iwyu_data.txt', '|', '/usr/bin/fix_include',
-           '--comments', '--nosafe_headers', '--ignore_re="\\.pb\\.(cc|h)"' );
+           '--comments', '--nosafe_headers' );
 }
 
 sub run_clangformat {
-   my $docker = docker('mount_src');
+   my ($docker) = @_;
    cmake($docker);
    sys( $docker, 'make', '-j' . $opt_procs, 'clangformat' );
 }
@@ -194,15 +196,16 @@ sub check_wsl {
 sub main {
    parse_options();
    check_wsl();
+   status('Setting up Docker (if requested)');
+   my $docker = docker();
    status('Running perltidy');
-   run_perltidy();
+   run_perltidy($docker);
    status('Running include-what-you-use');
-   my $iwyu_dock = run_iwyu();
+   run_iwyu($docker);
    status('iwyu complete, fixing includes in files');
-   run_fix_include($iwyu_dock);
-   $iwyu_dock = undef;
+   run_fix_include($docker);
    status('Includes fixed, auto-formatting all files');
-   run_clangformat();
+   run_clangformat($docker);
    status(   'Process complete.' . "\n"
            . 'Any changes will need to be submitted via git to be preserved.'
          );
