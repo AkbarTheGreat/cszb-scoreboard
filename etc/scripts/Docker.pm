@@ -27,6 +27,23 @@ package Docker {
    use FindBin        qw();
    use File::Basename qw(dirname);
 
+=pod
+    Constructor arguments:
+
+    Requred
+    ------------
+    name - The name of the image to build.  The container will always be named ${name}_exec
+
+    Optional
+    ------------
+    build - If set, the name of the cszb_scoreboard image to load.
+    dockerfile - The name of the dockerfile to load.  Only useful if build unset.  Defaults to "Dockerfile"
+    context - The context to run Docker in.  Defaults to either the current directory or, in case of a build argument, the root of the repository the current script is running from.
+    skip_build - Skip building this container.  This should only be done in scripts where the container is known to be built earlier in execution.
+    volumes - A map of volumes to mount at construction time.
+
+=cut
+
    sub new {
       my ( $class, %args ) = @_;
       die 'Docker requires the "name" argument.' unless ( $args{'name'} );
@@ -34,17 +51,23 @@ package Docker {
       $args{'context'}    //= '.';
       $args{'volumes'}    //= {};
 
+      my $root;
       if ( $args{'build'} ) {
          $args{'context'} = dirname( dirname($FindBin::RealBin) );
          $args{'dockerfile'}
              = $args{'context'} . '/Dockerfile.' . $args{'build'};
+         $root = '/src/cszb-scoreboard/';
       }
+      $root //= '/';
 
       my $self = bless { 'name'    => $args{'name'},
+                         'root'    => $root,
                          'verbose' => $args{'verbose'},
                        }, $class;
-      $self->build( $args{'dockerfile'}, $args{'context'} );
-      $self->start();
+      $self->workdir(q{});
+      $self->build( $args{'dockerfile'}, $args{'context'} )
+          unless $args{'skip_build'};
+      $self->start( $args{'volumes'} );
       return $self;
    }
 
@@ -61,10 +84,10 @@ package Docker {
    sub build {
       my ( $self, $file, $context ) = @_;
       $self->log('Building Docker image.');
-      if ( system( 'docker', 'build',         '-f', $file,
-                   '-t',     $self->{'name'}, $context )
-         )
-      {
+      my @cmd = ( 'docker', 'build' );
+      push @cmd, '-q' unless $self->{'verbose'};
+      push @cmd, ( '-f', $file, '-t', $self->{'name'}, $context );
+      if ( system(@cmd) ) {
          die 'Error building Docker image: ' . $? . "\n";
       }
    }
@@ -88,6 +111,15 @@ package Docker {
       }
    }
 
+   # Sets the current working directory for commands
+   sub workdir {
+      my ( $self, $dir ) = @_;
+      if ( $dir !~ '^/' ) {
+         $dir = $self->{'root'} . $dir;
+      }
+      $self->{'workdir'} = $dir;
+   }
+
    sub DESTROY {
       local ( $., $@, $!, $^E, $? );
       my ($self) = @_;
@@ -97,11 +129,10 @@ package Docker {
 
    sub cmd {
       my ( $self, @cmd ) = @_;
-      system( 'docker', 'exec', '-w', '/src/cszb-scoreboard', '-it',
+      system( 'docker', 'exec', '-w', $self->{'workdir'}, '-it',
               $self->container(), @cmd );
       return $?;
    }
-
 }
 
 1;
