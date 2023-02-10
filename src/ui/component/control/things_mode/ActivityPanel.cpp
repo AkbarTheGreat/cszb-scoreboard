@@ -40,7 +40,7 @@ const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 // existing ones.  In theory this could be 1, but it self-resolves pretty much
 // immediately whent they're repositioned, so it doesn't matter much.
 const int REPLACEMENT_BUFFER_SIZE = 5;
-static const char *BULLET = "\u2022-2023";
+static const char *BULLET = "\u2022";
 
 ActivityPanel::ActivityPanel(swx::Panel *wx,
                              ScreenTextController *owning_controller,
