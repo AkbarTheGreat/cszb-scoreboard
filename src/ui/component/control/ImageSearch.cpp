@@ -37,8 +37,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class PreviewPanel;
-
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const std::string DROP_MESSAGE = "<Drop Image Here To Load>";
@@ -47,9 +45,8 @@ constexpr Size DROP_TARGET_SIZE{.width = 120, .height = 360};
 constexpr Size BROWSER_SIZE{.width = 720, .height = 360};
 constexpr int DROP_TARGET_BORDER = 50;
 
-auto ImageSearch::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> std::unique_ptr<ImageSearch> {
-  auto local_image = std::make_unique<ImageSearch>(preview_panel, wx);
+auto ImageSearch::Create(swx::Panel *wx) -> std::unique_ptr<ImageSearch> {
+  auto local_image = std::make_unique<ImageSearch>(wx);
   local_image->initializeWidgets();
   local_image->updatePreview();
   return local_image;
@@ -111,7 +108,6 @@ void ImageSearch::bindEvents() {
 void ImageSearch::onURLDrop(const std::string &url) {
   HttpReader reader;
   std::vector<char> image_data;
-  LogDebug("Url dropped: %s", url.c_str());
   reader.readBinary(url.c_str(), &image_data);
   Image urlImage = Image::FromData(image_data);
   if (screen_selection->allSelected()) {

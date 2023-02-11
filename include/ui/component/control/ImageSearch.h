@@ -29,7 +29,6 @@ limitations under the License.
 #include "ui/widget/Panel.h"  // for Panel
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 
 namespace swx {
 class Panel;
@@ -37,9 +36,9 @@ class Panel;
 
 class ImageSearch : public ScreenImageController {
  public:
-  ImageSearch(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenImageController(preview_panel, wx) {}
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
+  ImageSearch( swx::Panel *wx)
+      : ScreenImageController( wx) {}
+  static auto Create( swx::Panel *wx)
       -> std::unique_ptr<ImageSearch>;
 
  private:
