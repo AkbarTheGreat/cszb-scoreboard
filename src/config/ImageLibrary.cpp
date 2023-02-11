@@ -22,7 +22,6 @@ limitations under the License.
 #include <algorithm>   // for binary_search, find, lower_bound
 #include <cctype>      // for tolower
 #include <compare>     // for operator<, strong_ordering
-#include <cstdio>      // for printf
 #include <filesystem>  // for operator==, path
 #include <utility>     // for move
 

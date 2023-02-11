@@ -26,7 +26,6 @@ limitations under the License.
 #include "ui/widget/Panel.h"                             // for Panel
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 
 namespace swx {
 class Panel;
@@ -34,10 +33,8 @@ class Panel;
 
 class LocalImage : public ScreenImageController {
  public:
-  LocalImage(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenImageController(preview_panel, wx) {}
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
-      -> std::unique_ptr<LocalImage>;
+  explicit LocalImage(swx::Panel *wx) : ScreenImageController(wx) {}
+  static auto Create(swx::Panel *wx) -> std::unique_ptr<LocalImage>;
 
  private:
   std::unique_ptr<Panel> button_panel, inner_panel;

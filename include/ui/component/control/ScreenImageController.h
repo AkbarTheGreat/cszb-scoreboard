@@ -32,7 +32,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 class Panel;
-class PreviewPanel;
 class ScreenText;
 
 namespace swx {
@@ -47,8 +46,7 @@ class ScreenImageController : public ScreenTextController {
   std::string all_screen_image_name, home_screen_image_name,
       away_screen_image_name;
 
-  ScreenImageController(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenTextController(preview_panel, wx) {}
+  explicit ScreenImageController(swx::Panel *wx) : ScreenTextController(wx) {}
   void bindEvents();
   void createControls(Panel *control_panel) override;
   virtual void positionWidgets(Panel *control_panel) = 0;

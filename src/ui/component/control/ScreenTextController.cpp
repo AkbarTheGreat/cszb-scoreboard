@@ -38,13 +38,11 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-ScreenTextController::ScreenTextController(PreviewPanel *preview_panel,
-                                           swx::Panel *wx,
+ScreenTextController::ScreenTextController(swx::Panel *wx,
                                            bool display_update_screens,
                                            Singleton *singleton)
     : Panel(wx) {
   this->singleton = singleton;
-  this->preview_panel = preview_panel;
   this->display_update_screens_button = display_update_screens;
 }
 
@@ -95,11 +93,11 @@ void ScreenTextController::bindEvents() {
 }
 
 auto ScreenTextController::previewPanel() -> PreviewPanel * {
-  return preview_panel;
+  return singleton->frameManager()->mainView()->previewPanel();
 }
 
 void ScreenTextController::updateClicked() {
-  preview_panel->updatePresenters();
+  previewPanel()->updatePresenters();
 }
 
 void ScreenTextController::updatePreview() {

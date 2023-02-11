@@ -26,6 +26,7 @@ class Panel {
  public:
   virtual auto asWx() -> wxPanel * { return nullptr; }
   virtual void setBackgroundStyle(int64_t style) = 0;
+  virtual void destroy() = 0;
 };
 
 class PanelImpl : public Panel, public wxPanel {
@@ -40,6 +41,7 @@ class PanelImpl : public Panel, public wxPanel {
   void setBackgroundStyle(int64_t style) override {
     wxWindow::SetBackgroundStyle(static_cast<wxBackgroundStyle>(style));
   }
+  void destroy() override { Destroy(); }
 };
 
 }  // namespace cszb_scoreboard::swx

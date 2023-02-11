@@ -30,7 +30,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 class Panel;
-class PreviewPanel;
 class ScreenText;
 namespace swx {
 class Panel;
@@ -38,11 +37,10 @@ class Panel;
 
 class TimerSetup : public ScreenTextController {
  public:
-  TimerSetup(PreviewPanel *preview_panel, swx::Panel *wx)
-      : ScreenTextController(preview_panel, wx,
+  explicit TimerSetup(swx::Panel *wx)
+      : ScreenTextController(wx,
                              /*display_update_screens=*/false) {}
-  static auto Create(PreviewPanel *preview_panel, swx::Panel *wx)
-      -> std::unique_ptr<TimerSetup>;
+  static auto Create(swx::Panel *wx) -> std::unique_ptr<TimerSetup>;
 
  private:
   void createControls(Panel *control_panel) override;

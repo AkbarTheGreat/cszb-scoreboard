@@ -41,8 +41,8 @@ wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent)
     : TabbedDialog(wx) {
   this->parent = parent;
-  addPage(std::make_unique<TeamSettingsPage>(childPanel()), "Teams");
   addPage(std::make_unique<DisplaySettingsPage>(childPanel()), "Displays");
+  addPage(std::make_unique<TeamSettingsPage>(childPanel()), "Teams");
   runSizer();
   bindEvents();
 }

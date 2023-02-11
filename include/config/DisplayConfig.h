@@ -29,14 +29,14 @@ class DisplayConfig {
   explicit DisplayConfig(SingletonClass c)
       : DisplayConfig(c, Singleton::getInstance()) {}
   auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
-  void detectDisplays();
+  void detectDisplays(bool force_reload = false);
   auto displayDetails(int index) -> proto::DisplayInfo;
   auto numberOfDisplays() -> int;
   void saveSettings();
   // Set the display id to the given monitor index.  Returns true if this
   // was an effective change, false if the values were identical already.
   auto setDisplayId(int index, int id) -> bool;
-  void setSide(int index, proto::ScreenSide side);
+  auto setSide(int index, const proto::ScreenSide &side) -> bool;
 
   auto windowedMode() -> bool;
   auto windowedModeNumberOfWindows() -> int;
@@ -55,7 +55,7 @@ class DisplayConfig {
  private:
   proto::DisplayConfig display_config;
   Singleton *singleton;
-  void detectExternalMonitors();
+  void detectExternalMonitors(bool force_reload);
   void setupWindowedMode();
 };
 }  // namespace cszb_scoreboard

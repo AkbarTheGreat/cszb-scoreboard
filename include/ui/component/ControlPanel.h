@@ -8,7 +8,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,37 +30,36 @@ limitations under the License.
 class wxAuiNotebookEvent;
 
 namespace cszb_scoreboard {
-class PreviewPanel;
-class ScreenText;
+	class ScreenText;
 
-namespace swx {
-class Notebook;
-}  // namespace swx
+	namespace swx {
+		class Notebook;
+	}  // namespace swx
 
-class ControlPanel : public Notebook {
- public:
-  ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel)
-      : ControlPanel(wx, preview_panel, Singleton::getInstance()) {}
-  void updateScreenTextFromSelected(ScreenText *screen_text);
-  auto isSelected(ScreenTextController *controller) -> bool;
+	class ControlPanel : public Notebook {
+	public:
+		explicit ControlPanel(swx::Notebook* wx)
+			: ControlPanel(wx, Singleton::getInstance()) {}
+		void updateScreenTextFromSelected(ScreenText* screen_text);
+		auto isSelected(ScreenTextController* controller) -> bool;
 
-  PUBLIC_TEST_ONLY
-  ControlPanel(swx::Notebook *wx, PreviewPanel *preview_panel,
-               Singleton *singleton);
+		PUBLIC_TEST_ONLY
+			ControlPanel(swx::Notebook* wx,
+				Singleton* singleton);
 
 #ifdef SCOREBOARD_TESTING
-  auto textController(int index) -> ScreenTextController * {
-    return controllers[index].get();
-  }
+		auto textController(int index) -> ScreenTextController* {
+			return controllers[index].get();
+		}
 #endif
 
- private:
-  void addController(std::unique_ptr<ScreenTextController> tab,
-                     const std::string &name);
-  void bindEvents();
-  void tabChanged(const wxAuiNotebookEvent &event);
-  // Holds a view to these controllers, does not own them.
-  std::vector<std::unique_ptr<ScreenTextController>> controllers;
-};
+	private:
+		void addController(std::unique_ptr<ScreenTextController> tab,
+			const std::string& name);
+		void bindEvents();
+		void tabChanged(const wxAuiNotebookEvent& event);
+		// Holds a view to these controllers, does not own them.
+		std::vector<std::unique_ptr<ScreenTextController>> controllers;
+	};
 
 }  // namespace cszb_scoreboard

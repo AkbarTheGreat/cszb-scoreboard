@@ -28,6 +28,9 @@ class PopUp {
   static void Info(const std::string &title, const std::string &msg);
   static void Message(const std::string &msg);
   static void Warning(const std::string &title, const std::string &msg);
+  // Returns true if the user agrees, false if they cancel.
+  static auto Confirmation(const std::string &title, const std::string &msg)
+      -> bool;
 };
 
 }  // namespace cszb_scoreboard

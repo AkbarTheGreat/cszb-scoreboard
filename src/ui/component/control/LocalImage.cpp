@@ -36,15 +36,12 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class PreviewPanel;
-
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const std::string CLIPBOARD_IMAGE_MESSAGE = "<Image Loaded From Clipboard>";
 
-auto LocalImage::Create(PreviewPanel *preview_panel, swx::Panel *wx)
-    -> std::unique_ptr<LocalImage> {
-  auto local_image = std::make_unique<LocalImage>(preview_panel, wx);
+auto LocalImage::Create(swx::Panel *wx) -> std::unique_ptr<LocalImage> {
+  auto local_image = std::make_unique<LocalImage>(wx);
   local_image->initializeWidgets();
   local_image->updatePreview();
   return local_image;

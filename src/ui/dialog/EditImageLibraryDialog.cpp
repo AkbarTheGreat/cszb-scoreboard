@@ -21,6 +21,7 @@ limitations under the License.
 
 #include <wx/string.h>  // for wxString
 
+#include <cstdint>     // for int32_t, int64_t
 #include <filesystem>  // for operator==, path
 #include <optional>    // for optional
 #include <string>      // for string

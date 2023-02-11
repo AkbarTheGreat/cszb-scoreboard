@@ -34,7 +34,6 @@ limitations under the License.
 #include "util/Singleton.h"                     // for Singleton
 
 namespace cszb_scoreboard {
-class PreviewPanel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
@@ -42,9 +41,9 @@ const int NUM_PREVIEWS = 5;
 const int PREVIEW_WIDTH = 160;
 const int PREVIEW_HEIGHT = 90;
 
-auto ImageFromLibrary::Create(PreviewPanel *preview_panel, swx::Panel *wx)
+auto ImageFromLibrary::Create(swx::Panel *wx)
     -> std::unique_ptr<ImageFromLibrary> {
-  auto library = std::make_unique<ImageFromLibrary>(preview_panel, wx);
+  auto library = std::make_unique<ImageFromLibrary>(wx);
   library->initializeWidgets();
   library->updatePreview();
   return library;

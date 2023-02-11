@@ -25,11 +25,16 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-void BoxWithIcon(const std::string &title, const std::string &msg,
-                 int64_t icon) {
+auto BoxWithIcon(const std::string &title, const std::string &msg, int64_t icon,
+                 int64_t buttons = wxOK) -> bool {
   // wxMessageBox puts msg & title in a weird order in my mind, so this is the
   // one place that's message first.
-  wxMessageBox(msg, title, wxOK | wxCENTRE | icon);
+  return wxMessageBox(msg, title, buttons | wxCENTRE | icon) == wxOK;
+}
+
+auto PopUp::Confirmation(const std::string &title, const std::string &msg)
+    -> bool {
+  return BoxWithIcon(title, msg, wxICON_EXCLAMATION, wxOK | wxCANCEL);
 }
 
 void PopUp::Error(const std::string &title, const std::string &msg) {

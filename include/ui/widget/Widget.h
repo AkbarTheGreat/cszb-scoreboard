@@ -90,6 +90,7 @@ class Widget {
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
+  void resetSizer();
   void runSizer();
   void setMinSize(Size size) const { wx()->SetMinSize(size.toWx()); }
   // Reparents this widget to another widget for layout purposes

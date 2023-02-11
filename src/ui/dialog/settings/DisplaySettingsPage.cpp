@@ -26,7 +26,9 @@ limitations under the License.
 #include "config/DisplayConfig.h"  // for DisplayConfig
 #include "config/swx/defs.h"       // for wxALL, wxGROW
 #include "config/swx/event.h"      // for wxCommandEvent (ptr only), wxEVT_C...
-#include "ui/widget/Panel.h"       // for Panel
+#include "ui/frame/FrameManager.h"
+#include "ui/frame/MainView.h"
+#include "ui/widget/Panel.h"  // for Panel
 #include "ui/widget/PopUp.h"
 #include "util/StringUtil.h"  // for StringUtil
 
@@ -46,12 +48,12 @@ DisplaySettingsPage::DisplaySettingsPage(swx::Panel *wx, Singleton *singleton)
 }
 
 void DisplaySettingsPage::createControls() {
-  for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
-    display_settings_panels.push_back(
-        std::make_unique<DisplaySettingsPanel>(childPanel(), i, this));
-  }
+  display_settings = panel();
 
-  separator_line = divider();
+  populateDisplays();
+
+  separator_1 = divider();
+  separator_2 = divider();
   window_mode_panel = panel();
 
   enable_window_mode = window_mode_panel->checkBox("Enable Window Mode");
@@ -68,7 +70,23 @@ void DisplaySettingsPage::createControls() {
   window_height = window_mode_panel->text(
       std::to_string(singleton->displayConfig()->windowHeight()));
 
+  reset_displays = button("Redetect External Displays", /*exact_fit=*/true);
+
   windowModeChanged();
+}
+
+void DisplaySettingsPage::populateDisplays() {
+  for (const auto &panel : display_settings_panels) {
+    panel->destroy();
+  }
+  display_settings_panels.clear();
+
+  int row = 0;
+  for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
+    display_settings_panels.push_back(std::make_unique<DisplaySettingsPanel>(
+        display_settings->childPanel(), i, this));
+    display_settings->addWidget(*display_settings_panels.back(), row++, 0);
+  }
 }
 
 void DisplaySettingsPage::positionWidgets() {
@@ -85,12 +103,12 @@ void DisplaySettingsPage::positionWidgets() {
   window_mode_panel->runSizer();
 
   int row = 0;
-  for (const auto &panel : display_settings_panels) {
-    addWidget(*panel, row++, 0);
-  }
-
-  addWidget(*separator_line, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
+  addWidget(*display_settings, row++, 0);
+  addWidget(*separator_1, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
   addWidget(*window_mode_panel, row++, 0);
+
+  addWidget(*separator_2, row++, 0, DEFAULT_BORDER_SIZE, wxALL | wxGROW);
+  addWidget(*reset_displays, row++, 0);
 
   runSizer();
 }
@@ -99,6 +117,9 @@ void DisplaySettingsPage::bindEvents() {
   enable_window_mode->bind(
       wxEVT_CHECKBOX,
       [this](wxCommandEvent &event) -> void { this->windowModeChanged(); });
+  reset_displays->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->resetDisplaysPressed();
+  });
 }
 
 /* Returns true if the display settings are allowable, presents a warning dialog
@@ -143,19 +164,21 @@ auto DisplaySettingsPage::validateSettings() -> bool {
 }
 
 void DisplaySettingsPage::saveSettings() {
-  bool warnedAboutOrderChange = false;
+  // This variable tracks if something has changed that will require the display
+  // presenters to be reset.
+  bool reset_displays = false;
 
   for (int i = 0; i < display_settings_panels.size(); ++i) {
     if (singleton->displayConfig()->setDisplayId(
-            i, display_settings_panels[i]->getDisplayId()) &&
-        !warnedAboutOrderChange) {
-      PopUp::Message(
-          "WARNING: You have changed monitor ordering.  To see this take "
-          "effect, you must restart the application.");
-      warnedAboutOrderChange = true;
+            i, display_settings_panels[i]->getDisplayId())) {
+      // If the display order was changed, reset the displays.
+      reset_displays = true;
     }
-    singleton->displayConfig()->setSide(i,
-                                        display_settings_panels[i]->getSide());
+    if (singleton->displayConfig()->setSide(
+            i, display_settings_panels[i]->getSide())) {
+      // If the display side was changed, reset the displays.
+      reset_displays = true;
+    }
   }
 
   // If any of the windowed settings have chagned, re-detect display settings.
@@ -167,9 +190,7 @@ void DisplaySettingsPage::saveSettings() {
        StringUtil::stringToInt(window_width->value())) ||
       (singleton->displayConfig()->windowHeight() !=
        StringUtil::stringToInt(window_height->value()))) {
-    PopUp::Message(
-        "WARNING: Changes to windowed mode will require an application restart "
-        "to take effect.");
+    reset_displays = true;
   }
 
   singleton->displayConfig()->setWindowedMode(enable_window_mode->checked());
@@ -181,6 +202,12 @@ void DisplaySettingsPage::saveSettings() {
       StringUtil::stringToInt(window_height->value()));
 
   singleton->displayConfig()->saveSettings();
+
+  // Something in the displays has changed -- reset them from the saved settings
+  // above.
+  if (reset_displays) {
+    singleton->frameManager()->mainView()->resetDisplays();
+  }
 }
 
 void DisplaySettingsPage::windowModeChanged() {
@@ -193,6 +220,22 @@ void DisplaySettingsPage::windowModeChanged() {
     window_width->disable();
     window_height->disable();
   }
+}
+
+void DisplaySettingsPage::resetDisplaysPressed() {
+  if (!PopUp::Confirmation(
+          "Warning",
+          "This will reset all of your display settings -- are you sure?")) {
+    return;
+  }
+
+  singleton->displayConfig()->detectDisplays(/*force_reload=*/true);
+  singleton->displayConfig()->saveSettings();
+  // Reset the ui from new newly  saved settings.
+  singleton->frameManager()->mainView()->resetDisplays();
+
+  populateDisplays();
+  runSizer();
 }
 
 void DisplaySettingsPage::swapDisplays(int a, int b) {
