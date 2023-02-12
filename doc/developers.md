@@ -65,6 +65,12 @@ If you're using vcpkg, the following command should get all four in one go:
 vcpkg install curl:x64-windows-static gtest:x64-windows-static jsoncpp:x64-windows-static protobuf:x64-windows-static wxwidgets:x64-windows-static
 ```
 
+You may also need to build wxWidgets from scratch and download the WebView runtime from Microsoft:
+https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution#understand-the-webview2-runtime-and-installer-preview
+When I did that, I needed to copy over
+wxWidgets\out\build\x64-Debug\libs\webview\packages\Microsoft.Web.WebView2.1.0.864.35\build\native\x64\WebView2LoaderStatic.lib
+to the install lib directory for that library to be found.
+
 ## Initial Setup
 
 If you’re using Visual Studio, you’ll want to clone the project into a new
