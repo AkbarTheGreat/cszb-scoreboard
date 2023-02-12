@@ -36,10 +36,8 @@ class Panel;
 
 class ImageSearch : public ScreenImageController {
  public:
-  ImageSearch( swx::Panel *wx)
-      : ScreenImageController( wx) {}
-  static auto Create( swx::Panel *wx)
-      -> std::unique_ptr<ImageSearch>;
+  explicit ImageSearch(swx::Panel *wx) : ScreenImageController(wx) {}
+  static auto Create(swx::Panel *wx) -> std::unique_ptr<ImageSearch>;
 
  private:
   std::unique_ptr<Panel> inner_panel, drop_target, reset_button_panel;
