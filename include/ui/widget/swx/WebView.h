@@ -54,6 +54,7 @@ class WebView {
   auto wx() -> wxWebView * { return _wx; }
 
   void LoadURL(const std::string &url) { _wx->LoadURL(url); }
+  void RunScript(const std::string &script) { _wx->RunScript(script); }
 
  private:
   wxWebView *_wx;

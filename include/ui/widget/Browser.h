@@ -27,6 +27,12 @@ class Browser : public Widget {
  public:
   explicit Browser(swx::WebView *web_view) { _wx = web_view; }
   void setURL(const std::string &url) { _wx->LoadURL(url); }
+  void runJavascript(const std::string &script) { _wx->RunScript(script); }
+  void bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
+            const std::function<void(wxWebViewEvent &)> &lambda,
+            int id = wxID_ANY) const {
+    wx()->Bind(eventType, lambda, id);
+  }
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow * override { return _wx->wx(); }

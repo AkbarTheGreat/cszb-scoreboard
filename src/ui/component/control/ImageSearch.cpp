@@ -42,7 +42,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string DROP_MESSAGE = "<Drop Image Here To Load>";
 const std::string URL = "https://images.google.com";
 constexpr Size DROP_TARGET_SIZE{.width = 120, .height = 360};
-constexpr Size BROWSER_SIZE{.width = 720, .height = 360};
+constexpr Size BROWSER_SIZE{.width = 960, .height = 360};
 constexpr int DROP_TARGET_BORDER = 50;
 
 auto ImageSearch::Create(swx::Panel *wx) -> std::unique_ptr<ImageSearch> {
@@ -101,6 +101,9 @@ void ImageSearch::bindEvents() {
       [this](int32_t x, int32_t y, const std::string &url) -> void {
         this->onURLDrop(url);
       });
+  browser->bind(wxEVT_WEBVIEW_LOADED, [this](wxWebViewEvent &e) -> void {
+    this->tweakGoogleImages();
+  });
   reset_button->bind(wxEVT_COMMAND_BUTTON_CLICKED,
                      [this](wxCommandEvent &e) -> void { this->resetURL(); });
 }
@@ -120,6 +123,30 @@ void ImageSearch::onURLDrop(const std::string &url) {
 
   control_panel->update();
   updatePreview();
+}
+
+void ImageSearch::tweakGoogleImages() {
+  browser->runJavascript(
+      "document.onclick = function() {"
+      // This chunk of code removes anchors on the larger boxes when you click
+      // in from the selection, so that drag & drop drops the image instead of
+      // the link.
+      "  var anchors = "
+      "  document.querySelectorAll('[role=\"link\"]').forEach(function(anchor) "
+      "  {"
+      "    var anchorParent = anchor.parentNode;"
+      "    while (anchor.firstChild) {"
+      "      anchorParent.insertBefore(anchor.firstChild, anchor);"
+      "    }"
+      "    anchorParent.removeChild(anchor);"
+      "  });"
+      // This next bit attempts to remove the "Search any image with Google
+      // Lens" popup on images.google.com.
+      "  var popup = document.getElementsByClassName('ea0Lbe')[0];"
+      "  if (popup) {"
+      "    popup.parentElement.removeChild(popup);"
+      "  }"
+      "};");
 }
 
 void ImageSearch::resetURL() { browser->setURL(URL); }

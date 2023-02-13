@@ -51,6 +51,7 @@ class ImageSearch : public ScreenImageController {
   void positionWidgets(Panel *control_panel) override;
   void onURLDrop(const std::string &url);
   void resetURL();
+  void tweakGoogleImages();
 };
 
 }  // namespace cszb_scoreboard
