@@ -46,12 +46,15 @@ TEST(Base64Test, EncodeStrings) {
 TEST(Base64Test, DecodeStrings) {
   std::vector<char> output;
   EXPECT_EQ(Base64::decode(TEST_ENCODE_1, &output), TEST_DECODE_1.length());
+  output.push_back('\0');
   EXPECT_EQ(std::string(output.data()), TEST_DECODE_1);
   output.resize(0);
   EXPECT_EQ(Base64::decode(TEST_ENCODE_2, &output), TEST_DECODE_2.length());
+  output.push_back('\0');
   EXPECT_EQ(std::string(output.data()), TEST_DECODE_2);
   output.resize(0);
   EXPECT_EQ(Base64::decode(TEST_ENCODE_3, &output), TEST_DECODE_3.length());
+  output.push_back('\0');
   EXPECT_EQ(std::string(output.data()), TEST_DECODE_3);
 }
 
