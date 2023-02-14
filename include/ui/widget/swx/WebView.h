@@ -49,6 +49,9 @@ class WebView {
 #else // #ifdef _WIN32
     _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendDefault, style, name);
 #endif // #ifdef _WIN32
+#ifdef SCOREBOARD_DEBUG) 
+    _wx->EnableAccessToDevTools(true);
+#endif
   }
 
   auto wx() -> wxWebView * { return _wx; }
