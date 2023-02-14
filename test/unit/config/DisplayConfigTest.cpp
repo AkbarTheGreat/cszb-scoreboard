@@ -16,13 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gmock/gmock-actions.h>                       // for Return, Return...
-#include <gmock/gmock-matchers.h>                      // for _
-#include <gmock/gmock-spec-builders.h>                 // for EXPECT_CALL
 #include <google/protobuf/util/message_differencer.h>  // for MessageDiffere...
-#include <gtest/gtest-message.h>                       // for Message
-#include <gtest/gtest-test-part.h>                     // for TestPartResult
-#include <gtest/gtest.h>                               // IWYU pragma: keep
+#include <gtest/gtest.h>                               // IWYU pragma: keep for SuiteApiResolver
 #include <wx/gdicmn.h>                                 // for wxRect, wxPoint
 
 #include <cstdint>  // for int32_t
@@ -31,6 +26,7 @@ limitations under the License.
 
 #include "config.pb.h"                             // for DisplayConfig
 #include "config/DisplayConfig.h"                  // for DisplayConfig
+#include "gmock/gmock.h"                           // for Return, Return...
 #include "test/TestUtil.h"                         // for EXPECT_ASSERT
 #include "test/mocks/config/MockPersistence.h"     // for MockPersistence
 #include "test/mocks/ui/frame/MockFrameManager.h"  // for MockFrameManager

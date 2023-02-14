@@ -18,13 +18,14 @@ limitations under the License.
 
 #include "util/HttpReader.h"
 
-#include <curl/curl.h>
+#include <curl/curl.h>  // for curl_easy_setopt, curl_easy_cleanup, curl_e...
 
-#include <cstring>
-#include <regex>  // for match_results<>::_Base_type, regex_...
+#include <cstring>  // for size_t, memcpy
+#include <regex>    // for regex_replace, match_results<>::_Base_type
+#include <sstream>  // for basic_stringbuf<>::int_type, basic_stringbu...
 
-#include "util/Base64.h"
-#include "util/Log.h"  // for LogDebug
+#include "util/Base64.h"  // for Base64
+#include "util/Log.h"     // for LogDebug
 
 namespace cszb_scoreboard {
 

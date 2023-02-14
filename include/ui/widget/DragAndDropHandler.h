@@ -20,12 +20,17 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/dataobj.h>
+#include <wx/dnd.h>    // for wxDragResult
+#include <wx/types.h>  // for wxCoord
 
-#include "ui/widget/Widget.h"
-#include "ui/widget/swx/DropTarget.h"
+#include <cstdint>     // for int32_t
+#include <functional>  // for function
+#include <string>      // for string
+
+#include "ui/widget/swx/DropTarget.h"  // for DropTarget
 
 namespace cszb_scoreboard {
+class Widget;
 
 class HeldTarget : public swx::DropTarget {
  public:

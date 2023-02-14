@@ -20,6 +20,11 @@ limitations under the License.
 
 #include "ui/widget/DragAndDropHandler.h"
 
+#include <wx/string.h>  // for wxString
+#include <wx/window.h>  // for wxWindow
+
+#include "ui/widget/Widget.h"  // for Widget
+
 namespace cszb_scoreboard {
 
 HeldTarget::HeldTarget(

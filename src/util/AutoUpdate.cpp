@@ -20,11 +20,10 @@ limitations under the License.
 #include "util/AutoUpdate.h"
 
 #include <json/reader.h>  // for CharReaderBuilder, CharReader
-#include <json/value.h>   // for Value
+#include <json/value.h>   // for Value, ValueIterator, ValueIterator...
 
 #include <cstddef>  // for size_t
-#include <fstream>  // IWYU pragma: keep for fstream
-#include <sstream>  // for basic_stringbuf<>::int_type, operator|
+#include <fstream>  // for operator|, fstream, ios, basic_ostr...
 
 #include "config/CommandArgs.h"   // for CommandArgs
 #include "util/FilesystemPath.h"  // for FilesystemPath

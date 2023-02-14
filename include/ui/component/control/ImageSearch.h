@@ -20,13 +20,14 @@ limitations under the License.
 #pragma once
 
 #include <memory>  // for unique_ptr
+#include <string>  // for string
 
 #include "ui/component/control/ScreenImageController.h"  // for ScreenImageC...
-#include "ui/widget/Browser.h"
-#include "ui/widget/Button.h"  // for Button
-#include "ui/widget/DragAndDropHandler.h"
-#include "ui/widget/Label.h"
-#include "ui/widget/Panel.h"  // for Panel
+#include "ui/widget/Browser.h"                           // for Browser
+#include "ui/widget/Button.h"                            // for Button
+#include "ui/widget/DragAndDropHandler.h"                // for DragAndDropH...
+#include "ui/widget/Label.h"                             // for Label
+#include "ui/widget/Panel.h"                             // for Panel
 
 namespace cszb_scoreboard {
 

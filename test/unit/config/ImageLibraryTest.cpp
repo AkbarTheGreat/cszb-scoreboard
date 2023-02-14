@@ -16,9 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest-message.h>    // for Message
-#include <gtest/gtest-test-part.h>  // for TestPartResult
-#include <gtest/gtest.h>            // IWYU pragma: keep
+#include <gtest/gtest.h>  // IWYU pragma: keep for Test, SuiteApiResolver
 
 #include <filesystem>  // for operator<<, operator==
 #include <sstream>     // for basic_stringbuf<>::int_type

@@ -19,22 +19,22 @@ limitations under the License.
 
 #include "ui/component/control/ImageSearch.h"
 
-#include <filesystem>  // for path
-#include <optional>    // for optional
-#include <string>      // for string
+#include <wx/defs.h>     // for wxTOP
+#include <wx/webview.h>  // for wxEVT_WEBVIEW_LOADED
+
+#include <cstdint>  // for int32_t
+#include <string>   // for string
+#include <vector>   // for vector
 
 #include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
-#include "config/swx/event.h"                   // for wxEVT_BUTTON
+#include "config/Position.h"                    // for Size
+#include "config/swx/event.h"                   // for wxEVT_COMMAND_BUTTON_...
 #include "config/swx/image.h"                   // for Image
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
-#include "ui/widget/FilePicker.h"               // for FilePicker
 #include "ui/widget/Label.h"                    // for Label
-#include "ui/widget/PopUp.h"                    // for PopUp
 #include "ui/widget/Widget.h"                   // for NO_BORDER
-#include "util/Clipboard.h"                     // for Clipboard
-#include "util/FilesystemPath.h"                // for FilesystemPath
-#include "util/HttpReader.h"
-#include "util/Log.h"
+#include "util/HttpReader.h"                    // for HttpReader
+#include "util/Log.h"                           // for LogDebug
 
 namespace cszb_scoreboard {
 

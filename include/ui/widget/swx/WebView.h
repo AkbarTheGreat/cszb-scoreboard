@@ -39,17 +39,18 @@ class WebView {
                    const wxSize &size = wxDefaultSize,
                    const wxString &backend = wxWebViewBackendDefault,
                    int64_t style = 0, const wxString &name = wxWebViewNameStr) {
-
 #ifdef _WIN32
-    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge, style, name);
+    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge,
+                         style, name);
     // Log backend information
     LogDebug("Backend: %s Version: %s", _wx->GetClassInfo()->GetClassName(),
              wxWebView::GetBackendVersionInfo().ToString());
     LogDebug("User Agent: %s", _wx->GetUserAgent());
-#else // #ifdef _WIN32
-    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendDefault, style, name);
-#endif // #ifdef _WIN32
-#ifdef SCOREBOARD_DEBUG) 
+#else   // #ifdef _WIN32
+    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendDefault,
+                         style, name);
+#endif  // #ifdef _WIN32
+#ifdef SCOREBOARD_DEBUG
     _wx->EnableAccessToDevTools(true);
 #endif
   }
