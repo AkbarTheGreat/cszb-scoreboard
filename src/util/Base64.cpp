@@ -31,8 +31,8 @@ const char ENCODE_MAP[] = {
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
 
-auto build_decode_map() -> std::unordered_map<char, unsigned char> {
-  std::unordered_map<char, unsigned char> map;
+auto build_decode_map() -> std::unordered_map<char, char> {
+  std::unordered_map<char, char> map;
   for (int i = 0; i < 64; i++) {
     map[ENCODE_MAP[i]] = i;
   }
@@ -41,14 +41,13 @@ auto build_decode_map() -> std::unordered_map<char, unsigned char> {
 
 // I could initialize this lazily instead of at startup, but it's n=64 sized
 // map, so this shouldn't be terribly inefficient to do every time.
-const std::unordered_map<char, unsigned char> DECODE_MAP = build_decode_map();
+const std::unordered_map<char, char> DECODE_MAP = build_decode_map();
 
 auto Base64::encode(const void *data_buffer, int64_t buffer_len)
     -> std::string {
   std::vector<char> output;
   output.reserve(buffer_len * 8 / 6);  // Reserve expected space
-  const unsigned char *char_buffer =
-      static_cast<const unsigned char *>(data_buffer);
+  const char *char_buffer = static_cast<const char *>(data_buffer);
   for (int i = 0; i < buffer_len; i++) {
     int32_t idx = (char_buffer[i] & 0xFC) >> 2;  // 11111100, shifted by two
     output.push_back(ENCODE_MAP[idx]);
@@ -78,12 +77,12 @@ auto Base64::encode(const void *data_buffer, int64_t buffer_len)
   return std::string(output.data());
 }
 
-auto Base64::decode(const std::string &data,
-                    std::vector<unsigned char> *bin_out) -> int64_t {
+auto Base64::decode(const std::string &data, std::vector<char> *bin_out)
+    -> int64_t {
   bin_out->reserve(data.length() * 6 / 8);  // Reserve expected space
   for (int i = 0; i < data.length(); i++) {
-    unsigned char byte = DECODE_MAP.at(data[i])
-                         << 2;  // xx111111 six bits, shifted left by two
+    char byte = DECODE_MAP.at(data[i])
+                << 2;  // xx111111 six bits, shifted left by two
     byte |= (DECODE_MAP.at(data[++i]) & 0x30) >>
             4;  // xx110000, First two bits, shifted right by 4
     bin_out->push_back(byte);

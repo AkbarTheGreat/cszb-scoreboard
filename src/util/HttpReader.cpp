@@ -23,6 +23,7 @@ limitations under the License.
 #include <cstring>
 #include <regex>  // for match_results<>::_Base_type, regex_...
 
+#include "util/Base64.h"
 #include "util/Log.h"  // for LogDebug
 
 namespace cszb_scoreboard {
@@ -122,6 +123,12 @@ auto HttpReader::readBinary(const char *url, std::vector<char> *bin_data,
     return false;
   }
 
+  // data urls are just base64 encoded raw data.  Parse that here without
+  // attempting network traffic.
+  if (std::string(url).starts_with("data")) {
+    return readDataUrl(url, bin_data);
+  }
+
   HttpResponse http_response = read(url);
   if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
@@ -145,6 +152,15 @@ auto HttpReader::readBinary(const char *url, std::vector<char> *bin_data,
     bin_data->resize(bin_data->size() - 1);
   }
 
+  return true;
+}
+
+auto HttpReader::readDataUrl(const char *url, std::vector<char> *bin_data)
+    -> bool {
+  std::string url_str(url);
+  // Strip off the header that looks like "data:image/jpeg;base64,"
+  url_str = url_str.substr(url_str.find_first_of(',') + 1);
+  Base64::decode(url_str, bin_data);
   return true;
 }
 

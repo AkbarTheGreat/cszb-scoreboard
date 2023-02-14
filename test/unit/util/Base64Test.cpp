@@ -34,16 +34,6 @@ const std::string TEST_ENCODE_1 = "TXkgZG9nIGlzIHRoZSBiZXN0IGRvZyEh";
 const std::string TEST_ENCODE_2 = "TXkgZG9nJ3MgYSBnb29kIGRvZz8=";
 const std::string TEST_ENCODE_3 = "VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==";
 
-auto build_string(const std::vector<unsigned char> &data) -> std::string {
-  std::vector<char> str_data;
-  str_data.reserve(data.size());
-  for (auto c : data) {
-    str_data.push_back(static_cast<char>(c));
-  }
-  str_data.push_back('\0');
-  return std::string(str_data.data());
-}
-
 TEST(Base64Test, EncodeStrings) {
   EXPECT_EQ(Base64::encode(TEST_DECODE_1.c_str(), TEST_DECODE_1.length()),
             TEST_ENCODE_1);
@@ -54,15 +44,15 @@ TEST(Base64Test, EncodeStrings) {
 }
 
 TEST(Base64Test, DecodeStrings) {
-  std::vector<unsigned char> output;
+  std::vector<char> output;
   EXPECT_EQ(Base64::decode(TEST_ENCODE_1, &output), TEST_DECODE_1.length());
-  EXPECT_EQ(build_string(output), TEST_DECODE_1);
+  EXPECT_EQ(std::string(output.data()), TEST_DECODE_1);
   output.resize(0);
   EXPECT_EQ(Base64::decode(TEST_ENCODE_2, &output), TEST_DECODE_2.length());
-  EXPECT_EQ(build_string(output), TEST_DECODE_2);
+  EXPECT_EQ(std::string(output.data()), TEST_DECODE_2);
   output.resize(0);
   EXPECT_EQ(Base64::decode(TEST_ENCODE_3, &output), TEST_DECODE_3.length());
-  EXPECT_EQ(build_string(output), TEST_DECODE_3);
+  EXPECT_EQ(std::string(output.data()), TEST_DECODE_3);
 }
 
 }  // namespace cszb_scoreboard::test
