@@ -40,7 +40,7 @@ class HttpReader {
                   int redirect_depth = 0) -> bool;
 
  private:
-  auto readDataUrl(const char *url, std::vector<char> *bin_data) -> bool;
+  static auto readDataUrl(const char *url, std::vector<char> *bin_data) -> bool;
 };
 
 }  // namespace cszb_scoreboard

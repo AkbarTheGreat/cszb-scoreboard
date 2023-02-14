@@ -43,7 +43,6 @@ auto HeldTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
   if (!GetData()) {
     return wxDragNone;
   }
-  auto test = static_cast<wxURLDataObject *>(m_dataObject);
   on_drop(static_cast<int32_t>(x), static_cast<int32_t>(y),
           std::string(static_cast<wxURLDataObject *>(m_dataObject)->GetURL()));
   return def;
