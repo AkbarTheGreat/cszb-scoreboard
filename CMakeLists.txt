@@ -213,6 +213,9 @@ package_add_test(AutoUpdateTest      FALSE test/unit/util/AutoUpdateTest.cpp
                                             src/util/HttpReader.cpp
                                             src/util/StringUtil.cpp
 )
+package_add_test(Base64Test          FALSE test/unit/util/Base64Test.cpp
+                                            src/util/Base64.cpp
+)
 package_add_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
                                             src/util/FilesystemPath.cpp
 )
