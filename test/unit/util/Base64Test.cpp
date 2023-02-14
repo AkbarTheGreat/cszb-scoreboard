@@ -22,25 +22,47 @@ limitations under the License.
 
 namespace cszb_scoreboard::test {
 
-// Will result in a double-pad, due to being 4  bits shy of a 6 bit boundary.
-const std::string TEST_DECODE_1 = "This is a test string.";
+// Will result in no pad, due to being a multiple of 6 bits.
+const std::string TEST_DECODE_1 = "My dog is the best dog!!";
 // Will result in a single pad, due to being 2 bits off of a 6 bit boundary.
 const std::string TEST_DECODE_2 = "My dog's a good dog?";
-// Will result in no pad, due to being a multiple of 6 bits.
-const std::string TEST_DECODE_3 = "My dog is the best dog!!";
+// Will result in a double-pad, due to being 4  bits shy of a 6 bit boundary.
+const std::string TEST_DECODE_3 = "This is a test string.";
 
 // Test encodes calculated using javascript.
-const std::string TEST_ENCODE_1 = "VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==";
+const std::string TEST_ENCODE_1 = "TXkgZG9nIGlzIHRoZSBiZXN0IGRvZyEh";
 const std::string TEST_ENCODE_2 = "TXkgZG9nJ3MgYSBnb29kIGRvZz8=";
-const std::string TEST_ENCODE_3 = "TXkgZG9nIGlzIHRoZSBiZXN0IGRvZyEh";
+const std::string TEST_ENCODE_3 = "VGhpcyBpcyBhIHRlc3Qgc3RyaW5nLg==";
+
+auto build_string(const std::vector<unsigned char> &data) -> std::string {
+  std::vector<char> str_data;
+  str_data.reserve(data.size());
+  for (auto c : data) {
+    str_data.push_back(static_cast<char>(c));
+  }
+  str_data.push_back('\0');
+  return std::string(str_data.data());
+}
 
 TEST(Base64Test, EncodeStrings) {
-  EXPECT_EQ(Base64::encode(TEST_DECODE_1.c_str(), TEST_DECODE_1.length()), "");
+  EXPECT_EQ(Base64::encode(TEST_DECODE_1.c_str(), TEST_DECODE_1.length()),
+            TEST_ENCODE_1);
+  EXPECT_EQ(Base64::encode(TEST_DECODE_2.c_str(), TEST_DECODE_2.length()),
+            TEST_ENCODE_2);
+  EXPECT_EQ(Base64::encode(TEST_DECODE_3.c_str(), TEST_DECODE_3.length()),
+            TEST_ENCODE_3);
 }
 
 TEST(Base64Test, DecodeStrings) {
-  std::vector<char> output;
-  EXPECT_EQ(Base64::decode(TEST_ENCODE_1, &output), -1);
+  std::vector<unsigned char> output;
+  EXPECT_EQ(Base64::decode(TEST_ENCODE_1, &output), TEST_DECODE_1.length());
+  EXPECT_EQ(build_string(output), TEST_DECODE_1);
+  output.resize(0);
+  EXPECT_EQ(Base64::decode(TEST_ENCODE_2, &output), TEST_DECODE_2.length());
+  EXPECT_EQ(build_string(output), TEST_DECODE_2);
+  output.resize(0);
+  EXPECT_EQ(Base64::decode(TEST_ENCODE_3, &output), TEST_DECODE_3.length());
+  EXPECT_EQ(build_string(output), TEST_DECODE_3);
 }
 
 }  // namespace cszb_scoreboard::test

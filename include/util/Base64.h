@@ -27,9 +27,15 @@ namespace cszb_scoreboard {
 
 class Base64 {
  public:
+  // Encode a set of arbitrary data into Base64. Buffer lengths are always
+  // specified in bytes.
   static auto encode(const void *data_buffer, int64_t buffer_len)
       -> std::string;
-  static auto decode(const std::string &data, std::vector<char> *bin_out) -> int64_t;
+  // Decode a Base64 encoded set of data into a vector<char>, which just
+  // contains the binary data.  Returns the length in bytes, although the vector
+  // also knows that.
+  static auto decode(const std::string &data,
+                     std::vector<unsigned char> *bin_out) -> int64_t;
 };
 
 }  // namespace cszb_scoreboard
