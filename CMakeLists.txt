@@ -210,6 +210,7 @@ package_add_test(ImageLibraryTest  FALSE test/unit/config/ImageLibraryTest.cpp
 package_add_test(AutoUpdateTest      FALSE test/unit/util/AutoUpdateTest.cpp
                                             src/util/AutoUpdate.cpp
                                             src/config/CommandArgs.cpp
+                                            src/util/Base64.cpp
                                             src/util/HttpReader.cpp
                                             src/util/StringUtil.cpp
 )
