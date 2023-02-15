@@ -30,6 +30,12 @@ limitations under the License.
 
 namespace cszb_scoreboard::swx {
 
+#ifdef _WIN32
+#define WX_WEB_ENGINE wxWebViewBackendEdge
+#else  // #ifdef _WIN32
+#define WX_WEB_ENGINE wxWebViewBackendDefault
+#endif  // #ifdef _WIN32
+
 class WebView {
  public:
   explicit WebView(wxWindow *parent,
@@ -39,18 +45,10 @@ class WebView {
                    const wxSize &size = wxDefaultSize,
                    const wxString &backend = wxWebViewBackendDefault,
                    int64_t style = 0, const wxString &name = wxWebViewNameStr) {
-#ifdef _WIN32
-    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendEdge,
-                         style, name);
-    // Log backend information
-    LogDebug("Backend: %s Version: %s", _wx->GetClassInfo()->GetClassName(),
-             wxWebView::GetBackendVersionInfo().ToString());
-    LogDebug("User Agent: %s", _wx->GetUserAgent());
-#else   // #ifdef _WIN32
-    _wx = wxWebView::New(parent, id, url, pos, size, wxWebViewBackendDefault,
-                         style, name);
-#endif  // #ifdef _WIN32
+    _wx =
+        wxWebView::New(parent, id, url, pos, size, WX_WEB_ENGINE, style, name);
 #ifdef SCOREBOARD_DEBUG
+    // Allow access to the developer console in debug mode.
     _wx->EnableAccessToDevTools(true);
 #endif
   }
