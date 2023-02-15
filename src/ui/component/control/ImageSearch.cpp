@@ -132,11 +132,17 @@ void ImageSearch::tweakGoogleImages() {
       "document.ondragstart = function(event) {"
       "  event.dataTransfer.setData( 'text', "
       "  event.srcElement.getAttribute('src'));"
+      "};"
       // This next bit attempts to remove the "Search any image with Google
-      // Lens" popup on images.google.com.
+      // Lens" popup on images.google.com.  We look for it the entire drag until
+      // it pops up, then we get rid of it and unregister the callback.  The
+      // class name could possibly change on us in the future, but I suspect it
+      // won't often.
+      "document.ondrag = function(event) {"
       "  var popup = document.getElementsByClassName('ea0Lbe')[0];"
       "  if (popup) {"
       "    popup.parentElement.removeChild(popup);"
+      "    document.ondrag = null;"
       "  }"
       "};");
 }
