@@ -44,15 +44,15 @@ our $APP_RESOURCES = $APP_CONTAINER . '/Resources';
 
 our $DOCKER_TAG = 'osxcross_release';
 
-my ( $opt_help, $opt_version, $opt_dry_run, $opt_test_build, $opt_internal );
+my ( $opt_help, $opt_version, $opt_verbose, $opt_test_build, $opt_internal );
 
 my %options = (
    'help|?'    => { 'val' => \$opt_help, 'help' => 'This help' },
    'version=s' =>
        { 'val' => \$opt_version, 'help' => 'Version to release (required)' },
-   'dry_run' => { 'val'  => \$opt_dry_run,
-                  'help' => 'Print steps, take no action.'
-                },
+   'noisy' => { 'val'  => \$opt_verbose,
+                'help' => 'Print commands as they run.'
+              },
    'test_build' => { 'val'  => \$opt_test_build,
                      'help' => 'Build a debug version for testing.'
                    },
@@ -84,13 +84,20 @@ sub parse_options {
 
 sub run_cmd {
    my @cmd = @_;
-   if ($opt_dry_run) {
+   if ($opt_verbose) {
       say '>', join ' ', @cmd;
-   } else {
-      system @cmd;
-      return $?;
    }
-   return 0;
+   system @cmd;
+   return $?;
+}
+
+sub run_cmd_tick {
+   my @cmd = @_;
+   my $cmd = join ' ', @cmd;
+   if ($opt_verbose) {
+      say '>', $cmd;
+   }
+   return `$cmd`;
 }
 
 sub build_release {
@@ -159,12 +166,13 @@ sub fix_dylibs {
        . $ENV{'OSXCROSS_HOST'}
        . '-install_name_tool';
 
-   my @libraries = `$otool -L $process_binary`;
+   my @libraries = run_cmd_tick($otool, '-L', $process_binary);
    for my $found_lib (@libraries) {
       chomp($found_lib);
       $found_lib =~ s/\s+\(.*//;
+      $found_lib =~ s/^\s+//;
       my $lib = $found_lib;
-      next unless $lib =~ s#^\s+/opt/local/##;
+      next unless $lib =~ s#^/opt/local/##;
       my $libname = basename($lib);
 
       my $source_lib
@@ -182,7 +190,8 @@ sub fix_dylibs {
                      '@executable_path/' . $libname,
                      $process_binary );
       return $result if $result;
-      return fix_dylibs( $target_lib, @processed_libs );
+      $result = fix_dylibs( $target_lib, @processed_libs );
+      return $result if $result;
    }
 
 }
