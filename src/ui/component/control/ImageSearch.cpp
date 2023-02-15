@@ -111,7 +111,7 @@ void ImageSearch::bindEvents() {
 
 void ImageSearch::onURLDrop(const std::string &url) {
   HttpReader reader;
-  LogDebug("Dropped Image URL %s", url);
+  LogDebug("Dropped Image URL %s", url.c_str());
   std::vector<char> image_data;
   reader.readBinary(url.c_str(), &image_data);
   Image urlImage = Image::FromData(image_data);
