@@ -24,7 +24,9 @@ limitations under the License.
 #include <memory>   // for unique_ptr, make_unique
 
 #include "config/Position.h"                    // for Position, Size
-#include "ui/dialog/SettingsDialog.h"           // for SettingsDialog
+#include "ui/dialog/EditImageLibraryDialog.h"   // IWYU pragma: keep for Dialog
+#include "ui/dialog/SettingsDialog.h"           // IWYU pragma: keep for Dialog
+#include "ui/dialog/TeamLibraryDialog.h"        // IWYU pragma: keep for Dialog
 #include "ui/widget/Frame.h"                    // for Frame
 #include "ui/widget/Panel.h"                    // for Panel
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
@@ -33,6 +35,10 @@ limitations under the License.
 // IWYU pragma: no_include <wx/gtk/app.h>
 
 namespace cszb_scoreboard {
+
+// #define DIALOG_TYPE EditImageLibraryDialog
+// #define DIALOG_TYPE SettingsDialog
+#define DIALOG_TYPE TeamLibraryDialog
 
 static constexpr int START_X = 50;
 static constexpr int START_Y = 50;
@@ -58,8 +64,7 @@ class DialogTest : public wxApp {
 
  private:
   std::unique_ptr<TestFrame> frame;
-  // std::unique_ptr<EditImageLibraryDialog> dialog;
-  std::unique_ptr<SettingsDialog> dialog;
+  std::unique_ptr<DIALOG_TYPE> dialog;
 };
 
 auto DialogTest::OnInit() -> bool {
@@ -71,8 +76,7 @@ auto DialogTest::OnInit() -> bool {
   Singleton::getInstance()->persistence();
   auto *prop_sheet =
       new swx::PropertySheetDialog(frame->panel->wx(), wxID_ANY, "Test");
-  // dialog = std::make_unique<EditImageLibraryDialog>(prop_sheet, nullptr);
-  dialog = std::make_unique<SettingsDialog>(prop_sheet, nullptr);
+  dialog = std::make_unique<DIALOG_TYPE>(prop_sheet, nullptr);
   dialog->bind(wxEVT_CLOSE_WINDOW,
                [this](wxCloseEvent &event) -> void { std::exit(0); });
   dialog->show();
