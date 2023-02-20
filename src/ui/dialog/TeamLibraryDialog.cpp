@@ -19,11 +19,13 @@ limitations under the License.
 
 #include "ui/dialog/TeamLibraryDialog.h"
 
+#include <string>  // for string, basic_string
 #include <vector>  // for vector
 
-#include "config.pb.h"         // for TeamInfo_TeamType_AW...
-#include "config/swx/defs.h"   // for wxID_CANCEL, wxID_OK
-#include "config/swx/event.h"  // for wxEVT_BUTTON
+#include "config.pb.h"           // for TeamInfo_TeamType_AWAY_TEAM, TeamInf...
+#include "config/swx/defs.h"     // for wxID_CANCEL, wxID_OK
+#include "config/swx/event.h"    // for wxEVT_BUTTON
+#include "ui/widget/DropDown.h"  // for DropDown
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
@@ -76,7 +78,8 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   file_name_entry = bottom_panel->text("");
 
   default_team_label = bottom_panel->label("Default Side");
-  default_team_selector = bottom_panel->label("<PLACEHOLDER FOR DROPDOWN>");
+  std::vector<std::string> choices = {"", "Home", "Away"};
+  default_team_selector = bottom_panel->dropDown(choices);
 
   add_update_button = bottom_panel->button("Add");
 

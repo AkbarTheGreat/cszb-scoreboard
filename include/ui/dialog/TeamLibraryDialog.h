@@ -26,6 +26,7 @@ limitations under the License.
 #include "ui/dialog/team_library/TeamSelectionEntry.h"  // for TeamSelection...
 #include "ui/widget/Button.h"                           // for Button
 #include "ui/widget/Divider.h"                          // for Divider
+#include "ui/widget/DropDown.h"                         // for DropDown
 #include "ui/widget/Label.h"                            // for Label
 #include "ui/widget/Panel.h"                            // for Panel
 #include "ui/widget/ScrollingPanel.h"                   // for ScrollingPanel
@@ -66,7 +67,7 @@ class TeamLibraryDialog : public TabbedDialog {
   std::unique_ptr<Label> file_name_label;
   std::unique_ptr<Text> file_name_entry;
   std::unique_ptr<Label> default_team_label;
-  std::unique_ptr<Label> default_team_selector;
+  std::unique_ptr<DropDown> default_team_selector;
   std::unique_ptr<Button> add_update_button;
 
   void bindEvents();
