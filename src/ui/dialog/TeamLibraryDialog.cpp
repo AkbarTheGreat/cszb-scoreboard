@@ -19,8 +19,6 @@ limitations under the License.
 
 #include "ui/dialog/TeamLibraryDialog.h"
 
-#include <google/protobuf/repeated_ptr_field.h>  // for RepeatedPtrField
-
 #include <vector>  // for vector
 
 #include "config.pb.h"         // for TeamInfo_TeamType_AW...
@@ -42,7 +40,7 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   this->parent = parent;
   this->singleton = singleton;
 
-  library = proto::TeamLibrary();  // TODO: Load/Save with Persistence.cpp
+  library = proto::TeamLibrary();  // TODO(akbar): Load/Save with Persistence.cpp
 
   // For testing, populate some default values.  These are just some teams we
   // use in Boston, they're placeholders.
@@ -159,7 +157,7 @@ void TeamLibraryDialog::onCancel() { close(); }
 auto TeamLibraryDialog::validateSettings() -> bool { return true; }
 
 void TeamLibraryDialog::saveSettings() {
-  // TODO: Save
+  // TODO(akbar): Save
 }
 
 }  // namespace cszb_scoreboard
