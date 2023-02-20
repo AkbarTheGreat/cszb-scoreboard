@@ -27,6 +27,7 @@ limitations under the License.
 #include <cstdint>  // for int64_t
 #include <memory>   // for unique_ptr
 #include <string>   // for string
+#include <vector>
 
 #include "config/Position.h"                    // for Size
 #include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
@@ -55,6 +56,7 @@ class Text;
 class Toggle;
 class LabelledArea;
 class FilesystemPath;
+class DropDown;
 
 class Panel : public Widget {
  public:
@@ -72,6 +74,8 @@ class Panel : public Widget {
   [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
       -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
+  [[nodiscard]] auto dropDown(const std::vector<std::string> &choices) const
+      -> std::unique_ptr<DropDown>;
   [[nodiscard]] auto openDirectoryPicker(
       const std::string &title, const FilesystemPath &initial_dir) const
       -> std::unique_ptr<DirectoryPicker>;
