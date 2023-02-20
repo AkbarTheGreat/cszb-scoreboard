@@ -19,29 +19,22 @@ limitations under the License.
 
 #include "ui/dialog/TeamLibraryDialog.h"
 
-#include <wx/string.h>  // for wxString
+#include <google/protobuf/repeated_ptr_field.h>  // for RepeatedPtrField
 
-#include <cstdint>     // for int32_t, int64_t
-#include <filesystem>  // for operator==, path
-#include <optional>    // for optional
-#include <string>      // for string
-#include <vector>      // for vector
+#include <vector>  // for vector
 
-#include "ScoreboardCommon.h"                          // for DEFAULT_BORDER...
-#include "config/swx/defs.h"                           // for wxID_CANCEL
-#include "config/swx/event.h"                          // for wxListEvent
-#include "ui/component/control/ImageFromLibrary.h"     // for ImageFromLibrary
-#include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-#include "ui/widget/DirectoryPicker.h"                 // for DirectoryPicker
-#include "util/Log.h"                                  // for LogDebug
-// IWYU pragma: no_include <ext/alloc_traits.h>
+#include "config.pb.h"         // for TeamInfo_TeamType_AW...
+#include "config/swx/defs.h"   // for wxID_CANCEL, wxID_OK
+#include "config/swx/event.h"  // for wxEVT_BUTTON
 
 namespace cszb_scoreboard {
+class ScoreControl;
+
 namespace swx {
 class PropertySheetDialog;
 }  // namespace swx
 
-const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+constexpr int TEAMS_BEFORE_SCROLL = 5;
 
 TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
                                      ScoreControl *parent, Singleton *singleton)
@@ -51,29 +44,97 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
 
   library = proto::TeamLibrary();  // TODO: Load/Save with Persistence.cpp
 
-  box_panel = panel();
-  name_entry = box_panel->text("Rozzie Square Pegs");
-  name_label = box_panel->label("Team name");
+  // For testing, populate some default values.  These are just some teams we
+  // use in Boston, they're placeholders.
+  proto::TeamLibInfo *home_team_info = library.add_teams();
+  home_team_info->set_default_team_type(proto::TeamInfo_TeamType_HOME_TEAM);
+  home_team_info->set_name("Rozzie Square Pegs");
+  home_team_info->set_image_path("c:\\logos\\RSP.png");
+  home_team_info->set_is_relative(false);
+  proto::TeamLibInfo *away_team_info = library.add_teams();
+  away_team_info->set_default_team_type(proto::TeamInfo_TeamType_AWAY_TEAM);
+  away_team_info->set_name("Boston Baked Beans");
+  away_team_info->set_image_path("BBB.png");
+  away_team_info->set_is_relative(true);
+  proto::TeamLibInfo *third_team_info = library.add_teams();
+  third_team_info->set_name("Waltham Sandwiches");
+  proto::TeamLibInfo *fourth_team_info = library.add_teams();
+  fourth_team_info->set_name("Brookline NSynchers");
+  // End testing stuff to be deleted
 
-  file_name_label = box_panel->label("Logo Filename");
-  file_name_entry = box_panel->text("<filename>");
+  box_panel = panel();
+  team_selection_scrolling = box_panel->scrollingPanel();
+  team_selection = team_selection_scrolling->panel();
+  bottom_panel = box_panel->panel();
+
+  divider = bottom_panel->divider();
+
+  name_entry = bottom_panel->text("");
+  name_label = bottom_panel->label("Team name");
+
+  file_name_label = bottom_panel->label("Logo Filename");
+  file_name_entry = bottom_panel->text("");
+
+  default_team_label = bottom_panel->label("Default Side");
+  default_team_selector = bottom_panel->label("<PLACEHOLDER FOR DROPDOWN>");
+
+  add_update_button = bottom_panel->button("Add");
 
   positionWidgets();
   bindEvents();
 }
 
 void TeamLibraryDialog::positionWidgets() {
-  int32_t row = 0;
-  box_panel->addWidgetWithSpan(*name_label, ++row, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*name_entry, row, 1, 1, 3);
+  int row = -1;
+  bottom_panel->addWidgetWithSpan(*divider, ++row, 0, 1, 2);
 
-  box_panel->addWidgetWithSpan(*file_name_label, ++row, 0, 1, 1);
-  box_panel->addWidgetWithSpan(*file_name_entry, row, 1, 1, 3);
+  bottom_panel->addWidget(*name_label, ++row, 0);
+  bottom_panel->addWidget(*name_entry, row, 1);
+
+  bottom_panel->addWidget(*file_name_label, ++row, 0);
+  bottom_panel->addWidget(*file_name_entry, row, 1);
+
+  bottom_panel->addWidget(*default_team_label, ++row, 0);
+  bottom_panel->addWidget(*default_team_selector, row, 1);
+
+  bottom_panel->addWidget(*add_update_button, ++row, 0);
+
+  bottom_panel->runSizer();
+
+  team_selection_scrolling->addWidget(*team_selection, 0, 0);
+
+  populateTeamSelection();
+
+  box_panel->addWidget(*team_selection_scrolling, 0, 0);
+  box_panel->addWidget(*bottom_panel, 1, 0);
 
   box_panel->runSizer();
 
   addPage(*box_panel, "");
   runSizer();
+  team_selection->runSizer();
+  team_selection_scrolling->runSizer();
+}
+
+void TeamLibraryDialog::populateTeamSelection() {
+  team_selection_entries.reserve(library.teams_size());
+  for (const auto &team : library.teams()) {
+    team_selection_entries.emplace_back(std::make_unique<TeamSelectionEntry>(
+        team_selection->childPanel(), this, team));
+  }
+
+  int row = 0;
+  for (const auto &entry : team_selection_entries) {
+    team_selection->addWidget(*entry, row++, 0);
+    if (row == TEAMS_BEFORE_SCROLL) {
+      team_selection->runSizer();
+      team_selection_scrolling->runSizer();
+    }
+  }
+  if (row < TEAMS_BEFORE_SCROLL) {
+    team_selection->runSizer();
+    team_selection_scrolling->runSizer();
+  }
 }
 
 void TeamLibraryDialog::bindEvents() {

@@ -18,32 +18,27 @@ limitations under the License.
 */
 #pragma once
 
-#include <map>     // for map
 #include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
-#include "ScoreboardCommon.h"     // for PUBLIC_TEST_ONLY
-#include "config/ImageLibrary.h"  // for TemporaryImage...
-#include "team_library.pb.h"
-#include "ui/dialog/edit_image_library/FileListBox.h"  // for FileListBox
-#include "ui/widget/Button.h"                          // for Button
-#include "ui/widget/Divider.h"                         // for Divider
-#include "ui/widget/Label.h"                           // for Label
-#include "ui/widget/ListBox.h"                         // for ListBox
-#include "ui/widget/Panel.h"                           // for Panel
-#include "ui/widget/TabbedDialog.h"                    // for TabbedDialog
-#include "ui/widget/Text.h"                            // for Text
-#include "util/FilesystemPath.h"                       // for FilesystemPath
-#include "util/Singleton.h"                            // for Singleton
-#include "ui/component/control/ScoreControl.h"
-
-class wxListEvent;
+#include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
+#include "team_library.pb.h"                            // for TeamLibrary
+#include "ui/dialog/team_library/TeamSelectionEntry.h"  // for TeamSelection...
+#include "ui/widget/Button.h"                           // for Button
+#include "ui/widget/Divider.h"                          // for Divider
+#include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/ScrollingPanel.h"                   // for ScrollingPanel
+#include "ui/widget/TabbedDialog.h"                     // for TabbedDialog
+#include "ui/widget/Text.h"                             // for Text
+#include "util/Singleton.h"                             // for Singleton
 
 namespace cszb_scoreboard {
+class ScoreControl;
+
 namespace swx {
 class PropertySheetDialog;
 }  // namespace swx
-
-class ImageFromLibrary;
 
 class TeamLibraryDialog : public TabbedDialog {
  public:
@@ -61,13 +56,22 @@ class TeamLibraryDialog : public TabbedDialog {
 
   // UI elements
   std::unique_ptr<Panel> box_panel;
+  std::unique_ptr<Panel> bottom_panel;
+  std::unique_ptr<Panel> team_selection;
+  std::unique_ptr<ScrollingPanel> team_selection_scrolling;
+  std::vector<std::unique_ptr<TeamSelectionEntry>> team_selection_entries;
+  std::unique_ptr<Divider> divider;
   std::unique_ptr<Label> name_label;
   std::unique_ptr<Text> name_entry;
   std::unique_ptr<Label> file_name_label;
   std::unique_ptr<Text> file_name_entry;
+  std::unique_ptr<Label> default_team_label;
+  std::unique_ptr<Label> default_team_selector;
+  std::unique_ptr<Button> add_update_button;
 
   void bindEvents();
   void positionWidgets();
+  void populateTeamSelection();
   void saveSettings();
   static auto validateSettings() -> bool;
   void onOk();
