@@ -16,10 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>  // IWYU pragma: keep for GTest
-
 #include <memory>  // for allocator
 
+#include "gtest/gtest.h"      // for Test, EXPECT_EQ, Message, TestPartResult
 #include "util/StringUtil.h"  // for StringUtil
 
 // extern wxColourDatabase *wxTheColourDatabase;

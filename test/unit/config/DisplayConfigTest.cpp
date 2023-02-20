@@ -17,7 +17,6 @@ limitations under the License.
 */
 
 #include <google/protobuf/util/message_differencer.h>  // for MessageDiffere...
-#include <gtest/gtest.h>                               // IWYU pragma: keep for SuiteApiResolver
 #include <wx/gdicmn.h>                                 // for wxRect, wxPoint
 
 #include <cstdint>  // for int32_t
@@ -27,6 +26,7 @@ limitations under the License.
 #include "config.pb.h"                             // for DisplayConfig
 #include "config/DisplayConfig.h"                  // for DisplayConfig
 #include "gmock/gmock.h"                           // for Return, Return...
+#include "gtest/gtest.h"                           // for AssertionResult
 #include "test/TestUtil.h"                         // for EXPECT_ASSERT
 #include "test/mocks/config/MockPersistence.h"     // for MockPersistence
 #include "test/mocks/ui/frame/MockFrameManager.h"  // for MockFrameManager

@@ -16,20 +16,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>  // IWYU pragma: keep for Test, SuiteApiResolver
-
 #include <filesystem>  // for operator<<, operator==
 #include <sstream>     // for basic_stringbuf<>::int_type
 #include <string>      // for string, operator+, allocator
 #include <vector>      // for vector
 
 #include "config/ImageLibrary.h"            // for ImageLibrary, ImageSearch...
+#include "gtest/gtest.h"                    // for Test, Message, TestPartRe...
 #include "image_library.pb.h"               // for ImageInfo, ImageLibrary
 #include "test/mocks/util/MockSingleton.h"  // for MockSingleton
 #include "util/FilesystemPath.h"            // for FilesystemPath
 #include "util/Singleton.h"                 // for SingletonClass
-// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
-// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

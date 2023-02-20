@@ -24,6 +24,7 @@ limitations under the License.
 #include "config.pb.h"         // for TeamInfo_TeamType_AW...
 #include "config/swx/defs.h"   // for wxID_CANCEL, wxID_OK
 #include "config/swx/event.h"  // for wxEVT_BUTTON
+// IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
 class ScoreControl;
@@ -40,7 +41,8 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   this->parent = parent;
   this->singleton = singleton;
 
-  library = proto::TeamLibrary();  // TODO(akbar): Load/Save with Persistence.cpp
+  library =
+      proto::TeamLibrary();  // TODO(akbar): Load/Save with Persistence.cpp
 
   // For testing, populate some default values.  These are just some teams we
   // use in Boston, they're placeholders.

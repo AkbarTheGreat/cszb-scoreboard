@@ -16,11 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>  // IWYU pragma: keep for GTest
-
 #include <filesystem>  // for path::preferred_separator
 #include <string>      // for allocator, string
 
+#include "gtest/gtest.h"          // for AssertionResult, Test, Message, Tes...
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
 #ifdef _WIN32

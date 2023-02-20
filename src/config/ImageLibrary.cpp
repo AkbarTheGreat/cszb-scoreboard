@@ -29,6 +29,7 @@ limitations under the License.
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "util/Log.h"             // for LogDebug
 #include "util/Singleton.h"       // for Singleton, Singleton...
+// IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
 

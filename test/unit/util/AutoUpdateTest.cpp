@@ -16,14 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>  // IWYU pragma: keep for Test, CmpHelperGE, CmpHe...
-
 #include <memory>   // for allocator, unique_ptr
 #include <string>   // for string
 #include <utility>  // for move
 #include <vector>   // for vector
 
 #include "gmock/gmock.h"                     // for Return, ReturnAction
+#include "gtest/gtest.h"                     // for AssertionResult, Message
 #include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
 #include "test/mocks/util/MockSingleton.h"   // for MockSingleton
 #include "util/AutoUpdate.h"                 // for Version, AutoUpdate
