@@ -39,7 +39,7 @@ class TeamConfig {
   auto singleScreenOrder() -> std::vector<proto::TeamInfo_TeamType>;
   auto teamColor(proto::TeamInfo_TeamType team) -> Color;
   auto teamColor(const proto::ScreenSide &side) -> std::vector<Color>;
-  auto teamName(proto::TeamInfo_TeamType team) -> std::string;
+  static auto teamName(proto::TeamInfo_TeamType team) -> std::string;
 
   PUBLIC_TEST_ONLY
   TeamConfig(SingletonClass c, Singleton *singleton);

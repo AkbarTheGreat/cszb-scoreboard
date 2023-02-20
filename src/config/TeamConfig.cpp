@@ -167,7 +167,7 @@ auto TeamConfig::teamColor(const proto::ScreenSide &side)
 }
 
 auto TeamConfig::teamName(proto::TeamInfo_TeamType team) -> std::string {
-  switch (team_config.teams(indexForTeam(team)).team_type()) {
+  switch (team) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
       return "Home";
     case proto::TeamInfo_TeamType_AWAY_TEAM:
