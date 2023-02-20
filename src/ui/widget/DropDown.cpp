@@ -31,7 +31,7 @@ DropDown::DropDown(swx::Choice *choice,
 }
 
 auto DropDown::selected() -> std::string {
-  return std::string(_wx->GetString(_wx->GetSelection()).c_str());
+  return {_wx->GetString(_wx->GetSelection()).c_str()};
 }
 
 }  // namespace cszb_scoreboard
