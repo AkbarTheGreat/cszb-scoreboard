@@ -16,15 +16,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest-message.h>    // for Message
-#include <gtest/gtest-test-part.h>  // for TestPartResult
-#include <gtest/gtest.h>            // IWYU pragma: keep for GTest
+#include <gtest/gtest.h>  // IWYU pragma: keep for GTest
 
 #include <filesystem>  // for path::preferred_separator
 #include <string>      // for allocator, string
 
-#include "gtest/gtest_pred_impl.h"  // for AssertionResult, Test, EXPECT_EQ
-#include "util/FilesystemPath.h"    // for FilesystemPath
+#include "util/FilesystemPath.h"  // for FilesystemPath
 
 #ifdef _WIN32
 const char *ROOT = "C:\\test";

@@ -34,7 +34,6 @@ const std::array<char, DATA_WIDTH> ENCODE_MAP{
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
 
-
 auto build_decode_map() -> std::unordered_map<char, char> {
   std::unordered_map<char, char> map;
   for (int i = 0; i < DATA_WIDTH; i++) {

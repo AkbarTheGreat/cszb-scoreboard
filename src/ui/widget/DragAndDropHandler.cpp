@@ -24,6 +24,7 @@ limitations under the License.
 #include <wx/window.h>  // for wxWindow
 
 #include "ui/widget/Widget.h"  // for Widget
+// IWYU pragma: no_include <wx/gtk/dataobj2.h>
 
 namespace cszb_scoreboard {
 

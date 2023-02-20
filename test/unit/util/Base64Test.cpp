@@ -18,7 +18,10 @@ limitations under the License.
 
 #include <gtest/gtest.h>  // IWYU pragma: keep for GTest
 
-#include "util/Base64.h"
+#include <string>  // for string, allocator
+#include <vector>  // for vector
+
+#include "util/Base64.h"  // for Base64
 
 namespace cszb_scoreboard::test {
 

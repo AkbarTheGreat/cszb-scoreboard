@@ -166,7 +166,7 @@ sub fix_dylibs {
        . $ENV{'OSXCROSS_HOST'}
        . '-install_name_tool';
 
-   my @libraries = run_cmd_tick($otool, '-L', $process_binary);
+   my @libraries = run_cmd_tick( $otool, '-L', $process_binary );
    for my $found_lib (@libraries) {
       chomp($found_lib);
       $found_lib =~ s/\s+\(.*//;
