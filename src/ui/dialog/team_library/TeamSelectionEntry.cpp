@@ -20,6 +20,8 @@ limitations under the License.
 
 #include "ui/dialog/team_library/TeamSelectionEntry.h"
 
+#include <wx/event.h>  // for wxCommandEvent (ptr only), wxEVT_BUTTON
+
 #include "config/TeamConfig.h"  // for TeamConfig
 #include "team_library.pb.h"    // for TeamLibInfo
 
@@ -29,7 +31,7 @@ class Panel;
 }  // namespace swx
 
 TeamSelectionEntry::TeamSelectionEntry(swx::Panel* wx,
-                                       TeamLibraryDialog* owning_controller,
+                                       TeamSelectionBox* owning_controller,
                                        const proto::TeamLibInfo& team)
     : Panel(wx) {
   parent = owning_controller;

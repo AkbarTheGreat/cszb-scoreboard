@@ -22,7 +22,7 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 
-#include "config.pb.h"              // for TeamInfo_TeamType
+#include "team_library.pb.h"
 #include "ui/widget/Button.h"       // for Button
 #include "ui/widget/Label.h"        // for Label
 #include "ui/widget/Panel.h"        // for Panel
@@ -30,8 +30,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class TeamSelectionBox;
-
+class TeamLibraryDialog;
 namespace proto {
 class TeamLibInfo;
 }  // namespace proto
@@ -41,11 +40,11 @@ class Panel;
 
 class TeamSelectionEntry : public Panel {
  public:
-  TeamSelectionEntry(swx::Panel* wx, TeamSelectionBox* owning_controller,
+  TeamSelectionEntry(swx::Panel* wx, TeamLibraryDialog* owning_controller,
                      const proto::TeamLibInfo& team);
 
  private:
-  TeamSelectionBox* parent;
+  TeamLibraryDialog* parent;
   std::unique_ptr<Button> clear;
   std::unique_ptr<RadioButton> home;
   std::unique_ptr<RadioButton> away;

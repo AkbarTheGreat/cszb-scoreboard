@@ -35,8 +35,6 @@ namespace swx {
 class PropertySheetDialog;
 }  // namespace swx
 
-constexpr int TEAMS_BEFORE_SCROLL = 5;
-
 TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
                                      ScoreControl *parent, Singleton *singleton)
     : TabbedDialog(wx) {
@@ -46,8 +44,8 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   library = singleton->persistence()->loadTeamLibrary();
 
   box_panel = panel();
-  team_selection_scrolling = box_panel->scrollingPanel();
-  team_selection = team_selection_scrolling->panel();
+  team_selection =
+      std::make_unique<TeamSelectionBox>(box_panel->childPanel(), this);
   bottom_panel = box_panel->panel();
 
   divider = bottom_panel->divider();
@@ -85,40 +83,14 @@ void TeamLibraryDialog::positionWidgets() {
 
   bottom_panel->runSizer();
 
-  team_selection_scrolling->addWidget(*team_selection, 0, 0);
-
-  populateTeamSelection();
-
-  box_panel->addWidget(*team_selection_scrolling, 0, 0);
+  box_panel->addWidget(*team_selection, 0, 0);
   box_panel->addWidget(*bottom_panel, 1, 0);
 
   box_panel->runSizer();
 
   addPage(*box_panel, "");
   runSizer();
-  team_selection->runSizer();
-  team_selection_scrolling->runSizer();
-}
-
-void TeamLibraryDialog::populateTeamSelection() {
-  team_selection_entries.reserve(library.teams_size());
-  for (const auto &team : library.teams()) {
-    team_selection_entries.emplace_back(std::make_unique<TeamSelectionEntry>(
-        team_selection->childPanel(), this, team));
-  }
-
-  int row = 0;
-  for (const auto &entry : team_selection_entries) {
-    team_selection->addWidget(*entry, row++, 0);
-    if (row == TEAMS_BEFORE_SCROLL) {
-      team_selection->runSizer();
-      team_selection_scrolling->runSizer();
-    }
-  }
-  if (row < TEAMS_BEFORE_SCROLL) {
-    team_selection->runSizer();
-    team_selection_scrolling->runSizer();
-  }
+  team_selection->updateList();
 }
 
 void TeamLibraryDialog::bindEvents() {
