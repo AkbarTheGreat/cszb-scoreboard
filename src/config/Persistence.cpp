@@ -117,6 +117,10 @@ void Persistence::loadTeamLibraryFromDisk() {
   third_team_info->set_name("Waltham Sandwiches");
   proto::TeamLibInfo *fourth_team_info = team_library.add_teams();
   fourth_team_info->set_name("Brookline NSynchers");
+  proto::TeamLibInfo *fifth_team_info = team_library.add_teams();
+  fifth_team_info->set_name("Somervillains");
+  proto::TeamLibInfo *sixth_team_info = team_library.add_teams();
+  sixth_team_info->set_name("West Roxbury'd Treasure");
   // End testing stuff to be deleted
 #else
   std::fstream input(TEAM_LIBRARY_FILE, std::ios::in | std::ios::binary);
