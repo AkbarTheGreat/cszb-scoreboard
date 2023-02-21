@@ -26,6 +26,7 @@ limitations under the License.
 #include "ui/widget/Label.h"        // for Label
 #include "ui/widget/Panel.h"        // for Panel
 #include "ui/widget/RadioButton.h"  // for RadioButton
+#include "team_library.pb.h"
 
 namespace cszb_scoreboard {
 
@@ -50,6 +51,11 @@ class TeamSelectionEntry : public Panel {
   std::unique_ptr<Label> name;
   std::unique_ptr<Label> default_team;
   std::unique_ptr<Label> buffer;
+
+  void bindEvents();
+  void positionWidgets();
+  void clearButtonPressed();
+  void teamSelectionChanged(proto::TeamInfo_TeamType new_team);
 };
 
 }  // namespace cszb_scoreboard

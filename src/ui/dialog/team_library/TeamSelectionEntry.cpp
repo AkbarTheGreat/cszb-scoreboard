@@ -42,6 +42,11 @@ TeamSelectionEntry::TeamSelectionEntry(swx::Panel* wx,
   // Add a little buffer on the right so the scrollbar doesn't cover text
   buffer = label("   ");
 
+  positionWidgets();
+  bindEvents();
+}
+
+void TeamSelectionEntry::positionWidgets() {
   int col = 0;
   addWidget(*clear, 0, col++);
   addWidget(*home, 0, col++);
@@ -52,5 +57,20 @@ TeamSelectionEntry::TeamSelectionEntry(swx::Panel* wx,
 
   runSizer();
 }
+
+void TeamSelectionEntry::bindEvents() {
+  clear->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
+    this->clearButtonPressed();
+  });
+}
+
+void TeamSelectionEntry::clearButtonPressed() {
+  home->setSelected(false);
+  away->setSelected(false);
+  teamSelectionChanged(proto::TeamInfo_TeamType_TEAM_ERROR);
+}
+
+void TeamSelectionEntry::teamSelectionChanged(
+    proto::TeamInfo_TeamType new_team) {}
 
 }  // namespace cszb_scoreboard
