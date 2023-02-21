@@ -20,12 +20,12 @@ limitations under the License.
 
 #include "ui/dialog/team_library/TeamSelectionBox.h"
 
-#include <google/protobuf/repeated_ptr_field.h>  // for RepeatedPtrField
-#include <stdint.h>                              // for int32_t
+#include <cstdint>  // for int32_t
 
 #include "config/Persistence.h"        // for Persistence
 #include "team_library.pb.h"           // for TeamLibrary
 #include "ui/widget/ScrollingPanel.h"  // for ScrollingPanel
+// IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
 

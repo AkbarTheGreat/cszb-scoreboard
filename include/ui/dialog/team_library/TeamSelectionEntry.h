@@ -20,9 +20,8 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>  // for int32_t
-
-#include <memory>  // for unique_ptr
+#include <cstdint>  // for int32_t
+#include <memory>   // for unique_ptr
 
 #include "config.pb.h"              // for TeamInfo_TeamType
 #include "ui/widget/Button.h"       // for Button
