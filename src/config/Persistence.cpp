@@ -33,11 +33,13 @@ namespace cszb_scoreboard {
 
 const char *CONFIG_FILE = "scoreboard.config";
 const char *IMAGE_LIBRARY_FILE = "image_library.data";
+const char *TEAM_LIBRARY_FILE = "team_library.data";
 
 Persistence::Persistence(SingletonClass c, Singleton *singleton) {
   this->singleton = singleton;
   loadConfigFromDisk();
   loadImageLibraryFromDisk();
+  loadTeamLibraryFromDisk();
 }
 
 void Persistence::loadConfigFromDisk() {
@@ -96,9 +98,52 @@ void Persistence::saveImageLibraryToDisk() {
 #endif
 }
 
+void Persistence::loadTeamLibraryFromDisk() {
+#ifdef FAKE_CONFIGURATION_FILES
+  // For testing, populate some default values.  These are just some teams we
+  // use in Boston, they're placeholders.
+  team_library = proto::TeamLibrary();
+  proto::TeamLibInfo *home_team_info = team_library.add_teams();
+  home_team_info->set_default_team_type(proto::TeamInfo_TeamType_HOME_TEAM);
+  home_team_info->set_name("Rozzie Square Pegs");
+  home_team_info->set_image_path("c:\\logos\\RSP.png");
+  home_team_info->set_is_relative(false);
+  proto::TeamLibInfo *away_team_info = team_library.add_teams();
+  away_team_info->set_default_team_type(proto::TeamInfo_TeamType_AWAY_TEAM);
+  away_team_info->set_name("Boston Baked Beans");
+  away_team_info->set_image_path("BBB.png");
+  away_team_info->set_is_relative(true);
+  proto::TeamLibInfo *third_team_info = team_library.add_teams();
+  third_team_info->set_name("Waltham Sandwiches");
+  proto::TeamLibInfo *fourth_team_info = team_library.add_teams();
+  fourth_team_info->set_name("Brookline NSynchers");
+  // End testing stuff to be deleted
+#else
+  std::fstream input(TEAM_LIBRARY_FILE, std::ios::in | std::ios::binary);
+  if (!input) {
+    LogDebug("%s: File not found. Creating an empty library.",
+             TEAM_LIBRARY_FILE);
+  } else if (!team_library.ParseFromIstream(&input)) {
+    LogDebug("Failure parsing team library file %s.", TEAM_LIBRARY_FILE);
+  }
+#endif
+}
+
+void Persistence::saveTeamLibraryToDisk() {
+#ifndef FAKE_CONFIGURATION_FILES
+  //  Do not save if we're doing faked data
+  std::fstream output(TEAM_LIBRARY_FILE,
+                      std::ios::out | std::ios::trunc | std::ios::binary);
+  if (!team_library.SerializeToOstream(&output)) {
+    LogDebug("Failed to write team library file %s.", TEAM_LIBRARY_FILE);
+  }
+#endif
+}
+
 auto Persistence::loadDisplays() -> proto::DisplayConfig {
-  // We don't actually have a way to reload after initialization at this point,
-  // but that should be fine, as this should still represent what's written out.
+  // We don't actually have a way to reload from disk after initialization at
+  // this point, but that should be fine, as this should still represent what's
+  // written out.
   return full_config.display_config();
 }
 
@@ -132,6 +177,17 @@ auto Persistence::loadImageLibrary() -> proto::ImageLibrary {
 void Persistence::saveImageLibrary(const proto::ImageLibrary &library) {
   image_library.CopyFrom(library);
   saveImageLibraryToDisk();
+}
+
+auto Persistence::loadTeamLibrary() -> proto::TeamLibrary {
+  // There's currently no route to reload from disk and any attempt to save to
+  // disk updates this variable, so for now this is sufficient.
+  return team_library;
+}
+
+void Persistence::saveTeamLibrary(const proto::TeamLibrary &library) {
+  team_library.CopyFrom(library);
+  saveTeamLibraryToDisk();
 }
 
 }  // namespace cszb_scoreboard

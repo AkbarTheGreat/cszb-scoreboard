@@ -22,7 +22,7 @@ limitations under the License.
 #include <string>  // for string, basic_string
 #include <vector>  // for vector
 
-#include "config.pb.h"           // for TeamInfo_TeamType_AWAY_TEAM, TeamInf...
+#include "config/Persistence.h"  // for Persistence
 #include "config/swx/defs.h"     // for wxID_CANCEL, wxID_OK
 #include "config/swx/event.h"    // for wxEVT_BUTTON
 #include "ui/widget/DropDown.h"  // for DropDown
@@ -43,26 +43,7 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   this->parent = parent;
   this->singleton = singleton;
 
-  library =
-      proto::TeamLibrary();  // TODO(akbar): Load/Save with Persistence.cpp
-
-  // For testing, populate some default values.  These are just some teams we
-  // use in Boston, they're placeholders.
-  proto::TeamLibInfo *home_team_info = library.add_teams();
-  home_team_info->set_default_team_type(proto::TeamInfo_TeamType_HOME_TEAM);
-  home_team_info->set_name("Rozzie Square Pegs");
-  home_team_info->set_image_path("c:\\logos\\RSP.png");
-  home_team_info->set_is_relative(false);
-  proto::TeamLibInfo *away_team_info = library.add_teams();
-  away_team_info->set_default_team_type(proto::TeamInfo_TeamType_AWAY_TEAM);
-  away_team_info->set_name("Boston Baked Beans");
-  away_team_info->set_image_path("BBB.png");
-  away_team_info->set_is_relative(true);
-  proto::TeamLibInfo *third_team_info = library.add_teams();
-  third_team_info->set_name("Waltham Sandwiches");
-  proto::TeamLibInfo *fourth_team_info = library.add_teams();
-  fourth_team_info->set_name("Brookline NSynchers");
-  // End testing stuff to be deleted
+  library = singleton->persistence()->loadTeamLibrary();
 
   box_panel = panel();
   team_selection_scrolling = box_panel->scrollingPanel();
