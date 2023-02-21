@@ -24,25 +24,25 @@ limitations under the License.
 
 #include "config/TeamConfig.h"  // for TeamConfig
 #include "team_library.pb.h"    // for TeamLibInfo
+#include "ui/widget/Panel.h"    // for Panel
 
 namespace cszb_scoreboard {
-namespace swx {
-class Panel;
-}  // namespace swx
 
-TeamSelectionEntry::TeamSelectionEntry(swx::Panel* wx,
+TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
                                        TeamSelectionBox* owning_controller,
-                                       const proto::TeamLibInfo& team)
-    : Panel(wx) {
+                                       int32_t row,
+                                       const proto::TeamLibInfo& team) {
   parent = owning_controller;
+  this->panel = panel;
+  index = row;
 
-  clear = button("Clear", true);
-  home = radioButton();
-  away = radioButton();
-  name = label(team.name());
-  default_team = label(TeamConfig::teamName(team.default_team_type()));
+  clear = panel->button("Clear", true);
+  home = panel->radioButton();
+  away = panel->radioButton();
+  name = panel->label(team.name());
+  default_team = panel->label(TeamConfig::teamName(team.default_team_type()));
   // Add a little buffer on the right so the scrollbar doesn't cover text
-  buffer = label("   ");
+  buffer = panel->label("   ");
 
   positionWidgets();
   bindEvents();
@@ -50,14 +50,12 @@ TeamSelectionEntry::TeamSelectionEntry(swx::Panel* wx,
 
 void TeamSelectionEntry::positionWidgets() {
   int col = 0;
-  addWidget(*clear, 0, col++);
-  addWidget(*home, 0, col++);
-  addWidget(*away, 0, col++);
-  addWidget(*name, 0, col++);
-  addWidget(*default_team, 0, col++);
-  addWidget(*buffer, 0, col++);
-
-  runSizer();
+  panel->addWidget(*clear, index, col++);
+  panel->addWidget(*home, index, col++);
+  panel->addWidget(*away, index, col++);
+  panel->addWidget(*name, index, col++);
+  panel->addWidget(*default_team, index, col++);
+  panel->addWidget(*buffer, index, col++);
 }
 
 void TeamSelectionEntry::bindEvents() {

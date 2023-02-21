@@ -21,6 +21,7 @@ limitations under the License.
 #include "ui/dialog/team_library/TeamSelectionBox.h"
 
 #include <google/protobuf/repeated_ptr_field.h>  // for RepeatedPtrField
+#include <stdint.h>                              // for int32_t
 
 #include "config/Persistence.h"        // for Persistence
 #include "team_library.pb.h"           // for TeamLibrary
@@ -41,6 +42,8 @@ TeamSelectionBox::TeamSelectionBox(swx::Panel* wx,
   parent = owning_controller;
   this->singleton = singleton;
 
+  library = singleton->persistence()->loadTeamLibrary();
+
   team_selection_scrolling = scrollingPanel();
   team_selection = team_selection_scrolling->panel();
 
@@ -49,19 +52,22 @@ TeamSelectionBox::TeamSelectionBox(swx::Panel* wx,
 }
 
 void TeamSelectionBox::positionWidgets() {
-  auto library = singleton->persistence()->loadTeamLibrary();
   team_selection_scrolling->addWidget(*team_selection, 0, 0);
   addWidget(*team_selection_scrolling, 0, 0);
 
+  createHeader();
+  createEntries();
+
+  runSizer();
+}
+
+void TeamSelectionBox::createEntries() {
+  int32_t row = 0;
   team_selection_entries.reserve(library.teams_size());
   for (const auto& team : library.teams()) {
     team_selection_entries.emplace_back(std::make_unique<TeamSelectionEntry>(
-        team_selection->childPanel(), this, team));
-  }
+        team_selection.get(), this, row++, team));
 
-  int row = 0;
-  for (const auto& entry : team_selection_entries) {
-    team_selection->addWidget(*entry, row++, 0);
     if (row == TEAMS_BEFORE_SCROLL) {
       team_selection->runSizer();
       team_selection_scrolling->runSizer();
@@ -71,9 +77,9 @@ void TeamSelectionBox::positionWidgets() {
     team_selection->runSizer();
     team_selection_scrolling->runSizer();
   }
-
-  runSizer();
 }
+
+void TeamSelectionBox::createHeader() {}
 
 void TeamSelectionBox::bindEvents() {}
 

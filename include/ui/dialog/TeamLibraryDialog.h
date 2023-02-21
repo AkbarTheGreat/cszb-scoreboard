@@ -21,7 +21,6 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 
 #include "ScoreboardCommon.h"                         // for PUBLIC_TEST_ONLY
-#include "team_library.pb.h"                          // for TeamLibrary
 #include "ui/dialog/team_library/TeamSelectionBox.h"  // for TeamSelectionBox
 #include "ui/widget/Button.h"                         // for Button
 #include "ui/widget/Divider.h"                        // for Divider
@@ -49,7 +48,6 @@ class TeamLibraryDialog : public TabbedDialog {
                     Singleton *singleton);
 
  private:
-  proto::TeamLibrary library;
   Singleton *singleton;
   ScoreControl *parent;
 

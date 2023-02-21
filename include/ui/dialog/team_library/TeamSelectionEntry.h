@@ -20,32 +20,34 @@ limitations under the License.
 
 #pragma once
 
+#include <stdint.h>  // for int32_t
+
 #include <memory>  // for unique_ptr
 
 #include "config.pb.h"              // for TeamInfo_TeamType
 #include "ui/widget/Button.h"       // for Button
 #include "ui/widget/Label.h"        // for Label
-#include "ui/widget/Panel.h"        // for Panel
 #include "ui/widget/RadioButton.h"  // for RadioButton
 
 namespace cszb_scoreboard {
 
 class TeamSelectionBox;
+class Panel;
 
 namespace proto {
 class TeamLibInfo;
 }  // namespace proto
-namespace swx {
-class Panel;
-}  // namespace swx
 
-class TeamSelectionEntry : public Panel {
+class TeamSelectionEntry {
  public:
-  TeamSelectionEntry(swx::Panel* wx, TeamSelectionBox* owning_controller,
-                     const proto::TeamLibInfo& team);
+  TeamSelectionEntry(Panel* panel, TeamSelectionBox* owning_controller,
+                     int32_t row, const proto::TeamLibInfo& team);
 
  private:
   TeamSelectionBox* parent;
+  Panel* panel;
+  int32_t index;
+
   std::unique_ptr<Button> clear;
   std::unique_ptr<RadioButton> home;
   std::unique_ptr<RadioButton> away;

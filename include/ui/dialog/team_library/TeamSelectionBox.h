@@ -23,7 +23,8 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 #include <vector>  // for vector
 
-#include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "team_library.pb.h"
 #include "ui/dialog/team_library/TeamSelectionEntry.h"  // for TeamSelection...
 #include "ui/widget/Panel.h"                            // for Panel
 #include "ui/widget/ScrollingPanel.h"                   // for ScrollingPanel
@@ -51,6 +52,7 @@ class TeamSelectionBox : public Panel {
  private:
   Singleton* singleton;
   TeamLibraryDialog* parent;
+  proto::TeamLibrary library;
 
   std::vector<std::unique_ptr<TeamSelectionEntry>> team_selection_entries;
   std::unique_ptr<Panel> team_selection;
@@ -58,6 +60,8 @@ class TeamSelectionBox : public Panel {
 
   void bindEvents();
   void positionWidgets();
+  void createEntries();
+  void createHeader();
 };
 
 }  // namespace cszb_scoreboard

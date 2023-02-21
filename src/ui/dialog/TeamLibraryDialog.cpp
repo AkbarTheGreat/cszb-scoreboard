@@ -22,7 +22,6 @@ limitations under the License.
 #include <string>  // for string, basic_string
 #include <vector>  // for vector
 
-#include "config/Persistence.h"  // for Persistence
 #include "config/swx/defs.h"     // for wxID_CANCEL, wxID_OK
 #include "config/swx/event.h"    // for wxEVT_BUTTON
 #include "ui/widget/DropDown.h"  // for DropDown
@@ -40,8 +39,6 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
     : TabbedDialog(wx) {
   this->parent = parent;
   this->singleton = singleton;
-
-  library = singleton->persistence()->loadTeamLibrary();
 
   box_panel = panel();
   team_selection =
