@@ -60,6 +60,14 @@ class Widget {
                          int row_span, int column_span,
                          int border_size = DEFAULT_BORDER_SIZE,
                          int flag = wxALL | wxGROW);
+  void addSpacer(const Size &size, int row, int column,
+                 int border_size = DEFAULT_BORDER_SIZE,
+                 int flag = wxALL | wxGROW) {
+    addSpacerWithSpan(size, row, column, 1, 1, border_size, flag);
+  }
+  void addSpacerWithSpan(const Size &size, int row, int column, int row_span,
+                         int column_span, int border_size = DEFAULT_BORDER_SIZE,
+                         int flag = wxALL | wxGROW);
   void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
             const std::function<void(wxCloseEvent &)> &lambda,
             int id = wxID_ANY) const {

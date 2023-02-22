@@ -40,6 +40,13 @@ void Widget::addWidgetWithSpan(const Widget &widget, int row, int column,
                wxGBSpan(row_span, column_span), flag, border_size);
 }
 
+void Widget::addSpacerWithSpan(const Size &size, int row, int column,
+                               int row_span, int column_span, int border_size,
+                               int flag) {
+  sizer()->Add(size.width, size.height, wxGBPosition(row, column),
+               wxGBSpan(row_span, column_span), flag, border_size);
+}
+
 auto Widget::widgetAtIndex(int row, int column) -> wxWindow * {
   if (window_sizer == nullptr) {
     return nullptr;
