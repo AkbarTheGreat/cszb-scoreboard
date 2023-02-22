@@ -28,6 +28,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+constexpr int32_t SCROLLBAR_BUFFER_WIDTH_PIXELS = 30;
+
 TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
                                        TeamSelectionBox* owning_controller,
                                        int32_t row,
@@ -54,7 +56,8 @@ void TeamSelectionEntry::positionWidgets() {
   panel->addWidget(*away, index, col++);
   panel->addWidget(*name, index, col++);
   panel->addWidget(*default_team, index, col++);
-  panel->addSpacer({.width = 30, .height = 0}, index, col++);
+  panel->addSpacer({.width = SCROLLBAR_BUFFER_WIDTH_PIXELS, .height = 0}, index,
+                   col++);
 }
 
 void TeamSelectionEntry::bindEvents() {
