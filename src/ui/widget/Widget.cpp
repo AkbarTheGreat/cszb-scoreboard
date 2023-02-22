@@ -155,7 +155,7 @@ void Widget::runSizer() {
   wx()->SetSizerAndFit(sizer());
 }
 
-Size Widget::sizeOfWidgetAtLocation(int row, int column) {
+auto Widget::sizeOfWidgetAtLocation(int row, int column) -> Size {
   // Return 0,0 in error cases.
   if (window_sizer == nullptr) {
     return {};
