@@ -103,6 +103,7 @@ class Widget {
   void setMinSize(Size size) const { wx()->SetMinSize(size.toWx()); }
   // Reparents this widget to another widget for layout purposes
   void setParent(Widget *parent) const { wx()->Reparent(parent->wx()); }
+  Size sizeOfWidgetAtLocation(int row, int column);
 
   // This should be moved to protected when the conversion is complete.
   auto sizer() -> swx::Sizer *;

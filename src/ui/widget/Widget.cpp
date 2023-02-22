@@ -155,6 +155,19 @@ void Widget::runSizer() {
   wx()->SetSizerAndFit(sizer());
 }
 
+Size Widget::sizeOfWidgetAtLocation(int row, int column) {
+  // Return 0,0 in error cases.
+  if (window_sizer == nullptr) {
+    return {};
+  }
+  if (row >= sizer()->GetEffectiveRowsCount() ||
+      column >= sizer()->GetEffectiveColsCount()) {
+    return {};
+  }
+  // Otherwise, return the size of the cell at this position.
+  return Size::fromWx(sizer()->GetCellSize(row, column));
+}
+
 auto Widget::sizer() -> swx::Sizer * {
   if (window_sizer == nullptr) {
     window_sizer = new swx::Sizer();

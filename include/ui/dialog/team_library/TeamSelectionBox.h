@@ -23,9 +23,10 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 #include <vector>  // for vector
 
-#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "team_library.pb.h"
+#include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
+#include "team_library.pb.h"                            // for TeamLibrary
 #include "ui/dialog/team_library/TeamSelectionEntry.h"  // for TeamSelection...
+#include "ui/widget/Label.h"                            // for Label
 #include "ui/widget/Panel.h"                            // for Panel
 #include "ui/widget/ScrollingPanel.h"                   // for ScrollingPanel
 #include "util/Singleton.h"                             // for Singleton

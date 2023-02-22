@@ -22,7 +22,6 @@ limitations under the License.
 
 #include <cstdint>  // for int32_t
 #include <memory>   // for unique_ptr
-#include <vector>
 
 #include "config.pb.h"              // for TeamInfo_TeamType
 #include "ui/widget/Button.h"       // for Button
