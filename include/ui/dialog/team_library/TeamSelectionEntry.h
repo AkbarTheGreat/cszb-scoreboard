@@ -22,6 +22,7 @@ limitations under the License.
 
 #include <cstdint>  // for int32_t
 #include <memory>   // for unique_ptr
+#include <vector>
 
 #include "config.pb.h"              // for TeamInfo_TeamType
 #include "ui/widget/Button.h"       // for Button
@@ -52,7 +53,6 @@ class TeamSelectionEntry {
   std::unique_ptr<RadioButton> away;
   std::unique_ptr<Label> name;
   std::unique_ptr<Label> default_team;
-  std::unique_ptr<Label> buffer;
 
   void bindEvents();
   void positionWidgets();

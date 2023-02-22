@@ -41,8 +41,6 @@ TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
   away = panel->radioButton();
   name = panel->label(team.name());
   default_team = panel->label(TeamConfig::teamName(team.default_team_type()));
-  // Add a little buffer on the right so the scrollbar doesn't cover text
-  buffer = panel->label("   ");
 
   positionWidgets();
   bindEvents();
@@ -50,12 +48,13 @@ TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
 
 void TeamSelectionEntry::positionWidgets() {
   int col = 0;
+  int buff_num = 0;
   panel->addWidget(*clear, index, col++);
   panel->addWidget(*home, index, col++);
   panel->addWidget(*away, index, col++);
   panel->addWidget(*name, index, col++);
   panel->addWidget(*default_team, index, col++);
-  panel->addWidget(*buffer, index, col++);
+  panel->addSpacer({.width = 30, .height = 0}, index, col++);
 }
 
 void TeamSelectionEntry::bindEvents() {
