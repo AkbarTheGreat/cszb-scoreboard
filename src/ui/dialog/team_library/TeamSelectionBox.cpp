@@ -20,6 +20,7 @@ limitations under the License.
 
 #include "ui/dialog/team_library/TeamSelectionBox.h"
 
+#include <algorithm>
 #include <cstdint>  // for int32_t
 
 #include "config/Persistence.h"        // for Persistence
@@ -53,10 +54,11 @@ TeamSelectionBox::TeamSelectionBox(swx::Panel* wx,
 
 void TeamSelectionBox::positionWidgets() {
   team_selection_scrolling->addWidget(*team_selection, 0, 0);
-  addWidget(*team_selection_scrolling, 0, 0);
+  addWidget(*team_selection_scrolling, 1, 0);
 
-  createHeader();
   createEntries();
+  createHeader();
+  addWidget(*header, 0, 0);
 
   runSizer();
 }
@@ -79,7 +81,28 @@ void TeamSelectionBox::createEntries() {
   }
 }
 
-void TeamSelectionBox::createHeader() {}
+void TeamSelectionBox::createHeader() {
+  header = panel();
+
+  // Clear button
+  header_labels.push_back(header->label(""));
+
+  // Team selectors
+  header_labels.push_back(header->label("Home"));
+  header_labels.push_back(header->label("Away"));
+
+  // Team name
+  header_labels.push_back(header->label("Team Name"));
+
+  // Team type
+  header_labels.push_back(header->label("Team Type"));
+
+  int32_t col = 0;
+  for (const auto& label : header_labels) {
+    header->addWidget(*label, 0, col++);
+  }
+  header->runSizer();
+}
 
 void TeamSelectionBox::bindEvents() {}
 

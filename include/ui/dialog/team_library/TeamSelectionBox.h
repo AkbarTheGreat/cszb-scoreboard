@@ -55,6 +55,8 @@ class TeamSelectionBox : public Panel {
   proto::TeamLibrary library;
 
   std::vector<std::unique_ptr<TeamSelectionEntry>> team_selection_entries;
+  std::unique_ptr<Panel> header;
+  std::vector<std::unique_ptr<Label>> header_labels;
   std::unique_ptr<Panel> team_selection;
   std::unique_ptr<ScrollingPanel> team_selection_scrolling;
 
