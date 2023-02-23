@@ -39,6 +39,8 @@ class TeamLibInfo;
 
 class TeamSelectionEntry {
  public:
+  static constexpr int32_t BORDER_SIZE = 3;
+
   TeamSelectionEntry(Panel* panel, TeamSelectionBox* owning_controller,
                      int32_t row, const proto::TeamLibInfo& team);
 

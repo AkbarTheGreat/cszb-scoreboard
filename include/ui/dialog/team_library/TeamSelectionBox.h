@@ -20,8 +20,9 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>  // for unique_ptr
-#include <vector>  // for vector
+#include <cstdint>  // for int64_t
+#include <memory>   // for unique_ptr
+#include <vector>   // for vector
 
 #include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
 #include "team_library.pb.h"                            // for TeamLibrary
@@ -65,6 +66,7 @@ class TeamSelectionBox : public Panel {
   void positionWidgets();
   void createEntries();
   void createHeader();
+  auto maxRowLength(int64_t column) -> int64_t;
 };
 
 }  // namespace cszb_scoreboard
