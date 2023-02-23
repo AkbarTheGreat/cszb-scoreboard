@@ -95,6 +95,8 @@ class Widget {
             const std::function<void(RenderContext *)> &lambda,
             int id = wxID_ANY);
   void focus() const { wx()->SetFocus(); }
+  void hide() const { wx()->Hide(); }
+  void show() const { wx()->Show(); }
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);

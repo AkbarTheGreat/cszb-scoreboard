@@ -78,12 +78,8 @@ void TeamLibraryDialog::positionWidgets() {
 
   bottom_panel->addWidget(*add_update_button, ++row, 0);
 
-  bottom_panel->runSizer();
-
   box_panel->addWidget(*team_selection, 0, 0);
   box_panel->addWidget(*bottom_panel, 1, 0);
-
-  box_panel->runSizer();
 
   addPage(*box_panel, "");
   runSizer();

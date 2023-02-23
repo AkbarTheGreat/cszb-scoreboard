@@ -43,6 +43,8 @@ class TeamSelectionEntry {
 
   TeamSelectionEntry(Panel* panel, TeamSelectionBox* owning_controller,
                      int32_t row, const proto::TeamLibInfo& team);
+  void hide();
+  void show();
 
  private:
   TeamSelectionBox* parent;

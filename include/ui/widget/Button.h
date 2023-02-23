@@ -29,7 +29,6 @@ class Button : public Widget {
 
   void disable() { wx()->Disable(); }
   void enable() { wx()->Enable(); }
-  void hide() { wx()->Hide(); }
   auto id() -> int { return wx()->GetId(); }
   void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
 

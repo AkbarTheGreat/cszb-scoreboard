@@ -20,12 +20,12 @@ limitations under the License.
 
 #include "ui/dialog/team_library/TeamSelectionBox.h"
 
-#include <algorithm>  // for max
-#include <cstdint>    // for int64_t, int32_t
+#include <cstdint>  // for int32_t, int64_t
+#include <string>   // for string
 
 #include "config/Persistence.h"        // for Persistence
 #include "config/Position.h"           // for Size
-#include "team_library.pb.h"           // for TeamLibrary
+#include "team_library.pb.h"           // for TeamLibInfo, TeamLibrary
 #include "ui/widget/ScrollingPanel.h"  // for ScrollingPanel
 #include "ui/widget/Widget.h"          // for NO_BORDER
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
@@ -67,7 +67,9 @@ void TeamSelectionBox::positionWidgets() {
 
 void TeamSelectionBox::createEntries() {
   int32_t row = 0;
-  team_selection_entries.reserve(library.teams_size());
+  team_selection_entries.reserve(library.teams_size() + 1);
+  team_selection_entries.emplace_back(std::make_unique<TeamSelectionEntry>(
+      team_selection.get(), this, row++, placeholderTeam()));
   for (const auto& team : library.teams()) {
     team_selection_entries.emplace_back(std::make_unique<TeamSelectionEntry>(
         team_selection.get(), this, row++, team));
@@ -127,20 +129,27 @@ void TeamSelectionBox::createHeader() {
 }
 
 // Helper method for createHeader
-auto TeamSelectionBox::maxRowLength(int64_t column) -> int64_t {
-  int64_t max_len = 0;
-  for (int row = 0; row < team_selection_entries.size(); row++) {
-    max_len = std::max(max_len,
-                       team_selection->sizeOfWidgetAtLocation(0, column).width);
+auto TeamSelectionBox::placeholderTeam() -> proto::TeamLibInfo {
+  proto::TeamLibInfo placeholder_team;
+  // We use 'W' for our placeholder name because it tends to be the widest
+  // in variable-width fonts.
+  std::string pad = "WWWW";
+  for (const auto& team : library.teams()) {
+    if (team.name().length() > pad.length()) {
+      pad.resize(team.name().length(), 'W');
+    }
   }
-  return max_len;
+  placeholder_team.set_name(pad);
+  return placeholder_team;
 }
 
 void TeamSelectionBox::bindEvents() {}
 
 void TeamSelectionBox::updateList() {
+  team_selection_entries[0]->show();
   team_selection->runSizer();
   team_selection_scrolling->runSizer();
+  team_selection_entries[0]->hide();
 }
 
 }  // namespace cszb_scoreboard

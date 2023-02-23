@@ -20,12 +20,11 @@ limitations under the License.
 
 #pragma once
 
-#include <cstdint>  // for int64_t
-#include <memory>   // for unique_ptr
-#include <vector>   // for vector
+#include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
 #include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
-#include "team_library.pb.h"                            // for TeamLibrary
+#include "team_library.pb.h"                            // for TeamLibInfo
 #include "ui/dialog/team_library/TeamSelectionEntry.h"  // for TeamSelection...
 #include "ui/widget/Label.h"                            // for Label
 #include "ui/widget/Panel.h"                            // for Panel
@@ -66,7 +65,7 @@ class TeamSelectionBox : public Panel {
   void positionWidgets();
   void createEntries();
   void createHeader();
-  auto maxRowLength(int64_t column) -> int64_t;
+  auto placeholderTeam() -> proto::TeamLibInfo;
 };
 
 }  // namespace cszb_scoreboard
