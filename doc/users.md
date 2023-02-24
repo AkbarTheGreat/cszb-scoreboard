@@ -49,11 +49,12 @@ When you first start the application, the main (or booth, or control) window sho
 like the following, depending on how many monitors it detects connected to your system:
 
 ![alt](img/startup.png "Window startup")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 Of special note are the status bar (along the bottom of the window), the screen previews (the larger
-blue and red boxes),  the screen thumbnanils (the smaller blue and red boxes),  and the "Send to
-Monitors" button (at the bottom of the controls at the bottom).
+blue and red boxes),  the screen thumbnanils (the smaller blue and red boxes),  the quick view panel
+(the gray boxes along the right side), and the "Send to Monitors" button (at the bottom of the
+controls at the bottom).
 
 The status bar will display how many monitors were detected at startup, and may show update
 information later in execution.
@@ -70,7 +71,8 @@ length below.
 ## Basic Functionality
 
 Functionally, every external monitor is assigned to one or more teams.  Controls typically allow
-settings to be made for one or all teams and will go to the screens which represent the selected team.  Every change from a control is immediately reflected in the screen preview panes as they're made.
+settings to be made for one or all teams and will go to the screens which represent the selected
+team.  Every change from a control is immediately reflected in the screen preview panes as they're made.
 
 The settings menu has options to control which monitor represents which team (or is a booth monitor)
 
@@ -86,10 +88,28 @@ home/away teams permanently, see the settings menu.
 The scoreboard begins with the score control tab selected, but each control tab's functionality is
 discussed in their own section, below.
 
+### Settings
+
+![alt](img/settings_display.png "Display Settings")
+_(image taken in version 1.5.0, some visuals may have changed)_
+
+The display settings allows you to change which monitors represent which team and which
+monitor/monitors belong to the booth.  The buttons immediately below each Display number may also be
+used to re-order the displays.  This is useful as you may wish to order them so that they map to the
+physical space you're in (from top to bottom, the displays will show up as previews in the main
+control from left to right)
+
+![alt](img/settings_team.png "Team Settings")
+_(image taken in version 1.5.0, some visuals may have changed)_
+
+The teams settings page currently allows you to select the default color of the home and away team
+as well as which order the teams appear in inside of split-screen monitors (using the same ordering
+controls as described for monitors, above).
+
 ### Score
 
 ![alt](img/scores.png "Score Control")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 The controls for score are in two columns, one for each team.  The columns reflect the team order
 configured in the settings menu.  This means if your theater has away on stage right and home on
@@ -103,12 +123,14 @@ the team names in a large, full-screen format, as below.  To return to the tradi
 press the button again (which will now be labelled "Show Scores")
 
 ![alt](img/team_intro.png "Introduce Teams")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 #### Team Logo Guidelines
 
-Team logos should be all white/black pngs.  All white is treated as transparency, all black will be
-rendered as a gradient of the font color for a semi-transparent overlay.
+Team logos should be all black pngs.  All transparency is treated as such, all black will
+be rendered as a gradient of the font color for a semi-transparent overlay.  Any color other than
+black (including grays or white) will render completely opaque, as if it were black, so it's best to
+author the images as just black to avoid confusion.
 
 ### Image Library
 
