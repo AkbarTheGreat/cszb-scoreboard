@@ -143,24 +143,23 @@ The arrow buttons above the images can be used to scroll through images.  The Te
 top selects which team's monitors will display the given image.
 
 ![alt](img/image_library.png "Image Library")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 All images in the library may have tags, and the search box allows easy searching of those tags.  As
 tags are matched, all matching tags are shown below the search box.  If a tag matches exactly, it's
 the only tag shown.  A grey box indicates that no additional images are found.
 
 ![alt](img/image_library_search.png "Image Library Searches")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 **Notes**
 
 ---
 
 Images are not copied into the library, just the location of the image.  Moving an image on disk
-that's in the library would necessitate re-adding that image to the library.
+that's in the library would necessitate updating the location of that image in the library.
 
-Tags are searched, but not image names.  If you intend to search by name, add the name as a tag as
-well.
+Image names are searched as well as tags, with similar logic.
 
 Just in case something goes wrong, image_library.data contains the image library itself and may be
 backed up however you prefer to back up files.
