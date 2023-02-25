@@ -52,7 +52,6 @@ class TeamSelectionEntry {
   Panel* panel;
   int32_t index;
 
-  std::unique_ptr<Button> clear;
   std::unique_ptr<RadioButton> home;
   std::unique_ptr<RadioButton> away;
   std::unique_ptr<Label> name;
@@ -62,7 +61,6 @@ class TeamSelectionEntry {
   void positionWidgets();
   void homeButtonPressed();
   void awayButtonPressed();
-  void clearButtonPressed();
 };
 
 }  // namespace cszb_scoreboard

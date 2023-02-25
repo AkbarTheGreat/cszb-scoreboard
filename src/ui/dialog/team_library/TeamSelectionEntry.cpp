@@ -40,7 +40,6 @@ TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
   this->panel = panel;
   index = row;
 
-  clear = panel->button("Clear", true);
   home = panel->radioButton();
   away = panel->radioButton();
   name = panel->label(team.name());
@@ -51,7 +50,6 @@ TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
 }
 
 void TeamSelectionEntry::hide() {
-  clear->hide();
   home->hide();
   away->hide();
   name->hide();
@@ -59,7 +57,6 @@ void TeamSelectionEntry::hide() {
 }
 
 void TeamSelectionEntry::show() {
-  clear->show();
   home->show();
   away->show();
   name->show();
@@ -69,7 +66,6 @@ void TeamSelectionEntry::show() {
 void TeamSelectionEntry::positionWidgets() {
   int col = 0;
   int buff_num = 0;
-  panel->addWidget(*clear, index, col++, BORDER_SIZE);
   panel->addWidget(*home, index, col++, BORDER_SIZE);
   home->setMinSize({.width = TEAM_SELECTION_SIZE_PIXELS});
   panel->addWidget(*away, index, col++, BORDER_SIZE);
@@ -81,8 +77,6 @@ void TeamSelectionEntry::positionWidgets() {
 }
 
 void TeamSelectionEntry::bindEvents() {
-  clear->bind(wxEVT_BUTTON,
-              [this](wxCommandEvent& event) -> void { clearButtonPressed(); });
   home->bind(wxEVT_RADIOBUTTON,
              [this](wxCommandEvent& event) -> void { homeButtonPressed(); });
   away->bind(wxEVT_RADIOBUTTON,
@@ -95,11 +89,6 @@ void TeamSelectionEntry::homeButtonPressed() {
 
 void TeamSelectionEntry::awayButtonPressed() {
   parent->teamSelected(index, proto::TeamInfo_TeamType_AWAY_TEAM);
-}
-
-void TeamSelectionEntry::clearButtonPressed() {
-  home->setSelected(false);
-  away->setSelected(false);
 }
 
 void TeamSelectionEntry::teamSelectionChanged(proto::TeamInfo_TeamType team) {

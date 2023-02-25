@@ -89,10 +89,6 @@ void TeamSelectionBox::createHeader() {
   header = panel();
   int32_t col = 0;
 
-  // Empty space for the clear button.
-  header->addSpacer({.width = 1}, 0, col, TeamSelectionEntry::BORDER_SIZE);
-  col += 2;
-
   // Team selectors
   header_labels.push_back(header->label("Home"));
   header->addWidget(*header_labels.back(), 0, col,
