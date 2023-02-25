@@ -257,6 +257,59 @@ will use the currently set state, Ctrl + Alt + [1-0] will set the state to the c
 next-to-last, 0 is last)
 * Ctrl+Alt+_number_ - Set quick state _number_ to the current preview state.
 
+## Editing the Image Library
+
+When you click the Edit Library button in the Image Library tab, you're presented with the following
+dialog:
+
+![alt](img/edit_image_library.png "Edit Image Library")
+_(image taken in version 1.5.0, some visuals may have changed)_
+
+Images here are listed in the order they'll appear in the library.  This may be particularly
+important if you want some images to appear in the first 5 images which are presented before
+searching.  To re-order them, you may select an image in the left pane and use the arrow buttons at
+the top to move that entry up or down.
+
+To add a new image, click the second button (which looks like a page of paper with a sparkle on it)
+and a file browser will pop up to select the file to be added.  Files are always added to the end
+of the list.The edit button (the ae button on the left) allows you to change the filename manually.
+This won't move the file on disk, but can be used to change the file to it's new on-disk location
+after it has been moved or renamed outside of the scoreboard.
+
+Once an image is added, it's advisable to set a display name (below the box) and one or more tags,
+for easier searching.  The tag box works the same as the filename box, with all of the same controls,
+but applies to whichever image is selected in the left-hand box.
+
+The Filename box below Display Name exists simply to show the current filename -- if a library root
+is applicable, it shows the full path including the root, if it is not, it is wider and less likely
+to be truncated than the box above.
+
+The Library Root button allows you to select a new root directory for the image library (displayed
+to the right of the button) and the Clear Root button removes any root directory.  Setting a new
+directory is done through a directory picker, so you may browse your computer's file system to find
+the appropriate path.  All images **do not** need to be in the library root, but any that are will
+be stored and displayed as a sub-path underneath that root.  This has two advantages: First, the
+filename list is easier to read while editing the library in the future.  Second, if the library
+needs to be moved (or the library is copied to another computer with a slightly different path
+heirarchy, but all of the same files), the root may be updated and a the effort of renaming files
+which have been moved may be saved.
+
+
+**Notes**
+
+---
+
+The search function of the Image Library searches across all display names and tags, so making sure
+that whatever you might want an image to come up for in a search is between those two fields is very
+important.  Likewise, if a tag matches exactly, partial matches are excluded, so we recommend you be
+consistent with your tags.  For instance, "dogs" won't show in a search for "dog" if "dog" is also a
+valid tag, so we recommend you standardize your tags on plural or singular.
+
+The Filename box should not be edited directly.  (In fact, editing it has no effect
+on any behavior).  It is a known issue that it allows you to edit it at all and should be resolved in an upcoming release.
+
+---
+
 ## Settings
 
 ![alt](img/settings_display.png "Display Settings")
