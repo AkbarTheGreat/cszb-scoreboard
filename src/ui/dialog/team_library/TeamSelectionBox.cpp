@@ -129,23 +129,23 @@ auto TeamSelectionBox::placeholderTeam() -> proto::TeamLibInfo {
   proto::TeamLibInfo placeholder_team;
   // We use 'W' for our placeholder name because it tends to be the widest
   // in variable-width fonts.
-  std::string pad = "WWWW";
+  pad_text = "WWWWWWW"; // Wide enough for if we just have a -None- entry.
   for (const auto& team : library.teams()) {
-    if (team.name().length() > pad.length()) {
-      pad.resize(team.name().length(), 'W');
+    if (team.name().length() > pad_text.length()) {
+      pad_text.resize(team.name().length(), 'W');
     }
   }
-  placeholder_team.set_name(pad);
+  placeholder_team.set_name(pad_text);
   return placeholder_team;
 }
 
 void TeamSelectionBox::bindEvents() {}
 
 void TeamSelectionBox::updateList() {
-  team_selection_entries[0]->show();
+  team_selection_entries[0]->setName(pad_text);
   team_selection->runSizer();
   team_selection_scrolling->runSizer();
-  team_selection_entries[0]->hide();
+  team_selection_entries[0]->setName(" -None-");
 }
 
 void TeamSelectionBox::teamSelected(int32_t row,

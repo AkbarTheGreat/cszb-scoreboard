@@ -55,6 +55,7 @@ class TeamSelectionBox : public Panel {
   Singleton* singleton;
   TeamLibraryDialog* parent;
   proto::TeamLibrary library;
+  std::string pad_text;
 
   std::vector<std::unique_ptr<TeamSelectionEntry>> team_selection_entries;
   std::unique_ptr<Panel> header;

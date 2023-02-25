@@ -47,6 +47,11 @@ TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
 
   positionWidgets();
   bindEvents();
+
+  if (index == 0) {
+    home->setSelected(true);
+    away->setSelected(true);
+  }
 }
 
 void TeamSelectionEntry::hide() {
@@ -62,6 +67,8 @@ void TeamSelectionEntry::show() {
   name->show();
   default_team->show();
 }
+
+void TeamSelectionEntry::setName(std::string name) { this->name->set(name); }
 
 void TeamSelectionEntry::positionWidgets() {
   int col = 0;

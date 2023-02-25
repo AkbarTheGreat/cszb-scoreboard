@@ -45,6 +45,7 @@ class TeamSelectionEntry {
                      int32_t row, const proto::TeamLibInfo& team);
   void hide();
   void show();
+  void setName(std::string name);
   void teamSelectionChanged(proto::TeamInfo_TeamType team);
 
  private:
