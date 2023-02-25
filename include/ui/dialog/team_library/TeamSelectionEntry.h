@@ -45,6 +45,7 @@ class TeamSelectionEntry {
                      int32_t row, const proto::TeamLibInfo& team);
   void hide();
   void show();
+  void teamSelectionChanged(proto::TeamInfo_TeamType team);
 
  private:
   TeamSelectionBox* parent;
@@ -59,8 +60,9 @@ class TeamSelectionEntry {
 
   void bindEvents();
   void positionWidgets();
+  void homeButtonPressed();
+  void awayButtonPressed();
   void clearButtonPressed();
-  void teamSelectionChanged(proto::TeamInfo_TeamType new_team);
 };
 
 }  // namespace cszb_scoreboard

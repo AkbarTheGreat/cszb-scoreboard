@@ -152,4 +152,13 @@ void TeamSelectionBox::updateList() {
   team_selection_entries[0]->hide();
 }
 
+void TeamSelectionBox::teamSelected(int32_t row,
+                                    proto::TeamInfo_TeamType team) {
+  for (int i = 0; i < team_selection_entries.size(); i++) {
+    if (i != row) {
+      team_selection_entries[i]->teamSelectionChanged(team);
+    }
+  }
+}
+
 }  // namespace cszb_scoreboard

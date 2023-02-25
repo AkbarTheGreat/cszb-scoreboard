@@ -45,6 +45,7 @@ class TeamSelectionBox : public Panel {
       : TeamSelectionBox(wx, owning_controller, Singleton::getInstance()) {}
 
   void updateList();
+  void teamSelected(int32_t row, proto::TeamInfo_TeamType team);
 
   PUBLIC_TEST_ONLY
   TeamSelectionBox(swx::Panel* wx, TeamLibraryDialog* owning_controller,

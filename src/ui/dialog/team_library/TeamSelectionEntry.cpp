@@ -24,7 +24,8 @@ limitations under the License.
 
 #include "config/TeamConfig.h"  // for TeamConfig
 #include "team_library.pb.h"    // for TeamLibInfo
-#include "ui/widget/Panel.h"    // for Panel
+#include "ui/dialog/team_library/TeamSelectionBox.h"
+#include "ui/widget/Panel.h"  // for Panel
 
 namespace cszb_scoreboard {
 
@@ -80,18 +81,34 @@ void TeamSelectionEntry::positionWidgets() {
 }
 
 void TeamSelectionEntry::bindEvents() {
-  clear->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
-    this->clearButtonPressed();
-  });
+  clear->bind(wxEVT_BUTTON,
+              [this](wxCommandEvent& event) -> void { clearButtonPressed(); });
+  home->bind(wxEVT_RADIOBUTTON,
+             [this](wxCommandEvent& event) -> void { homeButtonPressed(); });
+  away->bind(wxEVT_RADIOBUTTON,
+             [this](wxCommandEvent& event) -> void { awayButtonPressed(); });
+}
+
+void TeamSelectionEntry::homeButtonPressed() {
+  parent->teamSelected(index, proto::TeamInfo_TeamType_HOME_TEAM);
+}
+
+void TeamSelectionEntry::awayButtonPressed() {
+  parent->teamSelected(index, proto::TeamInfo_TeamType_AWAY_TEAM);
 }
 
 void TeamSelectionEntry::clearButtonPressed() {
   home->setSelected(false);
   away->setSelected(false);
-  teamSelectionChanged(proto::TeamInfo_TeamType_TEAM_ERROR);
 }
 
-void TeamSelectionEntry::teamSelectionChanged(
-    proto::TeamInfo_TeamType new_team) {}
+void TeamSelectionEntry::teamSelectionChanged(proto::TeamInfo_TeamType team) {
+  if (team == proto::TeamInfo_TeamType_HOME_TEAM) {
+    home->setSelected(false);
+  }
+  if (team == proto::TeamInfo_TeamType_AWAY_TEAM) {
+    away->setSelected(false);
+  }
+}
 
 }  // namespace cszb_scoreboard
