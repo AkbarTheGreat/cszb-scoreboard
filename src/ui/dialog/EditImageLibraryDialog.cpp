@@ -56,18 +56,19 @@ EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
                                             library->allFilenames());
 
   name_entry = box_panel->text("");
-  name_label = box_panel->label("Display name");
+  name_label = box_panel->label("Display Name");
 
   full_name_label = box_panel->label("Filename");
   full_name_entry = box_panel->text("");
+  full_name_entry->disable();
 
   root_divider = box_panel->divider();
   root_entry =
       box_panel->text(singleton->imageLibrary()->libraryRoot().string());
   root_entry->disable();
-  root_browse = box_panel->button("Library root", true);
+  root_browse = box_panel->button("Library Root", true);
   root_browse->toolTip("Set a new root directory for your library.");
-  root_clear = box_panel->button("Clear root", true);
+  root_clear = box_panel->button("Clear Root", true);
   root_clear->toolTip(
       "Remove the root directory for your library, all paths will be "
       "absolute.");
