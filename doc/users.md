@@ -170,7 +170,7 @@ typical browser controls (such as back).
 ### Load Image
 
 ![alt](img/load_image_clipboard.png "Load Image")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 Load Image is the tab you want when you have an image that's not in your image library.  The browse
 button will open a file browser for supported image types (bmp/gif/jpeg/png).
@@ -181,7 +181,7 @@ error if the clipboard does not appear to contain an image.
 ### 5/6 Things
 
 ![alt](img/5_things.png "5/6 Things")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 The 5/6 Things tab is useful for displaying lists of items for guessing games, in particular 5 Things
 or 6 Things, where there are multiple items and multiple substitutions for items.  It defaults to
@@ -203,7 +203,7 @@ two lists of three activites, one for each team.
 ### Text
 
 ![alt](img/text.png "Text")
-_(image taken in version 0.9.1, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 This tab is pretty straight-forward.  You type in text to be shown and it displays.  The font size
 is a relative font, so it's less important to know what 10 or 20 means other than 20 is twice as
@@ -213,7 +213,7 @@ size is the maximum font size.
 ### Timer
 
 ![alt](img/timer_initial.png "Timer")
-_(image taken in version 1.1.0, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 This tab controls a timer which overlays on every other view.  The view you see in the preview pane
 will be the last tab you were in, timers are either shown on all windows
@@ -223,23 +223,29 @@ respectively.  Changing the value of the timer in the numeric fields implicitly 
 the new value, even if the timer is currently running.  Once running, the timer looks like this:
 
 ![alt](img/timer_running.png "Timer in progress")
-_(image taken in version 1.1.0, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
 ## Quick States
 
 ![alt](img/quick_state.png "Quick States")
-_(image taken in version 0.9.3, some visuals may have changed)_
+_(image taken in version 1.5.0, some visuals may have changed)_
 
-Along the right-hand side of the window are 10 settable quick-states, for queuing up items to be
-displayed quickly.  Note that these are snapshots of a control's state, so, for instance, setting
+Along the right-hand side of the window are 1 special and 10 settable quick-states, for queuing up
+items to be displayed quickly.  The top quick state entry is always the current score, and can be
+selected at any time to give a score update.  The 10 entries below that may all be set to any
+control for quick display in the future.
+
+Note that these 10 are snapshots of a control's state, so, for instance, setting
 one of these to score will always show the score as of the time of the snapshotting (it will not
-update as the score changes).  This can be useful for flipping back and forth between a set 5 things
-list or setting up game displays ahead of time.  Whatever is convenient for your show.
+update as the score changes, unlike the top entry).  This can be useful for flipping back and forth
+between a set 5 things list or setting up game displays ahead of time.  Whatever is convenient for
+your show.
 
 Right click on any of the (initially gray) boxes to set the quick state to the current screen preview
 state.  Left clicking any populated quick state will send that state immediately to the monitors
 (leaving the current preview alone).  Additionally there are hotkeys for each state, Ctrl + [1-0]
 will use the currently set state, Ctrl + Alt + [1-0] will set the state to the current preview state.
+Ctrl + ` (the ~ key) will display the current score.
 
 ## Hotkeys
 
@@ -253,6 +259,7 @@ will use the currently set state, Ctrl + Alt + [1-0] will set the state to the c
 * Ctrl+w - Right team score +5
 * Ctrl+s - Right team score +1
 * Ctrl+x - Right team score -1
+* Ctrl+` - Display the score to the monitors.
 * Ctrl+_number_ - Display quick state _number_ to the monitors.  (1 is the first display, 9 is
 next-to-last, 0 is last)
 * Ctrl+Alt+_number_ - Set quick state _number_ to the current preview state.
