@@ -88,24 +88,6 @@ home/away teams permanently, see the settings menu.
 The scoreboard begins with the score control tab selected, but each control tab's functionality is
 discussed in their own section, below.
 
-### Settings
-
-![alt](img/settings_display.png "Display Settings")
-_(image taken in version 1.5.0, some visuals may have changed)_
-
-The display settings allows you to change which monitors represent which team and which
-monitor/monitors belong to the booth.  The buttons immediately below each Display number may also be
-used to re-order the displays.  This is useful as you may wish to order them so that they map to the
-physical space you're in (from top to bottom, the displays will show up as previews in the main
-control from left to right)
-
-![alt](img/settings_team.png "Team Settings")
-_(image taken in version 1.5.0, some visuals may have changed)_
-
-The teams settings page currently allows you to select the default color of the home and away team
-as well as which order the teams appear in inside of split-screen monitors (using the same ordering
-controls as described for monitors, above).
-
 ### Score
 
 ![alt](img/scores.png "Score Control")
@@ -165,6 +147,26 @@ Just in case something goes wrong, image_library.data contains the image library
 backed up however you prefer to back up files.
 
 ---
+
+### Image Search
+
+Image search allows you to quickly grab images from Google Image Search to send to displays.
+
+![alt](img/image_search.png "Image Search")
+_(image taken in version 1.5.0, some visuals may have changed)_
+
+After searching for whatever image you prefer, you can either drag one of the thumbnails to the
+target on the left or click the thumbnail and drag the larger image to the target.  The image
+after clicking is typically higher resolution, but your results may vary.
+
+
+![alt](img/image_search_walken.png "Image Search Results")
+_(image taken in version 1.5.0, some visuals may have changed)_
+
+Additionally, the Reset Browser button nestled below the team selector allows for the browser to be
+reset to the initial image search page, in case you browse too far away, given that there are no
+typical browser controls (such as back).
+
 ### Load Image
 
 ![alt](img/load_image_clipboard.png "Load Image")
@@ -254,4 +256,23 @@ will use the currently set state, Ctrl + Alt + [1-0] will set the state to the c
 * Ctrl+_number_ - Display quick state _number_ to the monitors.  (1 is the first display, 9 is
 next-to-last, 0 is last)
 * Ctrl+Alt+_number_ - Set quick state _number_ to the current preview state.
+
+## Settings
+
+![alt](img/settings_display.png "Display Settings")
+_(image taken in version 1.5.0, some visuals may have changed)_
+
+The display settings allows you to change which monitors represent which team and which
+monitor/monitors belong to the booth.  The buttons immediately below each Display number may also be
+used to re-order the displays.  This is useful as you may wish to order them so that they map to the
+physical space you're in (from top to bottom, the displays will show up as previews in the main
+control from left to right)
+
+![alt](img/settings_team.png "Team Settings")
+_(image taken in version 1.5.0, some visuals may have changed)_
+
+The teams settings page currently allows you to select the default color of the home and away team
+as well as which order the teams appear in inside of split-screen monitors (using the same ordering
+controls as described for monitors, above).
+
 
