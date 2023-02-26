@@ -41,6 +41,20 @@ if [[ "$1" == "osxcross" ]]; then
 
 	/usr/bin/cpan install \
 		JSON
+elif [[ "$1" == "code_clean" ]]; then
+	/usr/bin/apt -y install \
+		clang-format \
+		iwyu \
+		pip
+
+	# This is a hack to deal with iwyu being compiled against a different clang version.
+	ln -s /usr/lib/clang/14 /usr/lib/clang/13.0.1
+
+	/usr/bin/cpan install \
+		Perl::Tidy
+
+	/usr/bin/pip install \
+		mdformat-gfm
 else
 	/usr/bin/apt -y install \
 		clang-tidy \

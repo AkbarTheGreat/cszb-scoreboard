@@ -53,20 +53,21 @@ our @MARKDOWN_FILES = qw(
 
 our $IS_WSL = undef;
 
-my ( $opt_help, $opt_docker );
+my ( $opt_help, $opt_local );
 my $opt_procs = 2;
 
 # No real options yet, but it makes pretty boilerplate.
 my %options = (
-      'help|?'      => { 'val' => \$opt_help, 'help' => 'This help' },
-      'processes=i' => {
+   'help|?'      => { 'val' => \$opt_help, 'help' => 'This help' },
+   'processes=i' => {
          'val'  => \$opt_procs,
          'help' => 'The number of jobs to run per build execution (default 2)'
-      },
-      'docker' => {
-            'val'  => \$opt_docker,
-            'help' => 'Run commands inside of the standard docker container.',
-      },
+   },
+   'local' => {
+      'val'  => \$opt_local,
+      'help' =>
+          'Run commands locally, instead of inside of the code_clean docker container.',
+   },
 );
 
 sub sys {
@@ -109,19 +110,13 @@ sub status {
 }
 
 sub docker {
-   return undef unless $opt_docker;
+   return undef if $opt_local;
    my %volumes = ( $BASE_DIR => $DOCKER_ROOT );
-   my $docker = Docker->new( 'build'   => 'standard',
+   my $docker = Docker->new( 'build'   => 'code_clean',
                              'name'    => 'code_clean',
                              'verbose' => 1,
                              'volumes' => \%volumes,
                            );
-   $docker->cmd( 'apt', '-y', 'install', 'iwyu', 'clang-format', 'pip' );
-
-# This is a hack to deal with iwyu being compiled against a different clang version.
-   $docker->cmd( 'ln',   '-s', '/usr/lib/clang/14', '/usr/lib/clang/13.0.1' );
-   $docker->cmd( 'cpan', 'install', 'Perl::Tidy' );
-   $docker->cmd( 'pip',  'install', 'mdformat-gfm' );
    return $docker;
 }
 
