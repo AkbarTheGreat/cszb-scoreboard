@@ -40,6 +40,17 @@ our $DOCKER_BUILD_PATH = '/src/out/iwyu';
 our $BUILD_PATH        = $BASE_DIR . q{/out/iwyu};
 my $DOCKER_ROOT = '/src/cszb-scoreboard';
 
+our @MARKDOWN_FILES = qw(
+    CODE_OF_CONDUCT.md
+    CONTRIBUTING.md
+    README.md
+    doc/developers.md
+    doc/kiosk_setup.md
+    doc/users.md
+    include/config/swx/README.md
+    include/ui/widget/swx/README.md
+);
+
 our $IS_WSL = undef;
 
 my ( $opt_help, $opt_docker );
@@ -105,18 +116,21 @@ sub docker {
                              'verbose' => 1,
                              'volumes' => \%volumes,
                            );
-   $docker->cmd( 'apt', '-y', 'install', 'iwyu', 'clang-format' );
+   $docker->cmd( 'apt', '-y', 'install', 'iwyu', 'clang-format', 'pip' );
 
 # This is a hack to deal with iwyu being compiled against a different clang version.
-   $docker->cmd( 'ln', '-s', '/usr/lib/clang/14', '/usr/lib/clang/13.0.1' );
+   $docker->cmd( 'ln',   '-s', '/usr/lib/clang/14', '/usr/lib/clang/13.0.1' );
    $docker->cmd( 'cpan', 'install', 'Perl::Tidy' );
+   $docker->cmd( 'pip',  'install', 'mdformat-gfm' );
    return $docker;
 }
 
 sub workdir {
    my ( $docker, $dir ) = @_;
    if ($docker) {
-      $docker->cmd( 'mkdir', '-p', $dir );
+      if ($dir) {
+         $docker->cmd( 'mkdir', '-p', $dir );
+      }
       $docker->workdir($dir);
    } else {
       if ( $dir !~ /^\// ) {
@@ -156,8 +170,6 @@ sub cmake {
 sub run_perltidy {
    my ($docker) = @_;
    workdir( $docker, 'etc/scripts' );
-   if ($docker) {
-   }
    sys( $docker, 'perltidy', '-pro=.perltidy', '*.pl', '*.pm' );
    unlink( glob( $BASE_DIR . '/etc/scripts/*.bak' ) );
 }
@@ -186,6 +198,14 @@ sub run_clangformat {
    sys( $docker, 'make', '-j' . $opt_procs, 'clangformat' );
 }
 
+sub run_mdformat {
+   my ($docker) = @_;
+   workdir( $docker, q{} );
+   for my $file (@MARKDOWN_FILES) {
+      sys( $docker, 'mdformat', '--wrap=100', $file );
+   }
+}
+
 sub check_wsl {
    my $uname = `uname -a`;
    if ( $uname =~ /WSL2/ ) {
@@ -206,6 +226,8 @@ sub main {
    run_fix_include($docker);
    status('Includes fixed, auto-formatting all files');
    run_clangformat($docker);
+   status('Source formatted, auto-formatting markdown files');
+   run_mdformat($docker);
    status(   'Process complete.' . "\n"
            . 'Any changes will need to be submitted via git to be preserved.'
          );
