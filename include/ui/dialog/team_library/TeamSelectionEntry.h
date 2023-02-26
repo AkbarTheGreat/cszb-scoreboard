@@ -22,9 +22,9 @@ limitations under the License.
 
 #include <cstdint>  // for int32_t
 #include <memory>   // for unique_ptr
+#include <string>   // for string
 
 #include "config.pb.h"              // for TeamInfo_TeamType
-#include "ui/widget/Button.h"       // for Button
 #include "ui/widget/Label.h"        // for Label
 #include "ui/widget/RadioButton.h"  // for RadioButton
 
@@ -45,7 +45,7 @@ class TeamSelectionEntry {
                      int32_t row, const proto::TeamLibInfo& team);
   void hide();
   void show();
-  void setName(std::string name);
+  void setName(const std::string& name);
   void teamSelectionChanged(proto::TeamInfo_TeamType team);
 
  private:

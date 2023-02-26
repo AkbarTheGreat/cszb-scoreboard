@@ -129,7 +129,7 @@ auto TeamSelectionBox::placeholderTeam() -> proto::TeamLibInfo {
   proto::TeamLibInfo placeholder_team;
   // We use 'W' for our placeholder name because it tends to be the widest
   // in variable-width fonts.
-  pad_text = "WWWWWWW"; // Wide enough for if we just have a -None- entry.
+  pad_text = "WWWWWWW";  // Wide enough for if we just have a -None- entry.
   for (const auto& team : library.teams()) {
     if (team.name().length() > pad_text.length()) {
       pad_text.resize(team.name().length(), 'W');

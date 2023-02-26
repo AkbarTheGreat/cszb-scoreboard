@@ -68,7 +68,9 @@ void TeamSelectionEntry::show() {
   default_team->show();
 }
 
-void TeamSelectionEntry::setName(std::string name) { this->name->set(name); }
+void TeamSelectionEntry::setName(const std::string& name) {
+  this->name->set(name);
+}
 
 void TeamSelectionEntry::positionWidgets() {
   int col = 0;
