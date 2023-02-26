@@ -1,4 +1,4 @@
-/* 
+/*
 config.proto: Configuration proto for the cszb-scoreboard app
 
 Copyright 2019-2023 Tracy Beck
@@ -20,24 +20,25 @@ syntax = "proto3";
 package cszb_scoreboard.proto;
 
 message Rectangle {
-    int32 x = 1;
-	int32 y = 2;
-	int32 width = 3;
-	int32 height = 4;
+  int32 x = 1;
+  int32 y = 2;
+  int32 width = 3;
+  int32 height = 4;
 }
 
 message Color {
-    int32 rgb = 1;
+  int32 rgb = 1;
 }
 
 // ScreenSide represents which team(s) each monitor represents.  It's not a
 // simple selection, and so must be contained as a mapping of possibilities.
 message ScreenSide {
-	bool error = 1; // Used to indicate that we will have a box for an error, ie: there is no valid display to show to.
-	bool control = 2; // Indicates that it's our main display, used for control.
-	bool home = 3;
-	bool away = 4;
-	bool extra = 5;
+  bool error = 1;  // Used to indicate that we will have a box for an error, ie:
+                   // there is no valid display to show to.
+  bool control = 2;  // Indicates that it's our main display, used for control.
+  bool home = 3;
+  bool away = 4;
+  bool extra = 5;
 }
 
 // A scaling font used in ScreenText presentations.
@@ -46,13 +47,14 @@ message Font {
     FONT_STYLE_UNDEFINED = 0;
     FONT_STYLE_IMPACT = 1;
     FONT_STYLE_MODERN = 2;
-  } 
+  }
   FontStyle style = 1;
   float size = 2;
   Color color = 3;
 }
 
-// Represents text which may be rendered on a ScreenText and all of the relevant pieces necessary.
+// Represents text which may be rendered on a ScreenText and all of the relevant
+// pieces necessary.
 message RenderableText {
   enum ScreenPosition {
     FONT_SCREEN_POSITION_CENTERED = 0;
@@ -65,16 +67,16 @@ message RenderableText {
 }
 
 message DisplayInfo {
-	int32 id = 1;
-	Rectangle dimensions = 2;
-	ScreenSide side = 3;
+  int32 id = 1;
+  Rectangle dimensions = 2;
+  ScreenSide side = 3;
 }
 
 message DisplayConfig {
-	repeated DisplayInfo displays = 1;
-	bool enable_windowed_mode = 2;
-	int32 window_count = 3;
-	Rectangle window_size = 4;
+  repeated DisplayInfo displays = 1;
+  bool enable_windowed_mode = 2;
+  int32 window_count = 3;
+  Rectangle window_size = 4;
 }
 
 message TeamInfo {
@@ -83,17 +85,17 @@ message TeamInfo {
     HOME_TEAM = 1;
     AWAY_TEAM = 2;
     EXTRA_TEAM = 3;
-  } 
+  }
   TeamType team_type = 1;
   Color team_color = 2;
 }
 
 message TeamConfig {
-	repeated TeamInfo teams = 1;
-    repeated TeamInfo.TeamType single_screen_order = 2;
+  repeated TeamInfo teams = 1;
+  repeated TeamInfo.TeamType single_screen_order = 2;
 }
 
 message ScoreboardConfig {
-	DisplayConfig display_config = 1;
-	TeamConfig team_config = 2;
+  DisplayConfig display_config = 1;
+  TeamConfig team_config = 2;
 }

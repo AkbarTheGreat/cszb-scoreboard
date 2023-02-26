@@ -1,5 +1,6 @@
-/* 
-image_library.proto: Protobuf representation of an image library for the scoreboard.
+/*
+image_library.proto: Protobuf representation of an image library for the
+scoreboard.
 
 Copyright 2020-2023 Tracy Beck
 
@@ -20,13 +21,13 @@ syntax = "proto3";
 package cszb_scoreboard.proto;
 
 message ImageInfo {
-	string name = 1;
-	string file_path = 2;
-	repeated string tags = 3;
-	bool is_relative = 4;
+  string name = 1;
+  string file_path = 2;
+  repeated string tags = 3;
+  bool is_relative = 4;
 }
 
 message ImageLibrary {
-	repeated ImageInfo images = 1;
-	string library_root = 2;
+  repeated ImageInfo images = 1;
+  string library_root = 2;
 }

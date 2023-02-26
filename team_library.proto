@@ -1,5 +1,6 @@
-/* 
-team_library.proto: Protobuf representation of a team library for the scoreboard.
+/*
+team_library.proto: Protobuf representation of a team library for the
+scoreboard.
 
 Copyright 2023 Tracy Beck
 
@@ -22,14 +23,13 @@ package cszb_scoreboard.proto;
 import "config.proto";
 
 message TeamLibInfo {
-	string name = 1;
-	TeamInfo.TeamType default_team_type = 2;
-	string image_path = 3;
-	bool is_relative = 4;
+  string name = 1;
+  TeamInfo.TeamType default_team_type = 2;
+  string image_path = 3;
+  bool is_relative = 4;
 }
 
 message TeamLibrary {
-	repeated TeamLibInfo teams = 1;
-	string library_root = 2;
+  repeated TeamLibInfo teams = 1;
+  string library_root = 2;
 }
-
