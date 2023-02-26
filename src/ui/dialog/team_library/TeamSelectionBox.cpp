@@ -106,7 +106,7 @@ void TeamSelectionBox::createHeader() {
   col += 2;
 
   // Team type
-  header_labels.push_back(header->label("Team Type"));
+  header_labels.push_back(header->label("Default"));
   header->addWidget(*header_labels.back(), 0, col,
                     TeamSelectionEntry::BORDER_SIZE);
   col += 2;

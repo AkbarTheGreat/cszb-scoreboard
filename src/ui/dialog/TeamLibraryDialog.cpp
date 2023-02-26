@@ -48,7 +48,7 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   divider = bottom_panel->divider();
 
   name_entry = bottom_panel->text("");
-  name_label = bottom_panel->label("Team name");
+  name_label = bottom_panel->label("Team Name");
 
   file_name_label = bottom_panel->label("Logo Filename");
   file_name_entry = bottom_panel->text("");

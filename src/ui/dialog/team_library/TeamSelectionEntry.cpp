@@ -43,15 +43,12 @@ TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
   home = panel->radioButton();
   away = panel->radioButton();
   name = panel->label(team.name());
-  default_team = panel->label(TeamConfig::teamName(team.default_team_type()));
+  default_team = panel->label(teamLabel(team.default_team_type()));
 
   positionWidgets();
   bindEvents();
 
-  if (index == 0) {
-    home->setSelected(true);
-    away->setSelected(true);
-  }
+  handleDefaultTeams(team.default_team_type());
 }
 
 void TeamSelectionEntry::hide() {
@@ -106,6 +103,25 @@ void TeamSelectionEntry::teamSelectionChanged(proto::TeamInfo_TeamType team) {
   }
   if (team == proto::TeamInfo_TeamType_AWAY_TEAM) {
     away->setSelected(false);
+  }
+}
+
+auto TeamSelectionEntry::teamLabel(proto::TeamInfo_TeamType type)
+    -> std::string {
+  if (type == proto::TeamInfo_TeamType_TEAM_ERROR) {
+    return "";
+  }
+  return TeamConfig::teamName(type);
+}
+
+void TeamSelectionEntry::handleDefaultTeams(proto::TeamInfo_TeamType type) {
+  if (index == 0 || type == proto::TeamInfo_TeamType_HOME_TEAM) {
+    home->setSelected(true);
+    homeButtonPressed();
+  }
+  if (index == 0 || type == proto::TeamInfo_TeamType_AWAY_TEAM) {
+    away->setSelected(true);
+    awayButtonPressed();
   }
 }
 

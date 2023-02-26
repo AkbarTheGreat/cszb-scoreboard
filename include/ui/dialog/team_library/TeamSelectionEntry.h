@@ -58,10 +58,13 @@ class TeamSelectionEntry {
   std::unique_ptr<Label> name;
   std::unique_ptr<Label> default_team;
 
+  static auto teamLabel(proto::TeamInfo_TeamType type) -> std::string;
+
   void bindEvents();
   void positionWidgets();
   void homeButtonPressed();
   void awayButtonPressed();
+  void handleDefaultTeams(proto::TeamInfo_TeamType type);
 };
 
 }  // namespace cszb_scoreboard
