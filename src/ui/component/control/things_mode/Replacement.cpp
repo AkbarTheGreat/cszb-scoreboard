@@ -26,7 +26,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-static const char *BULLET = "\u2022-2023";
+static const char *BULLET = "\u2022";
 
 Replacement::Replacement(ReplacementPanel *parent) {
   this->parent = parent;
