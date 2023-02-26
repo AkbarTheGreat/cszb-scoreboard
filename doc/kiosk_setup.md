@@ -1,43 +1,41 @@
 # Making a slideshow kiosk on a Raspberry Pi
 
-So first of all, this has nothing to do directly with the scoreboard.  But it
-was a project I undertook for my local CSz theater and I thought it might be
-good to publish how I did it.  Also I wanted notes for myself.
+So first of all, this has nothing to do directly with the scoreboard. But it was a project I
+undertook for my local CSz theater and I thought it might be good to publish how I did it. Also I
+wanted notes for myself.
 
 ## The What
 
-I wanted a Raspberry Pi that I could just plug into a projector that as soon as
-boots up, loads a Google Slides show and auto-plays it.  The idea was to just
-make the pre-show slide deck an application that no one has to set up or worry
-about accidentally mousing over on top of while they prep for the show or
-whatever.
+I wanted a Raspberry Pi that I could just plug into a projector that as soon as boots up, loads a
+Google Slides show and auto-plays it. The idea was to just make the pre-show slide deck an
+application that no one has to set up or worry about accidentally mousing over on top of while they
+prep for the show or whatever.
 
-If you like this idea but dislike parts of it (let's say you're not an Ubuntu
-fan) That's fine!  If you have suggestions for alternate setups, feel free to
-send a pull request to this doc or just email me with your version and I can
-add alternate ways of doing the same thing.
+If you like this idea but dislike parts of it (let's say you're not an Ubuntu fan) That's fine! If
+you have suggestions for alternate setups, feel free to send a pull request to this doc or just
+email me with your version and I can add alternate ways of doing the same thing.
 
 ## The steps
 
-* Install Ubuntu on a Raspi using Ubuntu's guide:
-https://ubuntu.com/tutorials/how-to-install-ubuntu-desktop-on-raspberry-pi-4#1-overview
-   * This basically consists of installing the Raspberry Pi Imager and then
-   going through the normal "first time boot" steps with a keyboard/mouse/monitor
-   hooked up to the pi.  Then update all of the packages, because there will be
-   day 1 updates.
+- Install Ubuntu on a Raspi using Ubuntu's guide:
+  https://ubuntu.com/tutorials/how-to-install-ubuntu-desktop-on-raspberry-pi-4#1-overview
 
-* By default, Ubuntu's first account will be in the sudoers file.  So I leave
-  that account with a secure password and make a second account that is not in
-  the sudoers file to run the kiosk.
+  - This basically consists of installing the Raspberry Pi Imager and then going through the normal
+    "first time boot" steps with a keyboard/mouse/monitor hooked up to the pi. Then update all of
+    the packages, because there will be day 1 updates.
 
-* At this point, I also find it's useful to give the machine an easy-to find
-  hostname, because most maintenance will be done over SSH
+- By default, Ubuntu's first account will be in the sudoers file. So I leave that account with a
+  secure password and make a second account that is not in the sudoers file to run the kiosk.
 
-* sudo apt install screen vim ssh lightdm openbox unclutter chromium-browser
+- At this point, I also find it's useful to give the machine an easy-to find hostname, because most
+  maintenance will be done over SSH
 
-* Sign in once as the kiosk user to set openbox as your wm
+- sudo apt install screen vim ssh lightdm openbox unclutter chromium-browser
 
-* To make the kiosk autologin, set the lightdm config (/etc/lightdm/lightdm.conf) to look like this:
+- Sign in once as the kiosk user to set openbox as your wm
+
+- To make the kiosk autologin, set the lightdm config (/etc/lightdm/lightdm.conf) to look like this:
+
   ```
   [Seat:*]
   autologin-guest=false
@@ -46,6 +44,7 @@ https://ubuntu.com/tutorials/how-to-install-ubuntu-desktop-on-raspberry-pi-4#1-o
   ```
 
 ### The Kiosk script
+
 ```
 #!/bin/bash
 
@@ -76,10 +75,11 @@ while (true) ; do
 done
 ```
 
-(I found firefox to be a bit more performant for a pi 3b, but Chromium looks
-better on a 4. You should run your own tests and see which runs better for your slides)
+(I found firefox to be a bit more performant for a pi 3b, but Chromium looks better on a 4. You
+should run your own tests and see which runs better for your slides)
 
 ### ~kiosk/.config/autostart/kiosk.desktop
+
 ```
 [Desktop Entry]
 Type=Application
@@ -90,11 +90,10 @@ X-GNOME-Autostart-enabled=true
 
 ## Miscellaneous Notes
 
-* I considered setting the box up to auto-update from apt in the background.
-  I decided against this, as I don't want it to kick off an update during the
-  pre-show slides and possibly degrade performance (or shut down the slides
-  themselves.)  That does mean, however, that I'm on the hook for ensuring
-  that the box gets updated periodically, for security.
+- I considered setting the box up to auto-update from apt in the background. I decided against this,
+  as I don't want it to kick off an update during the pre-show slides and possibly degrade
+  performance (or shut down the slides themselves.) That does mean, however, that I'm on the hook
+  for ensuring that the box gets updated periodically, for security.
 
-* I started with a Raspi 3B and it _mostly_ worked, although some of the WebGL
-transitions look a little bit janky.  A Raspi 4 works noticably better.
+- I started with a Raspi 3B and it _mostly_ worked, although some of the WebGL transitions look a
+  little bit janky. A Raspi 4 works noticably better.
