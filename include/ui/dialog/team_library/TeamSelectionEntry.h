@@ -64,6 +64,7 @@ class TeamSelectionEntry {
   void positionWidgets();
   void homeButtonPressed();
   void awayButtonPressed();
+  void nameClicked();
   void handleDefaultTeams(proto::TeamInfo_TeamType type);
 };
 

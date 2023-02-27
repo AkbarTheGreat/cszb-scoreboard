@@ -22,9 +22,10 @@ limitations under the License.
 #include <string>  // for string, basic_string
 #include <vector>  // for vector
 
-#include "config/swx/defs.h"     // for wxID_CANCEL, wxID_OK
-#include "config/swx/event.h"    // for wxEVT_BUTTON
-#include "ui/widget/DropDown.h"  // for DropDown
+#include "config/swx/defs.h"      // for wxID_CANCEL, wxID_OK
+#include "config/swx/event.h"     // for wxEVT_BUTTON
+#include "ui/widget/DropDown.h"   // for DropDown
+#include "util/FilesystemPath.h"  // for FilesystemPath
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
@@ -109,6 +110,28 @@ auto TeamLibraryDialog::validateSettings() -> bool { return true; }
 
 void TeamLibraryDialog::saveSettings() {
   // TODO(akbar): Save
+}
+
+void TeamLibraryDialog::clearEdit() {
+  name_entry->setValue("");
+  file_name_entry->setValue("");
+  default_team_selector->setSelected(0);
+  add_update_button->setText("Add");
+}
+
+void TeamLibraryDialog::editTeam(int32_t row_number, const std::string &name,
+                                 const FilesystemPath &logo,
+                                 proto::TeamInfo_TeamType type) {
+  name_entry->setValue(name);
+  file_name_entry->setValue(logo.string());
+  if (type == proto::TeamInfo_TeamType_HOME_TEAM) {
+    default_team_selector->setSelected(1);
+  } else if (type == proto::TeamInfo_TeamType_AWAY_TEAM) {
+    default_team_selector->setSelected(2);
+  } else {
+    default_team_selector->setSelected(0);
+  }
+  add_update_button->setText("Update");
 }
 
 }  // namespace cszb_scoreboard

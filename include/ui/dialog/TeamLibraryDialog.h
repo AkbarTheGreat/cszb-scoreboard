@@ -18,9 +18,12 @@ limitations under the License.
 */
 #pragma once
 
-#include <memory>  // for unique_ptr
+#include <cstdint>  // for int32_t
+#include <memory>   // for unique_ptr
+#include <string>   // for string
 
 #include "ScoreboardCommon.h"                         // for PUBLIC_TEST_ONLY
+#include "config.pb.h"                                // for TeamInfo_TeamType
 #include "ui/dialog/team_library/TeamSelectionBox.h"  // for TeamSelectionBox
 #include "ui/widget/Button.h"                         // for Button
 #include "ui/widget/Divider.h"                        // for Divider
@@ -33,6 +36,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 class ScoreControl;
+class FilesystemPath;
 
 namespace swx {
 class PropertySheetDialog;
@@ -42,6 +46,10 @@ class TeamLibraryDialog : public TabbedDialog {
  public:
   TeamLibraryDialog(swx::PropertySheetDialog *wx, ScoreControl *parent)
       : TeamLibraryDialog(wx, parent, Singleton::getInstance()) {}
+
+  void clearEdit();
+  void editTeam(int32_t row_number, const std::string &name,
+                const FilesystemPath &logo, proto::TeamInfo_TeamType type);
 
   PUBLIC_TEST_ONLY
   TeamLibraryDialog(swx::PropertySheetDialog *wx, ScoreControl *parent,

@@ -18,8 +18,9 @@ limitations under the License.
 
 #pragma once
 
-#include <string>  // for string
-#include <vector>  // for vector
+#include <cstdint>  // for int32_t
+#include <string>   // for string
+#include <vector>   // for vector
 
 #include "ui/widget/Widget.h"      // for Widget
 #include "ui/widget/swx/Choice.h"  // for Choice
@@ -32,6 +33,7 @@ class DropDown : public Widget {
   DropDown(swx::Choice *choice, const std::vector<std::string> &choices);
 
   auto selected() -> std::string;
+  void setSelected(int32_t selection);
   void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
 
  protected:

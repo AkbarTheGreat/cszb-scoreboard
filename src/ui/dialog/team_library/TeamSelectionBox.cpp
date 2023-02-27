@@ -23,11 +23,13 @@ limitations under the License.
 #include <cstdint>  // for int32_t, int64_t
 #include <string>   // for string
 
-#include "config/Persistence.h"        // for Persistence
-#include "config/Position.h"           // for Size
-#include "team_library.pb.h"           // for TeamLibInfo, TeamLibrary
-#include "ui/widget/ScrollingPanel.h"  // for ScrollingPanel
-#include "ui/widget/Widget.h"          // for NO_BORDER
+#include "config/Persistence.h"           // for Persistence
+#include "config/Position.h"              // for Size
+#include "team_library.pb.h"              // for TeamLibInfo, TeamLibrary
+#include "ui/dialog/TeamLibraryDialog.h"  // for TeamLibraryDialog
+#include "ui/widget/ScrollingPanel.h"     // for ScrollingPanel
+#include "ui/widget/Widget.h"             // for NO_BORDER
+#include "util/FilesystemPath.h"          // for FilesystemPath
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
@@ -148,13 +150,23 @@ void TeamSelectionBox::updateList() {
   team_selection_entries[0]->setName(" -None-");
 }
 
-void TeamSelectionBox::teamSelected(int32_t row,
-                                    proto::TeamInfo_TeamType team) {
+void TeamSelectionBox::teamSelectedForSide(int32_t row,
+                                           proto::TeamInfo_TeamType team) {
   for (int i = 0; i < team_selection_entries.size(); i++) {
     if (i != row) {
       team_selection_entries[i]->teamSelectionChanged(team);
     }
   }
+}
+
+void TeamSelectionBox::teamSelectedForEdit(int32_t row) {
+  if (row == 0) {
+    parent->clearEdit();
+    return;
+  }
+  auto team = library.teams(row - 1);
+  parent->editTeam(row, team.name(), FilesystemPath(team.image_path()),
+                   team.default_team_type());
 }
 
 }  // namespace cszb_scoreboard

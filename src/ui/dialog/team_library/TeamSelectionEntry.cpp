@@ -87,15 +87,21 @@ void TeamSelectionEntry::bindEvents() {
              [this](wxCommandEvent& event) -> void { homeButtonPressed(); });
   away->bind(wxEVT_RADIOBUTTON,
              [this](wxCommandEvent& event) -> void { awayButtonPressed(); });
+  name->bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent& event) -> void {
+    nameClicked();
+    event.Skip();
+  });
 }
 
 void TeamSelectionEntry::homeButtonPressed() {
-  parent->teamSelected(index, proto::TeamInfo_TeamType_HOME_TEAM);
+  parent->teamSelectedForSide(index, proto::TeamInfo_TeamType_HOME_TEAM);
 }
 
 void TeamSelectionEntry::awayButtonPressed() {
-  parent->teamSelected(index, proto::TeamInfo_TeamType_AWAY_TEAM);
+  parent->teamSelectedForSide(index, proto::TeamInfo_TeamType_AWAY_TEAM);
 }
+
+void TeamSelectionEntry::nameClicked() { parent->teamSelectedForEdit(index); }
 
 void TeamSelectionEntry::teamSelectionChanged(proto::TeamInfo_TeamType team) {
   if (team == proto::TeamInfo_TeamType_HOME_TEAM) {

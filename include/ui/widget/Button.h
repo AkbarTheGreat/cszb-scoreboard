@@ -30,6 +30,7 @@ class Button : public Widget {
   void disable() { wx()->Disable(); }
   void enable() { wx()->Enable(); }
   auto id() -> int { return wx()->GetId(); }
+  void setText(const std::string &text) { wx()->SetLabel(text); }
   void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
 
  protected:
