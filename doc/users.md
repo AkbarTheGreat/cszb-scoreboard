@@ -311,10 +311,6 @@ important. Likewise, if a tag matches exactly, partial matches are excluded, so 
 consistent with your tags. For instance, "dogs" won't show in a search for "dog" if "dog" is also a
 valid tag, so we recommend you standardize your tags on plural or singular.
 
-The Filename box should not be edited directly. (In fact, editing it has no effect on any behavior).
-It is a known issue that it allows you to edit it at all and should be resolved in an upcoming
-release.
-
 ______________________________________________________________________
 
 ## Settings
