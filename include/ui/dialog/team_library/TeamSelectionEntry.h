@@ -25,6 +25,7 @@ limitations under the License.
 #include <string>   // for string
 
 #include "config.pb.h"              // for TeamInfo_TeamType
+#include "ui/widget/Button.h"       // for Button
 #include "ui/widget/Label.h"        // for Label
 #include "ui/widget/RadioButton.h"  // for RadioButton
 
@@ -43,8 +44,6 @@ class TeamSelectionEntry {
 
   TeamSelectionEntry(Panel* panel, TeamSelectionBox* owning_controller,
                      int32_t row, const proto::TeamLibInfo& team);
-  void hide();
-  void show();
   void setName(const std::string& name);
   void teamSelectionChanged(proto::TeamInfo_TeamType team);
 
@@ -57,6 +56,7 @@ class TeamSelectionEntry {
   std::unique_ptr<RadioButton> away;
   std::unique_ptr<Label> name;
   std::unique_ptr<Label> default_team;
+  std::unique_ptr<Button> remove;
 
   static auto teamLabel(proto::TeamInfo_TeamType type) -> std::string;
 
@@ -64,6 +64,7 @@ class TeamSelectionEntry {
   void positionWidgets();
   void homeButtonPressed();
   void awayButtonPressed();
+  void removeButtonPressed();
   void nameClicked();
   void handleDefaultTeams(proto::TeamInfo_TeamType type);
 };

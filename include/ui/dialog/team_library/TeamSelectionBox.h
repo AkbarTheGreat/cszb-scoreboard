@@ -53,8 +53,9 @@ class TeamSelectionBox : public Panel {
   void teamSelectedForEdit(int32_t row);
   void addTeam(const std::string& name, const FilesystemPath& logo,
                proto::TeamInfo_TeamType type);
-  void changeTeam(int32_t row_number, const std::string& name,
+  void changeTeam(int32_t team_number, const std::string& name,
                   const FilesystemPath& logo, proto::TeamInfo_TeamType type);
+  void deleteTeam(int32_t row_number);
 
   PUBLIC_TEST_ONLY
   TeamSelectionBox(swx::Panel* wx, TeamLibraryDialog* owning_controller,

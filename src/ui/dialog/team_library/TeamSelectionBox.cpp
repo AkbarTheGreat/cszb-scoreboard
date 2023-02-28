@@ -34,7 +34,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-constexpr int TEAMS_BEFORE_SCROLL = 5;
+constexpr int32_t TEAMS_BEFORE_SCROLL = 5;
 
 namespace swx {
 class Panel;
@@ -123,9 +123,15 @@ void TeamSelectionBox::createHeader() {
                     TeamSelectionEntry::BORDER_SIZE);
   col += 2;
 
+  // Delete button
+  header_labels.push_back(header->label("Delete"));
+  header->addWidget(*header_labels.back(), 0, col,
+                    TeamSelectionEntry::BORDER_SIZE);
+  col += 2;
+
   header->runSizer();
 
-  for (int entry_col = 0; entry_col < 4; entry_col++) {
+  for (int32_t entry_col = 0; entry_col < 4; entry_col++) {
     int64_t width = team_selection->sizeOfWidgetAtLocation(0, entry_col).width -
                     header->sizeOfWidgetAtLocation(0, entry_col * 2).width;
     if (width < 0) {
@@ -162,7 +168,7 @@ void TeamSelectionBox::updateList() {
 
 void TeamSelectionBox::teamSelectedForSide(int32_t row,
                                            proto::TeamInfo_TeamType team) {
-  for (int i = 0; i < team_selection_entries.size(); i++) {
+  for (int32_t i = 0; i < team_selection_entries.size(); i++) {
     if (i != row) {
       team_selection_entries[i]->teamSelectionChanged(team);
     }
@@ -174,8 +180,9 @@ void TeamSelectionBox::teamSelectedForEdit(int32_t row) {
     parent->clearEdit();
     return;
   }
-  auto team = library.teams(row - 1);
-  parent->editTeam(row, team.name(), FilesystemPath(team.image_path()),
+  int32_t team_number = row - 1;
+  auto team = library.teams(team_number);
+  parent->editTeam(team_number, team.name(), FilesystemPath(team.image_path()),
                    team.default_team_type());
 }
 
@@ -185,10 +192,19 @@ void TeamSelectionBox::addTeam(const std::string& name,
   setTeamInfo(library.add_teams(), name, logo, type);
 }
 
-void TeamSelectionBox::changeTeam(int32_t row_number, const std::string& name,
+void TeamSelectionBox::changeTeam(int32_t team_number, const std::string& name,
                                   const FilesystemPath& logo,
                                   proto::TeamInfo_TeamType type) {
-  setTeamInfo(library.mutable_teams(row_number - 1), name, logo, type);
+  setTeamInfo(library.mutable_teams(team_number), name, logo, type);
+}
+
+void TeamSelectionBox::deleteTeam(int32_t row_number) {
+  int32_t team_number = row_number - 1;
+  auto* teams = library.mutable_teams();
+  teams->erase(teams->begin() + team_number);
+  createEntries();
+  updateList();
+  parent->clearEdit();
 }
 
 // If type is a valid team type, clear out all entries in the library with that

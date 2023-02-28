@@ -25,7 +25,8 @@ limitations under the License.
 #include "config/TeamConfig.h"  // for TeamConfig
 #include "team_library.pb.h"    // for TeamLibInfo
 #include "ui/dialog/team_library/TeamSelectionBox.h"
-#include "ui/widget/Panel.h"  // for Panel
+#include "ui/widget/Button.h"  // for Panel
+#include "ui/widget/Panel.h"   // for Panel
 
 namespace cszb_scoreboard {
 
@@ -44,25 +45,12 @@ TeamSelectionEntry::TeamSelectionEntry(Panel* panel,
   away = panel->radioButton();
   name = panel->label(team.name());
   default_team = panel->label(teamLabel(team.default_team_type()));
+  remove = panel->button("X", true);
 
   positionWidgets();
   bindEvents();
 
   handleDefaultTeams(team.default_team_type());
-}
-
-void TeamSelectionEntry::hide() {
-  home->hide();
-  away->hide();
-  name->hide();
-  default_team->hide();
-}
-
-void TeamSelectionEntry::show() {
-  home->show();
-  away->show();
-  name->show();
-  default_team->show();
 }
 
 void TeamSelectionEntry::setName(const std::string& name) {
@@ -78,8 +66,12 @@ void TeamSelectionEntry::positionWidgets() {
   away->setMinSize({.width = TEAM_SELECTION_SIZE_PIXELS});
   panel->addWidget(*name, index, col++, BORDER_SIZE);
   panel->addWidget(*default_team, index, col++, BORDER_SIZE);
+  panel->addWidget(*remove, index, col++, BORDER_SIZE);
   panel->addSpacer({.width = SCROLLBAR_BUFFER_WIDTH_PIXELS}, index, col++,
                    BORDER_SIZE);
+  if (index == 0) {
+    remove->hide();
+  }
 }
 
 void TeamSelectionEntry::bindEvents() {
@@ -87,6 +79,9 @@ void TeamSelectionEntry::bindEvents() {
              [this](wxCommandEvent& event) -> void { homeButtonPressed(); });
   away->bind(wxEVT_RADIOBUTTON,
              [this](wxCommandEvent& event) -> void { awayButtonPressed(); });
+  remove->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
+    removeButtonPressed();
+  });
   name->bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent& event) -> void {
     nameClicked();
     event.Skip();
@@ -100,6 +95,8 @@ void TeamSelectionEntry::homeButtonPressed() {
 void TeamSelectionEntry::awayButtonPressed() {
   parent->teamSelectedForSide(index, proto::TeamInfo_TeamType_AWAY_TEAM);
 }
+
+void TeamSelectionEntry::removeButtonPressed() { parent->deleteTeam(index); }
 
 void TeamSelectionEntry::nameClicked() { parent->teamSelectedForEdit(index); }
 
