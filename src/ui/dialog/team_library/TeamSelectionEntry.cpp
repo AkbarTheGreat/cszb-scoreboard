@@ -65,6 +65,13 @@ void TeamSelectionEntry::show() {
   default_team->show();
 }
 
+void TeamSelectionEntry::destroy() {
+  home->destroy();
+  away->destroy();
+  name->destroy();
+  default_team->destroy();
+}
+
 void TeamSelectionEntry::setName(const std::string& name) {
   this->name->set(name);
 }

@@ -58,6 +58,7 @@ class TeamLibraryDialog : public TabbedDialog {
  private:
   Singleton *singleton;
   ScoreControl *parent;
+  int32_t row_for_edit;
 
   // UI elements
   std::unique_ptr<Panel> box_panel;
@@ -78,6 +79,7 @@ class TeamLibraryDialog : public TabbedDialog {
   static auto validateSettings() -> bool;
   void onOk();
   void onCancel();
+  void onAddOrUpdate();
 };
 
 }  // namespace cszb_scoreboard

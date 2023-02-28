@@ -67,8 +67,16 @@ void TeamSelectionBox::positionWidgets() {
   runSizer();
 }
 
+void TeamSelectionBox::clearOldEntries() {
+  for (const auto& entry : team_selection_entries) {
+    entry->destroy();
+  }
+  team_selection_entries.clear();
+}
+
 void TeamSelectionBox::createEntries() {
   int32_t row = 0;
+  clearOldEntries();
   team_selection_entries.reserve(library.teams_size() + 1);
   team_selection_entries.emplace_back(std::make_unique<TeamSelectionEntry>(
       team_selection.get(), this, row++, placeholderTeam()));
@@ -168,5 +176,19 @@ void TeamSelectionBox::teamSelectedForEdit(int32_t row) {
   parent->editTeam(row, team.name(), FilesystemPath(team.image_path()),
                    team.default_team_type());
 }
+
+void TeamSelectionBox::addTeam(const std::string& name,
+                               const FilesystemPath& logo,
+                               proto::TeamInfo_TeamType type) {
+  proto::TeamLibInfo* team = library.add_teams();
+  team->set_name(name);
+  team->set_image_path(logo.string());
+  team->set_default_team_type(type);
+  // createEntries();
+}
+
+void TeamSelectionBox::changeTeam(int32_t row_number, const std::string& name,
+                                  const FilesystemPath& logo,
+                                  proto::TeamInfo_TeamType type) {}
 
 }  // namespace cszb_scoreboard

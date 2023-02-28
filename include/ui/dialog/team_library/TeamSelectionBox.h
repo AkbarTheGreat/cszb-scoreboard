@@ -50,6 +50,10 @@ class TeamSelectionBox : public Panel {
   void updateList();
   void teamSelectedForSide(int32_t row, proto::TeamInfo_TeamType team);
   void teamSelectedForEdit(int32_t row);
+  void addTeam(const std::string& name, const FilesystemPath& logo,
+               proto::TeamInfo_TeamType type);
+  void changeTeam(int32_t row_number, const std::string& name,
+                  const FilesystemPath& logo, proto::TeamInfo_TeamType type);
 
   PUBLIC_TEST_ONLY
   TeamSelectionBox(swx::Panel* wx, TeamLibraryDialog* owning_controller,
@@ -69,6 +73,7 @@ class TeamSelectionBox : public Panel {
 
   void bindEvents();
   void positionWidgets();
+  void clearOldEntries();
   void createEntries();
   void createHeader();
   auto placeholderTeam() -> proto::TeamLibInfo;

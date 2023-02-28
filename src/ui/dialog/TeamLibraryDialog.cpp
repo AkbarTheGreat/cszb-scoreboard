@@ -40,6 +40,7 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
     : TabbedDialog(wx) {
   this->parent = parent;
   this->singleton = singleton;
+  row_for_edit = -1;
 
   box_panel = panel();
   team_selection =
@@ -94,6 +95,9 @@ void TeamLibraryDialog::bindEvents() {
   bind(
       wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
+  add_update_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    this->onAddOrUpdate();
+  });
 }
 
 void TeamLibraryDialog::onOk() {
@@ -106,6 +110,23 @@ void TeamLibraryDialog::onOk() {
 
 void TeamLibraryDialog::onCancel() { close(); }
 
+void TeamLibraryDialog::onAddOrUpdate() {
+  proto::TeamInfo_TeamType type = proto::TeamInfo_TeamType_TEAM_ERROR;
+  if (default_team_selector->selected() == "Home") {
+    type = proto::TeamInfo_TeamType_HOME_TEAM;
+  }
+  if (default_team_selector->selected() == "Away") {
+    type = proto::TeamInfo_TeamType_AWAY_TEAM;
+  }
+  if (row_for_edit == -1) {
+    team_selection->addTeam(name_entry->value(),
+                            FilesystemPath(file_name_entry->value()), type);
+    return;
+  }
+  team_selection->changeTeam(row_for_edit, name_entry->value(),
+                             FilesystemPath(file_name_entry->value()), type);
+}
+
 auto TeamLibraryDialog::validateSettings() -> bool { return true; }
 
 void TeamLibraryDialog::saveSettings() {
@@ -113,6 +134,7 @@ void TeamLibraryDialog::saveSettings() {
 }
 
 void TeamLibraryDialog::clearEdit() {
+  row_for_edit = -1;
   name_entry->setValue("");
   file_name_entry->setValue("");
   default_team_selector->setSelected(0);
@@ -122,6 +144,7 @@ void TeamLibraryDialog::clearEdit() {
 void TeamLibraryDialog::editTeam(int32_t row_number, const std::string &name,
                                  const FilesystemPath &logo,
                                  proto::TeamInfo_TeamType type) {
+  row_for_edit = row_number;
   name_entry->setValue(name);
   file_name_entry->setValue(logo.string());
   if (type == proto::TeamInfo_TeamType_HOME_TEAM) {
