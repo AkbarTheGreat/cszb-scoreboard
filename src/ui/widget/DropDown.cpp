@@ -31,7 +31,7 @@ DropDown::DropDown(swx::Choice *choice,
 }
 
 auto DropDown::selected() -> std::string {
-  return {_wx->GetString(_wx->GetSelection()).c_str()};
+  return _wx->GetString(_wx->GetSelection()).ToStdString();
 }
 
 void DropDown::setSelected(int32_t selection) { _wx->SetSelection(selection); }
