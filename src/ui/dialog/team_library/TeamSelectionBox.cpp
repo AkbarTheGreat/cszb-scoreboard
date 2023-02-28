@@ -191,10 +191,26 @@ void TeamSelectionBox::changeTeam(int32_t row_number, const std::string& name,
   setTeamInfo(library.mutable_teams(row_number - 1), name, logo, type);
 }
 
+// If type is a valid team type, clear out all entries in the library with that
+// type.
+void TeamSelectionBox::removeType(proto::TeamInfo_TeamType type) {
+  if (type == proto::TeamInfo_TeamType_TEAM_ERROR) {
+    return;
+  }
+  for (auto& team : *library.mutable_teams()) {
+    if (team.default_team_type() == type) {
+      team.set_default_team_type(proto::TeamInfo_TeamType_TEAM_ERROR);
+    }
+  }
+}
+
 void TeamSelectionBox::setTeamInfo(proto::TeamLibInfo* team,
                                    const std::string& name,
                                    const FilesystemPath& logo,
                                    proto::TeamInfo_TeamType type) {
+  // Remove this team type as a default in the library, so it can be set for
+  // this team.
+  removeType(type);
   team->set_name(name);
   team->set_image_path(logo.string());
   team->set_default_team_type(type);
