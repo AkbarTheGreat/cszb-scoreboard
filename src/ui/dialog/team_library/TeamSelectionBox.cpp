@@ -182,16 +182,24 @@ void TeamSelectionBox::teamSelectedForEdit(int32_t row) {
 void TeamSelectionBox::addTeam(const std::string& name,
                                const FilesystemPath& logo,
                                proto::TeamInfo_TeamType type) {
-  proto::TeamLibInfo* team = library.add_teams();
+  setTeamInfo(library.add_teams(), name, logo, type);
+}
+
+void TeamSelectionBox::changeTeam(int32_t row_number, const std::string& name,
+                                  const FilesystemPath& logo,
+                                  proto::TeamInfo_TeamType type) {
+  setTeamInfo(library.mutable_teams(row_number - 1), name, logo, type);
+}
+
+void TeamSelectionBox::setTeamInfo(proto::TeamLibInfo* team,
+                                   const std::string& name,
+                                   const FilesystemPath& logo,
+                                   proto::TeamInfo_TeamType type) {
   team->set_name(name);
   team->set_image_path(logo.string());
   team->set_default_team_type(type);
   createEntries();
   updateList();
 }
-
-void TeamSelectionBox::changeTeam(int32_t row_number, const std::string& name,
-                                  const FilesystemPath& logo,
-                                  proto::TeamInfo_TeamType type) {}
 
 }  // namespace cszb_scoreboard

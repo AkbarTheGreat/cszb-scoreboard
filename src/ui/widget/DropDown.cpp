@@ -18,7 +18,8 @@ limitations under the License.
 
 #include "ui/widget/DropDown.h"
 
-#include <wx/string.h>  // for wxCStrData, wxString
+#include <wx/defs.h>    // for wxNOT_FOUND
+#include <wx/string.h>  // for wxString
 
 namespace cszb_scoreboard {
 

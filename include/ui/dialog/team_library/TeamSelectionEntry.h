@@ -32,7 +32,6 @@ namespace cszb_scoreboard {
 
 class TeamSelectionBox;
 class Panel;
-class Spacer;
 
 namespace proto {
 class TeamLibInfo;

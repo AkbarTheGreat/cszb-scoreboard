@@ -78,6 +78,8 @@ class TeamSelectionBox : public Panel {
   void createEntries();
   void createHeader();
   auto placeholderTeam() -> proto::TeamLibInfo;
+  void setTeamInfo(proto::TeamLibInfo* team, const std::string& name,
+                   const FilesystemPath& logo, proto::TeamInfo_TeamType type);
 };
 
 }  // namespace cszb_scoreboard
