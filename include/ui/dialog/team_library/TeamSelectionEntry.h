@@ -32,6 +32,7 @@ namespace cszb_scoreboard {
 
 class TeamSelectionBox;
 class Panel;
+class Spacer;
 
 namespace proto {
 class TeamLibInfo;
@@ -45,7 +46,6 @@ class TeamSelectionEntry {
                      int32_t row, const proto::TeamLibInfo& team);
   void hide();
   void show();
-  void destroy();
   void setName(const std::string& name);
   void teamSelectionChanged(proto::TeamInfo_TeamType team);
 

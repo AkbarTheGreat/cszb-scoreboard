@@ -37,6 +37,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 class TeamLibraryDialog;
+class FilesystemPath;
 
 namespace swx {
 class Panel;

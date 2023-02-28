@@ -68,15 +68,17 @@ void TeamSelectionBox::positionWidgets() {
 }
 
 void TeamSelectionBox::clearOldEntries() {
-  for (const auto& entry : team_selection_entries) {
-    entry->destroy();
-  }
+  team_selection->destroy();
   team_selection_entries.clear();
+  team_selection = team_selection_scrolling->panel();
+  team_selection_scrolling->addWidget(*team_selection, 0, 0, NO_BORDER);
 }
 
 void TeamSelectionBox::createEntries() {
   int32_t row = 0;
-  clearOldEntries();
+  if (team_selection_entries.size()) {
+    clearOldEntries();
+  }
   team_selection_entries.reserve(library.teams_size() + 1);
   team_selection_entries.emplace_back(std::make_unique<TeamSelectionEntry>(
       team_selection.get(), this, row++, placeholderTeam()));
@@ -184,7 +186,8 @@ void TeamSelectionBox::addTeam(const std::string& name,
   team->set_name(name);
   team->set_image_path(logo.string());
   team->set_default_team_type(type);
-  // createEntries();
+  createEntries();
+  updateList();
 }
 
 void TeamSelectionBox::changeTeam(int32_t row_number, const std::string& name,

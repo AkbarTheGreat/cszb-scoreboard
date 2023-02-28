@@ -65,13 +65,6 @@ void TeamSelectionEntry::show() {
   default_team->show();
 }
 
-void TeamSelectionEntry::destroy() {
-  home->destroy();
-  away->destroy();
-  name->destroy();
-  default_team->destroy();
-}
-
 void TeamSelectionEntry::setName(const std::string& name) {
   this->name->set(name);
 }
@@ -85,8 +78,8 @@ void TeamSelectionEntry::positionWidgets() {
   away->setMinSize({.width = TEAM_SELECTION_SIZE_PIXELS});
   panel->addWidget(*name, index, col++, BORDER_SIZE);
   panel->addWidget(*default_team, index, col++, BORDER_SIZE);
-  panel->addSpacer({.width = SCROLLBAR_BUFFER_WIDTH_PIXELS}, index, col++,
-                   BORDER_SIZE);
+  panel->addSpacer({.width = SCROLLBAR_BUFFER_WIDTH_PIXELS},
+                                      index, col++, BORDER_SIZE);
 }
 
 void TeamSelectionEntry::bindEvents() {
