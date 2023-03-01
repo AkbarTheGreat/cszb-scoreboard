@@ -76,7 +76,7 @@ void TeamSelectionBox::clearOldEntries() {
 
 void TeamSelectionBox::createEntries() {
   int32_t row = 0;
-  if (team_selection_entries.size()) {
+  if (!team_selection_entries.empty()) {
     clearOldEntries();
   }
   team_selection_entries.reserve(library.teams_size() + 1);

@@ -23,9 +23,9 @@ namespace cszb_scoreboard {
 
 // Factors for calculating perceptive luminance - the human eye favors green
 // colors. (see Color::contrastColor for the source of numbers)
-static const float RED_LUMINANCE_FACTOR = 0.299f;
-static const float GREEN_LUMINANCE_FACTOR = 0.587f;
-static const float BLUE_LUMINANCE_FACTOR = 0.114f;
+static const float RED_LUMINANCE_FACTOR = 0.299F;
+static const float GREEN_LUMINANCE_FACTOR = 0.587F;
+static const float BLUE_LUMINANCE_FACTOR = 0.114F;
 
 static const int BYTE_SIZE = 255;
 

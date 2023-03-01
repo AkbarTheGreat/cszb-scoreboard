@@ -97,7 +97,6 @@ class Widget {
   void focus() const { wx()->SetFocus(); }
   void hide() const { wx()->Hide(); }
   void show() const { wx()->Show(); }
-  void destroy() { wx()->Destroy(); }
   void moveWidget(Widget *widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
