@@ -88,11 +88,13 @@ void TeamSelectionBox::createEntries() {
 
     if (row == TEAMS_BEFORE_SCROLL) {
       team_selection->runSizer();
+      team_selection_scrolling->setMinSize(team_selection->size());
       team_selection_scrolling->runSizer();
     }
   }
   if (row < TEAMS_BEFORE_SCROLL) {
     team_selection->runSizer();
+    team_selection_scrolling->setMinSize(team_selection->size());
     team_selection_scrolling->runSizer();
   }
 }

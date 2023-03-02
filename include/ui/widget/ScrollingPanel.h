@@ -19,8 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/widget/Panel.h"
-#include "ui/widget/swx/ScrolledWindow.h"
+#include "ui/widget/Panel.h"               // for Panel
+#include "ui/widget/swx/ScrolledWindow.h"  // for ScrolledWindow
 
 class wxWindow;
 
