@@ -25,12 +25,13 @@ limitations under the License.
 
 #include "config/swx/image.h"                           // for Image
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
-#include "ui/widget/Button.h"                           // for Button
-#include "ui/widget/ColorPicker.h"                      // for ColorPicker
-#include "ui/widget/Label.h"                            // for Label
-#include "ui/widget/Panel.h"                            // for Panel
-#include "ui/widget/Text.h"                             // for Text
-#include "ui/widget/Toggle.h"                           // for Toggle
+#include "ui/dialog/TeamLibraryDialog.h"
+#include "ui/widget/Button.h"       // for Button
+#include "ui/widget/ColorPicker.h"  // for ColorPicker
+#include "ui/widget/Label.h"        // for Label
+#include "ui/widget/Panel.h"        // for Panel
+#include "ui/widget/Text.h"         // for Text
+#include "ui/widget/Toggle.h"       // for Toggle
 
 namespace cszb_scoreboard {
 class ScreenText;
@@ -49,6 +50,7 @@ class ScoreControl : public ScreenTextController {
   explicit ScoreControl(swx::Panel *wx) : ScreenTextController(wx) {}
   static auto Create(swx::Panel *wx) -> std::unique_ptr<ScoreControl>;
   void setTeams(const proto::TeamLibraryDialogResponse &teams);
+  void onLibraryDialogClose();
 
  private:
   void addHomeAwayWidgetPair(Panel *panel, int row, const Widget &home_widget,
@@ -74,10 +76,13 @@ class ScoreControl : public ScreenTextController {
   void homeMinusOne();
   void selectLogo(bool isHome);
   void toggleIntroMode();
+  void selectFromLibrary();
 
   std::optional<Image> home_logo, away_logo;
   std::unique_ptr<Text> alpha_ctrl, size_ctrl;
+  std::unique_ptr<Panel> right_panel;
   std::unique_ptr<Toggle> team_intro_button;
+  std::unique_ptr<Button> team_library_button;
   std::unique_ptr<Panel> team_controls_panel;
   std::unique_ptr<Label> home_score_label, away_score_label;
   std::unique_ptr<ColorPicker> home_color_picker, away_color_picker;
@@ -88,6 +93,8 @@ class ScoreControl : public ScreenTextController {
   std::unique_ptr<Button> away_plus_1, away_plus_5, away_minus_1;
   std::unique_ptr<Button> home_logo_button, away_logo_button;
   std::unique_ptr<Label> home_logo_label, away_logo_label;
+
+  std::unique_ptr<TeamLibraryDialog> library_dialog;
 };
 
 }  // namespace cszb_scoreboard

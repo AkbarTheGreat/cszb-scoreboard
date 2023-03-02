@@ -23,7 +23,7 @@ limitations under the License.
 #include <vector>  // for vector
 
 #include "config/swx/defs.h"                    // for wxID_CANCEL, wxID_OK
-#include "config/swx/event.h"                   // for wxEVT_BUTTON
+#include "config/swx/event.h"                   // for wxEVT_BUTTON, wxEVT_C...
 #include "ui/component/control/ScoreControl.h"  // for ScoreControl
 #include "ui/widget/DropDown.h"                 // for DropDown
 #include "util/FilesystemPath.h"                // for FilesystemPath
@@ -98,6 +98,13 @@ void TeamLibraryDialog::bindEvents() {
   add_update_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
     this->onAddOrUpdate();
   });
+  auto local_parent = parent;
+  // Allow the parent to be null -- for testing.
+  if (local_parent != nullptr) {
+    bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
+      local_parent->onLibraryDialogClose();
+    });
+  }
 }
 
 void TeamLibraryDialog::onOk() {

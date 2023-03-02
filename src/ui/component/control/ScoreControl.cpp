@@ -28,9 +28,9 @@ limitations under the License.
 #include "config/TeamConfig.h"            // for TeamConfig
 #include "config/swx/defs.h"              // for operator|, wxALIGN_CENTER_V...
 #include "config/swx/event.h"             // for wxEVT_COMMAND_BUTTON_CLICKED
-#include "team_library.pb.h"              // for TeamLibraryDialogResponse
 #include "ui/component/ScreenText.h"      // for ScreenText
 #include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
+#include "ui/dialog/TeamLibraryDialog.h"  // for TeamLibraryDialog
 #include "ui/frame/FrameManager.h"        // for FrameManager
 #include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxACCEL_CTRL
 #include "ui/frame/MainView.h"            // for MainView
@@ -60,6 +60,15 @@ auto ScoreControl::Create(swx::Panel *wx) -> std::unique_ptr<ScoreControl> {
   auto control = std::make_unique<ScoreControl>(wx);
   control->initializeWidgets();
   return control;
+}
+
+void ScoreControl::onLibraryDialogClose() {
+  library_dialog.reset();
+  // Sometimes closing out this menu has given focus to a totally different
+  // window for focus for me in testing.  That's really obnoxious, because it
+  // can have the effect of sending the main window to the back of another
+  // window by virtue of exiting a dialog.
+  focus();
 }
 
 void ScoreControl::setTeams(const proto::TeamLibraryDialogResponse &teams) {}
@@ -97,10 +106,17 @@ void ScoreControl::createControls(Panel *control_panel) {
   away_logo_label = team_controls_panel->label(NO_LOGO_MESSAGE);
   away_logo_button = team_controls_panel->button("Choose Logo");
 
-  team_intro_button = control_panel->toggle(INTRO_MODE_LABEL);
+  right_panel = control_panel->panel();
+  team_intro_button = right_panel->toggle(INTRO_MODE_LABEL);
+  team_library_button = right_panel->button("Team Library");
 
   positionWidgets(control_panel);
   bindEvents();
+
+#ifndef SCOREBOARD_DEBUG
+  // TODO: Remove when this feature works fully
+  team_library_button->hide();
+#endif  // #ifndef SCOREBOARD_DEBUG
 }
 
 void ScoreControl::bindEvents() {
@@ -147,6 +163,9 @@ void ScoreControl::bindEvents() {
   team_intro_button->bind(
       wxEVT_TOGGLEBUTTON,
       [this](wxCommandEvent &event) -> void { this->toggleIntroMode(); });
+  team_library_button->bind(
+      wxEVT_BUTTON,
+      [this](wxCommandEvent &event) -> void { this->selectFromLibrary(); });
 }
 
 /* Since the control panel alternates between home and away buttons to make
@@ -224,9 +243,12 @@ void ScoreControl::positionWidgets(Panel *control_panel) {
   addHomeAwayWidgetPair(team_controls_panel.get(), row++, *home_logo_button,
                         *away_logo_button);
 
+  right_panel->addWidget(*team_intro_button, 0, 0);
+  right_panel->addWidget(*team_library_button, 1, 0);
+
   col = 0;
   control_panel->addWidget(*team_controls_panel, 0, col++, BORDER_SIZE);
-  control_panel->addWidget(*team_intro_button, 0, col++, BORDER_SIZE,
+  control_panel->addWidget(*right_panel, 0, col++, BORDER_SIZE,
                            wxALL | wxALIGN_CENTER_VERTICAL);
 
   home_button_panel->runSizer();
@@ -380,6 +402,12 @@ void ScoreControl::toggleIntroMode() {
     team_intro_button->setLabel(INTRO_MODE_LABEL);
   }
   updatePreview();
+}
+
+void ScoreControl::selectFromLibrary() {
+  library_dialog =
+      std::make_unique<TeamLibraryDialog>(childDialog("Team Library"), this);
+  library_dialog->show();
 }
 
 void ScoreControl::addToEntry(Text *entry, int amount) {
