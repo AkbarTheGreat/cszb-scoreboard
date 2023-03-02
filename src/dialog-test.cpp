@@ -17,20 +17,18 @@ limitations under the License.
 */
 
 #include <wx/app.h>    // for wxIMPLEMENT_APP
-#include <wx/defs.h>   // for wxID_ANY
 #include <wx/event.h>  // for wxCloseEvent (ptr only)
 
 #include <cstdlib>  // for exit
 #include <memory>   // for unique_ptr, make_unique
 
-#include "config/Position.h"                    // for Position, Size
-#include "ui/dialog/EditImageLibraryDialog.h"   // IWYU pragma: keep for Dialog
-#include "ui/dialog/SettingsDialog.h"           // IWYU pragma: keep for Dialog
-#include "ui/dialog/TeamLibraryDialog.h"        // IWYU pragma: keep for Dialog
-#include "ui/widget/Frame.h"                    // for Frame
-#include "ui/widget/Panel.h"                    // for Panel
-#include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
-#include "util/Singleton.h"                     // for Singleton
+#include "config/Position.h"                   // for Position, Size
+#include "ui/dialog/EditImageLibraryDialog.h"  // IWYU pragma: keep for Dialog
+#include "ui/dialog/SettingsDialog.h"          // IWYU pragma: keep for Dialog
+#include "ui/dialog/TeamLibraryDialog.h"       // for TeamLibraryDialog
+#include "ui/widget/Frame.h"                   // for Frame
+#include "ui/widget/Panel.h"                   // for Panel
+#include "util/Singleton.h"                    // for Singleton
 // IWYU pragma: no_include <wx/unix/app.h>
 // IWYU pragma: no_include <wx/gtk/app.h>
 
@@ -74,9 +72,8 @@ auto DialogTest::OnInit() -> bool {
   frame = std::make_unique<TestFrame>();
   frame->show(true);
   Singleton::getInstance()->persistence();
-  auto *prop_sheet =
-      new swx::PropertySheetDialog(frame->panel->wx(), wxID_ANY, "Test");
-  dialog = std::make_unique<DIALOG_TYPE>(prop_sheet, nullptr);
+  dialog =
+      std::make_unique<DIALOG_TYPE>(frame->panel->childDialog("Test"), nullptr);
   dialog->bind(wxEVT_CLOSE_WINDOW,
                [this](wxCloseEvent &event) -> void { std::exit(0); });
   dialog->show();
