@@ -19,16 +19,16 @@ limitations under the License.
 
 #include "ui/dialog/TeamLibraryDialog.h"
 
-#include <string>  // for string, operator==
-#include <vector>  // for vector
+#include <optional>  // for optional
+#include <string>    // for string, operator==
+#include <vector>    // for vector
 
 #include "config/swx/defs.h"                    // for wxID_CANCEL, wxID_OK
-#include "config/swx/event.h"                   // for wxEVT_BUTTON, wxEVT_C...
+#include "config/swx/event.h"                   // for wxEVT_BUTTON, wxMouse...
 #include "ui/component/control/ScoreControl.h"  // for ScoreControl
 #include "ui/widget/DropDown.h"                 // for DropDown
 #include "ui/widget/FilePicker.h"               // for FilePicker
 #include "util/FilesystemPath.h"                // for FilesystemPath
-#include "util/Log.h"
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
