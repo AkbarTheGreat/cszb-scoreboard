@@ -64,6 +64,7 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   default_team_selector = bottom_panel->dropDown(choices);
 
   add_update_button = bottom_panel->button("Add");
+  clear_logo_button = bottom_panel->button("Clear Logo");
 
   positionWidgets();
   bindEvents();
@@ -83,6 +84,7 @@ void TeamLibraryDialog::positionWidgets() {
   bottom_panel->addWidget(*default_team_selector, row, 1);
 
   bottom_panel->addWidget(*add_update_button, ++row, 0);
+  bottom_panel->addWidget(*clear_logo_button, row, 1);
 
   box_panel->addWidget(*team_selection, 0, 0);
   box_panel->addWidget(*bottom_panel, 1, 0);
@@ -102,6 +104,10 @@ void TeamLibraryDialog::bindEvents() {
 
   add_update_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
     this->onAddOrUpdate();
+  });
+
+  clear_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+    file_name_entry->set(NO_LOGO_MESSAGE);
   });
 
   file_name_entry->bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent &event) -> void {

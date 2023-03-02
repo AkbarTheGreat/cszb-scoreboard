@@ -72,6 +72,7 @@ class TeamLibraryDialog : public TabbedDialog {
   std::unique_ptr<Label> default_team_label;
   std::unique_ptr<DropDown> default_team_selector;
   std::unique_ptr<Button> add_update_button;
+  std::unique_ptr<Button> clear_logo_button;
 
   void bindEvents();
   void positionWidgets();
