@@ -68,7 +68,7 @@ class TeamLibraryDialog : public TabbedDialog {
   std::unique_ptr<Label> name_label;
   std::unique_ptr<Text> name_entry;
   std::unique_ptr<Label> file_name_label;
-  std::unique_ptr<Text> file_name_entry;
+  std::unique_ptr<Label> file_name_entry;
   std::unique_ptr<Label> default_team_label;
   std::unique_ptr<DropDown> default_team_selector;
   std::unique_ptr<Button> add_update_button;
@@ -80,6 +80,7 @@ class TeamLibraryDialog : public TabbedDialog {
   void onOk();
   void onCancel();
   void onAddOrUpdate();
+  void pickLogo();
   void updateScoreTeams();
 };
 

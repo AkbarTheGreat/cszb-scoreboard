@@ -26,10 +26,14 @@ limitations under the License.
 #include "config/swx/event.h"                   // for wxEVT_BUTTON, wxEVT_C...
 #include "ui/component/control/ScoreControl.h"  // for ScoreControl
 #include "ui/widget/DropDown.h"                 // for DropDown
+#include "ui/widget/FilePicker.h"               // for FilePicker
 #include "util/FilesystemPath.h"                // for FilesystemPath
+#include "util/Log.h"
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
+
+const std::string NO_LOGO_MESSAGE = "<No Logo>";
 
 namespace swx {
 class PropertySheetDialog;
@@ -53,7 +57,7 @@ TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
   name_label = bottom_panel->label("Team Name");
 
   file_name_label = bottom_panel->label("Logo Filename");
-  file_name_entry = bottom_panel->text("");
+  file_name_entry = bottom_panel->label(NO_LOGO_MESSAGE);
 
   default_team_label = bottom_panel->label("Default Side");
   std::vector<std::string> choices = {"", "Home", "Away"};
@@ -95,9 +99,16 @@ void TeamLibraryDialog::bindEvents() {
   bind(
       wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
       wxID_CANCEL);
+
   add_update_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
     this->onAddOrUpdate();
   });
+
+  file_name_entry->bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent &event) -> void {
+    pickLogo();
+    event.Skip();
+  });
+
   auto local_parent = parent;
   // Allow the parent to be null -- for testing.
   if (local_parent != nullptr) {
@@ -126,13 +137,24 @@ void TeamLibraryDialog::onAddOrUpdate() {
   if (default_team_selector->selected() == "Away") {
     type = proto::TeamInfo_TeamType_AWAY_TEAM;
   }
+  FilesystemPath new_logo;
+  if (file_name_entry->text() != NO_LOGO_MESSAGE) {
+    new_logo = FilesystemPath(file_name_entry->text());
+  }
   if (row_for_edit == -1) {
-    team_selection->addTeam(name_entry->value(),
-                            FilesystemPath(file_name_entry->value()), type);
+    team_selection->addTeam(name_entry->value(), new_logo, type);
     return;
   }
-  team_selection->changeTeam(row_for_edit, name_entry->value(),
-                             FilesystemPath(file_name_entry->value()), type);
+  team_selection->changeTeam(row_for_edit, name_entry->value(), new_logo, type);
+}
+
+void TeamLibraryDialog::pickLogo() {
+  std::unique_ptr<FilePicker> picker =
+      box_panel->openFilePicker("Select Logo Image", LOGO_SELECTION_STRING);
+  std::optional<FilesystemPath> selected_file = picker->selectFile();
+  if (selected_file.has_value()) {
+    file_name_entry->set(selected_file->string());
+  }
 }
 
 auto TeamLibraryDialog::validateSettings() -> bool { return true; }
@@ -142,7 +164,7 @@ void TeamLibraryDialog::saveSettings() { team_selection->saveLibrary(); }
 void TeamLibraryDialog::clearEdit() {
   row_for_edit = -1;
   name_entry->setValue("");
-  file_name_entry->setValue("");
+  file_name_entry->set(NO_LOGO_MESSAGE);
   default_team_selector->setSelected(0);
   add_update_button->setText("Add");
 }
@@ -152,7 +174,11 @@ void TeamLibraryDialog::editTeam(int32_t row_number, const std::string &name,
                                  proto::TeamInfo_TeamType type) {
   row_for_edit = row_number;
   name_entry->setValue(name);
-  file_name_entry->setValue(logo.string());
+  if (logo.string().empty()) {
+    file_name_entry->set(NO_LOGO_MESSAGE);
+  } else {
+    file_name_entry->set(logo.string());
+  }
   if (type == proto::TeamInfo_TeamType_HOME_TEAM) {
     default_team_selector->setSelected(1);
   } else if (type == proto::TeamInfo_TeamType_AWAY_TEAM) {
