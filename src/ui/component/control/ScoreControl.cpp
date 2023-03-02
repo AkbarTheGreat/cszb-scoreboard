@@ -28,6 +28,7 @@ limitations under the License.
 #include "config/TeamConfig.h"            // for TeamConfig
 #include "config/swx/defs.h"              // for operator|, wxALIGN_CENTER_V...
 #include "config/swx/event.h"             // for wxEVT_COMMAND_BUTTON_CLICKED
+#include "team_library.pb.h"              // for TeamLibraryDialogResponse
 #include "ui/component/ScreenText.h"      // for ScreenText
 #include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
 #include "ui/dialog/TeamLibraryDialog.h"  // for TeamLibraryDialog
@@ -71,7 +72,24 @@ void ScoreControl::onLibraryDialogClose() {
   focus();
 }
 
-void ScoreControl::setTeams(const proto::TeamLibraryDialogResponse &teams) {}
+void ScoreControl::setTeams(const proto::TeamLibraryDialogResponse &teams) {
+  if (teams.has_home()) {
+    home_name_entry->setValue(teams.home().name());
+    home_logo_label->set(teams.home().image_path());
+    if (!teams.home().image_path().empty()) {
+      home_logo = Image(FilesystemPath(teams.home().image_path()));
+    }
+  }
+  if (teams.has_away()) {
+    away_name_entry->setValue(teams.away().name());
+    away_logo_label->set(teams.away().image_path());
+    if (!teams.away().image_path().empty()) {
+      away_logo = Image(FilesystemPath(teams.away().image_path()));
+    }
+  }
+  control_panel->update();
+  updatePreview();
+}
 
 void ScoreControl::createControls(Panel *control_panel) {
   // TODO(akbar): Populate the team names from settings-based defaults
