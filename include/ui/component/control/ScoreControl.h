@@ -38,6 +38,7 @@ class Widget;
 
 namespace proto {
 class RenderableText;
+class TeamLibraryDialogResponse;
 }  // namespace proto
 namespace swx {
 class Panel;
@@ -47,6 +48,7 @@ class ScoreControl : public ScreenTextController {
  public:
   explicit ScoreControl(swx::Panel *wx) : ScreenTextController(wx) {}
   static auto Create(swx::Panel *wx) -> std::unique_ptr<ScoreControl>;
+  void setTeams(const proto::TeamLibraryDialogResponse &teams);
 
  private:
   void addHomeAwayWidgetPair(Panel *panel, int row, const Widget &home_widget,

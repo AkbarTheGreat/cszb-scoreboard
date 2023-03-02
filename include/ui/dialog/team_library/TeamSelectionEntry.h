@@ -46,6 +46,8 @@ class TeamSelectionEntry {
                      int32_t row, const proto::TeamLibInfo& team);
   void setName(const std::string& name);
   void teamSelectionChanged(proto::TeamInfo_TeamType team);
+  auto isHome() -> bool { return home->selected(); }
+  auto isAway() -> bool { return away->selected(); }
 
  private:
   TeamSelectionBox* parent;

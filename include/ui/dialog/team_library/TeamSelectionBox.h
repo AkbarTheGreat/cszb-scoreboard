@@ -56,6 +56,8 @@ class TeamSelectionBox : public Panel {
   void changeTeam(int32_t team_number, const std::string& name,
                   const FilesystemPath& logo, proto::TeamInfo_TeamType type);
   void deleteTeam(int32_t row_number);
+  auto selectedTeams() -> proto::TeamLibraryDialogResponse;
+  void saveLibrary();
 
   PUBLIC_TEST_ONLY
   TeamSelectionBox(swx::Panel* wx, TeamLibraryDialog* owning_controller,
@@ -82,6 +84,7 @@ class TeamSelectionBox : public Panel {
   void removeType(proto::TeamInfo_TeamType type);
   void setTeamInfo(proto::TeamLibInfo* team, const std::string& name,
                    const FilesystemPath& logo, proto::TeamInfo_TeamType type);
+  static void copyTeam(const proto::TeamLibInfo& from, proto::TeamLibInfo* to);
 };
 
 }  // namespace cszb_scoreboard

@@ -26,20 +26,21 @@ limitations under the License.
 #include "ScoreboardCommon.h"             // for LOGO_SELECTION_STRING
 #include "config.pb.h"                    // for RenderableText, Font, Rende...
 #include "config/TeamConfig.h"            // for TeamConfig
-#include "config/swx/defs.h"              // for wxALIGN_CENTER_VERTICAL, wxALL
+#include "config/swx/defs.h"              // for operator|, wxALIGN_CENTER_V...
 #include "config/swx/event.h"             // for wxEVT_COMMAND_BUTTON_CLICKED
+#include "team_library.pb.h"              // for TeamLibraryDialogResponse
 #include "ui/component/ScreenText.h"      // for ScreenText
 #include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/HotkeyTable.h"  // for HotkeyTable, wxACCEL_CTRL
-#include "ui/frame/MainView.h"
-#include "ui/graphics/Color.h"       // for Color
-#include "ui/graphics/TeamColors.h"  // for TeamColors
-#include "ui/widget/FilePicker.h"    // for FilePicker
-#include "util/FilesystemPath.h"     // for FilesystemPath
-#include "util/ProtoUtil.h"          // for ProtoUtil
-#include "util/Singleton.h"          // for Singleton
-#include "util/StringUtil.h"         // for StringUtil
+#include "ui/frame/FrameManager.h"        // for FrameManager
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxACCEL_CTRL
+#include "ui/frame/MainView.h"            // for MainView
+#include "ui/graphics/Color.h"            // for Color
+#include "ui/graphics/TeamColors.h"       // for TeamColors
+#include "ui/widget/FilePicker.h"         // for FilePicker
+#include "util/FilesystemPath.h"          // for FilesystemPath
+#include "util/ProtoUtil.h"               // for ProtoUtil
+#include "util/Singleton.h"               // for Singleton
+#include "util/StringUtil.h"              // for StringUtil
 
 namespace cszb_scoreboard {
 class Widget;
@@ -60,6 +61,8 @@ auto ScoreControl::Create(swx::Panel *wx) -> std::unique_ptr<ScoreControl> {
   control->initializeWidgets();
   return control;
 }
+
+void ScoreControl::setTeams(const proto::TeamLibraryDialogResponse &teams) {}
 
 void ScoreControl::createControls(Panel *control_panel) {
   // TODO(akbar): Populate the team names from settings-based defaults

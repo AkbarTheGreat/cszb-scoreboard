@@ -80,6 +80,7 @@ class TeamLibraryDialog : public TabbedDialog {
   void onOk();
   void onCancel();
   void onAddOrUpdate();
+  void updateScoreTeams();
 };
 
 }  // namespace cszb_scoreboard

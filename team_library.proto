@@ -26,10 +26,20 @@ message TeamLibInfo {
   string name = 1;
   TeamInfo.TeamType default_team_type = 2;
   string image_path = 3;
+  // is_relative is unused at the moment, but is reserved for future use to
+  // match the image library.
   bool is_relative = 4;
 }
 
 message TeamLibrary {
   repeated TeamLibInfo teams = 1;
+  // Library root is unused at the moment, but is reserved for future use to
+  // match the image library.
   string library_root = 2;
+}
+
+// Data structure to handle the return values from the TeamLibraryDialog
+message TeamLibraryDialogResponse {
+  TeamLibInfo home = 1;
+  TeamLibInfo away = 2;
 }

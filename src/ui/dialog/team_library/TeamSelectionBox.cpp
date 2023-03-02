@@ -207,8 +207,32 @@ void TeamSelectionBox::deleteTeam(int32_t row_number) {
   parent->clearEdit();
 }
 
-// If type is a valid team type, clear out all entries in the library with that
-// type.
+void TeamSelectionBox::copyTeam(const proto::TeamLibInfo& from,
+                                proto::TeamLibInfo* to) {
+  to->set_name(from.name());
+  to->set_image_path(from.image_path());
+}
+
+auto TeamSelectionBox::selectedTeams() -> proto::TeamLibraryDialogResponse {
+  proto::TeamLibraryDialogResponse response;
+  // Skip entry 0, as that's the "None" field.  Lack of assignment is how we
+  // communicate that the team is unset.
+  for (int i = 1; i < team_selection_entries.size(); i++) {
+    if (team_selection_entries[i]->isHome()) {
+      copyTeam(library.teams(i - 1), response.mutable_home());
+    }
+    if (team_selection_entries[i]->isAway()) {
+      copyTeam(library.teams(i - 1), response.mutable_away());
+    }
+  }
+  return response;
+}
+void TeamSelectionBox::saveLibrary() {
+  singleton->persistence()->saveTeamLibrary(library);
+}
+
+// If type is a valid team type, clear out all entries in the library with
+// that type.
 void TeamSelectionBox::removeType(proto::TeamInfo_TeamType type) {
   if (type == proto::TeamInfo_TeamType_TEAM_ERROR) {
     return;

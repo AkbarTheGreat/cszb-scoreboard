@@ -19,17 +19,17 @@ limitations under the License.
 
 #include "ui/dialog/TeamLibraryDialog.h"
 
-#include <string>  // for string, basic_string
+#include <string>  // for string, operator==
 #include <vector>  // for vector
 
-#include "config/swx/defs.h"      // for wxID_CANCEL, wxID_OK
-#include "config/swx/event.h"     // for wxEVT_BUTTON
-#include "ui/widget/DropDown.h"   // for DropDown
-#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "config/swx/defs.h"                    // for wxID_CANCEL, wxID_OK
+#include "config/swx/event.h"                   // for wxEVT_BUTTON
+#include "ui/component/control/ScoreControl.h"  // for ScoreControl
+#include "ui/widget/DropDown.h"                 // for DropDown
+#include "util/FilesystemPath.h"                // for FilesystemPath
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 
 namespace cszb_scoreboard {
-class ScoreControl;
 
 namespace swx {
 class PropertySheetDialog;
@@ -103,6 +103,7 @@ void TeamLibraryDialog::bindEvents() {
 void TeamLibraryDialog::onOk() {
   if (validateSettings()) {
     saveSettings();
+    updateScoreTeams();
     close();
     return;
   }
@@ -129,9 +130,7 @@ void TeamLibraryDialog::onAddOrUpdate() {
 
 auto TeamLibraryDialog::validateSettings() -> bool { return true; }
 
-void TeamLibraryDialog::saveSettings() {
-  // TODO(akbar): Save
-}
+void TeamLibraryDialog::saveSettings() { team_selection->saveLibrary(); }
 
 void TeamLibraryDialog::clearEdit() {
   row_for_edit = -1;
@@ -155,6 +154,13 @@ void TeamLibraryDialog::editTeam(int32_t row_number, const std::string &name,
     default_team_selector->setSelected(0);
   }
   add_update_button->setText("Update");
+}
+
+void TeamLibraryDialog::updateScoreTeams() {
+  // Allow for a null parent if used with dialog-test.
+  if (parent != nullptr) {
+    parent->setTeams(team_selection->selectedTeams());
+  }
 }
 
 }  // namespace cszb_scoreboard
