@@ -130,11 +130,6 @@ void ScoreControl::createControls(Panel *control_panel) {
 
   positionWidgets(control_panel);
   bindEvents();
-
-#ifndef SCOREBOARD_DEBUG
-  // TODO: Remove when this feature works fully
-  team_library_button->hide();
-#endif  // #ifndef SCOREBOARD_DEBUG
 }
 
 void ScoreControl::bindEvents() {
