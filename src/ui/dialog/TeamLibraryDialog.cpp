@@ -115,7 +115,7 @@ void TeamLibraryDialog::bindEvents() {
     event.Skip();
   });
 
-  auto local_parent = parent;
+  auto *local_parent = parent;
   // Allow the parent to be null -- for testing.
   if (local_parent != nullptr) {
     bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
