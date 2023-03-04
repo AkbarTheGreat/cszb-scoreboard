@@ -95,6 +95,7 @@ our @MACPORTS_LIBS = qw(
 our @MACPORTS_FAKELIBS = qw(
     geoclue2
     graphviz
+    py311
 );
 
 our $OSXCROSS_REPO  = $BASE_DIR . '/osxcross';
@@ -289,8 +290,11 @@ sub install_macports {
    sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
         'fake-install', @MACPORTS_FAKELIBS );
 
+    for my $lib (@MACPORTS_LIBS) {
+        say ' -- Installing ' . $lib . ' --';
    sys( $OSXCROSS_REPO . '/target/bin/osxcross-macports',
-        'install', @MACPORTS_LIBS );
+        'install', $lib);
+    }
 }
 
 sub install_osxcross {
@@ -380,13 +384,13 @@ sub setup_wxwidgets {
 }
 
 sub setup_osxcross {
-   clone_repo( 'osxcross', 'https://github.com/tpoechtrager/osxcross.git' );
+   #clone_repo( 'osxcross', 'https://github.com/tpoechtrager/osxcross.git' );
    osxcross_build_env();
-   build_osxcross();
+   #build_osxcross();
    install_macports();
-   patch_files();
-   install_osxcross();
-   fix_links();
+   #patch_files();
+   #install_osxcross();
+   #fix_links();
 }
 
 sub main {
@@ -395,15 +399,15 @@ sub main {
    $osxcross = 1 if $args[0] eq 'osxcross';
    chdir($BASE_DIR);
 
-   setup_googletest();
-   setup_protobuf();
+   #setup_googletest();
+   #setup_protobuf();
 
    if ($osxcross) {
       setup_osxcross();
    } else {
       setup_curl();
    }
-   setup_wxwidgets($osxcross);
+   #setup_wxwidgets($osxcross);
    say 'Successfully completed.';
 }
 
