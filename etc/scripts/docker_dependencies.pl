@@ -399,8 +399,8 @@ sub main {
    $osxcross = 1 if $args[0] eq 'osxcross';
    chdir($BASE_DIR);
 
-   #setup_googletest();
-   #setup_protobuf();
+   setup_googletest();
+   setup_protobuf();
 
    if ($osxcross) {
       setup_osxcross();
@@ -408,7 +408,7 @@ sub main {
       setup_curl();
    }
 
-   #setup_wxwidgets($osxcross);
+   setup_wxwidgets($osxcross);
    say 'Successfully completed.';
 }
 
