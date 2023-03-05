@@ -53,7 +53,7 @@ pipeline {
                     stage('Lint Cmake Generation') {
 						steps {
 							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
-									cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
+									cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true -DIMAGE_SEARCH=true'
 							)
 						}
 					}

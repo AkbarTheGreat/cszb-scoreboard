@@ -50,9 +50,11 @@ auto CommandArgs::autoUpdate() const -> bool { return auto_update; }
 // For consistency in call sites, leave this as a non-static method.
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 auto CommandArgs::enableImageSearch() const -> bool {
+#ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 #ifdef _WIN32
   return true;
 #endif  // #ifdef _WIN32
+#endif  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
   return false;
 }
 auto CommandArgs::resetConfig() const -> bool { return reset_config; }

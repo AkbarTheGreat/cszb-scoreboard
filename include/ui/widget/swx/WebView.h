@@ -30,6 +30,8 @@ limitations under the License.
 
 namespace cszb_scoreboard::swx {
 
+#ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
+
 #ifdef _WIN32
 #define WX_WEB_ENGINE wxWebViewBackendEdge
 #else  // #ifdef _WIN32
@@ -61,5 +63,23 @@ class WebView {
  private:
   wxWebView *_wx;
 };
+
+#else  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
+
+// Stub to satisfy a linker, intentionally non-functional
+class WebView {
+ public:
+  explicit WebView(wxWindow *parent, const wxString &url = "",
+                   wxWindowID id = wxID_ANY,
+                   const wxPoint &pos = wxDefaultPosition,
+                   const wxSize &size = wxDefaultSize,
+                   const wxString &backend = "", int64_t style = 0,
+                   const wxString &name = "") {}
+  auto wx() -> wxWebView * { return nullptr; }
+  void LoadURL(const std::string &url) {}
+  void RunScript(const std::string &script) {}
+};
+
+#endif  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 
 }  // namespace cszb_scoreboard::swx

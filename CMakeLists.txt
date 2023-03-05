@@ -36,6 +36,7 @@ set(LINKING_TYPE "dynamic" CACHE STRING "Link type")
 set(SKIP_LINT false CACHE BOOL "Skip Lint")
 set(CLANG_TIDY_ERRORS true CACHE BOOL "Lint warnings fail build")
 set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
+set(IMAGE_SEARCH false CACHE BOOL "Build the scoreboard with image search enabled")
 
 if(MSVC OR OSXCROSS_HOST)
     set(LINKING_TYPE "static")
@@ -70,6 +71,10 @@ endif()
 
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
     add_definitions(-DSCOREBOARD_DEBUG)
+endif()
+
+if(IMAGE_SEARCH)
+    add_definitions(-DSCOREBOARD_ENABLE_IMAGE_SEARCH)
 endif()
 
 set(LINT_OPTION, "")
