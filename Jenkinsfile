@@ -219,7 +219,7 @@ make scoreboard_proto cszb-scoreboard'''
           buildDir: 'out/build/Coverage',
           buildType: 'Debug',
           cleanBuild: true,
-          cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
+          cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DIMAGE_SEARCH=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
         retry(count: 3) {
           sh '''cd out/build/Coverage
             make -j3 all cszb-scoreboard-xml-coverage
