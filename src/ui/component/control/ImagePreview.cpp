@@ -84,8 +84,12 @@ auto ImagePreview::getFilename() const -> std::optional<FilesystemPath> {
 }
 
 void ImagePreview::setImage(const FilesystemPath &filename) {
-  this->filename = filename;
-  image = Image(filename);
+  // A simple check for files that've moved.  This doesn't really _fix_ them,
+  // but it avoids a nasty crash.
+  if (filename.existsWithRoot("")) {
+    this->filename = filename;
+    image = Image(filename);
+  }
   refresh();
 }
 

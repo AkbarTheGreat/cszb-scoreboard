@@ -75,7 +75,7 @@ void FilesystemPath::replace_filename(const std::string &new_filename) {
 
 #endif
 
-auto FilesystemPath::existsWithRoot(const std::string &root) -> bool {
+auto FilesystemPath::existsWithRoot(const std::string &root) const -> bool {
 #ifdef __APPLE__
   // TODO: This is incorrect, but will need some testing on an actual MacOS
   // device when it's implemented.

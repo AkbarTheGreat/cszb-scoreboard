@@ -99,7 +99,7 @@ class FilesystemPath : public std::filesystem::path {
   }
 #endif
 
-  auto existsWithRoot(const std::string &root) -> bool;
+  auto existsWithRoot(const std::string &root) const -> bool;
   static auto absolutePath(const std::string &root,
                            const std::string &file_path) -> std::string;
   static auto mostRelativePath(const std::string &root,
