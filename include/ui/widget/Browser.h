@@ -31,8 +31,9 @@ class Browser : public Widget {
   void bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
             const std::function<void(wxWebViewEvent &)> &lambda,
             int id = wxID_ANY) const {
-    wx()->Bind(eventType, lambda, id);
+    _wx->Bind(eventType, lambda, id);
   }
+  auto valid() -> bool { return _wx->valid(); }
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow * override { return _wx->wx(); }

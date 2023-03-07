@@ -88,7 +88,10 @@ void ImageSearch::positionWidgets(Panel *control_panel) {
   inner_panel->addWidget(*screen_selection, 0, 1, NO_BORDER);
   inner_panel->addWidget(*reset_button_panel, 1, 1, NO_BORDER);
 
-  inner_panel->addWidgetWithSpan(*browser, 0, 2, 2, 1, BROWSER_SIZE, NO_BORDER);
+  if (browser->valid()) {
+    inner_panel->addWidgetWithSpan(*browser, 0, 2, 2, 1, BROWSER_SIZE,
+                                   NO_BORDER);
+  }
 
   // I have to put this empty label somewhere to be compliant, so I just shove
   // it at the bottom.

@@ -39,12 +39,32 @@ WebView::WebView(wxWindow *parent, const wxString &url, wxWindowID id,
   _wx = wxWebView::New(parent, id, url, pos, size, WX_WEB_ENGINE, style, name);
 #ifdef SCOREBOARD_DEBUG
   // Allow access to the developer console in debug mode.
-  _wx->EnableAccessToDevTools(true);
+  if (_wx) {
+    _wx->EnableAccessToDevTools(true);
+  }
 #endif
 }
 
-void WebView::LoadURL(const std::string &url) { _wx->LoadURL(url); }
-void WebView::RunScript(const std::string &script) { _wx->RunScript(script); }
+void WebView::Bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
+                   const std::function<void(wxWebViewEvent &)> &lambda,
+                   int id) const {
+  if (valid()) {
+    _wx->Bind(eventType, lambda, id);
+  }
+}
+
+void WebView::LoadURL(const std::string &url) {
+  if (valid()) {
+    _wx->LoadURL(url);
+  }
+}
+
+void WebView::RunScript(const std::string &script) {
+  if (valid()) {
+    _wx->RunScript(script);
+  }
+}
+
 #endif  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 
 }  // namespace cszb_scoreboard::swx

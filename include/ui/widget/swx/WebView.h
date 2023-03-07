@@ -21,12 +21,19 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/filesys.h>
-#include <wx/stdpaths.h>
-#include <wx/webview.h>
-#include <wx/wx.h>
+#include <stdint.h>       // for int64_t
+#include <wx/defs.h>      // for wxID_ANY, wxWindowID
+#include <wx/gdicmn.h>    // for wxPoint, wxSize (ptr only)
+#include <wx/string.h>    // for wxString
+#include <wx/tbarbase.h>  // for wxDefaultPosition, wxDefaultSize
+#include <wx/webview.h>   // IWYU pragma: keep
 
-#include "util/Log.h"
+#include <functional>  // for function
+#include <string>      // for string
+
+class wxWindow;
+template <typename T>
+class wxEventTypeTag;
 
 namespace cszb_scoreboard::swx {
 
@@ -42,8 +49,12 @@ class WebView {
                    const wxString &backend = wxWebViewBackendDefault,
                    int64_t style = 0, const wxString &name = wxWebViewNameStr);
 
+  auto valid() const -> bool { return (_wx != nullptr); }
   auto wx() -> wxWebView * { return _wx; }
 
+  void Bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
+            const std::function<void(wxWebViewEvent &)> &lambda,
+            int id = wxID_ANY) const;
   void LoadURL(const std::string &url);
   void RunScript(const std::string &script);
 
@@ -62,7 +73,11 @@ class WebView {
                    const wxSize &size = wxDefaultSize,
                    const wxString &backend = "", int64_t style = 0,
                    const wxString &name = "") {}
+  auto valid() const -> bool { return false; }
   auto wx() -> wxWebView * { return nullptr; }
+  void Bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
+            const std::function<void(wxWebViewEvent &)> &lambda,
+            int id = wxID_ANY) const {}
   void LoadURL(const std::string &url) {}
   void RunScript(const std::string &script) {}
 };
