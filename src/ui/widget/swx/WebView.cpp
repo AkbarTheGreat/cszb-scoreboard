@@ -26,7 +26,9 @@ namespace cszb_scoreboard::swx {
 #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 
 #ifdef _WIN32
-#define WX_WEB_ENGINE wxWebViewBackendEdge
+#define WX_WEB_ENGINE                                                        \
+  wxWebView::IsBackendAvailable(wxWebViewBackendEdge) ? wxWebViewBackendEdge \
+                                                      : wxWebViewBackendWebKit
 #else  // #ifdef _WIN32
 #define WX_WEB_ENGINE wxWebViewBackendDefault
 #endif  // #ifdef _WIN32
