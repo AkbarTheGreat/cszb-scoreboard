@@ -54,6 +54,8 @@ our $VS22_CMAKE_ROOT
     = 'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/';
 our $VS19_CMAKE_ROOT
     = 'C:/PROGRAM FILES (X86)/MICROSOFT VISUAL STUDIO/2019/COMMUNITY/COMMON7/IDE/COMMONEXTENSIONS/MICROSOFT/CMAKE/CMake/bin/';
+our $WXWIDGETS_PATH = 'C:/src/wxWidgets/x64-Release';
+our $WXWIDGETS_VERSION = '33';
 
 our $CMAKE_ROOT = $VS_VERSION == 22 ? $VS22_CMAKE_ROOT : $VS19_CMAKE_ROOT;
 our $GEN_STRING = $VS_VERSION == 22 ? $VS22_GEN_STRING : $VS19_GEN_STRING;
@@ -157,6 +159,8 @@ sub cmake {
                '-DVCPKG_TARGET_TRIPLET:STRING="x64-windows-static"',
                '-DCMAKE_BUILD_TYPE:STRING="Release"',
                '-DCMAKE_CONFIGURATION_TYPES="Release"',
+               '-DWXWIDGETS_INSTALL_DIR="' . $WXWIDGETS_PATH . q{"},
+               '-DWXWIDGET_VERSION="' . $WXWIDGETS_VERSION . q{"},
    );
 
    return run_cmd( $CMAKE_CMD, @cmake_args, $repo_path );
@@ -275,6 +279,7 @@ sub main {
       chdir($TEMP_ROOT);
       rmtree($repo_path);
    }
+
    say 'Release '
        . $opt_version
        . ' created.  Available at /https://github.com/AkbarTheGreat/cszb-scoreboard/releases/tag/release_'
