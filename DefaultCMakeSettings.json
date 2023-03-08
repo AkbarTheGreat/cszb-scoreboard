@@ -6,28 +6,38 @@
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "clangTidyChecks": "-*,google-*,modernize-*,readability-*,portability-*,performance-*",
       "cmakeCommandArgs": "",
-      "cmakeToolchain": "<path to vcpkg.cmake>",
+      "cmakeToolchain": "C:\\src\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
       "configurationType": "Debug",
       "ctestCommandArgs": "",
       "enableClangTidyCodeAnalysis": true,
-      "generator": "Visual Studio 16 2019 Win64",
+      "generator": "Visual Studio 17 2022 Win64",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "variables": [
         {
           "name": "VCPKG_TARGET_TRIPLET",
-          "type": "STRING",
-          "value": "x64-windows-static"
+          "value": "x64-windows-static",
+          "type": "STRING"
         },
         {
           "name": "CMAKE_BUILD_TYPE",
-          "type": "STRING",
-          "value": "Debug"
+          "value": "Debug",
+          "type": "STRING"
         },
         {
           "name": "INTEGRATION_TEST",
-          "type": "BOOL",
-          "value": "True"
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "WXWIDGETS_INSTALL_DIR",
+          "value": "C:\\src\\wxWidgets\\x64-Debug",
+          "type": "STRING"
+        },
+        {
+          "name": "WXWIDGET_VERSION",
+          "value": "33",
+          "type": "STRING"
         }
       ]
     },
@@ -37,23 +47,72 @@
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "clangTidyChecks": "-*,google-*,modernize-*,readability-*,portability-*,performance-*",
       "cmakeCommandArgs": "",
-      "cmakeToolchain": "<path to vcpkg.cmake>",
+      "cmakeToolchain": "C:\\src\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
       "configurationType": "Release",
       "ctestCommandArgs": "",
       "enableClangTidyCodeAnalysis": true,
-      "generator": "Visual Studio 16 2019 Win64",
+      "generator": "Visual Studio 17 2022 Win64",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "variables": [
         {
           "name": "VCPKG_TARGET_TRIPLET",
-          "type": "STRING",
-          "value": "x64-windows-static"
+          "value": "x64-windows-static",
+          "type": "STRING"
         },
         {
           "name": "CMAKE_BUILD_TYPE",
-          "type": "STRING",
-          "value": "Release"
+          "value": "Release",
+          "type": "STRING"
+        },
+        {
+          "name": "WXWIDGETS_INSTALL_DIR",
+          "value": "C:\\src\\wxWidgets\\x64-Release",
+          "type": "STRING"
+        },
+        {
+          "name": "WXWIDGET_VERSION",
+          "value": "33",
+          "type": "STRING"
+        }
+      ]
+    },
+    {
+      "name": "Debug-Integration-Test",
+      "generator": "Visual Studio 17 2022 Win64",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "cmakeToolchain": "C:\\src\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "variables": [
+        {
+          "name": "VCPKG_TARGET_TRIPLET",
+          "value": "x64-windows-static",
+          "type": "STRING"
+        },
+        {
+          "name": "CMAKE_BUILD_TYPE",
+          "value": "Debug",
+          "type": "STRING"
+        },
+        {
+          "name": "INTEGRATION_TEST",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "WXWIDGETS_INSTALL_DIR",
+          "value": "C:\\src\\wxWidgets\\x64-Debug",
+          "type": "STRING"
+        },
+        {
+          "name": "WXWIDGET_VERSION",
+          "value": "33",
+          "type": "STRING"
         }
       ]
     }
