@@ -36,7 +36,7 @@ set(LINKING_TYPE "dynamic" CACHE STRING "Link type")
 set(SKIP_LINT false CACHE BOOL "Skip Lint")
 set(CLANG_TIDY_ERRORS true CACHE BOOL "Lint warnings fail build")
 set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
-set(IMAGE_SEARCH false CACHE BOOL "Build the scoreboard with image search enabled")
+set(IMAGE_SEARCH true CACHE BOOL "Build the scoreboard with image search enabled")
 
 if(MSVC OR OSXCROSS_HOST)
     set(LINKING_TYPE "static")
