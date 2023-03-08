@@ -41,7 +41,7 @@ WebView::WebView(wxWindow *parent, const wxString &url, wxWindowID id,
   _wx = wxWebView::New(parent, id, url, pos, size, WX_WEB_ENGINE, style, name);
 #ifdef SCOREBOARD_DEBUG
   // Allow access to the developer console in debug mode.
-  if (_wx) {
+  if (_wx != nullptr) {
     _wx->EnableAccessToDevTools(true);
   }
 #endif
