@@ -47,8 +47,10 @@ our @MARKDOWN_FILES = qw(
     doc/developers.md
     doc/kiosk_setup.md
     doc/users.md
+    etc/external_settings/README.md
     include/config/swx/README.md
     include/ui/widget/swx/README.md
+    src/ui/widget/swx/README.md
 );
 
 our $IS_WSL = undef;

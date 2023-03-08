@@ -21,6 +21,8 @@ limitations under the License.
 
 #include "ui/widget/swx/WebView.h"
 
+#include <wx/event.h>  // for wxEventTypeTag
+
 namespace cszb_scoreboard::swx {
 
 #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
