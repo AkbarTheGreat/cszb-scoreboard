@@ -33,8 +33,8 @@ endif()
 
 message(STATUS "VCPKG_TARGET_TRIPLET:${VCPKG_TARGET_TRIPLET}")
 
-if(NOT WXWIDGET_VERSION)
-	set(WXWIDGET_VERSION "31")
+if(NOT WXWIDGETS_VERSION)
+	set(WXWIDGETS_VERSION "31")
 endif()
 
 if (VCPKG_TARGET_TRIPLET MATCHES "static")
@@ -93,16 +93,16 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIBRARIES}
-			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}ud_net.lib
-			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_aui.lib
-			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_core.lib
-			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}ud.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}ud_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_core.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}ud.lib
 			${wxWidgets_LIB_DIR}/wxregexud.lib
 		)
 		if (IMAGE_SEARCH)
 			set(wxWidgets_LIBRARIES
 				${wxWidgets_LIBRARIES}
-				${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}ud_webview.lib
+				${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_webview.lib
 			)
 		endif() # if IMAGE_SEARCH
 	else() # Dynamic linking
@@ -139,16 +139,16 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 	if(LINKING_TYPE MATCHES "static")
 		set(wxWidgets_LIBRARIES 
 			${wxWidgets_LIBRARIES}
-			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}u_net.lib
-			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_aui.lib
-			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_core.lib
-			${wxWidgets_LIB_DIR}/wxbase${WXWIDGET_VERSION}u.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}u_net.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_aui.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_core.lib
+			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}u.lib
 			${wxWidgets_LIB_DIR}/wxregexu.lib
 		)
 		if (IMAGE_SEARCH)
 			set(wxWidgets_LIBRARIES
 				${wxWidgets_LIBRARIES}
-				${wxWidgets_LIB_DIR}/wxmsw${WXWIDGET_VERSION}u_webview.lib
+				${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_webview.lib
 			)
 		endif() # if IMAGE_SEARCH
 	else() # Dynamic linking

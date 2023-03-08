@@ -35,7 +35,7 @@
           "type": "STRING"
         },
         {
-          "name": "WXWIDGET_VERSION",
+          "name": "WXWIDGETS_VERSION",
           "value": "33",
           "type": "STRING"
         }
@@ -71,7 +71,7 @@
           "type": "STRING"
         },
         {
-          "name": "WXWIDGET_VERSION",
+          "name": "WXWIDGETS_VERSION",
           "value": "33",
           "type": "STRING"
         }
@@ -110,7 +110,7 @@
           "type": "STRING"
         },
         {
-          "name": "WXWIDGET_VERSION",
+          "name": "WXWIDGETS_VERSION",
           "value": "33",
           "type": "STRING"
         }

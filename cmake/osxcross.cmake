@@ -37,8 +37,8 @@ set(macports_lib_dir ${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib)
 set(wxWidgets_FOUND TRUE)
 set(wxWidgets_DEFINITIONS __WXOSX_COCOA__)
 
-if(NOT WXWIDGET_VERSION)
-	set(WXWIDGET_VERSION "3.1")
+if(NOT WXWIDGETS_VERSION)
+	set(WXWIDGETS_VERSION "3.1")
 endif()
 
 set(OSX_FRAMEWORKS
@@ -58,34 +58,34 @@ set(wxWidgets_LINK_FLAGS
 
 
 set(wxWidgets_INCLUDE_DIRS
-	${wx_root}/lib/wx/include/osx_cocoa-unicode-static-${WXWIDGET_VERSION}
-	${wx_root}/include/wx-${WXWIDGET_VERSION}
+	${wx_root}/lib/wx/include/osx_cocoa-unicode-static-${WXWIDGETS_VERSION}
+	${wx_root}/include/wx-${WXWIDGETS_VERSION}
 	)
 
 set(wxWidgets_LIBRARY_DIRS ${wx_root}/lib)
 
 # There are likely a bunch of libraries in here we don't need.  The plan is to pare down this list.
 set(wxWidgets_LIBRARIES
-	${wxWidgets_LIB_DIR}/libwx_baseu-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_baseu_net-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_baseu_xml-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_adv-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_aui-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_html-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_media-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_propgrid-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_qa-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_ribbon-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_richtext-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_stc-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_webview-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_xrc-${WXWIDGET_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwxjpeg-${WXWIDGET_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxregexu-${WXWIDGET_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxscintilla-${WXWIDGET_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxpng-${WXWIDGET_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxtiff-${WXWIDGET_VERSION}.a
+	${wxWidgets_LIB_DIR}/libwx_baseu-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_baseu_net-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_baseu_xml-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_adv-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_aui-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_html-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_media-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_propgrid-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_qa-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_ribbon-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_richtext-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_stc-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_webview-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_xrc-${WXWIDGETS_VERSION}-Darwin.a
+	${wxWidgets_LIB_DIR}/libwxjpeg-${WXWIDGETS_VERSION}.a
+	${wxWidgets_LIB_DIR}/libwxregexu-${WXWIDGETS_VERSION}.a
+	${wxWidgets_LIB_DIR}/libwxscintilla-${WXWIDGETS_VERSION}.a
+	${wxWidgets_LIB_DIR}/libwxpng-${WXWIDGETS_VERSION}.a
+	${wxWidgets_LIB_DIR}/libwxtiff-${WXWIDGETS_VERSION}.a
 
 	# TODO: Alphabetize these libs and deduplicate the list
 	${macports_lib_dir}/libiconv.a

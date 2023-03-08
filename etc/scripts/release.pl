@@ -160,7 +160,7 @@ sub cmake {
                '-DCMAKE_BUILD_TYPE:STRING="Release"',
                '-DCMAKE_CONFIGURATION_TYPES="Release"',
                '-DWXWIDGETS_INSTALL_DIR="' . $WXWIDGETS_PATH . q{"},
-               '-DWXWIDGET_VERSION="' . $WXWIDGETS_VERSION . q{"},
+               '-DWXWIDGETS_VERSION="' . $WXWIDGETS_VERSION . q{"},
    );
 
    return run_cmd( $CMAKE_CMD, @cmake_args, $repo_path );
