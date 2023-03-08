@@ -82,7 +82,7 @@ class FilesystemPath {
   std::string path_string;
 
  public:
-#else
+#else  // #ifdef __APPLE__
 // Enhanced alias to std::filesystem::path for non-Mac platforms.
 class FilesystemPath : public std::filesystem::path {
  public:
@@ -99,7 +99,7 @@ class FilesystemPath : public std::filesystem::path {
   }
 #endif
 
-  auto existsWithRoot(const std::string &root) const -> bool;
+  [[nodiscard]] auto existsWithRoot(const std::string &root) const -> bool;
   static auto absolutePath(const std::string &root,
                            const std::string &file_path) -> std::string;
   static auto mostRelativePath(const std::string &root,

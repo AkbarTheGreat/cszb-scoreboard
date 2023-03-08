@@ -21,13 +21,13 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>       // for int64_t
 #include <wx/defs.h>      // for wxID_ANY, wxWindowID
 #include <wx/gdicmn.h>    // for wxPoint, wxSize (ptr only)
 #include <wx/string.h>    // for wxString
 #include <wx/tbarbase.h>  // for wxDefaultPosition, wxDefaultSize
 #include <wx/webview.h>   // IWYU pragma: keep
 
+#include <cstdint>     // for int64_t
 #include <functional>  // for function
 #include <string>      // for string
 
@@ -49,7 +49,7 @@ class WebView {
                    const wxString &backend = wxWebViewBackendDefault,
                    int64_t style = 0, const wxString &name = wxWebViewNameStr);
 
-  auto valid() const -> bool { return (_wx != nullptr); }
+  [[nodiscard]] auto valid() const -> bool { return (_wx != nullptr); }
   auto wx() -> wxWebView * { return _wx; }
 
   void Bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
