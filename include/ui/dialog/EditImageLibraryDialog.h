@@ -20,6 +20,7 @@ limitations under the License.
 
 #include <map>     // for map
 #include <memory>  // for unique_ptr
+#include <string>  // for string
 
 #include "ScoreboardCommon.h"                          // for PUBLIC_TEST_ONLY
 #include "config/ImageLibrary.h"                       // for TemporaryImage...
@@ -73,7 +74,6 @@ class EditImageLibraryDialog : public TabbedDialog {
   void bindEvents();
   void positionWidgets();
   void saveSettings();
-  static auto validateSettings() -> bool;
   void fileSelected(wxListEvent *event);
   void onOk();
   void onCancel();
@@ -84,6 +84,9 @@ class EditImageLibraryDialog : public TabbedDialog {
   void rootClearPressed();
   void tagDeleted(const wxListEvent &event);
   void tagsUpdated(const wxListEvent &event);
+
+  static auto validateSettings() -> bool;
+  static auto bestGuessImageName(const FilesystemPath &file) -> std::string;
 };
 
 }  // namespace cszb_scoreboard

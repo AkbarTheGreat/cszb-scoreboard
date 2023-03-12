@@ -23,20 +23,20 @@ limitations under the License.
 #include <memory>   // for unique_ptr, make_unique
 
 #include "config/Position.h"                   // for Position, Size
-#include "ui/dialog/EditImageLibraryDialog.h"  // IWYU pragma: keep for Dialog
-#include "ui/dialog/SettingsDialog.h"          // IWYU pragma: keep for Dialog
-#include "ui/dialog/TeamLibraryDialog.h"       // for TeamLibraryDialog
-#include "ui/widget/Frame.h"                   // for Frame
-#include "ui/widget/Panel.h"                   // for Panel
-#include "util/Singleton.h"                    // for Singleton
+#include "ui/dialog/EditImageLibraryDialog.h"  // IWYU pragma: keep for EditImageLibraryDialog
+#include "ui/dialog/SettingsDialog.h"  // IWYU pragma: keep for SettingsDialog
+#include "ui/dialog/TeamLibraryDialog.h"  // IWYU pragma: keep for TeamLibraryDialog
+#include "ui/widget/Frame.h"              // for Frame
+#include "ui/widget/Panel.h"              // for Panel
+#include "util/Singleton.h"               // for Singleton
 // IWYU pragma: no_include <wx/unix/app.h>
 // IWYU pragma: no_include <wx/gtk/app.h>
 
 namespace cszb_scoreboard {
 
-// #define DIALOG_TYPE EditImageLibraryDialog
+#define DIALOG_TYPE EditImageLibraryDialog
 // #define DIALOG_TYPE SettingsDialog
-#define DIALOG_TYPE TeamLibraryDialog
+// #define DIALOG_TYPE TeamLibraryDialog
 
 static constexpr int START_X = 50;
 static constexpr int START_Y = 50;

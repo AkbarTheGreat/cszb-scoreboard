@@ -169,7 +169,8 @@ void EditImageLibraryDialog::fileUpdated(const FilesystemPath &prev,
   }
   if (prev == empty) {
     // New file.
-    library->addImage(curr, "", {});
+    std::string name = bestGuessImageName(curr);
+    library->addImage(curr, name, {});
     file_list->selectIndex(library->allFilenames().size() - 1);
     refreshFiles();
     return;
@@ -250,6 +251,11 @@ void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
 
   FilesystemPath filename = file_list->selectedFilename();
   library->setTags(filename, tags);
+}
+
+auto EditImageLibraryDialog::bestGuessImageName(const FilesystemPath &file)
+    -> std::string {
+  return "";
 }
 
 }  // namespace cszb_scoreboard
