@@ -113,4 +113,23 @@ TEST(FilesystemPathTest, FileExistence) {
   EXPECT_FALSE(bad_path.existsWithRoot(""));
 }
 
+TEST(FilesystemPathTest, TitleNameTests) {
+  FilesystemPath path("path-with-dashes");
+  EXPECT_EQ(path.titleName(), "Path With Dashes");
+  path = FilesystemPath("path_with_underscores");
+  EXPECT_EQ(path.titleName(), "Path With Underscores");
+  path = FilesystemPath("path-with-the-mixed-caps");
+  EXPECT_EQ(path.titleName(), "Path With the Mixed Caps");
+  path = FilesystemPath("the-first-word-should-be-caps");
+  EXPECT_EQ(path.titleName(), "The First Word Should Be Caps");
+  path = FilesystemPath("last-word-should-be-caps-on");
+  EXPECT_EQ(path.titleName(), "Last Word Should Be Caps On");
+  path = FilesystemPath("kEeP-wEiRd-CaPs");
+  EXPECT_EQ(path.titleName(), "KEeP WEiRd CaPs");
+  path = FilesystemPath("singleWord");
+  EXPECT_EQ(path.titleName(), "SingleWord");
+  path = FilesystemPath("removes-extensions.jpg");
+  EXPECT_EQ(path.titleName(), "Removes Extensions");
+}
+
 }  // namespace cszb_scoreboard::test

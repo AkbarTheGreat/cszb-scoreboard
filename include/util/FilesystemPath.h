@@ -100,6 +100,8 @@ class FilesystemPath : public std::filesystem::path {
 #endif
 
   [[nodiscard]] auto existsWithRoot(const std::string &root) const -> bool;
+  // Returns the name of a file with titlecase and best-guess spacing.
+  [[nodiscard]] auto titleName() const -> std::string;
   static auto absolutePath(const std::string &root,
                            const std::string &file_path) -> std::string;
   static auto mostRelativePath(const std::string &root,

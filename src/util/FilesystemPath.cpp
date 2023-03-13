@@ -20,6 +20,12 @@ limitations under the License.
 
 #include "util/FilesystemPath.h"
 
+#include <algorithm>  // for count, transform
+#include <array>      // for array
+#include <cctype>     // for toupper
+#include <cstddef>    // for size_t
+#include <sstream>    // for basic_istream, istringstream
+
 #ifdef __APPLE__
 #include <cstdio>
 #endif
@@ -117,6 +123,49 @@ auto FilesystemPath::mostRelativePath(const std::string &root,
     return file_path.substr(effective_root.length() + 1, std::string::npos);
   }
   return file_path;
+}
+
+// List grabbed from the APA style guide -- it is likely not complete, but it's
+// a good first attempt.
+const std::array<const char *, 22> TITLE_EXCEPTIONS = {
+    {"a",  "an",  "and", "as", "at",  "but", "by",  "for", "if", "in",  "nor",
+     "of", "off", "on",  "or", "per", "so",  "the", "to",  "up", "via", "yet"}};
+
+auto FilesystemPath::titleName() const -> std::string {
+  std::string title = filename().replace_extension("").string();
+
+  // Replace - and _ with spaces.
+  std::transform(title.begin(), title.end(), title.begin(),
+                 [](unsigned char c) {
+                   if (c == '-' || c == '_') {
+                     c = ' ';
+                   }
+                   return c;
+                 });
+  std::istringstream wordstream(title);
+  title = "";
+  std::string word;
+
+  // Iterate through all words as a stream.
+  while (wordstream >> word) {
+    // If it's not the first word, add a space back in.
+    if (!title.empty()) {
+      title += " ";
+    }
+    // If it's the first word or not one of our exceptions, capitalize it.
+    if (title.empty() || std::count(TITLE_EXCEPTIONS.begin(),
+                                    TITLE_EXCEPTIONS.end(), word) == 0) {
+      word[0] = std::toupper(word[0]);
+    }
+    title += word;
+  }
+
+  size_t last_space = title.find_last_of(' ');
+  if (last_space > 0) {
+    title[last_space + 1] = std::toupper(title[last_space + 1]);
+  }
+
+  return title;
 }
 
 }  // namespace cszb_scoreboard

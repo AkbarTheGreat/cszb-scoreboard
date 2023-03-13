@@ -255,7 +255,7 @@ void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
 
 auto EditImageLibraryDialog::bestGuessImageName(const FilesystemPath &file)
     -> std::string {
-  return "";
+  return file.titleName();
 }
 
 }  // namespace cszb_scoreboard
