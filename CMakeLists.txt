@@ -193,7 +193,7 @@ function(package_add_ui_test TESTNAME HAS_OWN_MAIN)
 endfunction()
 
 function(package_add_macos_test TESTNAME HAS_OWN_MAIN)
-    package_add_test(${TESTNAME}_MacOS ${HAS_OWN_MAIN} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
+    package_add_test(${TESTNAME}_MacOS ${HAS_OWN_MAIN} ${ARGN})
     target_compile_definitions(${TESTNAME}_MacOS PUBLIC SCOREBOARD_APPLE_IMPL)
 endfunction()
 
