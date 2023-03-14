@@ -19,8 +19,12 @@ limitations under the License.
 */
 #pragma once
 
-#include <string>
 #ifdef __APPLE__
+#define SCOREBOARD_APPLE_IMPL
+#endif
+
+#include <string>
+#ifdef SCOREBOARD_APPLE_IMPL
 #include <string>
 #else
 #include <filesystem>
@@ -28,7 +32,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-#ifdef __APPLE__
+#ifdef SCOREBOARD_APPLE_IMPL
 class FilesystemPath {
  public:
   FilesystemPath();
@@ -82,7 +86,7 @@ class FilesystemPath {
   std::string path_string;
 
  public:
-#else  // #ifdef __APPLE__
+#else  // #ifdef SCOREBOARD_APPLE_IMPL
 // Enhanced alias to std::filesystem::path for non-Mac platforms.
 class FilesystemPath : public std::filesystem::path {
  public:

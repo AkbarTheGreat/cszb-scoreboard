@@ -192,6 +192,11 @@ function(package_add_ui_test TESTNAME HAS_OWN_MAIN)
     endif()
 endfunction()
 
+function(package_add_macos_test TESTNAME HAS_OWN_MAIN)
+    package_add_test(${TESTNAME}_MacOS ${HAS_OWN_MAIN} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
+    target_compile_definitions(${TESTNAME}_MacOS PUBLIC SCOREBOARD_APPLE_IMPL)
+endfunction()
+
 enable_testing()
 
 # config/ tests
@@ -237,6 +242,12 @@ package_add_test(StringUtilTest      FALSE test/unit/util/StringUtilTest.cpp
 package_add_ui_test(ScreenPreviewTest   FALSE test/integration/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest       FALSE test/integration/TextEntryTest.cpp)
 package_add_ui_test(ScreenTextSideTest  FALSE test/integration/ScreenTextSideTest.cpp)
+
+# Tests here are Mac-specific builds of other tests.  This is usually to unit-test functionality that
+# can be compiled elsewhere, but was written specifically for a mac.
+package_add_macos_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
+                                                 src/util/FilesystemPath.cpp
+)
  
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)

@@ -26,13 +26,13 @@ limitations under the License.
 #include <cstddef>    // for size_t
 #include <sstream>    // for basic_istream, istringstream
 
-#ifdef __APPLE__
+#ifdef SCOREBOARD_APPLE_IMPL
 #include <cstdio>
 #endif
 
 namespace cszb_scoreboard {
 
-#ifdef __APPLE__
+#ifdef SCOREBOARD_APPLE_IMPL
 
 constexpr char preferred_separator = '/';
 
@@ -79,16 +79,16 @@ void FilesystemPath::replace_filename(const std::string &new_filename) {
   path_string = pathname().string() + '/' + new_filename;
 }
 
-#endif
+#endif  // #ifdef SCOREBOARD_APPLE_IMPL
 
 auto FilesystemPath::existsWithRoot(const std::string &root) const -> bool {
-#ifdef __APPLE__
+#ifdef SCOREBOARD_APPLE_IMPL
   // TODO: This is incorrect, but will need some testing on an actual MacOS
   // device when it's implemented.
   return true;
-#else   // #ifdef __APPLE__
+#else   // #ifdef SCOREBOARD_APPLE_IMPL
   return std::filesystem::exists(absolutePath(root, this->string()));
-#endif  // #ifdef __APPLE__
+#endif  // #ifdef SCOREBOARD_APPLE_IMPL
 }
 
 auto FilesystemPath::stripTrailingSeparator(const std::string &path)
