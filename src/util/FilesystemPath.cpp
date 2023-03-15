@@ -23,18 +23,15 @@ limitations under the License.
 #include <algorithm>  // for count, transform
 #include <array>      // for array
 #include <cctype>     // for toupper
-#include <cstddef>    // for size_t
 #include <sstream>    // for basic_istream, istringstream
 
 #ifdef SCOREBOARD_APPLE_IMPL
-#include <cstdio>
+#include <cstdio>  // for size_t, remove, rename
 #endif
 
 namespace cszb_scoreboard {
 
 #ifdef SCOREBOARD_APPLE_IMPL
-
-constexpr char preferred_separator = '/';
 
 FilesystemPath::FilesystemPath() { path_string = ""; }
 
@@ -57,22 +54,34 @@ void FilesystemPath::rename(const FilesystemPath &a, const FilesystemPath &b) {
   std::rename(a.path_string.c_str(), b.path_string.c_str());
 }
 
-auto FilesystemPath::filename() -> FilesystemPath {
+auto FilesystemPath::filename() const -> FilesystemPath {
   std::size_t separator = path_string.rfind('/');
   std::string filename = path_string;
-  if (separator != -1) {
+  if (separator != std::string::npos) {
     filename = path_string.substr(separator + 1, path_string.size() - 1);
   }
   return FilesystemPath(filename);
 }
 
-auto FilesystemPath::pathname() -> FilesystemPath {
+auto FilesystemPath::pathname() const -> FilesystemPath {
   std::size_t separator = path_string.rfind('/');
   std::string pathname = path_string;
-  if (separator != -1) {
+  if (separator != std::string::npos) {
     pathname = path_string.substr(0, separator);
   }
   return FilesystemPath(pathname);
+}
+auto FilesystemPath::replace_extension(const std::string &replacement) const
+    -> FilesystemPath {
+  std::string filename = path_string;
+  std::size_t extension_start = filename.rfind('.');
+  std::size_t separator = filename.rfind('/');
+  // Remove the old extension.  Ignore dots in directories
+  if (extension_start != std::string::npos &&
+      (separator == std::string::npos || extension_start > separator)) {
+    filename = path_string.substr(0, extension_start);
+  }
+  return FilesystemPath(filename + replacement);
 }
 
 void FilesystemPath::replace_filename(const std::string &new_filename) {
@@ -81,9 +90,10 @@ void FilesystemPath::replace_filename(const std::string &new_filename) {
 
 #endif  // #ifdef SCOREBOARD_APPLE_IMPL
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 auto FilesystemPath::existsWithRoot(const std::string &root) const -> bool {
 #ifdef SCOREBOARD_APPLE_IMPL
-  // TODO: This is incorrect, but will need some testing on an actual MacOS
+  // TODO(#39): This is incorrect, but will need some testing on an actual MacOS
   // device when it's implemented.
   return true;
 #else   // #ifdef SCOREBOARD_APPLE_IMPL

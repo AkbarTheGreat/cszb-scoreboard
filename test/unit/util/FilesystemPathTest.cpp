@@ -16,10 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <filesystem>  // for path::preferred_separator
-#include <string>      // for allocator, string
+#include <string>  // for allocator
 
-#include "gtest/gtest.h"          // for AssertionResult, Test, Message, Tes...
+#include "gtest/gtest.h"          // for Test, EXPECT_EQ, Message, TestPartR...
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
 #if defined(_WIN32) && !defined(SCOREBOARD_APPLE_IMPL)
@@ -38,9 +37,9 @@ const char *ABS_PATH_OUT_OF_ROOT = "/test2/path1/file1.ext";
 #endif  // #if defined(_WIN32) && !defined(SCOREBOARD_APPLE_IMPL)
 
 #ifdef SCOREBOARD_APPLE_IMPL
-#define TEST_NAME FilesystemPathTest_MacOS
+#define TESTNAME FilesystemPathTest_MacOS
 #else  // #ifdef SCOREBOARD_APPLE_IMPL
-#define TEST_NAME FilesystemPathTest
+#define TESTNAME FilesystemPathTest
 #endif  // #ifdef SCOREBOARD_APPLE_IMPL
 
 const char *CURRENT_BINARY;
@@ -55,14 +54,14 @@ auto main(int argc, char **argv) -> int {
 
 namespace cszb_scoreboard::test {
 
-TEST(TEST_NAME, AbsolutePathConversions) {
+TEST(TESTNAME, AbsolutePathConversions) {
   EXPECT_EQ(FilesystemPath::absolutePath(ROOT, RELATIVE_PATH_IN_ROOT),
             ABS_PATH_IN_ROOT);
   EXPECT_EQ(FilesystemPath::absolutePath(ROOT, ABS_PATH_OUT_OF_ROOT),
             ABS_PATH_OUT_OF_ROOT);
 }
 
-TEST(TEST_NAME, RelativePathConversions) {
+TEST(TESTNAME, RelativePathConversions) {
   EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT, RELATIVE_PATH_IN_ROOT),
             RELATIVE_PATH_IN_ROOT);
   EXPECT_EQ(FilesystemPath::mostRelativePath(ROOT, ABS_PATH_IN_ROOT),
@@ -71,7 +70,7 @@ TEST(TEST_NAME, RelativePathConversions) {
             ABS_PATH_OUT_OF_ROOT);
 }
 
-TEST(TEST_NAME, TrailingPathSeparator) {
+TEST(TESTNAME, TrailingPathSeparator) {
   EXPECT_EQ(FilesystemPath::absolutePath(ROOT_WITH_SEP, RELATIVE_PATH_IN_ROOT),
             ABS_PATH_IN_ROOT);
   EXPECT_EQ(FilesystemPath::absolutePath(ROOT_WITH_SEP, ABS_PATH_OUT_OF_ROOT),
@@ -90,7 +89,7 @@ TEST(TEST_NAME, TrailingPathSeparator) {
 // This functionality is known lacking in MacOS, all files return true for
 // existence.
 // TODO(#39): Fix this for MacOS
-TEST(TEST_NAME, FileExistence) {
+TEST(TESTNAME, FileExistence) {
   // The path for the currently running test -- we know this exists, so we use
   // it for existence testing.
   FilesystemPath abs_test_path = FilesystemPath(std::string(CURRENT_BINARY));
@@ -124,7 +123,7 @@ TEST(TEST_NAME, FileExistence) {
 }
 #endif  // #ifndef SCOREBOARD_APPLE_IMPL
 
-TEST(TEST_NAME, TitleNameTests) {
+TEST(TESTNAME, TitleNameTests) {
   FilesystemPath path("path-with-dashes");
   EXPECT_EQ(path.titleName(), "Path With Dashes");
   path = FilesystemPath("path_with_underscores");

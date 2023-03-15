@@ -23,10 +23,8 @@ limitations under the License.
 #define SCOREBOARD_APPLE_IMPL
 #endif
 
-#include <string>
-#ifdef SCOREBOARD_APPLE_IMPL
-#include <string>
-#else
+#include <string>  // for string
+#ifndef SCOREBOARD_APPLE_IMPL
 #include <filesystem>
 #endif
 
@@ -41,8 +39,10 @@ class FilesystemPath {
   static auto remove(const FilesystemPath &p) -> bool;
   static void rename(const FilesystemPath &a, const FilesystemPath &b);
 
-  auto filename() -> FilesystemPath;
-  auto pathname() -> FilesystemPath;
+  [[nodiscard]] auto filename() const -> FilesystemPath;
+  [[nodiscard]] auto pathname() const -> FilesystemPath;
+  [[nodiscard]] auto replace_extension(const std::string &replacement) const
+      -> FilesystemPath;
   void replace_filename(const std::string &new_filename);
   [[nodiscard]] auto string() const -> std::string { return path_string; }
   [[nodiscard]] auto c_str() const -> const char * {
@@ -81,6 +81,8 @@ class FilesystemPath {
       -> bool {
     return !(a == b);
   }
+
+  static const char preferred_separator = '/';
 
  private:
   std::string path_string;
