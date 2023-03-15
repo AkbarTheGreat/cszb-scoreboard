@@ -24,5 +24,5 @@ COPY ./ /src/cszb-scoreboard
 RUN mkdir -p /src/cszb-scoreboard/out
 WORKDIR /src/cszb-scoreboard/out
 
-CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DSKIP_LINT=true -DINTEGRATION_TEST=false ../ && make -j6 cszb-scoreboard
+CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DSKIP_LINT=true -DINTEGRATION_TEST=false ../ && make -j6 scoreboard_proto cszb-scoreboard
 
