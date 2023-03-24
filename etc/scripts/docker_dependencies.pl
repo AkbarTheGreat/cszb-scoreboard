@@ -43,7 +43,7 @@ use FindBin        qw{$RealBin};
 use List::AllUtils qw{none};
 
 our $PROTOBUF_VERSION  = 'v3.19.3';
-our $WXWIDGETS_VERSION = 'v3.1.6-final';
+our $WXWIDGETS_VERSION = 'v3.2.2.1';
 our $CURL_VERSION      = 'curl-7_79_0';
 our $GTEST_VERSION     = 'v1.13.0';
 
