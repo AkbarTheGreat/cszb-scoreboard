@@ -31,6 +31,7 @@
 
 echo "yes" | /usr/bin/cpan install \
 	File::Copy::Recursive \
+	File::Find \
 	File::Which \
 	List::AllUtils
 

@@ -26,9 +26,10 @@ limitations under the License.
 use 5.030;
 use Cwd;
 use File::Copy;
+use File::Find qw();
 use File::Path qw(mkpath);
 use File::Which;
-use Getopt::Long   qw{GetOptions};
+use Getopt::Long   qw(GetOptions);
 use List::AllUtils qw(any);
 
 use FindBin;
@@ -40,17 +41,8 @@ our $DOCKER_BUILD_PATH = '/src/out/iwyu';
 our $BUILD_PATH        = $BASE_DIR . q{/out/iwyu};
 my $DOCKER_ROOT = '/src/cszb-scoreboard';
 
-our @MARKDOWN_FILES = qw(
-    CODE_OF_CONDUCT.md
-    CONTRIBUTING.md
-    README.md
-    doc/developers.md
-    doc/kiosk_setup.md
-    doc/users.md
-    etc/external_settings/README.md
-    include/config/swx/README.md
-    include/ui/widget/swx/README.md
-    src/ui/widget/swx/README.md
+our @SKIP_MARKDOWN_FILES = qw(
+    cmake/modules/README.md
 );
 
 our $IS_WSL = undef;
@@ -164,6 +156,23 @@ sub cmake {
       );
 }
 
+sub find_files_with_extension {
+   my ($ext) = @_;
+   my $ext_re = qr/\.$ext$/;
+   my @files;
+   File::Find::find(
+      sub {
+         my $file = $File::Find::name;
+         if ( $file =~ $ext_re ) {
+            $file =~ s#^\./##;
+            push @files, $file;
+         }
+      },
+      '.'
+   );
+   return @files;
+}
+
 sub run_perltidy {
    my ($docker) = @_;
    workdir( $docker, 'etc/scripts' );
@@ -198,7 +207,9 @@ sub run_clangformat {
 sub run_mdformat {
    my ($docker) = @_;
    workdir( $docker, q{} );
-   for my $file (@MARKDOWN_FILES) {
+   my @markdown_files = find_files_with_extension('md');
+   for my $file (@markdown_files) {
+      next if any { $_ eq $file } @SKIP_MARKDOWN_FILES;
       sys( $docker, 'mdformat', '--wrap=100', $file );
    }
 }
@@ -218,10 +229,13 @@ sub main {
    status('Running perltidy');
    run_perltidy($docker);
    status('Running include-what-you-use');
+
    run_iwyu($docker);
    status('iwyu complete, fixing includes in files');
+
    run_fix_include($docker);
    status('Includes fixed, auto-formatting all files');
+
    run_clangformat($docker);
    status('Source formatted, auto-formatting markdown files');
    run_mdformat($docker);
