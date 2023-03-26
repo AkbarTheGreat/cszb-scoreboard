@@ -213,6 +213,13 @@ make scoreboard_proto cszb-scoreboard'''
           return runFullPipeline()
         }
       }
+      agent {
+        dockerfile {
+            filename 'Dockerfile.standard'
+            additionalBuildArgs "--tag akbarthegreat/scoreboard_coverage_${BRANCH_NAME}:latest"
+            reuseNode true
+        }
+      }
       steps {
         cmakeBuild(
           installation: 'AutoInstall',
