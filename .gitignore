@@ -7,5 +7,3 @@
 /CMakeSettings.json
 /etc/scripts/release_token
 /cmake/dev_settings.cmake
-/autoupdate_server/out
-/autoupdate_server/.vs
