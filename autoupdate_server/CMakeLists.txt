@@ -16,9 +16,9 @@
 
 cmake_minimum_required(VERSION 3.9.0)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/modules") # the cmake-modules repo
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/clang-format.cmake)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
 
 SET(PROJECT_NAME "cszb-scoreboard-updater")
 project(${PROJECT_NAME} CXX)
@@ -33,7 +33,10 @@ set(SKIP_LINT false CACHE BOOL "Skip Lint")
 set(CLANG_TIDY_ERRORS true CACHE BOOL "Lint warnings fail build")
 set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
 
+find_package(absl REQUIRED)
 find_package(Protobuf REQUIRED)
+find_package(gRPC CONFIG REQUIRED)
+find_package(Threads)
 find_package(GTest REQUIRED CONFIG)
 include(GoogleTest)
 
@@ -65,11 +68,20 @@ file(GLOB UPDATER_SRC
     "src/*/*/*/*/*.cpp"
 )
 
+get_target_property(grpc_cpp_plugin_location gRPC::grpc_cpp_plugin LOCATION)
+
 # Protobuf files.
 file(GLOB UPDATER_PROTO_SOURCES "*.proto")
 add_library(updater_proto OBJECT ${UPDATER_PROTO_SOURCES})
 set_target_properties(updater_proto PROPERTIES CXX_CLANG_TIDY "")
-protobuf_generate(TARGET updater_proto)
+protobuf_generate(TARGET updater_proto LANGUAGE cpp)
+protobuf_generate(TARGET updater_proto LANGUAGE grpc
+    GENERATE_EXTENSIONS
+        .grpc.pb.h
+        .grpc.pb.cc
+    PLUGIN
+        "protoc-gen-grpc=${grpc_cpp_plugin_location}"
+)
 target_link_libraries(updater_proto PRIVATE)
 
 
@@ -79,8 +91,15 @@ target_link_libraries(updater_classes PRIVATE ${Protobuf_LIBRARIES})
 
 add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:updater_classes> $<TARGET_OBJECTS:updater_proto>)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+        absl::base
+        absl::log
+        absl::strings
+        protobuf::libprotobuf
+        gRPC::grpc
+        gRPC::grpc++
+)
+
 
 # Testing specific code follows.
 
