@@ -26,7 +26,7 @@ use DDP;
 use MooseX::Singleton;
 use MooseX::Privacy;
 use CszbScoreboard::Config;
-
+ 
 has '_version_cache_last_update' => (
     is     => 'rw',
     isa => 'DateTime',
@@ -44,7 +44,7 @@ has '_latest_release_cache' => (
     isa => 'ArrayRef[HashRef]',
     traits => [qw/Private/],
 );
-
+ 
 sub releases {
     my ($self, $version, $log) = @_;
     if ($self->_is_latest($version, $log)) {
