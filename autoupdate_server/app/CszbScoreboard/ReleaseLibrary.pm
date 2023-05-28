@@ -46,31 +46,24 @@ sub versions {
 }
 
 sub _compare_versions {
-    my ($a, $b, $log) = @_;
+    my ($a, $b) = @_;
     my @a = split /\./, $a;
     my @b = split /\./, $b;
-    $log->debug('A: ' . $a . ' B: ' . $b);
     if (@b > @a) {
-        $log->debug('_1');
         return -1;
     }
     if (@a > @b) {
-        $log->debug('_2');
         return 1;
     }
-    $log->debug('  @A ' . scalar(@a) . " @a");
     while (@a) {
         my $a_prime = shift @a;
         my $b_prime = shift @b;
         $a_prime =~ s/_.*//;
         $b_prime =~ s/_.*//;
-        $log->debug('  A`: ' . $a_prime . ' B`: ' . $b_prime);
         if ($b_prime > $a_prime) {
-            $log->debug('_3');
             return -1;
         }
         if ($a_prime > $b_prime) {
-            $log->debug('_4');
             return 1;
         }
     }
