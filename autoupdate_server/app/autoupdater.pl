@@ -4,17 +4,21 @@ use 5.022;
 use lib '.';
 use Mojolicious::Lite -signatures;
 use CszbScoreboard::UpdaterAPI;
+use CszbScoreboard::Config;
+
+my $config = CszbScoreboard::Config->instance();
 
 if ($ENV{'LOCAL_TEST'}){
 	plugin AccessLog => {};
 } else {
-	plugin AccessLog =>  {log => '/logs/access.log'};
+	plugin AccessLog =>  {log => $config->access_log()};
 }
 
 my $api = CszbScoreboard::UpdaterAPI->new();
 
 get '/' => {text => 'I ♥ Mojolicious!'};
 
-get '/versions' => {json => $api->versions()};
+get '/versions' => sub($c) {$c->render(json => $api->dispatch($c, 'versions'))};
+get '/latest'   => sub($c) {$c->render(json => $api->dispatch($c, 'latest'))};
 
 app->start;
