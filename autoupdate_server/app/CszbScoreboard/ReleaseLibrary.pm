@@ -26,7 +26,7 @@ use DDP;
 use MooseX::Singleton;
 use MooseX::Privacy;
 use CszbScoreboard::Config;
- 
+
 has '_version_cache_last_update' => (
     is     => 'rw',
     isa => 'DateTime',
