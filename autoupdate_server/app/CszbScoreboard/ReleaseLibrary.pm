@@ -26,7 +26,7 @@ use DDP;
 use MooseX::Singleton;
 use MooseX::Privacy;
 use CszbScoreboard::Config;
- 
+
 has '_version_cache_last_update' => (
     is     => 'rw',
     isa => 'DateTime',
@@ -38,6 +38,20 @@ has '_version_cache' => (
     isa => 'ArrayRef[Str]',
     traits => [qw/Private/],
 );
+
+has '_latest_release_cache' => (
+    is     => 'rw',
+    isa => 'ArrayRef[HashRef]',
+    traits => [qw/Private/],
+);
+
+sub releases {
+    my ($self, $version, $log) = @_;
+    if ($self->_is_latest($version, $log)) {
+        return $self->_latest_release_cache();
+    }
+    return _gather_releases($version);
+}
 
 sub versions {
     my ($self, $log) = @_;
@@ -68,6 +82,41 @@ sub _compare_versions {
         }
     }
     return $a cmp $b;
+}
+
+sub _gather_releases {
+    my ($self, $version, $log) = @_;
+
+    my @releases;
+    my $version_dir = CszbScoreboard::Config->instance()->release_path() . '/' . $version;
+    my $ver_dh;
+    unless (opendir($ver_dh, $version_dir)) {
+        $log->error('Can\'t open ' . $version_dir . ': ' . $!);
+        return;
+    }
+    while (readdir $ver_dh) {
+        next if /^\.\.?$/;
+        push @releases, {'platform' => $_};
+    }
+    closedir $ver_dh;
+
+    for my $rel_hash (@releases) {
+        my $plat = $rel_hash->{'platform'};
+        my $platform_dir = $version_dir . '/' . $plat;
+        my $plat_dh;
+        $rel_hash->{'files'} = {};
+        unless (opendir($plat_dh, $platform_dir)) {
+            $log->error('Can\'t open ' . $platform_dir . ': ' . $!);
+            return;
+        }
+        while (readdir $plat_dh) {
+            next if /^\.\.?$/;
+            $rel_hash->{'files'}{$_} = {size => 0};
+        }
+        closedir $plat_dh;
+    }
+
+    return \@releases;
 }
  
 sub _gather_versions {
@@ -102,6 +151,13 @@ sub _gather_versions {
     $self->_version_cache_last_update(DateTime->now);
     @versions = sort {_compare_versions($a, $b, $log)} @versions;
     $self->_version_cache(\@versions);
+    $self->_latest_release_cache($self->_gather_releases($versions[-1], $log));
+}
+
+sub _is_latest {
+    my ($self, $version, $log) = @_;
+    return 1 if $version eq $self->versions($log)->[-1];
+    return undef;
 }
 
 1;
