@@ -3,8 +3,12 @@
 # simple script which just builds all of our standard docker containers.  I run
 # this sometimes just to pre-cache all of the containers for future executions.
 
-docker build -f Dockerfile.standard -t scoreboard .
-docker build -f Dockerfile.osxcross -t osxcross .
-docker build -f Dockerfile.code_clean -t code_clean .
+# Actually builds everything
+docker build --target=build_all .
+
+# Create some tags, for convenience.
+docker build --target=standard_build -t scoreboard .
+docker build --target=macos_build    -t osxcross   .
+docker build --target=code_clean     -t code_clean .
 
 
