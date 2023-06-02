@@ -9,6 +9,7 @@ FROM alpine:3.18 AS build_baseline
 RUN apk add --no-cache \
     alpine-sdk \
     clang \
+    clang-extra-tools \
     cmake \
     git
 
@@ -494,7 +495,6 @@ FROM standard_build_base AS code_clean
 #    clang-format \
 RUN apk add --no-cache \
     bash \
-    clang-extra-tools \
     perl \
     perl-app-cpanminus \
     py3-pip
