@@ -24,7 +24,6 @@ limitations under the License.
 #include <memory>   // for unique_ptr
 #include <string>   // for string
 
-#include "config.pb.h"              // for TeamInfo_TeamType
 #include "ui/widget/Button.h"       // for Button
 #include "ui/widget/Label.h"        // for Label
 #include "ui/widget/RadioButton.h"  // for RadioButton
@@ -36,6 +35,7 @@ class Panel;
 
 namespace proto {
 class TeamLibInfo;
+enum TeamInfo_TeamType : int;
 }  // namespace proto
 
 class TeamSelectionEntry {

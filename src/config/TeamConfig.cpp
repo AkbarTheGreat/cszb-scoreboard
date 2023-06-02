@@ -19,6 +19,8 @@ limitations under the License.
 
 #include "config/TeamConfig.h"
 
+#include <algorithm>  // for max
+
 #include "config/Persistence.h"  // for Persistence
 #include "util/ProtoUtil.h"      // for ProtoUtil
 

@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
+#include <algorithm>   // for max
 #include <cstdint>     // for int64_t
 #include <filesystem>  // for path
 #include <string>      // for string
@@ -26,14 +27,14 @@ limitations under the License.
 #include "ScoreboardCommon.h"             // for LOGO_SELECTION_STRING
 #include "config.pb.h"                    // for RenderableText, Font, Rende...
 #include "config/TeamConfig.h"            // for TeamConfig
-#include "config/swx/defs.h"              // for operator|, wxALIGN_CENTER_V...
+#include "config/swx/defs.h"              // for operator|, wxAlignment, wxD...
 #include "config/swx/event.h"             // for wxEVT_COMMAND_BUTTON_CLICKED
 #include "team_library.pb.h"              // for TeamLibraryDialogResponse
 #include "ui/component/ScreenText.h"      // for ScreenText
-#include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition, Over...
+#include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition
 #include "ui/dialog/TeamLibraryDialog.h"  // for TeamLibraryDialog
 #include "ui/frame/FrameManager.h"        // for FrameManager
-#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxACCEL_CTRL
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxAcceleratorE...
 #include "ui/frame/MainView.h"            // for MainView
 #include "ui/graphics/Color.h"            // for Color
 #include "ui/graphics/TeamColors.h"       // for TeamColors

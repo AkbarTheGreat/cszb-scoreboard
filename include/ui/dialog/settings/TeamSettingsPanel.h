@@ -20,19 +20,21 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"              // for TeamInfo_TeamType
+#include "ScoreboardCommon.h"       // for PUBLIC_TEST_ONLY
 #include "ui/graphics/Color.h"      // for Color
 #include "ui/widget/Button.h"       // for Button
 #include "ui/widget/ColorPicker.h"  // for ColorPicker
 #include "ui/widget/Label.h"        // for Label
 #include "ui/widget/Panel.h"        // for Panel
-#include "util/Singleton.h"
+#include "util/Singleton.h"         // for Singleton
 
 namespace cszb_scoreboard {
 
 // Pre-defining TeamSettingsPage for a parent pointer.
 class TeamSettingsPage;
+namespace proto {
+enum TeamInfo_TeamType : int;
+}  // namespace proto
 
 namespace swx {
 class Panel;

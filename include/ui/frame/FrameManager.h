@@ -28,10 +28,10 @@ limitations under the License.
 
 #include "ui/frame/MainView.h"  // for MainView
 #include "ui/widget/Display.h"  // for Display
+#include "ui/widget/Frame.h"    // for Frame
 #include "util/Singleton.h"     // for SingletonClass
 
 namespace cszb_scoreboard {
-class Frame;
 class ScreenPresenter;
 class ScreenText;
 struct Position;

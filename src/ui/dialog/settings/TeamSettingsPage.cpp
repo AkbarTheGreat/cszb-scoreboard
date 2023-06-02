@@ -19,12 +19,13 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
-#include <utility>  // for move
+#include <algorithm>  // for max
+#include <utility>    // for move
 
 #include "ScoreboardCommon.h"   // for DEFAULT_BORDER_SIZE
-#include "config.pb.h"          // for TeamInfo_TeamType, TeamInfo_TeamType_...
+#include "config.pb.h"          // for TeamInfo_TeamType
 #include "config/TeamConfig.h"  // for TeamConfig
-#include "ui/widget/PopUp.h"
+#include "ui/widget/PopUp.h"    // for PopUp
 
 namespace cszb_scoreboard {
 namespace swx {

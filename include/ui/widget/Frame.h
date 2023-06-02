@@ -19,7 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/aui/auibook.h>  // for wxAUI_NB_SCROLL_BUTTONS
+#include <wx/accel.h>        // for wxAcceleratorEntry
+#include <wx/aui/auibook.h>  // for wxAuiNotebookOption
 #include <wx/dialog.h>       // for wxDEFAULT_DIALOG_STYLE
 #include <wx/gdicmn.h>       // for wxPoint, wxSize (ptr ...
 #include <wx/panel.h>        // for wxPanelNameStr
@@ -33,7 +34,7 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"                   // for PUBLIC_TEST_ONLY
 #include "config/Position.h"                    // for Position, Size
-#include "config/swx/defs.h"                    // for wxID_ANY, wxWindowID
+#include "config/swx/defs.h"                    // for wxStandardID, wxWindowID
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Frame.h"                // for Frame, FrameImpl
 #include "ui/widget/swx/Notebook.h"             // for Notebook
@@ -41,7 +42,6 @@ limitations under the License.
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 
 class wxWindow;
-class wxAcceleratorEntry;
 // IWYU pragma: no_include <wx/generic/accel.h>
 
 namespace cszb_scoreboard {

@@ -22,15 +22,16 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
-#include "ScoreboardCommon.h"
-#include "config/Position.h"              // for Size
-#include "ui/component/ScreenTextSide.h"  // for ScreenTextSide (ptr only)
-#include "ui/widget/Panel.h"              // for Panel
-#include "util/Singleton.h"
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "config/Position.h"   // for Size
+#include "ui/widget/Panel.h"   // for Panel
+#include "util/Singleton.h"    // for Singleton
 
 namespace cszb_scoreboard {
 class Color;
 class Image;
+class ScreenTextSide;
+enum class OverlayScreenPosition;
 
 namespace proto {
 class Font;

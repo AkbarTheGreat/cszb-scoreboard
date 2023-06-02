@@ -20,7 +20,8 @@ limitations under the License.
 
 #include <wx/arrstr.h>    // for wxArrayString
 #include <wx/listctrl.h>  // IWYU pragma: keep for wxListCtrl
-#include <wx/string.h>    // for wxString
+
+#include <algorithm>  // for max
 // IWYU pragma: no_include <wx/generic/listctrl.h>
 
 namespace cszb_scoreboard {

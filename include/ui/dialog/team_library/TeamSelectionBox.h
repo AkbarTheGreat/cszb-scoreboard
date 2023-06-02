@@ -26,7 +26,6 @@ limitations under the License.
 #include <vector>   // for vector
 
 #include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
-#include "config.pb.h"                                  // for TeamInfo_Team...
 #include "team_library.pb.h"                            // for TeamLibInfo
 #include "ui/dialog/team_library/TeamSelectionEntry.h"  // for TeamSelection...
 #include "ui/widget/Label.h"                            // for Label
@@ -38,6 +37,9 @@ namespace cszb_scoreboard {
 
 class TeamLibraryDialog;
 class FilesystemPath;
+namespace proto {
+enum TeamInfo_TeamType : int;
+}  // namespace proto
 
 namespace swx {
 class Panel;

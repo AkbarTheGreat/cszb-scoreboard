@@ -20,10 +20,11 @@ limitations under the License.
 #include "ui/dialog/TeamLibraryDialog.h"
 
 #include <optional>  // for optional
-#include <string>    // for string, operator==
+#include <string>    // for operator==, basic_string
 #include <vector>    // for vector
 
-#include "config/swx/defs.h"                    // for wxID_CANCEL, wxID_OK
+#include "config.pb.h"                          // for TeamInfo_TeamType
+#include "config/swx/defs.h"                    // for wxStandardID
 #include "config/swx/event.h"                   // for wxEVT_BUTTON, wxMouse...
 #include "ui/component/control/ScoreControl.h"  // for ScoreControl
 #include "ui/widget/DropDown.h"                 // for DropDown

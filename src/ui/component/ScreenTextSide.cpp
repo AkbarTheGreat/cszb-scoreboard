@@ -22,8 +22,8 @@ limitations under the License.
 
 #include <wx/gdicmn.h>  // for wxSize
 
-#include <cstdint>  // for int64_t
-#include <memory>   // for allocator_traits<>::value_type
+#include <algorithm>  // for max
+#include <cstdint>    // for int64_t
 
 #include "config/Position.h"              // for Size, Position
 #include "config/TeamConfig.h"            // for TeamConfig

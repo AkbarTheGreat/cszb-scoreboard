@@ -22,8 +22,6 @@ limitations under the License.
 
 #include "util/Singleton.h"
 
-#include <wx/cmdline.h>  // for wxCmdLineParser
-
 #include <stdexcept>  // for runtime_error
 
 #include "config/CommandArgs.h"      // for CommandArgs

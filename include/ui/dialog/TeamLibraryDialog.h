@@ -23,7 +23,6 @@ limitations under the License.
 #include <string>   // for string
 
 #include "ScoreboardCommon.h"                         // for PUBLIC_TEST_ONLY
-#include "config.pb.h"                                // for TeamInfo_TeamType
 #include "ui/dialog/team_library/TeamSelectionBox.h"  // for TeamSelectionBox
 #include "ui/widget/Button.h"                         // for Button
 #include "ui/widget/Divider.h"                        // for Divider
@@ -37,6 +36,9 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScoreControl;
 class FilesystemPath;
+namespace proto {
+enum TeamInfo_TeamType : int;
+}  // namespace proto
 
 namespace swx {
 class PropertySheetDialog;

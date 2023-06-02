@@ -16,9 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <algorithm>   // for max
 #include <filesystem>  // for operator<<, operator==
-#include <sstream>     // for basic_stringbuf<>::int_type
-#include <string>      // for string, operator+, allocator
+#include <string>      // for operator+, allocator, ope...
 #include <vector>      // for vector
 
 #include "config/ImageLibrary.h"            // for ImageLibrary, ImageSearch...

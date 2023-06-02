@@ -20,9 +20,11 @@ limitations under the License.
 
 #include "ui/dialog/team_library/TeamSelectionBox.h"
 
-#include <cstdint>  // for int32_t, int64_t
-#include <string>   // for string
+#include <algorithm>  // for max
+#include <cstdint>    // for int32_t, int64_t
+#include <string>     // for string
 
+#include "config.pb.h"                    // for TeamInfo_TeamType
 #include "config/Persistence.h"           // for Persistence
 #include "config/Position.h"              // for Size
 #include "team_library.pb.h"              // for TeamLibInfo, TeamLibrary
@@ -31,6 +33,7 @@ limitations under the License.
 #include "ui/widget/Widget.h"             // for NO_BORDER
 #include "util/FilesystemPath.h"          // for FilesystemPath
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
+// IWYU pragma: no_include "net/proto2/public/repeated_field.h"
 
 namespace cszb_scoreboard {
 

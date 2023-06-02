@@ -19,18 +19,19 @@ limitations under the License.
 
 #include "ui/dialog/settings/DisplaySettingsPage.h"
 
-#include <string>  // for to_string
+#include <algorithm>  // for max
+#include <string>     // for to_string
 
-#include "ScoreboardCommon.h"      // for DEFAULT_BORDER_SIZE
-#include "config.pb.h"             // for ScreenSide
-#include "config/DisplayConfig.h"  // for DisplayConfig
-#include "config/swx/defs.h"       // for wxALL, wxGROW
-#include "config/swx/event.h"      // for wxCommandEvent (ptr only), wxEVT_C...
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/MainView.h"
-#include "ui/widget/Panel.h"  // for Panel
-#include "ui/widget/PopUp.h"
-#include "util/StringUtil.h"  // for StringUtil
+#include "ScoreboardCommon.h"       // for DEFAULT_BORDER_SIZE
+#include "config.pb.h"              // for ScreenSide
+#include "config/DisplayConfig.h"   // for DisplayConfig
+#include "config/swx/defs.h"        // for operator|, wxDirection, wxStretch
+#include "config/swx/event.h"       // for wxEVT_BUTTON, wxEVT_CHECKBOX
+#include "ui/frame/FrameManager.h"  // for FrameManager
+#include "ui/frame/MainView.h"      // for MainView
+#include "ui/widget/Panel.h"        // for Panel
+#include "ui/widget/PopUp.h"        // for PopUp
+#include "util/StringUtil.h"        // for StringUtil
 
 namespace cszb_scoreboard {
 namespace swx {

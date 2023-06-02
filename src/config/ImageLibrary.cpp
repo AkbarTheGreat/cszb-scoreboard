@@ -19,17 +19,18 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"
 
-#include <algorithm>   // for binary_search, find
+#include <algorithm>   // for max, binary_search, find
 #include <cctype>      // for tolower
-#include <compare>     // for operator<, strong_or...
+#include <compare>     // for operator<
 #include <filesystem>  // for operator==, path
 #include <utility>     // for move
 
-#include "config/Persistence.h"   // for Persistence
-#include "util/FilesystemPath.h"  // for FilesystemPath
-#include "util/Log.h"             // for LogDebug
-#include "util/Singleton.h"       // for Singleton, Singleton...
+#include "config/Persistence.h"                // for Persistence
+#include "util/FilesystemPath.h"               // for FilesystemPath
+#include "util/Log.h"                          // for LogDebug
+#include "util/Singleton.h"                    // for Singleton, SingletonClass
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
+// IWYU pragma: no_include "net/proto2/public/repeated_field.h"
 
 namespace cszb_scoreboard {
 

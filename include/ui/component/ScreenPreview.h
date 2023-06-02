@@ -29,7 +29,6 @@ limitations under the License.
 #include "config.pb.h"                     // for ScreenSide, RenderableText...
 #include "config/Position.h"               // for Size
 #include "ui/component/ScreenText.h"       // for ScreenText
-#include "ui/component/ScreenTextSide.h"   // for OverlayScreenPosition
 #include "ui/component/ScreenThumbnail.h"  // for ScreenThumbnail
 #include "ui/widget/Panel.h"               // for Panel
 #include "util/Singleton.h"                // for Singleton
@@ -38,6 +37,7 @@ namespace cszb_scoreboard {
 class Color;
 class ScreenPresenter;
 class Image;
+enum class OverlayScreenPosition;
 
 namespace swx {
 class Panel;

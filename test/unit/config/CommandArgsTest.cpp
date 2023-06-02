@@ -20,11 +20,10 @@ limitations under the License.
 #include <wx/cmdline.h>  // for wxCmdLineParser
 
 #include <array>   // for array
-#include <memory>  // for unique_ptr, allocator, make_unique
-#include <string>  // for string
+#include <memory>  // for allocator, unique_ptr, make_unique
 
 #include "config/CommandArgs.h"   // for CommandArgs, ARG_LIST
-#include "gtest/gtest.h"          // for AssertionResult, Test, Message, Sui...
+#include "gtest/gtest.h"          // for AssertionResult, Test, Message, Tes...
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "util/Singleton.h"       // for SingletonClass
 

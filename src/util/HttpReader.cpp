@@ -21,8 +21,7 @@ limitations under the License.
 #include <curl/curl.h>  // for curl_easy_setopt, curl_easy_cleanup, curl_e...
 
 #include <cstring>  // for size_t, memcpy
-#include <regex>    // for regex_replace, match_results<>::_Base_type
-#include <sstream>  // for basic_stringbuf<>::int_type, basic_stringbu...
+#include <regex>    // for regex_replace, regex
 
 #include "util/Base64.h"  // for Base64
 #include "util/Log.h"     // for LogDebug

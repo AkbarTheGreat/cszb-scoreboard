@@ -19,7 +19,8 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/ActivityPanel.h"
 
-#include <cassert>  // for assert
+#include <algorithm>  // for max
+#include <cassert>    // for assert
 
 #include "ScoreboardCommon.h"                                   // for DEFAU...
 #include "config/swx/event.h"                                   // for wxEVT...

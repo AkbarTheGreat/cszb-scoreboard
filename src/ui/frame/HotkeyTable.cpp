@@ -18,7 +18,7 @@ limitations under the License.
 
 #include "ui/frame/HotkeyTable.h"
 
-#include <memory>  // for allocator_traits<>::value_type
+#include <algorithm>  // for max
 
 #include "ui/widget/Frame.h"  // for Frame
 

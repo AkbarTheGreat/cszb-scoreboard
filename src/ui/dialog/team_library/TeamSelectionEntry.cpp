@@ -20,13 +20,14 @@ limitations under the License.
 
 #include "ui/dialog/team_library/TeamSelectionEntry.h"
 
-#include <wx/event.h>  // for wxCommandEvent (ptr only), wxEVT_BUTTON
+#include <wx/event.h>  // for wxCommandEvent ...
 
-#include "config/TeamConfig.h"  // for TeamConfig
-#include "team_library.pb.h"    // for TeamLibInfo
-#include "ui/dialog/team_library/TeamSelectionBox.h"
-#include "ui/widget/Button.h"  // for Panel
-#include "ui/widget/Panel.h"   // for Panel
+#include "config.pb.h"                                // for TeamInfo_TeamType
+#include "config/TeamConfig.h"                        // for TeamConfig
+#include "team_library.pb.h"                          // for TeamLibInfo
+#include "ui/dialog/team_library/TeamSelectionBox.h"  // for TeamSelectionBox
+#include "ui/widget/Button.h"                         // for Button
+#include "ui/widget/Panel.h"                          // for Panel
 
 namespace cszb_scoreboard {
 

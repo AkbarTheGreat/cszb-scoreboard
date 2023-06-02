@@ -23,11 +23,15 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"                     // for DEFAULT_BORDER_SIZE
 #include "config/TeamConfig.h"                    // for TeamConfig
-#include "config/swx/event.h"                     // for wxCommandEvent (ptr...
+#include "config/swx/event.h"                     // for wxEVT_COMMAND_BUTTO...
 #include "ui/dialog/settings/TeamSettingsPage.h"  // for TeamSettingsPage
 #include "ui/graphics/Color.h"                    // for Color
 
 namespace cszb_scoreboard {
+namespace proto {
+enum TeamInfo_TeamType : int;
+}  // namespace proto
+
 namespace swx {
 class Panel;
 }  // namespace swx
