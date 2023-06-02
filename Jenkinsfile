@@ -10,23 +10,10 @@ pipeline {
         sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
       }
     }
-    stage('Standard Docker Build') {
+    stage('Docker Build') {
       agent {
         dockerfile {
-          filename 'Dockerfile.standard'
-          additionalBuildArgs "--tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
-          reuseNode true
-        }
-      }
-      steps {
-        sh '''echo "Done"'''
-      }
-    }
-    stage('Osxcross Docker Build') {
-      agent {
-        dockerfile {
-          filename 'Dockerfile.osxcross'
-          additionalBuildArgs "--tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
+          additionalBuildArgs "--target=build_all --tag akbarthegreat/scoreboard_build_${BRANCH_NAME}:latest"
           reuseNode true
         }
       }
@@ -44,8 +31,7 @@ pipeline {
                 }
                 agent {
                     dockerfile {
-                        filename 'Dockerfile.standard'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_lint_${BRANCH_NAME}:latest"
+                        additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_lint_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }
@@ -68,8 +54,7 @@ make all'''
             stage('Debug') {
                 agent {
                     dockerfile {
-                        filename 'Dockerfile.standard'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
+                        additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }
@@ -134,8 +119,7 @@ make -j2 all'''
             stage('Release') {
                 agent {
                     dockerfile {
-                        filename 'Dockerfile.standard'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_release_${BRANCH_NAME}:latest"
+                        additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_release_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }
@@ -180,8 +164,7 @@ make -j2 all'''
             stage('MacOS') {
                 agent {
                     dockerfile {
-                        filename 'Dockerfile.osxcross'
-                        additionalBuildArgs "--tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
+                        additionalBuildArgs "--target=macos_build --tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
                         reuseNode true
                     }
                 }
@@ -215,8 +198,7 @@ make scoreboard_proto cszb-scoreboard'''
       }
       agent {
         dockerfile {
-            filename 'Dockerfile.standard'
-            additionalBuildArgs "--tag akbarthegreat/scoreboard_coverage_${BRANCH_NAME}:latest"
+            additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_coverage_${BRANCH_NAME}:latest"
             reuseNode true
         }
       }
