@@ -132,7 +132,7 @@ sub workdir {
 
 sub cmake {
    my ($docker)   = @_;
-   my $iwyu       = '/usr/bin/iwyu';
+   my $iwyu       = '/usr/local/bin/include-what-you-use';
    my $code_path  = $BASE_DIR;
    my $build_path = $BUILD_PATH;
    if ($docker) {
@@ -141,9 +141,6 @@ sub cmake {
    } else {
       $ENV{'CC'}  = '/usr/bin/clang';
       $ENV{'CXX'} = '/usr/bin/clang++';
-      if ($IS_WSL) {
-         $iwyu = '/usr/local/bin/include-what-you-use';
-      }
    }
    workdir( $docker, $build_path );
    sys( $docker,
@@ -194,7 +191,8 @@ sub run_iwyu {
 
 sub run_fix_include {
    my ($docker) = @_;
-   sys_io( $docker, 'cat', 'iwyu_data.txt', '|', '/usr/bin/fix_include',
+   sys_io( $docker, 'cat', 'iwyu_data.txt', '|',
+           '/usr/local/bin/fix_includes.py',
            '--comments', '--nosafe_headers' );
 }
 

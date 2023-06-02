@@ -176,6 +176,41 @@ RUN tar cvzf protobuf.tgz \
     /usr/local/lib/cmake/protobuf
 
 # ------------------------------------------------------------------------------
+# Include-What-You-Use (iwyu_build)
+#
+# Build IWYU -- Alpine doesn't seem to have a complete include-what-you-use
+# install, so we'll just build our own.
+# ------------------------------------------------------------------------------
+FROM build_baseline AS iwyu_build
+
+RUN apk add --no-cache \
+    clang-dev \
+    clang-static \
+    llvm-dev \
+    llvm-static
+
+ENV IWYU_VERSION clang_16
+
+WORKDIR /iwyu
+RUN git clone https://github.com/include-what-you-use/include-what-you-use.git .
+RUN git fetch --all --tags
+RUN git checkout ${IWYU_VERSION}
+RUN git submodule update --init --recursive
+
+WORKDIR /iwyu/out
+RUN cmake ..
+RUN make all
+RUN make install
+
+WORKDIR /
+RUN tar cvzf iwyu.tgz \
+    /usr/local/bin/include-what-you-use \
+    /usr/local/bin/fix_includes.py \
+    /usr/local/bin/iwyu_tool.py \
+    /usr/local/share/include-what-you-use \
+    /usr/local/share/man/man1/include-what-you-use.1
+
+# ------------------------------------------------------------------------------
 # Osxcross (osxcross_build)
 #
 # Build osxcross -- This builds our LLVM cross-compiler for MacOS builds.
@@ -450,8 +485,7 @@ FROM standard_build AS code_clean
 #    clang-format \
 RUN apk add --no-cache \
     bash \
-    clang16-extra-tools \
-    include-what-you-use \
+    clang-extra-tools \
     perl \
     perl-app-cpanminus \
     py3-pip
@@ -459,6 +493,11 @@ RUN apk add --no-cache \
 RUN cpanm Perl::Tidy
 
 RUN pip install mdformat
+
+WORKDIR /
+# Bring in IWYU
+COPY --from=iwyu_build /iwyu.tgz /
+RUN tar xvzf iwyu.tgz && rm iwyu.tgz
 
 COPY . /cszb-scoreboard
 
