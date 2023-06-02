@@ -361,9 +361,15 @@ RUN tar cvzf wxwidgets.tgz \
 # ------------------------------------------------------------------------------
 # MacOS Scoreboard Build (macos_build)
 #
-# Builds the scoreboard for MacOS -- does not test, as this is a cross-compile
+# Sets up a macos build environment for the scoreboard
 # ------------------------------------------------------------------------------
 FROM osxcross_build_baseline AS macos_build
+
+RUN apk add --no-cache \
+    perl \
+    perl-file-which \
+    perl-list-allutils \
+    zip
 
 WORKDIR /
 # Bring in JsonCpp
@@ -386,21 +392,12 @@ ENV DISPLAY :1
 
 COPY . /cszb-scoreboard
 
-WORKDIR /cszb-scoreboard/out
-CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
-          -DCMAKE_TOOLCHAIN_FILE=${OSXCROSS_ROOT_DIR}/toolchain.cmake \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DOPENSSL_ROOT_DIR=${OSXCROSS_ROOT_DIR}/macports/pkgs/opt/local/libexec/openssl3 \
-          -DSKIP_LINT=true \
-          -DINTEGRATION_TEST=false \
-          ../ && \
-    make -j6 scoreboard_proto cszb-scoreboard
-
+WORKDIR /cszb-scoreboard
 
 # ------------------------------------------------------------------------------
 # Standard Scoreboard Build (standard_build)
 #
-# The default target stage, this builds and tests the scoreboard.
+# Sets up a standard build environment for the scoreboard
 # ------------------------------------------------------------------------------
 FROM gui_build_baseline AS standard_build
 
@@ -436,14 +433,7 @@ ENV DISPLAY :1
 
 COPY . /cszb-scoreboard
 
-WORKDIR /cszb-scoreboard/out
-CMD supervisord -c /root/supervisord.conf && \
-    cmake -DCMAKE_BUILD_TYPE=Debug \
-          -DSKIP_LINT=false \
-          -DCLANG_TIDY_ERRORS=true \
-          -DINTEGRATION_TEST=true \
-          ../ && \
-    make -j6 scoreboard_proto all test
+WORKDIR /cszb-scoreboard
 
 # ------------------------------------------------------------------------------
 # Code Clean Worker (code_clean)
@@ -478,9 +468,35 @@ COPY --from=code_clean /cszb-scoreboard/Dockerfile /code_clean_docker
 CMD echo "Everything is built.  Enjoy."
 
 # ------------------------------------------------------------------------------
-# Default action
+# MacOS Scoreboard Build (macos_test)
 #
-# Just calls standard_build, above.
+# Builds the scoreboard for MacOS -- does not test, as this is a cross-compile
+# ------------------------------------------------------------------------------
+FROM macos_build AS macos_test
+
+WORKDIR /cszb-scoreboard/out
+CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
+          -DCMAKE_TOOLCHAIN_FILE=${OSXCROSS_ROOT_DIR}/toolchain.cmake \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DOPENSSL_ROOT_DIR=${OSXCROSS_ROOT_DIR}/macports/pkgs/opt/local/libexec/openssl3 \
+          -DSKIP_LINT=true \
+          -DINTEGRATION_TEST=false \
+          ../ && \
+    make -j6 scoreboard_proto cszb-scoreboard
+
+# ------------------------------------------------------------------------------
+# Standard test -- default action (standard_test)
+#
+# Uses standard_build to build and test the scoreboard
 # ------------------------------------------------------------------------------
 FROM standard_build
+
+WORKDIR /cszb-scoreboard/out
+CMD supervisord -c /root/supervisord.conf && \
+    cmake -DCMAKE_BUILD_TYPE=Debug \
+          -DSKIP_LINT=false \
+          -DCLANG_TIDY_ERRORS=true \
+          -DINTEGRATION_TEST=true \
+          ../ && \
+    make -j6 scoreboard_proto all test
 

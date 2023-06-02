@@ -39,6 +39,7 @@ package Docker {
     build - If set, the name of the cszb_scoreboard image to load.
     dockerfile - The name of the dockerfile to load.  Only useful if build unset.  Defaults to "Dockerfile"
     context - The context to run Docker in.  Defaults to either the current directory or, in case of a build argument, the root of the repository the current script is running from.
+    target - The target to build in the Dockerfile.  Ignored if build is used, if undef it builds the default target.
     skip_build - Skip building this container.  This should only be done in scripts where the container is known to be built earlier in execution.
     volumes - A map of volumes to mount at construction time.
 
@@ -54,9 +55,9 @@ package Docker {
       my $root;
       if ( $args{'build'} ) {
          $args{'context'} = dirname( dirname($FindBin::RealBin) );
-         $args{'dockerfile'}
-             = $args{'context'} . '/Dockerfile.' . $args{'build'};
-         $root = '/src/cszb-scoreboard/';
+         $args{'target'} = $args{'build'};
+         $args{'dockerfile'} = $args{'context'} . '/Dockerfile';
+         $root = '/cszb-scoreboard/';
       }
       $root //= '/';
 
@@ -65,7 +66,7 @@ package Docker {
                          'verbose' => $args{'verbose'},
                        }, $class;
       $self->workdir(q{});
-      $self->build( $args{'dockerfile'}, $args{'context'} )
+      $self->build( $args{'dockerfile'}, $args{'context'}, $args{'target'} )
           unless $args{'skip_build'};
       $self->start( $args{'volumes'} );
       return $self;
@@ -82,10 +83,13 @@ package Docker {
    }
 
    sub build {
-      my ( $self, $file, $context ) = @_;
+      my ( $self, $file, $context, $target ) = @_;
       $self->log('Building Docker image.');
       my @cmd = ( 'docker', 'build' );
       push @cmd, '-q' unless $self->{'verbose'};
+      if ($target) {
+          push @cmd, '--target=' . $target;
+      }
       push @cmd, ( '-f', $file, '-t', $self->{'name'}, $context );
       if ( system(@cmd) ) {
          die 'Error building Docker image: ' . $? . "\n";
