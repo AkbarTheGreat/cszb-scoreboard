@@ -453,8 +453,10 @@ RUN apk add --no-cache \
     clang16-extra-tools \
     include-what-you-use \
     perl \
-    perl-tidy \
+    perl-app-cpanminus \
     py3-pip
+
+RUN cpanm Perl::Tidy
 
 RUN pip install mdformat
 
