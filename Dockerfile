@@ -432,11 +432,13 @@ WORKDIR /cszb-scoreboard
 CMD echo "Either run macos_test,exec into this container, or run build_osxcross.pl."
 
 # ------------------------------------------------------------------------------
-# Standard Scoreboard Build (standard_build)
+# Standard Scoreboard Build Base (standard_build_base)
 #
-# Sets up a standard build environment for the scoreboard
+# Everything except copying source in for standard builds -- this is the base for
+# both the standard build as well as the code_clean images -- split up this way to
+# best leverage a lot of stage caching.
 # ------------------------------------------------------------------------------
-FROM gui_build_baseline AS standard_build
+FROM gui_build_baseline AS standard_build_base
 
 RUN apk add --no-cache \
     faenza-icon-theme \
@@ -468,6 +470,13 @@ RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 
 ENV DISPLAY :1
 
+# ------------------------------------------------------------------------------
+# Standard Scoreboard Build (standard_build)
+#
+# Sets up a standard build environment for the scoreboard
+# ------------------------------------------------------------------------------
+FROM standard_build_base AS standard_build
+
 COPY . /cszb-scoreboard
 
 WORKDIR /cszb-scoreboard
@@ -480,7 +489,7 @@ CMD echo "Either run without a target or exec into this container."
 # A container for use in clean_code.pl, as a method of running various code
 # cleanup and static analysis tools.
 # ------------------------------------------------------------------------------
-FROM standard_build AS code_clean
+FROM standard_build_base AS code_clean
 
 #    clang-format \
 RUN apk add --no-cache \
