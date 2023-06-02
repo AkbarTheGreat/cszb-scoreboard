@@ -39,7 +39,7 @@ use Docker;
 our $BASE_DIR          = Cwd::cwd();
 our $DOCKER_BUILD_PATH = '/src/out/iwyu';
 our $BUILD_PATH        = $BASE_DIR . q{/out/iwyu};
-my $DOCKER_ROOT = '/src/cszb-scoreboard';
+my $DOCKER_ROOT = '/cszb-scoreboard';
 
 our @SKIP_MARKDOWN_FILES = qw(
     cmake/modules/README.md

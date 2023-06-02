@@ -394,6 +394,8 @@ COPY . /cszb-scoreboard
 
 WORKDIR /cszb-scoreboard
 
+CMD echo "Either run macos_test,exec into this container, or run build_osxcross.pl."
+
 # ------------------------------------------------------------------------------
 # Standard Scoreboard Build (standard_build)
 #
@@ -435,6 +437,8 @@ COPY . /cszb-scoreboard
 
 WORKDIR /cszb-scoreboard
 
+CMD echo "Either run without a target or exec into this container."
+
 # ------------------------------------------------------------------------------
 # Code Clean Worker (code_clean)
 #
@@ -445,11 +449,18 @@ FROM standard_build AS code_clean
 
 #    clang-format \
 RUN apk add --no-cache \
+    bash \
+    clang16-extra-tools \
     include-what-you-use \
     perl \
+    perl-tidy \
     py3-pip
 
+RUN pip install mdformat
+
 COPY . /cszb-scoreboard
+
+WORKDIR /cszb-scoreboard
 
 CMD echo "Please run etc/scripts/clean_code.pl"
 
