@@ -541,7 +541,7 @@ CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
 #
 # Uses standard_build to build and test the scoreboard
 # ------------------------------------------------------------------------------
-FROM standard_build
+FROM standard_build AS standard_test
 
 WORKDIR /cszb-scoreboard/out
 CMD supervisord -c /root/supervisord.conf && \

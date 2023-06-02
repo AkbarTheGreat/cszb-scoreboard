@@ -7,8 +7,8 @@
 docker build --target=build_all .
 
 # Create some tags, for convenience.
-docker build --target=standard_build -t scoreboard .
-docker build --target=macos_build    -t osxcross   .
-docker build --target=code_clean     -t code_clean .
+docker build --target=standard_test -t scoreboard .
+docker build --target=macos_test    -t osxcross   .
+docker build --target=code_clean    -t code_clean .
 
 
