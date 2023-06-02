@@ -54,10 +54,10 @@ package Docker {
 
       my $root;
       if ( $args{'build'} ) {
-         $args{'context'} = dirname( dirname($FindBin::RealBin) );
-         $args{'target'} = $args{'build'};
+         $args{'context'}    = dirname( dirname($FindBin::RealBin) );
+         $args{'target'}     = $args{'build'};
          $args{'dockerfile'} = $args{'context'} . '/Dockerfile';
-         $root = '/cszb-scoreboard/';
+         $root               = '/cszb-scoreboard/';
       }
       $root //= '/';
 
@@ -88,7 +88,7 @@ package Docker {
       my @cmd = ( 'docker', 'build' );
       push @cmd, '-q' unless $self->{'verbose'};
       if ($target) {
-          push @cmd, '--target=' . $target;
+         push @cmd, '--target=' . $target;
       }
       push @cmd, ( '-f', $file, '-t', $self->{'name'}, $context );
       if ( system(@cmd) ) {

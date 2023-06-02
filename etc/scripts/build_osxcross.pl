@@ -244,16 +244,16 @@ sub internal_build {
 sub run_docker {
    my @args = ( '--version', $opt_version, '--internal_run' );
    push @args, '--test_build' if $opt_test_build;
-   push @args, '--noisy' if $opt_verbose;
+   push @args, '--noisy'      if $opt_verbose;
 
    mkpath( $BASE_DIR . q{/} . $PACKAGE_PATH );
    my $docker = Docker->new( 'build'   => 'macos_build',
                              'name'    => $DOCKER_TAG,
                              'verbose' => 1,
                              'volumes' => {
-                                      $BASE_DIR . q{/}
-                                    . $PACKAGE_PATH => '/cszb-scoreboard/'
-                                    . $PACKAGE_PATH
+                                          $BASE_DIR . q{/}
+                                        . $PACKAGE_PATH => '/cszb-scoreboard/'
+                                        . $PACKAGE_PATH
                              },
                            );
 
