@@ -131,9 +131,6 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libpcre.a
 	${macports_lib_dir}/libpcrecpp.a
 	${macports_lib_dir}/libpcreposix.a
-	${macports_lib_dir}/libprotobuf.a
-	${macports_lib_dir}/libprotobuf-lite.a
-	${macports_lib_dir}/libprotoc.a
 	${macports_lib_dir}/libpsl.a
 	${macports_lib_dir}/libssl.a
 	${macports_lib_dir}/libunistring.a
