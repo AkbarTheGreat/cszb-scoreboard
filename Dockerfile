@@ -445,6 +445,7 @@ RUN apk add --no-cache \
     faenza-icon-theme \
     openssl-dev \
     supervisor \
+    valgrind \
     x11vnc \
     xfce4 \
     xvfb
