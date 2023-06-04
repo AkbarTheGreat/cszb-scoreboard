@@ -451,10 +451,9 @@ RUN apk add --no-cache \
     xfce4 \
     xvfb
 
-WORKDIR /root
+WORKDIR /
 COPY etc/docker/supervisord.conf  ./
 
-WORKDIR /
 # Bring in Curl
 COPY --from=curl_build /curl.tgz /
 RUN tar xvzf curl.tgz && rm curl.tgz
@@ -555,7 +554,7 @@ CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
 FROM standard_build AS standard_test
 
 WORKDIR /cszb-scoreboard/out
-CMD supervisord -c /root/supervisord.conf && \
+CMD supervisord -c /supervisord.conf && \
     cmake -DCMAKE_BUILD_TYPE=Debug \
           -DSKIP_LINT=false \
           -DCLANG_TIDY_ERRORS=true \

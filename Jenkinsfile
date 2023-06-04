@@ -14,7 +14,6 @@ pipeline {
       agent {
         dockerfile {
           additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
-          args "-u root"
           reuseNode true
         }
       }
@@ -26,7 +25,6 @@ pipeline {
       agent {
         dockerfile {
           additionalBuildArgs "--target=macos_build --tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
-          args "-u root"
           reuseNode true
         }
       }
@@ -45,7 +43,6 @@ pipeline {
                 agent {
                     dockerfile {
                         additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_lint_${BRANCH_NAME}:latest"
-                        args "-u root"
                         reuseNode true
                     }
                 }
@@ -69,7 +66,6 @@ make all'''
                 agent {
                     dockerfile {
                         additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
-                        args "-u root"
                         reuseNode true
                     }
                 }
@@ -135,7 +131,6 @@ make -j2 all'''
                 agent {
                     dockerfile {
                         additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_release_${BRANCH_NAME}:latest"
-                        args "-u root"
                         reuseNode true
                     }
                 }
@@ -181,7 +176,6 @@ make -j2 all'''
                 agent {
                     dockerfile {
                         additionalBuildArgs "--target=macos_build --tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
-                        args "-u root"
                         reuseNode true
                     }
                 }
@@ -216,7 +210,6 @@ make scoreboard_proto cszb-scoreboard'''
       agent {
         dockerfile {
             additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_coverage_${BRANCH_NAME}:latest"
-            args "-u root"
             reuseNode true
         }
       }
@@ -275,7 +268,7 @@ def executeValgrind() {
 
 def runTests(testDir, isIntegration) {
     if (isIntegration) {
-        sh 'supervisord -c /root/supervisord.conf'
+        sh 'supervisord -c /supervisord.conf'
         ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
     } else {
         ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
