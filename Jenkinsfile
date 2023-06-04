@@ -234,9 +234,8 @@ make scoreboard_proto cszb-scoreboard'''
 
 def valgrindRun(isIntegration) {
     if (isIntegration) {
-        wrap(delegate: [$class: 'Xvnc', takeScreenshot: true, useXauthority: true]) {
-            executeValgrind()
-        }
+        sh 'sudo supervisord -c /supervisord.conf'
+        executeValgrind()
     } else {
         executeValgrind()
     }
