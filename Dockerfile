@@ -32,6 +32,7 @@ RUN echo "jenkins ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 FROM build_baseline AS gui_build_baseline
 
 RUN apk add --no-cache \
+    gstreamer-dev \
     gtk+3.0-dev \
 	libnotify-dev \
 	libsecret-dev \
@@ -342,6 +343,7 @@ RUN cmake .. \
     -DwxBUILD_TOOLKIT=gtk3 \
     -DwxBUILD_STRIPPED_RELEASE=OFF \
     -DwxUSE_XLOCALE=OFF \
+    -DwxUSE_MEDIACTRL=ON \
     -DwxUSE_WEBVIEW=ON
 RUN make all
 RUN make install
@@ -402,6 +404,7 @@ RUN cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DwxBUILD_PRECOMP=OFF \
     -DwxBUILD_SHARED=OFF \
+    -DwxUSE_MEDIACTRL=ON \
     -DwxUSE_WEBVIEW=ON
 RUN make all
 RUN make install
