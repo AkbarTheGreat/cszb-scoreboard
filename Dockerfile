@@ -11,12 +11,16 @@ RUN apk add --no-cache \
     clang \
     clang-extra-tools \
     cmake \
-    git
+    git \
+    sudo
 
 ENV CC /usr/bin/clang
 ENV CXX /usr/bin/clang++
 ENV USER root
 ENV UNATTENDED 1
+
+RUN adduser -Du 1001 jenkins
+RUN echo "jenkins ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # ------------------------------------------------------------------------------
 # Gui Baseline (gui_build_baseline)
