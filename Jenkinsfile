@@ -86,6 +86,7 @@ make -j2 all'''
 					stage('Debug Test') {
 						steps {
 							retry(count: 3) {
+                                sh 'supervisord -c /root/supervisord.conf'
 								runTests('Debug', runFullPipeline())
 							}
 						}
@@ -268,7 +269,6 @@ def executeValgrind() {
 
 def runTests(testDir, isIntegration) {
     if (isIntegration) {
-        sh 'supervisord -c /root/supervisord.conf'
         ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
     } else {
         ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
