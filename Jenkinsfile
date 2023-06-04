@@ -268,9 +268,8 @@ def executeValgrind() {
 
 def runTests(testDir, isIntegration) {
     if (isIntegration) {
-        wrap(delegate: [$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-            ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
-        }
+        sh 'supervisord -c /root/supervisord.conf'
+        ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
     } else {
         ctest(installation: 'AutoInstall', workingDir: "out/build/${testDir}", arguments: '-T Test --output-on-failure --no-compress-output')
     }
