@@ -443,6 +443,7 @@ FROM gui_build_baseline AS standard_build_base
 
 RUN apk add --no-cache \
     faenza-icon-theme \
+    gcovr \
     openssl-dev \
     supervisor \
     valgrind \
