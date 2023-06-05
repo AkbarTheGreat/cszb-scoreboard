@@ -446,6 +446,7 @@ CMD echo "Either run macos_test,exec into this container, or run build_osxcross.
 FROM gui_build_baseline AS standard_build_base
 
 RUN apk add --no-cache \
+    compiler-rt \
     faenza-icon-theme \
     gcovr \
     openssl-dev \
