@@ -335,6 +335,7 @@ function(setup_target_for_coverage_gcovr_xml)
         # Running gcovr
         COMMAND ${GCOVR_PATH} --xml
             -r ${BASEDIR} ${GCOVR_EXCLUDE_ARGS}
+            ${EXTRA_GCOVR_ARGS}
             --object-directory=${PROJECT_BINARY_DIR}
             -o ${Coverage_NAME}.xml
         BYPRODUCTS ${Coverage_NAME}.xml
@@ -410,6 +411,7 @@ function(setup_target_for_coverage_gcovr_html)
         # Running gcovr
         COMMAND ${GCOVR_PATH} --html --html-details
             -r ${BASEDIR} ${GCOVR_EXCLUDE_ARGS}
+            ${EXTRA_GCOVR_ARGS}
             --object-directory=${PROJECT_BINARY_DIR}
             -o ${Coverage_NAME}/index.html
 

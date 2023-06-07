@@ -251,6 +251,7 @@ package_add_macos_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTe
  
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)
+    set(EXTRA_GCOVR_ARGS "--merge-mode-functions=separate")
     append_coverage_compiler_flags()
     file(RELATIVE_PATH BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     list(APPEND COVERAGE_EXCLUDES "${BUILD_DIR}/*")

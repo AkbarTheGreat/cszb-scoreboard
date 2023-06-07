@@ -449,6 +449,7 @@ RUN apk add --no-cache \
     compiler-rt \
     faenza-icon-theme \
     gcovr \
+    llvm \
     openssl-dev \
     supervisor \
     valgrind \
@@ -476,6 +477,7 @@ COPY --from=wxwidgets_build /wxwidgets.tgz /
 RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 
 ENV DISPLAY :1
+ENV GCOV llvm-cov gcov
 
 # ------------------------------------------------------------------------------
 # Standard Scoreboard Build (standard_build)
@@ -550,6 +552,21 @@ CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
           -DINTEGRATION_TEST=false \
           ../ && \
     make -j6 scoreboard_proto cszb-scoreboard
+
+# ------------------------------------------------------------------------------
+# Coverage Generation -- (generate_cov)
+#
+# Uses standard_build to build, test, and generate coverage info for the scoreboard
+# ------------------------------------------------------------------------------
+FROM standard_build AS generate_cov
+
+WORKDIR /cszb-scoreboard/out
+CMD cmake -DCMAKE_BUILD_TYPE=Debug \
+          -DENABLE_CODE_COVERAGE=true \
+          -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING \
+          ../ && \
+    make -j6 scoreboard_proto all cszb-scoreboard-xml-coverage
+#cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING ../ 
 
 # ------------------------------------------------------------------------------
 # Standard test -- default action (standard_test)
