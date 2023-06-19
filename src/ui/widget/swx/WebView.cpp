@@ -25,8 +25,6 @@ limitations under the License.
 
 namespace cszb_scoreboard::swx {
 
-#ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
-
 #ifdef _WIN32
 #define WX_WEB_ENGINE                                                        \
   wxWebView::IsBackendAvailable(wxWebViewBackendEdge) ? wxWebViewBackendEdge \
@@ -66,7 +64,5 @@ void WebView::RunScript(const std::string &script) {
     _wx->RunScript(script);
   }
 }
-
-#endif  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 
 }  // namespace cszb_scoreboard::swx

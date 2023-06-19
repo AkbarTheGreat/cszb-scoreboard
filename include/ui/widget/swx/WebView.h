@@ -37,8 +37,6 @@ class wxEventTypeTag;
 
 namespace cszb_scoreboard::swx {
 
-#ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
-
 class WebView {
  public:
   explicit WebView(wxWindow *parent,
@@ -61,27 +59,5 @@ class WebView {
  private:
   wxWebView *_wx;
 };
-
-#else  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
-
-// Stub to satisfy a linker, intentionally non-functional
-class WebView {
- public:
-  explicit WebView(wxWindow *parent, const wxString &url = "",
-                   wxWindowID id = wxID_ANY,
-                   const wxPoint &pos = wxDefaultPosition,
-                   const wxSize &size = wxDefaultSize,
-                   const wxString &backend = "", int64_t style = 0,
-                   const wxString &name = "") {}
-  auto valid() const -> bool { return false; }
-  auto wx() -> wxWebView * { return nullptr; }
-  void Bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
-            const std::function<void(wxWebViewEvent &)> &lambda,
-            int id = wxID_ANY) const {}
-  void LoadURL(const std::string &url) {}
-  void RunScript(const std::string &script) {}
-};
-
-#endif  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 
 }  // namespace cszb_scoreboard::swx

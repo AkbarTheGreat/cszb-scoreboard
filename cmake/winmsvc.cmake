@@ -72,13 +72,8 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/wxpngd.lib
 			${wxWidgets_LIB_DIR}/wxtiffd.lib
 			${wxWidgets_LIB_DIR}/wxzlibd.lib
+			${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
 		)
-		if (IMAGE_SEARCH)
-			set(wxWidgets_LIBRARIES
-				${wxWidgets_LIBRARIES}
-				${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
-			)
-		endif() # if IMAGE_SEARCH
 	else() # Using VCPKG
 		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/debug/lib)
 		include_directories(SYSTEM INTERFACE ${VCPKG_BASE}/debug/lib/mswud ${VCPKG_BASE}/include)
@@ -98,13 +93,8 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_core.lib
 			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}ud.lib
 			${wxWidgets_LIB_DIR}/wxregexud.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_webview.lib
 		)
-		if (IMAGE_SEARCH)
-			set(wxWidgets_LIBRARIES
-				${wxWidgets_LIBRARIES}
-				${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_webview.lib
-			)
-		endif() # if IMAGE_SEARCH
 	else() # Dynamic linking
 		message(FATAL_ERROR "Dynamic linking not currently supported.")
 	endif() # if LINKING_TYPE == "static"
@@ -118,13 +108,8 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 			${wxWidgets_LIB_DIR}/wxpng.lib
 			${wxWidgets_LIB_DIR}/wxtiff.lib
 			${wxWidgets_LIB_DIR}/wxzlib.lib
+			${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
 		)
-		if (IMAGE_SEARCH)
-			set(wxWidgets_LIBRARIES
-				${wxWidgets_LIBRARIES}
-				${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
-			)
-		endif() # if IMAGE_SEARCH
 	else() # Using VCPKG
 		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/lib)
 		include_directories(SYSTEM INTERFACE ${VCPKG_BASE}/lib/mswu ${VCPKG_BASE}/inclde)
@@ -144,13 +129,8 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_core.lib
 			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}u.lib
 			${wxWidgets_LIB_DIR}/wxregexu.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_webview.lib
 		)
-		if (IMAGE_SEARCH)
-			set(wxWidgets_LIBRARIES
-				${wxWidgets_LIBRARIES}
-				${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_webview.lib
-			)
-		endif() # if IMAGE_SEARCH
 	else() # Dynamic linking
 		message(FATAL_ERROR "Dynamic linking not currently supported.")
 	endif() # if LINKING_TYPE == "static"

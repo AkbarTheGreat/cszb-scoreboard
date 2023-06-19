@@ -20,9 +20,7 @@ limitations under the License.
 #include "ui/component/control/ImageSearch.h"
 
 #include <wx/defs.h>  // for wxTOP
-#ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 #include <wx/webview.h>  // for wxEVT_WEBVIEW_LOADED
-#endif                   // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
 
 #include <cstdint>  // for int32_t
 #include <string>   // for string
@@ -107,12 +105,10 @@ void ImageSearch::bindEvents() {
       [this](int32_t x, int32_t y, const std::string &url) -> void {
         this->onURLDrop(url);
       });
-#ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
   // If IS is disabled, wxWebViewEvent isn't linkable, so skip in compilation.
   browser->bind(wxEVT_WEBVIEW_LOADED, [this](wxWebViewEvent &e) -> void {
     this->tweakGoogleImages();
   });
-#endif  // #ifdef SCOREBOARD_ENABLE_IMAGE_SEARCH
   reset_button->bind(wxEVT_COMMAND_BUTTON_CLICKED,
                      [this](wxCommandEvent &e) -> void { this->resetURL(); });
 }

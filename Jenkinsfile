@@ -50,7 +50,7 @@ pipeline {
                     stage('Lint Cmake Generation') {
 						steps {
 							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
-									cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true -DIMAGE_SEARCH=true'
+									cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
 							)
 						}
 					}
@@ -219,7 +219,7 @@ make scoreboard_proto cszb-scoreboard'''
           buildDir: 'out/build/Coverage',
           buildType: 'Debug',
           cleanBuild: true,
-          cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DIMAGE_SEARCH=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
+          cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
         retry(count: 3) {
           sh '''cd out/build/Coverage
             make -j3 all cszb-scoreboard-xml-coverage
