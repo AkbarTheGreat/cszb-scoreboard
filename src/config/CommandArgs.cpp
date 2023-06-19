@@ -47,11 +47,6 @@ CommandArgs::CommandArgs(SingletonClass c) {
 }
 
 auto CommandArgs::autoUpdate() const -> bool { return auto_update; }
-// For consistency in call sites, leave this as a non-static method.
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-auto CommandArgs::enableImageSearch() const -> bool {
-  return true;
-}
 auto CommandArgs::resetConfig() const -> bool { return reset_config; }
 auto CommandArgs::commandPath() -> FilesystemPath { return command_path; }
 

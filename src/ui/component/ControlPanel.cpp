@@ -44,9 +44,7 @@ ControlPanel::ControlPanel(swx::Notebook* wx, Singleton* singleton)
   addController(std::move(ScoreControl::Create(childPanel())), "Score");
   addController(std::move(ImageFromLibrary::Create(childPanel())),
                 "Image Library");
-  if (singleton->commandArgs()->enableImageSearch()) {
-    addController(std::move(ImageSearch::Create(childPanel())), "Image Search");
-  }
+  addController(std::move(ImageSearch::Create(childPanel())), "Image Search");
   addController(std::move(LocalImage::Create(childPanel())), "Load Image");
   addController(std::move(ThingsMode::Create(childPanel())), "5/6 Things");
   addController(std::move(TextEntry::Create(childPanel())), "Text");

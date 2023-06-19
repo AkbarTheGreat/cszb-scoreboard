@@ -45,7 +45,6 @@ class CommandArgs {
                     const wxCmdLineArgsArray &argv);
 
   // flag getters
-  [[nodiscard]] auto enableImageSearch() const -> bool;
   [[nodiscard]] auto autoUpdate() const -> bool;
   [[nodiscard]] auto resetConfig() const -> bool;
   auto commandPath() -> FilesystemPath;
