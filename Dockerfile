@@ -260,7 +260,8 @@ RUN ./build.sh
 RUN osxcross-macports fake-install \
     geoclue2 \
     graphviz \
-    py311
+    py311 \
+    xorg
 
 # Real Macports dependencies
 RUN osxcross-macports install \
