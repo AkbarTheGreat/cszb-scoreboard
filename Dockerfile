@@ -451,6 +451,7 @@ RUN apk add --no-cache \
     faenza-icon-theme \
     gcovr \
     llvm \
+    mesa-dri-gallium \
     openssl-dev \
     supervisor \
     valgrind \
@@ -479,6 +480,8 @@ RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 
 ENV DISPLAY :1
 ENV GCOV llvm-cov gcov
+
+EXPOSE 5900
 
 # ------------------------------------------------------------------------------
 # Standard Scoreboard Build (standard_build)
@@ -567,7 +570,6 @@ CMD cmake -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING \
           ../ && \
     make -j6 scoreboard_proto all cszb-scoreboard-xml-coverage
-#cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING ../ 
 
 # ------------------------------------------------------------------------------
 # Standard test -- default action (standard_test)
