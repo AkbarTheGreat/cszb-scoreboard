@@ -44,12 +44,7 @@ class ScreenPreview;
 
 namespace cszb_scoreboard::test {
 
-#ifdef _WIN32
-// Image Search is only enabled on win32, so it shifts text entry over by one.
 const int TEXT_ENTRY_TAB_INDEX = 5;
-#else   // #ifdef _WIN32
-const int TEXT_ENTRY_TAB_INDEX = 4;
-#endif  // #ifdef _WIN32
 
 const std::array<const char *, 2> TEST_ARGV = {
     {"scoreboard_testing.exe", "-n"}};
