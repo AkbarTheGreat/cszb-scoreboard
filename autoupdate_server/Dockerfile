@@ -17,6 +17,7 @@ RUN cpanm \
     Mojolicious::Plugin::AccessLog \
     MooseX::Privacy \
     MooseX::Singleton \
+    Redis \
     Smart::Comments
 
 COPY ./app /updater
