@@ -42,12 +42,13 @@ if(NOT WXWIDGETS_VERSION)
 endif()
 
 set(OSX_FRAMEWORKS
-	"-framework IOKit"
+	"-framework AudioToolbox"
 	"-framework Carbon"
 	"-framework Cocoa"
-	"-framework AudioToolbox"
-	"-framework System"
+	"-framework IOKit"
 	"-framework OpenGL"
+	"-framework System"
+	"-framework SystemConfiguration"
 	"-framework WebKit"
 	)
 
