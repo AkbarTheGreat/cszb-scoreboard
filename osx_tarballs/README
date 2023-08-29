@@ -1,1 +1,0 @@
-Place tarballs for osxcross SDKs here (as referenced in https://github.com/tpoechtrager/osxcross#packaging-the-sdk).  This directory is ignored by git, the tarballs themselves should not be checked in.
