@@ -180,6 +180,7 @@ function(package_add_test TESTNAME HAS_OWN_MAIN)
         # set a working directory so your project root so that you can find test data via paths relative to the project root
         WORKING_DIRECTORY ${PROJECT_DIR}
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
+        XML_OUTPUT_DIR gtest
     )
     set_target_properties(${TESTNAME} PROPERTIES FOLDER test CXX_CLANG_TIDY "${LINT_OPTION}")
 endfunction()

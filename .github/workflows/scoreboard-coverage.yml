@@ -1,0 +1,75 @@
+name: Scoreboard Coverage
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # 2 am every morning
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    container:
+      image:  "ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}:latest"
+
+    strategy:
+      fail-fast: true
+
+      matrix:
+        target_os: [linux]
+        build_type: [Debug]
+        include:
+          - target_os: linux
+            docker_target: standard_build
+            os: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings
+      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        echo "docker-tag=ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}:latest" >> $GITHUB_OUTPUT
+
+    - name: Configure Cmake
+      run: >
+        cmake -B out/${{ matrix.build_type }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DSKIP_LINT=false
+        -DINTEGRATION_TEST=true
+        -DENABLE_CODE_COVERAGE=true
+        -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING
+  
+    - name: Build
+      run: >
+        cmake --build out/${{ matrix.build_type }} --parallel 4 --config ${{ matrix.build_type }}
+
+    - name: Test
+      run: >
+        etc/github_actions/run_automated_tests.sh ${{ matrix.build_type }}
+
+    - name: Coverage
+      run: >
+        etc/github_actions/run_coverage_tests.sh ${{ matrix.build_type }}
+
+    - name: Archive test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.build_type }}
+        path: |
+            out/${{ matrix.build_type }}/gtest/**/*.xml
+            out/${{ matrix.build_type }}/Testing/**/*.xml
+
+    - name: Test Report
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: out/${{ matrix.build_type }}/gtest/**/*.xml
+
+    - name: Coverage Report
+      uses: 5monkeys/cobertura-action@master
+      with:
+        path: out/${{ matrix.build_type }}/cszb-scoreboard-xml-coverage.xml
+        minimum_coverage: 25
