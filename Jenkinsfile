@@ -5,11 +5,6 @@ pipeline {
   }
 
   stages {
-    stage('MacOS Prep') {
-      steps {
-        sh '''cp /usr/share/osx_tarballs/* osx_tarballs/'''
-      }
-    }
     stage('Standard Docker Build') {
       agent {
         dockerfile {
