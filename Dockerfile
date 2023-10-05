@@ -8,6 +8,7 @@ FROM alpine:3.18 AS build_baseline
 
 RUN apk add --no-cache \
     alpine-sdk \
+    bash \
     clang \
     clang-extra-tools \
     cmake \
@@ -223,7 +224,6 @@ RUN tar cvzf iwyu.tgz \
 FROM osxcross_build_baseline AS osxcross_build
 
 RUN apk add --no-cache \
-    bash \
     libxml2-dev \
     musl-fts-dev \
     openssl-dev \
@@ -231,6 +231,7 @@ RUN apk add --no-cache \
 
 ENV OSXCROSS_SDK_VERSION 12.3
 ENV OSXCROSS_SDK_FILE MacOSX${OSXCROSS_SDK_VERSION}.sdk
+ENV OSXCROSS_SDK_ZIP ${OSXCROSS_SDK_FILE}.tar.xz
 
 ENV OSXCROSS_BASE_DIR      /osxcross
 # While we're building osxcross, the target is the location we build into -- 
@@ -246,14 +247,15 @@ ENV OSXCROSS_CCTOOLS_PATH  ${OSXCROSS_BASE_DIR}/target/bin
 
 ENV PATH ${OSXCROSS_BASE_DIR}/target/bin:${PATH}
 
-WORKDIR /osxcross
+WORKDIR ${OSXCROSS_BASE_DIR}
 RUN git clone https://github.com/tpoechtrager/osxcross.git .
 RUN git fetch --all --tags
 RUN git submodule update --init --recursive
 
-COPY osx_tarballs/${OSXCROSS_SDK_FILE}.tar.bz2 /osxcross/tarballs/
+WORKDIR ${OSXCROSS_TARBALL_DIR}
+RUN wget https://github.com/joseluisq/macosx-sdks/releases/download/12.3/${OSXCROSS_SDK_ZIP}
 
-WORKDIR /osxcross
+WORKDIR ${OSXCROSS_BASE_DIR}
 RUN ./build.sh
 
 # Fake Macports Dependencies
@@ -287,7 +289,7 @@ RUN osxcross-macports install \
     zlib
 
 # Patch some macports files that need tweaks
-COPY etc/osxcross_patches/ /osxcross/target/
+COPY etc/osxcross_patches/ ${OSXCROSS_TARGET_DIR}
 
 # Move everything to where we'd like it to be in a dependent image
 RUN mv ${OSXCROSS_TARGET_DIR} ${OSXCROSS_ROOT_DIR}
