@@ -48,13 +48,13 @@ FROM build_baseline AS osxcross_build_baseline
 RUN apk add --no-cache \
 	cairo-dev
 
-ENV OSXCROSS_VERSION 1.4;
+ENV OSXCROSS_SDK_VERSION 14.0
 ENV MACOSX_DEPLOYMENT_TARGET 10.9
 ENV OSXCROSS_OSX_VERSION_MIN 10.9
 
-ENV OSXCROSS_SDK    darwin21.4
-ENV OSXCROSS_TARGET darwin21.4
-ENV OSXCROSS_HOST x86_64-apple-darwin21.4
+ENV OSXCROSS_SDK    darwin23
+ENV OSXCROSS_TARGET ${OSXCROSS_SDK}
+ENV OSXCROSS_HOST x86_64-apple-${OSXCROSS_SDK}
 ENV OSXCROSS_ROOT_DIR /opt/osxcross
 ENV OSXCROSS_TARGET_DIR ${OSXCROSS_ROOT_DIR}
 
@@ -229,7 +229,6 @@ RUN apk add --no-cache \
     openssl-dev \
     python3
 
-ENV OSXCROSS_SDK_VERSION 12.3
 ENV OSXCROSS_SDK_FILE MacOSX${OSXCROSS_SDK_VERSION}.sdk
 ENV OSXCROSS_SDK_ZIP ${OSXCROSS_SDK_FILE}.tar.xz
 
@@ -253,33 +252,34 @@ RUN git fetch --all --tags
 RUN git submodule update --init --recursive
 
 WORKDIR ${OSXCROSS_TARBALL_DIR}
-RUN wget https://github.com/joseluisq/macosx-sdks/releases/download/12.3/${OSXCROSS_SDK_ZIP}
+RUN wget https://github.com/joseluisq/macosx-sdks/releases/download/${OSXCROSS_SDK_VERSION}/${OSXCROSS_SDK_ZIP}
 
 WORKDIR ${OSXCROSS_BASE_DIR}
 RUN ./build.sh
 
 # Fake Macports Dependencies
 RUN osxcross-macports fake-install \
+    curl-ca-bundle \
     geoclue2 \
     graphviz \
+    libedit \
+    libiconv \
+    libpsl \
     py311 \
-    xorg
+    xorg \
+    xorg-xorgproto
 
 # Real Macports dependencies
 RUN osxcross-macports install \
     bzip2 \
     curl \
-    curl-ca-bundle \
     expat \
     gettext \
     glib2 \
     gtest \
     jsoncpp-devel \
-    libedit \
     libffi \
-    libiconv \
     libidn2 \
-    libpsl \
     libunistring \
     ncurses \
     openssl \
