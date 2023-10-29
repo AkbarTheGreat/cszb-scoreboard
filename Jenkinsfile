@@ -1,200 +1,246 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'scoreboard-worker'
+    }
+  }
   triggers {
     cron('00 04 * * *') //run at 4 am
   }
 
   stages {
     stage('Standard Docker Build') {
-      agent {
-        dockerfile {
-          additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
-          reuseNode true
-        }
-      }
       steps {
-        sh '''echo "Done"'''
+        sh """kubectl build -t \\
+            | docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME} \\
+            | --target=standard_build \\
+            | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard \\
+            | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard \\
+            | --registry-secret=local-cred --push . """.stripMargin()
       }
     }
     stage('Osxcross Docker Build') {
-      agent {
-        dockerfile {
-          additionalBuildArgs "--target=macos_build --tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
-          reuseNode true
-        }
-      }
       steps {
-        sh '''echo "Done"'''
+        sh """kubectl build -t \\
+            | docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME} \\
+            | --target=macos_build \\
+            | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos \\
+            | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos \\
+            | --registry-secret=local-cred --push . """.stripMargin()
       }
     }
     stage ('Build & Test') {
-        parallel {
-            stage('Lint') {
-                when {
-                    expression {
-                        return runFullPipeline()
-                    }
-                }
-                agent {
-                    dockerfile {
-                        additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_lint_${BRANCH_NAME}:latest"
-                        reuseNode true
-                    }
-                }
-                stages {
-                    stage('Lint Cmake Generation') {
-						steps {
-							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
-									cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
-							)
-						}
-					}
-					stage('Lint Build') {
-						steps {
-							sh '''cd out/build/Linter
-make all'''
-						}
-					}
-                }
+      parallel {
+        stage('Lint') {
+          when {
+            expression {
+              return runFullPipeline()
             }
-            stage('Debug') {
-                agent {
-                    dockerfile {
-                        additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_debug_${BRANCH_NAME}:latest"
-                        reuseNode true
-                    }
-                }
-                stages {
-                    stage('Debug Cmake Generation') {
-						steps {
-							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',
-									cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
-							)
-						}
-					}
-					stage('Debug Build') {
-						steps {
-							sh '''cd out/build/Debug
-make -j2 all'''
-						}
-					}
-					stage('Debug Test') {
-						steps {
-							retry(count: 3) {
-								runTests('Debug', runFullPipeline())
-							}
-						}
-					    post {
-							always {
-							archiveArtifacts(artifacts: 'out/build/Debug/Testing/**/*.xml', fingerprint: true)
-							xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
-								skipped(failureThreshold: '0'),
-								failed(failureThreshold: '0')
-								], tools: [CTest(
-								pattern: 'out/build/Debug/Testing/**/*.xml',
-								deleteOutputFiles: false,
-								failIfNotNew: false,
-								skipNoTestFiles: true,
-								stopProcessingIfError: true
-								)])
-							}
-						}
-					}
-					stage('Valgrind') {
-						steps {
-							valgrindRun(runFullPipeline())
-	
-							publishValgrind (
-							failBuildOnInvalidReports: false,
-							failBuildOnMissingReports: false,
-							failThresholdDefinitelyLost: '',
-							failThresholdInvalidReadWrite: '',
-							failThresholdTotal: '',
-							pattern: 'out/build/Debug/*.memcheck',
-							publishResultsForAbortedBuilds: false,
-							publishResultsForFailedBuilds: false,
-							sourceSubstitutionPaths: '',
-							unstableThresholdDefinitelyLost: '',
-							unstableThresholdInvalidReadWrite: '',
-							unstableThresholdTotal: ''
-							)
-						}
-					}
-                }
+          }
+          agent {
+            kubernetes {
+              defaultContainer 'scoreboard'
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
             }
-            stage('Release') {
-                agent {
-                    dockerfile {
-                        additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_release_${BRANCH_NAME}:latest"
-                        reuseNode true
-                    }
-                }
-                stages {
-                    stage('Release Cmake Generation') {
-						steps {
-							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
-									cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
-							)
-						}
-					}
-					stage('Release Build') {
-						steps {
-							sh '''cd out/build/Release
-make -j2 all'''
-						}
-					}
-					stage('Release Test') {
-						steps {
-							retry(count: 3) {
-								runTests('Release', runFullPipeline())
-							}
-						}
-					    post {
-							always {
-							archiveArtifacts(artifacts: 'out/build/Release/Testing/**/*.xml', fingerprint: true)
-							xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
-								skipped(failureThreshold: '0'),
-								failed(failureThreshold: '0')
-								], tools: [CTest(
-								pattern: 'out/build/Release/Testing/**/*.xml',
-								deleteOutputFiles: false,
-								failIfNotNew: false,
-								skipNoTestFiles: true,
-								stopProcessingIfError: true
-								)])
-							}
-						}
-					}
-                }
+          }
+          stages {
+            stage('Lint Cmake Generation') {
+              steps {
+                cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
+                           cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
+                )
+              }
             }
-            stage('MacOS') {
-                agent {
-                    dockerfile {
-                        additionalBuildArgs "--target=macos_build --tag akbarthegreat/scoreboard_osx_${BRANCH_NAME}:latest"
-                        reuseNode true
-                    }
-                }
-                stages {
-                    stage('MacOS Cmake Generation') {
-						steps {
-							cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
-									cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
-							)
-						}
-					}
-					stage('MacOS Build') {
-						environment {
-							LD_LIBRARY_PATH = '/opt/osxcross/lib'
-						}
-						steps {
-							sh '''cd out/build/osxcross
-export PATH=/opt/osxcross/bin:$PATH
-make scoreboard_proto cszb-scoreboard'''
-						}
-					}
-                }
+            stage('Lint Build') {
+              steps {
+                sh '''cd out/build/Linter
+                     |make all'''.stripMargin()
+              }
             }
+          }
         }
+        stage('Debug') {
+          agent {
+            kubernetes {
+              defaultContainer 'scoreboard'
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
+            }
+          }
+          stages {
+            stage('Debug Cmake Generation') {
+              steps {
+                cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Debug', buildType: 'Debug',
+                           cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
+                )
+              }
+            }
+            stage('Debug Build') {
+              steps {
+                sh '''cd out/build/Debug
+                     |make -j4 all'''.stripMargin()
+              }
+            }
+            stage('Debug Test') {
+              steps {
+                retry(count: 3) {
+                  runTests('Debug', runFullPipeline())
+                }
+              }
+              post {
+                always {
+                  archiveArtifacts(artifacts: 'out/build/Debug/Testing/**/*.xml', fingerprint: true)
+                  xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
+                        skipped(failureThreshold: '0'),
+                        failed(failureThreshold: '0')
+                        ], tools: [CTest(
+                        pattern: 'out/build/Debug/Testing/**/*.xml',
+                        deleteOutputFiles: false,
+                        failIfNotNew: false,
+                        skipNoTestFiles: true,
+                        stopProcessingIfError: true
+                        )])
+                }
+              }
+            }
+            stage('Valgrind') {
+              steps {
+                valgrindRun(runFullPipeline())
+
+                publishValgrind (
+                                 failBuildOnInvalidReports: false,
+                                 failBuildOnMissingReports: false,
+                                 failThresholdDefinitelyLost: '',
+                                 failThresholdInvalidReadWrite: '',
+                                 failThresholdTotal: '',
+                                 pattern: 'out/build/Debug/*.memcheck',
+                                 publishResultsForAbortedBuilds: false,
+                                 publishResultsForFailedBuilds: false,
+                                 sourceSubstitutionPaths: '',
+                                 unstableThresholdDefinitelyLost: '',
+                                 unstableThresholdInvalidReadWrite: '',
+                                 unstableThresholdTotal: ''
+                )
+              }
+            }
+          }
+        }
+        stage('Release') {
+          agent {
+            kubernetes {
+              defaultContainer 'scoreboard'
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
+            }
+          }
+          stages {
+            stage('Release Cmake Generation') {
+              steps {
+                cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Release', buildType: 'Release',
+                           cmakeArgs: "-DSKIP_LINT=true -DINTEGRATION_TEST=${runFullPipeline()}"
+                )
+              }
+            }
+            stage('Release Build') {
+              steps {
+                sh '''cd out/build/Release
+                     |make -j4 all'''.stripMargin()
+              }
+            }
+            stage('Release Test') {
+              steps {
+                retry(count: 3) {
+                  runTests('Release', runFullPipeline())
+                }
+              }
+              post {
+                always {
+                  archiveArtifacts(artifacts: 'out/build/Release/Testing/**/*.xml', fingerprint: true)
+                  xunit(testTimeMargin: '3000', thresholdMode: 1, thresholds: [
+                    skipped(failureThreshold: '0'),
+                    failed(failureThreshold: '0')
+                    ], tools: [CTest(
+                      pattern: 'out/build/Release/Testing/**/*.xml',
+                      deleteOutputFiles: false,
+                      failIfNotNew: false,
+                      skipNoTestFiles: true,
+                      stopProcessingIfError: true
+                  )])
+                }
+              }
+            }
+          }
+        }
+        stage('MacOS') {
+          agent {
+            kubernetes {
+              defaultContainer 'scoreboard'
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
+            }
+          }
+          stages {
+            stage('MacOS Cmake Generation') {
+              steps {
+                cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
+                           cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
+                )
+              }
+            }
+            stage('MacOS Build') {
+              environment {
+                LD_LIBRARY_PATH = '/opt/osxcross/lib'
+              }
+              steps {
+                sh '''cd out/build/osxcross
+                     |export PATH=/opt/osxcross/bin:$PATH
+                     |make scoreboard_proto cszb-scoreboard'''.stripMargin()
+              }
+            }
+          }
+        }
+      }
     }
     stage('Coverage') {
       when {
@@ -203,9 +249,20 @@ make scoreboard_proto cszb-scoreboard'''
         }
       }
       agent {
-        dockerfile {
-            additionalBuildArgs "--target=standard_build --tag akbarthegreat/scoreboard_coverage_${BRANCH_NAME}:latest"
-            reuseNode true
+        kubernetes {
+          defaultContainer 'scoreboard'
+          yaml """kind: Pod
+                 |spec:
+                 |  imagePullSecrets:
+                 |  - name: local-cred
+                 |  containers:
+                 |  - name: scoreboard
+                 |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                 |    imagePullPolicy: Always
+                 |    command:
+                 |    - sleep
+                 |    args:
+                 |    - 99d""".stripMargin()
         }
       }
       steps {
@@ -217,13 +274,11 @@ make scoreboard_proto cszb-scoreboard'''
           cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
         retry(count: 3) {
           sh '''cd out/build/Coverage
-            make -j3 all cszb-scoreboard-xml-coverage
-          '''
+               |make -j3 all cszb-scoreboard-xml-coverage'''.stripMargin()
         }
         cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
       }
     }
-    
   }
 }
 
