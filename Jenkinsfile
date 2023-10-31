@@ -48,6 +48,11 @@ pipeline {
                      |  - name: scoreboard
                      |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
                      |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 750Mi
+                     |      limits:
+                     |        memory: 750Mi
                      |    command:
                      |    - sleep
                      |    args:
@@ -82,6 +87,11 @@ pipeline {
                      |  - name: scoreboard
                      |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
                      |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 750Mi
+                     |      limits:
+                     |        memory: 750Mi
                      |    command:
                      |    - sleep
                      |    args:
@@ -158,6 +168,11 @@ pipeline {
                      |  - name: scoreboard
                      |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
                      |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 750Mi
+                     |      limits:
+                     |        memory: 750Mi
                      |    command:
                      |    - sleep
                      |    args:
@@ -214,6 +229,11 @@ pipeline {
 //                     |  - name: scoreboard
 //                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME}
 //                     |    imagePullPolicy: Always
+//                     |    resources:
+//                     |      requests:
+//                     |        memory: 750Mi
+//                     |      limits:
+//                     |        memory: 750Mi
 //                     |    command:
 //                     |    - sleep
 //                     |    args:
@@ -259,6 +279,11 @@ pipeline {
                  |  - name: scoreboard
                  |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
                  |    imagePullPolicy: Always
+                 |    resources:
+                 |      requests:
+                 |        memory: 750Mi
+                 |      limits:
+                 |        memory: 750Mi
                  |    command:
                  |    - sleep
                  |    args:
