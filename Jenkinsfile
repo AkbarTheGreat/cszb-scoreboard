@@ -217,49 +217,49 @@ pipeline {
             }
           }
         }
-//        stage('MacOS') {
-//          agent {
-//            kubernetes {
-//              defaultContainer 'scoreboard'
-//              yaml """kind: Pod
-//                     |spec:
-//                     |  imagePullSecrets:
-//                     |  - name: local-cred
-//                     |  containers:
-//                     |  - name: scoreboard
-//                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME}
-//                     |    imagePullPolicy: Always
-//                     |    resources:
-//                     |      requests:
-//                     |        memory: 1Gi
-//                     |      limits:
-//                     |        memory: 1Gi
-//                     |    command:
-//                     |    - sleep
-//                     |    args:
-//                     |    - 99d""".stripMargin()
-//            }
-//          }
-//          stages {
-//            stage('MacOS Cmake Generation') {
-//              steps {
-//                cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
-//                           cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
-//                )
-//              }
-//            }
-//            stage('MacOS Build') {
-//              environment {
-//                LD_LIBRARY_PATH = '/opt/osxcross/lib'
-//              }
-//              steps {
-//                sh '''cd out/build/osxcross
-//                     |export PATH=/opt/osxcross/bin:$PATH
-//                     |make scoreboard_proto cszb-scoreboard'''.stripMargin()
-//              }
-//            }
-//          }
-//        }
+        stage('MacOS') {
+          agent {
+            kubernetes {
+              defaultContainer 'scoreboard'
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 1Gi
+                     |      limits:
+                     |        memory: 1Gi
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
+            }
+          }
+          stages {
+            stage('MacOS Cmake Generation') {
+              steps {
+                cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/osxcross', buildType: 'Release',
+                           cmakeArgs: '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3 -DINTEGRATION_TEST=false'
+                )
+              }
+            }
+            stage('MacOS Build') {
+              environment {
+                LD_LIBRARY_PATH = '/opt/osxcross/lib'
+              }
+              steps {
+                sh '''cd out/build/osxcross
+                     |export PATH=/opt/osxcross/bin:$PATH
+                     |make scoreboard_proto cszb-scoreboard'''.stripMargin()
+              }
+            }
+          }
+        }
       }
     }
     stage('Coverage') {

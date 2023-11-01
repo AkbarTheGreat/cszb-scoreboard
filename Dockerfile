@@ -217,11 +217,11 @@ RUN tar cvzf iwyu.tgz \
     /usr/local/share/man/man1/include-what-you-use.1
 
 # ------------------------------------------------------------------------------
-# Osxcross (osxcross_build)
+# Osxcross (osxcross_compile)
 #
-# Build osxcross -- This builds our LLVM cross-compiler for MacOS builds.
+# Build osxcross -- This compiles osxcross itself, see osxcross_build for more.
 # ------------------------------------------------------------------------------
-FROM osxcross_build_baseline AS osxcross_build
+FROM osxcross_build_baseline AS osxcross_compile
 
 RUN apk add --no-cache \
     libxml2-dev \
@@ -257,29 +257,37 @@ RUN wget https://github.com/joseluisq/macosx-sdks/releases/download/${OSXCROSS_S
 WORKDIR ${OSXCROSS_BASE_DIR}
 RUN ./build.sh
 
+# ------------------------------------------------------------------------------
+# Osxcross (osxcross_build)
+#
+# Build osxcross -- This builds our complete LLVM cross-compiler for MacOS
+#                   builds.  It is broken into two stages for the times when
+#                   we need to debug the installation of macports objects.
+# ------------------------------------------------------------------------------
+FROM osxcross_compile AS osxcross_build
+
 # Fake Macports Dependencies
 RUN osxcross-macports fake-install \
     curl-ca-bundle \
-    geoclue2 \
     graphviz \
-    libedit \
-    libiconv \
-    libpsl \
     py311 \
-    xorg \
-    xorg-xorgproto
+    xorg
 
 # Real Macports dependencies
 RUN osxcross-macports install \
     bzip2 \
     curl \
     expat \
+    geoclue2 \
     gettext \
     glib2 \
     gtest \
     jsoncpp-devel \
+    libedit \
     libffi \
+    libiconv \
     libidn2 \
+    libpsl \
     libunistring \
     ncurses \
     openssl \
