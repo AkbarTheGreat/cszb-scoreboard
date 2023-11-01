@@ -50,9 +50,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 750Mi
+                     |        memory: 1Gi
                      |      limits:
-                     |        memory: 750Mi
+                     |        memory: 1Gi
                      |    command:
                      |    - sleep
                      |    args:
@@ -89,9 +89,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 750Mi
+                     |        memory: 1Gi
                      |      limits:
-                     |        memory: 750Mi
+                     |        memory: 1Gi
                      |    command:
                      |    - sleep
                      |    args:
@@ -170,9 +170,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 750Mi
+                     |        memory: 1Gi
                      |      limits:
-                     |        memory: 750Mi
+                     |        memory: 1Gi
                      |    command:
                      |    - sleep
                      |    args:
@@ -231,9 +231,9 @@ pipeline {
 //                     |    imagePullPolicy: Always
 //                     |    resources:
 //                     |      requests:
-//                     |        memory: 750Mi
+//                     |        memory: 1Gi
 //                     |      limits:
-//                     |        memory: 750Mi
+//                     |        memory: 1Gi
 //                     |    command:
 //                     |    - sleep
 //                     |    args:
@@ -281,9 +281,9 @@ pipeline {
                  |    imagePullPolicy: Always
                  |    resources:
                  |      requests:
-                 |        memory: 750Mi
+                 |        memory: 1Gi
                  |      limits:
-                 |        memory: 750Mi
+                 |        memory: 1Gi
                  |    command:
                  |    - sleep
                  |    args:
