@@ -9,26 +9,30 @@ pipeline {
   }
 
   stages {
-    stage('Standard Docker Build') {
-      steps {
-        sh """kubectl build -t \\
-            | docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME} \\
-            | --target=standard_build \\
-            | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard \\
-            | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard \\
-            | --registry-secret=local-cred --push . """.stripMargin()
-      }
-    }
-    stage('Osxcross Docker Build') {
-      steps {
-        sh """kubectl build -t \\
-            | docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME} \\
-            | --target=macos_build \\
-            | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos \\
-            | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos \\
-            | --registry-secret=local-cred --push . """.stripMargin()
-      }
-    }
+    stage ('Docker Builds') {
+      parallel {
+        stage('Standard Docker Build') {
+          steps {
+            sh """kubectl build -t \\
+                | docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME} \\
+                | --target=standard_build \\
+                | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard \\
+                | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard \\
+                | --registry-secret=local-cred --push . """.stripMargin()
+          }
+        } // Standard Docker
+        stage('Osxcross Docker Build') {
+          steps {
+            sh """kubectl build -t \\
+                | docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME} \\
+                | --target=macos_build \\
+                | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos \\
+                | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos \\
+                | --registry-secret=local-cred --push . """.stripMargin()
+          }
+        } // Osx Docker
+      } // Parallel block
+    } // Docker Builds
     stage ('Build & Test') {
       parallel {
         stage('Lint') {
@@ -74,7 +78,7 @@ pipeline {
               }
             }
           }
-        }
+        } // Lint
         stage('Debug') {
           agent {
             kubernetes {
@@ -109,7 +113,7 @@ pipeline {
             stage('Debug Build') {
               steps {
                 sh '''cd out/build/Debug
-                     |make -j4 all'''.stripMargin()
+                     |make -j6 all'''.stripMargin()
               }
             }
             stage('Debug Test') {
@@ -155,7 +159,7 @@ pipeline {
               }
             }
           }
-        }
+        } // Debug
         stage('Release') {
           agent {
             kubernetes {
@@ -190,7 +194,7 @@ pipeline {
             stage('Release Build') {
               steps {
                 sh '''cd out/build/Release
-                     |make -j4 all'''.stripMargin()
+                     |make -j6 all'''.stripMargin()
               }
             }
             stage('Release Test') {
@@ -216,7 +220,7 @@ pipeline {
               }
             }
           }
-        }
+        } // Release
         stage('MacOS') {
           agent {
             kubernetes {
@@ -259,51 +263,51 @@ pipeline {
               }
             }
           }
-        }
-      }
-    }
-    stage('Coverage') {
-      when {
-        expression {
-          return runFullPipeline()
-        }
-      }
-      agent {
-        kubernetes {
-          defaultContainer 'scoreboard'
-          yaml """kind: Pod
-                 |spec:
-                 |  imagePullSecrets:
-                 |  - name: local-cred
-                 |  containers:
-                 |  - name: scoreboard
-                 |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
-                 |    imagePullPolicy: Always
-                 |    resources:
-                 |      requests:
-                 |        memory: 1Gi
-                 |      limits:
-                 |        memory: 1Gi
-                 |    command:
-                 |    - sleep
-                 |    args:
-                 |    - 99d""".stripMargin()
-        }
-      }
-      steps {
-        cmakeBuild(
-          installation: 'AutoInstall',
-          buildDir: 'out/build/Coverage',
-          buildType: 'Debug',
-          cleanBuild: true,
-          cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
-        retry(count: 3) {
-          sh '''cd out/build/Coverage
-               |make -j3 all cszb-scoreboard-xml-coverage'''.stripMargin()
-        }
-        cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
-      }
-    }
+        } // MacOS
+        stage('Coverage') {
+          when {
+            expression {
+              return runFullPipeline()
+            }
+          }
+          agent {
+            kubernetes {
+              defaultContainer 'scoreboard'
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 1.5Gi
+                     |      limits:
+                     |        memory: 1.5Gi
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
+            }
+          }
+          steps {
+            cmakeBuild(
+              installation: 'AutoInstall',
+              buildDir: 'out/build/Coverage',
+              buildType: 'Debug',
+              cleanBuild: true,
+              cmakeArgs: '-DENABLE_CODE_COVERAGE=true -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING')
+            retry(count: 3) {
+              sh '''cd out/build/Coverage
+                   |make -j6 all cszb-scoreboard-xml-coverage'''.stripMargin()
+            }
+            cobertura(sourceEncoding: 'ASCII', coberturaReportFile: 'out/build/Coverage/cszb-scoreboard-xml-coverage.xml')
+          }
+        } // Coverage
+      } // Parallel block
+    } // Build & Test
   }
 }
 
