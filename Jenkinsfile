@@ -259,7 +259,7 @@ pipeline {
               steps {
                 sh '''cd out/build/osxcross
                      |export PATH=/opt/osxcross/bin:$PATH
-                     |make scoreboard_proto cszb-scoreboard'''.stripMargin()
+                     |make -j6 scoreboard_proto cszb-scoreboard'''.stripMargin()
               }
             }
           }
