@@ -1,4 +1,3 @@
-
 pipeline {
   agent {
     node {
@@ -45,7 +44,23 @@ pipeline {
           agent {
             kubernetes {
               defaultContainer 'scoreboard'
-              yaml buildPodTemplate
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 1.5Gi
+                     |      limits:
+                     |        memory: 1.5Gi
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
             }
           }
           stages {
@@ -68,7 +83,23 @@ pipeline {
           agent {
             kubernetes {
               defaultContainer 'scoreboard'
-              yaml largeBuildPodTemplate
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 1Gi
+                     |      limits:
+                     |        memory: 1Gi
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
             }
           }
           stages {
@@ -133,7 +164,23 @@ pipeline {
           agent {
             kubernetes {
               defaultContainer 'scoreboard'
-              yaml buildPodTemplate
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 1Gi
+                     |      limits:
+                     |        memory: 1Gi
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
             }
           }
           stages {
@@ -178,7 +225,23 @@ pipeline {
           agent {
             kubernetes {
               defaultContainer 'scoreboard'
-              yaml macosBuildPodTemplate
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 1Gi
+                     |      limits:
+                     |        memory: 1Gi
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
             }
           }
           stages {
@@ -210,7 +273,23 @@ pipeline {
           agent {
             kubernetes {
               defaultContainer 'scoreboard'
-              yaml largeBuildPodTemplate
+              yaml """kind: Pod
+                     |spec:
+                     |  imagePullSecrets:
+                     |  - name: local-cred
+                     |  containers:
+                     |  - name: scoreboard
+                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                     |    imagePullPolicy: Always
+                     |    resources:
+                     |      requests:
+                     |        memory: 2Gi
+                     |      limits:
+                     |        memory: 2Gi
+                     |    command:
+                     |    - sleep
+                     |    args:
+                     |    - 99d""".stripMargin()
             }
           }
           steps {
@@ -298,61 +377,4 @@ def runFullPipeline() {
 
     return runFull
 }
-
-def buildPodTemplate = """kind: Pod
-                         |spec:
-                         |  imagePullSecrets:
-                         |  - name: local-cred
-                         |  containers:
-                         |  - name: scoreboard
-                         |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
-                         |    imagePullPolicy: Always
-                         |    resources:
-                         |      requests:
-                         |        memory: 1Gi
-                         |      limits:
-                         |        memory: 1Gi
-                         |    command:
-                         |    - sleep
-                         |    args:
-                         |    - 99d""".stripMargin()
-
-// Should be the same as buildPodTemplate above, but with the macos image
-def macosBuildPodTemplate = """kind: Pod
-                         |spec:
-                         |  imagePullSecrets:
-                         |  - name: local-cred
-                         |  containers:
-                         |  - name: scoreboard
-                         |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME}
-                         |    imagePullPolicy: Always
-                         |    resources:
-                         |      requests:
-                         |        memory: 1Gi
-                         |      limits:
-                         |        memory: 1Gi
-                         |    command:
-                         |    - sleep
-                         |    args:
-                         |    - 99d""".stripMargin()
-
-// Should be the same as buildPodTemplate above, but with a higher memory footprint, for Lint and Coverage
-def largeBuildPodTemplate = """kind: Pod
-                         |spec:
-                         |  imagePullSecrets:
-                         |  - name: local-cred
-                         |  containers:
-                         |  - name: scoreboard
-                         |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
-                         |    imagePullPolicy: Always
-                         |    resources:
-                         |      requests:
-                         |        memory: 2Gi
-                         |      limits:
-                         |        memory: 2Gi
-                         |    command:
-                         |    - sleep
-                         |    args:
-                         |    - 99d""".stripMargin()
-
 
