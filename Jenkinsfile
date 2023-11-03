@@ -68,7 +68,7 @@ pipeline {
           agent {
             kubernetes {
               defaultContainer 'scoreboard'
-              yaml buildPodTemplate
+              yaml largeBuildPodTemplate
             }
           }
           stages {
@@ -178,7 +178,7 @@ pipeline {
           agent {
             kubernetes {
               defaultContainer 'scoreboard'
-              yaml buildPodTemplate
+              yaml macosBuildPodTemplate
             }
           }
           stages {
@@ -317,6 +317,26 @@ def buildPodTemplate = """kind: Pod
                          |    args:
                          |    - 99d""".stripMargin()
 
+// Should be the same as buildPodTemplate above, but with the macos image
+def macosBuildPodTemplate = """kind: Pod
+                         |spec:
+                         |  imagePullSecrets:
+                         |  - name: local-cred
+                         |  containers:
+                         |  - name: scoreboard
+                         |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME}
+                         |    imagePullPolicy: Always
+                         |    resources:
+                         |      requests:
+                         |        memory: 1Gi
+                         |      limits:
+                         |        memory: 1Gi
+                         |    command:
+                         |    - sleep
+                         |    args:
+                         |    - 99d""".stripMargin()
+
+// Should be the same as buildPodTemplate above, but with a higher memory footprint, for Lint and Coverage
 def largeBuildPodTemplate = """kind: Pod
                          |spec:
                          |  imagePullSecrets:
@@ -327,9 +347,9 @@ def largeBuildPodTemplate = """kind: Pod
                          |    imagePullPolicy: Always
                          |    resources:
                          |      requests:
-                         |        memory: 1.5Gi
+                         |        memory: 2Gi
                          |      limits:
-                         |        memory: 1.5Gi
+                         |        memory: 2Gi
                          |    command:
                          |    - sleep
                          |    args:
