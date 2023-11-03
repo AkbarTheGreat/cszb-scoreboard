@@ -74,7 +74,7 @@ pipeline {
             stage('Lint Build') {
               steps {
                 sh '''cd out/build/Linter
-                     |make all'''.stripMargin()
+                     |make -j6 all'''.stripMargin()
               }
             }
           }
