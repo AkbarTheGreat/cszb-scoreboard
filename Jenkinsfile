@@ -45,6 +45,9 @@ pipeline {
             kubernetes {
               defaultContainer 'scoreboard'
               yaml """kind: Pod
+                     |metadata:
+                     |  labels:
+                     |    scoreboard: lint
                      |spec:
                      |  imagePullSecrets:
                      |  - name: local-cred
@@ -54,9 +57,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 1.5Gi
+                     |        memory: 2Gi
                      |      limits:
-                     |        memory: 1.5Gi
+                     |        memory: 2Gi
                      |    command:
                      |    - sleep
                      |    args:
@@ -96,9 +99,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 1Gi
+                     |        memory: 1.5Gi
                      |      limits:
-                     |        memory: 1Gi
+                     |        memory: 1.5Gi
                      |    command:
                      |    - sleep
                      |    args:
@@ -168,6 +171,9 @@ pipeline {
             kubernetes {
               defaultContainer 'scoreboard'
               yaml """kind: Pod
+                     |metadata:
+                     |  labels:
+                     |    scoreboard: release
                      |spec:
                      |  imagePullSecrets:
                      |  - name: local-cred
@@ -177,9 +183,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 1Gi
+                     |        memory: 1.5Gi
                      |      limits:
-                     |        memory: 1Gi
+                     |        memory: 1.5Gi
                      |    command:
                      |    - sleep
                      |    args:
@@ -229,6 +235,9 @@ pipeline {
             kubernetes {
               defaultContainer 'scoreboard'
               yaml """kind: Pod
+                     |metadata:
+                     |  labels:
+                     |    scoreboard: macos
                      |spec:
                      |  imagePullSecrets:
                      |  - name: local-cred
@@ -238,9 +247,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 1Gi
+                     |        memory: 1.5Gi
                      |      limits:
-                     |        memory: 1Gi
+                     |        memory: 1.5Gi
                      |    command:
                      |    - sleep
                      |    args:
@@ -277,6 +286,9 @@ pipeline {
             kubernetes {
               defaultContainer 'scoreboard'
               yaml """kind: Pod
+                     |metadata:
+                     |  labels:
+                     |    scoreboard: coverage
                      |spec:
                      |  imagePullSecrets:
                      |  - name: local-cred
