@@ -84,6 +84,9 @@ pipeline {
             kubernetes {
               defaultContainer 'scoreboard'
               yaml """kind: Pod
+                     |metadata:
+                     |  labels:
+                     |    scoreboard: debug
                      |spec:
                      |  imagePullSecrets:
                      |  - name: local-cred
