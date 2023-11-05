@@ -57,9 +57,9 @@ pipeline {
                      |    imagePullPolicy: Always
                      |    resources:
                      |      requests:
-                     |        memory: 2Gi
+                     |        memory: 2.5Gi
                      |      limits:
-                     |        memory: 2Gi
+                     |        memory: 2.5Gi
                      |    command:
                      |    - sleep
                      |    args:
