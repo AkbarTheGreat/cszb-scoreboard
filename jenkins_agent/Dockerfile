@@ -1,4 +1,4 @@
-FROM jenkins/inbound-agent:3181.v78543a_987053-1
+FROM jenkins/inbound-agent:3192.v713e3b_039fb_e-1-jdk17
 
 USER root
 
