@@ -68,7 +68,7 @@ pipeline {
                      |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
-                     |          matchExpressions:
+                     |        - matchExpressions:
                      |          - key: node-class
                      |            operator: NotIn
                      |            values:
@@ -119,7 +119,7 @@ pipeline {
                      |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
-                     |          matchExpressions:
+                     |        - matchExpressions:
                      |          - key: node-class
                      |            operator: NotIn
                      |            values:
@@ -212,7 +212,7 @@ pipeline {
                      |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
-                     |          matchExpressions:
+                     |        - matchExpressions:
                      |          - key: node-class
                      |            operator: NotIn
                      |            values:
@@ -285,7 +285,7 @@ pipeline {
                      |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
-                     |          matchExpressions:
+                     |        - matchExpressions:
                      |          - key: node-class
                      |            operator: NotIn
                      |            values:
@@ -346,7 +346,7 @@ pipeline {
                      |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
-                     |          matchExpressions:
+                     |        - matchExpressions:
                      |          - key: node-class
                      |            operator: NotIn
                      |            values:
