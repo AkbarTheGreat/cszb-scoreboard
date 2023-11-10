@@ -65,12 +65,12 @@ pipeline {
                      |    args:
                      |    - 99d
                      |  affinity:
-                     |    nodeAntiAffinity:
+                     |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
-                     |            operator: In
+                     |            operator: NotIn
                      |            values:
                      |            - slow""".stripMargin()
             }
@@ -116,12 +116,12 @@ pipeline {
                      |    args:
                      |    - 99d
                      |  affinity:
-                     |    nodeAntiAffinity:
+                     |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
-                     |            operator: In
+                     |            operator: NotIn
                      |            values:
                      |            - slow""".stripMargin()
             }
@@ -209,12 +209,12 @@ pipeline {
                      |    args:
                      |    - 99d
                      |  affinity:
-                     |    nodeAntiAffinity:
+                     |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
-                     |            operator: In
+                     |            operator: NotIn
                      |            values:
                      |            - slow""".stripMargin()
             }
@@ -282,12 +282,12 @@ pipeline {
                      |    args:
                      |    - 99d
                      |  affinity:
-                     |    nodeAntiAffinity:
+                     |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
-                     |            operator: In
+                     |            operator: NotIn
                      |            values:
                      |            - slow""".stripMargin()
             }
@@ -343,12 +343,12 @@ pipeline {
                      |    args:
                      |    - 99d
                      |  affinity:
-                     |    nodeAntiAffinity:
+                     |    nodeAffinity:
                      |      requiredDuringSchedulingIgnoredDuringExecution:
                      |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
-                     |            operator: In
+                     |            operator: NotIn
                      |            values:
                      |            - slow""".stripMargin()
             }
