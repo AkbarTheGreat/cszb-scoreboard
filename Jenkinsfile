@@ -67,7 +67,7 @@ pipeline {
                      |  affinity:
                      |    nodeAntiAffinity:
                      |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 1
+                     |      - weight: 50
                      |        preference:
                      |          matchExpressions:
                      |          - key: node-class
@@ -119,7 +119,7 @@ pipeline {
                      |  affinity:
                      |    nodeAntiAffinity:
                      |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 1
+                     |      - weight: 50
                      |        preference:
                      |          matchExpressions:
                      |          - key: node-class
@@ -213,7 +213,7 @@ pipeline {
                      |  affinity:
                      |    nodeAntiAffinity:
                      |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 1
+                     |      - weight: 50
                      |        preference:
                      |          matchExpressions:
                      |          - key: node-class
@@ -287,7 +287,7 @@ pipeline {
                      |  affinity:
                      |    nodeAntiAffinity:
                      |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 1
+                     |      - weight: 50
                      |        preference:
                      |          matchExpressions:
                      |          - key: node-class
@@ -349,7 +349,7 @@ pipeline {
                      |  affinity:
                      |    nodeAntiAffinity:
                      |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 1
+                     |      - weight: 50
                      |        preference:
                      |          matchExpressions:
                      |          - key: node-class
