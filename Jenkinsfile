@@ -63,7 +63,17 @@ pipeline {
                      |    command:
                      |    - sleep
                      |    args:
-                     |    - 99d""".stripMargin()
+                     |    - 99d
+                     |  affinity:
+                     |    nodeAntiAffinity:
+                     |      preferredDuringSchedulingIgnoredDuringExecution:
+                     |      - weight: 1
+                     |        preference:
+                     |          matchExpressions:
+                     |          - key: node-class
+                     |            operator: In
+                     |            values:
+                     |            - slow""".stripMargin()
             }
           }
           stages {
@@ -105,7 +115,17 @@ pipeline {
                      |    command:
                      |    - sleep
                      |    args:
-                     |    - 99d""".stripMargin()
+                     |    - 99d
+                     |  affinity:
+                     |    nodeAntiAffinity:
+                     |      preferredDuringSchedulingIgnoredDuringExecution:
+                     |      - weight: 1
+                     |        preference:
+                     |          matchExpressions:
+                     |          - key: node-class
+                     |            operator: In
+                     |            values:
+                     |            - slow""".stripMargin()
             }
           }
           stages {
@@ -189,7 +209,17 @@ pipeline {
                      |    command:
                      |    - sleep
                      |    args:
-                     |    - 99d""".stripMargin()
+                     |    - 99d
+                     |  affinity:
+                     |    nodeAntiAffinity:
+                     |      preferredDuringSchedulingIgnoredDuringExecution:
+                     |      - weight: 1
+                     |        preference:
+                     |          matchExpressions:
+                     |          - key: node-class
+                     |            operator: In
+                     |            values:
+                     |            - slow""".stripMargin()
             }
           }
           stages {
@@ -253,7 +283,17 @@ pipeline {
                      |    command:
                      |    - sleep
                      |    args:
-                     |    - 99d""".stripMargin()
+                     |    - 99d
+                     |  affinity:
+                     |    nodeAntiAffinity:
+                     |      preferredDuringSchedulingIgnoredDuringExecution:
+                     |      - weight: 1
+                     |        preference:
+                     |          matchExpressions:
+                     |          - key: node-class
+                     |            operator: In
+                     |            values:
+                     |            - slow""".stripMargin()
             }
           }
           stages {
@@ -305,7 +345,17 @@ pipeline {
                      |    command:
                      |    - sleep
                      |    args:
-                     |    - 99d""".stripMargin()
+                     |    - 99d
+                     |  affinity:
+                     |    nodeAntiAffinity:
+                     |      preferredDuringSchedulingIgnoredDuringExecution:
+                     |      - weight: 1
+                     |        preference:
+                     |          matchExpressions:
+                     |          - key: node-class
+                     |            operator: In
+                     |            values:
+                     |            - slow""".stripMargin()
             }
           }
           steps {
