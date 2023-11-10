@@ -66,9 +66,8 @@ pipeline {
                      |    - 99d
                      |  affinity:
                      |    nodeAntiAffinity:
-                     |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 50
-                     |        preference:
+                     |      requiredDuringSchedulingIgnoredDuringExecution:
+                     |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
                      |            operator: In
@@ -118,9 +117,8 @@ pipeline {
                      |    - 99d
                      |  affinity:
                      |    nodeAntiAffinity:
-                     |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 50
-                     |        preference:
+                     |      requiredDuringSchedulingIgnoredDuringExecution:
+                     |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
                      |            operator: In
@@ -212,9 +210,8 @@ pipeline {
                      |    - 99d
                      |  affinity:
                      |    nodeAntiAffinity:
-                     |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 50
-                     |        preference:
+                     |      requiredDuringSchedulingIgnoredDuringExecution:
+                     |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
                      |            operator: In
@@ -286,9 +283,8 @@ pipeline {
                      |    - 99d
                      |  affinity:
                      |    nodeAntiAffinity:
-                     |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 50
-                     |        preference:
+                     |      requiredDuringSchedulingIgnoredDuringExecution:
+                     |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
                      |            operator: In
@@ -348,9 +344,8 @@ pipeline {
                      |    - 99d
                      |  affinity:
                      |    nodeAntiAffinity:
-                     |      preferredDuringSchedulingIgnoredDuringExecution:
-                     |      - weight: 50
-                     |        preference:
+                     |      requiredDuringSchedulingIgnoredDuringExecution:
+                     |        nodeSelectorTerms:
                      |          matchExpressions:
                      |          - key: node-class
                      |            operator: In
