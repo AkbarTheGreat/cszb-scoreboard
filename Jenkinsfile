@@ -9,14 +9,16 @@ pipeline {
   }
 
   stages {
+    stage ('Docker Prep') {
+      sh """docker buildx create --name imagebuilder \\
+          | --driver=remote tcp://buildkit:1234 \\
+          | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
+          | --bootstrap --use""".stripMargin()
+    }
     stage ('Docker Builds') {
       parallel {
         stage('Standard Docker Build') {
           steps {
-            sh """docker buildx create --name imagebuilder \\
-                | --driver=remote tcp://buildkit:1234 \\
-                | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
-                | --bootstrap --use""".stripMargin()
             sh """docker buildx build -t \\
                 | docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME} \\
                 | --target=standard_build \\
@@ -27,10 +29,6 @@ pipeline {
         } // Standard Docker
         stage('Osxcross Docker Build') {
           steps {
-            sh """docker buildx create --name imagebuilder \\
-                | --driver=remote tcp://buildkit:1234 \\
-                | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
-                | --bootstrap --use""".stripMargin()
             sh """docker buildx build -t \\
                 | docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME} \\
                 | --target=macos_build \\
