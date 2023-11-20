@@ -10,10 +10,12 @@ pipeline {
 
   stages {
     stage ('Docker Prep') {
-      sh """docker buildx create --name imagebuilder \\
-          | --driver=remote tcp://buildkit:1234 \\
-          | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
-          | --bootstrap --use""".stripMargin()
+      steps {
+        sh """docker buildx create --name imagebuilder \\
+            | --driver=remote tcp://buildkit:1234 \\
+            | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
+            | --bootstrap --use""".stripMargin()
+      }
     }
     stage ('Docker Builds') {
       parallel {
