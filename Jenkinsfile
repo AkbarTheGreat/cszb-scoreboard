@@ -13,22 +13,30 @@ pipeline {
       parallel {
         stage('Standard Docker Build') {
           steps {
-            sh """kubectl build -t \\
+            sh """docker buildx create --name imagebuilder \\
+                | --driver=remote tcp://buildkit:1234 \\
+                | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
+                | --bootstrap --use""".stripMargin()
+            sh """docker buildx build -t \\
                 | docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME} \\
                 | --target=standard_build \\
                 | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard-${BRANCH_NAME} \\
                 | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-standard-${BRANCH_NAME} \\
-                | --registry-secret=local-cred --push . """.stripMargin()
+                | --push . """.stripMargin()
           }
         } // Standard Docker
         stage('Osxcross Docker Build') {
           steps {
-            sh """kubectl build -t \\
+            sh """docker buildx create --name imagebuilder \\
+                | --driver=remote tcp://buildkit:1234 \\
+                | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
+                | --bootstrap --use""".stripMargin()
+            sh """docker buildx build -t \\
                 | docker.akbar.dev/akbarthegreat/scoreboard-testing-macos:${BRANCH_NAME} \\
                 | --target=macos_build \\
                 | --cache-to=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos-${BRANCH_NAME} \\
                 | --cache-from=type=registry,ref=docker.akbar.dev/akbarthegreat/scoreboard-build-cache-macos-${BRANCH_NAME} \\
-                | --registry-secret=local-cred --push . """.stripMargin()
+                | --push . """.stripMargin()
           }
         } // Osx Docker
       } // Parallel block
