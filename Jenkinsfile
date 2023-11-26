@@ -7,6 +7,9 @@ pipeline {
   triggers {
     cron('00 04 * * *') //run at 4 am
   }
+  options {
+    retry(3)
+  }
 
   stages {
     stage ('Docker Prep') {
