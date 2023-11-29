@@ -46,62 +46,64 @@ pipeline {
     } // Docker Builds
     stage ('Build & Test') {
       parallel {
-        stage('Lint') {
-          when {
-            expression {
-              return runFullPipeline()
-            }
-          }
-          agent {
-            kubernetes {
-              defaultContainer 'scoreboard'
-              yaml """kind: Pod
-                     |metadata:
-                     |  labels:
-                     |    scoreboard: lint
-                     |spec:
-                     |  imagePullSecrets:
-                     |  - name: local-cred
-                     |  containers:
-                     |  - name: scoreboard
-                     |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
-                     |    imagePullPolicy: Always
-                     |    resources:
-                     |      requests:
-                     |        memory: 2.5Gi
-                     |      limits:
-                     |        memory: 2.5Gi
-                     |    command:
-                     |    - sleep
-                     |    args:
-                     |    - 99d
-                     |  affinity:
-                     |    nodeAffinity:
-                     |      requiredDuringSchedulingIgnoredDuringExecution:
-                     |        nodeSelectorTerms:
-                     |        - matchExpressions:
-                     |          - key: node-class
-                     |            operator: NotIn
-                     |            values:
-                     |            - slow""".stripMargin()
-            }
-          }
-          stages {
-            stage('Lint Cmake Generation') {
-              steps {
-                cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
-                           cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
-                )
+        retry(count: 3) {
+          stage('Lint') {
+            when {
+              expression {
+                return runFullPipeline()
               }
             }
-            stage('Lint Build') {
-              steps {
-                sh '''cd out/build/Linter
-                     |make -j6 all'''.stripMargin()
+            agent {
+                kubernetes {
+                defaultContainer 'scoreboard'
+                yaml """kind: Pod
+                       |metadata:
+                       |  labels:
+                       |    scoreboard: lint
+                       |spec:
+                       |  imagePullSecrets:
+                       |  - name: local-cred
+                       |  containers:
+                       |  - name: scoreboard
+                       |    image: docker.akbar.dev/akbarthegreat/scoreboard-testing-standard:${BRANCH_NAME}
+                       |    imagePullPolicy: Always
+                       |    resources:
+                       |      requests:
+                       |        memory: 2.5Gi
+                       |      limits:
+                       |        memory: 2.5Gi
+                       |    command:
+                       |    - sleep
+                       |    args:
+                       |    - 99d
+                       |  affinity:
+                       |    nodeAffinity:
+                       |      requiredDuringSchedulingIgnoredDuringExecution:
+                       |        nodeSelectorTerms:
+                       |        - matchExpressions:
+                       |          - key: node-class
+                       |            operator: NotIn
+                       |            values:
+                       |            - slow""".stripMargin()
               }
             }
-          }
-        } // Lint
+            stages {
+              stage('Lint Cmake Generation') {
+                steps {
+                  cmakeBuild(installation: 'AutoInstall', buildDir: 'out/build/Linter', buildType: 'Debug',
+                             cmakeArgs: '-DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true'
+                  )
+                }
+              }
+              stage('Lint Build') {
+                steps {
+                  sh '''cd out/build/Linter
+                       |make -j6 all'''.stripMargin()
+                }
+              }
+            }
+          } // Lint
+        } // Retry block
         stage('Debug') {
           agent {
             kubernetes {
