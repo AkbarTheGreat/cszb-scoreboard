@@ -14,10 +14,10 @@ pipeline {
   stages {
     stage ('Docker Prep') {
       steps {
-        sh """docker buildx create --name imagebuilder \\
+        sh """docker buildx create --node imagebuilder \\
             | --driver=remote tcp://buildkit:1234 \\
             | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
-            | --bootstrap --node --use""".stripMargin()
+            | --bootstrap --use""".stripMargin()
       }
     }
     stage ('Docker Builds') {
