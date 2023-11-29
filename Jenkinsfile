@@ -17,7 +17,7 @@ pipeline {
         sh """docker buildx create --name imagebuilder \\
             | --driver=remote tcp://buildkit:1234 \\
             | --driver-opt=cacert=/certs/ca.pem,cert=/certs/cert.pem,key=/certs/key.pem \\
-            | --bootstrap --use""".stripMargin()
+            | --bootstrap --node --use""".stripMargin()
       }
     }
     stage ('Docker Builds') {
