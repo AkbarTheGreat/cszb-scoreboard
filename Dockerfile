@@ -270,7 +270,7 @@ FROM osxcross_compile AS osxcross_build
 RUN osxcross-macports fake-install \
     curl-ca-bundle \
     graphviz \
-    py311 \
+    py312 \
     xorg
 
 # Real Macports dependencies

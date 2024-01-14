@@ -9,6 +9,7 @@ pipeline {
   }
   options {
     retry(3)
+    buildDiscarder(logRotator(numToKeepStr: '14', artifactNumToKeepStr: '14'))
   }
 
   stages {
