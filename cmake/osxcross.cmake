@@ -92,8 +92,8 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libiconv.a
 	${macports_lib_dir}/libpsl.a
 	${macports_lib_dir}/libunistring.a
-	${macports_lib_dir}/libbrotlicommon-static.a
-	${macports_lib_dir}/libbrotlidec-static.a
+	${macports_lib_dir}/libbrotlicommon.dylib
+	${macports_lib_dir}/libbrotlidec.dylib
 	#${macports_lib_dir}/libasprintf.a
 	${macports_lib_dir}/libbz2.a
 	${macports_lib_dir}/libcharset.a
