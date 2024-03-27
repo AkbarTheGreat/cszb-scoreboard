@@ -117,11 +117,13 @@ target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
 
 
 add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
+add_dependencies(scoreboard_classes scoreboard_proto)
 set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
                       ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
 
 add_library(dialog_test_classes OBJECT ${DIALOG_TEST_SRC})
+add_dependencies(dialog_test_classes scoreboard_proto)
 set_target_properties(dialog_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(dialog_test_classes PUBLIC FAKE_CONFIGURATION_FILES)
 target_link_libraries(dialog_test_classes PRIVATE ${wxWidgets_LIBRARIES}
@@ -146,6 +148,7 @@ list(APPEND TEST_ONLY_SRC
 )
 
 add_library(scoreboard_ui_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
+add_dependencies(scoreboard_ui_test_classes scoreboard_proto)
 set_target_properties(scoreboard_ui_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_TESTING)
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_INTEGRATION_TEST)

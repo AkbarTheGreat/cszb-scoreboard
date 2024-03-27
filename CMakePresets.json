@@ -1,0 +1,47 @@
+{
+   "version": 2,
+   "configurePresets": [
+      {
+         "name": "Debug",
+         "generator": "Visual Studio 17 2022",
+         "binaryDir": "${sourceDir}/out/build/Debug",
+         "cacheVariables": {
+            "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+            "CMAKE_BUILD_TYPE": "Debug",
+            "INTEGRATION_TEST": "False",
+            "WXWIDGETS_INSTALL_DIR": "$env{WXWIDGETS_ROOT}/x64-Debug",
+            "WXWIDGETS_VERSION": "33",
+            "IMAGE_SEARCH": "True"
+         }
+      },
+      {
+         "name": "Debug Integration",
+         "generator": "Visual Studio 17 2022",
+         "binaryDir": "${sourceDir}/out/build/DebugIntegration",
+         "cacheVariables": {
+            "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+            "CMAKE_BUILD_TYPE": "Debug",
+            "INTEGRATION_TEST": "True",
+            "WXWIDGETS_INSTALL_DIR": "$env{WXWIDGETS_ROOT}/x64-Debug",
+            "WXWIDGETS_VERSION": "33",
+            "IMAGE_SEARCH": "True"
+         }
+      },
+      {
+         "name": "Release",
+         "generator": "Visual Studio 17 2022",
+         "binaryDir": "${sourceDir}/out/build/Release",
+         "cacheVariables": {
+            "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+            "CMAKE_BUILD_TYPE": "Release",
+            "INTEGRATION_TEST": "False",
+            "WXWIDGETS_INSTALL_DIR": "$env{WXWIDGETS_ROOT}/x64-Debug",
+            "WXWIDGETS_VERSION": "33",
+            "IMAGE_SEARCH": "True"
+         }
+      }
+   ]
+}

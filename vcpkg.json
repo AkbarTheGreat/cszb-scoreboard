@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "curl",
+    "gtest",
+    "jsoncpp",
+    "protobuf",
+    "wxwidgets"
+  ]
+}
