@@ -108,7 +108,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs: [docker_build]
     container:
-      image:  "ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}:latest"
+      image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
 
     strategy:
       fail-fast: true
