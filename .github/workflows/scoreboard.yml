@@ -55,7 +55,7 @@ jobs:
         context: .
         file: ./Dockerfile
         target: ${{ matrix.docker_target }}
-        tags: docker-tag=ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
+        tags: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
         push: true
         cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
         cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
@@ -64,7 +64,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs: [docker_build]
     container:
-      image: docker-tag=ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
+      image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
 
     strategy:
       fail-fast: true
