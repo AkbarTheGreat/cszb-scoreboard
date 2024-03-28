@@ -2,7 +2,7 @@ name: Scoreboard Testing
 
 on:
   push:
-    branches: [ "github_actions_testing" ]
+    branches: [ ]
   pull_request:
     branches: [ "master" ]
 
