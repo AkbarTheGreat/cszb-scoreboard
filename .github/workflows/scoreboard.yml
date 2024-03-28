@@ -23,9 +23,6 @@ jobs:
             docker_target: macos_build
             os: ubuntu-latest
 
-    outputs:
-      docker-tag: ${{ steps.strings.outputs.docker-tag }}
-
     steps:
     - uses: actions/checkout@v4
 
@@ -34,8 +31,7 @@ jobs:
       id: strings
       shell: bash
       run: |
-        echo "docker-tag=ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}:latest" >> $GITHUB_OUTPUT
-        echo "cache-branch=ghcr.io/akbarthegreat/cszb_scoreboard_cache_${{ matrix.docker_target }}_${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        echo "cache-branch=ghcr.io/akbarthegreat/cszb_scoreboard_cache_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}" >> $GITHUB_OUTPUT
 
     - name: Login to Docker
       env:
@@ -59,7 +55,7 @@ jobs:
         context: .
         file: ./Dockerfile
         target: ${{ matrix.docker_target }}
-        tags: ${{ steps.strings.outputs.docker-tag }}
+        tags: docker-tag=ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
         push: true
         cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
         cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
@@ -68,7 +64,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs: [docker_build]
     container:
-      image:  ${{ needs.docker_build.outputs.docker-tag }}
+      image: docker-tag=ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
 
     strategy:
       fail-fast: true
