@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     container:
       # Always use the main branch for coverage
-      image: docker-tag=ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_master:latest
+      image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_master:latest
 
     strategy:
       fail-fast: true
