@@ -19,12 +19,14 @@ limitations under the License.
 
 #include "util/ProtoUtil.h"
 
-#include <wx/font.h>
+#include <wx/font.h>  // for wxFontInfo, wxFont, wxFontFamily
+
+#include "util/FontUtil.h"  // for FontUtil
 
 namespace cszb_scoreboard {
+struct Size;
 
 const float DEFAULT_FONT_SIZE = 10;
-const int SCALE_FACTOR = 75;
 
 auto ProtoUtil::protoRct(const wxRect &input, proto::Rectangle *output)
     -> proto::Rectangle * {
@@ -50,12 +52,9 @@ auto ProtoUtil::wxClr(const proto::Color &input) -> Color {
   return Color(input.rgb());
 }
 
-auto ProtoUtil::wxScaledFont(const proto::Font &input, const wxSize &scale_size)
+auto ProtoUtil::wxScaledFont(const proto::Font &input, const Size &scale_size)
     -> wxFont {
-  int scaled_size = scale_size.GetHeight() * input.size() / SCALE_FACTOR;
-  if (scaled_size == 0) {
-    scaled_size = 1;
-  }
+  int scaled_size = FontUtil::scaleFactor(scale_size, input.size());
 
   wxFontInfo font_info(scaled_size);
 

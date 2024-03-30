@@ -26,7 +26,8 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"                        // for DEFAULT_BORDER_SIZE
 #include "ui/dialog/settings/DisplaySettingsPage.h"  // for DisplaySettingsPage
-#include "ui/dialog/settings/TeamSettingsPage.h"     // for TeamSettingsPage
+#include "ui/dialog/settings/GeneralSettingsPage.h"
+#include "ui/dialog/settings/TeamSettingsPage.h"  // for TeamSettingsPage
 #include "ui/frame/MainView.h"
 
 namespace cszb_scoreboard {
@@ -41,6 +42,7 @@ wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent)
     : TabbedDialog(wx) {
   this->parent = parent;
+  addPage(std::make_unique<GeneralSettingsPage>(childPanel()), "General");
   addPage(std::make_unique<DisplaySettingsPage>(childPanel()), "Displays");
   addPage(std::make_unique<TeamSettingsPage>(childPanel()), "Teams");
   runSizer();

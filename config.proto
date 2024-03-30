@@ -95,7 +95,12 @@ message TeamConfig {
   repeated TeamInfo.TeamType single_screen_order = 2;
 }
 
+message GeneralConfig {
+  double drop_shadow_depth = 1;
+}
+
 message ScoreboardConfig {
   DisplayConfig display_config = 1;
   TeamConfig team_config = 2;
+  GeneralConfig general_config = 3;
 }

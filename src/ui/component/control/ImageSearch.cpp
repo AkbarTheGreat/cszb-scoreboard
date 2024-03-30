@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "ui/component/control/ImageSearch.h"
 
-#include <wx/defs.h>  // for wxTOP
+#include <wx/defs.h>     // for wxTOP
 #include <wx/webview.h>  // for wxEVT_WEBVIEW_LOADED
 
 #include <cstdint>  // for int32_t

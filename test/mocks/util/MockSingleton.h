@@ -30,6 +30,7 @@ class MockSingleton : public Singleton {
   MOCK_METHOD(CommandArgs*, commandArgs, (), (override));
   MOCK_METHOD(DisplayConfig*, displayConfig, (), (override));
   MOCK_METHOD(FrameManager*, frameManager, (), (override));
+  MOCK_METHOD(GeneralConfig*, generalConfig, (), (override));
   MOCK_METHOD(HotkeyTable*, hotkeyTable, (), (override));
   MOCK_METHOD(ImageLibrary*, imageLibrary, (), (override));
   MOCK_METHOD(Persistence*, persistence, (), (override));

@@ -159,6 +159,21 @@ void Persistence::saveDisplays(const proto::DisplayConfig &display_config) {
   saveConfigToDisk();
 }
 
+auto Persistence::loadGeneralConfig() -> proto::GeneralConfig {
+  // We don't actually have a way to reload after initialization at this point,
+  // but that should be fine, as this should still represent what's written out.
+  return full_config.general_config();
+}
+
+void Persistence::saveGeneralConfig(
+    const proto::GeneralConfig &general_config) {
+  // full_config.clear_display_config();
+  proto::GeneralConfig *new_general_config =
+      full_config.mutable_general_config();
+  new_general_config->CopyFrom(general_config);
+  saveConfigToDisk();
+}
+
 auto Persistence::loadTeams() -> proto::TeamConfig {
   // We don't actually have a way to reload after initialization at this point,
   // but that should be fine, as this should still represent what's written out.

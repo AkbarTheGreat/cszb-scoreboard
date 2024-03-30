@@ -47,7 +47,7 @@ void RenderContext::drawText(const std::string& text, int64_t x, int64_t y) {
 
 void RenderContext::setFont(const proto::Font& font, const Size& font_size) {
   runAgainstActiveContext([font, font_size](wxDC* context) -> void {
-    context->SetFont(ProtoUtil::wxScaledFont(font, font_size.toWx()));
+    context->SetFont(ProtoUtil::wxScaledFont(font, font_size));
   });
 }
 

@@ -32,6 +32,8 @@ class Persistence {
       : Persistence(c, Singleton::getInstance()) {}
   virtual auto loadDisplays() -> proto::DisplayConfig;
   virtual void saveDisplays(const proto::DisplayConfig &display_config);
+  virtual auto loadGeneralConfig() -> proto::GeneralConfig;
+  virtual void saveGeneralConfig(const proto::GeneralConfig &general_config);
   virtual auto loadTeams() -> proto::TeamConfig;
   virtual void saveTeams(const proto::TeamConfig &team_config);
   virtual auto loadImageLibrary() -> proto::ImageLibrary;

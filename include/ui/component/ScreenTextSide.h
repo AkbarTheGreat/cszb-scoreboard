@@ -114,6 +114,7 @@ class ScreenTextSide : public Canvas {
   void renderOverlayBottomCorner(RenderContext *renderer);
   void renderOverlayCentered(RenderContext *renderer);
   void renderScaledBackground(RenderContext *renderer);
+  void renderShadowText(RenderContext *renderer, proto::RenderableText *text);
   void renderText(RenderContext *renderer, proto::RenderableText *text);
   void renderTimer(RenderContext *renderer);
   void renderAllText(RenderContext *renderer);

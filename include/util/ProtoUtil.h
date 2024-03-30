@@ -18,13 +18,14 @@ limitations under the License.
 */
 #pragma once
 
-#include <wx/gdicmn.h>  // for wxRect, wxSize (ptr only)
+#include <wx/gdicmn.h>  // for wxRect
 
 #include "config.pb.h"          // for ScreenSide, Font (ptr only), Color (p...
 #include "ui/graphics/Color.h"  // for Color
 #include "wx/font.h"            // for wxFont
 
 namespace cszb_scoreboard {
+struct Size;
 
 class ProtoUtil {
  public:
@@ -34,7 +35,7 @@ class ProtoUtil {
   static auto protoClr(const Color &input, proto::Color *output)
       -> proto::Color *;
   static auto wxClr(const proto::Color &input) -> Color;
-  static auto wxScaledFont(const proto::Font &input, const wxSize &scale_size)
+  static auto wxScaledFont(const proto::Font &input, const Size &scale_size)
       -> wxFont;
   static void setFontColor(proto::Font *font, const Color &color);
   static void defaultFont(proto::Font *font);

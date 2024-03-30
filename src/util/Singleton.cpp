@@ -26,6 +26,7 @@ limitations under the License.
 
 #include "config/CommandArgs.h"      // for CommandArgs
 #include "config/DisplayConfig.h"    // for DisplayConfig
+#include "config/GeneralConfig.h"    // for GeneralConfig
 #include "config/ImageLibrary.h"     // for ImageLibrary
 #include "config/Persistence.h"      // for Persistence
 #include "config/TeamConfig.h"       // for TeamConfig
@@ -92,6 +93,13 @@ auto SingletonImpl::frameManager() -> FrameManager* {
     inst_frame_manager = new FrameManager(SingletonClass{});
   }
   return inst_frame_manager;
+}
+
+auto SingletonImpl::generalConfig() -> GeneralConfig* {
+  if (inst_general_config == nullptr) {
+    inst_general_config = new GeneralConfig(SingletonClass{});
+  }
+  return inst_general_config;
 }
 
 auto SingletonImpl::hotkeyTable() -> HotkeyTable* {
