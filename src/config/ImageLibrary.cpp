@@ -25,10 +25,10 @@ limitations under the License.
 #include <filesystem>  // for operator==, path
 #include <utility>     // for move
 
-#include "config/Persistence.h"                // for Persistence
-#include "util/FilesystemPath.h"               // for FilesystemPath
-#include "util/Log.h"                          // for LogDebug
-#include "util/Singleton.h"                    // for Singleton, SingletonClass
+#include "config/Persistence.h"   // for Persistence
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Log.h"             // for LogDebug
+#include "util/Singleton.h"       // for Singleton, SingletonClass
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 // IWYU pragma: no_include "net/proto2/public/repeated_field.h"
 

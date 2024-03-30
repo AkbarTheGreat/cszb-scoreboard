@@ -29,6 +29,7 @@ class AutoUpdate;
 class CommandArgs;
 class DisplayConfig;
 class FrameManager;
+class GeneralConfig;
 class HotkeyTable;
 class ImageLibrary;
 class Persistence;
@@ -52,6 +53,7 @@ class Singleton {
   virtual auto autoUpdate() -> AutoUpdate* = 0;
   virtual auto commandArgs() -> CommandArgs* = 0;
   virtual auto displayConfig() -> DisplayConfig* = 0;
+  virtual auto generalConfig() -> GeneralConfig* = 0;
   virtual auto frameManager() -> FrameManager* = 0;
   virtual auto hotkeyTable() -> HotkeyTable* = 0;
   virtual auto imageLibrary() -> ImageLibrary* = 0;
@@ -71,6 +73,7 @@ class SingletonImpl : public Singleton {
   auto commandArgs() -> CommandArgs* override;
   auto displayConfig() -> DisplayConfig* override;
   auto frameManager() -> FrameManager* override;
+  auto generalConfig() -> GeneralConfig* override;
   auto hotkeyTable() -> HotkeyTable* override;
   auto imageLibrary() -> ImageLibrary* override;
   auto persistence() -> Persistence* override;
@@ -89,6 +92,7 @@ class SingletonImpl : public Singleton {
   CommandArgs* inst_command_args = nullptr;
   DisplayConfig* inst_display_config = nullptr;
   FrameManager* inst_frame_manager = nullptr;
+  GeneralConfig* inst_general_config = nullptr;
   HotkeyTable* inst_hotkey_table = nullptr;
   ImageLibrary* inst_image_library = nullptr;
   Persistence* inst_persistence = nullptr;

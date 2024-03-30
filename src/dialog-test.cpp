@@ -34,8 +34,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-#define DIALOG_TYPE EditImageLibraryDialog
-// #define DIALOG_TYPE SettingsDialog
+// #define DIALOG_TYPE EditImageLibraryDialog
+#define DIALOG_TYPE SettingsDialog
 // #define DIALOG_TYPE TeamLibraryDialog
 
 static constexpr int START_X = 50;

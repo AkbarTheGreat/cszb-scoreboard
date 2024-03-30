@@ -25,14 +25,16 @@ limitations under the License.
 #include <algorithm>  // for max
 #include <cstdint>    // for int64_t
 
+#include "config/GeneralConfig.h"
 #include "config/Position.h"              // for Size, Position
 #include "config/TeamConfig.h"            // for TeamConfig
 #include "config/swx/event.h"             // for wxEVT_PAINT
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
 #include "ui/widget/Panel.h"              // for Panel
 #include "ui/widget/RenderContext.h"      // for RenderContext
-#include "util/ProtoUtil.h"               // for ProtoUtil
-#include "util/TimerManager.h"            // for TimerManager
+#include "util/FontUtil.h"
+#include "util/ProtoUtil.h"     // for ProtoUtil
+#include "util/TimerManager.h"  // for TimerManager
 
 namespace cszb_scoreboard {
 
@@ -331,6 +333,28 @@ auto ScreenTextSide::positionText(RenderContext *renderer,
   }
 }
 
+void ScreenTextSide::renderShadowText(RenderContext *renderer,
+                                      proto::RenderableText *text) {
+  if (singleton->generalConfig()->dropShadowDistance() < 0) {
+    return;
+  }
+
+  double drop_shadow_factor = singleton->generalConfig()->dropShadowDistance() * text->font().size();
+
+  int32_t drop_shadow_offset = FontUtil::scaleFactor(size(), drop_shadow_factor);
+
+  if (auto_fit_text) {
+    autoFitText(renderer, text);
+  }
+  renderer->setFont(text->font(), size());
+  Color fontColor = ProtoUtil::wxClr(text->font().color()).contrastColor();
+  renderer->setTextColor(fontColor);
+  Position placement = positionText(renderer, *text);
+  placement = placement + Position{.x = drop_shadow_offset, .y = drop_shadow_offset};
+
+  renderer->drawText(text->text(), placement.x, placement.y);
+}
+
 void ScreenTextSide::renderText(RenderContext *renderer,
                                 proto::RenderableText *text) {
   if (auto_fit_text) {
@@ -374,6 +398,7 @@ void ScreenTextSide::renderTimer(RenderContext *renderer) {
 
 void ScreenTextSide::renderAllText(RenderContext *renderer) {
   for (auto &text : texts) {
+    renderShadowText(renderer, &text);
     renderText(renderer, &text);
   }
 }

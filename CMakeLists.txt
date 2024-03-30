@@ -207,6 +207,7 @@ package_add_test(DisplayConfigTest FALSE test/unit/config/DisplayConfigTest.cpp
                                           src/config/Position.cpp
                                           src/ui/widget/Display.cpp
                                           src/ui/widget/Frame.cpp
+                                          src/util/FontUtil.cpp
                                           src/util/ProtoUtil.cpp
 )
 package_add_test(ImageLibraryTest  FALSE test/unit/config/ImageLibraryTest.cpp
@@ -231,6 +232,7 @@ package_add_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
 )
 package_add_test(ProtoUtilTest       FALSE test/unit/util/ProtoUtilTest.cpp
                                             src/util/ProtoUtil.cpp
+                                            src/util/FontUtil.cpp
                                             src/ui/graphics/Color.cpp
 )
 package_add_test(StringUtilTest      FALSE test/unit/util/StringUtilTest.cpp
