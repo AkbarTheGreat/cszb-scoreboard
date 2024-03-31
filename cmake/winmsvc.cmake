@@ -72,7 +72,6 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/wxpngd.lib
 			${wxWidgets_LIB_DIR}/wxtiffd.lib
 			${wxWidgets_LIB_DIR}/wxzlibd.lib
-			${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
 		)
 	else() # Using VCPKG
 		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/debug/lib)
@@ -108,7 +107,6 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 			${wxWidgets_LIB_DIR}/wxpng.lib
 			${wxWidgets_LIB_DIR}/wxtiff.lib
 			${wxWidgets_LIB_DIR}/wxzlib.lib
-			${wxWidgets_LIB_DIR}/WebView2LoaderStatic.lib
 		)
 	else() # Using VCPKG
 		set(wxWidgets_LIB_DIR ${VCPKG_BASE}/lib)
@@ -136,9 +134,12 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 	endif() # if LINKING_TYPE == "static"
 endif() # if CMAKE_BUILD_TYPE == "Debug"
 
+find_package(unofficial-webview2 CONFIG REQUIRED)
+
 set(wxWidgets_LIBRARIES
 	${wxWidgets_LIBRARIES}
 	comctl32 Rpcrt4
+	unofficial::webview2::webview2
 )
 
 # I hate doing this, but wxWidgets produces way too many warnings in this category and obscures problems in my code.
