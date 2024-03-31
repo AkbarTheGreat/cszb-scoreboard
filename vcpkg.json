@@ -4,6 +4,6 @@
     "gtest",
     "jsoncpp",
     "protobuf",
-    "wxwidgets"
+    "webview2"
   ]
 }

@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  vcpkg_commit: 4044645043df0cb62e35ac91042221731153e1bb
+  wxwidget_commit: 44b99195bc4395944bab8071c6d7adcbdcdf8773
+
 jobs:
   docker_build:
     runs-on: ${{ matrix.os }}
@@ -60,98 +64,233 @@ jobs:
         cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
         cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
 
-  build:
+  wxwidgets_build:
     runs-on: ${{ matrix.os }}
-    needs: [docker_build]
-    container:
-      image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
 
     strategy:
       fail-fast: true
 
       matrix:
-        target_os: [linux, macos]
+        target_os: [win64]
+        build_type: [Release, Debug]
+        include:
+          - target_os: win64
+            os: windows-latest
+
+    steps:
+    - name: Cache wxWidgets install
+      id: cache-wx-install
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-wx-install
+      with:
+        path: ./wx/x64-${{ matrix.build_type }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-${{ env.wxwidget_commit }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Checkout wxWidgets
+      if: ${{ steps.cache-wx-install.outputs.cache-hit != 'true' }}
+      run: |
+        git clone https://github.com/wxWidgets/wxWidgets.git  wxwidgets
+        cd wxwidgets
+        git fetch --all --tags
+        git checkout ${{ env.wxwidget_commit }}
+        git submodule update --init --recursive
+
+    - name: Build wxWidgets
+      if: ${{ steps.cache-wx-install.outputs.cache-hit != 'true' }}
+      uses: threeal/cmake-action@main
+      with:
+        source-dir: ${{ github.workspace }}/wxwidgets
+        build-dir: ${{ github.workspace }}/wxwidgets/out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        build-args: --config ${{ matrix.build_type }}
+        options: 
+                 wxBUILD_SHARED=OFF
+                 wxBUILD_SAMPLES=OFF
+                 wxBUILD_MONOLITHIC=OFF
+                 wxBUILD_USE_STATIC_RUNTIME=ON
+                 wxUSE_XLOCALE=OFF
+                 wxUSE_WEBVIEW_WEBKIT=ON
+                 wxUSE_WEBVIEW_EDGE=ON
+                 wxUSE_WEBVIEW_EDGE_STATIC=ON
+                 CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+    - name: Install wxWidgets
+      if: ${{ steps.cache-wx-install.outputs.cache-hit != 'true' }}
+      working-directory: ./wxwidgets
+      run: >
+        cmake
+        --install out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        --config ${{ matrix.build_type }}
+        --prefix ${{ github.workspace }}/wx/x64-${{ matrix.build_type }}
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: [docker_build, wxwidgets_build]
+    container:
+      image: ${{ matrix.image }}
+
+    strategy:
+      fail-fast: true
+
+      matrix:
+        target_os: [linux, macos, win64]
         build_type: [Release, Debug]
         include:
           - target_os: linux
-            docker_target: standard_build
             os: ubuntu-latest
             test: true
-            build_target: all
+            image: ghcr.io/akbarthegreat/cszb_scoreboard_standard_build_${{ github.head_ref || github.ref_name }}:latest
           - target_os: macos
-            docker_target: macos_build
             os: ubuntu-latest
             test: false
-            cmake_args:  >
-                -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12
-                -DCMAKE_TOOLCHAIN_FILE=/opt/osxcross/toolchain.cmake
-                -DOPENSSL_ROOT_DIR=/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3
             env:
               - LD_LIBRARY_PATH='/opt/osxcross/lib'
-            build_target: cszb-scoreboard
+            build_args: --target cszb-scoreboard
+            image: ghcr.io/akbarthegreat/cszb_scoreboard_macos_build_${{ github.head_ref || github.ref_name }}:latest
+          - target_os: macos
+            build_type: Debug
+            cmake_args:  --preset=Mac-Debug
+          - target_os: macos
+            build_type: Release
+            cmake_args:  --preset=Mac-Release
+          - target_os: win64
+            os: windows-latest
+            test: true
+          - target_os: win64
+            build_type: Debug
+            cmake_args: --preset=Debug
+          - target_os: win64
+            build_type: Release
+            cmake_args: --preset=Release
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configure Cmake
-      run: >
-        cmake -B out/${{ matrix.build_type }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DSKIP_LINT=true
-        -DINTEGRATION_TEST=false
-        ${{ matrix.cmake_args }}
+    - name: Setup vckpkg
+      if: ${{ matrix.target_os == 'win64' }}
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: '${{ env.vcpkg_commit }}'
 
-    - name: Build
-      run: >
-        cmake --build out/${{ matrix.build_type }} --parallel 4 --config ${{ matrix.build_type }} --target ${{ matrix.build_target }}
+    - name: Cache wxWidgets install
+      if: ${{ matrix.target_os == 'win64' }}
+      id: cache-wx-install
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-wx-install
+      with:
+        path: ./wx/x64-${{ matrix.build_type }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-${{ env.wxwidget_commit }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Build Scoreboard
+      uses: threeal/cmake-action@main
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}/vcpkg # Only used in win-64, ignored in other platforms.
+        WXWIDGETS_ROOT: ${{ github.workspace }}/wx # Only used in win-64, ignored in other platforms.
+      with:
+        source-dir: ${{ github.workspace }}
+        build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        args: ${{ matrix.cmake_args }}
+        build-args: ${{ matrix.cmake_args }} ${{ matrix.build_args }}
+        options: 
+          CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          SKIP_LINT=true
+          INTEGRATION_TEST=false
 
   test:
     runs-on: ${{ matrix.os }}
     needs: [docker_build]
     container:
-      image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
+      image: ${{ matrix.image }}
 
     strategy:
       fail-fast: true
 
       matrix:
-        target_os: [linux]
+        target_os: [linux, win64]
         build_type: [Release, Debug]
         include:
           - target_os: linux
-            docker_target: standard_build
             os: ubuntu-latest
             test: true
+            image: ghcr.io/akbarthegreat/cszb_scoreboard_standard_build_${{ github.head_ref || github.ref_name }}:latest
+          - target_os: win64
+            os: windows-latest
+            test: true
+          - target_os: win64
+            build_type: Debug
+            cmake_args: --preset=Debug
+          - target_os: win64
+            build_type: Release
+            cmake_args: --preset=Release
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configure Cmake
-      run: >
-        cmake -B out/${{ matrix.build_type }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DSKIP_LINT=true
-        -DINTEGRATION_TEST=false
+    - name: Setup vckpkg
+      if: ${{ matrix.target_os == 'win64' }}
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: '${{ env.vcpkg_commit }}'
 
-    - name: Build
-      run: >
-        cmake --build out/${{ matrix.build_type }} --parallel 4 --config ${{ matrix.build_type }}
+    - name: Cache wxWidgets install
+      if: ${{ matrix.target_os == 'win64' }}
+      id: cache-wx-install
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-wx-install
+      with:
+        path: ./wx/x64-${{ matrix.build_type }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-${{ env.wxwidget_commit }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Build Scoreboard
+      uses: threeal/cmake-action@main
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}/vcpkg # Only used in win-64, ignored in other platforms.
+        WXWIDGETS_ROOT: ${{ github.workspace }}/wx # Only used in win-64, ignored in other platforms.
+      with:
+        source-dir: ${{ github.workspace }}
+        build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        args: ${{ matrix.cmake_args }}
+        build-args: ${{ matrix.cmake_args }}
+        options: 
+          CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          SKIP_LINT=true
+          INTEGRATION_TEST=false
 
     - name: Test
       if: ${{ matrix.test }}
-      run: >
-        etc/github_actions/run_automated_tests.sh ${{ matrix.build_type }}
+      uses: threeal/ctest-action@v1.0.0
+      with:
+        test-dir: out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        build-config: ${{ matrix.build_type }}
+        args: --no-compress-output
 
     - name: Archive test results
       uses: actions/upload-artifact@v4
       if: ${{ matrix.test }}
       with:
-        name: test-results-${{ matrix.build_type }}
+        name: test-results-${{ matrix.target_os }}-${{ matrix.build_type }}
         path: |
-            out/${{ matrix.build_type }}/gtest/**/*.xml
-            out/${{ matrix.build_type }}/Testing/**/*.xml
+            out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
+            out/${{ matrix.target_os }}/${{ matrix.build_type }}/Testing/**/*.xml
 
     - name: Test Report
       uses: EnricoMi/publish-unit-test-result-action@v2
-      if: ${{ matrix.test }}
+      if: ${{ matrix.test && matrix.target_os != 'win64' }}
       with:
-        files: out/${{ matrix.build_type }}/gtest/**/*.xml
+        files: out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml

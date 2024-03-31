@@ -5,7 +5,7 @@ on:
     - cron: "0 2 * * *" # 2 am every morning
 
 jobs:
-  test:
+  coverage:
     runs-on: ${{ matrix.os }}
     container:
       # Always use the main branch for coverage
@@ -25,43 +25,51 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configure Cmake
-      run: >
-        cmake -B out/${{ matrix.build_type }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DSKIP_LINT=false
-        -DINTEGRATION_TEST=true
-        -DENABLE_CODE_COVERAGE=true
-        -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING
-  
-    - name: Build
-      run: >
-        cmake --build out/${{ matrix.build_type }} --parallel 4 --config ${{ matrix.build_type }}
+    - name: Build Scoreboard
+      uses: threeal/cmake-action@main
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}/vcpkg # Only used in win-64, ignored in other platforms.
+        WXWIDGETS_ROOT: ${{ github.workspace }}/wx # Only used in win-64, ignored in other platforms.
+      with:
+        source-dir: ${{ github.workspace }}
+        build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        options: 
+          CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          SKIP_LINT=false
+          INTEGRATION_TEST=true
+          ENABLE_CODE_COVERAGE=true
+          CMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING
+
+    - name: Pre-Test Setup
+      run: sudo supervisord -c /supervisord.conf
 
     - name: Test
-      run: >
-        etc/github_actions/run_automated_tests.sh ${{ matrix.build_type }}
+      uses: threeal/ctest-action@v1.0.0
+      with:
+        test-dir: out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        build-config: ${{ matrix.build_type }}
+        args: --no-compress-output
 
     - name: Coverage
-      run: >
-        etc/github_actions/run_coverage_tests.sh ${{ matrix.build_type }}
+      working-directory: out/${{matrix.target_os}}/${{ matrix.build_type }}
+      run: make -j6 all cszb-scoreboard-xml-coverage
 
     - name: Archive test results
       uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.build_type }}
         path: |
-            out/${{ matrix.build_type }}/gtest/**/*.xml
-            out/${{ matrix.build_type }}/Testing/**/*.xml
+            out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
+            out/${{ matrix.target_os }}/${{ matrix.build_type }}/Testing/**/*.xml
 
     - name: Test Report
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
-        files: out/${{ matrix.build_type }}/gtest/**/*.xml
+        files: out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
 
     - name: Coverage Report
       uses: 5monkeys/cobertura-action@master
       with:
-        path: out/${{ matrix.build_type }}/cszb-scoreboard-xml-coverage.xml
+        path: out/${{ matrix.target_os }}/${{ matrix.build_type }}/cszb-scoreboard-xml-coverage.xml
         minimum_coverage: 25
