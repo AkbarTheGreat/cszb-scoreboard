@@ -1,0 +1,48 @@
+{
+   "version": 6,
+   "include": [ "Linux.json" ],
+   "configurePresets": [
+      {
+         "name": "MacOS-Debug",
+         "displayName": "MacOS Debug",
+         "inherits": "Linux-Debug",
+         "binaryDir": "${sourceDir}/out/MacOS/Debug",
+         "cacheVariables": {
+            "CMAKE_OSX_DEPLOYMENT_TARGET": "10.12",
+            "CMAKE_TOOLCHAIN_FILE": "/opt/osxcross/toolchain.cmake",
+            "OPENSSL_ROOT_DIR": "/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3"
+         }
+      },
+      {
+         "name": "MacOS-Release",
+         "displayName": "MacOS Release",
+         "inherits": "Linux-Release",
+         "binaryDir": "${sourceDir}/out/MacOS/Release",
+         "cacheVariables": {
+            "CMAKE_OSX_DEPLOYMENT_TARGET": "10.12",
+            "CMAKE_TOOLCHAIN_FILE": "/opt/osxcross/toolchain.cmake",
+            "OPENSSL_ROOT_DIR": "/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3"
+         }
+      }
+   ],
+   "buildPresets": [
+      {
+         "name": "MacOS-Debug",
+         "displayName": "MacOS Debug",
+         "configurePreset": "MacOS-Debug",
+         "configuration": "Debug",
+         "targets": [
+            "cszb-scoreboard"
+         ]
+      },
+      {
+         "name": "MacOS-Release",
+         "displayName": "MacOS Release",
+         "configurePreset": "MacOS-Release",
+         "configuration": "Release",
+         "targets": [
+            "cszb-scoreboard"
+         ]
+      }
+   ]
+}

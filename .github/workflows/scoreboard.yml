@@ -18,12 +18,12 @@ jobs:
       fail-fast: true
 
       matrix:
-        target_os: [linux, macos]
+        target_os: [Linux, MacOS]
         include:
-          - target_os: linux
+          - target_os: Linux
             docker_target: standard_build
             os: ubuntu-latest
-          - target_os: macos
+          - target_os: MacOS
             docker_target: macos_build
             os: ubuntu-latest
 
@@ -71,10 +71,10 @@ jobs:
       fail-fast: true
 
       matrix:
-        target_os: [win64]
+        target_os: [Win64]
         build_type: [Release, Debug]
         include:
-          - target_os: win64
+          - target_os: Win64
             os: windows-latest
 
     steps:
@@ -138,46 +138,34 @@ jobs:
       fail-fast: true
 
       matrix:
-        target_os: [linux, macos, win64]
+        target_os: [Linux, MacOS, Win64]
         build_type: [Release, Debug]
         include:
-          - target_os: linux
+          - target_os: Linux
             os: ubuntu-latest
             test: true
             image: ghcr.io/akbarthegreat/cszb_scoreboard_standard_build_${{ github.head_ref || github.ref_name }}:latest
-          - target_os: macos
+          - target_os: MacOS
             os: ubuntu-latest
             test: false
             env:
               - LD_LIBRARY_PATH='/opt/osxcross/lib'
             build_args: --target cszb-scoreboard
             image: ghcr.io/akbarthegreat/cszb_scoreboard_macos_build_${{ github.head_ref || github.ref_name }}:latest
-          - target_os: macos
-            build_type: Debug
-            cmake_args:  --preset=Mac-Debug
-          - target_os: macos
-            build_type: Release
-            cmake_args:  --preset=Mac-Release
-          - target_os: win64
+          - target_os: Win64
             os: windows-latest
             test: true
-          - target_os: win64
-            build_type: Debug
-            cmake_args: --preset=Debug
-          - target_os: win64
-            build_type: Release
-            cmake_args: --preset=Release
     steps:
     - uses: actions/checkout@v4
 
     - name: Setup vckpkg
-      if: ${{ matrix.target_os == 'win64' }}
+      if: ${{ matrix.target_os == 'Win64' }}
       uses: lukka/run-vcpkg@v11
       with:
         vcpkgGitCommitId: '${{ env.vcpkg_commit }}'
 
     - name: Cache wxWidgets install
-      if: ${{ matrix.target_os == 'win64' }}
+      if: ${{ matrix.target_os == 'Win64' }}
       id: cache-wx-install
       uses: actions/cache@v4
       env:
@@ -199,12 +187,8 @@ jobs:
       with:
         source-dir: ${{ github.workspace }}
         build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
-        args: ${{ matrix.cmake_args }}
-        build-args: ${{ matrix.cmake_args }} ${{ matrix.build_args }}
-        options: 
-          CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          SKIP_LINT=true
-          INTEGRATION_TEST=false
+        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+        build-args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
 
   test:
     runs-on: ${{ matrix.os }}
@@ -216,34 +200,28 @@ jobs:
       fail-fast: true
 
       matrix:
-        target_os: [linux, win64]
+        target_os: [Linux, Win64]
         build_type: [Release, Debug]
         include:
-          - target_os: linux
+          - target_os: Linux
             os: ubuntu-latest
             test: true
             image: ghcr.io/akbarthegreat/cszb_scoreboard_standard_build_${{ github.head_ref || github.ref_name }}:latest
-          - target_os: win64
+          - target_os: Win64
             os: windows-latest
             test: true
-          - target_os: win64
-            build_type: Debug
-            cmake_args: --preset=Debug
-          - target_os: win64
-            build_type: Release
-            cmake_args: --preset=Release
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Setup vckpkg
-      if: ${{ matrix.target_os == 'win64' }}
+      if: ${{ matrix.target_os == 'Win64' }}
       uses: lukka/run-vcpkg@v11
       with:
         vcpkgGitCommitId: '${{ env.vcpkg_commit }}'
 
     - name: Cache wxWidgets install
-      if: ${{ matrix.target_os == 'win64' }}
+      if: ${{ matrix.target_os == 'Win64' }}
       id: cache-wx-install
       uses: actions/cache@v4
       env:
@@ -265,20 +243,16 @@ jobs:
       with:
         source-dir: ${{ github.workspace }}
         build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
-        args: ${{ matrix.cmake_args }}
-        build-args: ${{ matrix.cmake_args }}
-        options: 
-          CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          SKIP_LINT=true
-          INTEGRATION_TEST=false
+        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+        build-args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
 
     - name: Test
       if: ${{ matrix.test }}
       uses: threeal/ctest-action@v1.0.0
       with:
         test-dir: out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
         build-config: ${{ matrix.build_type }}
-        args: --no-compress-output
 
     - name: Archive test results
       uses: actions/upload-artifact@v4
@@ -291,6 +265,6 @@ jobs:
 
     - name: Test Report
       uses: EnricoMi/publish-unit-test-result-action@v2
-      if: ${{ matrix.test && matrix.target_os != 'win64' }}
+      if: ${{ matrix.test && matrix.target_os != 'Win64' }}
       with:
         files: out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml

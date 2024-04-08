@@ -15,10 +15,10 @@ jobs:
       fail-fast: true
 
       matrix:
-        target_os: [linux]
-        build_type: [Debug]
+        target_os: [Linux]
+        build_type: [Coverage]
         include:
-          - target_os: linux
+          - target_os: Linux
             docker_target: standard_build
             os: ubuntu-latest
 
@@ -27,18 +27,10 @@ jobs:
 
     - name: Build Scoreboard
       uses: threeal/cmake-action@main
-      env:
-        VCPKG_ROOT: ${{ github.workspace }}/vcpkg # Only used in win-64, ignored in other platforms.
-        WXWIDGETS_ROOT: ${{ github.workspace }}/wx # Only used in win-64, ignored in other platforms.
       with:
         source-dir: ${{ github.workspace }}
         build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
-        options: 
-          CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          SKIP_LINT=false
-          INTEGRATION_TEST=true
-          ENABLE_CODE_COVERAGE=true
-          CMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING
+        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
 
     - name: Pre-Test Setup
       run: sudo supervisord -c /supervisord.conf
@@ -51,8 +43,12 @@ jobs:
         args: --no-compress-output
 
     - name: Coverage
-      working-directory: out/${{matrix.target_os}}/${{ matrix.build_type }}
-      run: make -j6 all cszb-scoreboard-xml-coverage
+      uses: threeal/cmake-action@main
+      with:
+        source-dir: ${{ github.workspace }}
+        build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+        build-args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
 
     - name: Archive test results
       uses: actions/upload-artifact@v4
