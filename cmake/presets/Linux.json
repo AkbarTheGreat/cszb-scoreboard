@@ -1,0 +1,93 @@
+{
+   "version": 6,
+   "configurePresets": [
+      {
+         "name": "Linux-Debug",
+         "displayName": "Linux Debug",
+         "generator": "Unix Makefiles",
+         "binaryDir": "${sourceDir}/out/Linux/Debug",
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Debug",
+            "SKIP_LINT": "true",
+            "INTEGRATION_TEST": "false"
+         }
+      },
+      {
+         "name": "Linux-Release",
+         "displayName": "Linux Release",
+         "inherits": "Linux-Debug",
+         "binaryDir": "${sourceDir}/out/Linux/Release",
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release"
+         }
+      },
+      {
+         "name": "Linux-Integration",
+         "displayName": "Full Linux Testing and Lint",
+         "inherits": "Linux-Debug",
+         "binaryDir": "${sourceDir}/out/Linux/Integration",
+         "cacheVariables": {
+            "SKIP_LINT": "false",
+            "INTEGRATION_TEST": "true",
+            "CLANG_TIDY_ERRORS": "true"
+         }
+      },
+      {
+         "name": "Linux-Coverage",
+         "displayName": "Coverage Generation",
+         "inherits": "Linux-Debug",
+         "binaryDir": "${sourceDir}/out/Linux/Coverage",
+         "cacheVariables": {
+            "ENABLE_CODE_COVERAGE": "true",
+            "CMAKE_CXX_FLAGS": "-DSCOREBOARD_ENABLE_LOGGING"
+         }
+      }
+   ],
+   "buildPresets": [
+      {
+         "name": "Linux-Debug",
+         "displayName": "Linux Debug",
+         "configurePreset": "Linux-Debug",
+         "configuration": "Debug"
+      },
+      {
+         "name": "Linux-Release",
+         "displayName": "Linux Release",
+         "configurePreset": "Linux-Release",
+         "configuration": "Release"
+      },
+      {
+         "name": "Linux-Integration",
+         "displayName": "Full Linux Testing and Lint",
+         "configurePreset": "Linux-Integration",
+         "configuration": "Debug"
+      },
+      {
+         "name": "Linux-Coverage",
+         "displayName": "Coverage Generation",
+         "configurePreset": "Linux-Coverage",
+         "configuration": "Debug",
+         "targets": [
+            "all",
+            "cszb-scoreboard-xml-coverage"
+         ]
+      }
+   ],
+   "testPresets": [
+      {
+         "name": "Linux-Debug",
+         "displayName": "Linux Debug",
+         "configurePreset": "Linux-Debug"
+      },
+      {
+         "name": "Linux-Release",
+         "displayName": "Linux Release",
+         "configurePreset": "Linux-Release"
+      },
+      {
+         "name": "Linux-Integration",
+         "displayName": "Full Linux Testing and Lint",
+         "configurePreset": "Linux-Integration"
+      }
+   ]
+}

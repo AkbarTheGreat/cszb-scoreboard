@@ -1,0 +1,76 @@
+{
+   "version": 6,
+   "configurePresets": [
+      {
+         "name": "Win64-Debug",
+         "displayName": "Debug",
+         "generator": "Visual Studio 17 2022",
+         "binaryDir": "${sourceDir}/out/Win64/Debug",
+         "cacheVariables": {
+            "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+            "CMAKE_BUILD_TYPE": "Debug",
+            "INTEGRATION_TEST": "False",
+            "WXWIDGETS_INSTALL_DIR": "$env{WXWIDGETS_ROOT}/x64-Debug",
+            "WXWIDGETS_VERSION": "33"
+         }
+      },
+      {
+         "name": "Win64-Integration",
+         "displayName": "Integration",
+         "inherits": "Win64-Debug",
+         "binaryDir": "${sourceDir}/out/Win64/Integration",
+         "cacheVariables": {
+            "INTEGRATION_TEST": "True"
+         }
+      },
+      {
+         "name": "Win64-Release",
+         "displayName": "Release",
+         "inherits": "Win64-Debug",
+         "binaryDir": "${sourceDir}/out/Win64/Release",
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release",
+            "WXWIDGETS_INSTALL_DIR": "$env{WXWIDGETS_ROOT}/x64-Release"
+         }
+      }
+   ],
+   "buildPresets": [
+      {
+         "name": "Win64-Debug",
+         "displayName": "Debug",
+         "configurePreset": "Win64-Debug",
+         "configuration": "Debug"
+      },
+      {
+         "name": "Win64-Integration",
+         "displayName": "Debug Integration",
+         "inherits": "Win64-Debug",
+         "configurePreset": "Win64-Integration"
+      },
+      {
+         "name": "Win64-Release",
+         "displayName": "Release",
+         "configurePreset": "Win64-Release",
+         "configuration": "Release"
+      }
+   ],
+   "testPresets": [
+      {
+         "name": "Win64-Debug",
+         "displayName": "Debug",
+         "configurePreset": "Win64-Debug"
+      },
+      {
+         "name": "Win64-Integration",
+         "displayName": "Debug Integration",
+         "inherits": "Win64-Debug",
+         "configurePreset": "Win64-Integration"
+      },
+      {
+         "name": "Win64-Release",
+         "displayName": "Release",
+         "configurePreset": "Win64-Release"
+      }
+   ]
+}

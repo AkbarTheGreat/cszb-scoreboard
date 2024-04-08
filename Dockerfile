@@ -561,28 +561,21 @@ CMD echo "Everything is built.  Enjoy."
 FROM macos_build AS macos_test
 
 WORKDIR /cszb-scoreboard/out
-CMD cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
-          -DCMAKE_TOOLCHAIN_FILE=${OSXCROSS_ROOT_DIR}/toolchain.cmake \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DOPENSSL_ROOT_DIR=${OSXCROSS_ROOT_DIR}/macports/pkgs/opt/local/libexec/openssl3 \
-          -DSKIP_LINT=true \
-          -DINTEGRATION_TEST=false \
-          ../ && \
-    make -j6 scoreboard_proto cszb-scoreboard
+CMD cmake --preset MacOS-Debug && \
+    cmake --build --preset MacOS-Debug --parallel 6
 
 # ------------------------------------------------------------------------------
 # Coverage Generation -- (generate_cov)
 #
 # Uses standard_build to build, test, and generate coverage info for the scoreboard
+# You will likely want to map /cszb-scoreboard/out/linux/Coverage as a volume to
+# exfiltrate the results.
 # ------------------------------------------------------------------------------
 FROM standard_build AS generate_cov
 
-WORKDIR /cszb-scoreboard/out
-CMD cmake -DCMAKE_BUILD_TYPE=Debug \
-          -DENABLE_CODE_COVERAGE=true \
-          -DCMAKE_CXX_FLAGS=-DSCOREBOARD_ENABLE_LOGGING \
-          ../ && \
-    make -j6 scoreboard_proto all cszb-scoreboard-xml-coverage
+WORKDIR /cszb-scoreboard
+CMD cmake --preset Linux-Coverage && \
+    cmake --build --preset Linux-Coverage --parallel 6
 
 # ------------------------------------------------------------------------------
 # Standard test -- default action (standard_test)
@@ -591,12 +584,8 @@ CMD cmake -DCMAKE_BUILD_TYPE=Debug \
 # ------------------------------------------------------------------------------
 FROM standard_build AS standard_test
 
-WORKDIR /cszb-scoreboard/out
+WORKDIR /cszb-scoreboard
 CMD supervisord -c /supervisord.conf && \
-    cmake -DCMAKE_BUILD_TYPE=Debug \
-          -DSKIP_LINT=false \
-          -DCLANG_TIDY_ERRORS=true \
-          -DINTEGRATION_TEST=true \
-          ../ && \
-    make -j6 scoreboard_proto all test
-
+    cmake --preset Linux-Integration && \
+    cmake --build --preset Linux-Integration --parallel 6 && \
+    ctest --preset Linux-Integration
