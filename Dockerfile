@@ -269,9 +269,12 @@ FROM osxcross_compile AS osxcross_build
 # Fake Macports Dependencies
 RUN osxcross-macports fake-install \
     curl-ca-bundle \
+    geoclue2 \
     gnutls \
     graphviz \
+    mesa \
     py312 \
+    shared-mime-info \
     xorg
 
 # Real Macports dependencies
@@ -279,7 +282,6 @@ RUN osxcross-macports install \
     bzip2 \
     curl \
     expat \
-    geoclue2 \
     gettext \
     glib2 \
     gtest \
