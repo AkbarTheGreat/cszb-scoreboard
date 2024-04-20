@@ -127,6 +127,8 @@ void ImageSearch::onURLDrop(const std::string &url) {
     home_screen_image = urlImage;
   }
 
+  drop_target->focus();
+
   control_panel->update();
   updatePreview();
 }
