@@ -1,4 +1,4 @@
-﻿# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Build Baseline (build_baseline)
 # 
 # This stage is the base requirements for all of our build stages, including the
@@ -540,6 +540,56 @@ WORKDIR /cszb-scoreboard
 CMD echo "Please run etc/scripts/clean_code.pl"
 
 # ------------------------------------------------------------------------------
+# Dev Container (dev)
+#
+# A container for use in vscode as a dev container.  Has all of the build
+# dependencies as well as code cleanup tools
+# ------------------------------------------------------------------------------
+FROM mcr.microsoft.com/devcontainers/base:alpine AS dev
+
+RUN apk add --no-cache \
+    alpine-sdk \
+    clang \
+    clang-extra-tools \
+    cmake \
+    compiler-rt \
+    git \
+    gcovr \
+    llvm \
+    openssl-dev \
+    perl \
+    perl-app-cpanminus \
+    py3-pip \
+    valgrind
+
+RUN cpanm Perl::Tidy
+
+RUN python3 -m venv /mdformat-venv && /mdformat-venv/bin/pip install mdformat
+
+ENV GCOV llvm-cov gcov
+
+WORKDIR /
+
+# Bring in Curl
+COPY --from=curl_build /curl.tgz /
+RUN tar xvzf curl.tgz && rm curl.tgz
+# Bring in JsonCpp
+COPY --from=jsoncpp_build /jsoncpp.tgz /
+RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
+# Bring in GTest
+COPY --from=googletest_build /googletest.tgz /
+RUN tar xvzf googletest.tgz && rm googletest.tgz
+# Bring in Protobuf
+COPY --from=protobuf_build /protobuf.tgz /
+RUN tar xvzf protobuf.tgz && rm protobuf.tgz
+# Bring in wxWidgets
+COPY --from=wxwidgets_build /wxwidgets.tgz /
+RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
+# Bring in IWYU
+COPY --from=iwyu_build /iwyu.tgz /
+RUN tar xvzf iwyu.tgz && rm iwyu.tgz
+
+# ------------------------------------------------------------------------------
 # Build Everything (build_all)
 #
 # A container which mostly just depends on all of the other final-stage containers
@@ -550,6 +600,7 @@ FROM scratch AS build_all
 COPY --from=standard_build /cszb-scoreboard/Dockerfile /standard_docker
 COPY --from=macos_build /cszb-scoreboard/Dockerfile /macos_docker
 COPY --from=code_clean /cszb-scoreboard/Dockerfile /code_clean_docker
+COPY --from=dev /cszb-scoreboard/Dockerfile /dev_docker
 
 CMD echo "Everything is built.  Enjoy."
 
