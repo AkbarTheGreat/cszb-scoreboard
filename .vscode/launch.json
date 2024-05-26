@@ -12,6 +12,14 @@
          "environment": []
       },
       {
+         "name": "Scoreboard (CMake, Linux -- theoretical)",
+         "type": "lldb",
+         "request": "launch",
+         "program": "${command:cmake.launchTargetPath}",
+         "args": [],
+         "cwd": "${workspaceFolder}/out/runtime"
+      },
+      {
          "name": "(ctest) Launch",
          "type": "cppvsdbg",
          "request": "launch",

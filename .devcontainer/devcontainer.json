@@ -1,5 +1,4 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
 	"name": "Cszb-Scoreboard",
 
@@ -9,7 +8,7 @@
 		"dockerfile": "../Dockerfile",
 		"context": "..",
 		"target": "dev"
-	}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	//"features": {}
@@ -21,7 +20,20 @@
 	// "postCreateCommand": "uname -a",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+    "vscode": {
+        "settings": {},
+        "extensions": [
+			"github.vscode-github-actions",
+			"ms-azuretools.vscode-docker",
+			"ms-vscode.cmake-tools",
+			"ms-vscode.cpptools-extension-pack",
+			"pbkit.vscode-pbkit",
+			"redhat.vscode-yaml",
+			"vadimcn.vscode-lldb"
+		]
+    }
+},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

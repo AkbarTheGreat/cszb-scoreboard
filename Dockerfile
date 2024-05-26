@@ -33,8 +33,8 @@ FROM build_baseline AS gui_build_baseline
 
 RUN apk add --no-cache \
     gtk+3.0-dev \
-	libnotify-dev \
-	libsecret-dev \
+    libnotify-dev \
+    libsecret-dev \
     webkit2gtk-dev
 
 # ------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ RUN apk add --no-cache \
 FROM build_baseline AS osxcross_build_baseline
 
 RUN apk add --no-cache \
-	cairo-dev
+    cairo-dev
 
 ENV OSXCROSS_SDK_VERSION 14.0
 ENV MACOSX_DEPLOYMENT_TARGET 10.9
@@ -326,9 +326,9 @@ RUN tar cvzf /osxcross.tgz /opt/osxcross
 FROM gui_build_baseline AS wxwidgets_build
 
 RUN apk add --no-cache \
-	libpng-dev \
-	openjpeg-dev \
-	tiff-dev
+    libpng-dev \
+    openjpeg-dev \
+    tiff-dev
 
 ENV WXWIDGETS_VERSION v3.2.2.1
 
@@ -366,9 +366,9 @@ RUN tar cvzf wxwidgets.tgz \
 FROM osxcross_build_baseline AS wxwidgets_osxcross_build
 
 RUN apk add --no-cache \
-	libpng-dev \
-	openjpeg-dev \
-	tiff-dev
+    libpng-dev \
+    openjpeg-dev \
+    tiff-dev
 
 ENV WXWIDGETS_VERSION v3.2.2.1
 
@@ -553,14 +553,23 @@ RUN apk add --no-cache \
     clang-extra-tools \
     cmake \
     compiler-rt \
-    git \
+    faenza-icon-theme \
     gcovr \
+    git \
+    gtk+3.0-dev \
+    libnotify-dev \
+    libsecret-dev \
+    lldb \
     llvm \
+    mesa-dri-gallium \
     openssl-dev \
     perl \
     perl-app-cpanminus \
     py3-pip \
-    valgrind
+    valgrind \
+    webkit2gtk-dev \
+    xfce4 \
+    xvfb
 
 RUN cpanm Perl::Tidy
 
