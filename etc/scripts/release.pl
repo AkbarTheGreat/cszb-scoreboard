@@ -189,10 +189,6 @@ sub test {
 sub build_osx {
    chdir($repo_path);
    my $source_path = dirname( dirname($FindBin::RealBin) );
-   if ( !$opt_dry_run ) {
-      rcopy( $source_path . '/osx_tarballs', $repo_path . '/osx_tarballs' )
-          or die 'Could not copy osx tarballs';
-   }
    my $perl       = $Config{'perlpath'};
    my $osx_script = $source_path . '/etc/scripts/build_osxcross.pl';
    my @args       = ( '--version', $opt_version );
