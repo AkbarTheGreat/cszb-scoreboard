@@ -94,11 +94,11 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libunistring.a
 	${macports_lib_dir}/libbrotlicommon.dylib
 	${macports_lib_dir}/libbrotlidec.dylib
+	${macports_lib_dir}/libcurl.dylib
 	#${macports_lib_dir}/libasprintf.a
 	${macports_lib_dir}/libbz2.a
 	${macports_lib_dir}/libcharset.a
 	${macports_lib_dir}/libcrypto.a
-	${macports_lib_dir}/libcurl.a
 	${macports_lib_dir}/libzstd.a
 	${macports_lib_dir}/libcurses.a
 	${macports_lib_dir}/libedit.a

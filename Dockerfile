@@ -87,11 +87,11 @@ RUN make install
 
 WORKDIR /
 RUN tar cvzf curl.tgz \
-   /usr/local/lib/libcurl* \
-   /usr/local/bin/curl* \
-   /usr/local/lib/pkgconfig/libcurl* \
-   /usr/local/include/curl \
-   /usr/local/lib/cmake/CURL
+    /usr/local/lib/libcurl* \
+    /usr/local/bin/curl* \
+    /usr/local/lib/pkgconfig/libcurl* \
+    /usr/local/include/curl \
+    /usr/local/lib/cmake/CURL
 
 # ------------------------------------------------------------------------------
 # JsonCpp (jsoncpp_bulid)
@@ -144,13 +144,13 @@ RUN make install
 
 WORKDIR /
 RUN tar cvzf googletest.tgz \
-   /usr/local/include/gmock \
-   /usr/local/include/gtest \
-   /usr/local/lib/libgmock* \
-   /usr/local/lib/libgtest* \
-   /usr/local/lib/pkgconfig/gmock* \
-   /usr/local/lib/pkgconfig/gtest* \
-   /usr/local/lib/cmake/GTest
+    /usr/local/include/gmock \
+    /usr/local/include/gtest \
+    /usr/local/lib/libgmock* \
+    /usr/local/lib/libgtest* \
+    /usr/local/lib/pkgconfig/gmock* \
+    /usr/local/lib/pkgconfig/gtest* \
+    /usr/local/lib/cmake/GTest
 
 # ------------------------------------------------------------------------------
 # Protobuf (protobuf_build)
@@ -389,8 +389,8 @@ WORKDIR /wxwidgets
 
 # This fixes an issue that turns into the symbol ___isPlatformVersionAtLeast being unavailable
 RUN sed -i 's/__has_builtin(__builtin_available)/__has_builtin(__disabled_builtin_available)/g' \
-            include/wx/osx/private/available.h \
-            src/png/pngrutil.c
+    include/wx/osx/private/available.h \
+    src/png/pngrutil.c
 
 # This constant doesn't exist for x86_64 architecture, so remove it forcefully.  It's gross, but it works
 RUN sed -i 's/layer.contentsFormat = kCAContentsFormatRGBA8Uint;//' src/osx/cocoa/window.mm
