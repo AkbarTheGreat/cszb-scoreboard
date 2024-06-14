@@ -23,9 +23,9 @@ limitations under the License.
 
 package Docker {
 
-   use 5.030;
-   use FindBin        qw();
-   use File::Basename qw(dirname);
+    use 5.030;
+    use FindBin qw();
+    use File::Basename qw(dirname);
 
 =pod
     Constructor arguments:
@@ -45,98 +45,102 @@ package Docker {
 
 =cut
 
-   sub new {
-      my ( $class, %args ) = @_;
-      die 'Docker requires the "name" argument.' unless ( $args{'name'} );
-      $args{'dockerfile'} //= 'Dockerfile';
-      $args{'context'}    //= '.';
-      $args{'volumes'}    //= {};
+    our @DOCKER_CMD = qw(docker);
+    @DOCKER_CMD = qw(podman);
 
-      my $root;
-      if ( $args{'build'} ) {
-         $args{'context'}    = dirname( dirname($FindBin::RealBin) );
-         $args{'target'}     = $args{'build'};
-         $args{'dockerfile'} = $args{'context'} . '/Dockerfile';
-         $root               = '/cszb-scoreboard/';
-      }
-      $root //= '/';
+    sub new {
+        my ( $class, %args ) = @_;
+        die 'Docker requires the "name" argument.' unless ( $args{'name'} );
+        $args{'dockerfile'} //= 'Dockerfile';
+        $args{'context'}    //= '.';
+        $args{'volumes'}    //= {};
 
-      my $self = bless { 'name'    => $args{'name'},
-                         'root'    => $root,
-                         'verbose' => $args{'verbose'},
-                       }, $class;
-      $self->workdir(q{});
-      $self->build( $args{'dockerfile'}, $args{'context'}, $args{'target'} )
+        my $root;
+        if ( $args{'build'} ) {
+            $args{'context'}    = dirname( dirname($FindBin::RealBin) );
+            $args{'target'}     = $args{'build'};
+            $args{'dockerfile'} = $args{'context'} . '/Dockerfile';
+            $root               = '/cszb-scoreboard/';
+        }
+        $root //= '/';
+
+        my $self = bless {
+            'name'    => $args{'name'},
+            'root'    => $root,
+            'verbose' => $args{'verbose'},
+        }, $class;
+        $self->workdir(q{});
+        $self->build( $args{'dockerfile'}, $args{'context'}, $args{'target'} )
           unless $args{'skip_build'};
-      $self->start( $args{'volumes'} );
-      return $self;
-   }
+        $self->start( $args{'volumes'} );
+        return $self;
+    }
 
-   sub log {
-      my ( $self, @msg ) = @_;
-      say @msg if $self->{'verbose'};
-   }
+    sub log {
+        my ( $self, @msg ) = @_;
+        say @msg if $self->{'verbose'};
+    }
 
-   sub container {
-      my ($self) = @_;
-      return $self->{'name'} . '_exec';
-   }
+    sub container {
+        my ($self) = @_;
+        return $self->{'name'} . '_exec';
+    }
 
-   sub build {
-      my ( $self, $file, $context, $target ) = @_;
-      $self->log('Building Docker image.');
-      my @cmd = ( 'docker', 'buildx', 'build' );
-      push @cmd, '-q' unless $self->{'verbose'};
-      if ($target) {
-         push @cmd, '--target=' . $target;
-      }
-      push @cmd, ( '-f', $file, '-t', $self->{'name'}, $context );
-      if ( system(@cmd) ) {
-         die 'Error building Docker image: ' . $? . "\n";
-      }
-   }
+    sub build {
+        my ( $self, $file, $context, $target ) = @_;
+        $self->log('Building Docker image.');
+        my @cmd = ( @DOCKER_CMD, 'buildx', 'build' );
+        push @cmd, '-q' unless $self->{'verbose'};
+        if ($target) {
+            push @cmd, '--target=' . $target;
+        }
+        push @cmd, ( '-f', $file, '-t', $self->{'name'}, $context );
+        if ( system(@cmd) ) {
+            die 'Error building Docker image: ' . $? . "\n";
+        }
+    }
 
-   sub start {
-      my ( $self, $volumes ) = @_;
-      $self->log('Starting Docker container.');
-      my @cmd = ( 'docker', 'run' );
-      for my $src ( keys %{$volumes} ) {
-         push @cmd, '-v', $src . q{:} . $volumes->{$src};
+    sub start {
+        my ( $self, $volumes ) = @_;
+        $self->log('Starting Docker container.');
+        my @cmd = ( @DOCKER_CMD, 'run' );
+        for my $src ( keys %{$volumes} ) {
+            push @cmd, '-v', $src . q{:} . $volumes->{$src};
 
-      }
-      push @cmd,
+        }
+        push @cmd,
           '--name',
           $self->container(),
           '-dit',
           $self->{'name'},
           '/bin/sh';
-      if ( system(@cmd) ) {
-         die 'Error starting Docker image: ' . $? . "\n";
-      }
-   }
+        if ( system(@cmd) ) {
+            die 'Error starting Docker image: ' . $? . "\n";
+        }
+    }
 
-   # Sets the current working directory for commands
-   sub workdir {
-      my ( $self, $dir ) = @_;
-      if ( $dir !~ '^/' ) {
-         $dir = $self->{'root'} . $dir;
-      }
-      $self->{'workdir'} = $dir;
-   }
+    # Sets the current working directory for commands
+    sub workdir {
+        my ( $self, $dir ) = @_;
+        if ( $dir !~ '^/' ) {
+            $dir = $self->{'root'} . $dir;
+        }
+        $self->{'workdir'} = $dir;
+    }
 
-   sub DESTROY {
-      local ( $., $@, $!, $^E, $? );
-      my ($self) = @_;
-      $self->log('Shutting down Docker container.');
-      system( 'docker', 'rm', '-f', $self->container() );
-   }
+    sub DESTROY {
+        local ( $., $@, $!, $^E, $? );
+        my ($self) = @_;
+        $self->log('Shutting down Docker container.');
+        system( @DOCKER_CMD, 'rm', '-f', $self->container() );
+    }
 
-   sub cmd {
-      my ( $self, @cmd ) = @_;
-      system( 'docker', 'exec', '-w', $self->{'workdir'}, '-it',
-              $self->container(), @cmd );
-      return $?;
-   }
+    sub cmd {
+        my ( $self, @cmd ) = @_;
+        system( @DOCKER_CMD, 'exec', '-w', $self->{'workdir'}, '-it',
+            $self->container(), @cmd );
+        return $?;
+    }
 }
 
 1;
