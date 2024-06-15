@@ -3,7 +3,7 @@ util/Base64.cpp: Encode/decode data in Base64.  There are a few options out
 there, but I didn't want to try to mix licenses with my MIT license, so I wrote
 my own from scratch to avoid this issue.
 
-Copyright 2023 Tracy Beck
+Copyright 2023-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -70,8 +70,8 @@ constexpr int B64_SHIFTL_LAST_TWO = 6;    // shifts left 6
 // map, so this shouldn't be terribly inefficient to do every time.
 const std::unordered_map<char, char> DECODE_MAP = build_decode_map();
 
-auto Base64::encode(const void *data_buffer, int64_t buffer_len)
-    -> std::string {
+auto Base64::encode(const void *data_buffer,
+                    int64_t buffer_len) -> std::string {
   std::vector<char> output;
   output.reserve(buffer_len * BITS_PER_BYTE /
                  BITS_PER_64);  // Reserve expected space
@@ -105,8 +105,8 @@ auto Base64::encode(const void *data_buffer, int64_t buffer_len)
   return {output.data()};
 }
 
-auto Base64::decode(const std::string &data, std::vector<char> *bin_out)
-    -> int64_t {
+auto Base64::decode(const std::string &data,
+                    std::vector<char> *bin_out) -> int64_t {
   bin_out->reserve(data.length() * BITS_PER_64 /
                    BITS_PER_BYTE);  // Reserve expected space
   for (int i = 0; i < data.length(); i++) {

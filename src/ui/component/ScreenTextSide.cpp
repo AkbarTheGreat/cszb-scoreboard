@@ -3,7 +3,7 @@ ui/component/ScreenTextSide.cpp: A single side of renderable image/text.  One or
 more of these are contained in a ScreenText, for use in presenting to a preview
 or external monitor.
 
-Copyright 2019-2023 Tracy Beck
+Copyright 2019-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -234,8 +234,8 @@ void ScreenTextSide::renderBackground(RenderContext *renderer) {
   renderOverlay(renderer);
 }
 
-auto ScreenTextSide::scaleImage(const Image &image, const Size &target_size)
-    -> Image {
+auto ScreenTextSide::scaleImage(const Image &image,
+                                const Size &target_size) -> Image {
   Image scaled_image = image;
   Size image_size = scaled_image.size();
   float screen_ratio = ratio(target_size);
@@ -308,17 +308,16 @@ auto ScreenTextSide::centerText(RenderContext *renderer,
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::topText(RenderContext *renderer, const std::string &text)
-    -> Position {
+auto ScreenTextSide::topText(RenderContext *renderer,
+                             const std::string &text) -> Position {
   Size text_extent = getTextExtent(renderer, text);
   int x = (size().width - text_extent.width) / 2;
   int y = size().height * TOP_OR_BOTTOM_RATIO;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::positionText(RenderContext *renderer,
-                                  const proto::RenderableText &text)
-    -> Position {
+auto ScreenTextSide::positionText(
+    RenderContext *renderer, const proto::RenderableText &text) -> Position {
   switch (text.position()) {
     case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_BOTTOM:
       return bottomText(renderer, text.text());

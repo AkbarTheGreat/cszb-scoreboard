@@ -2,7 +2,7 @@
 util/ProtoUtil.cpp: Convenience methods for converting between proto values and
 wxWidgets values.
 
-Copyright 2019-2023 Tracy Beck
+Copyright 2019-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ struct Size;
 
 const float DEFAULT_FONT_SIZE = 10;
 
-auto ProtoUtil::protoRct(const wxRect &input, proto::Rectangle *output)
-    -> proto::Rectangle * {
+auto ProtoUtil::protoRct(const wxRect &input,
+                         proto::Rectangle *output) -> proto::Rectangle * {
   output->set_x(input.GetX());
   output->set_y(input.GetY());
   output->set_width(input.GetWidth());
@@ -42,8 +42,8 @@ auto ProtoUtil::wxRct(const proto::Rectangle &input) -> wxRect {
   return rect;
 }
 
-auto ProtoUtil::protoClr(const Color &input, proto::Color *output)
-    -> proto::Color * {
+auto ProtoUtil::protoClr(const Color &input,
+                         proto::Color *output) -> proto::Color * {
   output->set_rgb(input.GetRGB());
   return output;
 }
@@ -52,8 +52,8 @@ auto ProtoUtil::wxClr(const proto::Color &input) -> Color {
   return Color(input.rgb());
 }
 
-auto ProtoUtil::wxScaledFont(const proto::Font &input, const Size &scale_size)
-    -> wxFont {
+auto ProtoUtil::wxScaledFont(const proto::Font &input,
+                             const Size &scale_size) -> wxFont {
   int scaled_size = FontUtil::scaleFactor(scale_size, input.size());
 
   wxFontInfo font_info(scaled_size);

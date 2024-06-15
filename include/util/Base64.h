@@ -3,7 +3,7 @@ util/Base64.h: Encode/decode data in Base64.  There are a few options out there,
 but I didn't want to try to mix licenses with my MIT license, so I wrote my own
 from scratch to avoid this issue.
 
-Copyright 2023 Tracy Beck
+Copyright 2023-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,13 +29,13 @@ class Base64 {
  public:
   // Encode a set of arbitrary data into Base64. Buffer lengths are always
   // specified in bytes.
-  static auto encode(const void *data_buffer, int64_t buffer_len)
-      -> std::string;
+  static auto encode(const void *data_buffer,
+                     int64_t buffer_len) -> std::string;
   // Decode a Base64 encoded set of data into a vector<char>, which just
   // contains the binary data.  Returns the length in bytes, although the vector
   // also knows that.
-  static auto decode(const std::string &data, std::vector<char> *bin_out)
-      -> int64_t;
+  static auto decode(const std::string &data,
+                     std::vector<char> *bin_out) -> int64_t;
 };
 
 }  // namespace cszb_scoreboard

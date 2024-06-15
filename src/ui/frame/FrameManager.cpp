@@ -5,7 +5,7 @@ all of these objects and any pointers returned from here should be considered
 non-authoritative.  All frame pointers are destroyed on exitFrames and any
 dangling references will then be invalid.
 
-Copyright 2019-2023 Tracy Beck
+Copyright 2019-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,9 +39,8 @@ auto FrameManager::createMainView(const std::string &title, const Position &pos,
   return main_view.get();
 }
 
-auto FrameManager::createScreenPresenter(int monitor_number,
-                                         const ScreenText &preview)
-    -> ScreenPresenter * {
+auto FrameManager::createScreenPresenter(
+    int monitor_number, const ScreenText &preview) -> ScreenPresenter * {
   auto presenter = std::make_unique<ScreenPresenter>(monitor_number, preview);
   ScreenPresenter *temporary = presenter.get();
   frames.emplace(std::move(presenter));

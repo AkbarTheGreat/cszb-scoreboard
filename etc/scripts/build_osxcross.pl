@@ -5,7 +5,7 @@
 This script builds a MacOS app bundle of the scoreboard using osxcross on a
 Linux machine.  The built application is in out/osxcross_package
 
-Copyright 2020-2023 Tracy Beck
+Copyright 2020-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

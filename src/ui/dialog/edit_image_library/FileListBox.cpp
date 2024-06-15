@@ -2,7 +2,7 @@
 ui/dialog/edit_image_library/FileListBox.cpp: A subclass of wxEditableListBox
 which specifically contains a list of files.
 
-Copyright 2020-2023 Tracy Beck
+Copyright 2020-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

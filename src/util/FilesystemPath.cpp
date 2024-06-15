@@ -3,7 +3,7 @@ util/FilesystemPath.cpp: In most cases, a moderately enhanced wrapper around
 std::filesystem::path. For cases where that support is unavailable, a simple
 stand-in which implements the functionality we need for our application.
 
-Copyright 2020-2023 Tracy Beck
+Copyright 2020-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

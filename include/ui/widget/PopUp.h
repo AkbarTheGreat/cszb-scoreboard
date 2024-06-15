@@ -1,7 +1,7 @@
 /*
 ui/widget/PopUp.h: A simple pop-up message as a fire & forget method.
 
-Copyright 2021-2023 Tracy Beck
+Copyright 2021-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ class PopUp {
   static void Message(const std::string &msg);
   static void Warning(const std::string &title, const std::string &msg);
   // Returns true if the user agrees, false if they cancel.
-  static auto Confirmation(const std::string &title, const std::string &msg)
-      -> bool;
+  static auto Confirmation(const std::string &title,
+                           const std::string &msg) -> bool;
 };
 
 }  // namespace cszb_scoreboard

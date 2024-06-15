@@ -2,7 +2,7 @@
 ui/widget/TabbedDialog.h: A substantial pop-up dialog, which contains controls
 within tabs.
 
-Copyright 2021-2023 Tracy Beck
+Copyright 2021-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,12 +49,10 @@ class TabbedDialog : public Widget {
   virtual ~TabbedDialog();
 
   void addPage(const Panel &page, const std::string &name);
-  [[nodiscard]] auto childPanel(wxWindowID id = wxID_ANY,
-                                const wxPoint &pos = wxDefaultPosition,
-                                const wxSize &size = wxDefaultSize,
-                                int64_t style = wxTAB_TRAVERSAL,
-                                const wxString &name = wxPanelNameStr) const
-      -> swx::Panel * {
+  [[nodiscard]] auto childPanel(
+      wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition,
+      const wxSize &size = wxDefaultSize, int64_t style = wxTAB_TRAVERSAL,
+      const wxString &name = wxPanelNameStr) const -> swx::Panel * {
     return new swx::PanelImpl(_wx->GetBookCtrl(), id, pos, size, style, name);
   }
   void close(bool force = true) { wx()->Close(force); }

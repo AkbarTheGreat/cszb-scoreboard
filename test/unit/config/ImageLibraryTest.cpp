@@ -1,7 +1,7 @@
 /*
 test/ImageLibraryTest.cpp: Tests for config/ImageLibrary
 
-Copyright 2020-2023 Tracy Beck
+Copyright 2020-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -90,11 +90,10 @@ auto testLibrary(MockSingleton *singleton) -> ImageLibrary {
 
 // Predicate for asserting against two arbitrary vectors.
 template <typename T, typename A>
-auto assertVectorEquality(const char *actual_expression,
-                          const char *expected_expression,
-                          std::vector<T, A> const &actual,
-                          std::vector<T, A> const &expected)
-    -> ::testing::AssertionResult {
+auto assertVectorEquality(
+    const char *actual_expression, const char *expected_expression,
+    std::vector<T, A> const &actual,
+    std::vector<T, A> const &expected) -> ::testing::AssertionResult {
   if (actual.size() != expected.size()) {
     return ::testing::AssertionFailure()
            << actual_expression << " and " << expected_expression
@@ -125,8 +124,8 @@ auto filesystemPathVector(const std::vector<std::string> &in)
   return out;
 }
 
-auto tagStrings(const ImageLibrary &library, bool include_name = false)
-    -> std::vector<std::string> {
+auto tagStrings(const ImageLibrary &library,
+                bool include_name = false) -> std::vector<std::string> {
   std::vector<CaseOptionalString> tags = library.allTags(include_name);
   std::vector<std::string> tag_strings;
   tag_strings.reserve(tags.size());

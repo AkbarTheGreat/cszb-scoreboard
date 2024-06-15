@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/Choice.h: A wrapper around wxChoice.
 
-Copyright 2023 Tracy Beck
+Copyright 2023-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

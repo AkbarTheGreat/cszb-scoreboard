@@ -2,7 +2,7 @@
 config/ImageLibrary.cpp: A singleton which represents a library of images,
 tagged by the user and quickly searchable.
 
-Copyright 2020-2023 Tracy Beck
+Copyright 2020-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -357,8 +357,8 @@ CaseOptionalString::CaseOptionalString(const std::string &str) {
                  [](unsigned char c) { return std::tolower(c); });
 }
 
-auto CaseOptionalString::find(const CaseOptionalString &b, size_t offset) const
-    -> size_t {
+auto CaseOptionalString::find(const CaseOptionalString &b,
+                              size_t offset) const -> size_t {
   return lowercase.find(b.lowercase, offset);
 }
 

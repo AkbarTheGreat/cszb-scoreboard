@@ -2,7 +2,7 @@
 ui/widget/Panel.h: A panel represents an interior panel container that is held
 within other frames or panels.
 
-Copyright 2021-2023 Tracy Beck
+Copyright 2021-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,9 +64,8 @@ class Panel : public Widget {
   virtual ~Panel();
 
   // Methods to create internal widgets, like buttons or labels.
-  [[nodiscard]] auto button(const std::string &label,
-                            bool exact_fit = false) const
-      -> std::unique_ptr<Button>;
+  [[nodiscard]] auto button(const std::string &label, bool exact_fit = false)
+      const -> std::unique_ptr<Button>;
   [[nodiscard]] auto browser(const std::string &url) const
       -> std::unique_ptr<Browser>;
   [[nodiscard]] auto checkBox(const std::string &label) const
@@ -76,9 +75,9 @@ class Panel : public Widget {
   [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
   [[nodiscard]] auto dropDown(const std::vector<std::string> &choices) const
       -> std::unique_ptr<DropDown>;
-  [[nodiscard]] auto openDirectoryPicker(
-      const std::string &title, const FilesystemPath &initial_dir) const
-      -> std::unique_ptr<DirectoryPicker>;
+  [[nodiscard]] auto openDirectoryPicker(const std::string &title,
+                                         const FilesystemPath &initial_dir)
+      const -> std::unique_ptr<DirectoryPicker>;
   [[nodiscard]] auto openFilePicker(const std::string &title,
                                     const std::string &selectionMode) const
       -> std::unique_ptr<FilePicker>;

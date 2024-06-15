@@ -4,7 +4,7 @@ Disables logging in tests entirely by default.  To enable logging in tests (to
 stderr instead of wxLog), configure Cmake with
 -DCMAKE_CXX_FLAGS="-DSCOREBOARD_ENABLE_LOGGING".
 
-Copyright 2021-2023 Tracy Beck
+Copyright 2021-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

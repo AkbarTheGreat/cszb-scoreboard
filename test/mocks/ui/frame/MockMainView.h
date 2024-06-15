@@ -1,7 +1,7 @@
 /*
 ui/frame/MockMainView.h: Mock MainView implementation for testing.
 
-Copyright 2021-2023 Tracy Beck
+Copyright 2021-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ limitations under the License.
 #include "ui/frame/MainView.h"
 
 // Empty initialization for testing.
-void cszb_scoreboard::MainView::init(){};
+void cszb_scoreboard::MainView::init() {};
 
 namespace cszb_scoreboard::test {
 

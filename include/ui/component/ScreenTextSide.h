@@ -3,7 +3,7 @@ ui/component/ScreenTextSide.cpp: A single side of renderable image/text.  One or
 more of these are contained in a ScreenText, for use in presenting to a preview
 or external monitor.
 
-Copyright 2019-2023 Tracy Beck
+Copyright 2019-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -79,8 +79,8 @@ class ScreenTextSide : public Canvas {
                  Singleton *singleton);
   ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size,
                  Singleton *singleton);
-  static auto getTextExtent(RenderContext *renderer, const std::string &text)
-      -> Size;
+  static auto getTextExtent(RenderContext *renderer,
+                            const std::string &text) -> Size;
 
  private:
   bool auto_fit_text;
@@ -107,8 +107,8 @@ class ScreenTextSide : public Canvas {
   auto centerText(RenderContext *renderer, const std::string &text) -> Position;
   void createBlackout();
   void initializeForColor(Size size, const Color &color);
-  auto positionText(RenderContext *renderer, const proto::RenderableText &text)
-      -> Position;
+  auto positionText(RenderContext *renderer,
+                    const proto::RenderableText &text) -> Position;
   void renderBackground(RenderContext *renderer);
   void renderOverlay(RenderContext *renderer);
   void renderOverlayBottomCorner(RenderContext *renderer);

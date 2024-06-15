@@ -2,7 +2,7 @@
 ui/widget/Panel.cpp: A panel represents an interior panel container that is held
 within other frames or panels.
 
-Copyright 2021-2023 Tracy Beck
+Copyright 2021-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -83,8 +83,8 @@ auto Panel::childPanel(int width, int height) const -> swx::Panel* {
                             wxSize(width, height));
 }
 
-auto Panel::button(const std::string& label, bool exact_fit) const
-    -> std::unique_ptr<Button> {
+auto Panel::button(const std::string& label,
+                   bool exact_fit) const -> std::unique_ptr<Button> {
   if (exact_fit) {
     return std::make_unique<Button>(
         new swx::Button(wx(), wxID_ANY, label, wxDefaultPosition, wxDefaultSize,
@@ -157,8 +157,8 @@ auto Panel::panel(bool self_managed) const -> std::unique_ptr<Panel> {
 }
 
 auto Panel::radio(const std::string& name, const char* const* choices,
-                  int64_t choices_size, bool is_vertical) const
-    -> std::unique_ptr<Radio> {
+                  int64_t choices_size,
+                  bool is_vertical) const -> std::unique_ptr<Radio> {
   int64_t style = wxRA_SPECIFY_COLS;
   if (is_vertical) {
     style = wxRA_SPECIFY_ROWS;
@@ -191,8 +191,8 @@ auto Panel::searchBox(const std::string& initial_text) const
   return search_box;
 }
 
-auto Panel::text(const std::string& initial_text, bool multi_line) const
-    -> std::unique_ptr<Text> {
+auto Panel::text(const std::string& initial_text,
+                 bool multi_line) const -> std::unique_ptr<Text> {
   if (multi_line) {
     return std::make_unique<Text>(
         new swx::TextCtrl(wx(), wxID_ANY, initial_text, wxDefaultPosition,

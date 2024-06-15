@@ -2,7 +2,7 @@
 config/ImageLibrary.h: A singleton which represents a library of images, tagged
 by the user and quickly searchable.
 
-Copyright 2020-2023 Tracy Beck
+Copyright 2020-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ class CaseOptionalString {
   explicit CaseOptionalString(const std::string &str);
   [[nodiscard]] auto lower() const -> std::string { return lowercase; }
   [[nodiscard]] auto string() const -> std::string { return value; }
-  [[nodiscard]] auto find(const CaseOptionalString &b, size_t offset = 0) const
-      -> size_t;
+  [[nodiscard]] auto find(const CaseOptionalString &b,
+                          size_t offset = 0) const -> size_t;
   [[nodiscard]] auto substring(const CaseOptionalString &b) const -> bool;
   [[nodiscard]] auto compare(const CaseOptionalString &b) const noexcept -> int;
   auto operator==(const CaseOptionalString &b) const noexcept -> bool;

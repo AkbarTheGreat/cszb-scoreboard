@@ -1,7 +1,7 @@
 /*
 ui/component/QuickStatePanel.h: This panel provides quick-settable screens.
 
-Copyright 2020-2023 Tracy Beck
+Copyright 2020-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ class QuickStateEntry : public ScreenText {
   static auto tooltipText(char command_character) -> std::string;
   static auto setTooltipText(char command_character) -> std::string;
   static auto executeTooltipText(char command_character) -> std::string;
-  static auto fillSingleCharTemplate(const std::string &tmpl, char replacement)
-      -> std::string;
+  static auto fillSingleCharTemplate(const std::string &tmpl,
+                                     char replacement) -> std::string;
   void bindEvents(int id);
   void executeShortcut();
   void setShortcut();

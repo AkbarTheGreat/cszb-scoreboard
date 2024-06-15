@@ -6,7 +6,7 @@ This script manages creating a release to Github.  It's only expected to be run
 by myself at the present time, so compatability with anyone else's system is
 not guaranteed.
 
-Copyright 2019-2023 Tracy Beck
+Copyright 2019-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -2,7 +2,7 @@
 ui/widget/DirectoryPicker.h: A modal (blocking other UI) dialog which pops up to
 select a directory from the file system.
 
-Copyright 2022-2023 Tracy Beck
+Copyright 2022-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,7 +1,7 @@
 /*
 util/HttpReader.h: Simple class which uses Curl to pull data over HTTP.
 
-Copyright 2019-2023 Tracy Beck
+Copyright 2019-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -155,8 +155,8 @@ auto HttpReader::readBinary(const char *url, std::vector<char> *bin_data,
   return true;
 }
 
-auto HttpReader::readDataUrl(const char *url, std::vector<char> *bin_data)
-    -> bool {
+auto HttpReader::readDataUrl(const char *url,
+                             std::vector<char> *bin_data) -> bool {
   std::string url_str(url);
   // Strip off the header that looks like "data:image/jpeg;base64,"
   url_str = url_str.substr(url_str.find_first_of(',') + 1);

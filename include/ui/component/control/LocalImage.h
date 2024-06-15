@@ -2,7 +2,7 @@
 ui/component/control/LocalImage.h: Handles loading images from disk or from the
 clipboard.
 
-Copyright 2019-2023 Tracy Beck
+Copyright 2019-2024 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
