@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <chrono>  // for seconds
+#include <chrono>   // for seconds
 #include <cstdint>  // for int64_t
 #include <memory>   // for unique_ptr
 #include <string>   // for string

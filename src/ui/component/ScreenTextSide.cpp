@@ -339,9 +339,11 @@ void ScreenTextSide::renderShadowText(RenderContext *renderer,
     return;
   }
 
-  double drop_shadow_factor = singleton->generalConfig()->dropShadowDistance() * text->font().size();
+  double drop_shadow_factor =
+      singleton->generalConfig()->dropShadowDistance() * text->font().size();
 
-  int32_t drop_shadow_offset = FontUtil::scaleFactor(size(), drop_shadow_factor);
+  int32_t drop_shadow_offset =
+      FontUtil::scaleFactor(size(), drop_shadow_factor);
 
   if (auto_fit_text) {
     autoFitText(renderer, text);
@@ -350,7 +352,8 @@ void ScreenTextSide::renderShadowText(RenderContext *renderer,
   Color fontColor = ProtoUtil::wxClr(text->font().color()).contrastColor();
   renderer->setTextColor(fontColor);
   Position placement = positionText(renderer, *text);
-  placement = placement + Position{.x = drop_shadow_offset, .y = drop_shadow_offset};
+  placement =
+      placement + Position{.x = drop_shadow_offset, .y = drop_shadow_offset};
 
   renderer->drawText(text->text(), placement.x, placement.y);
 }

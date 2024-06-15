@@ -25,7 +25,8 @@ namespace cszb_scoreboard {
 
 const int SCALE_FACTOR = 75;
 
-auto FontUtil::scaleFactor(const Size& display_size, int32_t font_size) -> int32_t {
+auto FontUtil::scaleFactor(const Size& display_size, int32_t font_size)
+    -> int32_t {
   return scaleFactor(display_size, static_cast<double>(font_size));
 }
 

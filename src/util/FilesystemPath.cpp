@@ -122,9 +122,8 @@ auto FilesystemPath::absolutePath(const std::string &root,
 
 // If file_path is already relative, returns file_path.  If file_path is
 // relative to root, returns the relative path.  Otherwise, returns file_path.
-auto FilesystemPath::mostRelativePath(const std::string &root,
-                                      const std::string &file_path)
-    -> std::string {
+auto FilesystemPath::mostRelativePath(
+    const std::string &root, const std::string &file_path) -> std::string {
   if (FilesystemPath(file_path).is_relative() || root.empty()) {
     return file_path;
   }

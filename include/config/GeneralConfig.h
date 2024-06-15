@@ -18,8 +18,6 @@ limitations under the License.
 */
 #pragma once
 
-#include <stdint.h>  // for int32_t
-
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "config.pb.h"         // for GeneralConfig
 #include "util/Singleton.h"    // for Singleton, SingletonClass
