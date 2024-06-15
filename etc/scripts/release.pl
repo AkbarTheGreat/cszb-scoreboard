@@ -189,9 +189,9 @@ sub test {
 sub build_osx {
    chdir($repo_path);
    my $source_path = dirname( dirname($FindBin::RealBin) );
-   my $perl       = $Config{'perlpath'};
-   my $osx_script = $source_path . '/etc/scripts/build_osxcross.pl';
-   my @args       = ( '--version', $opt_version );
+   my $perl        = $Config{'perlpath'};
+   my $osx_script  = $source_path . '/etc/scripts/build_osxcross.pl';
+   my @args        = ( '--version', $opt_version );
    return run_cmd( $perl, $osx_script, @args );
 }
 
