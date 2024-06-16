@@ -598,6 +598,9 @@ RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 COPY --from=iwyu_build /iwyu.tgz /
 RUN tar xvzf iwyu.tgz && rm iwyu.tgz
 
+COPY . /cszb-scoreboard
+WORKDIR /cszb-scoreboard
+
 # ------------------------------------------------------------------------------
 # Build Everything (build_all)
 #
