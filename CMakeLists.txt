@@ -201,6 +201,7 @@ enable_testing()
 # config/ tests
 package_add_test(CommandArgsTest   FALSE test/unit/config/CommandArgsTest.cpp
                                           src/config/CommandArgs.cpp)
+
 package_add_test(DisplayConfigTest FALSE test/unit/config/DisplayConfigTest.cpp
                                           src/config/DisplayConfig.cpp
                                           src/config/Persistence.cpp
@@ -210,6 +211,12 @@ package_add_test(DisplayConfigTest FALSE test/unit/config/DisplayConfigTest.cpp
                                           src/util/FontUtil.cpp
                                           src/util/ProtoUtil.cpp
 )
+
+package_add_test(GeneralConfigTest FALSE test/unit/config/GeneralConfigTest.cpp
+                                          src/config/GeneralConfig.cpp
+                                          src/config/Persistence.cpp
+)
+
 package_add_test(ImageLibraryTest  FALSE test/unit/config/ImageLibraryTest.cpp
                                           src src/config/ImageLibrary.cpp
                                           src/config/Persistence.cpp
