@@ -42,10 +42,14 @@ class Panel;
 
 class TeamSettingsPanel : public Panel {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   TeamSettingsPanel(swx::Panel *wx, int team_index,
                     proto::TeamInfo_TeamType team, TeamSettingsPage *parent)
       : TeamSettingsPanel(wx, team_index, team, parent,
                           Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   void copyFrom(const TeamSettingsPanel &other);
   auto teamColor() -> Color;
   auto team() -> proto::TeamInfo_TeamType { return team_type; }

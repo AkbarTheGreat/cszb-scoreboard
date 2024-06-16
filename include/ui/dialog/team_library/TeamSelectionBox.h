@@ -47,8 +47,12 @@ class Panel;
 
 class TeamSelectionBox : public Panel {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   TeamSelectionBox(swx::Panel* wx, TeamLibraryDialog* owning_controller)
       : TeamSelectionBox(wx, owning_controller, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
 
   void updateList();
   void teamSelectedForSide(int32_t row, proto::TeamInfo_TeamType team);

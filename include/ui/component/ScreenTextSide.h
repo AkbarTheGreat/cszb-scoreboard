@@ -43,12 +43,16 @@ enum class OverlayScreenPosition { Centered, BottomLeft };
 
 class ScreenTextSide : public Canvas {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
                  const proto::ScreenSide &side, Size size)
       : ScreenTextSide(wx, initial_text, side, size, Singleton::getInstance()) {
   }
   ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size)
       : ScreenTextSide(wx, source_side, size, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
 
   void addText(const proto::RenderableText &text,
                const proto::ScreenSide &side);

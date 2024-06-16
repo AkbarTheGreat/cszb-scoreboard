@@ -28,8 +28,12 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenPresenter : public Frame {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   ScreenPresenter(int monitor_number, const ScreenText &preview)
       : ScreenPresenter(monitor_number, preview, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   void blackout() { screen_text->blackout(); }
   void setAll(const ScreenText &source) { screen_text->setAll(source); }
 

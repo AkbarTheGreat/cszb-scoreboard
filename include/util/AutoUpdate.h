@@ -51,9 +51,13 @@ class Version {
 
 class AutoUpdate {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit AutoUpdate(SingletonClass c)
       : AutoUpdate(c, Singleton::getInstance(),
                    std::move(std::make_unique<HttpReader>())){};
+  // GCOVR_EXCL_STOP
   auto checkForUpdate(const std::string &current_version) -> bool;
   [[nodiscard]] auto updateIsDownloadable() const -> bool {
     return update_size > 0;

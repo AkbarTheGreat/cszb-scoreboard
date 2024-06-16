@@ -55,8 +55,12 @@ class QuickStateEntry : public ScreenText {
 
 class QuickStatePanel : public Panel {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit QuickStatePanel(swx::Panel *wx)
       : QuickStatePanel(wx, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   static void executeShortcut(QuickStateEntry *entry, Singleton *singleton);
   static void setShortcut(QuickStateEntry *entry, Singleton *singleton);
   auto scorePanel() -> ScreenText * { return score_entry.get(); }

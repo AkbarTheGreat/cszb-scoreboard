@@ -42,9 +42,13 @@ class Panel;
 
 class ActivityPanel : public Panel {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
                 const proto::ScreenSide &side)
       : ActivityPanel(wx, owning_controller, side, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   void addActivity();
   void addReplacement();
   auto getColor() -> Color;

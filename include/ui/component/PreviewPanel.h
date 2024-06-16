@@ -38,8 +38,12 @@ class Panel;
 
 class PreviewPanel : public DraggablePanel {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit PreviewPanel(swx::Panel *wx)
       : PreviewPanel(wx, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
 
   void blackout();
   void forAllScreens(const std::function<void(ScreenPreview *)> &lambda);

@@ -51,13 +51,19 @@ class ScreenTextController : public Panel {
    * ScreenTextController would like to populate to the window. */
   virtual void createControls(Panel *control_panel) = 0;
   /* Dictates which screen(s) will receive this change on updateClicked.
-   * Defaults to all screens, may be overridden for more control. */
+   * Defaults to all screens, may be overridden for more control.
+   *
+   * GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+   * always call the constructor that passes in the Singelton object, as it
+   * allows mocking of singletons.
+   */
   explicit ScreenTextController(swx::Panel *wx)
       : ScreenTextController(wx,
                              /*display_update_screens=*/true) {}
   ScreenTextController(swx::Panel *wx, bool display_update_screens)
       : ScreenTextController(wx, display_update_screens,
                              Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   ScreenTextController(swx::Panel *wx, bool display_update_screens,
                        Singleton *singleton);
   void initializeWidgets();

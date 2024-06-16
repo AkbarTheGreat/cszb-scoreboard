@@ -28,7 +28,11 @@ namespace cszb_scoreboard {
 
 class AutoRefreshTimer : public PersistentTimer {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   AutoRefreshTimer() : AutoRefreshTimer(Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
 
   PUBLIC_TEST_ONLY
   explicit AutoRefreshTimer(Singleton* singleton);

@@ -32,8 +32,12 @@ namespace cszb_scoreboard {
 
 class TimerManager {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit TimerManager(SingletonClass c)
       : TimerManager(c, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   [[nodiscard]] auto timerOn() const -> bool { return timer_displayed; }
   [[nodiscard]] auto timerRunning() const -> bool { return timer_running; }
   auto displayTime() -> std::string;

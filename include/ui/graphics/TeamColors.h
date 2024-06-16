@@ -30,8 +30,12 @@ class ScreenSide;
 
 class TeamColors {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit TeamColors(SingletonClass c)
       : TeamColors(c, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   auto getColor(const proto::ScreenSide &side) -> Color;
   void setColor(const proto::ScreenSide &side, const Color &color);
 

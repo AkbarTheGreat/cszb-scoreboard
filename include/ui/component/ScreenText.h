@@ -44,8 +44,12 @@ class Panel;
 
 class ScreenText : public Panel {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit ScreenText(swx::Panel *wx)
       : ScreenText(wx, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   void setupPreview(const std::string &initial_text,
                     const std::vector<proto::ScreenSide> &sides, Size size);
 

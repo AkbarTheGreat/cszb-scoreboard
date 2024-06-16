@@ -40,8 +40,12 @@ class Panel;
 
 class DisplaySettingsPanel : public Panel {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent)
       : DisplaySettingsPanel(wx, index, parent, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   void copyFrom(const DisplaySettingsPanel &other);
   auto getSide() -> proto::ScreenSide;
   [[nodiscard]] auto getDisplayId() const -> int { return display_id; }

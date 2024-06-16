@@ -31,9 +31,13 @@ class Panel;
 
 class ScreenThumbnail : public ScreenText {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   ScreenThumbnail(swx::Panel *wx, int monitor_number, const ScreenText &preview)
       : ScreenThumbnail(wx, monitor_number, preview, Singleton::getInstance()) {
   }
+  // GCOVR_EXCL_STOP
 
   PUBLIC_TEST_ONLY
   ScreenThumbnail(swx::Panel *wx, int monitor_number, const ScreenText &preview,

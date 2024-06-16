@@ -26,8 +26,12 @@ namespace cszb_scoreboard {
 
 class DisplayConfig {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit DisplayConfig(SingletonClass c)
       : DisplayConfig(c, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
   void detectDisplays(bool force_reload = false);
   auto displayDetails(int index) -> proto::DisplayInfo;

@@ -28,8 +28,12 @@ namespace cszb_scoreboard {
 
 class Persistence {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit Persistence(SingletonClass c)
       : Persistence(c, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   virtual auto loadDisplays() -> proto::DisplayConfig;
   virtual void saveDisplays(const proto::DisplayConfig &display_config);
   virtual auto loadGeneralConfig() -> proto::GeneralConfig;

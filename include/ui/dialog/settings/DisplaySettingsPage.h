@@ -39,8 +39,12 @@ class Panel;
 
 class DisplaySettingsPage : public SettingsPage {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit DisplaySettingsPage(swx::Panel *wx)
       : DisplaySettingsPage(wx, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   void saveSettings() override;
   auto validateSettings() -> bool override;
   void swapDisplays(int a, int b);

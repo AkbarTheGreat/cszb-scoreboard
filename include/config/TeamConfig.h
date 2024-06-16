@@ -30,8 +30,12 @@ namespace cszb_scoreboard {
 
 class TeamConfig {
  public:
+  // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+  // always call the constructor that passes in the Singelton object, as it
+  // allows mocking of singletons.
   explicit TeamConfig(SingletonClass c)
       : TeamConfig(c, Singleton::getInstance()) {}
+  // GCOVR_EXCL_STOP
   auto numberOfTeams() -> int;
   void saveSettings();
   void setColor(proto::TeamInfo_TeamType team, const Color &color);
