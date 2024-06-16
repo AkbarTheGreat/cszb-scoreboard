@@ -112,13 +112,10 @@ class DisplayConfigTest : public ::testing::Test {
         .WillRepeatedly(Return(frame_manager.get()));
     EXPECT_CALL(*frame_manager, mainView)
         .WillRepeatedly(Return(main_view.get()));
-    EXPECT_CALL(*persist, saveDisplays).WillRepeatedly(Return());
     // Default the main_view to be in monitor1()
     EXPECT_CALL(*main_view_frame, GetPosition)
         .WillRepeatedly(Return(wxPoint(1, 1)));
-    // Since the config might change, only return it once.  Futher returns in a
-    // test should specify what they want to happen.
-    EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+    persist->saveDisplays(*display_config);
   }
 
   void TearDown() override {
@@ -193,7 +190,7 @@ TEST_F(DisplayConfigTest, NumberOfDisplays) {
   // Number increases with a fully set up display from disk
   display_config->add_displays();
   display_config->set_window_count(3);
-  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  persist->saveDisplays(*display_config);
   DisplayConfig triConfig(SingletonClass{}, singleton.get());
   EXPECT_EQ(3, triConfig.numberOfDisplays());
 
@@ -201,7 +198,7 @@ TEST_F(DisplayConfigTest, NumberOfDisplays) {
   display_config.reset();
   display_config = defaultConfig();
   display_config->set_window_count(3);
-  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  persist->saveDisplays(*display_config);
   DisplayConfig autoConfig(SingletonClass{}, singleton.get());
   EXPECT_EQ(3, autoConfig.numberOfDisplays());
 }
@@ -210,7 +207,7 @@ TEST_F(DisplayConfigTest, ExternalConfigSkipsIfCountIsIdentical) {
   // Load display to flush the call expected in SetUp.
   persist->loadDisplays();
   display_config->set_enable_windowed_mode(false);
-  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  persist->saveDisplays(*display_config);
   EXPECT_CALL(*frame_manager, monitorCount).WillOnce(Return(2));
   EXPECT_CALL(*frame_manager, monitor(0)).WillRepeatedly(Return(monitor1()));
   EXPECT_CALL(*frame_manager, monitor(1)).WillRepeatedly(Return(monitor2()));
@@ -231,7 +228,7 @@ TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
   display_config = std::make_unique<proto::DisplayConfig>();
-  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  persist->saveDisplays(*display_config);
   EXPECT_CALL(*frame_manager, monitorCount).WillOnce(Return(1));
   EXPECT_CALL(*frame_manager, monitor(0)).WillRepeatedly(Return(monitor1()));
   DisplayConfig config(SingletonClass{}, singleton.get());
@@ -253,7 +250,7 @@ TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
   display_config = std::make_unique<proto::DisplayConfig>();
-  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  persist->saveDisplays(*display_config);
   EXPECT_CALL(*frame_manager, monitorCount).WillOnce(Return(2));
   EXPECT_CALL(*frame_manager, monitor(0)).WillRepeatedly(Return(monitor1()));
   EXPECT_CALL(*frame_manager, monitor(1)).WillRepeatedly(Return(monitor2()));
@@ -280,7 +277,7 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   persist->loadDisplays();
   display_config.reset();
   display_config = std::make_unique<proto::DisplayConfig>();
-  EXPECT_CALL(*persist, loadDisplays).WillOnce(Return(*display_config));
+  persist->saveDisplays(*display_config);
   EXPECT_CALL(*frame_manager, monitorCount).WillOnce(Return(3));
   EXPECT_CALL(*frame_manager, monitor(0)).WillRepeatedly(Return(monitor1()));
   EXPECT_CALL(*frame_manager, monitor(1)).WillRepeatedly(Return(monitor2()));

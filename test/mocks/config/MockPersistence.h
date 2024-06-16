@@ -24,20 +24,35 @@ limitations under the License.
 
 namespace cszb_scoreboard::test {
 
+/*
+The MOCK_PERSISTENCE_METHODS macro sets up a local variable and three methods
+that will fake out persistence locally to the object. The local variable is
+assumed to be a protobuf of type {proto}.  The two methods of load{method_base}
+and save{method_base} are overrides of the Persistence class.  A third method,
+reset{method_base}, is added to reset the faked persistence.
+*/
+
+#define MOCK_PERSISTENCE_METHODS(method_base, proto)                       \
+ private:                                                                  \
+  proto local_##method_base;                                               \
+                                                                           \
+ public:                                                                   \
+  auto load##method_base()->proto override { return local_##method_base; } \
+  void save##method_base(const proto &var) override {                      \
+    local_##method_base = var;                                             \
+  }                                                                        \
+  void reset##method_base() { local_##method_base = {}; }
+
 class MockPersistence : public Persistence {
  public:
   MockPersistence(MockSingleton *singleton)
       : Persistence(SingletonClass{}, singleton) {}
 
-  MOCK_METHOD(proto::DisplayConfig, loadDisplays, (), (override));
-  MOCK_METHOD(void, saveDisplays, (const proto::DisplayConfig &display_config),
-              (override));
-  MOCK_METHOD(proto::TeamConfig, loadTeams, (), (override));
-  MOCK_METHOD(void, saveTeams, (const proto::TeamConfig &team_config),
-              (override));
-  MOCK_METHOD(proto::ImageLibrary, loadImageLibrary, (), (override));
-  MOCK_METHOD(void, saveImageLibrary, (const proto::ImageLibrary &library),
-              (override));
+  MOCK_PERSISTENCE_METHODS(Displays, proto::DisplayConfig);
+  MOCK_PERSISTENCE_METHODS(GeneralConfig, proto::GeneralConfig);
+  MOCK_PERSISTENCE_METHODS(ImageLibrary, proto::ImageLibrary);
+  MOCK_PERSISTENCE_METHODS(Teams, proto::TeamConfig);
+  MOCK_PERSISTENCE_METHODS(TeamLibrary, proto::TeamLibrary);
 };
 
 }  // namespace cszb_scoreboard::test
