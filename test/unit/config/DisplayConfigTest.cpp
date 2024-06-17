@@ -114,7 +114,7 @@ class DisplayConfigTest : public ::testing::Test {
         .WillRepeatedly(Return(main_view.get()));
     // Default the main_view to be in monitor1()
     EXPECT_CALL(*main_view_frame, GetPosition)
-        .WillRepeatedly(Return(wxPoint(1, 1)));
+        .WillRepeatedly(Return(wxPoint(15, 15)));
     persist->saveDisplays(*display_config);
   }
 
@@ -307,14 +307,14 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
 
 TEST_F(DisplayConfigTest, SetSide) {
   DisplayConfig config(SingletonClass{}, singleton.get());
-  auto *newSide = new proto::ScreenSide();
-  newSide->set_away(false);
-  newSide->set_extra(true);
-  config.setSide(1, *newSide);
+  auto *new_side = new proto::ScreenSide();
+  new_side->set_away(false);
+  new_side->set_extra(true);
+  config.setSide(1, *new_side);
   std::unique_ptr<proto::DisplayConfig> expected = defaultConfig();
   expected->mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
   expected->mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
-  expected->mutable_displays(1)->set_allocated_side(newSide);
+  expected->mutable_displays(1)->set_allocated_side(new_side);
   EXPECT_PROTO_EQ(*expected, config.displayConfig());
 }
 
@@ -337,6 +337,87 @@ TEST_F(DisplayConfigTest, SetDisplayId) {
 
   EXPECT_ASSERT(config.setDisplayId(-1, 1));
   EXPECT_ASSERT(config.setDisplayId(3, 1));
+}
+
+// Test if the correct display is set as primary when the main view is on it
+TEST_F(DisplayConfigTest, IsPrimaryDisplay) {
+  DisplayConfig twoMonitorConfig(SingletonClass{}, singleton.get());
+
+  // Our mock main_view reports as position 15,15, so it should be on the first
+  // monitor and not the second.
+  auto display_1_info = twoMonitorConfig.displayDetails(0);
+  auto display_2_info = twoMonitorConfig.displayDetails(1);
+  EXPECT_TRUE(twoMonitorConfig.isPrimaryDisplay(&display_1_info));
+  EXPECT_FALSE(twoMonitorConfig.isPrimaryDisplay(&display_2_info));
+}
+
+TEST_F(DisplayConfigTest, DefaultWindowValues) {
+  // Set the saved default_config to a baseline proto.
+  display_config.reset();
+  display_config = std::make_unique<proto::DisplayConfig>();
+  persist->saveDisplays(*display_config);
+
+  DisplayConfig config(SingletonClass{}, singleton.get());
+
+  EXPECT_FALSE(config.windowedMode());
+  EXPECT_EQ(0, config.windowedModeNumberOfWindows());
+  EXPECT_EQ(1024, config.windowWidth());
+  EXPECT_EQ(768, config.windowHeight());
+}
+
+TEST_F(DisplayConfigTest, SetAndGetWindowedMode) {
+  DisplayConfig config(SingletonClass{}, singleton.get());
+
+  // Set windowed mode to true and check if it's correct
+  config.setWindowedMode(true);
+  EXPECT_TRUE(config.windowedMode());
+
+  // Set windowed mode to false and check if it's correct
+  config.setWindowedMode(false);
+  EXPECT_FALSE(config.windowedMode());
+}
+
+TEST_F(DisplayConfigTest, SetAndGetWindowedModeNumberOfWindows) {
+  DisplayConfig config(SingletonClass{}, singleton.get());
+
+  // Test setting a valid number of windows and getting it back
+  config.setWindowedModeNumberOfWindows(3);
+  EXPECT_EQ(3, config.windowedModeNumberOfWindows());
+
+  // Test setting a negative number of windows and check that the value is set
+  // to 0 (default)
+  config.setWindowedModeNumberOfWindows(-1);
+  EXPECT_EQ(0, config.windowedModeNumberOfWindows());
+}
+
+TEST_F(DisplayConfigTest, SetAndGetWindowSize) {
+  DisplayConfig config(SingletonClass{}, singleton.get());
+
+  // Test setting a valid window size and getting it back
+  config.setWindowWidth(800);
+  config.setWindowHeight(600);
+  EXPECT_EQ(800, config.windowWidth());
+  EXPECT_EQ(600, config.windowHeight());
+
+  // Test setting a negative window size and check that the value is set to
+  // default (1, 1)
+  config.setWindowWidth(-1);
+  config.setWindowHeight(-1);
+  EXPECT_EQ(1, config.windowWidth());
+  EXPECT_EQ(1, config.windowHeight());
+
+  // Reset to something tame, and double-check that it stuck again.
+  config.setWindowWidth(5);
+  config.setWindowHeight(5);
+  EXPECT_EQ(5, config.windowWidth());
+  EXPECT_EQ(5, config.windowHeight());
+
+  // Test setting a zero window size and check that the value is set to
+  // default (1, 1)
+  config.setWindowWidth(0);
+  config.setWindowHeight(0);
+  EXPECT_EQ(1, config.windowWidth());
+  EXPECT_EQ(1, config.windowHeight());
 }
 
 }  // namespace test

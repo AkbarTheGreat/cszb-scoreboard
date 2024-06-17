@@ -210,6 +210,9 @@ auto DisplayConfig::windowedModeNumberOfWindows() -> int {
 }
 
 void DisplayConfig::setWindowedModeNumberOfWindows(int num) {
+  if (num < 0) {
+    num = 0;
+  }
   display_config.set_window_count(num);
 }
 
@@ -218,6 +221,9 @@ auto DisplayConfig::windowWidth() -> int {
 }
 
 void DisplayConfig::setWindowWidth(int width) {
+  if (width < 1) {
+    width = 1;
+  }
   display_config.mutable_window_size()->set_width(width);
 }
 
@@ -226,6 +232,9 @@ auto DisplayConfig::windowHeight() -> int {
 }
 
 void DisplayConfig::setWindowHeight(int height) {
+  if (height < 1) {
+    height = 1;
+  }
   display_config.mutable_window_size()->set_height(height);
 }
 
