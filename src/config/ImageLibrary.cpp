@@ -48,10 +48,14 @@ void insertIntoSortedVector(std::vector<CaseOptionalString> *vect,
   }
 }
 
+// GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
+// always call the constructor that passes in the Singelton object, as it
+// allows mocking of singletons.
 ImageLibrary::ImageLibrary(SingletonClass c)
     : ImageLibrary(
           c, Singleton::getInstance(),
           Singleton::getInstance()->persistence()->loadImageLibrary()) {}
+// GCOVR_EXCL_STOP
 
 ImageLibrary::ImageLibrary(SingletonClass c, Singleton *singleton,
                            proto::ImageLibrary library) {
