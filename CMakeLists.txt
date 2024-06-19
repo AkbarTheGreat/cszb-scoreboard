@@ -199,60 +199,65 @@ endfunction()
 enable_testing()
 
 # config/ tests
-package_add_test(CommandArgsTest   FALSE test/unit/config/CommandArgsTest.cpp
-                                          src/config/CommandArgs.cpp)
+package_add_test(CommandArgsTest         FALSE test/unit/config/CommandArgsTest.cpp
+                                                src/config/CommandArgs.cpp)
 
-package_add_test(DisplayConfigTest FALSE test/unit/config/DisplayConfigTest.cpp
-                                          src/config/DisplayConfig.cpp
-                                          src/config/Persistence.cpp
-                                          src/config/Position.cpp
-                                          src/ui/widget/Display.cpp
-                                          src/ui/widget/Frame.cpp
-                                          src/util/FontUtil.cpp
-                                          src/util/ProtoUtil.cpp
+package_add_test(DisplayConfigTest       FALSE test/unit/config/DisplayConfigTest.cpp
+                                                src/config/DisplayConfig.cpp
+                                                src/config/Persistence.cpp
+                                                src/config/Position.cpp
+                                                src/ui/widget/Display.cpp
+                                                src/ui/widget/Frame.cpp
+                                                src/util/FontUtil.cpp
+                                                src/util/ProtoUtil.cpp
 )
 
-package_add_test(GeneralConfigTest FALSE test/unit/config/GeneralConfigTest.cpp
-                                          src/config/GeneralConfig.cpp
-                                          src/config/Persistence.cpp
+package_add_test(GeneralConfigTest       FALSE test/unit/config/GeneralConfigTest.cpp
+                                                src/config/GeneralConfig.cpp
+                                                src/config/Persistence.cpp
 )
 
-package_add_test(ImageLibraryTest  FALSE test/unit/config/ImageLibraryTest.cpp
-                                          src src/config/ImageLibrary.cpp
-                                          src/config/Persistence.cpp
-                                          src/util/FilesystemPath.cpp
+package_add_test(ImageLibraryTest        FALSE test/unit/config/ImageLibraryTest.cpp
+                                                src/config/ImageLibrary.cpp
+                                                src/config/Persistence.cpp
+                                                src/util/FilesystemPath.cpp
+)
+
+package_add_test(CaseOptionalStringTest  FALSE test/unit/config/ImageLibrary/CaseOptionalStringTest.cpp
+                                                src/config/ImageLibrary.cpp
+                                                src/util/FilesystemPath.cpp
 )
 
 # util/ tests
-package_add_test(AutoUpdateTest      FALSE test/unit/util/AutoUpdateTest.cpp
-                                            src/util/AutoUpdate.cpp
-                                            src/config/CommandArgs.cpp
-                                            src/util/Base64.cpp
-                                            src/util/HttpReader.cpp
-                                            src/util/StringUtil.cpp
+package_add_test(AutoUpdateTest          FALSE test/unit/util/AutoUpdateTest.cpp
+                                                src/util/AutoUpdate.cpp
+                                                src/config/CommandArgs.cpp
+                                                src/util/Base64.cpp
+                                                src/util/HttpReader.cpp
+                                                src/util/StringUtil.cpp
 )
-package_add_test(Base64Test          FALSE test/unit/util/Base64Test.cpp
-                                            src/util/Base64.cpp
+package_add_test(Base64Test              FALSE test/unit/util/Base64Test.cpp
+                                                src/util/Base64.cpp
 )
-package_add_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
-                                            src/util/FilesystemPath.cpp
+package_add_test(FilesystemPathTest      TRUE  test/unit/util/FilesystemPathTest.cpp
+                                                src/util/FilesystemPath.cpp
 )
-package_add_test(ProtoUtilTest       FALSE test/unit/util/ProtoUtilTest.cpp
-                                            src/util/ProtoUtil.cpp
-                                            src/util/FontUtil.cpp
-                                            src/ui/graphics/Color.cpp
+package_add_test(ProtoUtilTest           FALSE test/unit/util/ProtoUtilTest.cpp
+                                                src/util/ProtoUtil.cpp
+                                                src/util/FontUtil.cpp
+                                                src/ui/graphics/Color.cpp
 )
-package_add_test(StringUtilTest      FALSE test/unit/util/StringUtilTest.cpp
-                                            src/util/StringUtil.cpp
+package_add_test(StringUtilTest          FALSE test/unit/util/StringUtilTest.cpp
+                                                src/util/StringUtil.cpp
 )
 
 
-package_add_ui_test(ScreenPreviewTest   FALSE test/integration/ScreenPreviewTest.cpp)
-package_add_ui_test(TextEntryTest       FALSE test/integration/TextEntryTest.cpp)
-package_add_ui_test(ScreenTextSideTest  FALSE test/integration/ScreenTextSideTest.cpp)
+package_add_ui_test(ScreenPreviewTest    FALSE test/integration/ScreenPreviewTest.cpp)
+package_add_ui_test(TextEntryTest        FALSE test/integration/TextEntryTest.cpp)
+package_add_ui_test(ScreenTextSideTest   FALSE test/integration/ScreenTextSideTest.cpp)
 
-# Tests here are Mac-specific builds of other tests.  This is usually to unit-test functionality that
-# can be compiled elsewhere, but was written specifically for a mac.
+# Tests here are Mac-specific builds of other tests.  These tests may be compiled/run anywhere,
+# but they test functionality that is written to be mac-specific.
 package_add_macos_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
                                                  src/util/FilesystemPath.cpp
 )
