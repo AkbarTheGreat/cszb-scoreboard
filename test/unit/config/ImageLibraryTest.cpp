@@ -16,12 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <algorithm>   // for max
-#include <filesystem>  // for operator<<, operator==
-#include <string>      // for operator+, allocator, ope...
-#include <vector>      // for vector
+#include <algorithm>  // for max
+#include <memory>     // for unique_ptr
+#include <string>     // for operator+, allocator, cha...
+#include <vector>     // for vector
 
 #include "config/ImageLibrary.h"            // for ImageLibrary, ImageSearch...
+#include "gmock/gmock.h"                    // for ElementsAre, MakePredicat...
 #include "gtest/gtest.h"                    // for Test, Message, TestPartRe...
 #include "image_library.pb.h"               // for ImageInfo, ImageLibrary
 #include "test/mocks/util/MockSingleton.h"  // for MockSingleton
@@ -84,8 +85,8 @@ auto testLibrary(MockSingleton *singleton) -> ImageLibrary {
   return ImageLibrary(SingletonClass{}, singleton, library);
 }
 
-auto tagStrings(const ImageLibrary &library,
-                bool include_name = false) -> std::vector<std::string> {
+auto tagStrings(const ImageLibrary &library, bool include_name = false)
+    -> std::vector<std::string> {
   std::vector<CaseOptionalString> tags = library.allTags(include_name);
   std::vector<std::string> tag_strings;
   tag_strings.reserve(tags.size());

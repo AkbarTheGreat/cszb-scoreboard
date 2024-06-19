@@ -19,12 +19,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>
+#include <string>  // for allocator, string
 
-#include "config/ImageLibrary.h"            // for ImageLibrary, ImageSearch...
-#include "test/mocks/util/MockSingleton.h"  // for MockSingleton
-#include "util/FilesystemPath.h"            // for FilesystemPath
-#include "util/Singleton.h"                 // for SingletonClass
+#include "config/ImageLibrary.h"  // for CaseOptionalString
+#include "gtest/gtest.h"          // for AssertionResult, Message, TestPartR...
+#include "test/mocks/util/MockSingleton.h"  // IWYU pragma: keep
 
 namespace cszb_scoreboard::test {
 

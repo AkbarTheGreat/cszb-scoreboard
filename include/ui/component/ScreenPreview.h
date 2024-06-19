@@ -52,7 +52,7 @@ class ScreenPreview : public Panel {
                 int monitor_number)
       : ScreenPreview(wx, std::move(sides), monitor_number,
                       Singleton::getInstance()) {}
-                      // GCOVR_EXCL_STOPO
+  // GCOVR_EXCL_STOP
   void sendToPresenter(ScreenText *screen_text);
   void sendToPresenter();
   void blackoutPresenter();

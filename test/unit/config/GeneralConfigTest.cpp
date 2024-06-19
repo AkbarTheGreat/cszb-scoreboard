@@ -16,15 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <iostream>
-#include <memory>
-#include <vector>
+#include <memory>  // for unique_ptr, allocator
 
-#include "config/GeneralConfig.h"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+#include "config.pb.h"                          // for GeneralConfig
+#include "config/GeneralConfig.h"               // for GeneralConfig
+#include "gmock/gmock.h"                        // for Return, ReturnAction
+#include "gtest/gtest.h"                        // for AssertionResult, Message
 #include "test/mocks/config/MockPersistence.h"  // for MockPersistence
-#include "test/mocks/util/MockSingleton.h"
+#include "test/mocks/util/MockSingleton.h"      // for MockSingleton
+#include "util/Singleton.h"                     // for SingletonClass
 
 namespace cszb_scoreboard {
 
