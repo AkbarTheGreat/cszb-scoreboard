@@ -50,13 +50,20 @@ jobs:
         args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
         build-args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
 
-    - name: Archive test results
+    - name: Archive Test Results
       uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.build_type }}
         path: |
             out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
             out/${{ matrix.target_os }}/${{ matrix.build_type }}/Testing/**/*.xml
+
+    - name: Archive Coverage HTML
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-reports-${{ matrix.build_type }}
+        path: |
+            out/${{ matrix.target_os }}/${{ matrix.build_type }}/cszb-scoreboard-coverage/**/*
 
     - name: Test Report
       uses: EnricoMi/publish-unit-test-result-action@v2

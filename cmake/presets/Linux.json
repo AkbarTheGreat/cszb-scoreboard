@@ -69,15 +69,7 @@
          "configuration": "Debug",
          "targets": [
             "all",
-            "cszb-scoreboard-xml-coverage"
-         ]
-      },
-      {
-         "name": "Linux-Coverage-Web",
-         "displayName": "HTML Coverage Generation",
-         "inherits": "Linux-Coverage",
-         "targets": [
-            "all",
+            "cszb-scoreboard-xml-coverage",
             "cszb-scoreboard-coverage"
          ]
       }

@@ -7,6 +7,6 @@ docker buildx build --target=standard_test -t scoreboard .
 docker run -v ${PWD}/out/cov:/cszb-scoreboard/out/Linux/Coverage/cszb-scoreboard-coverage --rm -it scoreboard \
     bash -c \
     'cmake --preset Linux-Coverage && \
-    cmake --build --preset Linux-Coverage-Web'
+    cmake --build --preset Linux-Coverage'
 
 
