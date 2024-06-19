@@ -397,6 +397,8 @@ TEST(ImageLibraryTest, GetName) {
   ImageLibrary library = testLibrary(&singleton);
 
   EXPECT_EQ("great dane", library.name(FilesystemPath("great_dane.jpg")));
+
+  EXPECT_EQ("", library.name(FilesystemPath("notgonnafindit.jpg")));
 }
 
 TEST(ImageLibraryTest, GetTags) {
@@ -406,6 +408,8 @@ TEST(ImageLibraryTest, GetTags) {
   EXPECT_THAT(library.tags(FilesystemPath(LIB_ROOT + "corgi.jpg")),
               ElementsAre(CaseOptionalString("cute"), CaseOptionalString("dog"),
                           CaseOptionalString("short")));
+
+  EXPECT_TRUE(library.tags(FilesystemPath("notgonnafindit.jpg")).empty());
 }
 
 TEST(ImageLibraryTest, SetName) {
@@ -414,6 +418,9 @@ TEST(ImageLibraryTest, SetName) {
 
   library.setName(FilesystemPath("great_dane.jpg"), "Amazing dane");
   EXPECT_EQ("Amazing dane", library.name(FilesystemPath("great_dane.jpg")));
+
+  library.setName(FilesystemPath("invalid.jpg"), "Not a file");
+  EXPECT_EQ("", library.name(FilesystemPath("invalid.jpg")));
 }
 
 TEST(ImageLibraryTest, SetTags) {
@@ -428,6 +435,9 @@ TEST(ImageLibraryTest, SetTags) {
       library.tags(FilesystemPath(LIB_ROOT + "corgi.jpg")),
       ElementsAre(CaseOptionalString("dog"), CaseOptionalString("floof"),
                   CaseOptionalString("long")));
+
+  library.setTags(FilesystemPath("invalid.jpg"), {"notafile"});
+  EXPECT_TRUE(library.tags(FilesystemPath("invalid.jpg")).empty());
 }
 
 // TODO (akbar): Test smartUpdateLibraryRoot -- this will likely either require
