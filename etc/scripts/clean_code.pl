@@ -232,10 +232,14 @@ sub main {
    status('iwyu complete, fixing includes in files');
 
    run_fix_include($docker);
-   status('Includes fixed, auto-formatting all files');
 
-   run_clangformat($docker);
-   status('Source formatted, auto-formatting markdown files');
+# Clang format is disabled for now, as vscode uses clang-format 18 and our docker image only has clang-format 16, and they format differently, causing a bunch of noise.
+# Ultimately, I'd like to update to alpine 3.20 and use clang18, but osxcross breaks on alpine 3.20 (regardless of clang version) due to weird non-posix calls being assumed.
+#status('Includes fixed, auto-formatting all files');
+#run_clangformat($docker);
+#status('Source formatted, auto-formatting markdown files');
+   status('Includes fixed, auto-formatting markdown files');
+
    run_mdformat($docker);
    status(   'Process complete.' . "\n"
            . 'Any changes will need to be submitted via git to be preserved.'

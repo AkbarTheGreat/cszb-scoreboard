@@ -1,5 +1,20 @@
 {
    "files.associations": {
-      "memory": "cpp"
+      "memory": "cpp",
+      "array": "cpp",
+      "deque": "cpp",
+      "format": "cpp",
+      "initializer_list": "cpp",
+      "list": "cpp",
+      "ranges": "cpp",
+      "regex": "cpp",
+      "span": "cpp",
+      "stack": "cpp",
+      "utility": "cpp",
+      "vector": "cpp",
+      "xhash": "cpp",
+      "xstring": "cpp",
+      "xtree": "cpp",
+      "xutility": "cpp"
    }
 }
