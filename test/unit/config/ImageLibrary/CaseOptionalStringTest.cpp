@@ -54,28 +54,28 @@ TEST(CaseOptionalStringTest, StringMethod) {
 // Test find() method - exact match
 TEST(CaseOptionalStringTest, FindExactMatch) {
   CaseOptionalString cs("Hello World");
-  EXPECT_EQ(0u, cs.find(CaseOptionalString("Hello World")));
+  EXPECT_EQ(0U, cs.find(CaseOptionalString("Hello World")));
 
   // Also works case insensitive
-  EXPECT_EQ(0u, cs.find(CaseOptionalString("heLLo woRld")));
+  EXPECT_EQ(0U, cs.find(CaseOptionalString("heLLo woRld")));
 }
 
 // Test find() method - word boundary match
 TEST(CaseOptionalStringTest, FindWordMatch) {
   CaseOptionalString cs("Hello World");
-  EXPECT_EQ(6u, cs.find(CaseOptionalString("World")));
+  EXPECT_EQ(6U, cs.find(CaseOptionalString("World")));
 
   // Also works case insensitive
-  EXPECT_EQ(6u, cs.find(CaseOptionalString("woRld")));
+  EXPECT_EQ(6U, cs.find(CaseOptionalString("woRld")));
 }
 
 // Test find() method - partial match
 TEST(CaseOptionalStringTest, FindPartialMatch) {
   CaseOptionalString cs("Hello World");
-  EXPECT_EQ(4u, cs.find(CaseOptionalString("o")));
+  EXPECT_EQ(4U, cs.find(CaseOptionalString("o")));
 
   // Also works case insensitive
-  EXPECT_EQ(4u, cs.find(CaseOptionalString("O")));
+  EXPECT_EQ(4U, cs.find(CaseOptionalString("O")));
 }
 
 // Test find() method - no match
