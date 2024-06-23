@@ -271,7 +271,7 @@ jobs:
 
   lint-and-integration:
     runs-on: ${{ matrix.os }}
-    needs: [docker_build, test]
+    needs: [docker_build]
     container:
       image: ${{ matrix.image }}
 
