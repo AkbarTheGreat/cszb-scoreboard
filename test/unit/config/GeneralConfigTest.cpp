@@ -26,9 +26,7 @@ limitations under the License.
 #include "test/mocks/util/MockSingleton.h"      // for MockSingleton
 #include "util/Singleton.h"                     // for SingletonClass
 
-namespace cszb_scoreboard {
-
-namespace test {
+namespace cszb_scoreboard::test {
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -84,7 +82,7 @@ TEST_F(GeneralConfigTest, SetGetDropShadowDistance) {
   GeneralConfig generalConfig(SingletonClass{}, singleton.get());
   EXPECT_EQ(-1, generalConfig.dropShadowDistance());
 
-  double distance = 3.0;
+  double distance = 3.0;  // NOLINT (readability-magic-numbers)
   generalConfig.setDropShadowDistance(distance);
   EXPECT_EQ(distance, generalConfig.dropShadowDistance());
 }
@@ -109,5 +107,4 @@ TEST_F(GeneralConfigTest, SaveSettings) {
               shadowDistance);
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test
