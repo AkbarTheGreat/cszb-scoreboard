@@ -1,0 +1,4 @@
+{
+   "Checks": "-*,google-*,modernize-*,readability-*,portability-*,performance-*,-readability-identifier-length",
+   "WarningsAsErrors": ""
+}

@@ -82,6 +82,7 @@ namespace test {
 
 constexpr int32_t EXPECTED_DEFAULT_WINDOW_WIDTH = 1024;
 constexpr int32_t EXPECTED_DEFAULT_WINDOW_HEIGHT = 768;
+constexpr int32_t MAIN_VIEW_X_AND_Y = 15;
 
 class DisplayConfigTest : public ::testing::Test {
  protected:
@@ -114,7 +115,7 @@ class DisplayConfigTest : public ::testing::Test {
         .WillRepeatedly(Return(main_view.get()));
     // Default the main_view to be in monitor1()
     EXPECT_CALL(*main_view_frame, GetPosition)
-        .WillRepeatedly(Return(wxPoint(15, 15)));
+        .WillRepeatedly(Return(wxPoint(MAIN_VIEW_X_AND_Y, MAIN_VIEW_X_AND_Y)));
     persist->saveDisplays(*display_config);
   }
 
@@ -394,8 +395,8 @@ TEST_F(DisplayConfigTest, SetAndGetWindowSize) {
   DisplayConfig config(SingletonClass{}, singleton.get());
 
   // Test setting a valid window size and getting it back
-  config.setWindowWidth(800);
-  config.setWindowHeight(600);
+  config.setWindowWidth(800);   // NOLINT (readability-magic-numbers)
+  config.setWindowHeight(600);  // NOLINT (readability-magic-numbers)
   EXPECT_EQ(800, config.windowWidth());
   EXPECT_EQ(600, config.windowHeight());
 
@@ -407,8 +408,8 @@ TEST_F(DisplayConfigTest, SetAndGetWindowSize) {
   EXPECT_EQ(1, config.windowHeight());
 
   // Reset to something tame, and double-check that it stuck again.
-  config.setWindowWidth(5);
-  config.setWindowHeight(5);
+  config.setWindowWidth(5);   // NOLINT (readability-magic-numbers)
+  config.setWindowHeight(5);  // NOLINT (readability-magic-numbers)
   EXPECT_EQ(5, config.windowWidth());
   EXPECT_EQ(5, config.windowHeight());
 
