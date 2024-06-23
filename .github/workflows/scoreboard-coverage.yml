@@ -5,8 +5,62 @@ on:
     - cron: "0 2 * * *" # 2 am every morning
 
 jobs:
+  docker_build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+
+      matrix:
+        target_os: [Linux, MacOS]
+        include:
+          - target_os: Linux
+            docker_target: standard_build
+            os: ubuntu-latest
+          - target_os: MacOS
+            docker_target: macos_build
+            os: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings
+      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+      id: strings
+      shell: bash
+      run: |
+        echo "cache-branch=ghcr.io/akbarthegreat/cszb_scoreboard_cache_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}" >> $GITHUB_OUTPUT
+
+    - name: Login to Docker
+      env:
+        GITHUB_USER: ${{ github.actor }}
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: $GITHUB_USER
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and Push Docker Image
+      env:
+        REGISTRY: ghcr.io
+        OWNER: AkbarTheGreat
+        IMAGE_NAME: ${{ github.repository }}
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        target: ${{ matrix.docker_target }}
+        tags: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
+        push: true
+        cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
+        cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
+
   coverage:
     runs-on: ${{ matrix.os }}
+    needs: [docker_build]
     container:
       # Always use the main branch for coverage
       image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_master:latest
@@ -76,3 +130,52 @@ jobs:
       with:
         path: out/${{ matrix.target_os }}/${{ matrix.build_type }}/cszb-scoreboard-xml-coverage.xml
         minimum_coverage: 25
+
+  lint-and-integration:
+    runs-on: ${{ matrix.os }}
+    needs: [docker_build]
+    container:
+      # Always use the main branch for nightly work
+      image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_master:latest
+
+    strategy:
+      fail-fast: true
+
+      matrix:
+        target_os: [Linux]
+        build_type: [Integration]
+        include:
+          - target_os: Linux
+            docker_target: standard_build
+            os: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Scoreboard
+      uses: threeal/cmake-action@main
+      with:
+        source-dir: ${{ github.workspace }}
+        build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+        build-args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+
+    - name: Test
+      uses: threeal/ctest-action@v1.0.0
+      with:
+        test-dir: out/${{ matrix.target_os }}/${{ matrix.build_type }}
+        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+        build-config: ${{ matrix.build_type }}
+
+    - name: Archive test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.target_os }}-${{ matrix.build_type }}
+        path: |
+            out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
+            out/${{ matrix.target_os }}/${{ matrix.build_type }}/Testing/**/*.xml
+
+    - name: Test Report
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        files: out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
