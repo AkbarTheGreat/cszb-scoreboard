@@ -198,6 +198,9 @@ endfunction()
 
 enable_testing()
 
+# meta/ tests
+package_add_test(TempFilesystemTest      FALSE test/unit/meta/TempFilesystemTest.cpp)
+
 # config/ tests
 package_add_test(CommandArgsTest         FALSE test/unit/config/CommandArgsTest.cpp
                                                 src/config/CommandArgs.cpp)
