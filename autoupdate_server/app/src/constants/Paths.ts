@@ -10,5 +10,9 @@ export default {
     All: '/all',
     Latest: '/latest',
     Info: '/info/:version',
+    UpdateURL: '/update_path/:version/:release',
+  },
+  Update: {
+    Data: '/update_data',
   },
 } as const;

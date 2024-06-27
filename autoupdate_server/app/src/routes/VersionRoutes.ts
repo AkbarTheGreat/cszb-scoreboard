@@ -1,5 +1,6 @@
-import HttpStatusCodes from '@src/constants/HttpStatusCodes';
+import Url from 'url';
 
+import HttpStatusCodes from '@src/constants/HttpStatusCodes';
 import VersionService from '@src/services/VersionService';
 import { Version } from '@src/models/Version';
 import { IReq, IRes } from './types/express/misc';
@@ -32,7 +33,22 @@ async function getAll(_: IReq, res: IRes) {
   return res.status(HttpStatusCodes.OK).json({ 'versions': versions });
 }
 
-
+/**
+ * Get the URL(s) to download an update
+ */
+async function getUpdateURLs(req: IReq<{ params: { version: string, release: string } }>, res: IRes) {
+  const version = req.params.version;
+  const release = req.params.release;
+  const sub_urls = await VersionService.getUpdateURLs(version, release);
+  const urls = sub_urls.map(u =>
+    Url.format({
+      protocol: req.protocol,
+      host: req.get('host'),
+      pathname: u,
+    })
+  );
+  return res.status(HttpStatusCodes.OK).json({ 'urls': urls, });
+}
 
 // **** Export default **** //
 
@@ -40,4 +56,5 @@ export default {
   getAll,
   getInfo,
   getLatest,
+  getUpdateURLs,
 } as const;

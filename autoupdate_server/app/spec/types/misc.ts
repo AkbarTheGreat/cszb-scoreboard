@@ -14,4 +14,5 @@ type TBody = {
   versions?: string[];
   version?: Version;
   latest?: Version;
+  urls?: string[];
 }
