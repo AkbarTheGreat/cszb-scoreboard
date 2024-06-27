@@ -187,7 +187,7 @@ endfunction()
 
 function(package_add_ui_test TESTNAME HAS_OWN_MAIN)
     if (INTEGRATION_TEST)
-	    package_add_test(${TESTNAME} ${HAS_OWN_MAIN} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes> )
+	    package_add_test(${TESTNAME} ${HAS_OWN_MAIN} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes>)
     endif()
 endfunction()
 
@@ -254,10 +254,21 @@ package_add_test(StringUtilTest          FALSE test/unit/util/StringUtilTest.cpp
                                                 src/util/StringUtil.cpp
 )
 
+# ui/event tests
+package_add_test(UpdateTimerTest         FALSE test/unit/ui/event/UpdateTimerTest.cpp
+                                                src/ui/event/UpdateTimer.cpp
+                                                src/util/AutoUpdate.cpp
+                                                src/config/CommandArgs.cpp
+                                                src/util/Base64.cpp
+                                                src/util/HttpReader.cpp
+                                                src/util/StringUtil.cpp
+                                                src/ui/widget/Frame.cpp
+)
 
-package_add_ui_test(ScreenPreviewTest    FALSE test/integration/ScreenPreviewTest.cpp)
-package_add_ui_test(TextEntryTest        FALSE test/integration/TextEntryTest.cpp)
-package_add_ui_test(ScreenTextSideTest   FALSE test/integration/ScreenTextSideTest.cpp)
+# integration tests
+package_add_ui_test(ScreenPreviewTest  FALSE test/integration/ScreenPreviewTest.cpp)
+package_add_ui_test(TextEntryTest      FALSE test/integration/TextEntryTest.cpp)
+package_add_ui_test(ScreenTextSideTest FALSE test/integration/ScreenTextSideTest.cpp)
 
 # Tests here are Mac-specific builds of other tests.  These tests may be compiled/run anywhere,
 # but they test functionality that is written to be mac-specific.
