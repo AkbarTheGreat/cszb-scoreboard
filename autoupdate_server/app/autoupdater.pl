@@ -16,10 +16,10 @@ if ($ENV{'LOCAL_TEST'}){
 
 my $api = CszbScoreboard::UpdaterAPI->new();
 
-get '/' => {text => 'I ♥ Mojolicious!'};
+get '/'             => sub($c) {$c->render(json => $api->dispatch($c, 'latest'))};
+get '/latest'       => sub($c) {$c->render(json => $api->dispatch($c, 'latest'))};
 
 get '/versions'     => sub($c) {$c->render(json => $api->dispatch($c, 'versions'))};
 get '/version_info' => sub($c) {$c->render(json => $api->dispatch($c, 'version_info'))};
-get '/latest'       => sub($c) {$c->render(json => $api->dispatch($c, 'latest'))};
 
 app->start;
