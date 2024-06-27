@@ -33,6 +33,8 @@ FROM build_baseline AS gui_build_baseline
 
 RUN apk add --no-cache \
     gstreamer-dev \
+    gst-plugins-base-dev \
+    gst-plugins-good \
     gtk+3.0-dev \
     libnotify-dev \
     libsecret-dev \
