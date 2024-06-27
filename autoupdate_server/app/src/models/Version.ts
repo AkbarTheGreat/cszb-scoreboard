@@ -1,26 +1,13 @@
 // **** Types **** //
 
-export interface Version {
+export class Version {
   name: string;
   releases: [string] | [];
+
+  constructor(name?: string, releases?: [string]) {
+    this.name = name ?? '';
+    this.releases = releases ?? [];
+  }
+
 }
 
-
-// **** Functions **** //
-
-/**
- * Create new Version.
- */
-function new_(
-  name?: string,
-  releases?: [string],
-): Version {
-  return {
-    name: (name ?? ''),
-    releases: (releases ?? []),
-  };
-}
-
-export default {
-  new: new_,
-} as const;
