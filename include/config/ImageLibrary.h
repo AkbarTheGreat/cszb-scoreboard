@@ -18,10 +18,12 @@ limitations under the License.
 */
 #pragma once
 
-#include <cstddef>  // for size_t
-#include <memory>   // for unique_ptr
-#include <string>   // for string, basic_string
-#include <vector>   // for vector
+#include <stdint.h>            // for uint32_t
+#include <cstddef>             // for size_t
+#include <memory>              // for unique_ptr
+#include <string>              // for string, basic_string
+#include <vector>              // for vector
+#include <unordered_set>       // for unordered_set
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "image_library.pb.h"  // for ImageInfo, ImageLibrary
@@ -99,6 +101,10 @@ class ImageLibrary {
   // makes a best effort to set their location in a way that makes sense. Use
   // this for most user operations where the root changes.
   void smartUpdateLibraryRoot(const FilesystemPath &root);
+  // Looks for images added or moved in the library and automatically
+  // updates them the best it knows how.  If delete_missing is set to true, also
+  // removes any missing images from the library.
+  void detectLibraryChanges(bool delete_missing = false);
   void clearLibrary();
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;
@@ -124,6 +130,8 @@ class ImageLibrary {
   auto partialMatchSearch(const std::string &query) -> ImageSearchResults;
   void addMatch(std::vector<proto::ImageInfo> *matched_images,
                 const proto::ImageInfo &image);
+  auto crawlImageDirectory(std::string path, uint32_t depth = 0)
+      -> std::unordered_set<std::string>;
 };
 
 // A non-singleton subclass of the singleton ImageLibrary which turns off all

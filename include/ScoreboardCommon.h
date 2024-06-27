@@ -20,6 +20,7 @@ limitations under the License.
 
 #pragma once
 
+#include <array>
 #include <string>
 
 namespace cszb_scoreboard {
@@ -28,6 +29,9 @@ const int DEFAULT_BORDER_SIZE = 5;
 
 const std::string IMAGE_SELECTION_STRING =
     "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
+
+const std::array<const char *, 5> IMAGE_EXTENSIONS = {
+    {".bmp", ".gif", ".jpg", ".jpeg", ".png"}};
 
 const std::string LOGO_SELECTION_STRING = "Logo files (png)|*.png";
 
