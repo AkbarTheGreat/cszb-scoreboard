@@ -20,11 +20,11 @@ limitations under the License.
 
 #include "util/FilesystemPath.h"
 
-#include <stddef.h>  // for size_t
-
 #include <algorithm>  // for count, transform
-#include <cctype>     // for toupper
-#include <sstream>    // for basic_istream, istringstream
+#include <array>
+#include <cctype>   // for toupper
+#include <cstddef>  // for size_t
+#include <sstream>  // for basic_istream, istringstream
 
 #ifdef SCOREBOARD_APPLE_IMPL
 #include <cstdio>  // for size_t, remove, rename
@@ -106,7 +106,7 @@ auto FilesystemPath::existsWithRoot(const std::string &root) const -> bool {
 
 auto FilesystemPath::stripTrailingSeparator(const std::string &path)
     -> std::string {
-  if (path.length() > 0 && path.at(path.length() - 1) == preferred_separator) {
+  if (!path.empty() && path.at(path.length() - 1) == preferred_separator) {
     return path.substr(0, path.length() - 1);
   }
   return path;
@@ -130,8 +130,8 @@ auto FilesystemPath::mostRelativePath(
   }
   auto effective_root = stripTrailingSeparator(root);
   // Search for root at the start of the string.
-  if (file_path.rfind(effective_root + static_cast<char>(preferred_separator),
-                      0) == 0) {
+  if (file_path.starts_with(effective_root +
+                            static_cast<char>(preferred_separator))) {
     return file_path.substr(effective_root.length() + 1, std::string::npos);
   }
   return file_path;
@@ -182,8 +182,10 @@ auto FilesystemPath::titleName() const -> std::string {
 
 /* NOT YET IMPLEMENTED ON MACOS!
 Eventually, we'll need to do so, but until then the one feature that relies on
-this (auto-updating image libraries) will be unsupported on macs.
+this (auto-updating image libraries) will be unsupported on macs.  While it's
+unimplemented, it fails lint on our MacOS tests, so disable that check.
 */
+// NOLINTNEXTLINE (readability-convert-member-functions-to-static)
 auto FilesystemPath::findFilesOfType(
     const std::vector<const char *> &extensions,
     uint32_t max_depth) -> std::unordered_set<std::string> {

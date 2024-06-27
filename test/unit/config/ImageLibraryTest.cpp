@@ -68,7 +68,7 @@ class ImageLibraryTest : public ::testing::Test {
 
   auto internalPath(const std::string &base, const std::string &subpath) {
     auto path = std::filesystem::temp_directory_path();
-    if (filesystem.get() != nullptr) {
+    if (filesystem != nullptr) {
       path = filesystem->getRoot();
     }
     path /= base;
