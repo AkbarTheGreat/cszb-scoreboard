@@ -1,0 +1,15 @@
+# Docker compose file for local debugging of the service
+
+version: '2'
+services:
+  updater:
+    build: .
+    command: [morbo, -l, http://*:8080, autoupdater.pl]
+    environment:
+      - LOCAL_TEST=1
+    ports:
+      - 8080:8080
+    volumes:
+      - ./app:/updater
+      - ./testdata:/releases
+      - ./debug-logs:/logs
