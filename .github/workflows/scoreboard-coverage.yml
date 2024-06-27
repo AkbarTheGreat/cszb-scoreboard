@@ -143,7 +143,7 @@ jobs:
 
       matrix:
         target_os: [Linux]
-        build_type: [Integration]
+        build_type: [Coverage]
         include:
           - target_os: Linux
             docker_target: standard_build
