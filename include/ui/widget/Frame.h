@@ -112,11 +112,10 @@ class Frame : public Widget {
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
     return new swx::PanelImpl(wx(), id, pos, size, style, name);
   }
-  auto childNotebook(wxWindowID id = wxID_ANY,
-                     const wxPoint &pos = wxDefaultPosition,
-                     const wxSize &size = wxDefaultSize,
-                     int64_t style = DEFAULT_NOTEBOOK_STYLE)
-      -> swx::Notebook * {
+  auto childNotebook(
+      wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition,
+      const wxSize &size = wxDefaultSize,
+      int64_t style = DEFAULT_NOTEBOOK_STYLE) -> swx::Notebook * {
     return new swx::Notebook(wx(), id, pos, size, style);
   }
 

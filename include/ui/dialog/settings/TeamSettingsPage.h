@@ -34,7 +34,7 @@ class Panel;
 class TeamSettingsPage : public SettingsPage {
  public:
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
-  // always call the constructor that passes in the Singelton object, as it
+  // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
   explicit TeamSettingsPage(swx::Panel *wx)
       : TeamSettingsPage(wx, Singleton::getInstance()) {}
