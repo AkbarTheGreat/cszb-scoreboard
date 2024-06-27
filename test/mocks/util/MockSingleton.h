@@ -48,11 +48,4 @@ class MockSingleton : public Singleton {
 
 }  // namespace test
 
-#ifndef USE_REAL_SINGLETON
-auto Singleton::getInstance() -> Singleton* {
-  static test::MockSingleton instance;
-  return &instance;
-}
-#endif
-
 }  // namespace cszb_scoreboard

@@ -23,9 +23,6 @@ limitations under the License.
 #include "test/mocks/util/MockSingleton.h"
 #include "ui/frame/MainView.h"
 
-// Empty initialization for testing.
-void cszb_scoreboard::MainView::init() {};
-
 namespace cszb_scoreboard::test {
 
 class MockMainView : public MainView {

@@ -32,6 +32,9 @@ limitations under the License.
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "util/Singleton.h"       // for SingletonClass
 
+#define TEST_STUB_SINGLETON
+#include "test/mocks/Stubs.h"
+
 namespace cszb_scoreboard::test {
 
 using ::testing::ElementsAre;

@@ -40,6 +40,10 @@ limitations under the License.
 #include "ui/widget/Frame.h"                       // for Frame
 #include "util/Singleton.h"                        // for SingletonClass
 
+#define TEST_STUB_FRAME_MANAGER
+#define TEST_STUB_MAIN_VIEW
+#include "test/mocks/Stubs.h"
+
 namespace cszb_scoreboard {
 class ScreenText;
 

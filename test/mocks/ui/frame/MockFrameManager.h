@@ -21,25 +21,6 @@ limitations under the License.
 #include "gmock/gmock.h"
 #include "ui/frame/FrameManager.h"
 
-namespace cszb_scoreboard {
-auto FrameManager::createMainView(const std::string &title, const Position &pos,
-                                  const Size &size) -> MainView * {
-  return nullptr;
-}
-
-auto FrameManager::createScreenPresenter(
-    int monitor_number, const ScreenText &preview) -> ScreenPresenter * {
-  return nullptr;
-}
-
-void FrameManager::refreshFrames() {}
-
-void FrameManager::exitFrames() {}
-
-auto FrameManager::monitor(uint32_t index) -> Display { return Display(0); }
-
-}  // namespace cszb_scoreboard
-
 namespace cszb_scoreboard::test {
 
 class MockFrameManager : public FrameManager {
