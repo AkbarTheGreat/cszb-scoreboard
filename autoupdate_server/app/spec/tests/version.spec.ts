@@ -60,6 +60,46 @@ describe('VersionRouter', () => {
       });
   });
 
+  // Version info
+  describe(`"GET:${Paths.Versions.Info}"`, () => {
+
+    const ERROR_MSG = 'foo';
+
+    // Setup API
+    const api = (version: string | null, cb: TApiCb) =>
+      agent
+        .get(Paths.Versions.Info.replace(':version', version??''))
+        .end(apiCb(cb));
+
+    // Success
+    it(`should return a status code of "${HttpStatusCodes.OK}" if the ` +
+      'request was successful.', (done) => {
+        // Add spy
+        const versionData = getDummyLatest();
+        jest.spyOn(VersionRepo, 'getInfo').mockResolvedValue(versionData);
+        // Call api
+        api('1.0.0', res => {
+          expect(res.status).toBe(HttpStatusCodes.OK);
+          expect(res.body).toEqual({ version: versionData });
+          done();
+        });
+      });
+
+    // Version not found
+    it('should return a JSON object with the error message of ' +
+      `"${VERSION_NOT_FOUND_ERR}" and a status code of ` +
+      `"${HttpStatusCodes.NOT_FOUND}" if the id was not found.`, (done) => {
+        // Add spy
+        jest.spyOn(VersionRepo, 'getInfo').mockResolvedValue(null);
+        // Call api
+        api('0.0.0', res => {
+          expect(res.status).toBe(HttpStatusCodes.NOT_FOUND);
+          expect(res.body.error).toBe(VERSION_NOT_FOUND_ERR);
+          done();
+        });
+      });
+  });
+
   // Get latest versions
   describe(`"GET:${Paths.Versions.Latest}"`, () => {
 
@@ -73,14 +113,12 @@ describe('VersionRouter', () => {
     it('should return a JSON object with all the versions and a status code ' +
       `of "${HttpStatusCodes.OK}" if the request was successful.`, (done) => {
         // Add spy
-        //const versionList = getDummyVersions();
         const versionData = getDummyLatest();
-        //jest.spyOn(VersionRepo, 'getAll').mockResolvedValue(versionList);
         jest.spyOn(VersionRepo, 'getLatest').mockResolvedValue(versionData);
         // Call API
         api(res => {
           expect(res.status).toBe(HttpStatusCodes.OK);
-          expect(res.body).toEqual({latest: versionData});
+          expect(res.body).toEqual({ latest: versionData });
           done();
         });
       });
