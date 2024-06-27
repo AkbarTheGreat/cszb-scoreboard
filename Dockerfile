@@ -647,8 +647,10 @@ CMD cmake --preset Linux-Coverage && \
 # ------------------------------------------------------------------------------
 FROM standard_build AS standard_test
 
+ENV BUILD_PRESET Integration
+
 WORKDIR /cszb-scoreboard
 CMD supervisord -c /supervisord.conf && \
-    cmake --preset Linux-Integration && \
-    cmake --build --preset Linux-Integration --parallel 6 && \
-    ctest --preset Linux-Integration
+    cmake --preset Linux-${BUILD_PRESET} && \
+    cmake --build --preset Linux-${BUILD_PRESET} --parallel 6 && \
+    ctest --preset Linux-${BUILD_PRESET}
