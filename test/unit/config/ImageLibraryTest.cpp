@@ -17,9 +17,10 @@ limitations under the License.
 */
 
 #include <algorithm>  // for max
-#include <memory>     // for unique_ptr
-#include <string>     // for operator+, allocator, cha...
-#include <vector>     // for vector
+#include <filesystem>
+#include <memory>  // for unique_ptr
+#include <string>  // for operator+, allocator, cha...
+#include <vector>  // for vector
 
 #include "config/ImageLibrary.h"  // for ImageLibrary, ImageSearch...
 #include "gmock/gmock.h"          // for ElementsAre, MakePredicat...
@@ -27,8 +28,9 @@ limitations under the License.
 #include "image_library.pb.h"     // for ImageInfo, ImageLibrary
 #include "test/mocks/config/MockPersistence.h"
 #include "test/mocks/util/MockSingleton.h"  // for MockSingleton
-#include "util/FilesystemPath.h"            // for FilesystemPath
-#include "util/Singleton.h"                 // for SingletonClass
+#include "test/util/TempFilesystem.h"
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Singleton.h"       // for SingletonClass
 
 namespace cszb_scoreboard::test {
 
@@ -36,26 +38,22 @@ using ::testing::ElementsAre;
 using ::testing::Return;
 using ::testing::UnorderedElementsAre;
 
-#ifdef _WIN32
-const std::string LIB_ROOT = "C:\\test\\";
-const std::string NONLIB_ROOT = "C:\\test2\\";
-#else   // ifdef _WIN32
-const std::string LIB_ROOT = "/test/";
-const std::string NONLIB_ROOT = "/test2/";
-#endif  // ifdef _WIN32
+const std::string LIB_ROOT_DIR = "test";
+const std::string NONLIB_ROOT_DIR = "test2";
 
 class ImageLibraryTest : public ::testing::Test {
  protected:
   std::unique_ptr<ImageLibrary> library;
   std::unique_ptr<MockSingleton> singleton;
   std::unique_ptr<MockPersistence> persist;
+  std::unique_ptr<TempFilesystem> filesystem;
 
   ImageLibraryTest() = default;
   ~ImageLibraryTest() override = default;
 
   void SetUp() override {
     singleton = std::make_unique<MockSingleton>();
-    library = testLibrary(singleton.get());
+    library = testLibrary();
     persist = std::make_unique<MockPersistence>(singleton.get());
     EXPECT_CALL(*singleton, persistence).WillRepeatedly(Return(persist.get()));
   }
@@ -65,17 +63,42 @@ class ImageLibraryTest : public ::testing::Test {
     singleton.reset();
     persist->resetGeneralConfig();
     persist.reset();
+    filesystem.reset();
   }
 
-  auto testLibrary(MockSingleton *singleton) -> std::unique_ptr<ImageLibrary> {
+  auto internalPath(const std::string &base, const std::string &subpath) {
+    auto path = std::filesystem::temp_directory_path();
+    if (filesystem.get() != nullptr) {
+      path = filesystem->getRoot();
+    }
+    path /= base;
+    if (!subpath.empty()) {
+      path /= subpath;
+    }
+    return path.string();
+  }
+
+  auto libRoot(const std::string &subpath) {
+    return internalPath(LIB_ROOT_DIR, subpath);
+  }
+
+  auto libRoot() { return libRoot(""); }
+
+  auto nonlibRoot(const std::string &subpath) {
+    return internalPath(NONLIB_ROOT_DIR, subpath);
+  }
+
+  auto nonlibRoot() { return nonlibRoot(""); }
+
+  auto testLibrary() -> std::unique_ptr<ImageLibrary> {
     proto::ImageLibrary library;
 
-    library.set_library_root(LIB_ROOT);
+    library.set_library_root(libRoot());
 
     // Add a corgi
     proto::ImageInfo *image = library.add_images();
     image->set_name("corgi");
-    image->set_file_path(LIB_ROOT + "corgi.jpg");
+    image->set_file_path(libRoot("corgi.jpg"));
     image->add_tags("dog");
     image->add_tags("cute");
     image->add_tags("short");
@@ -92,7 +115,7 @@ class ImageLibraryTest : public ::testing::Test {
     // Add a capybara
     image = library.add_images();
     image->set_name("capybara");
-    image->set_file_path(NONLIB_ROOT + "capy.jpg");
+    image->set_file_path(nonlibRoot("capy.jpg"));
     image->add_tags("rodent");
     image->add_tags("cute");
     image->add_tags("short");
@@ -100,14 +123,34 @@ class ImageLibraryTest : public ::testing::Test {
     // Add a bathroom
     image = library.add_images();
     image->set_name("Bathroom");
-    image->set_file_path(
-        LIB_ROOT +
-        "but-why.jpg");  // Because we can use (s)tall for partial matches
+    image->set_file_path(libRoot(
+        "but-why.jpg"));  // Because we can use (s)tall for partial matches
     image->add_tags("gender");
     image->add_tags("neutral");
     image->add_tags("Stall");
 
-    return std::make_unique<ImageLibrary>(SingletonClass{}, singleton, library);
+    return std::make_unique<ImageLibrary>(SingletonClass{}, singleton.get(),
+                                          library);
+  }
+
+  void addImageToSubdir(const std::string &subdir, const std::string &name) {
+    std::filesystem::path path = subdir;
+    path /= name;
+    filesystem->createFile(path.string(), ".");
+  }
+
+  // Creates a filesystem to match the entries in testLibrary.  This is not done
+  // for every test to save IO time.
+  void buildFilesystem() {
+    filesystem = std::make_unique<TempFilesystem>();
+    filesystem->createSubdir(LIB_ROOT_DIR);
+    filesystem->createSubdir(NONLIB_ROOT_DIR);
+    addImageToSubdir(LIB_ROOT_DIR, "corgi.jpg");
+    addImageToSubdir(LIB_ROOT_DIR, "great_dane.jpg");
+    addImageToSubdir(NONLIB_ROOT_DIR, "capy.jpg");
+    addImageToSubdir(LIB_ROOT_DIR, "but-why.jpg");
+    // Rebuild the library to match the filesystem.
+    library = testLibrary();
   }
 };
 
@@ -139,8 +182,8 @@ TEST_F(ImageLibraryTest, AllTagsBuildsCorrectly) {
 TEST_F(ImageLibraryTest, AllFilenamesBuildsCorrectly) {
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
 }
 
 // Searches for full single words match the relevant tag if it exists.
@@ -149,19 +192,19 @@ TEST_F(ImageLibraryTest, FullWordSearches) {
   auto result = library->search("dog");
   EXPECT_THAT(result.matchedTags(), ElementsAre("dog"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg")));
 
   // Potentially conflicting search doesn't collide
   result = library->search("tall");
   EXPECT_THAT(result.matchedTags(), ElementsAre("tall"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(FilesystemPath(LIB_ROOT + "great_dane.jpg")));
+              ElementsAre(FilesystemPath(libRoot("great_dane.jpg"))));
 
   // Titles match full names
   result = library->search("capybara");
   EXPECT_THAT(result.matchedTags(), ElementsAre("capybara"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(FilesystemPath(NONLIB_ROOT + "capy.jpg")));
+              ElementsAre(FilesystemPath(nonlibRoot("capy.jpg"))));
 
   // Bad search returns nothing
   result = library->search("notgonnafindit");
@@ -175,19 +218,19 @@ TEST_F(ImageLibraryTest, PartialWordSearches) {
   auto result = library->search("do");
   EXPECT_THAT(result.matchedTags(), ElementsAre("dog"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg")));
 
   // Potentially conflicting search doesn't collide
   result = library->search("tal");
   EXPECT_THAT(result.matchedTags(), ElementsAre("Stall", "tall"));
-  EXPECT_THAT(result.filenames(), ElementsAre(LIB_ROOT + "great_dane.jpg",
-                                              LIB_ROOT + "but-why.jpg"));
+  EXPECT_THAT(result.filenames(),
+              ElementsAre(libRoot("great_dane.jpg"), libRoot("but-why.jpg")));
 
   // Titles match partial names too
   result = library->search("capy");
   EXPECT_THAT(result.matchedTags(), ElementsAre("capybara"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(FilesystemPath({NONLIB_ROOT + "capy.jpg"})));
+              ElementsAre(FilesystemPath({nonlibRoot("capy.jpg")})));
 
   // Empty search returns everything
   result = library->search("");
@@ -195,8 +238,8 @@ TEST_F(ImageLibraryTest, PartialWordSearches) {
               ElementsAre("cute", "dog", "gender", "neutral", "rodent", "short",
                           "Stall", "tall"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
 
   // Bad search still returns nothing
   result = library->search("notgonnafindit");
@@ -210,8 +253,8 @@ TEST_F(ImageLibraryTest, DeduplicatingSearches) {
   auto result = library->search("c");
   EXPECT_THAT(result.matchedTags(), ElementsAre("capybara", "corgi", "cute"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          nonlibRoot("capy.jpg")));
 }
 
 // Makes sure that case insensitive searches work correctly
@@ -220,62 +263,61 @@ TEST_F(ImageLibraryTest, CaseInsensitiveSearches) {
   auto result = library->search("stall");
   EXPECT_THAT(result.matchedTags(), ElementsAre("Stall"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(FilesystemPath(LIB_ROOT + "but-why.jpg")));
+              ElementsAre(FilesystemPath(libRoot("but-why.jpg"))));
   // This should match exactly one image
   result = library->search("bath");
   EXPECT_THAT(result.matchedTags(), ElementsAre("Bathroom"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(FilesystemPath(LIB_ROOT + "but-why.jpg")));
+              ElementsAre(FilesystemPath(libRoot("but-why.jpg"))));
 }
 
 TEST_F(ImageLibraryTest, RemoveRoot) {
   library->removeLibraryRoot();
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   ASSERT_EQ(library->libraryRoot(), "");
 }
 
 TEST_F(ImageLibraryTest, MoveRoot) {
-  library->moveLibraryRoot(FilesystemPath(NONLIB_ROOT));
+  library->moveLibraryRoot(FilesystemPath(nonlibRoot()));
   // The one relative path in the library (great_dane) moves implicitly, all
   // other paths remain the same.
   auto result = library->search("");
-  EXPECT_THAT(
-      result.filenames(),
-      ElementsAre(LIB_ROOT + "corgi.jpg", NONLIB_ROOT + "great_dane.jpg",
-                  NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+  EXPECT_THAT(result.filenames(),
+              ElementsAre(libRoot("corgi.jpg"), nonlibRoot("great_dane.jpg"),
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
-  ASSERT_EQ(library->libraryRoot(), NONLIB_ROOT);
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
+  ASSERT_EQ(library->libraryRoot(), nonlibRoot());
 }
 
 TEST_F(ImageLibraryTest, SetRoot) {
-  library->setLibraryRoot(FilesystemPath(NONLIB_ROOT));
+  library->setLibraryRoot(FilesystemPath(nonlibRoot()));
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
-                          "capy.jpg", LIB_ROOT + "but-why.jpg"));
-  ASSERT_EQ(library->libraryRoot(), NONLIB_ROOT);
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          "capy.jpg", libRoot("but-why.jpg")));
+  ASSERT_EQ(library->libraryRoot(), nonlibRoot());
 }
 
 TEST_F(ImageLibraryTest, AddImage) {
   library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
   std::vector<FilesystemPath> files = library->allFilenames();
-  EXPECT_THAT(files, ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                                 NONLIB_ROOT + "capy.jpg",
-                                 LIB_ROOT + "but-why.jpg", "new-image.png"));
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
+                                 "new-image.png"));
   auto result = library->search("");
   EXPECT_THAT(result.matchedTags(),
               ElementsAre("cute", "dog", "gender", "neutral", "rodent", "short",
                           "Stall", "tag_test", "tall"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg",
-                          LIB_ROOT + "new-image.png"));
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
+                          libRoot("new-image.png")));
 }
 
 TEST_F(ImageLibraryTest, MoveImage) {
@@ -284,23 +326,22 @@ TEST_F(ImageLibraryTest, MoveImage) {
                      FilesystemPath("moved-image.png"));
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   // Changes for exact match.
-  library->moveImage(FilesystemPath(NONLIB_ROOT + "capy.jpg"),
+  library->moveImage(FilesystemPath(nonlibRoot("capy.jpg")),
                      FilesystemPath("moved-image.png"));
   files = library->allFilenames();
-  EXPECT_THAT(files, ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                                 "moved-image.png", LIB_ROOT + "but-why.jpg"));
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 "moved-image.png", libRoot("but-why.jpg")));
   // Search result also updates.
   auto result = library->search("");
   EXPECT_THAT(result.matchedTags(),
               ElementsAre("cute", "dog", "gender", "neutral", "rodent", "short",
                           "Stall", "tall"));
-  EXPECT_THAT(
-      result.filenames(),
-      ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
-                  LIB_ROOT + "moved-image.png", LIB_ROOT + "but-why.jpg"));
+  EXPECT_THAT(result.filenames(),
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          libRoot("moved-image.png"), libRoot("but-why.jpg")));
 }
 
 TEST_F(ImageLibraryTest, DeleteImage) {
@@ -308,21 +349,21 @@ TEST_F(ImageLibraryTest, DeleteImage) {
   library->deleteImage(FilesystemPath("capy.jpg"));
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   // Deletes an exact match.
-  library->deleteImage(FilesystemPath(NONLIB_ROOT + "capy.jpg"));
+  library->deleteImage(FilesystemPath(nonlibRoot("capy.jpg")));
   files = library->allFilenames();
-  EXPECT_THAT(files, ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                                 LIB_ROOT + "but-why.jpg"));
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 libRoot("but-why.jpg")));
   // Search result and tags also update.
   auto result = library->search("");
   EXPECT_THAT(result.matchedTags(),
               ElementsAre("cute", "dog", "gender", "neutral", "short", "Stall",
                           "tall"));
   EXPECT_THAT(result.filenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", LIB_ROOT + "great_dane.jpg",
-                          LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          libRoot("but-why.jpg")));
 }
 
 TEST_F(ImageLibraryTest, TemporaryClone) {
@@ -333,11 +374,11 @@ TEST_F(ImageLibraryTest, TemporaryClone) {
                  {"tempTag"});
 
   EXPECT_THAT(library->allFilenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   EXPECT_THAT(temp->allFilenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg",
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
                           "temp/tempImage.jpg"));
 }
 
@@ -350,14 +391,14 @@ TEST_F(ImageLibraryTest, ClearLibrary) {
 }
 
 TEST_F(ImageLibraryTest, CopyFrom) {
-  auto copy_target = testLibrary(singleton.get());
+  auto copy_target = testLibrary();
 
   copy_target->clearLibrary();
 
   // Verify starting state.
   EXPECT_THAT(library->allFilenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   EXPECT_TRUE(copy_target->allFilenames().empty());
 
   {
@@ -367,22 +408,22 @@ TEST_F(ImageLibraryTest, CopyFrom) {
 
   // Copy succeeded
   EXPECT_THAT(library->allFilenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   EXPECT_THAT(copy_target->allFilenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
 
   copy_target->addImage(FilesystemPath("newImage.jpg"), "new Image",
                         {"newtag"});
 
   // Ensure that the copies are still separate.
   EXPECT_THAT(library->allFilenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg"));
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
   EXPECT_THAT(copy_target->allFilenames(),
-              ElementsAre(LIB_ROOT + "corgi.jpg", "great_dane.jpg",
-                          NONLIB_ROOT + "capy.jpg", LIB_ROOT + "but-why.jpg",
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
                           "newImage.jpg"));
 }
 
@@ -393,7 +434,7 @@ TEST_F(ImageLibraryTest, GetName) {
 }
 
 TEST_F(ImageLibraryTest, GetTags) {
-  EXPECT_THAT(library->tags(FilesystemPath(LIB_ROOT + "corgi.jpg")),
+  EXPECT_THAT(library->tags(FilesystemPath(libRoot("corgi.jpg"))),
               ElementsAre(CaseOptionalString("cute"), CaseOptionalString("dog"),
                           CaseOptionalString("short")));
 
@@ -409,12 +450,12 @@ TEST_F(ImageLibraryTest, SetName) {
 }
 
 TEST_F(ImageLibraryTest, SetTags) {
-  library->setTags(FilesystemPath(LIB_ROOT + "corgi.jpg"),
+  library->setTags(FilesystemPath(libRoot("corgi.jpg")),
                    {"floof", "dog", "long"});
   // Contains exactly the list set, not a merge or a union of the previous set,
   // and returns it in alphabetical order.
   EXPECT_THAT(
-      library->tags(FilesystemPath(LIB_ROOT + "corgi.jpg")),
+      library->tags(FilesystemPath(libRoot("corgi.jpg"))),
       ElementsAre(CaseOptionalString("dog"), CaseOptionalString("floof"),
                   CaseOptionalString("long")));
 
@@ -422,8 +463,79 @@ TEST_F(ImageLibraryTest, SetTags) {
   EXPECT_TRUE(library->tags(FilesystemPath("invalid.jpg")).empty());
 }
 
-// TODO (akbar): Test smartUpdateLibraryRoot -- this will likely either require
-// sophisticated mocking of FilesystemPath or a test filestructure that's
-// created/destroyed at setup/teardown.
+TEST_F(ImageLibraryTest, SmartUpdateNoDuplicates) {
+  // The filesystem object will clean up the temp files when it goes out of
+  // scope.
+  buildFilesystem();
+  library->smartUpdateLibraryRoot(FilesystemPath(nonlibRoot()));
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files,
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          "capy.jpg", libRoot("but-why.jpg")));
+}
+
+TEST_F(ImageLibraryTest, SmartUpdateDuplicateRelativePaths) {
+  buildFilesystem();
+  addImageToSubdir(NONLIB_ROOT_DIR, "great_dane.jpg");
+  library->smartUpdateLibraryRoot(FilesystemPath(nonlibRoot()));
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 "capy.jpg", libRoot("but-why.jpg")));
+}
+
+TEST_F(ImageLibraryTest, SmartUpdateDuplicateAbsolutePaths) {
+  buildFilesystem();
+  // Corgi will still be referred to from the original lib path.
+  addImageToSubdir(NONLIB_ROOT_DIR, "corgi.jpg");
+  library->smartUpdateLibraryRoot(FilesystemPath(nonlibRoot()));
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files,
+              ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"),
+                          "capy.jpg", libRoot("but-why.jpg")));
+}
+
+TEST_F(ImageLibraryTest, SmartUpdateMissingAbsoluteFile) {
+  // The filesystem object will clean up the temp files when it goes out of
+  // scope.
+  buildFilesystem();
+  library->addImage(FilesystemPath(libRoot("new-image.png")), "New Thing",
+                    {"tag_test"});
+  library->smartUpdateLibraryRoot(FilesystemPath(nonlibRoot()));
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(
+      files,
+      ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"), "capy.jpg",
+                  libRoot("but-why.jpg"), libRoot("new-image.png")));
+}
+
+TEST_F(ImageLibraryTest, SmartUpdateMissingRelativeFile) {
+  // The filesystem object will clean up the temp files when it goes out of
+  // scope.
+  buildFilesystem();
+  library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
+  library->smartUpdateLibraryRoot(FilesystemPath(nonlibRoot()));
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(
+      files,
+      ElementsAre(libRoot("corgi.jpg"), libRoot("great_dane.jpg"), "capy.jpg",
+                  libRoot("but-why.jpg"), libRoot("new-image.png")));
+}
+
+TEST_F(ImageLibraryTest, LoadSaveLibrary) {
+  library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
+
+  library->saveLibrary();
+
+  ImageLibrary loaded(SingletonClass{}, singleton.get(),
+                      persist->loadImageLibrary());
+  std::vector<std::string> tags = tagStrings(*library);
+  // Check that they're in the correct (alphabetical) order.
+  EXPECT_THAT(tags, ElementsAre("cute", "dog", "gender", "neutral", "rodent",
+                                "short", "Stall", "tag_test", "tall"));
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
+                                 "new-image.png"));
+}
 
 }  // namespace cszb_scoreboard::test
