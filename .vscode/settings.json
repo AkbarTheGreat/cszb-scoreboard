@@ -21,7 +21,8 @@
       "charconv": "cpp",
       "ios": "cpp",
       "istream": "cpp",
-      "ostream": "cpp"
+      "ostream": "cpp",
+      "functional": "cpp"
    },
    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
       "clang-diagnostic-error"

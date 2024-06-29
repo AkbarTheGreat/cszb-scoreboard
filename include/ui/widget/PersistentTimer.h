@@ -21,6 +21,7 @@ limitations under the License.
 
 #include <functional>  // for function
 
+#include "ScoreboardCommon.h"
 #include "ui/widget/swx/Timer.h"  // for Timer
 
 namespace cszb_scoreboard {
@@ -39,6 +40,9 @@ class PersistentTimer {
  public:
   PersistentTimer(int period, const std::function<void()> &on_tick);
   void stop();
+
+  PUBLIC_TEST_ONLY
+  void trigger();
 
  private:
   // We should delete the held timer at destruction, but doing so causes a read
