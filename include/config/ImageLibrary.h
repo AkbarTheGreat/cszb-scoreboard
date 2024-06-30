@@ -52,6 +52,44 @@ class CaseOptionalString {
   std::string lowercase;
 };
 
+class ImageChange {
+ public:
+  ImageChange(const proto::ImageInfo &added, const proto::ImageInfo &removed) {
+    this->_added = added;
+    this->_removed = removed;
+  }
+  [[nodiscard]] auto added() const -> proto::ImageInfo { return _added; }
+  [[nodiscard]] auto removed() const -> proto::ImageInfo { return _removed; }
+
+ private:
+  proto::ImageInfo _added, _removed;
+};
+
+class LibraryUpdateResults {
+ public:
+  LibraryUpdateResults(const std::vector<ImageChange> &added_images,
+                       const std::vector<ImageChange> &moved_images,
+                       const std::vector<ImageChange> &removed_images) {
+    this->_added = added_images;
+    this->_moved = moved_images;
+    this->_removed = removed_images;
+  }
+  [[nodiscard]] auto addedImages() const -> std::vector<ImageChange> {
+    return _added;
+  }
+  [[nodiscard]] auto movedImages() const -> std::vector<ImageChange> {
+    return _moved;
+  }
+  [[nodiscard]] auto removedImages() const -> std::vector<ImageChange> {
+    return _removed;
+  }
+
+ private:
+  std::vector<ImageChange> _added;
+  std::vector<ImageChange> _moved;
+  std::vector<ImageChange> _removed;
+};
+
 class ImageSearchResults {
  public:
   auto filenames() -> std::vector<FilesystemPath>;
@@ -81,10 +119,10 @@ class ImageLibrary {
   auto name(const FilesystemPath &filename) -> std::string;
   void setName(const FilesystemPath &filename, const std::string &name);
 
-  void addImage(const FilesystemPath &file, const std::string &name,
-                const std::vector<std::string> &tags);
-  void moveImage(const FilesystemPath &previous_path,
-                 const FilesystemPath &new_path);
+  auto addImage(const FilesystemPath &file, const std::string &name,
+                const std::vector<std::string> &tags) -> proto::ImageInfo;
+  auto moveImage(const FilesystemPath &previous_path,
+                 const FilesystemPath &new_path) -> proto::ImageInfo;
   void deleteImage(const FilesystemPath &file);
   auto libraryRoot() -> FilesystemPath;
   void removeLibraryRoot();
@@ -92,17 +130,19 @@ class ImageLibrary {
   // this if the entire directory was relocated and you want to shift them all
   // at one time.
   void moveLibraryRoot(const FilesystemPath &root);
-  // setLibraryRoot sets the root, updating every file to match the new relative
-  // location.  Use this if the root is changed, but no files are moved.
+  // setLibraryRoot sets the root, updating every file to match the new
+  // relative location.  Use this if the root is changed, but no files are
+  // moved.
   void setLibraryRoot(const FilesystemPath &root);
-  // smartUpdateLibraryRoot sets the root, and for relative paths in the library
-  // makes a best effort to set their location in a way that makes sense. Use
-  // this for most user operations where the root changes.
+  // smartUpdateLibraryRoot sets the root, and for relative paths in the
+  // library makes a best effort to set their location in a way that makes
+  // sense. Use this for most user operations where the root changes.
   void smartUpdateLibraryRoot(const FilesystemPath &root);
   // Looks for images added or moved in the library and automatically
-  // updates them the best it knows how.  If delete_missing is set to true, also
-  // removes any missing images from the library.
-  virtual void detectLibraryChanges(bool delete_missing = false);
+  // updates them the best it knows how.  If delete_missing is set to true,
+  // also removes any missing images from the library.
+  virtual auto detectLibraryChanges(bool delete_missing = false)
+      -> LibraryUpdateResults;
   void clearLibrary();
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;
@@ -111,8 +151,8 @@ class ImageLibrary {
                const std::vector<std::string> &tags);
 
   PUBLIC_TEST_ONLY
-  // Test-available constructor which initializes this object from an in-memory
-  // proto.
+  // Test-available constructor which initializes this object from an
+  // in-memory proto.
   ImageLibrary(SingletonClass c, Singleton *singleton,
                proto::ImageLibrary library);
 

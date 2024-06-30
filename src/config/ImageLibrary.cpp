@@ -154,8 +154,9 @@ auto ImageLibrary::tags(const FilesystemPath &filename)
   return tags;
 }
 
-void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
-                            const std::vector<std::string> &tags) {
+auto ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
+                            const std::vector<std::string> &tags)
+    -> proto::ImageInfo {
   proto::ImageInfo *new_image = library.add_images();
   FilesystemPath rel_path = FilesystemPath(
       FilesystemPath::mostRelativePath(libraryRoot().string(), file.string()));
@@ -165,19 +166,24 @@ void ImageLibrary::addImage(const FilesystemPath &file, const std::string &name,
   for (const auto &tag : tags) {
     new_image->add_tags(tag);
   }
+  return *new_image;
 }
 
-void ImageLibrary::moveImage(const FilesystemPath &previous_path,
-                             const FilesystemPath &new_path) {
+auto ImageLibrary::moveImage(const FilesystemPath &previous_path,
+                             const FilesystemPath &new_path)
+    -> proto::ImageInfo {
   FilesystemPath rel_path = FilesystemPath(FilesystemPath::mostRelativePath(
       libraryRoot().string(), new_path.string()));
   auto *images = library.mutable_images();
+  proto::ImageInfo last_changed;
   for (auto &image : *images) {
     if (FilesystemPath(image.file_path()) == previous_path) {
       image.set_file_path(rel_path.string());
       image.set_is_relative(rel_path.is_relative());
+      last_changed = image;
     }
   }
+  return last_changed;
 }
 
 void ImageLibrary::deleteImage(const FilesystemPath &file) {
@@ -246,9 +252,10 @@ void ImageLibrary::smartUpdateLibraryRoot(const FilesystemPath &root) {
   setLibraryRoot(root);
 }
 
-void ImageLibrary::detectLibraryChanges(bool delete_missing) {
-  std::unordered_set<std::string> missing_images;
-  std::unordered_set<std::string> external_to_library;
+auto ImageLibrary::detectLibraryChanges(bool delete_missing)
+    -> LibraryUpdateResults {
+  std::vector<proto::ImageInfo> missing_images;
+  std::vector<proto::ImageInfo> external_to_library;
   // Get a set of all images found on the disk, regardless of whether they're in
   // the library or not.
   std::vector<const char *> extensions(IMAGE_EXTENSIONS.begin(),
@@ -265,25 +272,29 @@ void ImageLibrary::detectLibraryChanges(bool delete_missing) {
       if (files_on_disk.find(abs_path) != files_on_disk.end()) {
         files_on_disk.erase(abs_path);
       } else {
-        external_to_library.insert(image.file_path());
+        external_to_library.emplace_back(image);
       }
     } else {
-      missing_images.insert(image.file_path());
+      missing_images.emplace_back(image);
     }
   }
 
+  std::vector<ImageChange> moves, adds, deletes;
   // Check for moved images.
   auto missing_it = missing_images.begin();
   while (!missing_images.empty() && missing_it != missing_images.end()) {
-    std::string missing = *missing_it;
-    std::string missing_filename = FilesystemPath(missing).filename().string();
+    proto::ImageInfo missing = *missing_it;
+    std::string missing_filename =
+        FilesystemPath(missing.file_path()).filename().string();
     bool iterate = true;
     for (const std::string &disk : files_on_disk) {
       std::string possible = FilesystemPath(disk).filename().string();
       if (missing_filename == possible) {
-        moveImage(FilesystemPath(missing), FilesystemPath(disk));
+        proto::ImageInfo new_image = moveImage(
+            FilesystemPath(missing.file_path()), FilesystemPath(disk));
+        moves.emplace_back(ImageChange(new_image, missing));
         files_on_disk.erase(disk);
-        missing_images.erase(missing);
+        missing_it = missing_images.erase(missing_it);
         iterate = false;
         break;
       }
@@ -297,15 +308,19 @@ void ImageLibrary::detectLibraryChanges(bool delete_missing) {
   for (const auto &filename : files_on_disk) {
     FilesystemPath file(
         FilesystemPath::mostRelativePath(library.library_root(), filename));
-    addImage(file, file.titleName(), {});
+    auto new_image = addImage(file, file.titleName(), {});
+    adds.emplace_back(ImageChange(new_image, proto::ImageInfo()));
   }
   // Remove missing images, if applicable.
   if (delete_missing) {
     for (const auto &missing : missing_images) {
-      deleteImage(FilesystemPath(
-          FilesystemPath::mostRelativePath(library.library_root(), missing)));
+      deleteImage(FilesystemPath(FilesystemPath::mostRelativePath(
+          library.library_root(), missing.file_path())));
+      deletes.emplace_back(proto::ImageInfo(), missing);
     }
   }
+
+  return LibraryUpdateResults(adds, moves, deletes);
 }
 
 void ImageLibrary::clearLibrary() { library.Clear(); }
