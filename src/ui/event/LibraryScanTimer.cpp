@@ -22,20 +22,40 @@ limitations under the License.
 #include <functional>  // for function
 
 #include "config/ImageLibrary.h"
+#include "ui/widget/Frame.h"            // for Frame
 #include "ui/widget/PersistentTimer.h"  // for PersistentTimer
 
 namespace cszb_scoreboard {
 
 constexpr int REFRESH_RATE_MILLIS = 5 * 60 * 1000;  // 5 minute refresh
 
-LibraryScanTimer::LibraryScanTimer(Singleton* singleton)
+LibraryScanTimer::LibraryScanTimer(Frame* main_view, Singleton* singleton)
     : PersistentTimer(REFRESH_RATE_MILLIS,
                       [this]() -> void { this->execute(); }) {
+  this->main_view = main_view;
   this->singleton = singleton;
 }
 
 void LibraryScanTimer::execute() {
-  singleton->imageLibrary()->detectLibraryChanges();
+  LibraryUpdateResults results =
+      singleton->imageLibrary()->detectLibraryChanges();
+  if (!results.addedImages().empty() || !results.movedImages().empty() ||
+      !results.removedImages().empty()) {
+    std::string message = "Library changes detected!";
+    if (results.addedImages().size()) {
+      message +=
+          " Added " + std::to_string(results.addedImages().size()) + " images.";
+    }
+    if (results.movedImages().size()) {
+      message +=
+          " Moved " + std::to_string(results.movedImages().size()) + " images.";
+    }
+    if (results.removedImages().size()) {
+      message += " Removed " + std::to_string(results.removedImages().size()) +
+                 " images.";
+    }
+    main_view->setStatusBar(message);
+  }
 }
 
 }  // namespace cszb_scoreboard
