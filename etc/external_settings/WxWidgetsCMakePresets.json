@@ -1,0 +1,77 @@
+{
+   "version": 6,
+   "configurePresets": [
+      {
+         "name": "Debug",
+         "displayName": "Debug",
+         "generator": "Visual Studio 17 2022",
+         "binaryDir": "${sourceDir}/out/build/Debug",
+         "installDir": "$env{WXWIDGETS_ROOT}/x64-Debug",
+         "cacheVariables": {
+            "wxBUILD_SHARED": "False",
+            "wxBUILD_MONOLITHIC": "False",
+            "wxBUILD_USE_STATIC_RUNTIME": "True",
+            "CMAKE_C_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
+            "CMAKE_C_FLAGS_MINSIZEREL": "/MT /O1 /Ob1 /DNDEBUG",
+            "CMAKE_C_FLAGS_RELEASE": "/MT /O2 /Ob2 /DNDEBUG",
+            "CMAKE_C_FLAGS_RELWITHDEBINFO": "/MT /Zi /O2 /Ob1 /DNDEBUG",
+            "CMAKE_CXX_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
+            "CMAKE_CXX_FLAGS_MINSIZEREL": "/MT /O1 /Ob1 /DNDEBUG",
+            "CMAKE_CXX_FLAGS_RELEASE": "/MT /O2 /Ob2 /DNDEBUG",
+            "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "/MT /Zi /O2 /Ob1 /DNDEBUG",
+            "wxUSE_WEBVIEW_EDGE": "True",
+            "wxBUILD_SAMPLES": "OFF",
+            "wxUSE_WEBVIEW_WEBKIT": "True",
+            "wxUSE_WEBVIEW_IE": "False",
+            "wxUSE_WEBVIEW_EDGE_STATIC": "True"
+         }
+      },
+      {
+         "name": "Release",
+         "displayName": "Release",
+         "generator": "Visual Studio 17 2022",
+         "binaryDir": "${sourceDir}/out/build/Release",
+         "installDir": "$env{WXWIDGETS_ROOT}/x64-Release",
+         "cacheVariables": {
+            "wxBUILD_SHARED": "False",
+            "wxBUILD_MONOLITHIC": "False",
+            "wxBUILD_USE_STATIC_RUNTIME": "True",
+            "CMAKE_C_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
+            "CMAKE_C_FLAGS_MINSIZEREL": "/MT /O1 /Ob1 /DNDEBUG",
+            "CMAKE_C_FLAGS_RELEASE": "/MT /O2 /Ob2 /DNDEBUG",
+            "CMAKE_C_FLAGS_RELWITHDEBINFO": "/MT /Zi /O2 /Ob1 /DNDEBUG",
+            "CMAKE_CXX_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
+            "CMAKE_CXX_FLAGS_MINSIZEREL": "/MT /O1 /Ob1 /DNDEBUG",
+            "CMAKE_CXX_FLAGS_RELEASE": "/MT /O2 /Ob2 /DNDEBUG",
+            "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "/MT /Zi /O2 /Ob1 /DNDEBUG",
+            "wxUSE_WEBVIEW_EDGE": "True",
+            "wxBUILD_SAMPLES": "OFF",
+            "wxUSE_WEBVIEW_WEBKIT": "True",
+            "wxUSE_WEBVIEW_IE": "False",
+            "wxUSE_WEBVIEW_EDGE_STATIC": "True"
+         }
+      }
+   ],
+   "buildPresets": [
+      {
+         "name": "Debug",
+         "displayName": "Debug",
+         "configurePreset": "Debug",
+         "configuration": "Debug",
+         "targets": [
+            "all_build",
+            "install"
+         ]
+      },
+      {
+         "name": "Release",
+         "displayName": "Release",
+         "configurePreset": "Release",
+         "configuration": "Release",
+         "targets": [
+            "all_build",
+            "install"
+         ]
+      }
+   ]
+}

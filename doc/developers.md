@@ -22,16 +22,26 @@ The following items are pretty much required to get anywhere as a developer on t
 - [Cmake](https://cmake.org/) - Cmake is our build platform and you'll need it installed on your
   system to build anything.
 
-### Software I recommend
+### Software I recommend (Option A)
+
+I began development using Visual Studio Community Edition, but have since switched to VSCode and find that it is a better experience (for me, at least).  I recently set up a new computer, so here's what I had to do to get things working again.
+
+I installed VSCode, Git, Cmake, Visual Studio Build Tools 2022, and Strawberry Perl using [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) (The package names are Microsoft.VisualStudioCode, Git.Git, Kitware.CMake, Microsoft.VisualStudio.2022.BuildTools, and StrawberryPerl.StrawberryPerl).  You'll need to modify the VS 2022 setup to include the C++ compiler -- open the "Visual Studio Installer" and modify the Build Tools installation to include Desktop Development with C++.
+
+You'll also want to clone [Vcpkg](https://github.com/microsoft/vcpkg) somewhere and run bootstrap_vcpkg.bat from that directory to set it up.  Next, set a couple of environment variables.  VCPKG_ROOT should point to wherever you cloned vcpkg and WXWIDGETS_ROOT should point to a place where you're comfortable installing wxwidgets libraries.
+
+You'll need to build WxWidgets -- unfortunately the vcpkg version hasn't been super useful for me.  Clone the [repository](https://github.com/wxWidgets/wxWidgets) and copy over the CmakePresets.json file from etc/external_settings in this repository to the top level of wxWidgets.  You should be able to just build and install wxwidgets using the cmake build tools in vscode (or manually with cmake, if you'd rather, using the presets in that file.  It'll install ot the WXWIDGETS_ROOT you set above.)
+
+That ought to be enough to get you up and running.  Obviously, winget is a suggestion, you can install all of the dependencies by hand if you'd like, but that at least traces what I did to get a working environment.
+
+### Software I recommend (Option B)
 
 You don't have to have an environment that looks like mine, but I like it, so I'll enumerate a
-couple of other things that have worked well for me, just in case anyone wants to know.
+couple of other things that have worked well for me before I switched to VSCode, just in case anyone wants to know.
 
 - [Visual Studio Community Edition](https://visualstudio.microsoft.com/vs/) - It's the IDE I use.
   I've found it's integration with Cmake to be pretty good, and it's got a great debugger.
 - [Vcpkg](https://github.com/microsoft/vcpkg) - A really solid package manager for visual studio.
-  NB: If you use Visual Studio Code, I was unable to get these to cooperate with each other for some
-  reason.
 - [The github VS extension](https://visualstudio.github.com/index.html) -- It makes interacting with
   the project on Github a lot more pleasant.
 
