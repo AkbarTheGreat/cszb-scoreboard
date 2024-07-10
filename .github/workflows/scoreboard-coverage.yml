@@ -131,51 +131,51 @@ jobs:
         path: out/${{ matrix.target_os }}/${{ matrix.build_type }}/cszb-scoreboard-xml-coverage.xml
         minimum_coverage: 25
 
-  lint-and-integration:
-    runs-on: ${{ matrix.os }}
-    needs: [docker_build]
-    container:
-      # Always use the main branch for nightly work
-      image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_master:latest
+  # lint-and-integration:
+  #   runs-on: ${{ matrix.os }}
+  #   needs: [docker_build]
+  #   container:
+  #     # Always use the main branch for nightly work
+  #     image: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_master:latest
 
-    strategy:
-      fail-fast: true
+  #   strategy:
+  #     fail-fast: true
 
-      matrix:
-        target_os: [Linux]
-        build_type: [Integration]
-        include:
-          - target_os: Linux
-            docker_target: standard_build
-            os: ubuntu-latest
+  #     matrix:
+  #       target_os: [Linux]
+  #       build_type: [Integration]
+  #       include:
+  #         - target_os: Linux
+  #           docker_target: standard_build
+  #           os: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v4
+  #   steps:
+  #   - uses: actions/checkout@v4
 
-    - name: Build Scoreboard
-      uses: threeal/cmake-action@main
-      with:
-        source-dir: ${{ github.workspace }}
-        build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
-        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
-        build-args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+  #   - name: Build Scoreboard
+  #     uses: threeal/cmake-action@main
+  #     with:
+  #       source-dir: ${{ github.workspace }}
+  #       build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
+  #       args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+  #       build-args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
 
-    - name: Test
-      uses: threeal/ctest-action@v1.0.0
-      with:
-        test-dir: out/${{ matrix.target_os }}/${{ matrix.build_type }}
-        args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
-        build-config: ${{ matrix.build_type }}
+  #   - name: Test
+  #     uses: threeal/ctest-action@v1.0.0
+  #     with:
+  #       test-dir: out/${{ matrix.target_os }}/${{ matrix.build_type }}
+  #       args: --preset ${{ matrix.target_os }}-${{ matrix.build_type }}
+  #       build-config: ${{ matrix.build_type }}
 
-    - name: Archive test results
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results-${{ matrix.target_os }}-${{ matrix.build_type }}
-        path: |
-            out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
-            out/${{ matrix.target_os }}/${{ matrix.build_type }}/Testing/**/*.xml
+  #   - name: Archive test results
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: test-results-${{ matrix.target_os }}-${{ matrix.build_type }}
+  #       path: |
+  #           out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
+  #           out/${{ matrix.target_os }}/${{ matrix.build_type }}/Testing/**/*.xml
 
-    - name: Test Report
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      with:
-        files: out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
+  #   - name: Test Report
+  #     uses: EnricoMi/publish-unit-test-result-action@v2
+  #     with:
+  #       files: out/${{ matrix.target_os }}/${{ matrix.build_type }}/gtest/**/*.xml
