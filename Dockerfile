@@ -15,10 +15,10 @@ RUN apk add --no-cache \
     git \
     sudo
 
-ENV CC /usr/bin/clang
-ENV CXX /usr/bin/clang++
-ENV USER root
-ENV UNATTENDED 1
+ENV CC=/usr/bin/clang
+ENV CXX=/usr/bin/clang++
+ENV USER=root
+ENV UNATTENDED=1
 
 RUN adduser -Du 1001 jenkins
 RUN echo "jenkins ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -48,18 +48,18 @@ FROM build_baseline AS osxcross_build_baseline
 RUN apk add --no-cache \
     cairo-dev
 
-ENV OSXCROSS_SDK_VERSION 14.0
-ENV MACOSX_DEPLOYMENT_TARGET 10.9
-ENV OSXCROSS_OSX_VERSION_MIN 10.9
+ENV OSXCROSS_SDK_VERSION=14.0
+ENV MACOSX_DEPLOYMENT_TARGET=10.9
+ENV OSXCROSS_OSX_VERSION_MIN=10.9
 
-ENV OSXCROSS_SDK    darwin23
-ENV OSXCROSS_TARGET ${OSXCROSS_SDK}
-ENV OSXCROSS_HOST x86_64-apple-${OSXCROSS_SDK}
-ENV OSXCROSS_ROOT_DIR /opt/osxcross
-ENV OSXCROSS_TARGET_DIR ${OSXCROSS_ROOT_DIR}
+ENV OSXCROSS_SDK=darwin23
+ENV OSXCROSS_TARGET=${OSXCROSS_SDK}
+ENV OSXCROSS_HOST=x86_64-apple-${OSXCROSS_SDK}
+ENV OSXCROSS_ROOT_DIR=/opt/osxcross
+ENV OSXCROSS_TARGET_DIR=${OSXCROSS_ROOT_DIR}
 
-ENV PATH ${OSXCROSS_ROOT_DIR}/bin:$PATH
-ENV LD_LIBRARY_PATH ${OSXCROSS_ROOT_DIR}/lib
+ENV PATH=${OSXCROSS_ROOT_DIR}/bin:$PATH
+ENV LD_LIBRARY_PATH=${OSXCROSS_ROOT_DIR}/lib
 
 # ------------------------------------------------------------------------------
 # Curl (curl_bulid)
@@ -72,7 +72,7 @@ RUN apk add --no-cache \
     openssl-dev \
     perl
 
-ENV CURL_VERSION curl-7_79_0
+ENV CURL_VERSION=curl-7_79_0
 
 WORKDIR /curl
 RUN git clone https://github.com/curl/curl.git .
@@ -101,7 +101,7 @@ RUN tar cvzf curl.tgz \
 # ------------------------------------------------------------------------------
 FROM build_baseline AS jsoncpp_build
 
-ENV JSONCPP_VERSION 1.9.5
+ENV JSONCPP_VERSION=1.9.5
 
 WORKDIR /jsoncpp
 RUN git clone https://github.com/open-source-parsers/jsoncpp.git .
@@ -129,7 +129,7 @@ RUN tar cvzf jsoncpp.tgz \
 # ------------------------------------------------------------------------------
 FROM build_baseline AS googletest_build
 
-ENV GTEST_VERSION v1.13.0
+ENV GTEST_VERSION=v1.13.0
 
 WORKDIR /googletest
 RUN git clone https://github.com/google/googletest.git .
@@ -160,7 +160,7 @@ RUN tar cvzf googletest.tgz \
 # ------------------------------------------------------------------------------
 FROM build_baseline AS protobuf_build
 
-ENV PROTOBUF_VERSION v3.21.12
+ENV PROTOBUF_VERSION=v3.21.12
 
 WORKDIR /protobuf
 RUN git clone https://github.com/google/protobuf.git .
@@ -195,7 +195,7 @@ RUN apk add --no-cache \
     llvm-dev \
     llvm-static
 
-ENV IWYU_VERSION clang_16
+ENV IWYU_VERSION=clang_16
 
 WORKDIR /iwyu
 RUN git clone https://github.com/include-what-you-use/include-what-you-use.git .
@@ -229,22 +229,22 @@ RUN apk add --no-cache \
     openssl-dev \
     python3
 
-ENV OSXCROSS_SDK_FILE MacOSX${OSXCROSS_SDK_VERSION}.sdk
-ENV OSXCROSS_SDK_ZIP ${OSXCROSS_SDK_FILE}.tar.xz
+ENV OSXCROSS_SDK_FILE=MacOSX${OSXCROSS_SDK_VERSION}.sdk
+ENV OSXCROSS_SDK_ZIP=${OSXCROSS_SDK_FILE}.tar.xz
 
-ENV OSXCROSS_BASE_DIR      /osxcross
+ENV OSXCROSS_BASE_DIR=/osxcross
 # While we're building osxcross, the target is the location we build into -- 
 # after we've installed it, it moves back to OSXCROSS_ROOT_DIR
-ENV OSXCROSS_TARGET_DIR    ${OSXCROSS_BASE_DIR}/target
-ENV OSXCROSS_SDK           ${OSXCROSS_BASE_DIR}/target/SDK/$OSXCROSS_SDK_FILE
-ENV OSXCROSS_SDK_DIR       ${OSXCROSS_BASE_DIR}/target/SDK
-ENV OSXCROSS_TARBALL_DIR   ${OSXCROSS_BASE_DIR}/tarballs
-ENV OSXCROSS_PATCH_DIR     ${OSXCROSS_BASE_DIR}/patches
-ENV OSXCROSS_DIR_SDK_TOOLS ${OSXCROSS_BASE_DIR}/target/SDK/tools
-ENV OSXCROSS_BUILD_DIR     ${OSXCROSS_BASE_DIR}/build
-ENV OSXCROSS_CCTOOLS_PATH  ${OSXCROSS_BASE_DIR}/target/bin
+ENV OSXCROSS_TARGET_DIR=${OSXCROSS_BASE_DIR}/target
+ENV OSXCROSS_SDK=${OSXCROSS_BASE_DIR}/target/SDK/$OSXCROSS_SDK_FILE
+ENV OSXCROSS_SDK_DIR=${OSXCROSS_BASE_DIR}/target/SDK
+ENV OSXCROSS_TARBALL_DIR=${OSXCROSS_BASE_DIR}/tarballs
+ENV OSXCROSS_PATCH_DIR=${OSXCROSS_BASE_DIR}/patches
+ENV OSXCROSS_DIR_SDK_TOOLS=${OSXCROSS_BASE_DIR}/target/SDK/tools
+ENV OSXCROSS_BUILD_DIR=${OSXCROSS_BASE_DIR}/build
+ENV OSXCROSS_CCTOOLS_PATH=${OSXCROSS_BASE_DIR}/target/bin
 
-ENV PATH ${OSXCROSS_BASE_DIR}/target/bin:${PATH}
+ENV PATH=${OSXCROSS_BASE_DIR}/target/bin:${PATH}
 
 WORKDIR ${OSXCROSS_BASE_DIR}
 RUN git clone https://github.com/tpoechtrager/osxcross.git .
@@ -330,7 +330,7 @@ RUN apk add --no-cache \
     openjpeg-dev \
     tiff-dev
 
-ENV WXWIDGETS_VERSION v3.2.2.1
+ENV WXWIDGETS_VERSION=v3.2.2.1
 
 WORKDIR /wxwidgets
 RUN git clone https://github.com/wxWidgets/wxWidgets.git .
@@ -370,7 +370,7 @@ RUN apk add --no-cache \
     openjpeg-dev \
     tiff-dev
 
-ENV WXWIDGETS_VERSION v3.2.2.1
+ENV WXWIDGETS_VERSION=v3.2.2.1
 
 WORKDIR /wxwidgets
 RUN git clone https://github.com/wxWidgets/wxWidgets.git .
@@ -442,13 +442,13 @@ RUN tar xvzf osxcross.tgz && rm osxcross.tgz
 COPY --from=wxwidgets_osxcross_build /wxwidgets.tgz /
 RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 
-ENV DISPLAY :1
+ENV DISPLAY=:1
 
 COPY . /cszb-scoreboard
 
 WORKDIR /cszb-scoreboard
 
-CMD echo "Either run macos_test,exec into this container, or run build_osxcross.pl."
+CMD ["/bin/echo", "Either run macos_test,exec into this container, or run build_osxcross.pl."]
 
 # ------------------------------------------------------------------------------
 # Standard Scoreboard Build Base (standard_build_base)
@@ -491,8 +491,8 @@ RUN tar xvzf protobuf.tgz && rm protobuf.tgz
 COPY --from=wxwidgets_build /wxwidgets.tgz /
 RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 
-ENV DISPLAY :1
-ENV GCOV llvm-cov gcov
+ENV DISPLAY=:1
+ENV GCOV='llvm-cov gcov'
 
 EXPOSE 5900
 
@@ -507,7 +507,7 @@ COPY . /cszb-scoreboard
 
 WORKDIR /cszb-scoreboard
 
-CMD echo "Either run without a target or exec into this container."
+CMD ["/bin/echo", "Either run without a target or exec into this container."]
 
 # ------------------------------------------------------------------------------
 # Code Clean Worker (code_clean)
@@ -537,7 +537,7 @@ COPY . /cszb-scoreboard
 
 WORKDIR /cszb-scoreboard
 
-CMD echo "Please run etc/scripts/clean_code.pl"
+CMD ["/bin/echo", "Please run etc/scripts/clean_code.pl"]
 
 # ------------------------------------------------------------------------------
 # Dev Container (dev)
@@ -575,7 +575,7 @@ RUN cpanm Perl::Tidy
 
 RUN python3 -m venv /mdformat-venv && /mdformat-venv/bin/pip install mdformat
 
-ENV GCOV llvm-cov gcov
+ENV GCOV='llvm-cov gcov'
 
 WORKDIR /
 
@@ -614,7 +614,7 @@ COPY --from=macos_build /cszb-scoreboard/Dockerfile /macos_docker
 COPY --from=code_clean /cszb-scoreboard/Dockerfile /code_clean_docker
 COPY --from=dev /cszb-scoreboard/Dockerfile /dev_docker
 
-CMD echo "Everything is built.  Enjoy."
+CMD ["/bin/echo", "Everything is built.  Enjoy."]
 
 # ------------------------------------------------------------------------------
 # MacOS Scoreboard Build (macos_test)
@@ -647,7 +647,7 @@ CMD cmake --preset Linux-Coverage && \
 # ------------------------------------------------------------------------------
 FROM standard_build AS standard_test
 
-ENV BUILD_PRESET Integration
+ENV BUILD_PRESET=Integration
 
 WORKDIR /cszb-scoreboard
 CMD supervisord -c /supervisord.conf && \
