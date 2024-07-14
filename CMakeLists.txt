@@ -265,6 +265,12 @@ package_add_test(UpdateTimerTest         FALSE test/unit/ui/event/UpdateTimerTes
                                                 src/ui/widget/Frame.cpp
 )
 
+package_add_test(LibraryScanTimerTest    FALSE test/unit/ui/event/LibraryScanTimerTest.cpp
+                                                src/ui/event/LibraryScanTimer.cpp
+                                                src/config/ImageLibrary.cpp
+                                                src/util/FilesystemPath.cpp
+)
+
 # integration tests
 package_add_ui_test(ScreenPreviewTest  FALSE test/integration/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest      FALSE test/integration/TextEntryTest.cpp)

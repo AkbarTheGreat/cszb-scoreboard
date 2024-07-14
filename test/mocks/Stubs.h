@@ -70,8 +70,19 @@ void cszb_scoreboard::MainView::init() {};
 
 /* Stubbed methods from PersistentTimer.h */
 #ifdef TEST_STUB_PERSISTENT_TIMER
+
+std::function<void()> last_on_tick;
+
 PersistentTimer::PersistentTimer(int period,
-                                 std::function<void()> const &on_tick) {}
+                                 std::function<void()> const &on_tick) {
+  last_on_tick = on_tick;
+}
+
+// This is a bit of a hack to simulate timers executing on their schedule for
+// unit testing.  This method is not presently even implemented in the
+// production version of this class.
+void PersistentTimer::trigger() { last_on_tick(); }
+
 #endif  // #ifdef TEST_STUB_PERSISTENT_TIMER
 
 }  // namespace cszb_scoreboard
