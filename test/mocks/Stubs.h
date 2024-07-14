@@ -61,7 +61,17 @@ auto FrameManager::monitor(uint32_t index) -> Display { return Display(0); }
 
 /* Stubbed methods from MainView.h */
 #ifdef TEST_STUB_MAIN_VIEW
+#include "ui/widget/Frame.h"
+MainView::MainView(cszb_scoreboard::swx::Frame *wx,
+                   cszb_scoreboard::Singleton *singleton)
+    : Frame(wx) {}
 void cszb_scoreboard::MainView::init() {};
 #endif  // #ifdef TEST_STUB_MAIN_VIEW
+
+/* Stubbed methods from PersistentTimer.h */
+#ifdef TEST_STUB_PERSISTENT_TIMER
+PersistentTimer::PersistentTimer(int period,
+                                 std::function<void()> const &on_tick) {}
+#endif  // #ifdef TEST_STUB_PERSISTENT_TIMER
 
 }  // namespace cszb_scoreboard
