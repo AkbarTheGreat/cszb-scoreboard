@@ -464,8 +464,6 @@ TEST_F(ImageLibraryTest, SetTags) {
 }
 
 TEST_F(ImageLibraryTest, SmartUpdateNoDuplicates) {
-  // The filesystem object will clean up the temp files when it goes out of
-  // scope.
   buildFilesystem();
   library->smartUpdateLibraryRoot(FilesystemPath(nonlibRoot()));
   std::vector<FilesystemPath> files = library->allFilenames();
@@ -495,8 +493,6 @@ TEST_F(ImageLibraryTest, SmartUpdateDuplicateAbsolutePaths) {
 }
 
 TEST_F(ImageLibraryTest, SmartUpdateMissingAbsoluteFile) {
-  // The filesystem object will clean up the temp files when it goes out of
-  // scope.
   buildFilesystem();
   library->addImage(FilesystemPath(libRoot("new-image.png")), "New Thing",
                     {"tag_test"});
@@ -509,8 +505,6 @@ TEST_F(ImageLibraryTest, SmartUpdateMissingAbsoluteFile) {
 }
 
 TEST_F(ImageLibraryTest, SmartUpdateMissingRelativeFile) {
-  // The filesystem object will clean up the temp files when it goes out of
-  // scope.
   buildFilesystem();
   library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
   library->smartUpdateLibraryRoot(FilesystemPath(nonlibRoot()));
@@ -536,6 +530,95 @@ TEST_F(ImageLibraryTest, LoadSaveLibrary) {
   EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
                                  nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
                                  "new-image.png"));
+}
+
+TEST_F(ImageLibraryTest, DetectChangesNoChanges) {
+  buildFilesystem();
+  library->detectLibraryChanges();
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files,
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
+}
+
+TEST_F(ImageLibraryTest, DetectChangesAddsFile) {
+  buildFilesystem();
+  addImageToSubdir(libRoot(), "new-image.png");
+  library->detectLibraryChanges();
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
+                                 "new-image.png"));
+  EXPECT_EQ(library->name(FilesystemPath("new-image.png")), "New Image");
+  EXPECT_TRUE(library->tags(FilesystemPath("new-image.png")).empty());
+}
+
+TEST_F(ImageLibraryTest, DetectChangesIgnoresNonImages) {
+  buildFilesystem();
+  addImageToSubdir(libRoot(), "new-image.txt");
+  library->detectLibraryChanges();
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files,
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
+}
+
+TEST_F(ImageLibraryTest, DetectChangesLeavesMissingFile) {
+  buildFilesystem();
+  library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
+  library->detectLibraryChanges();
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
+                                 "new-image.png"));
+}
+
+TEST_F(ImageLibraryTest, DetectChangesMovesFile) {
+  buildFilesystem();
+  library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
+
+  filesystem->createSubdir(libRoot("subdir"));
+  addImageToSubdir(libRoot("subdir"), "new-image.png");
+
+  library->detectLibraryChanges();
+  std::vector<FilesystemPath> files = library->allFilenames();
+  std::string expected_path =
+      (std::filesystem::path("subdir") / "new-image.png").string();
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
+                                 expected_path));
+  EXPECT_EQ(library->name(FilesystemPath(expected_path)), "New Thing");
+  EXPECT_THAT(library->tags(FilesystemPath(expected_path)),
+              ElementsAre(CaseOptionalString("tag_test")));
+}
+
+TEST_F(ImageLibraryTest, DetectChangesMovesFileWithDeleteEnabled) {
+  buildFilesystem();
+  library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
+
+  filesystem->createSubdir(libRoot("subdir"));
+  addImageToSubdir(libRoot("subdir"), "new-image.png");
+
+  library->detectLibraryChanges(/*delete_missing = */ true);
+  std::vector<FilesystemPath> files = library->allFilenames();
+  std::string expected_path =
+      (std::filesystem::path("subdir") / "new-image.png").string();
+  EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                                 nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
+                                 expected_path));
+  EXPECT_EQ(library->name(FilesystemPath(expected_path)), "New Thing");
+  EXPECT_THAT(library->tags(FilesystemPath(expected_path)),
+              ElementsAre(CaseOptionalString("tag_test")));
+}
+
+TEST_F(ImageLibraryTest, DetectChangesCanRemoveMissingFile) {
+  buildFilesystem();
+  library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
+  library->detectLibraryChanges(/*delete_missing = */ true);
+  std::vector<FilesystemPath> files = library->allFilenames();
+  EXPECT_THAT(files,
+              ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
+                          nonlibRoot("capy.jpg"), libRoot("but-why.jpg")));
 }
 
 }  // namespace cszb_scoreboard::test
