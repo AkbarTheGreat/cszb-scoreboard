@@ -623,9 +623,12 @@ CMD ["/bin/echo", "Everything is built.  Enjoy."]
 # ------------------------------------------------------------------------------
 FROM macos_build AS macos_test
 
+ENV BUILD_PRESET=Debug
+ENV BUILD_THREADS= 
+
 WORKDIR /cszb-scoreboard/out
-CMD cmake --preset MacOS-Debug && \
-    cmake --build --preset MacOS-Debug --parallel 6
+CMD cmake --preset MacOS-${BUILD_PRESET} && \
+    cmake --build --preset MacOS-${BUILD_PRESET} --parallel ${BUILD_THREADS}
 
 # ------------------------------------------------------------------------------
 # Coverage Generation -- (generate_cov)
@@ -636,9 +639,12 @@ CMD cmake --preset MacOS-Debug && \
 # ------------------------------------------------------------------------------
 FROM standard_build AS generate_cov
 
+ENV BUILD_PRESET=Coverage
+ENV BUILD_THREADS= 
+
 WORKDIR /cszb-scoreboard
-CMD cmake --preset Linux-Coverage && \
-    cmake --build --preset Linux-Coverage --parallel 6
+CMD cmake --preset Linux-${BUILD_PRESET} && \
+    cmake --build --preset Linux-${BUILD_PRESET} --parallel ${BUILD_THREADS}
 
 # ------------------------------------------------------------------------------
 # Standard test -- default action (standard_test)
@@ -648,9 +654,10 @@ CMD cmake --preset Linux-Coverage && \
 FROM standard_build AS standard_test
 
 ENV BUILD_PRESET=Integration
+ENV BUILD_THREADS= 
 
 WORKDIR /cszb-scoreboard
 CMD supervisord -c /supervisord.conf && \
     cmake --preset Linux-${BUILD_PRESET} && \
-    cmake --build --preset Linux-${BUILD_PRESET} --parallel 6 && \
+    cmake --build --preset Linux-${BUILD_PRESET} --parallel ${BUILD_THREADS} && \
     ctest --preset Linux-${BUILD_PRESET}

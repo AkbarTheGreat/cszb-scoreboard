@@ -1,18 +1,23 @@
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>  // for GMOCK_PP_INTERNAL_IF_0
+#include <gtest/gtest.h>  // for TestInfo (ptr only)
+#include <wx/string.h>    // for wxString, operator==
 
-#include "ScoreboardCommon.h"  // for SCOREBOARD_VERSION
-#include "config/ImageLibrary.h"
-#include "image_library.pb.h"
-#include "test/mocks/ui/frame/MockMainView.h"
-#include "test/mocks/ui/widget/swx/MockFrame.h"
-#include "test/mocks/util/MockSingleton.h"
-#include "ui/event/LibraryScanTimer.h"
+#include <algorithm>  // for max
+#include <memory>     // for unique_ptr, allocator
+#include <vector>     // for vector
+
+#include "config/ImageLibrary.h"                 // for LibraryUpdateResults
+#include "image_library.pb.h"                    // for ImageInfo, ImageLibrary
+#include "test/mocks/ui/frame/MockMainView.h"    // for MockMainView
+#include "test/mocks/ui/widget/swx/MockFrame.h"  // for MockFrame
+#include "test/mocks/util/MockSingleton.h"       // for MockSingleton
+#include "ui/event/LibraryScanTimer.h"           // for LibraryScanTimer
+#include "util/Singleton.h"                      // for SingletonClass
 
 #define TEST_STUB_MAIN_VIEW
 #define TEST_STUB_PERSISTENT_TIMER
 #define TEST_STUB_SINGLETON
-#include "test/mocks/Stubs.h"
+#include "test/mocks/Stubs.h"  // for PersistentTimer::tri...
 
 using ::testing::_;
 using ::testing::Return;
@@ -55,15 +60,18 @@ class LibraryScanTimerTest : public ::testing::Test {
     ui_frame.reset();
   }
 
-  auto foundChanges(int num) -> std::vector<ImageChange> {
+  static auto foundChanges(int num) -> std::vector<ImageChange> {
     std::vector<ImageChange> changes;
     for (int i = 0; i < num; ++i) {
-      changes.emplace_back(ImageChange(proto::ImageInfo(), proto::ImageInfo()));
+      // NOLINTNEXTLINE(performance-inefficient-vector-operation)
+      changes.emplace_back(proto::ImageInfo(), proto::ImageInfo());
     }
     return changes;
   }
 
-  auto noChanges() -> std::vector<ImageChange> { return foundChanges(0); }
+  static auto noChanges() -> std::vector<ImageChange> {
+    return foundChanges(0);
+  }
 };
 
 TEST_F(LibraryScanTimerTest, DoesNothingAtStartup) {

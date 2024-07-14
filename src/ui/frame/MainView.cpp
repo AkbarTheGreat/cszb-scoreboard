@@ -53,6 +53,7 @@ void MainView::init() {
   if (singleton->commandArgs()->autoUpdate()) {
     update_timer = std::make_unique<UpdateTimer>(this);
   }
+  scan_timer = std::make_unique<LibraryScanTimer>(this);
 
   // Set focus to the control_panel so that tab movement works correctly without
   // an initial click.

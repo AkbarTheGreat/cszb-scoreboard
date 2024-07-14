@@ -20,8 +20,10 @@ limitations under the License.
 #include "ui/event/LibraryScanTimer.h"
 
 #include <functional>  // for function
+#include <string>      // for allocator, operator+, char_tr...
+#include <vector>      // for vector
 
-#include "config/ImageLibrary.h"
+#include "config/ImageLibrary.h"        // for LibraryUpdateResults, ImageCh...
 #include "ui/widget/Frame.h"            // for Frame
 #include "ui/widget/PersistentTimer.h"  // for PersistentTimer
 
@@ -38,19 +40,20 @@ LibraryScanTimer::LibraryScanTimer(Frame* main_view, Singleton* singleton)
 
 void LibraryScanTimer::execute() {
   LibraryUpdateResults results =
-      singleton->imageLibrary()->detectLibraryChanges();
+      singleton->imageLibrary()->detectLibraryChanges(
+          /*delete_missing= */ false);
   if (!results.addedImages().empty() || !results.movedImages().empty() ||
       !results.removedImages().empty()) {
     std::string message = "Library changes detected!";
-    if (results.addedImages().size()) {
+    if (!results.addedImages().empty()) {
       message +=
           " Added " + std::to_string(results.addedImages().size()) + " images.";
     }
-    if (results.movedImages().size()) {
+    if (!results.movedImages().empty()) {
       message +=
           " Moved " + std::to_string(results.movedImages().size()) + " images.";
     }
-    if (results.removedImages().size()) {
+    if (!results.removedImages().empty()) {
       message += " Removed " + std::to_string(results.removedImages().size()) +
                  " images.";
     }

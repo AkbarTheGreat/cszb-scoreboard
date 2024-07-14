@@ -141,7 +141,7 @@ class ImageLibrary {
   // Looks for images added or moved in the library and automatically
   // updates them the best it knows how.  If delete_missing is set to true,
   // also removes any missing images from the library.
-  virtual auto detectLibraryChanges(bool delete_missing = false)
+  virtual auto detectLibraryChanges(bool delete_missing)
       -> LibraryUpdateResults;
   void clearLibrary();
   void saveLibrary();
