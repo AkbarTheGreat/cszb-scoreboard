@@ -19,11 +19,13 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"
 
-#include <algorithm>   // for max, binary_search, find
-#include <cctype>      // for tolower
-#include <compare>     // for operator<
-#include <filesystem>  // for operator==, path
-#include <utility>     // for move
+#include <algorithm>              // for max, binary_search, find, lower_bound
+#include <cctype>                 // for tolower
+#include <compare>                // for operator<
+#include <filesystem>             // for operator==, path, directory_iterator
+#include <unordered_set>          // for unordered_set, operator==, _Node_it...
+#include <utility>                // for move
+#include <array>                  // for array
 
 #include "config/Persistence.h"   // for Persistence
 #include "util/FilesystemPath.h"  // for FilesystemPath
@@ -33,6 +35,8 @@ limitations under the License.
 // IWYU pragma: no_include "net/proto2/public/repeated_field.h"
 
 namespace cszb_scoreboard {
+
+constexpr uint32_t MAXIMUM_DIRECTORY_CRAWL_DEPTH = 10;
 
 // Simple helper method which will insert a string into a sorted vector of
 // strings, ignoring it if it's a duplicate.
@@ -239,6 +243,89 @@ void ImageLibrary::smartUpdateLibraryRoot(const FilesystemPath &root) {
   // Now, do a regular setLibraryRoot to establish new relative paths and update
   // the library root internally.
   setLibraryRoot(root);
+}
+
+auto ImageLibrary::crawlImageDirectory(std::string path, uint32_t depth)
+    -> std::unordered_set<std::string> {
+  std::unordered_set<std::string> found_files;
+
+  if (depth > MAXIMUM_DIRECTORY_CRAWL_DEPTH) {
+    return found_files;
+  }
+
+  for (const auto &entry :
+       std::filesystem::directory_iterator(FilesystemPath(path))) {
+    if (entry.is_directory()) {
+      auto new_files = crawlImageDirectory(entry.path().string(), depth + 1);
+      found_files.insert(new_files.begin(), new_files.end());
+    } else {
+      for (const auto &extension : IMAGE_EXTENSIONS) {
+        if (entry.path().extension() == extension) {
+          found_files.emplace(entry.path().string());
+        }
+      }
+    }
+  }
+  return found_files;
+}
+
+void ImageLibrary::detectLibraryChanges(bool delete_missing) {
+  std::unordered_set<std::string> missing_images;
+  std::unordered_set<std::string> external_to_library;
+  // Get a set of all images found on the disk, regardless of whether they're in
+  // the library or not.
+  auto files_on_disk = crawlImageDirectory(library.library_root());
+  // Map out which images in the library are present on disk and which aren't.
+  for (const auto &image : library.images()) {
+    if (FilesystemPath(image.file_path())
+            .existsWithRoot(library.library_root())) {
+      std::string abs_path = FilesystemPath::absolutePath(
+          library.library_root(), image.file_path());
+      if (files_on_disk.find(abs_path) != files_on_disk.end()) {
+        files_on_disk.erase(abs_path);
+      } else {
+        external_to_library.insert(image.file_path());
+      }
+    } else {
+      missing_images.insert(image.file_path());
+    }
+  }
+
+  // Check for moved images.
+  auto missing_it = missing_images.begin();
+  while (!missing_images.empty() && missing_it != missing_images.end()) {
+    std::string missing = *missing_it;
+    std::string missing_filename = FilesystemPath(missing).filename().string();
+    bool iterate = true;
+    for (const std::string &disk : files_on_disk) {
+      std::string possible = FilesystemPath(disk).filename().string();
+      const auto disk_copy = disk;
+      if (missing_filename == possible) {
+        moveImage(FilesystemPath(missing), FilesystemPath(disk_copy));
+        files_on_disk.erase(disk);
+        missing_images.erase(missing);
+        iterate = false;
+        break;
+      }
+    }
+    if (iterate) {
+      ++missing_it;
+    }
+  }
+
+  // Add new images.
+  for (const auto &filename : files_on_disk) {
+    FilesystemPath file(
+        FilesystemPath::mostRelativePath(library.library_root(), filename));
+    addImage(file, file.titleName(), {});
+  }
+  // Remove missing images, if applicable.
+  if (delete_missing) {
+    for (const auto &missing : missing_images) {
+      deleteImage(FilesystemPath(
+          FilesystemPath::mostRelativePath(library.library_root(), missing)));
+    }
+  }
 }
 
 void ImageLibrary::clearLibrary() { library.Clear(); }
