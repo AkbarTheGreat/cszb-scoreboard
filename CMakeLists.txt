@@ -269,6 +269,7 @@ package_add_test(LibraryScanTimerTest    FALSE test/unit/ui/event/LibraryScanTim
                                                 src/ui/event/LibraryScanTimer.cpp
                                                 src/config/ImageLibrary.cpp
                                                 src/util/FilesystemPath.cpp
+                                                src/ui/widget/Frame.cpp
 )
 
 # integration tests
