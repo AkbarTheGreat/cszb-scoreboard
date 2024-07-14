@@ -47,7 +47,7 @@ class PropertySheetDialog;
 class TeamLibraryDialog : public TabbedDialog {
  public:
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
-  // always call the constructor that passes in the Singelton object, as it
+  // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
   TeamLibraryDialog(swx::PropertySheetDialog *wx, ScoreControl *parent)
       : TeamLibraryDialog(wx, parent, Singleton::getInstance()) {}

@@ -42,7 +42,7 @@ class Font;
 class RenderContext {
   // Using the passkey idiom from https://abseil.io/tips/134 to avoid adding
   // abseil as a project dependency.  If enough uses of abseil pop up, this can
-  // be changed to simply using WrapUnique for singelton construction.
+  // be changed to simply using WrapUnique for singleton construction.
  private:
   class Token {
    private:
