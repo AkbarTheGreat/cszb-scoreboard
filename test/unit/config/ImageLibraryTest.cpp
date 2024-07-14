@@ -537,7 +537,10 @@ TEST_F(ImageLibraryTest, LoadSaveLibrary) {
 
 TEST_F(ImageLibraryTest, DetectChangesNoChanges) {
   buildFilesystem();
-  library->detectLibraryChanges();
+  LibraryUpdateResults results = library->detectLibraryChanges();
+  EXPECT_TRUE(results.addedImages().empty());
+  EXPECT_TRUE(results.movedImages().empty());
+  EXPECT_TRUE(results.removedImages().empty());
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
               ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
@@ -547,7 +550,14 @@ TEST_F(ImageLibraryTest, DetectChangesNoChanges) {
 TEST_F(ImageLibraryTest, DetectChangesAddsFile) {
   buildFilesystem();
   addImageToSubdir(libRoot(), "new-image.png");
-  library->detectLibraryChanges();
+  LibraryUpdateResults results = library->detectLibraryChanges();
+  EXPECT_TRUE(results.movedImages().empty());
+  EXPECT_TRUE(results.removedImages().empty());
+  EXPECT_EQ(results.addedImages().size(), 1);
+  EXPECT_EQ(results.addedImages()[0].added().file_path(), "new-image.png");
+  EXPECT_EQ(results.addedImages()[0].added().name(), "New Image");
+  EXPECT_EQ(results.addedImages()[0].removed().file_path(), "");
+  EXPECT_EQ(results.addedImages()[0].removed().name(), "");
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
                                  nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
@@ -559,7 +569,10 @@ TEST_F(ImageLibraryTest, DetectChangesAddsFile) {
 TEST_F(ImageLibraryTest, DetectChangesIgnoresNonImages) {
   buildFilesystem();
   addImageToSubdir(libRoot(), "new-image.txt");
-  library->detectLibraryChanges();
+  LibraryUpdateResults results = library->detectLibraryChanges();
+  EXPECT_TRUE(results.addedImages().empty());
+  EXPECT_TRUE(results.movedImages().empty());
+  EXPECT_TRUE(results.removedImages().empty());
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
               ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
@@ -569,7 +582,10 @@ TEST_F(ImageLibraryTest, DetectChangesIgnoresNonImages) {
 TEST_F(ImageLibraryTest, DetectChangesLeavesMissingFile) {
   buildFilesystem();
   library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
-  library->detectLibraryChanges();
+  LibraryUpdateResults results = library->detectLibraryChanges();
+  EXPECT_TRUE(results.addedImages().empty());
+  EXPECT_TRUE(results.movedImages().empty());
+  EXPECT_TRUE(results.removedImages().empty());
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
                                  nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
@@ -582,11 +598,18 @@ TEST_F(ImageLibraryTest, DetectChangesMovesFile) {
 
   filesystem->createSubdir(libRoot("subdir"));
   addImageToSubdir(libRoot("subdir"), "new-image.png");
-
-  library->detectLibraryChanges();
-  std::vector<FilesystemPath> files = library->allFilenames();
   std::string expected_path =
       (std::filesystem::path("subdir") / "new-image.png").string();
+
+  LibraryUpdateResults results = library->detectLibraryChanges();
+  EXPECT_TRUE(results.addedImages().empty());
+  EXPECT_TRUE(results.removedImages().empty());
+  EXPECT_EQ(results.movedImages().size(), 1);
+  EXPECT_EQ(results.movedImages()[0].added().file_path(), expected_path);
+  EXPECT_EQ(results.movedImages()[0].added().name(), "New Thing");
+  EXPECT_EQ(results.movedImages()[0].removed().file_path(), "new-image.png");
+  EXPECT_EQ(results.movedImages()[0].removed().name(), "New Thing");
+  std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
                                  nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
                                  expected_path));
@@ -601,11 +624,19 @@ TEST_F(ImageLibraryTest, DetectChangesMovesFileWithDeleteEnabled) {
 
   filesystem->createSubdir(libRoot("subdir"));
   addImageToSubdir(libRoot("subdir"), "new-image.png");
-
-  library->detectLibraryChanges(/*delete_missing = */ true);
-  std::vector<FilesystemPath> files = library->allFilenames();
   std::string expected_path =
       (std::filesystem::path("subdir") / "new-image.png").string();
+
+  LibraryUpdateResults results =
+      library->detectLibraryChanges(/*delete_missing = */ true);
+  EXPECT_TRUE(results.addedImages().empty());
+  EXPECT_TRUE(results.removedImages().empty());
+  EXPECT_EQ(results.movedImages().size(), 1);
+  EXPECT_EQ(results.movedImages()[0].added().file_path(), expected_path);
+  EXPECT_EQ(results.movedImages()[0].added().name(), "New Thing");
+  EXPECT_EQ(results.movedImages()[0].removed().file_path(), "new-image.png");
+  EXPECT_EQ(results.movedImages()[0].removed().name(), "New Thing");
+  std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files, ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
                                  nonlibRoot("capy.jpg"), libRoot("but-why.jpg"),
                                  expected_path));
@@ -617,7 +648,15 @@ TEST_F(ImageLibraryTest, DetectChangesMovesFileWithDeleteEnabled) {
 TEST_F(ImageLibraryTest, DetectChangesCanRemoveMissingFile) {
   buildFilesystem();
   library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
-  library->detectLibraryChanges(/*delete_missing = */ true);
+  LibraryUpdateResults results =
+      library->detectLibraryChanges(/*delete_missing = */ true);
+  EXPECT_TRUE(results.addedImages().empty());
+  EXPECT_TRUE(results.movedImages().empty());
+  EXPECT_EQ(results.removedImages().size(), 1);
+  EXPECT_EQ(results.removedImages()[0].added().file_path(), "");
+  EXPECT_EQ(results.removedImages()[0].added().name(), "");
+  EXPECT_EQ(results.removedImages()[0].removed().file_path(), "new-image.png");
+  EXPECT_EQ(results.removedImages()[0].removed().name(), "New Thing");
   std::vector<FilesystemPath> files = library->allFilenames();
   EXPECT_THAT(files,
               ElementsAre(libRoot("corgi.jpg"), "great_dane.jpg",
