@@ -25,6 +25,9 @@ limitations under the License.
 #include "gtest/gtest.h"          // for AssertionResult, Message, TestPartR...
 #include "test/mocks/util/MockSingleton.h"  // IWYU pragma: keep
 
+#define TEST_STUB_SINGLETON
+#include "test/mocks/Stubs.h"
+
 namespace cszb_scoreboard::test {
 
 TEST(CaseOptionalStringTest, ConstructorEmptyString) {
