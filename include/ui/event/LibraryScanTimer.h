@@ -22,7 +22,8 @@ limitations under the License.
 #include <ui/widget/PersistentTimer.h>  // for PersistentTimer
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "util/Singleton.h"    // for Singleton
+#include "ui/widget/Frame.h"
+#include "util/Singleton.h"  // for Singleton
 
 namespace cszb_scoreboard {
 
@@ -31,15 +32,17 @@ class LibraryScanTimer : public PersistentTimer {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  LibraryScanTimer() : LibraryScanTimer(Singleton::getInstance()) {}
+  explicit LibraryScanTimer(Frame* main_view)
+      : LibraryScanTimer(main_view, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 
   PUBLIC_TEST_ONLY
-  explicit LibraryScanTimer(Singleton* singleton);
+  explicit LibraryScanTimer(Frame* main_view, Singleton* singleton);
 
  private:
   void execute();
   Singleton* singleton;
+  Frame* main_view;
 };
 
 }  // namespace cszb_scoreboard
