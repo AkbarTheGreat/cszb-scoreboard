@@ -21,13 +21,14 @@ limitations under the License.
 #include "util/FilesystemPath.h"
 
 #include <algorithm>  // for count, transform
-#include <array>
-#include <cctype>   // for toupper
+#include <array>      // for array
+#include <cctype>     // for toupper
 #include <cstddef>  // for size_t
-#include <sstream>  // for basic_istream, istringstream
+#include <sstream>    // for basic_istream, istringstream
+#include <stdexcept>  // for runtime_error
 
 #ifdef SCOREBOARD_APPLE_IMPL
-#include <cstdio>  // for size_t, remove, rename
+#include <cstdio>     // for size_t, remove, rename
 #else
 #include <filesystem>
 #endif

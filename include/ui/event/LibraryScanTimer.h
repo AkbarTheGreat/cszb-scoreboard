@@ -21,11 +21,11 @@ limitations under the License.
 
 #include <ui/widget/PersistentTimer.h>  // for PersistentTimer
 
-#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "ui/widget/Frame.h"
-#include "util/Singleton.h"  // for Singleton
+#include "ScoreboardCommon.h"           // for PUBLIC_TEST_ONLY
+#include "util/Singleton.h"             // for Singleton
 
 namespace cszb_scoreboard {
+class Frame;
 
 class LibraryScanTimer : public PersistentTimer {
  public:

@@ -279,7 +279,7 @@ auto ImageLibrary::detectLibraryChanges(bool delete_missing)
     }
   }
 
-  std::vector<ImageChange> moves, adds, deletes;
+  std::vector<ImageChange> moves;
   // Check for moved images.
   auto missing_it = missing_images.begin();
   while (!missing_images.empty() && missing_it != missing_images.end()) {
@@ -292,7 +292,7 @@ auto ImageLibrary::detectLibraryChanges(bool delete_missing)
       if (missing_filename == possible) {
         proto::ImageInfo new_image = moveImage(
             FilesystemPath(missing.file_path()), FilesystemPath(disk));
-        moves.emplace_back(ImageChange(new_image, missing));
+        moves.emplace_back(new_image, missing);
         files_on_disk.erase(disk);
         missing_it = missing_images.erase(missing_it);
         iterate = false;
@@ -304,13 +304,16 @@ auto ImageLibrary::detectLibraryChanges(bool delete_missing)
     }
   }
 
+  std::vector<ImageChange> adds;
   // Add new images.
   for (const auto &filename : files_on_disk) {
     FilesystemPath file(
         FilesystemPath::mostRelativePath(library.library_root(), filename));
     auto new_image = addImage(file, file.titleName(), {});
-    adds.emplace_back(ImageChange(new_image, proto::ImageInfo()));
+    adds.emplace_back(new_image, proto::ImageInfo());
   }
+
+  std::vector<ImageChange> deletes;
   // Remove missing images, if applicable.
   if (delete_missing) {
     for (const auto &missing : missing_images) {
@@ -320,7 +323,7 @@ auto ImageLibrary::detectLibraryChanges(bool delete_missing)
     }
   }
 
-  return LibraryUpdateResults(adds, moves, deletes);
+  return {adds, moves, deletes};
 }
 
 void ImageLibrary::clearLibrary() { library.Clear(); }

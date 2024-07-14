@@ -23,11 +23,12 @@ limitations under the License.
 #define SCOREBOARD_APPLE_IMPL
 #endif
 
-#include <string>  // for string
-#include <unordered_set>
-#include <vector>
+#include <stdint.h>       // for uint32_t
+#include <string>         // for string
+#include <unordered_set>  // for unordered_set
+#include <vector>         // for vector
 #ifndef SCOREBOARD_APPLE_IMPL
-#include <filesystem>
+#include <filesystem>     // for remove, rename, path
 #endif
 
 namespace cszb_scoreboard {

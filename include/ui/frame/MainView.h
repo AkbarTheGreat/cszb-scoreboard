@@ -30,10 +30,11 @@ limitations under the License.
 #include "ui/component/PreviewPanel.h"     // for PreviewPanel
 #include "ui/component/QuickStatePanel.h"  // for QuickStatePanel
 #include "ui/dialog/SettingsDialog.h"      // for SettingsDialog
-#include "ui/event/UpdateTimer.h"          // for UpdateTimer
-#include "ui/widget/Frame.h"               // for Frame
-#include "ui/widget/swx/Frame.h"           // for FrameImpl, Frame (ptr only)
-#include "util/Singleton.h"                // for Singleton
+#include "ui/event/LibraryScanTimer.h"
+#include "ui/event/UpdateTimer.h"  // for UpdateTimer
+#include "ui/widget/Frame.h"       // for Frame
+#include "ui/widget/swx/Frame.h"   // for FrameImpl, Frame (ptr only)
+#include "util/Singleton.h"        // for Singleton
 
 class wxNotebook;
 
@@ -84,6 +85,7 @@ class MainView : public Frame {
   std::unique_ptr<PreviewPanel> preview_panel;
   std::unique_ptr<QuickStatePanel> quick_state;
   std::unique_ptr<UpdateTimer> update_timer;
+  std::unique_ptr<LibraryScanTimer> scan_timer;
   Singleton *singleton;
 };
 

@@ -537,7 +537,8 @@ TEST_F(ImageLibraryTest, LoadSaveLibrary) {
 
 TEST_F(ImageLibraryTest, DetectChangesNoChanges) {
   buildFilesystem();
-  LibraryUpdateResults results = library->detectLibraryChanges();
+  LibraryUpdateResults results =
+      library->detectLibraryChanges(/* delete_missing = */ false);
   EXPECT_TRUE(results.addedImages().empty());
   EXPECT_TRUE(results.movedImages().empty());
   EXPECT_TRUE(results.removedImages().empty());
@@ -550,7 +551,8 @@ TEST_F(ImageLibraryTest, DetectChangesNoChanges) {
 TEST_F(ImageLibraryTest, DetectChangesAddsFile) {
   buildFilesystem();
   addImageToSubdir(libRoot(), "new-image.png");
-  LibraryUpdateResults results = library->detectLibraryChanges();
+  LibraryUpdateResults results =
+      library->detectLibraryChanges(/* delete_missing = */ false);
   EXPECT_TRUE(results.movedImages().empty());
   EXPECT_TRUE(results.removedImages().empty());
   EXPECT_EQ(results.addedImages().size(), 1);
@@ -569,7 +571,8 @@ TEST_F(ImageLibraryTest, DetectChangesAddsFile) {
 TEST_F(ImageLibraryTest, DetectChangesIgnoresNonImages) {
   buildFilesystem();
   addImageToSubdir(libRoot(), "new-image.txt");
-  LibraryUpdateResults results = library->detectLibraryChanges();
+  LibraryUpdateResults results =
+      library->detectLibraryChanges(/*delete_missing = */ false);
   EXPECT_TRUE(results.addedImages().empty());
   EXPECT_TRUE(results.movedImages().empty());
   EXPECT_TRUE(results.removedImages().empty());
@@ -582,7 +585,8 @@ TEST_F(ImageLibraryTest, DetectChangesIgnoresNonImages) {
 TEST_F(ImageLibraryTest, DetectChangesLeavesMissingFile) {
   buildFilesystem();
   library->addImage(FilesystemPath("new-image.png"), "New Thing", {"tag_test"});
-  LibraryUpdateResults results = library->detectLibraryChanges();
+  LibraryUpdateResults results =
+      library->detectLibraryChanges(/*delete_missing = */ false);
   EXPECT_TRUE(results.addedImages().empty());
   EXPECT_TRUE(results.movedImages().empty());
   EXPECT_TRUE(results.removedImages().empty());
@@ -601,7 +605,8 @@ TEST_F(ImageLibraryTest, DetectChangesMovesFile) {
   std::string expected_path =
       (std::filesystem::path("subdir") / "new-image.png").string();
 
-  LibraryUpdateResults results = library->detectLibraryChanges();
+  LibraryUpdateResults results =
+      library->detectLibraryChanges(/*delete_missing = */ false);
   EXPECT_TRUE(results.addedImages().empty());
   EXPECT_TRUE(results.removedImages().empty());
   EXPECT_EQ(results.movedImages().size(), 1);

@@ -29,6 +29,9 @@ limitations under the License.
 #include "util/HttpReader.h"                 // for HttpResponse
 #include "util/Singleton.h"                  // for SingletonClass
 
+#define TEST_STUB_SINGLETON
+#include "test/mocks/Stubs.h"
+
 using ::testing::_;
 using ::testing::HasSubstr;
 using ::testing::Return;

@@ -18,27 +18,25 @@ limitations under the License.
 
 #include <google/protobuf/util/message_differencer.h>  // for MessageDiffere...
 #include <wx/gdicmn.h>                                 // for wxRect, wxPoint
+#include <cstdint>                                     // for int32_t
+#include <memory>                                      // for unique_ptr
+#include <string>                                      // for string
 
-#include <cstdint>  // for int32_t
-#include <memory>   // for unique_ptr
-#include <string>   // for string
-
-#include "config.pb.h"                             // for DisplayConfig
-#include "config/DisplayConfig.h"                  // for DisplayConfig
-#include "gmock/gmock.h"                           // for Return, Return...
-#include "gtest/gtest.h"                           // for AssertionResult
-#include "test/TestUtil.h"                         // for EXPECT_ASSERT
-#include "test/mocks/config/MockPersistence.h"     // for MockPersistence
-#include "test/mocks/ui/frame/MockFrameManager.h"  // for MockFrameManager
-#include "test/mocks/ui/frame/MockMainView.h"      // for MockMainView
-#include "test/mocks/ui/widget/swx/MockDisplay.h"  // for MockDisplay
-#include "test/mocks/ui/widget/swx/MockFrame.h"    // for MockFrame
-#include "test/mocks/util/MockSingleton.h"         // for MockSingleton
-#include "ui/component/ScreenPresenter.h"          // for ScreenPresenter
-#include "ui/frame/MainView.h"                     // for MainView
-#include "ui/widget/Display.h"                     // for Display
-#include "ui/widget/Frame.h"                       // for Frame
-#include "util/Singleton.h"                        // for SingletonClass
+#include "config.pb.h"                                 // for DisplayConfig
+#include "config/DisplayConfig.h"                      // for DisplayConfig
+#include "gmock/gmock.h"                               // for Return, Return...
+#include "gtest/gtest.h"                               // for AssertionResult
+#include "test/TestUtil.h"                             // for EXPECT_ASSERT
+#include "test/mocks/config/MockPersistence.h"         // for MockPersistence
+#include "test/mocks/ui/frame/MockFrameManager.h"      // for MockFrameManager
+#include "test/mocks/ui/frame/MockMainView.h"          // for MockMainView
+#include "test/mocks/ui/widget/swx/MockDisplay.h"      // for MockDisplay
+#include "test/mocks/ui/widget/swx/MockFrame.h"        // for MockFrame
+#include "test/mocks/util/MockSingleton.h"             // for MockSingleton
+#include "ui/component/ScreenPresenter.h"              // for ScreenPresenter
+#include "ui/widget/Display.h"                         // for Display
+#include "ui/widget/Frame.h"                           // for Frame
+#include "util/Singleton.h"                            // for SingletonClass
 
 #define TEST_STUB_FRAME_MANAGER
 #define TEST_STUB_MAIN_VIEW
@@ -46,10 +44,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 class ScreenText;
-
-namespace swx {
-class Frame;
-}  // namespace swx
 }  // namespace cszb_scoreboard
 
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>

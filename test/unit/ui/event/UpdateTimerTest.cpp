@@ -1,12 +1,18 @@
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>  // for GMOCK_PP_INTERNAL_IF_0
+#include <gtest/gtest.h>  // for Matcher
+#include <wx/string.h>    // for wxString, operator==
 
-#include "ScoreboardCommon.h"  // for SCOREBOARD_VERSION
-#include "test/mocks/ui/frame/MockMainView.h"
-#include "test/mocks/ui/widget/swx/MockFrame.h"
-#include "test/mocks/util/MockHttpReader.h"
-#include "test/mocks/util/MockSingleton.h"
-#include "ui/event/UpdateTimer.h"
-#include "util/AutoUpdate.h"
+#include <memory>  // for unique_ptr, make_unique
+#include <string>  // for string
+
+#include "test/mocks/ui/frame/MockMainView.h"    // for MockMainView
+#include "test/mocks/ui/widget/swx/MockFrame.h"  // for MockFrame
+#include "test/mocks/util/MockHttpReader.h"      // for MockHttpReader
+#include "test/mocks/util/MockSingleton.h"       // for MockSingleton
+#include "ui/event/UpdateTimer.h"                // for UpdateTimer
+#include "util/AutoUpdate.h"                     // for AutoUpdate
+#include "util/HttpReader.h"                     // for HttpReader
+#include "util/Singleton.h"                      // for SingletonClass
 
 #define TEST_STUB_MAIN_VIEW
 #define TEST_STUB_PERSISTENT_TIMER
