@@ -19,14 +19,14 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"
 
-#include <stdint.h>               // for uint32_t
-#include <algorithm>              // for binary_search, find, lower_bound
-#include <array>                  // for array
-#include <cctype>                 // for tolower
-#include <compare>                // for operator<
-#include <filesystem>             // for operator==, path
-#include <unordered_set>          // for unordered_set, operator==, _Node_it...
-#include <utility>                // for move
+#include <algorithm>      // for binary_search, find, lower_bound
+#include <array>          // for array
+#include <cctype>         // for tolower
+#include <compare>        // for operator<
+#include <cstdint>        // for uint32_t
+#include <filesystem>     // for operator==, path
+#include <unordered_set>  // for unordered_set, operator==, _Node_it...
+#include <utility>        // for move
 
 #include "config/Persistence.h"   // for Persistence
 #include "util/FilesystemPath.h"  // for FilesystemPath
@@ -280,9 +280,8 @@ void ImageLibrary::detectLibraryChanges(bool delete_missing) {
     bool iterate = true;
     for (const std::string &disk : files_on_disk) {
       std::string possible = FilesystemPath(disk).filename().string();
-      const auto disk_copy = disk;
       if (missing_filename == possible) {
-        moveImage(FilesystemPath(missing), FilesystemPath(disk_copy));
+        moveImage(FilesystemPath(missing), FilesystemPath(disk));
         files_on_disk.erase(disk);
         missing_images.erase(missing);
         iterate = false;
