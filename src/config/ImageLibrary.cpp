@@ -226,9 +226,9 @@ void ImageLibrary::smartUpdateLibraryRoot(const FilesystemPath &root) {
       // * If neither path is exists, leave the path as the original.
       // * Ultimately, this boils down to -- is new path valid?  Use that.
       // Otherwise, use the old one.
-      if (FilesystemPath(image.file_path()).existsWithRoot(root.string())) {
+      if (FilesystemPath(image.file_path()).existsWithRoot(new_root)) {
         image.set_file_path(
-            FilesystemPath::absolutePath(root.string(), image.file_path()));
+            FilesystemPath::absolutePath(new_root, image.file_path()));
       } else {
         image.set_file_path(FilesystemPath::absolutePath(library.library_root(),
                                                          image.file_path()));
