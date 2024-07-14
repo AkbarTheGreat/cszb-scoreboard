@@ -641,10 +641,11 @@ FROM standard_build AS generate_cov
 
 ENV BUILD_PRESET=Coverage
 ENV BUILD_THREADS= 
+ENV RUN_TESTS=
 
 WORKDIR /cszb-scoreboard
-CMD cmake --preset Linux-${BUILD_PRESET} && \
-    cmake --build --preset Linux-${BUILD_PRESET} --parallel ${BUILD_THREADS}
+
+CMD ["etc/docker/entrypoint.sh"]
 
 # ------------------------------------------------------------------------------
 # Standard test -- default action (standard_test)
@@ -655,9 +656,10 @@ FROM standard_build AS standard_test
 
 ENV BUILD_PRESET=Integration
 ENV BUILD_THREADS= 
+ENV RUN_TESTS=yes
 
 WORKDIR /cszb-scoreboard
-CMD supervisord -c /supervisord.conf && \
-    cmake --preset Linux-${BUILD_PRESET} && \
-    cmake --build --preset Linux-${BUILD_PRESET} --parallel ${BUILD_THREADS} && \
-    ctest --preset Linux-${BUILD_PRESET}
+
+CMD ["etc/docker/entrypoint.sh"]
+
+
