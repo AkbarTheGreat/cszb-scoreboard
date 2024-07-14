@@ -73,11 +73,6 @@ using ::testing::Return;
 
 namespace cszb_scoreboard {
 
-// Defining some constructors here so as to avoid having to link all of the
-// scoreboard for MockFrameManager
-
-MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {}
-
 ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
                                  Singleton *singleton)
     : Frame("Scoreboard") {}
