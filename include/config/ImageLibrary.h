@@ -102,7 +102,7 @@ class ImageLibrary {
   // Looks for images added or moved in the library and automatically
   // updates them the best it knows how.  If delete_missing is set to true, also
   // removes any missing images from the library.
-  void detectLibraryChanges(bool delete_missing = false);
+  virtual void detectLibraryChanges(bool delete_missing = false);
   void clearLibrary();
   void saveLibrary();
   auto search(const std::string &query) -> ImageSearchResults;
