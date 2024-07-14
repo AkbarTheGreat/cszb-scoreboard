@@ -19,13 +19,14 @@ limitations under the License.
 
 #include "config/ImageLibrary.h"
 
-#include <algorithm>              // for max, binary_search, find, lower_bound
+#include <stdint.h>               // for uint32_t
+#include <algorithm>              // for binary_search, find, lower_bound
+#include <array>                  // for array
 #include <cctype>                 // for tolower
 #include <compare>                // for operator<
-#include <filesystem>             // for operator==, path, directory_iterator
+#include <filesystem>             // for operator==, path
 #include <unordered_set>          // for unordered_set, operator==, _Node_it...
 #include <utility>                // for move
-#include <array>                  // for array
 
 #include "config/Persistence.h"   // for Persistence
 #include "util/FilesystemPath.h"  // for FilesystemPath
@@ -245,36 +246,16 @@ void ImageLibrary::smartUpdateLibraryRoot(const FilesystemPath &root) {
   setLibraryRoot(root);
 }
 
-auto ImageLibrary::crawlImageDirectory(std::string path, uint32_t depth)
-    -> std::unordered_set<std::string> {
-  std::unordered_set<std::string> found_files;
-
-  if (depth > MAXIMUM_DIRECTORY_CRAWL_DEPTH) {
-    return found_files;
-  }
-
-  for (const auto &entry :
-       std::filesystem::directory_iterator(FilesystemPath(path))) {
-    if (entry.is_directory()) {
-      auto new_files = crawlImageDirectory(entry.path().string(), depth + 1);
-      found_files.insert(new_files.begin(), new_files.end());
-    } else {
-      for (const auto &extension : IMAGE_EXTENSIONS) {
-        if (entry.path().extension() == extension) {
-          found_files.emplace(entry.path().string());
-        }
-      }
-    }
-  }
-  return found_files;
-}
-
 void ImageLibrary::detectLibraryChanges(bool delete_missing) {
   std::unordered_set<std::string> missing_images;
   std::unordered_set<std::string> external_to_library;
   // Get a set of all images found on the disk, regardless of whether they're in
   // the library or not.
-  auto files_on_disk = crawlImageDirectory(library.library_root());
+  std::vector<const char *> extensions(IMAGE_EXTENSIONS.begin(),
+                                       IMAGE_EXTENSIONS.end());
+  auto files_on_disk =
+      FilesystemPath(library.library_root())
+          .findFilesOfType(extensions, MAXIMUM_DIRECTORY_CRAWL_DEPTH);
   // Map out which images in the library are present on disk and which aren't.
   for (const auto &image : library.images()) {
     if (FilesystemPath(image.file_path())

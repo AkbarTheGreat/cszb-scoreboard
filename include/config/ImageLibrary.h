@@ -18,12 +18,10 @@ limitations under the License.
 */
 #pragma once
 
-#include <stdint.h>            // for uint32_t
-#include <cstddef>             // for size_t
-#include <memory>              // for unique_ptr
-#include <string>              // for string, basic_string
-#include <vector>              // for vector
-#include <unordered_set>       // for unordered_set
+#include <cstddef>  // for size_t
+#include <memory>   // for unique_ptr
+#include <string>   // for string, basic_string
+#include <vector>   // for vector
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "image_library.pb.h"  // for ImageInfo, ImageLibrary
@@ -130,8 +128,6 @@ class ImageLibrary {
   auto partialMatchSearch(const std::string &query) -> ImageSearchResults;
   void addMatch(std::vector<proto::ImageInfo> *matched_images,
                 const proto::ImageInfo &image);
-  auto crawlImageDirectory(std::string path, uint32_t depth = 0)
-      -> std::unordered_set<std::string>;
 };
 
 // A non-singleton subclass of the singleton ImageLibrary which turns off all

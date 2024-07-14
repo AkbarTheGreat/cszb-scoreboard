@@ -20,14 +20,16 @@ limitations under the License.
 
 #include "util/FilesystemPath.h"
 
-#include <stddef.h>   // for size_t
+#include <stddef.h>  // for size_t
+
 #include <algorithm>  // for count, transform
-#include <array>      // for array
 #include <cctype>     // for toupper
 #include <sstream>    // for basic_istream, istringstream
 
 #ifdef SCOREBOARD_APPLE_IMPL
 #include <cstdio>  // for size_t, remove, rename
+#else
+#include <filesystem>
 #endif
 
 namespace cszb_scoreboard {
@@ -176,6 +178,41 @@ auto FilesystemPath::titleName() const -> std::string {
   }
 
   return title;
+}
+
+/* NOT YET IMPLEMENTED ON MACOS!
+Eventually, we'll need to do so, but until then the one feature that relies on
+this (auto-updating image libraries) will be unsupported on macs.
+*/
+auto FilesystemPath::findFilesOfType(
+    const std::vector<const char *> &extensions,
+    uint32_t max_depth) -> std::unordered_set<std::string> {
+  std::unordered_set<std::string> found_files;
+#ifdef SCOREBOARD_APPLE_IMPL
+  // TODO(akbar):  Implement this for macs
+  throw std::runtime_error(
+      "Finding files of a given type is not yet supported on MacOS");
+#else   // #ifdef SCOREBOARD_APPLE_IMPL
+
+  if (max_depth == 0) {
+    return found_files;
+  }
+
+  for (const auto &entry : std::filesystem::directory_iterator(*this)) {
+    if (entry.is_directory()) {
+      auto new_files = FilesystemPath(entry.path().string())
+                           .findFilesOfType(extensions, max_depth - 1);
+      found_files.insert(new_files.begin(), new_files.end());
+    } else {
+      for (const auto &extension : extensions) {
+        if (entry.path().extension() == extension) {
+          found_files.emplace(entry.path().string());
+        }
+      }
+    }
+  }
+#endif  // #ifdef SCOREBOARD_APPLE_IMPL
+  return found_files;
 }
 
 }  // namespace cszb_scoreboard

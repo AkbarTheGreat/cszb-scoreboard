@@ -24,6 +24,8 @@ limitations under the License.
 #endif
 
 #include <string>  // for string
+#include <unordered_set>
+#include <vector>
 #ifndef SCOREBOARD_APPLE_IMPL
 #include <filesystem>
 #endif
@@ -112,6 +114,10 @@ class FilesystemPath : public std::filesystem::path {
                            const std::string &file_path) -> std::string;
   static auto mostRelativePath(const std::string &root,
                                const std::string &file_path) -> std::string;
+  // Recursively search for files with given extensions, up to a given depth (to
+  // avoid infinite loops).
+  auto findFilesOfType(const std::vector<const char *> &extensions,
+                       uint32_t max_depth) -> std::unordered_set<std::string>;
 
  private:
   static auto stripTrailingSeparator(const std::string &path) -> std::string;
