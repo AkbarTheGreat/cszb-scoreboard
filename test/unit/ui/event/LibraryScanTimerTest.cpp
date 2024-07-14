@@ -21,7 +21,8 @@ class MockImageLibrary : public ImageLibrary {
  public:
   explicit MockImageLibrary(MockSingleton *singleton)
       : ImageLibrary(SingletonClass{}, singleton, proto::ImageLibrary()) {}
-  MOCK_METHOD(void, detectLibraryChanges, (bool delete_missing), (override));
+  MOCK_METHOD(LibraryUpdateResults, detectLibraryChanges, (bool delete_missing),
+              (override));
 };
 // NOLINTEND
 
@@ -54,7 +55,10 @@ TEST_F(LibraryScanTimerTest, DoesNothingAtStartup) {
 
 TEST_F(LibraryScanTimerTest, AutomaticallyUpdatesOnTrigger) {
   // Will call with delete_missing=false on trigger
-  EXPECT_CALL(*image_library, detectLibraryChanges(false)).Times(1);
+  EXPECT_CALL(*image_library, detectLibraryChanges(false))
+      .WillOnce(Return(LibraryUpdateResults(std::vector<ImageChange>(),
+                                            std::vector<ImageChange>(),
+                                            std::vector<ImageChange>())));
   // Will never call with delete_missing=true
   EXPECT_CALL(*image_library, detectLibraryChanges(true)).Times(0);
   LibraryScanTimer timer(singleton.get());
