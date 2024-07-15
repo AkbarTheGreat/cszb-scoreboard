@@ -82,7 +82,7 @@ RUN git submodule update --init --recursive
 
 WORKDIR /curl/out
 RUN cmake .. -DBUILD_SHARED_LIBS=ON
-RUN make -j all
+RUN make -j 4 all
 RUN make install
 
 WORKDIR /
@@ -111,7 +111,7 @@ RUN git submodule update --init --recursive
 
 WORKDIR /jsoncpp/out
 RUN cmake ..
-RUN make -j all
+RUN make -j 4 all
 RUN make install
 
 WORKDIR /
@@ -139,7 +139,7 @@ RUN git submodule update --init --recursive
 
 WORKDIR /googletest/out
 RUN cmake ..
-RUN make -j all
+RUN make -j 4 all
 RUN make install
 
 WORKDIR /
@@ -170,7 +170,7 @@ RUN git submodule update --init --recursive
 
 WORKDIR /protobuf/out
 RUN cmake ../cmake
-RUN make -j all
+RUN make -j 4 all
 RUN make install
 
 WORKDIR /
@@ -205,7 +205,7 @@ RUN git submodule update --init --recursive
 
 WORKDIR /iwyu/out
 RUN cmake ..
-RUN make -j all
+RUN make -j 4 all
 RUN make install
 
 WORKDIR /
@@ -345,7 +345,7 @@ RUN cmake .. \
     -DwxBUILD_STRIPPED_RELEASE=OFF \
     -DwxUSE_XLOCALE=OFF \
     -DwxUSE_WEBVIEW=ON
-RUN make -j all
+RUN make -j 4 all
 RUN make install
 
 WORKDIR /
@@ -405,7 +405,7 @@ RUN cmake .. \
     -DwxBUILD_PRECOMP=OFF \
     -DwxBUILD_SHARED=OFF \
     -DwxUSE_WEBVIEW=ON
-RUN make -j all
+RUN make -j 4 all
 RUN make install
 
 WORKDIR /
