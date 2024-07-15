@@ -623,12 +623,12 @@ CMD ["/bin/echo", "Everything is built.  Enjoy."]
 # ------------------------------------------------------------------------------
 FROM macos_build AS macos_test
 
+ENV BUILD_PLATFORM=MacOS
 ENV BUILD_PRESET=Debug
 ENV BUILD_THREADS= 
+ENV RUN_TESTS=
 
-WORKDIR /cszb-scoreboard/out
-CMD cmake --preset MacOS-${BUILD_PRESET} && \
-    cmake --build --preset MacOS-${BUILD_PRESET} --parallel ${BUILD_THREADS}
+CMD ["etc/docker/entrypoint.sh"]
 
 # ------------------------------------------------------------------------------
 # Coverage Generation -- (generate_cov)
@@ -639,11 +639,10 @@ CMD cmake --preset MacOS-${BUILD_PRESET} && \
 # ------------------------------------------------------------------------------
 FROM standard_build AS generate_cov
 
+ENV BUILD_PLATFORM=Linux
 ENV BUILD_PRESET=Coverage
 ENV BUILD_THREADS= 
 ENV RUN_TESTS=
-
-WORKDIR /cszb-scoreboard
 
 CMD ["etc/docker/entrypoint.sh"]
 
@@ -654,12 +653,9 @@ CMD ["etc/docker/entrypoint.sh"]
 # ------------------------------------------------------------------------------
 FROM standard_build AS standard_test
 
+ENV BUILD_PLATFORM=Linux
 ENV BUILD_PRESET=Integration
 ENV BUILD_THREADS= 
 ENV RUN_TESTS=yes
 
-WORKDIR /cszb-scoreboard
-
 CMD ["etc/docker/entrypoint.sh"]
-
-
