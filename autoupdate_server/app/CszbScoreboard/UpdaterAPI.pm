@@ -29,8 +29,9 @@ use Mojo::Exception qw(raise);
 our @VALID_API_VERSIONS = qw(1.0);
 
 our %DISPATCH_TREE = (
-    latest   => sub {latest(@_)},
-    versions => sub {versions(@_)},
+    latest       => sub {latest(@_)},
+    versions     => sub {versions(@_)},
+    version_info => sub {version_info(@_)},
 );
 
 sub api_base {
