@@ -35,7 +35,7 @@ const std::array<const char *, 5> IMAGE_EXTENSIONS = {
 
 const std::string LOGO_SELECTION_STRING = "Logo files (png)|*.png";
 
-#define SCOREBOARD_VERSION "1.6.5"
+#define SCOREBOARD_VERSION "1.7.0"
 
 // Evaluates to public: in a test environment, private: in non-test code, to
 // hide dependencies as tightly as possible
