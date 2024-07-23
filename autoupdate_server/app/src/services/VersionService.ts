@@ -4,7 +4,7 @@ import { Version } from '@src/models/Version';
 
 // **** Variables **** //
 
-export const USER_NOT_FOUND_ERR = 'User not found';
+export const VERSION_NOT_FOUND_ERR = 'Version not found';
 
 
 // **** Functions **** //
