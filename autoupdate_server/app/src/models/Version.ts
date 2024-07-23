@@ -12,10 +12,10 @@ export class Version {
   hierarchy: VersionHierarchy;
   releases: string[];
 
-  constructor(name: string, releases?: string[]) {
-    this.name = name ?? '';
+  constructor(name: string, releases: string[]) {
+    this.name = name;
     this.hierarchy = Version.versionHierarchy(name)
-    this.releases = releases ?? [];
+    this.releases = releases;
   }
 
 

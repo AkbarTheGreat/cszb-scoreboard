@@ -1,7 +1,5 @@
 import { Response } from 'supertest';
-
-import { IUser } from '@src/models/User';
-
+import { Version } from '@src/models/Version'
 
 // Misc
 export type TReqBody = Record<string, unknown>;
@@ -13,6 +11,7 @@ export type TApiCb = (res: TRes) => void;
 // typescript errors.
 type TBody = {
   [key: string]: unknown;
-  user?: IUser;
-  users?: IUser[];
+  versions?: string[];
+  version?: Version;
+  latest?: Version;
 }
