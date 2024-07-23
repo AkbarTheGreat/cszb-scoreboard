@@ -16,6 +16,14 @@ async function getLatest(_: IReq, res: IRes) {
 }
 
 /**
+ * Get information about a version
+ */
+async function getInfo(req: IReq, res: IRes) {
+  const info = await VersionService.getInfo(req.params.version);
+  return res.status(HttpStatusCodes.OK).json({ info });
+}
+
+/**
  * Get all Versions
  */
 async function getAll(_: IReq, res: IRes) {
@@ -29,5 +37,6 @@ async function getAll(_: IReq, res: IRes) {
 
 export default {
   getAll,
+  getInfo,
   getLatest,
 } as const;

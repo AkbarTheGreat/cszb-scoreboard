@@ -9,5 +9,6 @@ export default {
     Base: '/versions',
     All: '/all',
     Latest: '/latest',
+    Info: '/info/:version',
   },
 } as const;
