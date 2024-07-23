@@ -90,6 +90,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}ud_net.lib
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_aui.lib
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_core.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_media.lib
 			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}ud.lib
 			${wxWidgets_LIB_DIR}/wxregexud.lib
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}ud_webview.lib
@@ -125,6 +126,7 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release") # Not Debug, check Release
 			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}u_net.lib
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_aui.lib
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_core.lib
+			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_media.lib
 			${wxWidgets_LIB_DIR}/wxbase${WXWIDGETS_VERSION}u.lib
 			${wxWidgets_LIB_DIR}/wxregexu.lib
 			${wxWidgets_LIB_DIR}/wxmsw${WXWIDGETS_VERSION}u_webview.lib
