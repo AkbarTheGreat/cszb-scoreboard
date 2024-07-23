@@ -40,25 +40,18 @@ use lib "$FindBin::RealBin";
 # Project local libraries
 use GitHub;
 
-our $TEMP_ROOT    = 'C:/temp';
+our $TEMP_ROOT    = 'S:/temp';
 our $GIT_REPO     = 'git@github.com:AkbarTheGreat/cszb-scoreboard.git';
 our $VERSION_FILE = '/include/ScoreboardCommon.h';
-our $VS_VERSION   = 22;
 
 # These should be the parts that are very specific to my machine
-our $VCPKG_CMAKE = 'C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake',
-    our $GIT_CMD = 'C:/Program Files/Git/cmd/git.exe';
-our $VS19_GEN_STRING = 'Visual Studio 16 2019';
-our $VS22_GEN_STRING = 'Visual Studio 17 2022';
-our $VS22_CMAKE_ROOT
-    = 'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/';
-our $VS19_CMAKE_ROOT
-    = 'C:/PROGRAM FILES (X86)/MICROSOFT VISUAL STUDIO/2019/COMMUNITY/COMMON7/IDE/COMMONEXTENSIONS/MICROSOFT/CMAKE/CMake/bin/';
-our $WXWIDGETS_PATH    = 'C:/src/wxWidgets/x64-Release';
+our $VCPKG_CMAKE = $ENV{'VCPKG_ROOT'} . '/scripts/buildsystems/vcpkg.cmake';
+our $GIT_CMD     = 'C:/Program Files/Git/cmd/git.exe';
+our $GEN_STRING  = 'Visual Studio 17 2022';
+our $CMAKE_ROOT
+    = 'C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/';
+our $WXWIDGETS_PATH    = $ENV{'WXWIDGETS_ROOT'} . '/x64-Release';
 our $WXWIDGETS_VERSION = '33';
-
-our $CMAKE_ROOT = $VS_VERSION == 22 ? $VS22_CMAKE_ROOT : $VS19_CMAKE_ROOT;
-our $GEN_STRING = $VS_VERSION == 22 ? $VS22_GEN_STRING : $VS19_GEN_STRING;
 
 our $CMAKE_CMD = $CMAKE_ROOT . 'cmake.exe';
 our $CTEST_CMD = $CMAKE_ROOT . 'ctest.exe';
