@@ -12,7 +12,7 @@ export const USER_NOT_FOUND_ERR = 'User not found';
 /**
  * Get latest version
  */
-function getLatest(): Promise<string | null> {
+function getLatest(): Promise<Version | null> {
   return VersionRepo.getLatest();
 }
 

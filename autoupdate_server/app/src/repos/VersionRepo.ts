@@ -6,8 +6,8 @@ import { Version } from '@src/models/Version';
 /**
  * Get latest version
  */
-async function getLatest(): Promise<string | null> {
-  return '1.2.3';
+async function getLatest(): Promise<Version | null> {
+  return new Version('1.2.3')
 }
 
 /**
