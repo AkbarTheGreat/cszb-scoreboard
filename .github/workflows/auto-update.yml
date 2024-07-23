@@ -53,8 +53,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
-      working-directory: autoupdate_server
+      working-directory: autoupdate_server/app
       run: npm install
     - name: Run tests
-      working-directory: autoupdate_server
+      working-directory: autoupdate_server/app
       run: npm test
