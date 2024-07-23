@@ -1,18 +1,16 @@
 import supertest, { Test } from 'supertest';
 import TestAgent from 'supertest/lib/agent';
-import { defaultErrMsg as ValidatorErr } from 'jet-validator';
-import insertUrlParams from 'inserturlparams';
 
 import app from '@src/server';
 
 import VersionRepo from '@src/repos/VersionRepo';
-import { Version } from '@src/models/Version';
+import VersionHelper from '@src/models/VersionHelper';
 import HttpStatusCodes from '@src/constants/HttpStatusCodes';
 import { VERSION_NOT_FOUND_ERR } from '@src/services/VersionService';
 
 import Paths from '@spec/support/Paths';
 import apiCb from '@spec/support/apiCb';
-import { TApiCb } from 'spec/types/misc';
+import { TApiCb, FromProto } from '@spec/types/misc';
 
 
 const getDummyVersions = () => {
@@ -20,7 +18,7 @@ const getDummyVersions = () => {
 }
 
 const getDummyLatest = () => {
-  return new Version('1.0.0', ['win64'])
+  return VersionHelper.buildVersion('1.0.0', ['win64'])
 };
 
 const getDummyUpdatePaths = () => {
@@ -54,9 +52,9 @@ describe('VersionRouter', () => {
         const data = getDummyVersions();
         jest.spyOn(VersionRepo, 'getAll').mockResolvedValue(data);
         // Call API
-        api(res => {
+        api(async res => {
           expect(res.status).toBe(HttpStatusCodes.OK);
-          expect(res.body).toEqual({ versions: data });
+          expect(await FromProto.all(res)).toEqual({ versions: data });
           done();
         });
       });
@@ -78,9 +76,9 @@ describe('VersionRouter', () => {
         const versionData = getDummyLatest();
         jest.spyOn(VersionRepo, 'getInfo').mockResolvedValue(versionData);
         // Call api
-        api('1.0.0', res => {
+        api('1.0.0', async res => {
           expect(res.status).toBe(HttpStatusCodes.OK);
-          expect(res.body).toEqual({ version: versionData });
+          expect(await FromProto.info(res)).toEqual({ version: versionData });
           done();
         });
       });
@@ -92,9 +90,10 @@ describe('VersionRouter', () => {
         // Add spy
         jest.spyOn(VersionRepo, 'getInfo').mockResolvedValue(null);
         // Call api
-        api('0.0.0', res => {
+        api('0.0.0', async res => {
           expect(res.status).toBe(HttpStatusCodes.NOT_FOUND);
-          expect(res.body.error).toBe(VERSION_NOT_FOUND_ERR);
+          const infoResponse = await FromProto.info(res);
+          expect(await infoResponse.error?.errorMessage).toBe(VERSION_NOT_FOUND_ERR);
           done();
         });
       });
@@ -116,14 +115,15 @@ describe('VersionRouter', () => {
         const testUrls = getDummyUpdatePaths();
         jest.spyOn(VersionRepo, 'getUpdateURLs').mockResolvedValue(testUrls);
         // Call api
-        api('1.0.0', 'macos', res => {
+        api('1.0.0', 'macos', async res => {
           expect(res.status).toBe(HttpStatusCodes.OK);
-          if (res.body.urls) {
-            for (let i = 0; i < res.body.urls.length; ++i) {
-              expect(res.body.urls[i]).toMatch(testUrls[i]);
+          const updateResponse = await FromProto.update(res);
+          if (updateResponse.urls) {
+            for (let i = 0; i < updateResponse.urls.length; ++i) {
+              expect(updateResponse.urls[i]).toMatch(testUrls[i]);
             }
           } else {
-            expect(res.body).toEqual({ urls: [] });
+            expect(await FromProto.update(res)).toEqual({ urls: [] });
           }
           done();
         });
@@ -136,9 +136,10 @@ describe('VersionRouter', () => {
         // Add spy
         jest.spyOn(VersionRepo, 'getUpdateURLs').mockResolvedValue(null);
         // Call api
-        api('0.0.0', 'macos', res => {
+        api('0.0.0', 'macos', async res => {
           expect(res.status).toBe(HttpStatusCodes.NOT_FOUND);
-          expect(res.body.error).toBe(VERSION_NOT_FOUND_ERR);
+          const latest = await FromProto.latest(res);
+          expect(latest.error?.errorMessage).toBe(VERSION_NOT_FOUND_ERR);
           done();
         });
       });
@@ -161,9 +162,9 @@ describe('VersionRouter', () => {
         const versionData = getDummyLatest();
         jest.spyOn(VersionRepo, 'getLatest').mockResolvedValue(versionData);
         // Call API
-        api(res => {
+        api(async res => {
           expect(res.status).toBe(HttpStatusCodes.OK);
-          expect(res.body).toEqual({ latest: versionData });
+          expect(await FromProto.latest(res)).toEqual({ latest: versionData });
           done();
         });
       });

@@ -1,0 +1,57 @@
+/*
+version_info.proto: Protobuf representation of a release version of our software.
+
+Copyright 2024 Tracy Beck
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+package cszb_scoreboard.proto;
+
+message VersionHierarchy {
+  int32 major = 1;
+  int32 minor = 2;
+  int32 sub = 3;
+  string tag = 4;
+}
+
+message Version {
+  string name = 1;
+  VersionHierarchy hierarchy = 2;
+  repeated string releases = 3;
+}
+
+message Error {
+  string error_message = 1;
+}
+
+message GetLatestResponse {
+  optional Version latest = 1;
+  optional Error error = 2;
+}
+
+message GetInfoResponse {
+  optional Version version = 1;
+  optional Error error = 2;
+}
+
+message GetAllResponse {
+  repeated string versions = 1;
+  optional Error error = 2;
+}
+
+message GetUpdateURLsResponse {
+  repeated string urls = 1;
+  optional Error error = 2;
+}
