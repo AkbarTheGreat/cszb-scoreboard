@@ -1,8 +1,8 @@
 import EnvVars from '@src/constants/EnvVars';
+import Filesystem from '@src/constants/Filesystem'
+import Paths from '@src/constants/Paths'
 import fs from 'fs';
 import { Version } from '@src/models/Version';
-
-const releaseData = EnvVars.NodeEnv == 'test' ? '../testdata/releases/' : '/releases/';
 
 // **** Functions **** //
 
@@ -17,7 +17,7 @@ async function getLatest(): Promise<Version | null> {
  * Get all versions.
  */
 async function getAll(): Promise<string[]> {
-  const versions: string[] = fs.readdirSync(releaseData, { withFileTypes: true })
+  const versions: string[] = fs.readdirSync(Filesystem.ReleaseData, { withFileTypes: true })
     .filter(item => item.isDirectory() && !item.name.startsWith('.'))
     .map(item => item.name)
   versions.sort((a, b) => versionSorter(a, b))
@@ -36,11 +36,30 @@ async function getInfo(version: string): Promise<Version | null> {
 }
 
 async function getReleases(version: string): Promise<string[]> {
-  const releases = fs.readdirSync(releaseData + '/' + version, { withFileTypes: true })
+  const releases = fs.readdirSync(`${Filesystem.ReleaseData}/${version}`, { withFileTypes: true })
     .filter(item => item.isDirectory() && !item.name.startsWith('.'))
     .map(item => item.name)
   releases.sort();
   return releases;
+}
+
+/**
+ * Get the URL to download an update
+ */
+async function getUpdateURLs(version: string, release: string): Promise<string[] | null> {
+  const allVersions = getAll();
+  if (!(await allVersions).includes(version)) {
+    return null;
+  }
+  const versionData = new Version(version, await (getReleases(version)))
+  if (!(versionData.releases.includes(release))) {
+    return null;
+  }
+
+  const paths: string[] = fs.readdirSync(`${Filesystem.ReleaseData}/${version}/${release}`, { withFileTypes: true })
+    .filter(item => !item.isDirectory())
+    .map(item => `${Paths.Base}${Paths.Update.Data}/${version}/${release}/${item.name}`);
+  return paths;
 }
 
 /* I fully believe there's a more idiomatic way to do this, but this at least works, even if it's verbose. */
@@ -85,6 +104,7 @@ export default {
   getAll,
   getInfo,
   getLatest,
+  getUpdateURLs,
 } as const;
 
 export const _versionSorter = (EnvVars.NodeEnv === "test") ? versionSorter : null;
