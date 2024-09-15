@@ -27,9 +27,10 @@ limitations under the License.
 #include "ui/component/control/ImageSearch.h"       // for ImageSearch
 #include "ui/component/control/LocalImage.h"        // for LocalImage
 #include "ui/component/control/ScoreControl.h"      // for ScoreControl
-#include "ui/component/control/TextEntry.h"         // for TextEntry
-#include "ui/component/control/ThingsMode.h"        // for ThingsMode
-#include "ui/component/control/TimerSetup.h"        // for TimerSetup
+#include "ui/component/control/SlideshowSetup.h"
+#include "ui/component/control/TextEntry.h"   // for TextEntry
+#include "ui/component/control/ThingsMode.h"  // for ThingsMode
+#include "ui/component/control/TimerSetup.h"  // for TimerSetup
 
 namespace cszb_scoreboard {
 class ScreenText;
@@ -48,6 +49,7 @@ ControlPanel::ControlPanel(swx::Notebook* wx, Singleton* singleton)
   addController(std::move(ThingsMode::Create(childPanel())), "5/6 Things");
   addController(std::move(TextEntry::Create(childPanel())), "Text");
   addController(std::move(TimerSetup::Create(childPanel())), "Timer");
+  addController(std::move(SlideshowSetup::Create(childPanel())), "Slideshow");
 
   bindEvents();
 
