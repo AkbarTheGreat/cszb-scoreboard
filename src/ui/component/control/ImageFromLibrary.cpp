@@ -39,8 +39,6 @@ namespace cszb_scoreboard {
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const int NUM_PREVIEWS = 5;
-const int PREVIEW_WIDTH = 160;
-const int PREVIEW_HEIGHT = 90;
 
 auto ImageFromLibrary::Create(swx::Panel *wx)
     -> std::unique_ptr<ImageFromLibrary> {
@@ -69,8 +67,9 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
   image_previews.reserve(NUM_PREVIEWS);
   image_names.reserve(NUM_PREVIEWS);
   for (int i = 0; i < NUM_PREVIEWS; i++) {
-    image_previews.emplace_back(std::make_unique<ImagePreview>(
-        image_preview_panel->childPanel(PREVIEW_WIDTH, PREVIEW_HEIGHT)));
+    image_previews.emplace_back(
+        std::make_unique<ImagePreview>(image_preview_panel->childPanel(
+            ImagePreview::PREVIEW_WIDTH, ImagePreview::PREVIEW_HEIGHT)));
     image_names.emplace_back(image_preview_panel->label("          "));
   }
 

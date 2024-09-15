@@ -41,6 +41,9 @@ class ImagePreview : public Panel {
   [[nodiscard]] auto getFilename() const -> std::optional<FilesystemPath>;
   void setImage(const FilesystemPath &filename);
 
+  const static int PREVIEW_WIDTH = 160;
+  const static int PREVIEW_HEIGHT = 90;
+
  private:
   void bindEvents();
   void paintEvent(RenderContext *renderer);
