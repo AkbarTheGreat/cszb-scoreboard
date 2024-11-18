@@ -19,13 +19,18 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/component/control/ImagePreview.h"
-#include "ui/widget/Button.h"  // for Button
-#include "ui/widget/Label.h"   // for Label
-#include "ui/widget/Panel.h"
-#include "util/FilesystemPath.h"
+#include <memory>                               // for unique_ptr
+
+#include "ui/component/control/ImagePreview.h"  // for ImagePreview
+#include "ui/widget/Button.h"                   // for Button
+#include "ui/widget/Label.h"                    // for Label
+#include "ui/widget/Panel.h"                    // for Panel
 
 namespace cszb_scoreboard {
+class FilesystemPath;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class Slide : public Panel {
  public:

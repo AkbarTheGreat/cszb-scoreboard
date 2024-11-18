@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/component/control/SlideshowSetup.h"
 
 namespace cszb_scoreboard {
+class ScreenText;
 
 auto SlideshowSetup ::Create(swx::Panel *wx)
     -> std::unique_ptr<SlideshowSetup> {
