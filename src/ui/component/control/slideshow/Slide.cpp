@@ -19,9 +19,14 @@ limitations under the License.
 
 #include "ui/component/control/slideshow/Slide.h"
 
-#include "ui/widget/swx/Panel.h"
+#include <filesystem>             // for path
+
+#include "util/FilesystemPath.h"  // for FilesystemPath
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 Slide::Slide(swx::Panel *wx, FilesystemPath image) : Panel(wx) {
   slide_name = this->label(image.filename().string());
