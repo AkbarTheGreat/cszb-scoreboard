@@ -22,6 +22,8 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ScreenText;
 
+constexpr int NUM_PREVIEWS = 5;
+
 auto SlideshowSetup ::Create(swx::Panel *wx)
     -> std::unique_ptr<SlideshowSetup> {
   auto control = std::make_unique<SlideshowSetup>(wx);
@@ -33,6 +35,14 @@ void SlideshowSetup::createControls(Panel *control_panel) {
   main_panel = control_panel->panel();
   add_button = main_panel->button("Add New Slide");
   slide_panel = main_panel->panel();
+
+  slide_previews.reserve(NUM_PREVIEWS);
+  for (int i = 0; i < NUM_PREVIEWS; i++) {
+    slide_previews.emplace_back(
+        std::make_unique<SlidePreview>(slide_panel->childPanel(
+            SlidePreview::PREVIEW_WIDTH, SlidePreview::PREVIEW_HEIGHT)));
+  }
+
   positionWidgets(control_panel);
   bindEvents();
 }
@@ -42,14 +52,23 @@ void SlideshowSetup::positionWidgets(Panel *control_panel) {
 
   main_panel->addWidget(*add_button, 0, 0);
   main_panel->addWidgetWithSpan(*slide_panel, 1, 0, 1, 2);
+  for (int i = 0; i < NUM_PREVIEWS; i++) {
+    slide_panel->addWidget(*slide_previews[i], 0, i);
+  }
 
   slide_panel->runSizer();
   main_panel->runSizer();
   control_panel->runSizer();
 }
 
-void SlideshowSetup::bindEvents() {}
+void SlideshowSetup::bindEvents() {
+  add_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->addNewSlide(); });
+}
 
 void SlideshowSetup::updateScreenText(ScreenText *screen_text) {}
+
+void SlideshowSetup::addNewSlide() {}
 
 }  // namespace cszb_scoreboard

@@ -1,5 +1,5 @@
 /*
-ui/component/control/slideshow/Slide.cpp: The UI for a given slide in a
+ui/component/control/slideshow/SlidePreview.cpp: The UI for a given slide in a
 slideshow, including buttons to modify or move the slide around.
 
 Copyright 2024 Tracy Beck
@@ -17,9 +17,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/component/control/slideshow/Slide.h"
+#include "ui/component/control/slideshow/SlidePreview.h"
 
-#include <filesystem>             // for path
+#include <filesystem>  // for path
 
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
@@ -28,22 +28,22 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-Slide::Slide(swx::Panel *wx, FilesystemPath image) : Panel(wx) {
-  slide_name = this->label(image.filename().string());
+SlidePreview::SlidePreview(swx::Panel *wx) : Panel(wx) {
+  slide_name = this->label("");
   left_button = this->button("<");
   right_button = this->button(">");
   remove_button = this->button("X");
   slide_preview = std::make_unique<ImagePreview>(
       childPanel(ImagePreview::PREVIEW_WIDTH, ImagePreview::PREVIEW_HEIGHT));
-  slide_preview->setImage(image);
+  slide_name = this->label("No slide");
 
   bindEvents();
   positionWidgets();
 }
 
-void Slide::bindEvents() {}
+void SlidePreview::bindEvents() {}
 
-void Slide::positionWidgets() {
+void SlidePreview::positionWidgets() {
   this->addWidgetWithSpan(*slide_name, 0, 0, 1, 3);
   this->addWidgetWithSpan(*slide_preview, 1, 0, 1, 3);
   this->addWidget(*left_button, 2, 0);
