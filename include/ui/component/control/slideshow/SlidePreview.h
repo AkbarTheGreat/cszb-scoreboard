@@ -1,6 +1,6 @@
 /*
-ui/component/control/slideshow/Slide.h: The UI for a given slide in a slideshow,
-including buttons to modify or move the slide around.
+ui/component/control/slideshow/SlidePreview.h: The UI for a given slide in a
+slideshow, including buttons to modify or move the slide around.
 
 Copyright 2024 Tracy Beck
 
@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>                               // for unique_ptr
+#include <memory>  // for unique_ptr
 
 #include "ui/component/control/ImagePreview.h"  // for ImagePreview
 #include "ui/widget/Button.h"                   // for Button
@@ -32,9 +32,12 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-class Slide : public Panel {
+class SlidePreview : public Panel {
  public:
-  explicit Slide(swx::Panel *wx, FilesystemPath image);
+  explicit SlidePreview(swx::Panel *wx);
+
+  const static int PREVIEW_WIDTH = ImagePreview::PREVIEW_WIDTH;
+  const static int PREVIEW_HEIGHT = ImagePreview::PREVIEW_HEIGHT + 20;
 
  private:
   std::unique_ptr<ImagePreview> slide_preview;

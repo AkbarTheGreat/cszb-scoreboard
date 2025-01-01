@@ -19,13 +19,13 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>                                       // for unique_ptr
-#include <vector>                                       // for vector
+#include <memory>  // for unique_ptr
+#include <vector>  // for vector
 
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
-#include "ui/component/control/slideshow/Slide.h"       // for Slide
-#include "ui/widget/Button.h"                           // for Button
-#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/component/control/slideshow/SlidePreview.h"  // for Slide
+#include "ui/widget/Button.h"                             // for Button
+#include "ui/widget/Panel.h"                              // for Panel
 
 namespace cszb_scoreboard {
 class ScreenText;
@@ -44,12 +44,13 @@ class SlideshowSetup : public ScreenTextController {
  private:
   std::unique_ptr<Button> add_button;
   std::unique_ptr<Panel> main_panel, slide_panel;
-  std::vector<std::unique_ptr<Slide>> slides;
+  std::vector<std::unique_ptr<SlidePreview>> slide_previews;
 
   void createControls(Panel *control_panel) override;
   void updateScreenText(ScreenText *screen_text) override;
   void bindEvents();
   void positionWidgets(Panel *control_panel);
+  void addNewSlide();
 };
 
 }  // namespace cszb_scoreboard
