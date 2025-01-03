@@ -34,12 +34,14 @@ namespace cszb_scoreboard {
 const char *CONFIG_FILE = "scoreboard.config";
 const char *IMAGE_LIBRARY_FILE = "image_library.data";
 const char *TEAM_LIBRARY_FILE = "team_library.data";
+const char *SLIDE_SHOW_FILE = "slide_show.data";
 
 Persistence::Persistence(SingletonClass c, Singleton *singleton) {
   this->singleton = singleton;
   loadConfigFromDisk();
   loadImageLibraryFromDisk();
   loadTeamLibraryFromDisk();
+  loadSlideShowFromDisk();
 }
 
 void Persistence::loadConfigFromDisk() {
@@ -144,6 +146,33 @@ void Persistence::saveTeamLibraryToDisk() {
 #endif
 }
 
+void Persistence::loadSlideShowFromDisk() {
+#ifdef FAKE_CONFIGURATION_FILES
+  // Create an empty slide show.  In the future, we may want to populate test
+  // data here.
+  slide_show = proto::SlideShow();
+#else
+  std::fstream input(SLIDE_SHOW_FILE, std::ios::in | std::ios::binary);
+  if (!input) {
+    LogDebug("%s: File not found. Creating an empty slide show.",
+             SLIDE_SHOW_FILE);
+  } else if (!slide_show.ParseFromIstream(&input)) {
+    LogDebug("Failure parsing slide show file %s.", SLIDE_SHOW_FILE);
+  }
+#endif
+}
+
+void Persistence::saveSlideShowToDisk() {
+#ifndef FAKE_CONFIGURATION_FILES
+  //  Do not save if we're doing faked data
+  std::fstream output(SLIDE_SHOW_FILE,
+                      std::ios::out | std::ios::trunc | std::ios::binary);
+  if (!slide_show.SerializeToOstream(&output)) {
+    LogDebug("Failed to write slide show file %s.", SLIDE_SHOW_FILE);
+  }
+#endif
+}
+
 auto Persistence::loadDisplays() -> proto::DisplayConfig {
   // We don't actually have a way to reload from disk after initialization at
   // this point, but that should be fine, as this should still represent what's
@@ -172,6 +201,17 @@ void Persistence::saveGeneralConfig(
       full_config.mutable_general_config();
   new_general_config->CopyFrom(general_config);
   saveConfigToDisk();
+}
+
+auto Persistence::loadSlideShow() -> proto::SlideShow {
+  // There's currently no route to reload from disk and any attempt to save to
+  // disk updates this variable, so for now this is sufficient.
+  return slide_show;
+}
+
+void Persistence::saveSlideShow(const proto::SlideShow &slide_show) {
+  this->slide_show.CopyFrom(slide_show);
+  saveSlideShowToDisk();
 }
 
 auto Persistence::loadTeams() -> proto::TeamConfig {
