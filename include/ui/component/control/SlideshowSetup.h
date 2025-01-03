@@ -42,6 +42,7 @@ class SlideshowSetup : public ScreenTextController {
   static auto Create(swx::Panel *wx) -> std::unique_ptr<SlideshowSetup>;
 
  private:
+  int current_slide_page = 0;
   std::unique_ptr<Button> add_button;
   std::unique_ptr<Panel> main_panel, slide_panel;
   std::vector<std::unique_ptr<SlidePreview>> slide_previews;
@@ -51,6 +52,7 @@ class SlideshowSetup : public ScreenTextController {
   void bindEvents();
   void positionWidgets(Panel *control_panel);
   void addNewSlide();
+  void setSlidePreviews(unsigned int page_number);
 };
 
 }  // namespace cszb_scoreboard

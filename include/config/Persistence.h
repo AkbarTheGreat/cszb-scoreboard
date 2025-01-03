@@ -21,6 +21,7 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config.pb.h"
 #include "image_library.pb.h"
+#include "slide_show.pb.h"
 #include "team_library.pb.h"
 #include "util/Singleton.h"
 
@@ -38,6 +39,8 @@ class Persistence {
   virtual void saveDisplays(const proto::DisplayConfig &display_config);
   virtual auto loadGeneralConfig() -> proto::GeneralConfig;
   virtual void saveGeneralConfig(const proto::GeneralConfig &general_config);
+  virtual auto loadSlideShow() -> proto::SlideShow;
+  virtual void saveSlideShow(const proto::SlideShow &slide_show);
   virtual auto loadTeams() -> proto::TeamConfig;
   virtual void saveTeams(const proto::TeamConfig &team_config);
   virtual auto loadImageLibrary() -> proto::ImageLibrary;
@@ -52,6 +55,7 @@ class Persistence {
   proto::ScoreboardConfig full_config;
   proto::ImageLibrary image_library;
   proto::TeamLibrary team_library;
+  proto::SlideShow slide_show;
   Singleton *singleton;
   void loadConfigFromDisk();
   void saveConfigToDisk();
@@ -59,6 +63,8 @@ class Persistence {
   void saveImageLibraryToDisk();
   void loadTeamLibraryFromDisk();
   void saveTeamLibraryToDisk();
+  void loadSlideShowFromDisk();
+  void saveSlideShowToDisk();
 };
 
 }  // namespace cszb_scoreboard

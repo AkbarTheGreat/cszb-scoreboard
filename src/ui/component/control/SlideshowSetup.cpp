@@ -71,4 +71,56 @@ void SlideshowSetup::updateScreenText(ScreenText *screen_text) {}
 
 void SlideshowSetup::addNewSlide() {}
 
+void SlideshowSetup::setSlidePreviews(unsigned int page_number) {
+  current_slide_page = page_number;
+
+  /*
+    ImageSearchResults results =
+        singleton->imageLibrary()->search(std::string(search));
+
+    if (search.empty()) {
+      tag_list_label->set("");
+    } else {
+      std::string tag_string;
+      bool first = true;
+      for (const auto &tag : results.matchedTags()) {
+        if (!first) {
+          tag_string += ", ";
+        }
+        tag_string += tag;
+        first = false;
+      }
+      tag_list_label->set(tag_string);
+    }
+
+    std::vector<FilesystemPath> files = results.filenames();
+    if (files.empty()) {
+      current_image_page = 0;
+      return;
+    }
+
+    int start_num = NUM_PREVIEWS * page_number;
+
+    if (start_num >= files.size()) {
+      return setImages(search, page_number - 1);
+    }
+
+    int stop_num = start_num + NUM_PREVIEWS;
+    if (stop_num >= files.size()) {
+      stop_num = files.size();
+    }
+
+    for (int i = start_num; i < stop_num; i++) {
+      image_previews[i - start_num]->setImage(files[i]);
+      image_names[i -
+    start_num]->set(singleton->imageLibrary()->name(files[i]));
+    }
+
+    for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {
+      image_previews[i]->clearImage();
+      image_names[i]->set("");
+    }
+    */
+}
+
 }  // namespace cszb_scoreboard
