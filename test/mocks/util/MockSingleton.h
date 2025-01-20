@@ -34,6 +34,7 @@ class MockSingleton : public Singleton {
   MOCK_METHOD(HotkeyTable*, hotkeyTable, (), (override));
   MOCK_METHOD(ImageLibrary*, imageLibrary, (), (override));
   MOCK_METHOD(Persistence*, persistence, (), (override));
+  MOCK_METHOD(SlideShow*, slideShow, (), (override));
   MOCK_METHOD(TeamColors*, teamColors, (), (override));
   MOCK_METHOD(TeamConfig*, teamConfig, (), (override));
   MOCK_METHOD(TimerManager*, timerManager, (), (override));
@@ -43,7 +44,7 @@ class MockSingleton : public Singleton {
                const wxCmdLineArgsArray& argv),
               (override));
 
-  ~MockSingleton(){};
+  ~MockSingleton() {};
 };
 
 }  // namespace test

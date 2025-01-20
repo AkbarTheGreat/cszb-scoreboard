@@ -19,6 +19,9 @@ limitations under the License.
 
 #include "ui/component/control/SlideshowSetup.h"
 
+#include "config/SlideShow.h"
+#include "slide_show.pb.h"
+
 namespace cszb_scoreboard {
 class ScreenText;
 
@@ -45,6 +48,7 @@ void SlideshowSetup::createControls(Panel *control_panel) {
 
   positionWidgets(control_panel);
   bindEvents();
+  setSlidePreviews(0);
 }
 
 void SlideshowSetup::positionWidgets(Panel *control_panel) {
@@ -74,53 +78,24 @@ void SlideshowSetup::addNewSlide() {}
 void SlideshowSetup::setSlidePreviews(unsigned int page_number) {
   current_slide_page = page_number;
 
-  /*
-    ImageSearchResults results =
-        singleton->imageLibrary()->search(std::string(search));
+  int32_t start = page_number * NUM_PREVIEWS;
+  int32_t end = start + NUM_PREVIEWS;
+  std::vector<proto::SlideInfo> slides =
+      singleton->slideShow()->slides(start, end);
 
-    if (search.empty()) {
-      tag_list_label->set("");
-    } else {
-      std::string tag_string;
-      bool first = true;
-      for (const auto &tag : results.matchedTags()) {
-        if (!first) {
-          tag_string += ", ";
-        }
-        tag_string += tag;
-        first = false;
-      }
-      tag_list_label->set(tag_string);
-    }
+  if (slides.empty() && page_number > 0) {
+    setSlidePreviews(page_number - 1);
+    return;
+  }
 
-    std::vector<FilesystemPath> files = results.filenames();
-    if (files.empty()) {
-      current_image_page = 0;
-      return;
-    }
+  for (int i = 0; i < slides.size(); i++) {
+    slide_previews[i]->setImage(FilesystemPath(slides[i].file_path()));
+    slide_previews[i]->setName(slides[i].name());
+  }
 
-    int start_num = NUM_PREVIEWS * page_number;
-
-    if (start_num >= files.size()) {
-      return setImages(search, page_number - 1);
-    }
-
-    int stop_num = start_num + NUM_PREVIEWS;
-    if (stop_num >= files.size()) {
-      stop_num = files.size();
-    }
-
-    for (int i = start_num; i < stop_num; i++) {
-      image_previews[i - start_num]->setImage(files[i]);
-      image_names[i -
-    start_num]->set(singleton->imageLibrary()->name(files[i]));
-    }
-
-    for (int i = stop_num - start_num; i < NUM_PREVIEWS; i++) {
-      image_previews[i]->clearImage();
-      image_names[i]->set("");
-    }
-    */
+  for (int i = slides.size(); i < NUM_PREVIEWS; i++) {
+    slide_previews[i]->clear();
+  }
 }
 
 }  // namespace cszb_scoreboard

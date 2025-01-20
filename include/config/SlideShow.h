@@ -18,6 +18,8 @@ limitations under the License.
 */
 #pragma once
 
+#include <vector>
+
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "slide_show.pb.h"
 #include "util/FilesystemPath.h"
@@ -38,6 +40,7 @@ class SlideShow {
   void addSlide(const std::string &name, const FilesystemPath &file,
                 int32_t index = -1);
   void saveShow();
+  auto slides(int32_t start, int32_t end) -> std::vector<proto::SlideInfo>;
 
   PUBLIC_TEST_ONLY
   SlideShow(SingletonClass c, Singleton *singleton);

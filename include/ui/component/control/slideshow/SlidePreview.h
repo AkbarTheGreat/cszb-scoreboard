@@ -36,6 +36,10 @@ class SlidePreview : public Panel {
  public:
   explicit SlidePreview(swx::Panel *wx);
 
+  void clear();
+  void setName(std::string name);
+  void setImage(const FilesystemPath &file);
+
   const static int PREVIEW_WIDTH = ImagePreview::PREVIEW_WIDTH;
   const static int PREVIEW_HEIGHT = ImagePreview::PREVIEW_HEIGHT + 20;
 

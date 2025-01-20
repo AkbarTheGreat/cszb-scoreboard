@@ -56,4 +56,20 @@ void SlidePreview::positionWidgets() {
   this->runSizer();
 }
 
+void SlidePreview::clear() {
+  slide_name->set("");
+  slide_preview->clearImage();
+  refresh();
+}
+
+void SlidePreview::setName(std::string name) {
+  slide_name->set(name);
+  refresh();
+}
+
+void SlidePreview::setImage(const FilesystemPath &file) {
+  slide_preview->setImage(file);
+  refresh();
+}
+
 }  // namespace cszb_scoreboard

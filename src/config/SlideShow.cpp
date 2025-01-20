@@ -61,4 +61,14 @@ void SlideShow::saveShow() {
   singleton->persistence()->saveSlideShow(slide_show);
 }
 
+auto SlideShow::slides(int32_t start,
+                       int32_t end) -> std::vector<proto::SlideInfo> {
+  std::vector<proto::SlideInfo> slides;
+  for (int32_t index = start; index < end && index < slide_show.slides_size();
+       index++) {
+    slides.push_back(slide_show.slides(index));
+  }
+  return slides;
+}
+
 }  // namespace cszb_scoreboard
