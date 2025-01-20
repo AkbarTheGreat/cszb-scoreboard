@@ -81,6 +81,7 @@ void SlideshowSetup::addNewSlide() {
   if (new_file.has_value()) {
     std::string name = new_file->filename().string();
     singleton->slideShow()->addSlide(name, *new_file);
+    singleton->slideShow()->saveShow();
     setSlidePreviews(current_slide_page);
   }
 }
