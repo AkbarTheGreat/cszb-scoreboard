@@ -24,11 +24,12 @@ limitations under the License.
 
 #include <stdexcept>  // for runtime_error
 
-#include "config/CommandArgs.h"      // for CommandArgs
-#include "config/DisplayConfig.h"    // for DisplayConfig
-#include "config/GeneralConfig.h"    // for GeneralConfig
-#include "config/ImageLibrary.h"     // for ImageLibrary
-#include "config/Persistence.h"      // for Persistence
+#include "config/CommandArgs.h"    // for CommandArgs
+#include "config/DisplayConfig.h"  // for DisplayConfig
+#include "config/GeneralConfig.h"  // for GeneralConfig
+#include "config/ImageLibrary.h"   // for ImageLibrary
+#include "config/Persistence.h"    // for Persistence
+#include "config/SlideShow.h"
 #include "config/TeamConfig.h"       // for TeamConfig
 #include "ui/frame/FrameManager.h"   // for FrameManager
 #include "ui/frame/HotkeyTable.h"    // for HotkeyTable
@@ -46,6 +47,7 @@ SingletonImpl::~SingletonImpl() {
   delete inst_hotkey_table;
   delete inst_image_library;
   delete inst_persistence;
+  delete inst_slide_show;
   delete inst_team_colors;
   delete inst_team_config;
   delete inst_timer_manager;
@@ -121,6 +123,13 @@ auto SingletonImpl::persistence() -> Persistence* {
     inst_persistence = new Persistence(SingletonClass{});
   }
   return inst_persistence;
+}
+
+auto SingletonImpl::slideShow() -> SlideShow* {
+  if (inst_slide_show == nullptr) {
+    inst_slide_show = new SlideShow(SingletonClass{});
+  }
+  return inst_slide_show;
 }
 
 auto SingletonImpl::teamColors() -> TeamColors* {
