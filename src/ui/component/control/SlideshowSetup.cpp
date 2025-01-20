@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "config/SlideShow.h"
 #include "slide_show.pb.h"
+#include "ui/widget/FilePicker.h"
 
 namespace cszb_scoreboard {
 class ScreenText;
@@ -73,7 +74,16 @@ void SlideshowSetup::bindEvents() {
 
 void SlideshowSetup::updateScreenText(ScreenText *screen_text) {}
 
-void SlideshowSetup::addNewSlide() {}
+void SlideshowSetup::addNewSlide() {
+  std::unique_ptr<FilePicker> dialog =
+      openFilePicker("Select Image", IMAGE_SELECTION_STRING);
+  std::optional<FilesystemPath> new_file = dialog->selectFile();
+  if (new_file.has_value()) {
+    std::string name = new_file->filename().string();
+    singleton->slideShow()->addSlide(name, *new_file);
+    setSlidePreviews(current_slide_page);
+  }
+}
 
 void SlideshowSetup::setSlidePreviews(unsigned int page_number) {
   current_slide_page = page_number;
