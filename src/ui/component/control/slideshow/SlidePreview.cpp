@@ -28,11 +28,13 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
+constexpr int SPACER_WIDTH = 48;
+
 SlidePreview::SlidePreview(swx::Panel *wx) : Panel(wx) {
   slide_name = this->label("");
-  left_button = this->button("<");
-  right_button = this->button(">");
-  remove_button = this->button("X");
+  left_button = this->button("<", true);
+  right_button = this->button(">", true);
+  remove_button = this->button("X", true);
   slide_preview = std::make_unique<ImagePreview>(
       childPanel(ImagePreview::PREVIEW_WIDTH, ImagePreview::PREVIEW_HEIGHT));
   slide_name = this->label("No slide");
@@ -44,11 +46,13 @@ SlidePreview::SlidePreview(swx::Panel *wx) : Panel(wx) {
 void SlidePreview::bindEvents() {}
 
 void SlidePreview::positionWidgets() {
-  this->addWidgetWithSpan(*slide_name, 0, 0, 1, 3);
-  this->addWidgetWithSpan(*slide_preview, 1, 0, 1, 3);
-  this->addWidget(*left_button, 2, 0);
-  this->addWidget(*remove_button, 2, 1);
-  this->addWidget(*right_button, 2, 2);
+  this->addWidgetWithSpan(*slide_name, 0, 0, 1, 5);
+  this->addWidgetWithSpan(*slide_preview, 1, 0, 1, 5);
+  this->addSpacer({.width = SPACER_WIDTH}, 2, 0, NO_BORDER);
+  this->addWidget(*left_button, 2, 1);
+  this->addWidget(*remove_button, 2, 2);
+  this->addWidget(*right_button, 2, 3);
+  this->addSpacer({.width = SPACER_WIDTH}, 2, 4, NO_BORDER);
   this->runSizer();
 }
 
