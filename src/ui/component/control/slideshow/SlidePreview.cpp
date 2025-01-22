@@ -21,6 +21,7 @@ limitations under the License.
 
 #include <filesystem>  // for path
 
+#include "ui/component/control/SlideshowSetup.h"
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
 namespace cszb_scoreboard {
@@ -30,7 +31,11 @@ class Panel;
 
 constexpr int SPACER_WIDTH = 48;
 
-SlidePreview::SlidePreview(swx::Panel *wx) : Panel(wx) {
+SlidePreview::SlidePreview(swx::Panel *wx, SlideshowSetup *owning_control,
+                           int32_t index)
+    : Panel(wx) {
+  parent = owning_control;
+  this->index = index;
   slide_name = this->label("");
   left_button = this->button("<", true);
   right_button = this->button(">", true);
@@ -43,7 +48,18 @@ SlidePreview::SlidePreview(swx::Panel *wx) : Panel(wx) {
   positionWidgets();
 }
 
-void SlidePreview::bindEvents() {}
+// NOTE TO SELF -- left button isn't working yet -- not sure why.
+void SlidePreview::bindEvents() {
+  left_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { parent->moveSlideLeft(index); });
+  right_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { parent->moveSlideRight(index); });
+  remove_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { parent->removeSlide(index); });
+}
 
 void SlidePreview::positionWidgets() {
   this->addWidgetWithSpan(*slide_name, 0, 0, 1, 5);

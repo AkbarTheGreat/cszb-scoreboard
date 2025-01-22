@@ -28,11 +28,33 @@ class ScreenText;
 
 constexpr int NUM_PREVIEWS = 5;
 
-auto SlideshowSetup ::Create(swx::Panel *wx)
-    -> std::unique_ptr<SlideshowSetup> {
+auto SlideshowSetup::Create(swx::Panel *wx) -> std::unique_ptr<SlideshowSetup> {
   auto control = std::make_unique<SlideshowSetup>(wx);
   control->initializeWidgets();
   return control;
+}
+
+void SlideshowSetup::swapSlides(int32_t a, int32_t b) {
+  singleton->slideShow()->swapSlides(a, b);
+  singleton->slideShow()->saveShow();
+  setSlidePreviews(current_slide_page);
+}
+
+void SlideshowSetup::moveSlideLeft(int32_t index) {
+  int32_t a = index + (NUM_PREVIEWS * current_slide_page);
+  swapSlides(a, a - 1);
+}
+
+void SlideshowSetup::moveSlideRight(int32_t index) {
+  int32_t a = index + (NUM_PREVIEWS * current_slide_page);
+  swapSlides(a, a + 1);
+}
+
+void SlideshowSetup::removeSlide(int32_t index) {
+  index = index + (NUM_PREVIEWS * current_slide_page);
+  singleton->slideShow()->removeSlide(index);
+  singleton->slideShow()->saveShow();
+  setSlidePreviews(current_slide_page);
 }
 
 void SlideshowSetup::createControls(Panel *control_panel) {
@@ -42,9 +64,10 @@ void SlideshowSetup::createControls(Panel *control_panel) {
 
   slide_previews.reserve(NUM_PREVIEWS);
   for (int i = 0; i < NUM_PREVIEWS; i++) {
-    slide_previews.emplace_back(
-        std::make_unique<SlidePreview>(slide_panel->childPanel(
-            SlidePreview::PREVIEW_WIDTH, SlidePreview::PREVIEW_HEIGHT)));
+    slide_previews.emplace_back(std::make_unique<SlidePreview>(
+        slide_panel->childPanel(SlidePreview::PREVIEW_WIDTH,
+                                SlidePreview::PREVIEW_HEIGHT),
+        this, i));
   }
 
   positionWidgets(control_panel);

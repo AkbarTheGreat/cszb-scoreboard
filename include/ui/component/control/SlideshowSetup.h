@@ -40,6 +40,9 @@ class SlideshowSetup : public ScreenTextController {
       : ScreenTextController(wx,
                              /*display_update_screens=*/false) {}
   static auto Create(swx::Panel *wx) -> std::unique_ptr<SlideshowSetup>;
+  void moveSlideLeft(int32_t index);
+  void moveSlideRight(int32_t index);
+  void removeSlide(int32_t index);
 
  private:
   int current_slide_page = 0;
@@ -53,6 +56,7 @@ class SlideshowSetup : public ScreenTextController {
   void positionWidgets(Panel *control_panel);
   void addNewSlide();
   void setSlidePreviews(unsigned int page_number);
+  void swapSlides(int32_t a, int32_t b);
 };
 
 }  // namespace cszb_scoreboard
