@@ -31,6 +31,12 @@ SlideShow::SlideShow(SingletonClass c, Singleton *singleton) {
 }
 
 void SlideShow::swapSlides(uint32_t a, uint32_t b) {
+  if (a < 0 || b < 0) {
+    return;
+  }
+  if (a >= slide_show.slides_size() || b >= slide_show.slides_size()) {
+    return;
+  }
   slide_show.mutable_slides()->SwapElements(a, b);
 }
 

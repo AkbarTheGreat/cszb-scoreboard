@@ -27,14 +27,18 @@ limitations under the License.
 #include "ui/widget/Panel.h"                    // for Panel
 
 namespace cszb_scoreboard {
+
 class FilesystemPath;
+class SlideshowSetup;
+
 namespace swx {
 class Panel;
 }  // namespace swx
 
 class SlidePreview : public Panel {
  public:
-  explicit SlidePreview(swx::Panel *wx);
+  explicit SlidePreview(swx::Panel *wx, SlideshowSetup *owning_control,
+                        int32_t index);
 
   void clear();
   void setName(std::string name);
@@ -44,6 +48,8 @@ class SlidePreview : public Panel {
   const static int PREVIEW_HEIGHT = ImagePreview::PREVIEW_HEIGHT + 20;
 
  private:
+  SlideshowSetup *parent;
+  int32_t index;
   std::unique_ptr<ImagePreview> slide_preview;
   std::unique_ptr<Label> slide_name;
   std::unique_ptr<Button> left_button;
