@@ -59,8 +59,13 @@ void SlideshowSetup::removeSlide(int32_t index) {
 
 void SlideshowSetup::createControls(Panel *control_panel) {
   main_panel = control_panel->panel();
-  add_button = main_panel->button("Add New Slide");
   slide_panel = main_panel->panel();
+
+  add_button = main_panel->button("Add New Slide");
+  previous_page = main_panel->button("<");
+  previous_page->toolTip("Previous Page");
+  next_page = main_panel->button(">");
+  next_page->toolTip("Next Page");
 
   slide_previews.reserve(NUM_PREVIEWS);
   for (int i = 0; i < NUM_PREVIEWS; i++) {
@@ -78,8 +83,10 @@ void SlideshowSetup::createControls(Panel *control_panel) {
 void SlideshowSetup::positionWidgets(Panel *control_panel) {
   control_panel->addWidget(*main_panel, 0, 0);
 
-  main_panel->addWidget(*add_button, 0, 0);
-  main_panel->addWidgetWithSpan(*slide_panel, 1, 0, 1, 2);
+  main_panel->addWidgetWithSpan(*add_button, 0, 0, 1, 2);
+  main_panel->addWidget(*previous_page, 1, 0);
+  main_panel->addWidget(*next_page, 1, 1);
+  main_panel->addWidgetWithSpan(*slide_panel, 2, 0, 1, 3);
   for (int i = 0; i < NUM_PREVIEWS; i++) {
     slide_panel->addWidget(*slide_previews[i], 0, i);
   }
@@ -93,6 +100,11 @@ void SlideshowSetup::bindEvents() {
   add_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
       [this](wxCommandEvent &event) -> void { this->addNewSlide(); });
+  previous_page->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->previousPage(); });
+  next_page->bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                  [this](wxCommandEvent &event) -> void { this->nextPage(); });
 }
 
 void SlideshowSetup::updateScreenText(ScreenText *screen_text) {}
@@ -107,6 +119,7 @@ void SlideshowSetup::addNewSlide() {
     singleton->slideShow()->saveShow();
     setSlidePreviews(current_slide_page);
   }
+  lastPage();
 }
 
 void SlideshowSetup::setSlidePreviews(unsigned int page_number) {
@@ -129,6 +142,21 @@ void SlideshowSetup::setSlidePreviews(unsigned int page_number) {
 
   for (int i = slides.size(); i < NUM_PREVIEWS; i++) {
     slide_previews[i]->clear();
+  }
+}
+
+void SlideshowSetup::previousPage() {
+  if (current_slide_page <= 0) return;
+  setSlidePreviews(current_slide_page - 1);
+}
+
+void SlideshowSetup::nextPage() { setSlidePreviews(current_slide_page + 1); }
+
+void SlideshowSetup::lastPage() {
+  int previous_page = -1;
+  while (previous_page != current_slide_page) {
+    previous_page = current_slide_page;
+    nextPage();
   }
 }
 

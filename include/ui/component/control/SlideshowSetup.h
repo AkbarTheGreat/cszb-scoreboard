@@ -46,7 +46,7 @@ class SlideshowSetup : public ScreenTextController {
 
  private:
   int current_slide_page = 0;
-  std::unique_ptr<Button> add_button;
+  std::unique_ptr<Button> add_button, previous_page, next_page;
   std::unique_ptr<Panel> main_panel, slide_panel;
   std::vector<std::unique_ptr<SlidePreview>> slide_previews;
 
@@ -57,6 +57,9 @@ class SlideshowSetup : public ScreenTextController {
   void addNewSlide();
   void setSlidePreviews(unsigned int page_number);
   void swapSlides(int32_t a, int32_t b);
+  void previousPage();
+  void nextPage();
+  void lastPage();
 };
 
 }  // namespace cszb_scoreboard

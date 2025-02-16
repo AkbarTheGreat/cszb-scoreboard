@@ -38,8 +38,11 @@ SlidePreview::SlidePreview(swx::Panel *wx, SlideshowSetup *owning_control,
   this->index = index;
   slide_name = this->label("");
   left_button = this->button("<", true);
+  left_button->toolTip("Move left");
   right_button = this->button(">", true);
+  right_button->toolTip("Move right");
   remove_button = this->button("X", true);
+  remove_button->toolTip("Delete");
   slide_preview = std::make_unique<ImagePreview>(
       childPanel(ImagePreview::PREVIEW_WIDTH, ImagePreview::PREVIEW_HEIGHT));
   slide_name = this->label("No slide");
