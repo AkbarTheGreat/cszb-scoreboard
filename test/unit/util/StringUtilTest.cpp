@@ -68,4 +68,59 @@ TEST(StringUtilTest, ZeroPaddingWorksAsExpected) {
   EXPECT_EQ(StringUtil::intToString(-1, 4), "-001");
 }
 
+TEST(StringUtilTest, ConvertsPositiveDoublesToStrings) {
+  EXPECT_EQ(StringUtil::doubleToString(1.0), "1");
+  EXPECT_EQ(StringUtil::doubleToString(20.0), "20");
+  EXPECT_EQ(StringUtil::doubleToString(20.5), "20");
+  EXPECT_EQ(StringUtil::doubleToString(1234567890.0), "1234567890");
+}
+
+TEST(StringUtilTest, ConvertsPositiveDoublesFromStrings) {
+  EXPECT_EQ(StringUtil::stringToDouble("1"), 1.0);
+  EXPECT_EQ(StringUtil::stringToDouble("20"), 20.0);
+  EXPECT_EQ(StringUtil::stringToDouble("20.0"), 20.0);
+  EXPECT_EQ(StringUtil::stringToDouble("20.5"), 20.5);
+  EXPECT_EQ(StringUtil::stringToDouble("1234567890"),
+            1234567890.0);  // NOLINT(readability-magic-numbers)
+}
+
+TEST(StringUtilTest, ConvertsFloatingZeroBothDirections) {
+  EXPECT_EQ(StringUtil::doubleToString(0.0), "0");
+  EXPECT_EQ(StringUtil::stringToDouble("0"), 0.0);
+  EXPECT_EQ(StringUtil::stringToDouble("0.0"), 0.0);
+}
+
+TEST(StringUtilTest, ConvertsNegativeDoublesToStrings) {
+  EXPECT_EQ(StringUtil::doubleToString(-1.0), "-1");
+  EXPECT_EQ(StringUtil::doubleToString(-20.0), "-20");
+  EXPECT_EQ(StringUtil::doubleToString(-1234567890.0), "-1234567890");
+}
+
+TEST(StringUtilTest, ConvertsNegativeDoublesFromStrings) {
+  EXPECT_EQ(StringUtil::stringToDouble("-1"), -1.0);
+  EXPECT_EQ(StringUtil::stringToDouble("-20"), -20.0);
+  EXPECT_EQ(StringUtil::stringToDouble("-1234567890"),
+            -1234567890.0);  // NOLINT(readability-magic-numbers)
+}
+
+TEST(StringUtilTest, PrecisionWorksAsExpected) {
+  EXPECT_EQ(StringUtil::doubleToString(1, 0), "1");
+  EXPECT_EQ(StringUtil::doubleToString(1, 1), "1.0");
+  EXPECT_EQ(StringUtil::doubleToString(1, 2), "1.00");
+  EXPECT_EQ(StringUtil::doubleToString(1, 5), "1.00000");
+  EXPECT_EQ(StringUtil::doubleToString(-1, 0), "-1");
+  EXPECT_EQ(StringUtil::doubleToString(-1, 1), "-1.0");
+  EXPECT_EQ(StringUtil::doubleToString(-1, 2), "-1.00");
+  EXPECT_EQ(StringUtil::doubleToString(-1, 3), "-1.000");
+  EXPECT_EQ(StringUtil::doubleToString(-1, 4), "-1.0000");
+  EXPECT_EQ(StringUtil::doubleToString(20.5, 0), "20");
+  EXPECT_EQ(StringUtil::doubleToString(20.5, 1), "20.5");
+  EXPECT_EQ(StringUtil::doubleToString(20.5, 2), "20.50");
+  EXPECT_EQ(StringUtil::doubleToString(20.5, 3), "20.500");
+  EXPECT_EQ(StringUtil::doubleToString(-20.5, 0), "-20");
+  EXPECT_EQ(StringUtil::doubleToString(-20.5, 1), "-20.5");
+  EXPECT_EQ(StringUtil::doubleToString(-20.5, 2), "-20.50");
+  EXPECT_EQ(StringUtil::doubleToString(-20.5, 3), "-20.500");
+}
+
 }  // namespace cszb_scoreboard::test
