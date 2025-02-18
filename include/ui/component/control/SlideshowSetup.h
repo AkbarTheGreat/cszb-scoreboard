@@ -25,7 +25,9 @@ limitations under the License.
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/slideshow/SlidePreview.h"  // for Slide
 #include "ui/widget/Button.h"                             // for Button
-#include "ui/widget/Panel.h"                              // for Panel
+#include "ui/widget/Label.h"
+#include "ui/widget/Panel.h"  // for Panel
+#include "ui/widget/Text.h"
 
 namespace cszb_scoreboard {
 class ScreenText;
@@ -47,7 +49,10 @@ class SlideshowSetup : public ScreenTextController {
  private:
   int current_slide_page = 0;
   std::unique_ptr<Button> add_button, previous_page, next_page;
-  std::unique_ptr<Panel> main_panel, slide_panel;
+  std::unique_ptr<Button> start_button, stop_button;
+  std::unique_ptr<Panel> main_panel, config_panel, slide_panel, delay_panel;
+  std::unique_ptr<Label> delay_label;
+  std::unique_ptr<Text> delay_setting;
   std::vector<std::unique_ptr<SlidePreview>> slide_previews;
 
   void createControls(Panel *control_panel) override;
@@ -60,6 +65,7 @@ class SlideshowSetup : public ScreenTextController {
   void previousPage();
   void nextPage();
   void lastPage();
+  void delayUpdated();
 };
 
 }  // namespace cszb_scoreboard

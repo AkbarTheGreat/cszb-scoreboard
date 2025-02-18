@@ -30,7 +30,7 @@ SlideShow::SlideShow(SingletonClass c, Singleton *singleton) {
       std::move(Singleton::getInstance()->persistence()->loadSlideShow());
 }
 
-void SlideShow::swapSlides(uint32_t a, uint32_t b) {
+void SlideShow::swapSlides(int32_t a, int32_t b) {
   if (a < 0 || b < 0) {
     return;
   }
@@ -40,7 +40,7 @@ void SlideShow::swapSlides(uint32_t a, uint32_t b) {
   slide_show.mutable_slides()->SwapElements(a, b);
 }
 
-void SlideShow::removeSlide(uint32_t index) {
+void SlideShow::removeSlide(int32_t index) {
   for (int i = index; i < slide_show.mutable_slides()->size() - 1; ++i) {
     slide_show.mutable_slides()->SwapElements(i, i + 1);
   }
@@ -67,8 +67,8 @@ void SlideShow::saveShow() {
   singleton->persistence()->saveSlideShow(slide_show);
 }
 
-auto SlideShow::slides(int32_t start,
-                       int32_t end) -> std::vector<proto::SlideInfo> {
+auto SlideShow::slides(int32_t start, int32_t end)
+    -> std::vector<proto::SlideInfo> {
   std::vector<proto::SlideInfo> slides;
   for (int32_t index = start; index < end && index < slide_show.slides_size();
        index++) {

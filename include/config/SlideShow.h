@@ -27,6 +27,8 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
+constexpr double DEFAULT_SLIDESHOW_DELAY = 5.0f;
+
 class SlideShow {
  public:
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
@@ -35,12 +37,17 @@ class SlideShow {
   explicit SlideShow(SingletonClass c)
       : SlideShow(c, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  void swapSlides(uint32_t a, uint32_t b);
-  void removeSlide(uint32_t index);
+  void swapSlides(int32_t a, int32_t b);
+  void removeSlide(int32_t index);
   void addSlide(const std::string &name, const FilesystemPath &file,
                 int32_t index = -1);
   void saveShow();
   auto slides(int32_t start, int32_t end) -> std::vector<proto::SlideInfo>;
+  auto delay() -> double {
+    return slide_show.delay() > 0 ? slide_show.delay()
+                                  : DEFAULT_SLIDESHOW_DELAY;
+  }
+  void setDelay(double delay) { slide_show.set_delay(delay); }
 
   PUBLIC_TEST_ONLY
   SlideShow(SingletonClass c, Singleton *singleton);

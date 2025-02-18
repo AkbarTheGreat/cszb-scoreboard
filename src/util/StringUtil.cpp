@@ -45,8 +45,8 @@ auto StringUtil::intToString(int value, int zero_pad) -> std::string {
   return {cstr};
 }
 
-auto StringUtil::stringToInt(const std::string &string,
-                             int default_value) -> int64_t {
+auto StringUtil::stringToInt(const std::string &string, int default_value)
+    -> int64_t {
   wxString wxs = string;
   long value = default_value;  // NOLINT(google-runtime-int) Must be long to
                                // match string.ToLong() below.
@@ -54,6 +54,25 @@ auto StringUtil::stringToInt(const std::string &string,
     wxs.ToLong(&value);
   }
   return value;
+}
+
+auto StringUtil::stringToDouble(const std::string &string, int default_value)
+    -> double {
+  wxString wxs = string;
+  double value = default_value;
+  wxs.ToDouble(&value);
+  return value;
+}
+
+auto StringUtil::doubleToString(double value, int32_t precision)
+    -> std::string {
+  wxString wxs;
+  std::array<char, FORMAT_BUFFER_SIZE> format_str;
+  snprintf(format_str.data(), format_str.size(), "%%.0%df", precision);
+  wxString format = wxString(format_str.data());
+  wxs.Printf(format, value);
+  const char *cstr = wxs.c_str();
+  return {cstr};
 }
 
 }  // namespace cszb_scoreboard

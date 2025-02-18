@@ -22,6 +22,7 @@ limitations under the License.
 #include "config/SlideShow.h"
 #include "slide_show.pb.h"
 #include "ui/widget/FilePicker.h"
+#include "util/StringUtil.h"
 
 namespace cszb_scoreboard {
 class ScreenText;
@@ -59,13 +60,17 @@ void SlideshowSetup::removeSlide(int32_t index) {
 
 void SlideshowSetup::createControls(Panel *control_panel) {
   main_panel = control_panel->panel();
+  config_panel = main_panel->panel();
   slide_panel = main_panel->panel();
+  delay_panel = main_panel->panel();
 
-  add_button = main_panel->button("Add New Slide");
-  previous_page = main_panel->button("<");
+  add_button = config_panel->button("Add New Slide");
+  previous_page = config_panel->button("<");
   previous_page->toolTip("Previous Page");
-  next_page = main_panel->button(">");
+  next_page = config_panel->button(">");
   next_page->toolTip("Next Page");
+  start_button = config_panel->button("Start");
+  stop_button = config_panel->button("Stop");
 
   slide_previews.reserve(NUM_PREVIEWS);
   for (int i = 0; i < NUM_PREVIEWS; i++) {
@@ -75,6 +80,10 @@ void SlideshowSetup::createControls(Panel *control_panel) {
         this, i));
   }
 
+  delay_label = delay_panel->label("Delay (seconds):");
+  delay_setting = delay_panel->text(
+      StringUtil::doubleToString(singleton->slideShow()->delay(), 2));
+
   positionWidgets(control_panel);
   bindEvents();
   setSlidePreviews(0);
@@ -83,15 +92,26 @@ void SlideshowSetup::createControls(Panel *control_panel) {
 void SlideshowSetup::positionWidgets(Panel *control_panel) {
   control_panel->addWidget(*main_panel, 0, 0);
 
-  main_panel->addWidgetWithSpan(*add_button, 0, 0, 1, 2);
-  main_panel->addWidget(*previous_page, 1, 0);
-  main_panel->addWidget(*next_page, 1, 1);
-  main_panel->addWidgetWithSpan(*slide_panel, 2, 0, 1, 3);
+  main_panel->addWidget(*config_panel, 0, 0);
+  main_panel->addWidgetWithSpan(*slide_panel, 1, 0, 1, 3);
+  main_panel->addWidgetWithSpan(*delay_panel, 2, 0, 1, 2);
+
+  config_panel->addWidgetWithSpan(*add_button, 0, 0, 1, 2);
+  config_panel->addWidget(*previous_page, 1, 0);
+  config_panel->addWidget(*next_page, 1, 1);
+  config_panel->addWidget(*start_button, 2, 0);
+  config_panel->addWidget(*stop_button, 2, 1);
+
   for (int i = 0; i < NUM_PREVIEWS; i++) {
     slide_panel->addWidget(*slide_previews[i], 0, i);
   }
 
+  delay_panel->addWidget(*delay_label, 0, 0);
+  delay_panel->addWidget(*delay_setting, 0, 1);
+
   slide_panel->runSizer();
+  config_panel->runSizer();
+  delay_panel->runSizer();
   main_panel->runSizer();
   control_panel->runSizer();
 }
@@ -105,6 +125,9 @@ void SlideshowSetup::bindEvents() {
       [this](wxCommandEvent &event) -> void { this->previousPage(); });
   next_page->bind(wxEVT_COMMAND_BUTTON_CLICKED,
                   [this](wxCommandEvent &event) -> void { this->nextPage(); });
+  delay_setting->bind(wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void {
+    this->delayUpdated();
+  });
 }
 
 void SlideshowSetup::updateScreenText(ScreenText *screen_text) {}
@@ -120,6 +143,12 @@ void SlideshowSetup::addNewSlide() {
     setSlidePreviews(current_slide_page);
   }
   lastPage();
+}
+
+void SlideshowSetup::delayUpdated() {
+  singleton->slideShow()->setDelay(
+      StringUtil::stringToDouble(delay_setting->value()));
+  singleton->slideShow()->saveShow();
 }
 
 void SlideshowSetup::setSlidePreviews(unsigned int page_number) {

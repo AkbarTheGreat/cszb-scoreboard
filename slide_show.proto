@@ -27,4 +27,5 @@ message SlideInfo {
 
 message SlideShow {
   repeated SlideInfo slides = 1;
+  double delay = 2;
 }
