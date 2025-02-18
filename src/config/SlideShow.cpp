@@ -19,8 +19,12 @@ limitations under the License.
 
 #include "config/SlideShow.h"
 
-#include "config/Persistence.h"
-#include "util/Singleton.h"
+#include <algorithm>  // for max
+#include <utility>    // for move
+
+#include "config/Persistence.h"   // for Persistence
+#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "util/Singleton.h"       // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
 

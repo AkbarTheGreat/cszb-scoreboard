@@ -19,10 +19,19 @@ limitations under the License.
 
 #include "ui/component/control/SlideshowSetup.h"
 
-#include "config/SlideShow.h"
-#include "slide_show.pb.h"
-#include "ui/widget/FilePicker.h"
-#include "util/StringUtil.h"
+#include <wx/event.h>  // for wxCommandEvent (ptr only), wxEVT_C...
+
+#include <filesystem>  // for path
+#include <optional>    // for optional
+#include <string>      // for string
+
+#include "ScoreboardCommon.h"      // for IMAGE_SELECTION_STRING
+#include "config/SlideShow.h"      // for SlideShow
+#include "slide_show.pb.h"         // for SlideInfo
+#include "ui/widget/FilePicker.h"  // for FilePicker
+#include "util/FilesystemPath.h"   // for FilesystemPath
+#include "util/Singleton.h"        // for Singleton
+#include "util/StringUtil.h"       // for StringUtil
 
 namespace cszb_scoreboard {
 class ScreenText;

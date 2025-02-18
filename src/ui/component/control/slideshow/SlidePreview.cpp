@@ -19,10 +19,10 @@ limitations under the License.
 
 #include "ui/component/control/slideshow/SlidePreview.h"
 
-#include <filesystem>  // for path
+#include <wx/event.h>                             // for wxCommandEvent (ptr...
 
-#include "ui/component/control/SlideshowSetup.h"
-#include "util/FilesystemPath.h"  // for FilesystemPath
+#include "ui/component/control/SlideshowSetup.h"  // for SlideshowSetup
+#include "ui/widget/Widget.h"                     // for NO_BORDER
 
 namespace cszb_scoreboard {
 namespace swx {

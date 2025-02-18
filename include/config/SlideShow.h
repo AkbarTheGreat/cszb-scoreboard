@@ -18,14 +18,17 @@ limitations under the License.
 */
 #pragma once
 
-#include <vector>
+#include <stdint.h>  // for int32_t
+
+#include <string>  // for string
+#include <vector>  // for vector
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "slide_show.pb.h"
-#include "util/FilesystemPath.h"
-#include "util/Singleton.h"  // for Singleton, SingletonClass
+#include "slide_show.pb.h"     // for SlideShow, SlideInfo (ptr only)
+#include "util/Singleton.h"    // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
+class FilesystemPath;
 
 constexpr double DEFAULT_SLIDESHOW_DELAY = 5.0f;
 
