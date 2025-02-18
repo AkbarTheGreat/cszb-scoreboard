@@ -19,15 +19,17 @@ limitations under the License.
 
 #pragma once
 
+#include <stdint.h>  // for int32_t
+
 #include <memory>  // for unique_ptr
 #include <vector>  // for vector
 
-#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
-#include "ui/component/control/slideshow/SlidePreview.h"  // for Slide
+#include "ui/component/control/ScreenTextController.h"    // for ScreenTextC...
+#include "ui/component/control/slideshow/SlidePreview.h"  // for SlidePreview
 #include "ui/widget/Button.h"                             // for Button
-#include "ui/widget/Label.h"
-#include "ui/widget/Panel.h"  // for Panel
-#include "ui/widget/Text.h"
+#include "ui/widget/Label.h"                              // for Label
+#include "ui/widget/Panel.h"                              // for Panel
+#include "ui/widget/Text.h"                               // for Text
 
 namespace cszb_scoreboard {
 class ScreenText;

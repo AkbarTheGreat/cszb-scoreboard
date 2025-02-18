@@ -19,7 +19,9 @@ limitations under the License.
 
 #pragma once
 
-#include <memory>  // for unique_ptr
+#include <stdint.h>                             // for int32_t
+#include <memory>                               // for unique_ptr
+#include <string>                               // for string
 
 #include "ui/component/control/ImagePreview.h"  // for ImagePreview
 #include "ui/widget/Button.h"                   // for Button
