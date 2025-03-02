@@ -67,6 +67,8 @@ class SlideshowSetup : public ScreenTextController {
   void previousPage();
   void nextPage();
   void lastPage();
+  void startShow();
+  void stopShow();
   void delayUpdated();
 };
 

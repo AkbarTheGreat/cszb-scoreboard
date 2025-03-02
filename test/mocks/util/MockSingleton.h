@@ -26,6 +26,7 @@ namespace test {
 
 class MockSingleton : public Singleton {
  public:
+  MOCK_METHOD(AutoRefreshTimer*, autoRefreshTimer, (), (override));
   MOCK_METHOD(AutoUpdate*, autoUpdate, (), (override));
   MOCK_METHOD(CommandArgs*, commandArgs, (), (override));
   MOCK_METHOD(DisplayConfig*, displayConfig, (), (override));

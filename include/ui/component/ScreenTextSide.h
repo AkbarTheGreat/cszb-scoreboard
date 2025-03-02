@@ -1,5 +1,5 @@
 /*
-ui/component/ScreenTextSide.cpp: A single side of renderable image/text.  One or
+ui/component/ScreenTextSide.h: A single side of renderable image/text.  One or
 more of these are contained in a ScreenText, for use in presenting to a preview
 or external monitor.
 
@@ -41,17 +41,22 @@ class Panel;
 
 enum class OverlayScreenPosition { Centered, BottomLeft };
 
+enum class ScreenTextCategory { Preview, Presenter };
+
 class ScreenTextSide : public Canvas {
  public:
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
   ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
-                 const proto::ScreenSide &side, Size size)
-      : ScreenTextSide(wx, initial_text, side, size, Singleton::getInstance()) {
-  }
-  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size)
-      : ScreenTextSide(wx, source_side, size, Singleton::getInstance()) {}
+                 const proto::ScreenSide &side, Size size,
+                 ScreenTextCategory category)
+      : ScreenTextSide(wx, initial_text, side, size, category,
+                       Singleton::getInstance()) {}
+  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size,
+                 ScreenTextCategory category)
+      : ScreenTextSide(wx, source_side, size, category,
+                       Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 
   void addText(const proto::RenderableText &text,
@@ -80,11 +85,11 @@ class ScreenTextSide : public Canvas {
   PUBLIC_TEST_ONLY
   ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
                  const proto::ScreenSide &side, Size size,
-                 Singleton *singleton);
+                 ScreenTextCategory category, Singleton *singleton);
   ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size,
-                 Singleton *singleton);
-  static auto getTextExtent(RenderContext *renderer,
-                            const std::string &text) -> Size;
+                 ScreenTextCategory category, Singleton *singleton);
+  static auto getTextExtent(RenderContext *renderer, const std::string &text)
+      -> Size;
 
  private:
   bool auto_fit_text;
@@ -99,6 +104,7 @@ class ScreenTextSide : public Canvas {
   proto::ScreenSide screen_side;
   std::vector<proto::RenderableText> texts;
   Singleton *singleton;
+  ScreenTextCategory category;
 
   ScreenTextSide(Singleton *singleton, swx::Panel *wx,
                  const proto::ScreenSide &side);
@@ -111,13 +117,14 @@ class ScreenTextSide : public Canvas {
   auto centerText(RenderContext *renderer, const std::string &text) -> Position;
   void createBlackout();
   void initializeForColor(Size size, const Color &color);
-  auto positionText(RenderContext *renderer,
-                    const proto::RenderableText &text) -> Position;
+  auto positionText(RenderContext *renderer, const proto::RenderableText &text)
+      -> Position;
   void renderBackground(RenderContext *renderer);
   void renderOverlay(RenderContext *renderer);
   void renderOverlayBottomCorner(RenderContext *renderer);
   void renderOverlayCentered(RenderContext *renderer);
-  void renderScaledBackground(RenderContext *renderer);
+  auto renderSlide(RenderContext *renderer) -> bool;
+  void renderScaledBackground(RenderContext *renderer, const Image &image);
   void renderShadowText(RenderContext *renderer, proto::RenderableText *text);
   void renderText(RenderContext *renderer, proto::RenderableText *text);
   void renderTimer(RenderContext *renderer);

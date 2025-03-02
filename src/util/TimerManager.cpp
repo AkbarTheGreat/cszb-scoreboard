@@ -29,6 +29,7 @@ namespace cszb_scoreboard {
 TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {
   timer_displayed = false;
   timer_running = false;
+  this->singleton = singleton;
   time_left = std::chrono::minutes(
       1);  // Just a valid default value, unimportant what it is.
   timer_end = std::chrono::duration_cast<std::chrono::seconds>(
@@ -57,15 +58,18 @@ void TimerManager::pauseTimer() { timer_running = false; }
 void TimerManager::showTimer() {
   if (!timer_displayed) {
     timer_displayed = true;
-    refresh_timer = std::make_unique<AutoRefreshTimer>();
+    singleton->autoRefreshTimer();
   }
 }
 
 void TimerManager::hideTimer() {
   if (timer_displayed) {
     timer_displayed = false;
-    refresh_timer->stop();
-    refresh_timer.reset();
+    // We used to stop the autorefresh timer when this was the only client.  Now
+    // we either just let it run indefinitely or we should have a use counter
+    // going.
+    // refresh_timer->stop();
+    // refresh_timer.reset();
   }
 }
 

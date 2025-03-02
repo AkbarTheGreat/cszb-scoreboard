@@ -81,4 +81,36 @@ auto SlideShow::slides(int32_t start, int32_t end)
   return slides;
 }
 
+void SlideShow::start() {
+  is_running = true;
+  last_transition = std::chrono::duration_cast<std::chrono::seconds>(
+      std::chrono::system_clock::now().time_since_epoch());
+}
+void SlideShow::stop() { is_running = false; }
+
+auto SlideShow::nextSlide() -> Image {
+  // We can't expect to run an empty slide show.
+  if (slide_show.slides_size() == 0) {
+    is_running = false;
+    return {};
+  }
+
+  // Check for end of show and loop.
+  if (slide_number >= slide_show.slides_size()) {
+    slide_number = 0;
+  }
+
+  auto slide = slide_show.slides(slide_number);
+  auto left_millis = std::chrono::duration_cast<std::chrono::milliseconds>(
+                         std::chrono::system_clock::now().time_since_epoch()) -
+                     last_transition;
+  double time_left = left_millis.count() / 1000.0;
+  if (time_left > slide_show.delay()) {
+    last_transition = std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch());
+    ++slide_number;
+  }
+  return Image(FilesystemPath(slide.file_path()));
+}
+
 }  // namespace cszb_scoreboard
