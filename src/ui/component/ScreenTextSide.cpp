@@ -26,7 +26,8 @@ limitations under the License.
 #include <cstdint>    // for int64_t
 
 #include "config/GeneralConfig.h"
-#include "config/Position.h"              // for Size, Position
+#include "config/Position.h"  // for Size, Position
+#include "config/SlideShow.h"
 #include "config/TeamConfig.h"            // for TeamConfig
 #include "config/swx/event.h"             // for wxEVT_PAINT
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
@@ -48,8 +49,10 @@ constexpr float TIMER_FONT_SIZE = 10;
 constexpr int TIMER_ALPHA = 128;
 
 ScreenTextSide::ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side,
-                               Size size, Singleton *singleton)
+                               Size size, ScreenTextCategory category,
+                               Singleton *singleton)
     : ScreenTextSide(singleton, wx, source_side->screen_side) {
+  this->category = category;
   for (const auto &new_text : source_side->texts) {
     this->texts.push_back(new_text);
   }
@@ -63,8 +66,10 @@ ScreenTextSide::ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side,
 
 ScreenTextSide::ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
                                const proto::ScreenSide &side, Size size,
+                               ScreenTextCategory category,
                                Singleton *singleton)
     : ScreenTextSide(singleton, wx, side) {
+  this->category = category;
   proto::RenderableText default_text;
   default_text.set_text(initial_text);
   ProtoUtil::defaultFont(default_text.mutable_font());
@@ -176,7 +181,8 @@ void ScreenTextSide::blackout() {
   refresh();
 }
 
-void ScreenTextSide::renderScaledBackground(RenderContext *renderer) {
+void ScreenTextSide::renderScaledBackground(RenderContext *renderer,
+                                            const Image &image) {
   Image scaled_image = scaleImage(image, size());
   int x = (size().width - scaled_image.size().width) / 2;
   int y = (size().height - scaled_image.size().height) / 2;
@@ -225,17 +231,26 @@ void ScreenTextSide::renderOverlayCentered(RenderContext *renderer) {
   renderer->drawImage(scaled_image, x, y);
 }
 
+auto ScreenTextSide::renderSlide(RenderContext *renderer) -> bool {
+  if (category == ScreenTextCategory::Presenter &&
+      singleton->slideShow()->isRunning()) {
+    renderScaledBackground(renderer, singleton->slideShow()->nextSlide());
+    return true;
+  }
+  return false;
+}
+
 void ScreenTextSide::renderBackground(RenderContext *renderer) {
   if (image_is_scaled) {
-    renderScaledBackground(renderer);
+    renderScaledBackground(renderer, image);
   } else {
     renderer->drawImage(image, 0, 0);
   }
   renderOverlay(renderer);
 }
 
-auto ScreenTextSide::scaleImage(const Image &image,
-                                const Size &target_size) -> Image {
+auto ScreenTextSide::scaleImage(const Image &image, const Size &target_size)
+    -> Image {
   Image scaled_image = image;
   Size image_size = scaled_image.size();
   float screen_ratio = ratio(target_size);
@@ -308,16 +323,17 @@ auto ScreenTextSide::centerText(RenderContext *renderer,
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::topText(RenderContext *renderer,
-                             const std::string &text) -> Position {
+auto ScreenTextSide::topText(RenderContext *renderer, const std::string &text)
+    -> Position {
   Size text_extent = getTextExtent(renderer, text);
   int x = (size().width - text_extent.width) / 2;
   int y = size().height * TOP_OR_BOTTOM_RATIO;
   return Position{.x = x, .y = y};
 }
 
-auto ScreenTextSide::positionText(
-    RenderContext *renderer, const proto::RenderableText &text) -> Position {
+auto ScreenTextSide::positionText(RenderContext *renderer,
+                                  const proto::RenderableText &text)
+    -> Position {
   switch (text.position()) {
     case proto::RenderableText_ScreenPosition_FONT_SCREEN_POSITION_BOTTOM:
       return bottomText(renderer, text.text());
@@ -411,6 +427,11 @@ auto ScreenTextSide::getTextExtent(RenderContext *renderer,
 }
 
 void ScreenTextSide::paintEvent(RenderContext *renderer) {
+  // renderSlide returns true if we're in a slideshow, so abort any other
+  // rendering.
+  if (renderSlide(renderer)) {
+    return;
+  }
   renderBackground(renderer);
   renderAllText(renderer);
   renderTimer(renderer);

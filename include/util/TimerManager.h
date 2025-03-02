@@ -53,9 +53,9 @@ class TimerManager {
  private:
   auto timeLeft() -> std::chrono::seconds;
 
-  std::unique_ptr<AutoRefreshTimer> refresh_timer;
   bool timer_displayed;
   bool timer_running;
+  Singleton *singleton;
   // Tracks the time to the end of an active timer.
   std::chrono::seconds timer_end;
   // Tracks the static time left of a paused timer.

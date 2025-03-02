@@ -30,7 +30,8 @@ limitations under the License.
 #include "config/ImageLibrary.h"   // for ImageLibrary
 #include "config/Persistence.h"    // for Persistence
 #include "config/SlideShow.h"
-#include "config/TeamConfig.h"       // for TeamConfig
+#include "config/TeamConfig.h"  // for TeamConfig
+#include "ui/event/AutoRefreshTimer.h"
 #include "ui/frame/FrameManager.h"   // for FrameManager
 #include "ui/frame/HotkeyTable.h"    // for HotkeyTable
 #include "ui/graphics/TeamColors.h"  // for TeamColors
@@ -40,6 +41,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 SingletonImpl::~SingletonImpl() {
+  delete inst_auto_refresh_timer;
   delete inst_auto_update;
   delete inst_command_args;
   delete inst_display_config;
@@ -56,6 +58,13 @@ SingletonImpl::~SingletonImpl() {
 auto Singleton::getInstance() -> Singleton* {
   static SingletonImpl instance;
   return &instance;
+}
+
+auto SingletonImpl::autoRefreshTimer() -> AutoRefreshTimer* {
+  if (inst_auto_refresh_timer == nullptr) {
+    inst_auto_refresh_timer = new AutoRefreshTimer(SingletonClass{});
+  }
+  return inst_auto_refresh_timer;
 }
 
 auto SingletonImpl::autoUpdate() -> AutoUpdate* {

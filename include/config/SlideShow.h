@@ -24,8 +24,9 @@ limitations under the License.
 #include <vector>  // for vector
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "slide_show.pb.h"     // for SlideShow, SlideInfo (ptr only)
-#include "util/Singleton.h"    // for Singleton, SingletonClass
+#include "config/swx/image.h"
+#include "slide_show.pb.h"   // for SlideShow, SlideInfo (ptr only)
+#include "util/Singleton.h"  // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
 class FilesystemPath;
@@ -51,6 +52,10 @@ class SlideShow {
                                   : DEFAULT_SLIDESHOW_DELAY;
   }
   void setDelay(double delay) { slide_show.set_delay(delay); }
+  auto isRunning() -> bool { return is_running; }
+  void start();
+  void stop();
+  auto nextSlide() -> Image;
 
   PUBLIC_TEST_ONLY
   SlideShow(SingletonClass c, Singleton *singleton);
@@ -58,5 +63,8 @@ class SlideShow {
  private:
   proto::SlideShow slide_show;
   Singleton *singleton;
+  int32_t slide_number = 0;
+  bool is_running = false;
+  std::chrono::seconds last_transition;
 };
 }  // namespace cszb_scoreboard

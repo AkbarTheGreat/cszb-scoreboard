@@ -137,6 +137,12 @@ void SlideshowSetup::bindEvents() {
   delay_setting->bind(wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void {
     this->delayUpdated();
   });
+  start_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->startShow(); });
+  stop_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent &event) -> void { this->stopShow(); });
 }
 
 void SlideshowSetup::updateScreenText(ScreenText *screen_text) {}
@@ -197,5 +203,12 @@ void SlideshowSetup::lastPage() {
     nextPage();
   }
 }
+
+void SlideshowSetup::startShow() {
+  singleton->slideShow()->start();
+  singleton->autoRefreshTimer();
+}
+
+void SlideshowSetup::stopShow() { singleton->slideShow()->stop(); }
 
 }  // namespace cszb_scoreboard

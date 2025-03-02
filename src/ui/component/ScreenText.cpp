@@ -54,9 +54,9 @@ void ScreenText::setupPreview(const std::string &initial_text,
   for (auto team : screen_order) {
     for (const auto &side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
-        text_sides.push_back(
-            new ScreenTextSide(childPanel(split_size.width, split_size.height),
-                               initial_text, side, split_size));
+        text_sides.push_back(new ScreenTextSide(
+            childPanel(split_size.width, split_size.height), initial_text, side,
+            split_size, ScreenTextCategory::Preview));
         break;
       }
     }
@@ -74,9 +74,9 @@ void ScreenText::setupPresenter(const ScreenText &preview, Size size) {
       splitScreenSize(size.width, size.height, preview.text_sides.size());
 
   for (auto *source_text_side : preview.text_sides) {
-    text_sides.push_back(
-        new ScreenTextSide(childPanel(split_size.width, split_size.height),
-                           source_text_side, split_size));
+    text_sides.push_back(new ScreenTextSide(
+        childPanel(split_size.width, split_size.height), source_text_side,
+        split_size, ScreenTextCategory::Presenter));
   }
 
   initializeSides(text_sides);

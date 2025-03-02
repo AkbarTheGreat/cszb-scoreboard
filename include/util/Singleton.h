@@ -25,6 +25,7 @@ class wxCmdLineArgsArray;
 
 namespace cszb_scoreboard {
 
+class AutoRefreshTimer;
 class AutoUpdate;
 class CommandArgs;
 class DisplayConfig;
@@ -33,10 +34,10 @@ class GeneralConfig;
 class HotkeyTable;
 class ImageLibrary;
 class Persistence;
+class SlideShow;
 class TeamColors;
 class TeamConfig;
 class TimerManager;
-class SlideShow;
 
 // Singletons are created with this object as a reminder to developers not to
 // arbitrarily create them outside of test situations.  It's a friendly
@@ -51,6 +52,7 @@ class Singleton {
   virtual ~Singleton() = default;
   static auto getInstance() -> Singleton*;
 
+  virtual auto autoRefreshTimer() -> AutoRefreshTimer* = 0;
   virtual auto autoUpdate() -> AutoUpdate* = 0;
   virtual auto commandArgs() -> CommandArgs* = 0;
   virtual auto displayConfig() -> DisplayConfig* = 0;
@@ -71,6 +73,7 @@ class Singleton {
 class SingletonImpl : public Singleton {
  public:
   ~SingletonImpl() override;
+  auto autoRefreshTimer() -> AutoRefreshTimer* override;
   auto autoUpdate() -> AutoUpdate* override;
   auto commandArgs() -> CommandArgs* override;
   auto displayConfig() -> DisplayConfig* override;
@@ -91,6 +94,7 @@ class SingletonImpl : public Singleton {
   // This class uses raw pointers to avoid over-circular reliance on the headers
   // that are Singletons themselves.  This means they must be deleted in the
   // destructor.
+  AutoRefreshTimer* inst_auto_refresh_timer = nullptr;
   AutoUpdate* inst_auto_update = nullptr;
   CommandArgs* inst_command_args = nullptr;
   DisplayConfig* inst_display_config = nullptr;
