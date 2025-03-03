@@ -25,7 +25,19 @@ use DateTime;
 use DDP;
 use MooseX::Singleton;
 use MooseX::Privacy;
+use Redis;
 use CszbScoreboard::Config;
+
+has '_cache' => (
+    is      => 'ro',
+    isa     => 'Redis',
+    lazy    => 1,
+    default => sub {return Redis->new(
+                    server => 'updater-cache:6379',
+                    reconnect => 60,
+                    every => 100_000
+    );},
+);
 
 has '_version_cache_last_update' => (
     is     => 'rw',
@@ -47,18 +59,12 @@ has '_latest_release_cache' => (
 
 sub releases {
     my ($self, $version, $log) = @_;
-    # Is latest calls versions() which refreshes the cache if necessary, so we
-    # don't need to deal with it here.
-    if ($self->_is_latest($version, $log)) {
-        return $self->_latest_release_cache();
-    }
     return _gather_releases($version);
 }
 
 sub versions {
     my ($self, $log) = @_;
-    $self->_gather_versions($log);
-    return $self->_version_cache();
+    return $self->_gather_versions($log);
 }
 
 sub _compare_versions {
@@ -120,20 +126,17 @@ sub _gather_releases {
 
     return \@releases;
 }
+
+sub _sorted_versions {
+    my ($log, @versions) = @_;
+    return [sort {_compare_versions($a, $b, $log)} @versions];
+}
  
 sub _gather_versions {
     my ($self, $log) = @_;
-    unless ($self->_version_cache_last_update()) {
-        $self->_version_cache_last_update(DateTime->now);
-        $self->_version_cache_last_update()->subtract(minutes => (CszbScoreboard::Config->instance()->release_cache_minutes()*2));
-    }
-
-    my $refresh = $self->_version_cache_last_update()->clone();
-
-    $refresh->add(minutes => CszbScoreboard::Config->instance()->release_cache_minutes());
-    if (DateTime->now < $refresh) {
-        $log->debug('Using cached known versions');
-        return;
+    if ($self->_cache()->exists('versions')) {
+       $log->debug('Using cached known versions');
+       return _sorted_versions($log, $self->_cache()->smembers('versions'));
     }
 
     $log->debug('Refreshing known versions');
@@ -150,10 +153,10 @@ sub _gather_versions {
     }
     closedir $release_dir;
 
-    $self->_version_cache_last_update(DateTime->now);
-    @versions = sort {_compare_versions($a, $b, $log)} @versions;
-    $self->_version_cache(\@versions);
-    $self->_latest_release_cache($self->_gather_releases($versions[-1], $log));
+    $self->_cache()->sadd('versions', @versions);
+    $self->_cache()->expire('versions', CszbScoreboard::Config->instance()->release_cache_minutes()*60);
+
+    return _sorted_versions($log, @versions);
 }
 
 sub _is_latest {
