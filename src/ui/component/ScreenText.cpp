@@ -21,10 +21,12 @@ limitations under the License.
 
 #include <algorithm>  // for max
 
-#include "config.pb.h"                    // for RenderableText, ScreenSide
+#include "config.pb.h"  // for RenderableText, ScreenSide
+#include "config/SlideShow.h"
 #include "config/TeamConfig.h"            // for TeamConfig
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide, OverlayScre...
-#include "util/ProtoUtil.h"               // for ProtoUtil
+#include "util/Log.h"
+#include "util/ProtoUtil.h"  // for ProtoUtil
 
 namespace cszb_scoreboard {
 class Color;
@@ -36,11 +38,38 @@ const int BORDER_SIZE = 0;
 
 ScreenText::ScreenText(swx::Panel *wx, Singleton *singleton) : Panel(wx) {
   this->singleton = singleton;
+  bindEvents();
+}
+
+void ScreenText::bindEvents() {
+  bind(wxEVT_PAINT,
+       [this](RenderContext *renderer) -> void { this->paintEvent(renderer); });
+}
+
+void ScreenText::paintEvent(RenderContext *renderer) {
+  if (category == ScreenTextCategory::Preview) {
+    return;
+  }
+
+  if (singleton->slideShow()->isRunning()) {
+    singleDisplay(/*is_temporary=*/true);
+    return;
+  }
+
+  if (view_split_override) {
+    if (is_single_view) {
+      singleDisplay();
+    } else {
+      splitDisplays();
+    }
+    return;
+  }
 }
 
 void ScreenText::setupPreview(const std::string &initial_text,
                               const std::vector<proto::ScreenSide> &sides,
                               Size size) {
+  category = ScreenTextCategory::Preview;
   setSize(size);
   std::vector<ScreenTextSide *> text_sides;
 
@@ -54,9 +83,9 @@ void ScreenText::setupPreview(const std::string &initial_text,
   for (auto team : screen_order) {
     for (const auto &side : sides) {
       if (ProtoUtil::sideContains(side, team)) {
-        text_sides.push_back(new ScreenTextSide(
-            childPanel(split_size.width, split_size.height), initial_text, side,
-            split_size, ScreenTextCategory::Preview));
+        text_sides.push_back(
+            new ScreenTextSide(childPanel(split_size.width, split_size.height),
+                               initial_text, side, split_size, category));
         break;
       }
     }
@@ -66,6 +95,7 @@ void ScreenText::setupPreview(const std::string &initial_text,
 }
 
 void ScreenText::setupPresenter(const ScreenText &preview, Size size) {
+  category = ScreenTextCategory::Presenter;
   setSize(size);
   std::vector<ScreenTextSide *> text_sides;
   text_sides.reserve(preview.text_sides.size());
@@ -74,9 +104,9 @@ void ScreenText::setupPresenter(const ScreenText &preview, Size size) {
       splitScreenSize(size.width, size.height, preview.text_sides.size());
 
   for (auto *source_text_side : preview.text_sides) {
-    text_sides.push_back(new ScreenTextSide(
-        childPanel(split_size.width, split_size.height), source_text_side,
-        split_size, ScreenTextCategory::Presenter));
+    text_sides.push_back(
+        new ScreenTextSide(childPanel(split_size.width, split_size.height),
+                           source_text_side, split_size, category));
   }
 
   initializeSides(text_sides);
@@ -229,8 +259,11 @@ void ScreenText::autosplitDisplays(const proto::ScreenSide &side) {
   singleDisplay();
 }
 
-void ScreenText::singleDisplay() {
-  is_single_view = true;
+void ScreenText::singleDisplay(bool is_temporary) {
+  if (!is_temporary) {
+    is_single_view = true;
+  }
+  view_split_override = is_temporary;
   if (text_sides.size() < 2) {
     return;
   }
@@ -241,8 +274,11 @@ void ScreenText::singleDisplay() {
   update();
 }
 
-void ScreenText::splitDisplays() {
-  is_single_view = false;
+void ScreenText::splitDisplays(bool is_temporary) {
+  if (!is_temporary) {
+    is_single_view = false;
+  }
+  view_split_override = is_temporary;
   if (text_sides.size() < 2) {
     return;
   }

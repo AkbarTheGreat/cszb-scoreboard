@@ -32,6 +32,7 @@ class Color;
 class Image;
 class ScreenTextSide;
 enum class OverlayScreenPosition;
+enum class ScreenTextCategory;
 
 namespace proto {
 class Font;
@@ -96,16 +97,20 @@ class ScreenText : public Panel {
  private:
   std::vector<ScreenTextSide *> text_sides;
   bool is_single_view = false;
+  bool view_split_override = false;
   Singleton *singleton;
+  ScreenTextCategory category;
 
   void autosplitDisplays(const proto::ScreenSide &side);
+  void bindEvents();
+  void paintEvent(RenderContext *renderer);
   void initializeSides(const std::vector<ScreenTextSide *> &text_sides);
-  void singleDisplay();
+  void singleDisplay(bool is_temporary = false);
   void setImage(const Image &image, bool is_scaled,
                 const proto::ScreenSide &side);
   void setText(const std::string &text, int font_size,
                const proto::ScreenSide &side);
-  void splitDisplays();
+  void splitDisplays(bool is_temporary = false);
   static auto splitScreenSize(int x, int y, int number_of_splits) -> Size;
 };
 
