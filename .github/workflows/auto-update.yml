@@ -42,8 +42,8 @@ jobs:
         IMAGE_NAME: ${{ github.repository }}
       uses: docker/build-push-action@v5
       with:
-        context: .
-        file: ./Dockerfile
+        context: ./autoupdate_server
+        file: ./autoupdate_server/Dockerfile
         tags: ghcr.io/akbarthegreat/cszb_autoupdate_${{ github.head_ref || github.ref_name }}:latest
         push: true
         cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
@@ -53,6 +53,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
+      working-directory: autoupdate_server
       run: npm install
     - name: Run tests
+      working-directory: autoupdate_server
       run: npm test
