@@ -19,12 +19,13 @@ limitations under the License.
 =cut
 
 package CszbScoreboard::UpdaterAPI;
+use 5.022;
+
 use Moose;
 use lib '../..';
 use CszbScoreboard::ReleaseLibrary;
 use List::AllUtils qw(none any);
 use Mojo::Exception qw(raise);
- 
 our @VALID_API_VERSIONS = qw(1.0);
 
 our %DISPATCH_TREE = (
@@ -40,20 +41,32 @@ sub api_base {
     # @VALID_API_VERSIONS, above.
     return (api_version => '1.0');
 }
-
-sub _version_info_worker {
-    my ($self, $version, $mojo) = @_;
-    my $lib = CszbScoreboard::ReleaseLibrary->instance();
-    return {$self->api_base(),
-       version => $version,
-       releases => $lib->releases($version, $mojo->app->log),
-    };
-}
  
 sub versions {
-    my ($self) = @_;
+    my ($self, $log) = @_;
     my $lib = CszbScoreboard::ReleaseLibrary->instance();
-    return {'versions' => $lib->versions()};
+    return {$self->api_base(), 'versions' => $lib->versions($log)};
+}
+
+sub latest {
+    my ($self, $log) = @_;
+    my $lib = CszbScoreboard::ReleaseLibrary->instance();
+    return {$self->api_base(), 'latest' => $lib->versions($log)->[-1]};
+}
+
+sub dispatch {
+    my ($self, $mojo, $route) = @_;
+    my $api_version = $mojo->param('api_version');
+    $api_version //= '1.0'; # Default to 1.0 if nothing is passed in.
+    $mojo->app->log->debug('REQ Ver: |' . $api_version . '|');
+    $mojo->app->log->debug('VAL Ver: |' . $_ . '|') for @VALID_API_VERSIONS;
+    if (none {$_ eq $api_version} @VALID_API_VERSIONS) {
+        raise 'CszBoston::UpdaterAPI::InvalidAPI', 'Invalid API version: ' . $api_version;
+    }
+    if (none {$_ eq $route} keys %DISPATCH_TREE) {
+        raise 'CszBoston::UpdaterAPI::InvalidMethod', 'Invalid Method: ' . $route;
+    }
+    return $DISPATCH_TREE{$route}->($self, $mojo->app->log);
 }
 
 1;
