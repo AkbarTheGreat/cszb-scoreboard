@@ -16,7 +16,11 @@ function getLatest(): Promise<Version | null> {
   return VersionRepo.getLatest();
 }
 
-function getAll(): Promise<Version[] | null> {
+function getInfo(version: string): Promise<Version | null> {
+  return VersionRepo.getInfo(version);
+}
+
+function getAll(): Promise<string[] | null> {
   return VersionRepo.getAll();
 }
 
@@ -24,5 +28,6 @@ function getAll(): Promise<Version[] | null> {
 
 export default {
   getAll,
+  getInfo,
   getLatest,
 } as const;

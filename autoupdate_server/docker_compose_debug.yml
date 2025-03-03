@@ -1,0 +1,18 @@
+# Docker compose file for local debugging of the service
+
+services:
+  updater:
+    build: .
+    command: [npm, run, dev]
+    environment:
+      - LOCAL_TEST=1
+    ports:
+      - 8080:3000
+    volumes:
+      - ./app:/autoupdater
+      - ./testdata/releases:/releases
+      - ./testdata/logs:/logs
+  #updater-cache:
+    #image: redis:alpine
+    #ports:
+      #- '6379:6379'

@@ -25,6 +25,11 @@ versionRouter.get(
   VersionRoutes.getLatest,
 );
 
+versionRouter.get(
+  Paths.Versions.Info,
+  VersionRoutes.getInfo,
+);
+
 apiRouter.use(Paths.Versions.Base, versionRouter);
 
 
