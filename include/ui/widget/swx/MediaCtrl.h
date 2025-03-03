@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/MediaCtrl.h: A wrapper around wxMediaCtrl.
 
-Copyright 2023 Tracy Beck
+Copyright 2023-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ wxFORCE_LINK_MODULE(wxmediabackend_wmp10);
 namespace cszb_scoreboard::swx {
 
 #define BACKEND ""
-//#define BACKEND "wxAMMediaBackend"
-//#define BACKEND "wxWMP10MediaBackend"
-//#define BACKEND "wxQTMediaBackend"
+// #define BACKEND "wxAMMediaBackend"
+// #define BACKEND "wxWMP10MediaBackend"
+// #define BACKEND "wxQTMediaBackend"
 
 class MediaCtrl : public wxMediaCtrl {
  public:

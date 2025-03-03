@@ -1,7 +1,7 @@
 /*
 ui/widget/Animation.h: A widget which renders an animated gif.
 
-Copyright 2023 Tracy Beck
+Copyright 2023-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
