@@ -60,7 +60,7 @@ find_package(CURL CONFIG REQUIRED)
 initialize_vcpkg_code()
 
 if(NOT wxWidgets_LIBRARIES)
-   find_package(wxWidgets REQUIRED COMPONENTS net core base aui webview)
+   find_package(wxWidgets REQUIRED COMPONENTS net core base aui webview media)
    include(${wxWidgets_USE_FILE})
 endif()
 
