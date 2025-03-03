@@ -55,6 +55,9 @@ jobs:
     - name: Install modules
       working-directory: autoupdate_server/app
       run: npm install
+    - name: Generate protos
+      working-directory: autoupdate_server/app
+      run: mkdir -p ./generated/proto && npx protoc --ts_out ./generated/proto --proto_path src/proto src/proto/*.proto
     - name: Run tests
       working-directory: autoupdate_server/app
       run: npm test
