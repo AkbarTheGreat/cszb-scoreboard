@@ -19,8 +19,9 @@ limitations under the License.
 
 #include "util/TimerManager.h"
 
-#include <compare>  // for operator<, strong_ordering
-#include <ratio>    // for ratio
+#include <compare>            // for operator<, strong_ordering
+#include <ratio>              // for ratio
+#include <memory>             // for allocator
 
 #include "util/StringUtil.h"  // for StringUtil
 

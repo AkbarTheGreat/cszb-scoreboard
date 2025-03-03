@@ -21,12 +21,10 @@ limitations under the License.
 
 #include <chrono>   // for seconds
 #include <cstdint>  // for int64_t
-#include <memory>   // for unique_ptr
 #include <string>   // for string
 
-#include "ScoreboardCommon.h"           // for PUBLIC_TEST_ONLY
-#include "ui/event/AutoRefreshTimer.h"  // for AutoRefreshTimer
-#include "util/Singleton.h"             // for Singleton, SingletonClass
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "util/Singleton.h"    // for Singleton, SingletonClass
 
 namespace cszb_scoreboard {
 

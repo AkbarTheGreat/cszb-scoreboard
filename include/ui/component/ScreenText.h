@@ -19,8 +19,8 @@ limitations under the License.
 
 #pragma once
 
-#include <string>  // for string
-#include <vector>  // for vector
+#include <string>              // for string
+#include <vector>              // for vector
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "config/Position.h"   // for Size
@@ -33,6 +33,7 @@ class Image;
 class ScreenTextSide;
 enum class OverlayScreenPosition;
 enum class ScreenTextCategory;
+class RenderContext;
 
 namespace proto {
 class Font;

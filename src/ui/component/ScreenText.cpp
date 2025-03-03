@@ -19,18 +19,19 @@ limitations under the License.
 
 #include "ui/component/ScreenText.h"
 
-#include <algorithm>  // for max
+#include <wx/event.h>                     // for wxEVT_PAINT
+#include <algorithm>                      // for max
 
-#include "config.pb.h"  // for RenderableText, ScreenSide
-#include "config/SlideShow.h"
+#include "config.pb.h"                    // for RenderableText, ScreenSide
+#include "config/SlideShow.h"             // for SlideShow
 #include "config/TeamConfig.h"            // for TeamConfig
-#include "ui/component/ScreenTextSide.h"  // for ScreenTextSide, OverlayScre...
-#include "util/Log.h"
-#include "util/ProtoUtil.h"  // for ProtoUtil
+#include "ui/component/ScreenTextSide.h"  // for ScreenTextSide, ScreenTextC...
+#include "util/ProtoUtil.h"               // for ProtoUtil
 
 namespace cszb_scoreboard {
 class Color;
 class Image;
+class RenderContext;
 
 // Margin for the top or bottom, as a percentage
 const float TOP_OR_BOTTOM_MARGIN = 2;
