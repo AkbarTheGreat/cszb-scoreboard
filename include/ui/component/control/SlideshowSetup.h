@@ -2,7 +2,7 @@
 ui/component/control/SlideshowSetup.h: This class is responsible for managing a
 slideshow.  Typically, these are used for pre-show distractions.
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

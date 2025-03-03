@@ -4,7 +4,7 @@ constructed via a factory, the easiest way to contain wx code is via containment
 rather than extension.  It's not my favorite thing to do, but it's what I'm
 doing for this one class, for consistency with other classes.
 
-Copyright 2022-2024 Tracy Beck
+Copyright 2022-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

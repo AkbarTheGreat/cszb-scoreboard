@@ -2,7 +2,7 @@
 ui/widget/Frame.h: A frame represents a free-standing window that is not a
 dialog.
 
-Copyright 2021-2024 Tracy Beck
+Copyright 2021-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -112,10 +112,11 @@ class Frame : public Widget {
                   const wxString &name = wxPanelNameStr) -> swx::Panel * {
     return new swx::PanelImpl(wx(), id, pos, size, style, name);
   }
-  auto childNotebook(
-      wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition,
-      const wxSize &size = wxDefaultSize,
-      int64_t style = DEFAULT_NOTEBOOK_STYLE) -> swx::Notebook * {
+  auto childNotebook(wxWindowID id = wxID_ANY,
+                     const wxPoint &pos = wxDefaultPosition,
+                     const wxSize &size = wxDefaultSize,
+                     int64_t style = DEFAULT_NOTEBOOK_STYLE)
+      -> swx::Notebook * {
     return new swx::Notebook(wx(), id, pos, size, style);
   }
 

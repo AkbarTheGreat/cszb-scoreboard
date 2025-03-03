@@ -1,7 +1,7 @@
 /*
 test/ImageLibraryTest.cpp: Tests for config/ImageLibrary
 
-Copyright 2020-2024 Tracy Beck
+Copyright 2020-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -157,8 +157,8 @@ class ImageLibraryTest : public ::testing::Test {
   }
 };
 
-auto tagStrings(const ImageLibrary &library,
-                bool include_name = false) -> std::vector<std::string> {
+auto tagStrings(const ImageLibrary &library, bool include_name = false)
+    -> std::vector<std::string> {
   std::vector<CaseOptionalString> tags = library.allTags(include_name);
   std::vector<std::string> tag_strings;
   tag_strings.reserve(tags.size());

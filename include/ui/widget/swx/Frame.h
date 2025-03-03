@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/Frame.h: A wrapper around wxFrame
 
-Copyright 2021-2024 Tracy Beck
+Copyright 2021-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ class FrameImpl : public Frame, public wxFrame {
             const wxSize &size = wxDefaultSize,
             int64_t style = wxDEFAULT_FRAME_STYLE,
             const wxString &name = wxFrameNameStr)
-      : wxFrame(parent, id, title, pos, size, style, name){};
+      : wxFrame(parent, id, title, pos, size, style, name) {};
 
   auto Close(bool force) -> bool override { return wxFrame::Close(force); }
   auto CreateStatusBar(int number, int64_t style, wxWindowID id,

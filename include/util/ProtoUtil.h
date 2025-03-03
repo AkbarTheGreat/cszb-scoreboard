@@ -2,7 +2,7 @@
 util/ProtoUtil.h: Convenience methods for converting between proto values and
 wxWidgets values.
 
-Copyright 2019-2024 Tracy Beck
+Copyright 2019-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,14 +29,14 @@ struct Size;
 
 class ProtoUtil {
  public:
-  static auto protoRct(const wxRect &input,
-                       proto::Rectangle *output) -> proto::Rectangle *;
+  static auto protoRct(const wxRect &input, proto::Rectangle *output)
+      -> proto::Rectangle *;
   static auto wxRct(const proto::Rectangle &input) -> wxRect;
-  static auto protoClr(const Color &input,
-                       proto::Color *output) -> proto::Color *;
+  static auto protoClr(const Color &input, proto::Color *output)
+      -> proto::Color *;
   static auto wxClr(const proto::Color &input) -> Color;
-  static auto wxScaledFont(const proto::Font &input,
-                           const Size &scale_size) -> wxFont;
+  static auto wxScaledFont(const proto::Font &input, const Size &scale_size)
+      -> wxFont;
   static void setFontColor(proto::Font *font, const Color &color);
   static void defaultFont(proto::Font *font);
   static void validateFont(proto::Font *font);

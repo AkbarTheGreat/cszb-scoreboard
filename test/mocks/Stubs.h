@@ -8,7 +8,7 @@ this file.  Similar to:
 #define TEST_STUB_MAIN_VIEW
 #include "test/mocks/Stubs.h"
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,8 +47,9 @@ auto FrameManager::createMainView(const std::string &title, const Position &pos,
   return nullptr;
 }
 
-auto FrameManager::createScreenPresenter(
-    int monitor_number, const ScreenText &preview) -> ScreenPresenter * {
+auto FrameManager::createScreenPresenter(int monitor_number,
+                                         const ScreenText &preview)
+    -> ScreenPresenter * {
   return nullptr;
 }
 

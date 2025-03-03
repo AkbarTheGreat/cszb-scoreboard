@@ -2,7 +2,7 @@
 ui/component/control/things_mode/ActivityPanel.h: Represents all activities in
 5/6 things.
 
-Copyright 2019-2024 Tracy Beck
+Copyright 2019-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

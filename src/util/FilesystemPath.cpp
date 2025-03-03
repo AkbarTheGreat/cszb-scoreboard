@@ -3,7 +3,7 @@ util/FilesystemPath.cpp: In most cases, a moderately enhanced wrapper around
 std::filesystem::path. For cases where that support is unavailable, a simple
 stand-in which implements the functionality we need for our application.
 
-Copyright 2020-2024 Tracy Beck
+Copyright 2020-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ limitations under the License.
 #include <algorithm>  // for count, transform
 #include <array>      // for array
 #include <cctype>     // for toupper
-#include <cstddef>  // for size_t
+#include <cstddef>    // for size_t
 #include <sstream>    // for basic_istream, istringstream
 #include <stdexcept>  // for runtime_error
 
 #ifdef SCOREBOARD_APPLE_IMPL
-#include <cstdio>     // for size_t, remove, rename
+#include <cstdio>  // for size_t, remove, rename
 #else
 #include <filesystem>
 #endif
@@ -124,8 +124,9 @@ auto FilesystemPath::absolutePath(const std::string &root,
 
 // If file_path is already relative, returns file_path.  If file_path is
 // relative to root, returns the relative path.  Otherwise, returns file_path.
-auto FilesystemPath::mostRelativePath(
-    const std::string &root, const std::string &file_path) -> std::string {
+auto FilesystemPath::mostRelativePath(const std::string &root,
+                                      const std::string &file_path)
+    -> std::string {
   if (FilesystemPath(file_path).is_relative() || root.empty()) {
     return file_path;
   }
@@ -188,8 +189,8 @@ unimplemented, it fails lint on our MacOS tests, so disable that check.
 */
 // NOLINTNEXTLINE (readability-convert-member-functions-to-static)
 auto FilesystemPath::findFilesOfType(
-    const std::vector<const char *> &extensions,
-    uint32_t max_depth) -> std::unordered_set<std::string> {
+    const std::vector<const char *> &extensions, uint32_t max_depth)
+    -> std::unordered_set<std::string> {
   std::unordered_set<std::string> found_files;
 #ifdef SCOREBOARD_APPLE_IMPL
   // TODO(akbar):  Implement this for macs

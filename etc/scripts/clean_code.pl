@@ -7,7 +7,7 @@ codebase, cleaning up any messy human stuff that might've made our pretty
 code ugly.  It's only tested on Ubuntu and some stuff would probably need
 to be changed to make it work on other platforms.
 
-Copyright 2021-2024 Tracy Beck
+Copyright 2021-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

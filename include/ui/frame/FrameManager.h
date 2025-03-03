@@ -5,7 +5,7 @@ all of these objects and any pointers returned from here should be considered
 non-authoritative.  All frame pointers are destroyed on exitFrames and any
 dangling references will then be invalid.
 
-Copyright 2019-2024 Tracy Beck
+Copyright 2019-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,8 +42,9 @@ class FrameManager {
   explicit FrameManager(SingletonClass c) {}
   virtual auto createMainView(const std::string &title, const Position &pos,
                               const Size &size) -> MainView *;
-  virtual auto createScreenPresenter(
-      int monitor_number, const ScreenText &preview) -> ScreenPresenter *;
+  virtual auto createScreenPresenter(int monitor_number,
+                                     const ScreenText &preview)
+      -> ScreenPresenter *;
   void clearPresenters();
   virtual auto mainView() -> MainView * { return main_view.get(); }
   virtual void refreshFrames();

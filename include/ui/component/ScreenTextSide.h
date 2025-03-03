@@ -3,7 +3,7 @@ ui/component/ScreenTextSide.h: A single side of renderable image/text.  One or
 more of these are contained in a ScreenText, for use in presenting to a preview
 or external monitor.
 
-Copyright 2019-2024 Tracy Beck
+Copyright 2019-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

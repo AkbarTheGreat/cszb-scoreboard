@@ -2,7 +2,7 @@
 ui/component/control/slideshow/SlidePreview.cpp: The UI for a given slide in a
 slideshow, including buttons to modify or move the slide around.
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "ui/component/control/slideshow/SlidePreview.h"
 
-#include <wx/event.h>                             // for wxCommandEvent (ptr...
+#include <wx/event.h>  // for wxCommandEvent (ptr...
 
 #include "ui/component/control/SlideshowSetup.h"  // for SlideshowSetup
 #include "ui/widget/Widget.h"                     // for NO_BORDER

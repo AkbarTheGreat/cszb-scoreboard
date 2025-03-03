@@ -5,7 +5,7 @@ other singletons.  All users should inject this in their constructor for
 testability's sake, but may have a non-injected constructor which calls the
 singleton version as a convenience.
 
-Copyright 2019-2024 Tracy Beck
+Copyright 2019-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

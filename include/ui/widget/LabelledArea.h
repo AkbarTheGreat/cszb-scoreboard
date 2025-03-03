@@ -3,7 +3,7 @@ ui/widget/LabelledArea.h: A labelled area is a border with an in-built label,
 for grouping chunks of UI together.  To embed things inside of this object,
 reference it's holds() method.
 
-Copyright 2022-2024 Tracy Beck
+Copyright 2022-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

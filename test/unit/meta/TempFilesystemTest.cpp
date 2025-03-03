@@ -3,7 +3,7 @@
 test/unit/meta/TempFilesystemTest.cpp: Tests for the class which creates
 auto-destructing filesystems for testing.
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <filesystem>                  // for exists, operator/, path, temp_...
-#include <memory>                      // for allocator, unique_ptr, make_un...
+#include <filesystem>  // for exists, operator/, path, temp_...
+#include <memory>      // for allocator, unique_ptr, make_un...
 
 #include "gmock/gmock.h"               // for MakePredicateFormatterFromMatcher
 #include "gtest/gtest.h"               // for AssertionResult, Message, Test...

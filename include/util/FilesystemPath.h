@@ -3,7 +3,7 @@ util/FilesystemPath.h: In most cases, a moderately enhanced wrapper around
 std::filesystem::path. For cases where that support is unavailable, a simple
 stand-in which implements the functionality we need for our application.
 
-Copyright 2020-2024 Tracy Beck
+Copyright 2020-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ limitations under the License.
 #define SCOREBOARD_APPLE_IMPL
 #endif
 
-#include <stdint.h>       // for uint32_t
+#include <stdint.h>  // for uint32_t
+
 #include <string>         // for string
 #include <unordered_set>  // for unordered_set
 #include <vector>         // for vector
 #ifndef SCOREBOARD_APPLE_IMPL
-#include <filesystem>     // for remove, rename, path
+#include <filesystem>  // for remove, rename, path
 #endif
 
 namespace cszb_scoreboard {
@@ -60,28 +61,28 @@ class FilesystemPath {
 
   [[nodiscard]] auto is_relative() const -> bool { return !is_absolute(); }
 
-  friend auto operator<(const FilesystemPath &a,
-                        const FilesystemPath &b) -> bool {
+  friend auto operator<(const FilesystemPath &a, const FilesystemPath &b)
+      -> bool {
     return a.compare(b) < 0;
   }
-  friend auto operator==(const FilesystemPath &a,
-                         const FilesystemPath &b) -> bool {
+  friend auto operator==(const FilesystemPath &a, const FilesystemPath &b)
+      -> bool {
     return a.compare(b) == 0;
   }
-  friend auto operator>(const FilesystemPath &a,
-                        const FilesystemPath &b) -> bool {
+  friend auto operator>(const FilesystemPath &a, const FilesystemPath &b)
+      -> bool {
     return b < a;
   }
-  friend auto operator<=(const FilesystemPath &a,
-                         const FilesystemPath &b) -> bool {
+  friend auto operator<=(const FilesystemPath &a, const FilesystemPath &b)
+      -> bool {
     return !(a > b);
   }
-  friend auto operator>=(const FilesystemPath &a,
-                         const FilesystemPath &b) -> bool {
+  friend auto operator>=(const FilesystemPath &a, const FilesystemPath &b)
+      -> bool {
     return !(a < b);
   }
-  friend auto operator!=(const FilesystemPath &a,
-                         const FilesystemPath &b) -> bool {
+  friend auto operator!=(const FilesystemPath &a, const FilesystemPath &b)
+      -> bool {
     return !(a == b);
   }
 

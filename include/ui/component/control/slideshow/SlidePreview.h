@@ -2,7 +2,7 @@
 ui/component/control/slideshow/SlidePreview.h: The UI for a given slide in a
 slideshow, including buttons to modify or move the slide around.
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ limitations under the License.
 
 #pragma once
 
-#include <stdint.h>                             // for int32_t
-#include <memory>                               // for unique_ptr
-#include <string>                               // for string
+#include <stdint.h>  // for int32_t
+
+#include <memory>  // for unique_ptr
+#include <string>  // for string
 
 #include "ui/component/control/ImagePreview.h"  // for ImagePreview
 #include "ui/widget/Button.h"                   // for Button

@@ -4,7 +4,7 @@ config/ImageLibrary's CaseOptionalString class.  The directory structure isn't a
 perfect mirror, but I wanted to break out tests for this small helper class into
 their own test file for clarity.
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,7 +1,7 @@
 /*
 util/AutoUpdate.h: Singleton which handles checking for updates to the software.
 
-Copyright 2019-2024 Tracy Beck
+Copyright 2019-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class AutoUpdate {
   // allows mocking of singletons.
   explicit AutoUpdate(SingletonClass c)
       : AutoUpdate(c, Singleton::getInstance(),
-                   std::move(std::make_unique<HttpReader>())){};
+                   std::move(std::make_unique<HttpReader>())) {};
   // GCOVR_EXCL_STOP
   virtual auto checkForUpdate(const std::string &current_version) -> bool;
   [[nodiscard]] virtual auto updateIsDownloadable() const -> bool {
@@ -79,8 +79,8 @@ class AutoUpdate {
   std::unique_ptr<HttpReader> httpReader;
   Singleton *singleton;
   auto backupPath() -> FilesystemPath;
-  auto downloadUpdate(const std::string &url,
-                      std::vector<char> *update_data) -> bool;
+  auto downloadUpdate(const std::string &url, std::vector<char> *update_data)
+      -> bool;
 };
 
 }  // namespace cszb_scoreboard

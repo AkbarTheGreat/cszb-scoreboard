@@ -3,7 +3,7 @@ ui/component/control/ImageFromLibrary.h: Handles loading images from a
 pre-populated library of tagged images on disk and presenting them to one or
 more screens.
 
-Copyright 2019-2024 Tracy Beck
+Copyright 2019-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

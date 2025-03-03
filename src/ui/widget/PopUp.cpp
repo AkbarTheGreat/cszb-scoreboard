@@ -1,7 +1,7 @@
 /*
 ui/widget/PopUp.cpp: A simple pop-up message as a fire & forget method.
 
-Copyright 2021-2024 Tracy Beck
+Copyright 2021-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ auto BoxWithIcon(const std::string &title, const std::string &msg, int64_t icon,
   return wxMessageBox(msg, title, buttons | wxCENTRE | icon) == wxOK;
 }
 
-auto PopUp::Confirmation(const std::string &title,
-                         const std::string &msg) -> bool {
+auto PopUp::Confirmation(const std::string &title, const std::string &msg)
+    -> bool {
   return BoxWithIcon(title, msg, wxICON_EXCLAMATION, wxOK | wxCANCEL);
 }
 

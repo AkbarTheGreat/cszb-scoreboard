@@ -5,7 +5,7 @@ A library which handles building and running commands against a Docker container
 
 This could possibly be useful for other folks wanting to do this sort of thing.  But also, there's probably something better on CPAN already.
 
-Copyright 2023-2024 Tracy Beck
+Copyright 2023-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

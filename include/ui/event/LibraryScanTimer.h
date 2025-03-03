@@ -2,7 +2,7 @@
 ui/event/LibraryScanTimer.h: A timer which periodically rescans the image
 library root for changes.
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ limitations under the License.
 
 #include <ui/widget/PersistentTimer.h>  // for PersistentTimer
 
-#include "ScoreboardCommon.h"           // for PUBLIC_TEST_ONLY
-#include "util/Singleton.h"             // for Singleton
+#include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+#include "util/Singleton.h"    // for Singleton
 
 namespace cszb_scoreboard {
 class Frame;

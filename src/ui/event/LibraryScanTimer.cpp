@@ -2,7 +2,7 @@
 ui/event/LibraryScanTimer.cpp: A timer which periodically rescans the image
 library root for changes.
 
-Copyright 2024 Tracy Beck
+Copyright 2024-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

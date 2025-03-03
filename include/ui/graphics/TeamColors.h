@@ -2,7 +2,7 @@
 ui/graphics/TeamColors.h: A singleton which holds the currently selected colors
 for every team.
 
-Copyright 2020-2024 Tracy Beck
+Copyright 2020-2025 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
