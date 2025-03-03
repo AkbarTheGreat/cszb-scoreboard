@@ -68,7 +68,7 @@ describe('VersionRouter', () => {
     // Setup API
     const api = (version: string | null, cb: TApiCb) =>
       agent
-        .get(Paths.Versions.Info.replace(':version', version??''))
+        .get(Paths.Versions.Info.replace(':version', version ?? ''))
         .end(apiCb(cb));
 
     // Success
