@@ -48,3 +48,11 @@ jobs:
         push: true
         cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
         cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
+  jest_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: npm install
+    - name: Run tests
+      run: npm test
