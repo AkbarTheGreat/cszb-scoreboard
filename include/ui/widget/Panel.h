@@ -57,6 +57,7 @@ class Toggle;
 class LabelledArea;
 class FilesystemPath;
 class DropDown;
+class Animation;
 
 class Panel : public Widget {
  public:
@@ -64,6 +65,8 @@ class Panel : public Widget {
   virtual ~Panel();
 
   // Methods to create internal widgets, like buttons or labels.
+  [[nodiscard]] auto animation(const std::string &filename) const
+      -> std::unique_ptr<Animation>;
   [[nodiscard]] auto button(const std::string &label,
                             bool exact_fit = false) const
       -> std::unique_ptr<Button>;
