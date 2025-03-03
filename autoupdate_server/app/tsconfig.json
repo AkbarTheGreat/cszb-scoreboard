@@ -65,9 +65,6 @@
       "@spec/*": [
         "spec/*"
       ],
-      "@testrepo/*": [
-        "../testdata/releases/*"
-      ],
     },
     "useUnknownInCatchVariables": false
   },
