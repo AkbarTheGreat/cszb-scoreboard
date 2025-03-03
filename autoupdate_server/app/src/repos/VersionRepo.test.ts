@@ -1,5 +1,5 @@
 import VersionRepo, { _versionSorter } from './VersionRepo';
-import { Version } from '@src/models/Version';
+import VersionHelper from '@src/models/VersionHelper'
 
 test('Gets all expected versions from test repo', async () => {
   const data = await VersionRepo.getAll();
@@ -15,7 +15,7 @@ test('Gets all expected versions from test repo', async () => {
 test('Get info returns expected value for known version', async () => {
   const version = await VersionRepo.getInfo('0.5.0');
   expect(version).toEqual(
-    new Version('0.5.0', ['win64'])
+    VersionHelper.buildVersion('0.5.0', ['win64'])
   );
 });
 
@@ -26,7 +26,7 @@ test('Get info returns null for invalid version', async () => {
 
 test('Get latest returns the highest version number', async () => {
   const latest = await VersionRepo.getLatest();
-  expect(latest).toEqual(new Version('1.0.1', ['macos', 'win64']));
+  expect(latest).toEqual(VersionHelper.buildVersion('1.0.1', ['macos', 'win64']));
 });
 
 test('Get update url returns expected value for known version', async () => {
