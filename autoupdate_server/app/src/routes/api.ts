@@ -1,7 +1,8 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import jetValidator from 'jet-validator';
 
-import Paths from '../constants/Paths';
+import Filesystem from '@src/constants/Filesystem';
+import Paths from '@src/constants/Paths';
 import VersionRoutes from './VersionRoutes';
 
 
@@ -30,7 +31,14 @@ versionRouter.get(
   VersionRoutes.getInfo,
 );
 
+versionRouter.get(
+  Paths.Versions.UpdateURL,
+  VersionRoutes.getUpdateURLs,
+);
+
 apiRouter.use(Paths.Versions.Base, versionRouter);
+
+apiRouter.use(Paths.Update.Data, express.static(Filesystem.ReleaseData));
 
 
 // **** Export default **** //

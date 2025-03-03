@@ -29,6 +29,21 @@ test('Get latest returns the highest version number', async () => {
   expect(latest).toEqual(new Version('1.0.1', ['macos', 'win64']));
 });
 
+test('Get update url returns expected value for known version', async () => {
+  const urls = await VersionRepo.getUpdateURLs('1.0.1', 'macos');
+  expect(urls).toEqual(['/api/update_data/1.0.1/macos/dummy_update_file']);
+});
+
+test('Get update urls returns null for invalid version', async () => {
+  const urls = await VersionRepo.getUpdateURLs('9.9.9', 'macos');
+  expect(urls).toEqual(null);
+});
+
+test('Get update urls returns null for invalid release', async () => {
+  const urls = await VersionRepo.getUpdateURLs('1.0.1', 'os2-warp');
+  expect(urls).toEqual(null);
+});
+
 test('Version sort works as expected', async () => {
   expect(_versionSorter).not.toBeNull()
   if (_versionSorter) {
