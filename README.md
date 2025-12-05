@@ -15,8 +15,11 @@ like to use it.
 
 There are plenty of free scoreboards which already exist, but they are often designed for strict
 time-keeping or don't have the support features which a comedy venue might like, such as the ability
-to display random memes on screen at any given time. Other alternatives, such as Janis or the
-ComedySportz San Jose Scoreboard have features which are useful, but are also closed source.
+to display random memes on screen at any given time. Other alternatives, such as JANIS or the
+ComedySportz San Jose Scoreboard have features which are useful, but were closed source when this
+project started.  A friendly shoutout to [JANIS](https://github.com/brbill/janis), which has gone
+open source in the meantime and, as it inspired this project, is also a stellar solution to the
+same problem space.
 
 I set out in late 2019 to create a scoreboard which would be at least as useful as the existing CSz
 themed scoreboards, but which would also be open-source, cross platform, and feature rich.
