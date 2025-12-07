@@ -1,5 +1,6 @@
 {
   "dependencies": [
+    "abseil",
     "curl",
     "gtest",
     "jsoncpp",

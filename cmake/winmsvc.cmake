@@ -142,6 +142,17 @@ set(wxWidgets_LIBRARIES
 	unofficial::webview2::webview2
 )
 
+# Vcpkg protobuf doesn't properly pull in the abseil stuff it requires.  Bring them in here, as the Linux/MacOS builds are still abseil-free (at least for now)
+set(wxWidgets_LIBRARIES
+	${wxWidgets_LIBRARIES}
+	absl::log_internal_check_op
+	absl::log_internal_conditions
+	absl::log_internal_message
+	absl::raw_hash_set
+	absl::statusor
+	utf8_range::utf8_validity
+)
+
 # I hate doing this, but wxWidgets produces way too many warnings in this category and obscures problems in my code.
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 

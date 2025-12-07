@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 env:
-  vcpkg_commit: 4044645043df0cb62e35ac91042221731153e1bb
+  vcpkg_commit: 74e6536215718009aae747d86d84b78376bf9e09
   wxwidget_commit: 44b99195bc4395944bab8071c6d7adcbdcdf8773
 
 jobs:
