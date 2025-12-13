@@ -13,49 +13,44 @@ jobs:
       fail-fast: true
 
       matrix:
-        target_os: [Linux, MacOS]
+        target_os: [Linux]
         include:
           - target_os: Linux
             docker_target: standard_build
             os: ubuntu-latest
-          - target_os: MacOS
-            docker_target: macos_build
-            os: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-      id: strings
-      shell: bash
-      run: |
-        echo "cache-branch=ghcr.io/akbarthegreat/cszb_scoreboard_cache_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}" >> $GITHUB_OUTPUT
+      - name: Set reusable strings
+        # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+        id: strings
+        shell: bash
+        run: |
+          echo "cache-branch=ghcr.io/akbarthegreat/cszb_scoreboard_cache_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}" >> $GITHUB_OUTPUT
 
-    - name: Login to Docker
-      env:
-        GITHUB_USER: ${{ github.actor }}
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: $GITHUB_USER
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to Docker
+        env:
+          GITHUB_USER: ${{ github.actor }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: $GITHUB_USER
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Build and Push Docker Image
-      env:
-        REGISTRY: ghcr.io
-        OWNER: AkbarTheGreat
-        IMAGE_NAME: ${{ github.repository }}
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile
-        target: ${{ matrix.docker_target }}
-        tags: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
-        push: true
-        cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
-
-
+      - name: Build and Push Docker Image
+        env:
+          REGISTRY: ghcr.io
+          OWNER: AkbarTheGreat
+          IMAGE_NAME: ${{ github.repository }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          target: ${{ matrix.docker_target }}
+          tags: ghcr.io/akbarthegreat/cszb_scoreboard_${{ matrix.docker_target }}_${{ github.head_ref || github.ref_name }}:latest
+          push: true
+          cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
