@@ -1,7 +1,7 @@
 /*
 ui/event/UpdateTimer.cpp: A timer which periodically checks for updates.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace cszb_scoreboard {
 // Retry every six hours to look for an update.
 constexpr int AUTO_UPDATE_DELAY = 6 * 60 * 60 * 1000;
 
-UpdateTimer::UpdateTimer(Frame *main_view, Singleton *singleton)
+UpdateTimer::UpdateTimer(Frame* main_view, Singleton* singleton)
     : PersistentTimer(AUTO_UPDATE_DELAY,
                       [this]() -> void { this->execute(); }) {
   this->main_view = main_view;

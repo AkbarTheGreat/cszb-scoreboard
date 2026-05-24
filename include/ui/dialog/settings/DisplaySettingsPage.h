@@ -2,7 +2,7 @@
 ui/dialog/settings/DisplaySettingsPage.h: The page of the settings notebook
 which handles display settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class DisplaySettingsPage : public SettingsPage {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  explicit DisplaySettingsPage(swx::Panel *wx)
+  explicit DisplaySettingsPage(swx::Panel* wx)
       : DisplaySettingsPage(wx, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   void saveSettings() override;
@@ -50,7 +50,7 @@ class DisplaySettingsPage : public SettingsPage {
   void swapDisplays(int a, int b);
 
   PUBLIC_TEST_ONLY
-  explicit DisplaySettingsPage(swx::Panel *wx, Singleton *singleton);
+  explicit DisplaySettingsPage(swx::Panel* wx, Singleton* singleton);
 
  private:
   void bindEvents();
@@ -68,7 +68,7 @@ class DisplaySettingsPage : public SettingsPage {
   std::unique_ptr<CheckBox> enable_window_mode;
   std::unique_ptr<Divider> separator_1, separator_2;
   std::unique_ptr<Button> reset_displays;
-  Singleton *singleton;
+  Singleton* singleton;
 };
 
 }  // namespace cszb_scoreboard

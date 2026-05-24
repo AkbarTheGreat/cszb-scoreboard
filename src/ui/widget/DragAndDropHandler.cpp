@@ -3,7 +3,7 @@ ui/widget/DragAndDropHandler.cpp: An object which handles receiving drops from
 drag and drop operations.  Currently only supports receiving URLs from a
 Browser.
 
-Copyright 2021-2022 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 HeldTarget::HeldTarget(
-    const std::function<void(int32_t, int32_t, const std::string &)> &on_drop) {
+    const std::function<void(int32_t, int32_t, const std::string&)>& on_drop) {
   this->on_drop = on_drop;
   SetDataObject(new wxURLDataObject);
 }
@@ -45,15 +45,15 @@ auto HeldTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
     return wxDragNone;
   }
   on_drop(static_cast<int32_t>(x), static_cast<int32_t>(y),
-          std::string(static_cast<wxURLDataObject *>(m_dataObject)->GetURL()));
+          std::string(static_cast<wxURLDataObject*>(m_dataObject)->GetURL()));
   return def;
 }
 
 auto HeldTarget::OnDrop(wxCoord x, wxCoord y) -> bool { return true; }
 
 DragAndDropHandler ::DragAndDropHandler(
-    Widget *owner,
-    const std::function<void(int32_t, int32_t, const std::string &)> &on_drop) {
+    Widget* owner,
+    const std::function<void(int32_t, int32_t, const std::string&)>& on_drop) {
   held = new HeldTarget(on_drop);
   owner->wx()->SetDropTarget(held);
 }

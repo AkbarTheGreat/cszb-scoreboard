@@ -2,7 +2,7 @@
 ui/component/control/TimerSetup.cpp: This class is responsible for managing
 timers which may be displayed at the bottom of every other view.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,13 +40,13 @@ const std::string PAUSE = "Pause";
 const std::string SHOW = "Show";
 const std::string HIDE = "Hide";
 
-auto TimerSetup ::Create(swx::Panel *wx) -> std::unique_ptr<TimerSetup> {
+auto TimerSetup ::Create(swx::Panel* wx) -> std::unique_ptr<TimerSetup> {
   auto control = std::make_unique<TimerSetup>(wx);
   control->initializeWidgets();
   return control;
 }
 
-void TimerSetup::createControls(Panel *control_panel) {
+void TimerSetup::createControls(Panel* control_panel) {
   minutes_label = control_panel->label("Minutes");
   minutes_text = control_panel->text("5");
   seconds_label = control_panel->label("Seconds");
@@ -61,7 +61,7 @@ void TimerSetup::createControls(Panel *control_panel) {
   timeUpdated();
 }
 
-void TimerSetup::positionWidgets(Panel *control_panel) {
+void TimerSetup::positionWidgets(Panel* control_panel) {
   control_panel->addWidget(*minutes_label, 0, 0);
   control_panel->addWidget(*minutes_text, 0, 1);
   control_panel->addWidget(*seconds_label, 1, 0);
@@ -75,17 +75,17 @@ void TimerSetup::positionWidgets(Panel *control_panel) {
 void TimerSetup::bindEvents() {
   start_stop_button->bind(
       wxEVT_TOGGLEBUTTON,
-      [this](wxCommandEvent &event) -> void { this->startOrStopTimer(); });
+      [this](wxCommandEvent& event) -> void { this->startOrStopTimer(); });
   show_hide_button->bind(
       wxEVT_TOGGLEBUTTON,
-      [this](wxCommandEvent &event) -> void { this->showOrHideTimer(); });
+      [this](wxCommandEvent& event) -> void { this->showOrHideTimer(); });
   reset_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->resetTimer(); });
+      [this](wxCommandEvent& event) -> void { this->resetTimer(); });
   minutes_text->bind(
-      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->timeUpdated(); });
+      wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void { this->timeUpdated(); });
   seconds_text->bind(
-      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->timeUpdated(); });
+      wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void { this->timeUpdated(); });
 }
 
 void TimerSetup::startOrStopTimer() {
@@ -155,6 +155,6 @@ void TimerSetup::fixButtons() {
   }
 }
 
-void TimerSetup::updateScreenText(ScreenText *screen_text) {}
+void TimerSetup::updateScreenText(ScreenText* screen_text) {}
 
 }  // namespace cszb_scoreboard

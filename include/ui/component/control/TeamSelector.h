@@ -2,7 +2,7 @@
 ui/component/control/TeamSelector.h: A group of radio buttons which selects
 which team's or teams' screen(s) to send data to.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ class Panel;
 
 class TeamSelector : public Panel {
  public:
-  explicit TeamSelector(swx::Panel *wx);
-  TeamSelector(swx::Panel *wx, const proto::ScreenSide &side);
+  explicit TeamSelector(swx::Panel* wx);
+  TeamSelector(swx::Panel* wx, const proto::ScreenSide& side);
   auto allSelected() -> bool;
   auto awaySelected() -> bool;
   auto homeSelected() -> bool;

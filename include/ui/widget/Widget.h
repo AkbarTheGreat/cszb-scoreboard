@@ -1,7 +1,7 @@
 /*
 ui/widget/Widget.h: Methods common to all of our widgets.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,86 +37,86 @@ const int NO_BORDER = 0;
 
 class Widget {
  public:
-  void addWidget(const Widget &widget, int row, int column,
-                 const Size &widget_size, int border_size = DEFAULT_BORDER_SIZE,
+  void addWidget(const Widget& widget, int row, int column,
+                 const Size& widget_size, int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
     addWidgetWithSpan(widget, row, column, 1, 1, widget_size, border_size,
                       flag);
   }
-  void addWidget(const Widget &widget, int row, int column,
+  void addWidget(const Widget& widget, int row, int column,
                  int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
     addWidgetWithSpan(widget, row, column, 1, 1, border_size, flag);
   }
-  void addWidgetWithSpan(const Widget &widget, int row, int column,
-                         int row_span, int column_span, const Size &widget_size,
+  void addWidgetWithSpan(const Widget& widget, int row, int column,
+                         int row_span, int column_span, const Size& widget_size,
                          int border_size = DEFAULT_BORDER_SIZE,
                          int flag = wxALL | wxGROW) {
     widget.setMinSize(widget_size);
     addWidgetWithSpan(widget, row, column, row_span, column_span, border_size,
                       flag);
   }
-  void addWidgetWithSpan(const Widget &widget, int row, int column,
+  void addWidgetWithSpan(const Widget& widget, int row, int column,
                          int row_span, int column_span,
                          int border_size = DEFAULT_BORDER_SIZE,
                          int flag = wxALL | wxGROW);
-  void addSpacer(const Size &size, int row, int column,
+  void addSpacer(const Size& size, int row, int column,
                  int border_size = DEFAULT_BORDER_SIZE,
                  int flag = wxALL | wxGROW) {
     addSpacerWithSpan(size, row, column, 1, 1, border_size, flag);
   }
-  void addSpacerWithSpan(const Size &size, int row, int column, int row_span,
+  void addSpacerWithSpan(const Size& size, int row, int column, int row_span,
                          int column_span, int border_size = DEFAULT_BORDER_SIZE,
                          int flag = wxALL | wxGROW);
-  void bind(const wxEventTypeTag<wxCloseEvent> &eventType,
-            const std::function<void(wxCloseEvent &)> &lambda,
+  void bind(const wxEventTypeTag<wxCloseEvent>& eventType,
+            const std::function<void(wxCloseEvent&)>& lambda,
             int id = wxID_ANY) const {
     wx()->Bind(eventType, lambda, id);
   }
-  void bind(const wxEventTypeTag<wxCommandEvent> &eventType,
-            const std::function<void(wxCommandEvent &)> &lambda,
+  void bind(const wxEventTypeTag<wxCommandEvent>& eventType,
+            const std::function<void(wxCommandEvent&)>& lambda,
             int id = wxID_ANY) const {
     wx()->Bind(eventType, lambda, id);
   }
-  void bind(const wxEventTypeTag<wxKeyEvent> &eventType,
-            const std::function<void(wxKeyEvent &)> &lambda,
+  void bind(const wxEventTypeTag<wxKeyEvent>& eventType,
+            const std::function<void(wxKeyEvent&)>& lambda,
             int id = wxID_ANY) const {
     wx()->Bind(eventType, lambda, id);
   }
-  void bind(const wxEventTypeTag<wxMouseEvent> &eventType,
-            const std::function<void(wxMouseEvent &)> &lambda,
+  void bind(const wxEventTypeTag<wxMouseEvent>& eventType,
+            const std::function<void(wxMouseEvent&)>& lambda,
             int id = wxID_ANY) const {
     wx()->Bind(eventType, lambda, id);
   }
   // A wxPaintEvent wraps more functionality than others, in that it creates a
   // renderable context for use in rendering to the window implicitly, which may
   // be utilized by other Widget methods.
-  void bind(const wxEventTypeTag<wxPaintEvent> &eventType,
-            const std::function<void(RenderContext *)> &lambda,
+  void bind(const wxEventTypeTag<wxPaintEvent>& eventType,
+            const std::function<void(RenderContext*)>& lambda,
             int id = wxID_ANY);
   void focus() const { wx()->SetFocus(); }
   void hide() const { wx()->Hide(); }
   void show() const { wx()->Show(); }
-  void moveWidget(Widget *widget, int row, int column);
+  void moveWidget(Widget* widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);
   void resetSizer();
   void runSizer();
   void setMinSize(Size size) const { wx()->SetMinSize(size.toWx()); }
   // Reparents this widget to another widget for layout purposes
-  void setParent(Widget *parent) const { wx()->Reparent(parent->wx()); }
+  void setParent(Widget* parent) const { wx()->Reparent(parent->wx()); }
   auto sizeOfWidgetAtLocation(int row, int column) -> Size;
 
   // This should be moved to protected when the conversion is complete.
-  auto sizer() -> swx::Sizer *;
+  auto sizer() -> swx::Sizer*;
 
-  [[nodiscard]] virtual auto wx() const -> wxWindow * = 0;
+  [[nodiscard]] virtual auto wx() const -> wxWindow* = 0;
 
  private:
   // wxWidget will clean up our sizer for us, so keep it as an unmanaged
   // pointer.
-  swx::Sizer *window_sizer = nullptr;
-  auto widgetAtIndex(int row, int column) -> wxWindow *;
+  swx::Sizer* window_sizer = nullptr;
+  auto widgetAtIndex(int row, int column) -> wxWindow*;
 };
 
 }  // namespace cszb_scoreboard

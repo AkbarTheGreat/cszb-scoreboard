@@ -1,7 +1,7 @@
 /*
 ui/event/UpdateTimer.h: A timer which periodically checks for updates.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,16 +32,16 @@ class UpdateTimer : public PersistentTimer {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  explicit UpdateTimer(Frame *main_view)
+  explicit UpdateTimer(Frame* main_view)
       : UpdateTimer(main_view, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 
   PUBLIC_TEST_ONLY
-  explicit UpdateTimer(Frame *main_view, Singleton *singleton);
+  explicit UpdateTimer(Frame* main_view, Singleton* singleton);
 
  private:
-  Frame *main_view;
-  Singleton *singleton;
+  Frame* main_view;
+  Singleton* singleton;
 
   void execute();
 };

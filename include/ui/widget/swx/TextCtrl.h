@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/TextCtrl.h: A wrapper around wxTextCtrl.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ namespace cszb_scoreboard::swx {
 
 class TextCtrl : public wxTextCtrl {
  public:
-  TextCtrl(wxWindow *parent, wxWindowID id,
-           const wxString &value = wxEmptyString,
-           const wxPoint &pos = wxDefaultPosition,
-           const wxSize &size = wxDefaultSize, int64_t style = 0,
-           const wxValidator &validator = wxDefaultValidator,
-           const wxString &name = wxTextCtrlNameStr)
+  TextCtrl(wxWindow* parent, wxWindowID id,
+           const wxString& value = wxEmptyString,
+           const wxPoint& pos = wxDefaultPosition,
+           const wxSize& size = wxDefaultSize, int64_t style = 0,
+           const wxValidator& validator = wxDefaultValidator,
+           const wxString& name = wxTextCtrlNameStr)
       : wxTextCtrl(parent, id, value, pos, size, style, validator, name) {}
 };
 

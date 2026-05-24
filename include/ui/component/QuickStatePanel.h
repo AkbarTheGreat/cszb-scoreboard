@@ -1,7 +1,7 @@
 /*
 ui/component/QuickStatePanel.h: This panel provides quick-settable screens.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,20 +36,20 @@ class Panel;
 
 class QuickStateEntry : public ScreenText {
  public:
-  QuickStateEntry(swx::Panel *wx, int id, Singleton *singleton);
+  QuickStateEntry(swx::Panel* wx, int id, Singleton* singleton);
 
  private:
   static auto tooltipText(char command_character) -> std::string;
   static auto setTooltipText(char command_character) -> std::string;
   static auto executeTooltipText(char command_character) -> std::string;
-  static auto fillSingleCharTemplate(const std::string &tmpl, char replacement)
+  static auto fillSingleCharTemplate(const std::string& tmpl, char replacement)
       -> std::string;
   void bindEvents(int id);
   void executeShortcut();
   void setShortcut();
 
   std::unique_ptr<Button> set_button, execute_button;
-  Singleton *singleton;
+  Singleton* singleton;
   bool initialized = false;
 };
 
@@ -58,15 +58,15 @@ class QuickStatePanel : public Panel {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  explicit QuickStatePanel(swx::Panel *wx)
+  explicit QuickStatePanel(swx::Panel* wx)
       : QuickStatePanel(wx, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  static void executeShortcut(QuickStateEntry *entry, Singleton *singleton);
-  static void setShortcut(QuickStateEntry *entry, Singleton *singleton);
-  auto scorePanel() -> ScreenText * { return score_entry.get(); }
+  static void executeShortcut(QuickStateEntry* entry, Singleton* singleton);
+  static void setShortcut(QuickStateEntry* entry, Singleton* singleton);
+  auto scorePanel() -> ScreenText* { return score_entry.get(); }
 
   PUBLIC_TEST_ONLY
-  QuickStatePanel(swx::Panel *wx, Singleton *singleton);
+  QuickStatePanel(swx::Panel* wx, Singleton* singleton);
 
  private:
   void positionWidgets();

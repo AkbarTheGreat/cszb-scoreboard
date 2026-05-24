@@ -3,7 +3,7 @@ ui/component/control/ScreenImageController.h: A specialized ScreenTextController
 which handles sending images loaded from elsewhere, as opposed to a static
 background.  By default, this also does not support any text at all.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const std::string NO_IMAGE_MESSAGE =
     "<No Image Selected>                               ";
 
-void ScreenImageController::createControls(Panel *control_panel) {
+void ScreenImageController::createControls(Panel* control_panel) {
   screen_selection =
       std::make_unique<TeamSelector>(childPanel(), ProtoUtil::allSide());
   current_image_label = control_panel->label(NO_IMAGE_MESSAGE);
@@ -47,10 +47,10 @@ void ScreenImageController::createControls(Panel *control_panel) {
 void ScreenImageController::bindEvents() {
   screen_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->screenChanged(); });
+      [this](wxCommandEvent& event) -> void { this->screenChanged(); });
 }
 
-void ScreenImageController::updateScreenText(ScreenText *screen_text) {
+void ScreenImageController::updateScreenText(ScreenText* screen_text) {
   if (!isActive()) {
     return;
   }

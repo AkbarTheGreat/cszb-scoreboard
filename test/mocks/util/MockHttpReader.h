@@ -1,7 +1,7 @@
 /*
 util/MockHttpReader.h: Mock HttpReader class for testing.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace cszb_scoreboard::test {
 
 class MockHttpReader : public HttpReader {
  public:
-  MOCK_METHOD(HttpResponse, read, (const char *url), (override));
+  MOCK_METHOD(HttpResponse, read, (const char* url), (override));
 };
 
 }  // namespace cszb_scoreboard::test

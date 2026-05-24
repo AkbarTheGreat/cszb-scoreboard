@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/ToggleButton.h: A wrapper around wxToggleButton.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ namespace cszb_scoreboard::swx {
 
 class ToggleButton : public wxToggleButton {
  public:
-  ToggleButton(wxWindow *parent, wxWindowID id, const wxString &label,
-               const wxPoint &pos = wxDefaultPosition,
-               const wxSize &size = wxDefaultSize, int64_t style = 0,
-               const wxValidator &val = wxDefaultValidator,
-               const wxString &name = wxCheckBoxNameStr)
+  ToggleButton(wxWindow* parent, wxWindowID id, const wxString& label,
+               const wxPoint& pos = wxDefaultPosition,
+               const wxSize& size = wxDefaultSize, int64_t style = 0,
+               const wxValidator& val = wxDefaultValidator,
+               const wxString& name = wxCheckBoxNameStr)
       : wxToggleButton(parent, id, label, pos, size, style, val, name) {}
 };
 

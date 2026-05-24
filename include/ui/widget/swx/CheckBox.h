@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/CheckBox.h: A wrapper around wxCheckBox.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ namespace cszb_scoreboard::swx {
 
 class CheckBox : public wxCheckBox {
  public:
-  CheckBox(wxWindow *parent, wxWindowID id, const wxString &label,
-           const wxPoint &pos = wxDefaultPosition,
-           const wxSize &size = wxDefaultSize, int64_t style = 0,
-           const wxValidator &validator = wxDefaultValidator,
-           const wxString &name = wxCheckBoxNameStr)
+  CheckBox(wxWindow* parent, wxWindowID id, const wxString& label,
+           const wxPoint& pos = wxDefaultPosition,
+           const wxSize& size = wxDefaultSize, int64_t style = 0,
+           const wxValidator& validator = wxDefaultValidator,
+           const wxString& name = wxCheckBoxNameStr)
       : wxCheckBox(parent, id, label, pos, size, style, validator, name) {}
 };
 

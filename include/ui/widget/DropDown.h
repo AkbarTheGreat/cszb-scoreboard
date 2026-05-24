@@ -1,7 +1,7 @@
 /*
 ui/widget/DropDown.h: A drop-down selector to pick one from many strings.
 
-Copyright 2023-2025 Tracy Beck
+Copyright 2023-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,17 +30,17 @@ namespace cszb_scoreboard {
 
 class DropDown : public Widget {
  public:
-  DropDown(swx::Choice *choice, const std::vector<std::string> &choices);
+  DropDown(swx::Choice* choice, const std::vector<std::string>& choices);
 
   auto selected() -> std::string;
   void setSelected(int32_t selection);
-  void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
+  void toolTip(const std::string& tip) { wx()->SetToolTip(tip); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::Choice *_wx;
+  swx::Choice* _wx;
 };
 
 }  // namespace cszb_scoreboard

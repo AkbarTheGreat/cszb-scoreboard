@@ -2,7 +2,7 @@
 ui/dialog/EditImageLibraryDialog.h: A dialog which allows a user to
 add/remove/edit images in the image library.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,13 +50,13 @@ class EditImageLibraryDialog : public TabbedDialog {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  EditImageLibraryDialog(swx::PropertySheetDialog *wx, ImageFromLibrary *parent)
+  EditImageLibraryDialog(swx::PropertySheetDialog* wx, ImageFromLibrary* parent)
       : EditImageLibraryDialog(wx, parent, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 
   PUBLIC_TEST_ONLY
-  EditImageLibraryDialog(swx::PropertySheetDialog *wx, ImageFromLibrary *parent,
-                         Singleton *singleton);
+  EditImageLibraryDialog(swx::PropertySheetDialog* wx, ImageFromLibrary* parent,
+                         Singleton* singleton);
 
  private:
   std::unique_ptr<FileListBox> file_list;
@@ -72,25 +72,25 @@ class EditImageLibraryDialog : public TabbedDialog {
   std::unique_ptr<ListBox> tag_list;
   std::unique_ptr<TemporaryImageLibrary> library;
   std::map<FilesystemPath, proto::ImageInfo> images;
-  ImageFromLibrary *parent;
-  Singleton *singleton;
+  ImageFromLibrary* parent;
+  Singleton* singleton;
 
   void bindEvents();
   void positionWidgets();
   void saveSettings();
-  void fileSelected(wxListEvent *event);
+  void fileSelected(wxListEvent* event);
   void onOk();
   void onCancel();
-  void fileUpdated(const FilesystemPath &prev, const FilesystemPath &curr);
+  void fileUpdated(const FilesystemPath& prev, const FilesystemPath& curr);
   void nameUpdated();
   void refreshFiles();
   void rootBrowsePressed();
   void rootClearPressed();
-  void tagDeleted(const wxListEvent &event);
-  void tagsUpdated(const wxListEvent &event);
+  void tagDeleted(const wxListEvent& event);
+  void tagsUpdated(const wxListEvent& event);
 
   static auto validateSettings() -> bool;
-  static auto bestGuessImageName(const FilesystemPath &file) -> std::string;
+  static auto bestGuessImageName(const FilesystemPath& file) -> std::string;
 };
 
 }  // namespace cszb_scoreboard

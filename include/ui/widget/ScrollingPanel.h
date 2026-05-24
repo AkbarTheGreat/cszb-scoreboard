@@ -2,7 +2,7 @@
 ui/widget/ScrollingPanel.h: A panel which may scroll around a larger area than
 the panel itself.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,16 +28,16 @@ namespace cszb_scoreboard {
 
 class ScrollingPanel : public Panel {
  public:
-  explicit ScrollingPanel(swx::ScrolledWindow *panel);
+  explicit ScrollingPanel(swx::ScrolledWindow* panel);
 
   void runSizer();
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  protected:
-  swx::ScrolledWindow *_wx;
+  swx::ScrolledWindow* _wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -3,7 +3,7 @@ ui/component/control/ScreenTextController.cpp: Any class which extends this
 serves to set information from the user into a ScreenText.  It could be
 arbitrary text, a single image, or a score update, to name a few.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,9 +38,9 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-ScreenTextController::ScreenTextController(swx::Panel *wx,
+ScreenTextController::ScreenTextController(swx::Panel* wx,
                                            bool display_update_screens,
-                                           Singleton *singleton)
+                                           Singleton* singleton)
     : Panel(wx) {
   this->singleton = singleton;
   this->display_update_screens_button = display_update_screens;
@@ -58,15 +58,15 @@ void ScreenTextController::initializeWidgets() {
 }
 
 auto ScreenTextController::isActive() -> bool {
-  FrameManager *frameMgr = singleton->frameManager();
+  FrameManager* frameMgr = singleton->frameManager();
   if (frameMgr == nullptr) {
     return false;
   }
-  MainView *main = frameMgr->mainView();
+  MainView* main = frameMgr->mainView();
   if (main == nullptr) {
     return false;
   }
-  ControlPanel *control = main->controlPanel();
+  ControlPanel* control = main->controlPanel();
   if (control == nullptr) {
     return false;
   }
@@ -89,10 +89,10 @@ void ScreenTextController::positionWidgets() {
 void ScreenTextController::bindEvents() {
   update_screens->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->updateClicked(); });
+      [this](wxCommandEvent& event) -> void { this->updateClicked(); });
 }
 
-auto ScreenTextController::previewPanel() -> PreviewPanel * {
+auto ScreenTextController::previewPanel() -> PreviewPanel* {
   return singleton->frameManager()->mainView()->previewPanel();
 }
 
@@ -101,7 +101,7 @@ void ScreenTextController::updateClicked() {
 }
 
 void ScreenTextController::updatePreview() {
-  previewPanel()->forAllScreens([this](ScreenPreview *preview) -> void {
+  previewPanel()->forAllScreens([this](ScreenPreview* preview) -> void {
     this->updateScreenText(preview->screen());
   });
 }

@@ -2,7 +2,7 @@
 ui/component/control/TextEntry.h: This class is responsible for generating text
 which can go to one or all of the scoreboard screens.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ class Panel;
 
 class TextEntry : public ScreenTextController {
  public:
-  explicit TextEntry(swx::Panel *wx);
-  static auto Create(swx::Panel *wx) -> std::unique_ptr<TextEntry>;
-  auto textField() -> Text *;
+  explicit TextEntry(swx::Panel* wx);
+  static auto Create(swx::Panel* wx) -> std::unique_ptr<TextEntry>;
+  auto textField() -> Text*;
   void textUpdated();
 
   PUBLIC_TEST_ONLY
@@ -58,12 +58,12 @@ class TextEntry : public ScreenTextController {
   int home_font_size, away_font_size, all_font_size;
   Color home_color, away_color, all_color;
 
-  void updateScreenText(ScreenText *screen_text) override;
-  void createControls(Panel *control_panel) override;
+  void updateScreenText(ScreenText* screen_text) override;
+  void createControls(Panel* control_panel) override;
 
   void bindEvents();
   auto enteredFontSize() -> int;
-  void positionWidgets(Panel *control_panel);
+  void positionWidgets(Panel* control_panel);
   void screenChanged();
   void colorChanged();
 };

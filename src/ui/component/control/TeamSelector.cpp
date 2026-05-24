@@ -2,7 +2,7 @@
 ui/component/control/TeamSelector.cpp: A group of radio buttons which selects
 which team's or teams' screen(s) to send data to.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,15 +29,15 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-static constexpr std::array<const char *, 3> CHOICES{{"Home", "Away", "All"}};
+static constexpr std::array<const char*, 3> CHOICES{{"Home", "Away", "All"}};
 
-TeamSelector::TeamSelector(swx::Panel *wx) : Panel(wx) {
+TeamSelector::TeamSelector(swx::Panel* wx) : Panel(wx) {
   selector = radio("Team", CHOICES.data(), CHOICES.size());
   addWidget(*selector, 0, 0, NO_BORDER);
   runSizer();
 }
 
-TeamSelector::TeamSelector(swx::Panel *wx, const proto::ScreenSide &side)
+TeamSelector::TeamSelector(swx::Panel* wx, const proto::ScreenSide& side)
     : TeamSelector(wx) {
   if (side.home() && side.away()) {
     selector->setSelection(2);

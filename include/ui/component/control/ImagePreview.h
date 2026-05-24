@@ -2,7 +2,7 @@
 ui/component/control/ImagePreview.h: A preview thumbnail of an image,
 selectable to send to a ScreenText.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,19 +35,19 @@ class Panel;
 
 class ImagePreview : public Panel {
  public:
-  explicit ImagePreview(swx::Panel *wx);
+  explicit ImagePreview(swx::Panel* wx);
 
   void clearImage();
   [[nodiscard]] auto getFilename() const -> std::optional<FilesystemPath>;
-  void setImage(const FilesystemPath &filename);
+  void setImage(const FilesystemPath& filename);
 
   const static int PREVIEW_WIDTH = 160;
   const static int PREVIEW_HEIGHT = 90;
 
  private:
   void bindEvents();
-  void paintEvent(RenderContext *renderer);
-  static auto ratio(const Size &size) -> float;
+  void paintEvent(RenderContext* renderer);
+  static auto ratio(const Size& size) -> float;
 
   std::optional<FilesystemPath> filename;
   Image image;

@@ -2,7 +2,7 @@
 config/Persistence.cpp: This class manages serializing/deserializing
 our configuration proto to/from disk via a singleton.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ namespace cszb_scoreboard {
 #define FAKE_CONFIGURATION_FILES
 #endif
 
-const char *CONFIG_FILE = "scoreboard.config";
-const char *IMAGE_LIBRARY_FILE = "image_library.data";
-const char *TEAM_LIBRARY_FILE = "team_library.data";
-const char *SLIDE_SHOW_FILE = "slide_show.data";
+const char* CONFIG_FILE = "scoreboard.config";
+const char* IMAGE_LIBRARY_FILE = "image_library.data";
+const char* TEAM_LIBRARY_FILE = "team_library.data";
+const char* SLIDE_SHOW_FILE = "slide_show.data";
 
-Persistence::Persistence(SingletonClass c, Singleton *singleton) {
+Persistence::Persistence(SingletonClass c, Singleton* singleton) {
   this->singleton = singleton;
   loadConfigFromDisk();
   loadImageLibraryFromDisk();
@@ -105,23 +105,23 @@ void Persistence::loadTeamLibraryFromDisk() {
   // For testing, populate some default values.  These are just some teams we
   // use in Boston, they're placeholders.
   team_library = proto::TeamLibrary();
-  proto::TeamLibInfo *home_team_info = team_library.add_teams();
+  proto::TeamLibInfo* home_team_info = team_library.add_teams();
   home_team_info->set_default_team_type(proto::TeamInfo_TeamType_HOME_TEAM);
   home_team_info->set_name("Rozzie Square Pegs");
   home_team_info->set_image_path("c:\\logos\\RSP.png");
   home_team_info->set_is_relative(false);
-  proto::TeamLibInfo *away_team_info = team_library.add_teams();
+  proto::TeamLibInfo* away_team_info = team_library.add_teams();
   away_team_info->set_default_team_type(proto::TeamInfo_TeamType_AWAY_TEAM);
   away_team_info->set_name("Boston Baked Beans");
   away_team_info->set_image_path("BBB.png");
   away_team_info->set_is_relative(true);
-  proto::TeamLibInfo *third_team_info = team_library.add_teams();
+  proto::TeamLibInfo* third_team_info = team_library.add_teams();
   third_team_info->set_name("Waltham Sandwiches");
-  proto::TeamLibInfo *fourth_team_info = team_library.add_teams();
+  proto::TeamLibInfo* fourth_team_info = team_library.add_teams();
   fourth_team_info->set_name("Brookline NSynchers");
-  proto::TeamLibInfo *fifth_team_info = team_library.add_teams();
+  proto::TeamLibInfo* fifth_team_info = team_library.add_teams();
   fifth_team_info->set_name("Somervillains");
-  proto::TeamLibInfo *sixth_team_info = team_library.add_teams();
+  proto::TeamLibInfo* sixth_team_info = team_library.add_teams();
   sixth_team_info->set_name("West Roxbury'd Treasure");
   // End testing stuff to be deleted
 #else
@@ -180,9 +180,9 @@ auto Persistence::loadDisplays() -> proto::DisplayConfig {
   return full_config.display_config();
 }
 
-void Persistence::saveDisplays(const proto::DisplayConfig &display_config) {
+void Persistence::saveDisplays(const proto::DisplayConfig& display_config) {
   // full_config.clear_display_config();
-  proto::DisplayConfig *new_display_config =
+  proto::DisplayConfig* new_display_config =
       full_config.mutable_display_config();
   new_display_config->CopyFrom(display_config);
   saveConfigToDisk();
@@ -195,9 +195,9 @@ auto Persistence::loadGeneralConfig() -> proto::GeneralConfig {
 }
 
 void Persistence::saveGeneralConfig(
-    const proto::GeneralConfig &general_config) {
+    const proto::GeneralConfig& general_config) {
   // full_config.clear_display_config();
-  proto::GeneralConfig *new_general_config =
+  proto::GeneralConfig* new_general_config =
       full_config.mutable_general_config();
   new_general_config->CopyFrom(general_config);
   saveConfigToDisk();
@@ -209,7 +209,7 @@ auto Persistence::loadSlideShow() -> proto::SlideShow {
   return slide_show;
 }
 
-void Persistence::saveSlideShow(const proto::SlideShow &slide_show) {
+void Persistence::saveSlideShow(const proto::SlideShow& slide_show) {
   this->slide_show.CopyFrom(slide_show);
   saveSlideShowToDisk();
 }
@@ -220,9 +220,9 @@ auto Persistence::loadTeams() -> proto::TeamConfig {
   return full_config.team_config();
 }
 
-void Persistence::saveTeams(const proto::TeamConfig &team_config) {
+void Persistence::saveTeams(const proto::TeamConfig& team_config) {
   // full_config.clear_display_config();
-  proto::TeamConfig *new_team_config = full_config.mutable_team_config();
+  proto::TeamConfig* new_team_config = full_config.mutable_team_config();
   new_team_config->CopyFrom(team_config);
   saveConfigToDisk();
 }
@@ -233,7 +233,7 @@ auto Persistence::loadImageLibrary() -> proto::ImageLibrary {
   return image_library;
 }
 
-void Persistence::saveImageLibrary(const proto::ImageLibrary &library) {
+void Persistence::saveImageLibrary(const proto::ImageLibrary& library) {
   image_library.CopyFrom(library);
   saveImageLibraryToDisk();
 }
@@ -244,7 +244,7 @@ auto Persistence::loadTeamLibrary() -> proto::TeamLibrary {
   return team_library;
 }
 
-void Persistence::saveTeamLibrary(const proto::TeamLibrary &library) {
+void Persistence::saveTeamLibrary(const proto::TeamLibrary& library) {
   team_library.CopyFrom(library);
   saveTeamLibraryToDisk();
 }

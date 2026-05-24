@@ -2,7 +2,7 @@
 ui/widget/Panel.h: A panel represents an interior panel container that is held
 within other frames or panels.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -60,45 +60,45 @@ class DropDown;
 
 class Panel : public Widget {
  public:
-  explicit Panel(swx::Panel *panel);
+  explicit Panel(swx::Panel* panel);
   virtual ~Panel();
 
   // Methods to create internal widgets, like buttons or labels.
-  [[nodiscard]] auto button(const std::string &label,
+  [[nodiscard]] auto button(const std::string& label,
                             bool exact_fit = false) const
       -> std::unique_ptr<Button>;
-  [[nodiscard]] auto browser(const std::string &url) const
+  [[nodiscard]] auto browser(const std::string& url) const
       -> std::unique_ptr<Browser>;
-  [[nodiscard]] auto checkBox(const std::string &label) const
+  [[nodiscard]] auto checkBox(const std::string& label) const
       -> std::unique_ptr<CheckBox>;
-  [[nodiscard]] auto colorPicker(const wxColour &initial_color) const
+  [[nodiscard]] auto colorPicker(const wxColour& initial_color) const
       -> std::unique_ptr<ColorPicker>;
   [[nodiscard]] auto divider() const -> std::unique_ptr<Divider>;
-  [[nodiscard]] auto dropDown(const std::vector<std::string> &choices) const
+  [[nodiscard]] auto dropDown(const std::vector<std::string>& choices) const
       -> std::unique_ptr<DropDown>;
   [[nodiscard]] auto openDirectoryPicker(
-      const std::string &title, const FilesystemPath &initial_dir) const
+      const std::string& title, const FilesystemPath& initial_dir) const
       -> std::unique_ptr<DirectoryPicker>;
-  [[nodiscard]] auto openFilePicker(const std::string &title,
-                                    const std::string &selectionMode) const
+  [[nodiscard]] auto openFilePicker(const std::string& title,
+                                    const std::string& selectionMode) const
       -> std::unique_ptr<FilePicker>;
-  [[nodiscard]] auto label(const std::string &text) const
+  [[nodiscard]] auto label(const std::string& text) const
       -> std::unique_ptr<Label>;
-  [[nodiscard]] auto labelledArea(const std::string &label) const
+  [[nodiscard]] auto labelledArea(const std::string& label) const
       -> std::unique_ptr<LabelledArea>;
-  [[nodiscard]] auto listBox(const std::string &title) const
+  [[nodiscard]] auto listBox(const std::string& title) const
       -> std::unique_ptr<ListBox>;
-  [[nodiscard]] auto radio(const std::string &name, const char *const *choices,
+  [[nodiscard]] auto radio(const std::string& name, const char* const* choices,
                            int64_t choices_size, bool is_vertical = true) const
       -> std::unique_ptr<Radio>;
   [[nodiscard]] auto radioButton() const -> std::unique_ptr<RadioButton>;
   [[nodiscard]] auto scrollingPanel() const -> std::unique_ptr<ScrollingPanel>;
-  [[nodiscard]] auto searchBox(const std::string &initial_text) const
+  [[nodiscard]] auto searchBox(const std::string& initial_text) const
       -> std::unique_ptr<SearchBox>;
-  [[nodiscard]] auto text(const std::string &initial_text,
+  [[nodiscard]] auto text(const std::string& initial_text,
                           bool multi_line = false) const
       -> std::unique_ptr<Text>;
-  [[nodiscard]] auto toggle(const std::string &label) const
+  [[nodiscard]] auto toggle(const std::string& label) const
       -> std::unique_ptr<Toggle>;
 
   // Create an anonymous Panel child for the current one, akin to button(),
@@ -107,38 +107,38 @@ class Panel : public Widget {
       -> std::unique_ptr<Panel>;
 
   // Create a child wx entry, for new Dialog object creation.
-  [[nodiscard]] auto childDialog(const wxString &title,
+  [[nodiscard]] auto childDialog(const wxString& title,
                                  wxWindowID id = wxID_ANY,
-                                 const wxPoint &pos = wxDefaultPosition,
-                                 const wxSize &size = wxDefaultSize,
+                                 const wxPoint& pos = wxDefaultPosition,
+                                 const wxSize& size = wxDefaultSize,
                                  int64_t style = wxDEFAULT_DIALOG_STYLE,
-                                 const wxString &name = wxDialogNameStr) const
-      -> swx::PropertySheetDialog * {
+                                 const wxString& name = wxDialogNameStr) const
+      -> swx::PropertySheetDialog* {
     return new swx::PropertySheetDialog(wx(), id, title, pos, size, style,
                                         name);
   }
   // Create a child wx entry, for new Panel object creation.
-  [[nodiscard]] auto childPanel() const -> swx::Panel *;
+  [[nodiscard]] auto childPanel() const -> swx::Panel*;
   // Create a child wx entry, sized as large as the given rectangle.
-  [[nodiscard]] auto childPanel(int width, int height) const -> swx::Panel *;
+  [[nodiscard]] auto childPanel(int width, int height) const -> swx::Panel*;
   void hide() const { wx()->Hide(); }
   void refresh() const { wx()->Refresh(); }
   void setBorder(bool has_border = true) const;
   // TODO(akbar): Get rid of this duplicate setSize method
-  void setSize(const wxSize &size) const { wx()->SetSize(size); }
-  void setSize(const Size &size) const { wx()->SetSize(size.toWx()); }
+  void setSize(const wxSize& size) const { wx()->SetSize(size); }
+  void setSize(const Size& size) const { wx()->SetSize(size.toWx()); }
   void show() const { wx()->Show(); }
   // Temporary -- remove once we get rid of clients using wx_size
   [[nodiscard]] auto wx_size() const -> wxSize { return wx()->GetSize(); }
   [[nodiscard]] auto size() const -> Size;
-  void toolTip(const std::string &tip) const { wx()->SetToolTip(tip); }
+  void toolTip(const std::string& tip) const { wx()->SetToolTip(tip); }
   void update() const { wx()->Update(); }
   void destroy() { _wx->destroy(); }
 
   // TODO(akbar): make this private once construction is all moved away from
   // passing wx widgets along.
-  [[nodiscard]] auto wx() const -> wxWindow * override {
-    return dynamic_cast<swx::PanelImpl *>(_wx);
+  [[nodiscard]] auto wx() const -> wxWindow* override {
+    return dynamic_cast<swx::PanelImpl*>(_wx);
   }
 
  protected:
@@ -146,7 +146,7 @@ class Panel : public Widget {
   // on the parent wxWidget to do it for us.
   bool should_self_delete = false;
 
-  swx::Panel *_wx;
+  swx::Panel* _wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -5,7 +5,7 @@ background.  By default, this also does not support any text at all.  This is
 not intended to be used standalone, or as a polymorphic container pointer, but
 merely a way to abstract away common functionality.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,12 +46,12 @@ class ScreenImageController : public ScreenTextController {
   std::string all_screen_image_name, home_screen_image_name,
       away_screen_image_name;
 
-  explicit ScreenImageController(swx::Panel *wx) : ScreenTextController(wx) {}
+  explicit ScreenImageController(swx::Panel* wx) : ScreenTextController(wx) {}
   void bindEvents();
-  void createControls(Panel *control_panel) override;
-  virtual void positionWidgets(Panel *control_panel) = 0;
+  void createControls(Panel* control_panel) override;
+  virtual void positionWidgets(Panel* control_panel) = 0;
   void screenChanged();
-  void updateScreenText(ScreenText *screen_text) override;
+  void updateScreenText(ScreenText* screen_text) override;
 };
 
 }  // namespace cszb_scoreboard

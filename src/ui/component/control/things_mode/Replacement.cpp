@@ -2,7 +2,7 @@
 ui/component/control/things_mode/Replacement.cpp: Represents a replacement in
 5/6 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-static const char *BULLET = "\u2022";
+static const char* BULLET = "\u2022";
 
-Replacement::Replacement(ReplacementPanel *parent) {
+Replacement::Replacement(ReplacementPanel* parent) {
   this->parent = parent;
   control_pane = parent->panel(true);
   replaceable = control_pane->text("", true);
@@ -41,21 +41,21 @@ Replacement::Replacement(ReplacementPanel *parent) {
   positionWidgets();
 }
 
-void Replacement::copyFrom(Replacement *other) {
+void Replacement::copyFrom(Replacement* other) {
   replaceable->setValue(other->replaceable->value());
   replacement->setValue(other->replacement->value());
 }
 
 void Replacement::bindEvents() {
-  auto *rp = parent;
+  auto* rp = parent;
   remove_replacement_button->bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                                  [this, rp](wxCommandEvent &event) -> void {
+                                  [this, rp](wxCommandEvent& event) -> void {
                                     rp->deleteReplacement(this);
                                   });
   replaceable->bind(wxEVT_KEY_UP,
-                    [rp](wxKeyEvent &event) -> void { rp->textUpdated(); });
+                    [rp](wxKeyEvent& event) -> void { rp->textUpdated(); });
   replacement->bind(wxEVT_KEY_UP,
-                    [rp](wxKeyEvent &event) -> void { rp->textUpdated(); });
+                    [rp](wxKeyEvent& event) -> void { rp->textUpdated(); });
 }
 
 void Replacement::positionWidgets() {

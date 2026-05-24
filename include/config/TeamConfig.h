@@ -2,7 +2,7 @@
 config/TeamConfig.h: This class is a configuration singleton which
 represents the team specific configuration pieces.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,21 +38,21 @@ class TeamConfig {
   // GCOVR_EXCL_STOP
   auto numberOfTeams() -> int;
   void saveSettings();
-  void setColor(proto::TeamInfo_TeamType team, const Color &color);
-  void setSingleScreenOrder(const std::vector<proto::TeamInfo_TeamType> &order);
+  void setColor(proto::TeamInfo_TeamType team, const Color& color);
+  void setSingleScreenOrder(const std::vector<proto::TeamInfo_TeamType>& order);
   auto singleScreenOrder() -> std::vector<proto::TeamInfo_TeamType>;
   auto teamColor(proto::TeamInfo_TeamType team) -> Color;
-  auto teamColor(const proto::ScreenSide &side) -> std::vector<Color>;
+  auto teamColor(const proto::ScreenSide& side) -> std::vector<Color>;
   static auto teamName(proto::TeamInfo_TeamType team) -> std::string;
 
   PUBLIC_TEST_ONLY
-  TeamConfig(SingletonClass c, Singleton *singleton);
+  TeamConfig(SingletonClass c, Singleton* singleton);
 
  private:
   proto::TeamConfig team_config;
-  Singleton *singleton;
-  static void setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type);
-  static auto teamsForSide(const proto::ScreenSide &side)
+  Singleton* singleton;
+  static void setTeam(proto::TeamInfo* team, proto::TeamInfo_TeamType type);
+  static auto teamsForSide(const proto::ScreenSide& side)
       -> std::vector<proto::TeamInfo_TeamType>;
   auto checkTeamConfig() -> bool;
   auto checkTeamOrder() -> bool;

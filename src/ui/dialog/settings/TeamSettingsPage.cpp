@@ -2,7 +2,7 @@
 ui/dialog/settings/TeamSettingsPage.cpp: The page of the settings notebook which
 handles team based settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-TeamSettingsPage::TeamSettingsPage(swx::Panel *wx, Singleton *singleton)
+TeamSettingsPage::TeamSettingsPage(swx::Panel* wx, Singleton* singleton)
     : SettingsPage(wx) {
   this->singleton = singleton;
   int i = 0;
@@ -63,7 +63,7 @@ void TeamSettingsPage::saveSettings() {
     restart_warning = true;
   }
 
-  for (const auto &panel : team_settings_panels) {
+  for (const auto& panel : team_settings_panels) {
     singleton->teamConfig()->setColor(panel->team(), panel->teamColor());
 
     if (restart_warning || previous_team_order.size() <= team_order.size() ||

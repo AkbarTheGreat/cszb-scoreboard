@@ -2,7 +2,7 @@
 ui/component/control/SlideshowSetup.h: This class is responsible for managing a
 slideshow.  Typically, these are used for pre-show distractions.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,10 +40,10 @@ class Panel;
 
 class SlideshowSetup : public ScreenTextController {
  public:
-  explicit SlideshowSetup(swx::Panel *wx)
+  explicit SlideshowSetup(swx::Panel* wx)
       : ScreenTextController(wx,
                              /*display_update_screens=*/false) {}
-  static auto Create(swx::Panel *wx) -> std::unique_ptr<SlideshowSetup>;
+  static auto Create(swx::Panel* wx) -> std::unique_ptr<SlideshowSetup>;
   void moveSlideLeft(int32_t index);
   void moveSlideRight(int32_t index);
   void removeSlide(int32_t index);
@@ -57,10 +57,10 @@ class SlideshowSetup : public ScreenTextController {
   std::unique_ptr<Text> delay_setting;
   std::vector<std::unique_ptr<SlidePreview>> slide_previews;
 
-  void createControls(Panel *control_panel) override;
-  void updateScreenText(ScreenText *screen_text) override;
+  void createControls(Panel* control_panel) override;
+  void updateScreenText(ScreenText* screen_text) override;
   void bindEvents();
-  void positionWidgets(Panel *control_panel);
+  void positionWidgets(Panel* control_panel);
   void addNewSlide();
   void setSlidePreviews(unsigned int page_number);
   void swapSlides(int32_t a, int32_t b);

@@ -2,7 +2,7 @@
 ui/widget/Frame.cpp: A frame represents a free-standing window that is not a
 dialog.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,10 +47,10 @@ void Frame::fullScreen(bool show) {
   _wx->ShowFullScreen(show);
 }
 
-void Frame::menuBar(const std::vector<MenuCategory> &menu) {
-  auto *menu_bar = new wxMenuBar();
-  for (const auto &category : menu) {
-    auto *menu_cat = new wxMenu;
+void Frame::menuBar(const std::vector<MenuCategory>& menu) {
+  auto* menu_bar = new wxMenuBar();
+  for (const auto& category : menu) {
+    auto* menu_cat = new wxMenu;
     for (auto item : category.items) {
       if (item.name) {
         menu_cat->Append(item.id, *item.name, *item.description);
@@ -63,12 +63,12 @@ void Frame::menuBar(const std::vector<MenuCategory> &menu) {
   _wx->SetMenuBar(menu_bar);
 }
 
-void Frame::setDimensions(const Position &position, const Size &size) {
+void Frame::setDimensions(const Position& position, const Size& size) {
   wx()->SetSize(size.toWx());
   wx()->SetPosition(position.toWx());
 }
 
-void Frame::setStatusBar(const wxString &text) {
+void Frame::setStatusBar(const wxString& text) {
   if (!has_status_bar) {
     has_status_bar = true;
     _wx->CreateStatusBar();

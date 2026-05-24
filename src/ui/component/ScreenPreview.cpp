@@ -3,7 +3,7 @@ ui/ScreenPreview.cpp: This class manages the thumbnail preview of a monitor
 in the main window.  In addition, the preview owns the ScreenPresenter which
 displays to the actual monitor, dispatching the updated view when necessary.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,13 +33,13 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 10;
-const char *WELCOME_MESSAGE = "Hello";
-const char *ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
+const char* WELCOME_MESSAGE = "Hello";
+const char* ERROR_MESSAGE = "NO\nSCREENS\nFOUND!";
 const int PREVIEW_HEIGHT = 320;
 
-ScreenPreview::ScreenPreview(swx::Panel *wx,
+ScreenPreview::ScreenPreview(swx::Panel* wx,
                              std::vector<proto::ScreenSide> sides,
-                             int monitor_number, Singleton *singleton)
+                             int monitor_number, Singleton* singleton)
     : Panel(wx) {
   this->singleton = singleton;
   std::string initial_text;
@@ -76,16 +76,14 @@ auto ScreenPreview::previewSize(int monitor_number) -> Size {
   float ratio = 4 / 3;
 
   if (!display_info.side().error()) {
-    const proto::Rectangle &dimensions = display_info.dimensions();
+    const proto::Rectangle& dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
   return Size{.width = static_cast<int>(PREVIEW_HEIGHT * ratio),
               .height = PREVIEW_HEIGHT};
 }
 
-auto ScreenPreview::thumbnailWidget() -> ScreenText * {
-  return thumbnail.get();
-}
+auto ScreenPreview::thumbnailWidget() -> ScreenText* { return thumbnail.get(); }
 
 void ScreenPreview::resetFromSettings(int monitor_number) {
   screen_text->setSize(previewSize(monitor_number).toWx());
@@ -102,7 +100,7 @@ void ScreenPreview::resetFromSettings(int monitor_number) {
   screen_text->refresh();
 }
 
-void ScreenPreview::sendToPresenter(ScreenText *screen_text) {
+void ScreenPreview::sendToPresenter(ScreenText* screen_text) {
   presenter->setAll(*screen_text);
   thumbnail->setAll(*screen_text);
 }

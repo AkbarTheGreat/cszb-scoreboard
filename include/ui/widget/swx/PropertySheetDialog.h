@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/PropertySheetDialog.h: A wrapper around wxPropertySheetDialog.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ namespace cszb_scoreboard::swx {
 
 class PropertySheetDialog : public wxPropertySheetDialog {
  public:
-  PropertySheetDialog(wxWindow *parent, wxWindowID id, const wxString &title,
-                      const wxPoint &pos = wxDefaultPosition,
-                      const wxSize &size = wxDefaultSize,
+  PropertySheetDialog(wxWindow* parent, wxWindowID id, const wxString& title,
+                      const wxPoint& pos = wxDefaultPosition,
+                      const wxSize& size = wxDefaultSize,
                       int64_t style = wxDEFAULT_DIALOG_STYLE,
-                      const wxString &name = wxDialogNameStr)
+                      const wxString& name = wxDialogNameStr)
       : wxPropertySheetDialog(parent, id, title, pos, size, style, name) {}
 
-  auto ProcessEvent(wxEvent &event) -> bool override {
+  auto ProcessEvent(wxEvent& event) -> bool override {
     return wxPropertySheetDialog::ProcessEvent(event);
   }
 };

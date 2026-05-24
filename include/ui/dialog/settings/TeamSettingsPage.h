@@ -2,7 +2,7 @@
 ui/dialog/settings/TeamSettingsPage.h: The page of the settings notebook which
 handles team based settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class TeamSettingsPage : public SettingsPage {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  explicit TeamSettingsPage(swx::Panel *wx)
+  explicit TeamSettingsPage(swx::Panel* wx)
       : TeamSettingsPage(wx, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   void saveSettings() override;
@@ -44,11 +44,11 @@ class TeamSettingsPage : public SettingsPage {
   auto validateSettings() -> bool override;
 
   PUBLIC_TEST_ONLY
-  TeamSettingsPage(swx::Panel *wx, Singleton *singleton);
+  TeamSettingsPage(swx::Panel* wx, Singleton* singleton);
 
  private:
   std::vector<std::unique_ptr<TeamSettingsPanel>> team_settings_panels;
-  Singleton *singleton;
+  Singleton* singleton;
 };
 
 }  // namespace cszb_scoreboard

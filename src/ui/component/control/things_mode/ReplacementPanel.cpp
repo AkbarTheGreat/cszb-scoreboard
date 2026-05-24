@@ -2,7 +2,7 @@
 ui/component/control/things_mode/ReplacementPanel.cpp: Represents all
 replacements for one activity in 5/6 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ class Panel;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 const int INITIAL_NUMBER_OF_REPLACEMENTS = 2;
 
-ReplacementPanel::ReplacementPanel(swx::Panel *wx,
-                                   ActivityPanel *activity_panel)
+ReplacementPanel::ReplacementPanel(swx::Panel* wx,
+                                   ActivityPanel* activity_panel)
     : Panel(wx) {
   should_self_delete = true;
   this->activity_panel = activity_panel;
@@ -50,7 +50,7 @@ void ReplacementPanel::bindEvents() {}
 
 void ReplacementPanel::positionWidgets() {
   int row = 0;
-  for (const auto &replacement : replacements) {
+  for (const auto& replacement : replacements) {
     addWidget(*replacement->controlPane(), row++, 0);
   }
   runSizer();
@@ -62,9 +62,9 @@ void ReplacementPanel::addReplacement() {
   updateNotify();
 }
 
-void ReplacementPanel::deleteReplacement(Replacement *deleted) {
+void ReplacementPanel::deleteReplacement(Replacement* deleted) {
   int offset = 0;
-  for (const auto &replacement : replacements) {
+  for (const auto& replacement : replacements) {
     if (replacement.get() == deleted) {
       removeRowFromSizer(offset);
       replacements.erase(replacements.begin() + offset);
@@ -79,7 +79,7 @@ auto ReplacementPanel::previewText(int font_size)
     -> std::vector<proto::RenderableText> {
   std::string preview_text = activity_panel->selectedActivityText() + "\n \n";
 
-  for (const auto &replacement : replacements) {
+  for (const auto& replacement : replacements) {
     preview_text += replacement->previewText() + "\n";
   }
   std::vector<proto::RenderableText> return_vector;

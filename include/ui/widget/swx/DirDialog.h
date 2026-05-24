@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/DirDialog.h: A wrapper around wxDirDialog.
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,13 +26,13 @@ namespace cszb_scoreboard::swx {
 
 class DirDialog : public wxDirDialog {
  public:
-  explicit DirDialog(wxWindow *parent,
-                     const wxString &message = wxDirSelectorPromptStr,
-                     const wxString &defaultPath = wxEmptyString,
+  explicit DirDialog(wxWindow* parent,
+                     const wxString& message = wxDirSelectorPromptStr,
+                     const wxString& defaultPath = wxEmptyString,
                      int64_t style = wxDD_DEFAULT_STYLE,
-                     const wxPoint &pos = wxDefaultPosition,
-                     const wxSize &size = wxDefaultSize,
-                     const wxString &name = wxDirDialogNameStr)
+                     const wxPoint& pos = wxDefaultPosition,
+                     const wxSize& size = wxDefaultSize,
+                     const wxString& name = wxDirDialogNameStr)
       : wxDirDialog(parent, message, defaultPath, style, pos, size, name) {}
 };
 

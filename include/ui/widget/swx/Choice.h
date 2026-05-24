@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/Choice.h: A wrapper around wxChoice.
 
-Copyright 2023-2025 Tracy Beck
+Copyright 2023-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ namespace cszb_scoreboard::swx {
 
 class Choice : public wxChoice {
  public:
-  explicit Choice(wxWindow *parent, wxWindowID id = wxID_ANY,
-                  const wxPoint &pos = wxDefaultPosition,
-                  const wxSize &size = wxDefaultSize, int n = 0,
+  explicit Choice(wxWindow* parent, wxWindowID id = wxID_ANY,
+                  const wxPoint& pos = wxDefaultPosition,
+                  const wxSize& size = wxDefaultSize, int n = 0,
                   // NOLINTNEXTLINE(modernize-avoid-c-arrays) -- to match wx
                   const wxString choices[] = nullptr, int64_t style = 0,
-                  const wxValidator &validator = wxDefaultValidator,
-                  const wxString &name = wxChoiceNameStr)
+                  const wxValidator& validator = wxDefaultValidator,
+                  const wxString& name = wxChoiceNameStr)
       : wxChoice(parent, id, pos, size, n, choices, style, validator, name) {}
 };
 

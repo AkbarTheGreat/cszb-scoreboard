@@ -1,7 +1,7 @@
 /*
 test/ImageLibraryTest.cpp: Tests for config/ImageLibrary
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ class ImageLibraryTest : public ::testing::Test {
     filesystem.reset();
   }
 
-  auto internalPath(const std::string &base, const std::string &subpath) {
+  auto internalPath(const std::string& base, const std::string& subpath) {
     auto path = std::filesystem::temp_directory_path();
     if (filesystem != nullptr) {
       path = filesystem->getRoot();
@@ -81,13 +81,13 @@ class ImageLibraryTest : public ::testing::Test {
     return path.string();
   }
 
-  auto libRoot(const std::string &subpath) {
+  auto libRoot(const std::string& subpath) {
     return internalPath(LIB_ROOT_DIR, subpath);
   }
 
   auto libRoot() { return libRoot(""); }
 
-  auto nonlibRoot(const std::string &subpath) {
+  auto nonlibRoot(const std::string& subpath) {
     return internalPath(NONLIB_ROOT_DIR, subpath);
   }
 
@@ -99,7 +99,7 @@ class ImageLibraryTest : public ::testing::Test {
     library.set_library_root(libRoot());
 
     // Add a corgi
-    proto::ImageInfo *image = library.add_images();
+    proto::ImageInfo* image = library.add_images();
     image->set_name("corgi");
     image->set_file_path(libRoot("corgi.jpg"));
     image->add_tags("dog");
@@ -136,7 +136,7 @@ class ImageLibraryTest : public ::testing::Test {
                                           library);
   }
 
-  void addImageToSubdir(const std::string &subdir, const std::string &name) {
+  void addImageToSubdir(const std::string& subdir, const std::string& name) {
     std::filesystem::path path = subdir;
     path /= name;
     filesystem->createFile(path.string(), ".");
@@ -157,12 +157,12 @@ class ImageLibraryTest : public ::testing::Test {
   }
 };
 
-auto tagStrings(const ImageLibrary &library, bool include_name = false)
+auto tagStrings(const ImageLibrary& library, bool include_name = false)
     -> std::vector<std::string> {
   std::vector<CaseOptionalString> tags = library.allTags(include_name);
   std::vector<std::string> tag_strings;
   tag_strings.reserve(tags.size());
-  for (const auto &tag : tags) {
+  for (const auto& tag : tags) {
     tag_strings.emplace_back(tag.string());
   }
   return tag_strings;

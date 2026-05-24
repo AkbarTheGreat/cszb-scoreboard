@@ -1,7 +1,7 @@
 /*
 test/CommandArgsTest.cpp: Tests for config/CommandArgs
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ limitations under the License.
 #include "util/Singleton.h"       // for SingletonClass
 
 // Macro to manage repetitive unpacking of a std::array for our helper methods
-#define ARG_ARR(arr) arr.size(), const_cast<char **>(arr.data())
+#define ARG_ARR(arr) arr.size(), const_cast<char**>(arr.data())
 
 namespace cszb_scoreboard::test {
 
-auto wxArgArray(int argc, char **argv) -> std::unique_ptr<wxCmdLineArgsArray> {
+auto wxArgArray(int argc, char** argv) -> std::unique_ptr<wxCmdLineArgsArray> {
   auto wx_args = std::make_unique<wxCmdLineArgsArray>();
   wx_args->Init(argc, argv);
   return wx_args;
@@ -42,7 +42,7 @@ auto wxArgArray(int argc, char **argv) -> std::unique_ptr<wxCmdLineArgsArray> {
  * the edge cases that the wx suite should already be testing.  Also, testing
  * the error cases is tricky due to the way wx asserts in them, so we only test
  * valid parses. */
-auto parseCommandLine(int argc, char **argv) -> std::unique_ptr<CommandArgs> {
+auto parseCommandLine(int argc, char** argv) -> std::unique_ptr<CommandArgs> {
   wxCmdLineParser parser(argc, argv);
   parser.SetDesc(ARG_LIST.data());
   parser.Parse();
@@ -54,31 +54,31 @@ auto parseCommandLine(int argc, char **argv) -> std::unique_ptr<CommandArgs> {
 }
 
 TEST(CommandArgsTest, AutoUpdateFlagWorksCorrectly) {
-  const std::array<const char *, 2> single_letter = {
+  const std::array<const char*, 2> single_letter = {
       {"scoreboard_testing.exe", "-n"}};
 
   EXPECT_FALSE(parseCommandLine(ARG_ARR(single_letter))->autoUpdate());
 
-  const std::array<const char *, 2> full_word = {
+  const std::array<const char*, 2> full_word = {
       {"scoreboard_testing.exe", "--noupdate"}};
 
   EXPECT_FALSE(parseCommandLine(ARG_ARR(full_word))->autoUpdate());
 }
 
 TEST(CommandArgsTest, ResetConfigFlagWorksCorrectly) {
-  const std::array<const char *, 2> single_letter = {
+  const std::array<const char*, 2> single_letter = {
       {"scoreboard_testing.exe", "-r"}};
 
   EXPECT_TRUE(parseCommandLine(ARG_ARR(single_letter))->resetConfig());
 
-  const std::array<const char *, 2> full_word = {
+  const std::array<const char*, 2> full_word = {
       {"scoreboard_testing.exe", "--resetconfig"}};
 
   EXPECT_TRUE(parseCommandLine(ARG_ARR(full_word))->resetConfig());
 }
 
 TEST(CommandArgsTest, DefaultValuesAreCorrect) {
-  const std::array<const char *, 1> no_args = {{"scoreboard_testing.exe"}};
+  const std::array<const char*, 1> no_args = {{"scoreboard_testing.exe"}};
 
   std::unique_ptr<CommandArgs> cmdArgs = parseCommandLine(ARG_ARR(no_args));
 
@@ -88,24 +88,24 @@ TEST(CommandArgsTest, DefaultValuesAreCorrect) {
 
 TEST(CommandArgsTest, FlagsDoNotInteract) {
   // Defaults are still applied when the other flag is thrown.
-  const std::array<const char *, 2> no_update = {
+  const std::array<const char*, 2> no_update = {
       {"scoreboard_testing.exe", "-n"}};
 
   EXPECT_FALSE(parseCommandLine(ARG_ARR(no_update))->resetConfig());
 
-  const std::array<const char *, 2> reset_config = {
+  const std::array<const char*, 2> reset_config = {
       {"scoreboard_testing.exe", "-r"}};
 
   EXPECT_TRUE(parseCommandLine(ARG_ARR(reset_config))->autoUpdate());
 }
 
 TEST(CommandArgsTest, CommandIsFirstArgument) {
-  const std::array<const char *, 1> no_args = {{"scoreboard_testing.exe"}};
+  const std::array<const char*, 1> no_args = {{"scoreboard_testing.exe"}};
 
   EXPECT_EQ(FilesystemPath("scoreboard_testing.exe"),
             parseCommandLine(ARG_ARR(no_args))->commandPath());
 
-  const std::array<const char *, 3> many_args = {{"many_args.exe", "-n", "-r"}};
+  const std::array<const char*, 3> many_args = {{"many_args.exe", "-n", "-r"}};
 
   EXPECT_EQ(FilesystemPath("many_args.exe"),
             parseCommandLine(ARG_ARR(many_args))->commandPath());

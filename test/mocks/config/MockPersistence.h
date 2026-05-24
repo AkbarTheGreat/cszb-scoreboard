@@ -1,7 +1,7 @@
 /*
 util/MockSingleton.h: Mock Singleton provider for testing.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,20 +32,20 @@ and save{method_base} are overrides of the Persistence class.  A third method,
 reset{method_base}, is added to reset the faked persistence.
 */
 
-#define MOCK_PERSISTENCE_METHODS(method_base, proto)                       \
- private:                                                                  \
-  proto local_##method_base;                                               \
-                                                                           \
- public:                                                                   \
-  auto load##method_base()->proto override { return local_##method_base; } \
-  void save##method_base(const proto &var) override {                      \
-    local_##method_base = var;                                             \
-  }                                                                        \
+#define MOCK_PERSISTENCE_METHODS(method_base, proto)                         \
+ private:                                                                    \
+  proto local_##method_base;                                                 \
+                                                                             \
+ public:                                                                     \
+  auto load##method_base() -> proto override { return local_##method_base; } \
+  void save##method_base(const proto& var) override {                        \
+    local_##method_base = var;                                               \
+  }                                                                          \
   void reset##method_base() { local_##method_base = {}; }
 
 class MockPersistence : public Persistence {
  public:
-  MockPersistence(MockSingleton *singleton)
+  MockPersistence(MockSingleton* singleton)
       : Persistence(SingletonClass{}, singleton) {}
 
   MOCK_PERSISTENCE_METHODS(Displays, proto::DisplayConfig);

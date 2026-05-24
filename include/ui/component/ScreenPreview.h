@@ -4,7 +4,7 @@ monitor in the main window.  In addition, the preview owns the ScreenPresenter
 which displays to the actual monitor, dispatching the updated view when
 necessary.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,51 +48,51 @@ class ScreenPreview : public Panel {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  ScreenPreview(swx::Panel *wx, std::vector<proto::ScreenSide> sides,
+  ScreenPreview(swx::Panel* wx, std::vector<proto::ScreenSide> sides,
                 int monitor_number)
       : ScreenPreview(wx, std::move(sides), monitor_number,
                       Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  void sendToPresenter(ScreenText *screen_text);
+  void sendToPresenter(ScreenText* screen_text);
   void sendToPresenter();
   void blackoutPresenter();
   void resetFromSettings(int monitor_number);
-  auto screen() -> ScreenText * { return screen_text.get(); }
-  auto thumbnailWidget() -> ScreenText *;
+  auto screen() -> ScreenText* { return screen_text.get(); }
+  auto thumbnailWidget() -> ScreenText*;
 
-  void setAllText(const std::string &text, int font_size,
-                  const Color &background, bool auto_fit,
-                  const proto::ScreenSide &side) {
+  void setAllText(const std::string& text, int font_size,
+                  const Color& background, bool auto_fit,
+                  const proto::ScreenSide& side) {
     screen_text->setAllText(text, font_size, background, auto_fit, side);
   }
-  void setAllText(const std::vector<proto::RenderableText> &lines,
-                  const Color &background, bool auto_fit,
-                  const proto::ScreenSide &side) {
+  void setAllText(const std::vector<proto::RenderableText>& lines,
+                  const Color& background, bool auto_fit,
+                  const proto::ScreenSide& side) {
     screen_text->setAllText(lines, background, auto_fit, side);
   }
-  void setAllText(const std::vector<proto::RenderableText> &lines,
-                  const Color &background, bool auto_fit,
-                  const Image &logo_overlay, double overlay_screen_percentage,
+  void setAllText(const std::vector<proto::RenderableText>& lines,
+                  const Color& background, bool auto_fit,
+                  const Image& logo_overlay, double overlay_screen_percentage,
                   unsigned char logo_alpha, OverlayScreenPosition logo_position,
-                  const proto::ScreenSide &side) {
+                  const proto::ScreenSide& side) {
     screen_text->setAllText(lines, background, auto_fit, logo_overlay,
                             overlay_screen_percentage, logo_alpha,
                             logo_position, side);
   }
-  void setAll(const ScreenText &source) { screen_text->setAll(source); }
-  void setImage(const Image &image, const proto::ScreenSide &side) {
+  void setAll(const ScreenText& source) { screen_text->setAll(source); }
+  void setImage(const Image& image, const proto::ScreenSide& side) {
     screen_text->setImage(image, side);
   }
 
   PUBLIC_TEST_ONLY
-  ScreenPreview(swx::Panel *wx, std::vector<proto::ScreenSide> sides,
-                int monitor_number, Singleton *singleton);
+  ScreenPreview(swx::Panel* wx, std::vector<proto::ScreenSide> sides,
+                int monitor_number, Singleton* singleton);
 
  private:
   std::unique_ptr<ScreenText> screen_text;
-  ScreenPresenter *presenter;
+  ScreenPresenter* presenter;
   std::unique_ptr<ScreenThumbnail> thumbnail;
-  Singleton *singleton;
+  Singleton* singleton;
   auto previewSize(int monitor_number) -> Size;
   void positionWidgets();
 };

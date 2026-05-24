@@ -1,7 +1,7 @@
 /*
 ui/widget/SearchBox.h: A search box control.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace cszb_scoreboard {
 
 class SearchBox : public Widget {
  public:
-  SearchBox(swx::SearchCtrl *search, const std::string &initial_text) {
+  SearchBox(swx::SearchCtrl* search, const std::string& initial_text) {
     _wx = search;
     _wx->SetDescriptiveText(initial_text);
   }
@@ -35,10 +35,10 @@ class SearchBox : public Widget {
   auto value() -> std::string { return _wx->GetValue().ToStdString(); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::SearchCtrl *_wx;
+  swx::SearchCtrl* _wx;
 };
 
 }  // namespace cszb_scoreboard

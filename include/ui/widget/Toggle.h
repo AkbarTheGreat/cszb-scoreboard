@@ -1,7 +1,7 @@
 /*
 ui/widget/Toggle.h: A button which toggles between two states.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,19 +25,19 @@ namespace cszb_scoreboard {
 
 class Toggle : public Widget {
  public:
-  explicit Toggle(swx::ToggleButton *button) { _wx = button; }
+  explicit Toggle(swx::ToggleButton* button) { _wx = button; }
 
-  void setLabel(const std::string &label) { _wx->SetLabelText(label); }
+  void setLabel(const std::string& label) { _wx->SetLabelText(label); }
   auto value() -> bool { return _wx->GetValue(); }
   void toggle() { _wx->SetValue(!_wx->GetValue()); }
   void press() { _wx->SetValue(true); }
   void unpress() { _wx->SetValue(false); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::ToggleButton *_wx;
+  swx::ToggleButton* _wx;
 };
 
 }  // namespace cszb_scoreboard

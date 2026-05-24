@@ -1,7 +1,7 @@
 /*
 ui/frame/HotkeyTable.h: This class manages hotkeys for the application.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ class HotkeyTable {
  public:
   explicit HotkeyTable(SingletonClass c) {}
   void addHotkey(int modifier_flags, int key_code, wxWindowID widget_id);
-  void installHotkeys(Frame *main_window);
+  void installHotkeys(Frame* main_window);
 
  private:
   std::vector<wxAcceleratorEntry> accel_entries;

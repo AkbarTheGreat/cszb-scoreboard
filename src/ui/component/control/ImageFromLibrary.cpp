@@ -3,7 +3,7 @@ ui/component/control/ImageFromLibrary.cpp: Handles loading images from a
 pre-populated library of tagged images on disk and presenting them to one or
 more screens.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const int NUM_PREVIEWS = 5;
 
-auto ImageFromLibrary::Create(swx::Panel *wx)
+auto ImageFromLibrary::Create(swx::Panel* wx)
     -> std::unique_ptr<ImageFromLibrary> {
   auto library = std::make_unique<ImageFromLibrary>(wx);
   library->initializeWidgets();
@@ -48,7 +48,7 @@ auto ImageFromLibrary::Create(swx::Panel *wx)
   return library;
 }
 
-void ImageFromLibrary::createControls(Panel *control_panel) {
+void ImageFromLibrary::createControls(Panel* control_panel) {
   ScreenImageController::createControls(control_panel);
   main_panel = control_panel->panel();
   image_preview_panel = control_panel->panel();
@@ -79,7 +79,7 @@ void ImageFromLibrary::createControls(Panel *control_panel) {
   bindEvents();
 }
 
-void ImageFromLibrary::positionWidgets(Panel *control_panel) {
+void ImageFromLibrary::positionWidgets(Panel* control_panel) {
   search_panel->addWidget(*search_box, 0, 0, DEFAULT_BORDER_SIZE, wxALL);
   search_panel->addWidget(*tag_list_label, 1, 0, DEFAULT_BORDER_SIZE, wxALL);
 
@@ -96,12 +96,12 @@ void ImageFromLibrary::positionWidgets(Panel *control_panel) {
   control_panel->addWidget(*configure_button, 3, 0, DEFAULT_BORDER_SIZE, wxALL);
 
   int col = 0;
-  for (const auto &preview : image_previews) {
+  for (const auto& preview : image_previews) {
     image_preview_panel->addWidget(*preview, 0, col++);
   }
 
   col = 0;
-  for (const auto &name : image_names) {
+  for (const auto& name : image_names) {
     image_preview_panel->addWidget(*name, 1, col++);
   }
 
@@ -114,19 +114,19 @@ void ImageFromLibrary::positionWidgets(Panel *control_panel) {
 void ImageFromLibrary::bindEvents() {
   configure_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->editButton(); });
+      [this](wxCommandEvent& event) -> void { this->editButton(); });
   search_box->bind(wxEVT_TEXT,
-                   [this](wxCommandEvent &event) -> void { this->doSearch(); });
+                   [this](wxCommandEvent& event) -> void { this->doSearch(); });
   left_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->pageChange(false); });
+      [this](wxCommandEvent& event) -> void { this->pageChange(false); });
   right_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->pageChange(true); });
-  for (const auto &preview : image_previews) {
+      [this](wxCommandEvent& event) -> void { this->pageChange(true); });
+  for (const auto& preview : image_previews) {
     // Capture the unique_ptr to a referencing pointer, for the lambda capture.
-    auto *arg = preview.get();
-    preview->bind(wxEVT_LEFT_DOWN, [this, arg](wxMouseEvent &event) -> void {
+    auto* arg = preview.get();
+    preview->bind(wxEVT_LEFT_DOWN, [this, arg](wxMouseEvent& event) -> void {
       this->selectImage(arg);
     });
   }
@@ -164,7 +164,7 @@ void ImageFromLibrary::pageChange(bool forward) {
 // selectImage uses a pointer instead of a const ref due to the delayed nature
 // of it's use in a bind.  If you bind the lambda with a const ref, you wind up
 // with an object that is potentially stuck in initialization-time semantics.
-void ImageFromLibrary::selectImage(ImagePreview *image) {
+void ImageFromLibrary::selectImage(ImagePreview* image) {
   std::optional<FilesystemPath> filename = image->getFilename();
 
   // do nothing if someone clicked a gray box
@@ -190,7 +190,7 @@ void ImageFromLibrary::selectImage(ImagePreview *image) {
   updatePreview();
 }
 
-void ImageFromLibrary::setImages(const std::string &search,
+void ImageFromLibrary::setImages(const std::string& search,
                                  unsigned int page_number) {
   current_image_page = page_number;
 
@@ -202,7 +202,7 @@ void ImageFromLibrary::setImages(const std::string &search,
   } else {
     std::string tag_string;
     bool first = true;
-    for (const auto &tag : results.matchedTags()) {
+    for (const auto& tag : results.matchedTags()) {
       if (!first) {
         tag_string += ", ";
       }

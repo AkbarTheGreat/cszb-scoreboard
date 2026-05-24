@@ -1,7 +1,7 @@
 /*
 ui/component/MockPreviewPanel.h: Mock PreviewPanel implementation for testing.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ class MockPreviewPanel : public PreviewPanel {
  public:
   MockFrameManager() : FrameManager(SingletonClass{}) {}
 
-  MOCK_METHOD(MainView *, createMainView,
-              (const std::string &title, const Position &pos, const Size &size),
+  MOCK_METHOD(MainView*, createMainView,
+              (const std::string& title, const Position& pos, const Size& size),
               (override));
-  MOCK_METHOD(ScreenPresenter *, createScreenPresenter,
-              (int monitor_number, const ScreenText &preview), (override));
-  MOCK_METHOD(MainView *, mainView, (), (override));
+  MOCK_METHOD(ScreenPresenter*, createScreenPresenter,
+              (int monitor_number, const ScreenText& preview), (override));
+  MOCK_METHOD(MainView*, mainView, (), (override));
   MOCK_METHOD(void, exitFrames, (), (override));
   MOCK_METHOD(int32_t, monitorCount, (), (override));
   MOCK_METHOD(Display, monitor, (uint32_t index), (override));

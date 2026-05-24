@@ -2,7 +2,7 @@
 ui/dialog/TeamLibraryDialog.cpp: A dialog which allows a user to select a team
 from the team library or edit said library.
 
-Copyright 2023-2025 Tracy Beck
+Copyright 2023-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ namespace swx {
 class PropertySheetDialog;
 }  // namespace swx
 
-TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog *wx,
-                                     ScoreControl *parent, Singleton *singleton)
+TeamLibraryDialog::TeamLibraryDialog(swx::PropertySheetDialog* wx,
+                                     ScoreControl* parent, Singleton* singleton)
     : TabbedDialog(wx) {
   this->parent = parent;
   this->singleton = singleton;
@@ -97,29 +97,29 @@ void TeamLibraryDialog::positionWidgets() {
 
 void TeamLibraryDialog::bindEvents() {
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onOk(); },
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onOk(); },
       wxID_OK);
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onCancel(); },
       wxID_CANCEL);
 
-  add_update_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+  add_update_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
     this->onAddOrUpdate();
   });
 
-  clear_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+  clear_logo_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
     file_name_entry->set(NO_LOGO_MESSAGE);
   });
 
-  file_name_entry->bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent &event) -> void {
+  file_name_entry->bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent& event) -> void {
     pickLogo();
     event.Skip();
   });
 
-  auto *local_parent = parent;
+  auto* local_parent = parent;
   // Allow the parent to be null -- for testing.
   if (local_parent != nullptr) {
-    bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
+    bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent& event) -> void {
       local_parent->onLibraryDialogClose();
     });
   }
@@ -176,8 +176,8 @@ void TeamLibraryDialog::clearEdit() {
   add_update_button->setText("Add");
 }
 
-void TeamLibraryDialog::editTeam(int32_t row_number, const std::string &name,
-                                 const FilesystemPath &logo,
+void TeamLibraryDialog::editTeam(int32_t row_number, const std::string& name,
+                                 const FilesystemPath& logo,
                                  proto::TeamInfo_TeamType type) {
   row_for_edit = row_number;
   name_entry->setValue(name);

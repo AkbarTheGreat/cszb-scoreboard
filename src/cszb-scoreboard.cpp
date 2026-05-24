@@ -1,7 +1,7 @@
 ﻿/*
 cszb-scoreboard.cpp : Defines the entry point for the application.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ void Scoreboard::close() {
   Singleton::getInstance()->frameManager()->mainView()->closeWindow();
 }
 
-void Scoreboard::OnInitCmdLine(wxCmdLineParser &parser) {
+void Scoreboard::OnInitCmdLine(wxCmdLineParser& parser) {
   wxApp::OnInitCmdLine(parser);
   parser.SetDesc(ARG_LIST.data());
   // If we ever want '/' as a path separator to work in Windows, we have to
@@ -72,7 +72,7 @@ void Scoreboard::OnInitCmdLine(wxCmdLineParser &parser) {
   // the future.   If we need it, set via parser.SetSwitchChars(wxT("-"));
 }
 
-auto Scoreboard::OnCmdLineParsed(wxCmdLineParser &parser) -> bool {
+auto Scoreboard::OnCmdLineParsed(wxCmdLineParser& parser) -> bool {
   Singleton::getInstance()->generateCommandArgs(parser, argc, argv);
   return wxApp::OnCmdLineParsed(parser);
 }

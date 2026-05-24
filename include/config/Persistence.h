@@ -2,7 +2,7 @@
 config/Persistence.h: This class manages serializing/deserializing
 our configuration proto to/from disk via a singleton.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,27 +36,27 @@ class Persistence {
       : Persistence(c, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   virtual auto loadDisplays() -> proto::DisplayConfig;
-  virtual void saveDisplays(const proto::DisplayConfig &display_config);
+  virtual void saveDisplays(const proto::DisplayConfig& display_config);
   virtual auto loadGeneralConfig() -> proto::GeneralConfig;
-  virtual void saveGeneralConfig(const proto::GeneralConfig &general_config);
+  virtual void saveGeneralConfig(const proto::GeneralConfig& general_config);
   virtual auto loadSlideShow() -> proto::SlideShow;
-  virtual void saveSlideShow(const proto::SlideShow &slide_show);
+  virtual void saveSlideShow(const proto::SlideShow& slide_show);
   virtual auto loadTeams() -> proto::TeamConfig;
-  virtual void saveTeams(const proto::TeamConfig &team_config);
+  virtual void saveTeams(const proto::TeamConfig& team_config);
   virtual auto loadImageLibrary() -> proto::ImageLibrary;
-  virtual void saveImageLibrary(const proto::ImageLibrary &library);
+  virtual void saveImageLibrary(const proto::ImageLibrary& library);
   virtual auto loadTeamLibrary() -> proto::TeamLibrary;
-  virtual void saveTeamLibrary(const proto::TeamLibrary &library);
+  virtual void saveTeamLibrary(const proto::TeamLibrary& library);
 
   PUBLIC_TEST_ONLY
-  Persistence(SingletonClass c, Singleton *singleton);
+  Persistence(SingletonClass c, Singleton* singleton);
 
  private:
   proto::ScoreboardConfig full_config;
   proto::ImageLibrary image_library;
   proto::TeamLibrary team_library;
   proto::SlideShow slide_show;
-  Singleton *singleton;
+  Singleton* singleton;
   void loadConfigFromDisk();
   void saveConfigToDisk();
   void loadImageLibraryFromDisk();

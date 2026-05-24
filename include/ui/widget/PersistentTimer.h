@@ -2,7 +2,7 @@
 ui/widget/PersistentTimer.h: A timer object which performs a given action
 periodically.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class PersistentTimer {
  private:
   class HeldTimer : public swx::Timer {
    public:
-    explicit HeldTimer(const std::function<void()> &on_tick);
+    explicit HeldTimer(const std::function<void()>& on_tick);
 
    private:
     void Notify() override;
@@ -38,7 +38,7 @@ class PersistentTimer {
   };
 
  public:
-  PersistentTimer(int period, const std::function<void()> &on_tick);
+  PersistentTimer(int period, const std::function<void()>& on_tick);
   void stop();
 
   PUBLIC_TEST_ONLY
@@ -49,7 +49,7 @@ class PersistentTimer {
   // exception on Windows, so we just leak it at present.  Since all of the
   // timers we have right now last until the application closes, we can live
   // with this (unfortunately).
-  HeldTimer *held;
+  HeldTimer* held;
 };
 
 }  // namespace cszb_scoreboard

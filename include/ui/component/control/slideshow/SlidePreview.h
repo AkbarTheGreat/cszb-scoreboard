@@ -2,7 +2,7 @@
 ui/component/control/slideshow/SlidePreview.h: The UI for a given slide in a
 slideshow, including buttons to modify or move the slide around.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,18 +40,18 @@ class Panel;
 
 class SlidePreview : public Panel {
  public:
-  explicit SlidePreview(swx::Panel *wx, SlideshowSetup *owning_control,
+  explicit SlidePreview(swx::Panel* wx, SlideshowSetup* owning_control,
                         int32_t index);
 
   void clear();
   void setName(std::string name);
-  void setImage(const FilesystemPath &file);
+  void setImage(const FilesystemPath& file);
 
   const static int PREVIEW_WIDTH = ImagePreview::PREVIEW_WIDTH;
   const static int PREVIEW_HEIGHT = ImagePreview::PREVIEW_HEIGHT + 20;
 
  private:
-  SlideshowSetup *parent;
+  SlideshowSetup* parent;
   int32_t index;
   std::unique_ptr<ImagePreview> slide_preview;
   std::unique_ptr<Label> slide_name;

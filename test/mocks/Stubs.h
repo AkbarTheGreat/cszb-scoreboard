@@ -8,7 +8,7 @@ this file.  Similar to:
 #define TEST_STUB_MAIN_VIEW
 #include "test/mocks/Stubs.h"
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace cszb_scoreboard {
 
 /* Stubbed methods from Singleton.h */
 #ifdef TEST_STUB_SINGLETON
-auto Singleton::getInstance() -> Singleton * {
+auto Singleton::getInstance() -> Singleton* {
   static test::MockSingleton instance;
   return &instance;
 }
@@ -42,14 +42,14 @@ auto Singleton::getInstance() -> Singleton * {
 
 /* Stubbed methods from FrameManager.h */
 #ifdef TEST_STUB_FRAME_MANAGER
-auto FrameManager::createMainView(const std::string &title, const Position &pos,
-                                  const Size &size) -> MainView * {
+auto FrameManager::createMainView(const std::string& title, const Position& pos,
+                                  const Size& size) -> MainView* {
   return nullptr;
 }
 
 auto FrameManager::createScreenPresenter(int monitor_number,
-                                         const ScreenText &preview)
-    -> ScreenPresenter * {
+                                         const ScreenText& preview)
+    -> ScreenPresenter* {
   return nullptr;
 }
 
@@ -63,8 +63,8 @@ auto FrameManager::monitor(uint32_t index) -> Display { return Display(0); }
 /* Stubbed methods from MainView.h */
 #ifdef TEST_STUB_MAIN_VIEW
 #include "ui/widget/Frame.h"
-MainView::MainView(cszb_scoreboard::swx::Frame *wx,
-                   cszb_scoreboard::Singleton *singleton)
+MainView::MainView(cszb_scoreboard::swx::Frame* wx,
+                   cszb_scoreboard::Singleton* singleton)
     : Frame(wx) {}
 void cszb_scoreboard::MainView::init() {};
 #endif  // #ifdef TEST_STUB_MAIN_VIEW
@@ -75,7 +75,7 @@ void cszb_scoreboard::MainView::init() {};
 std::function<void()> last_on_tick;
 
 PersistentTimer::PersistentTimer(int period,
-                                 std::function<void()> const &on_tick) {
+                                 std::function<void()> const& on_tick) {
   last_on_tick = on_tick;
 }
 

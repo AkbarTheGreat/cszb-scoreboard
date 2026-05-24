@@ -2,7 +2,7 @@
 ui/component/control/things_mode/Replacement.h: Represents a replacement in 5/6
 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,10 +34,10 @@ class ReplacementPanel;
 
 class Replacement {
  public:
-  explicit Replacement(ReplacementPanel *parent);
-  void copyFrom(Replacement *other);
-  auto controlPane() -> Panel * { return control_pane.get(); }
-  auto deleteButton() -> Button * { return remove_replacement_button.get(); }
+  explicit Replacement(ReplacementPanel* parent);
+  void copyFrom(Replacement* other);
+  auto controlPane() -> Panel* { return control_pane.get(); }
+  auto deleteButton() -> Button* { return remove_replacement_button.get(); }
   auto previewText() -> std::string;
 
  private:
@@ -45,7 +45,7 @@ class Replacement {
   std::unique_ptr<Text> replaceable, replacement;
   std::unique_ptr<Button> remove_replacement_button;
   std::unique_ptr<Label> spacer_text;
-  ReplacementPanel *parent;
+  ReplacementPanel* parent;
 
   void bindEvents();
   void positionWidgets();

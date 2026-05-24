@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/Panel.h: A wrapper around wxPanel.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,20 +24,20 @@ namespace cszb_scoreboard::swx {
 
 class Panel {
  public:
-  virtual auto asWx() -> wxPanel * { return nullptr; }
+  virtual auto asWx() -> wxPanel* { return nullptr; }
   virtual void setBackgroundStyle(int64_t style) = 0;
   virtual void destroy() = 0;
 };
 
 class PanelImpl : public Panel, public wxPanel {
  public:
-  explicit PanelImpl(wxWindow *parent, wxWindowID id = wxID_ANY,
-                     const wxPoint &pos = wxDefaultPosition,
-                     const wxSize &size = wxDefaultSize,
+  explicit PanelImpl(wxWindow* parent, wxWindowID id = wxID_ANY,
+                     const wxPoint& pos = wxDefaultPosition,
+                     const wxSize& size = wxDefaultSize,
                      int64_t style = wxTAB_TRAVERSAL,
-                     const wxString &name = wxPanelNameStr)
+                     const wxString& name = wxPanelNameStr)
       : wxPanel(parent, id, pos, size, style, name) {}
-  auto asWx() -> wxPanel * override { return this; }
+  auto asWx() -> wxPanel* override { return this; }
   void setBackgroundStyle(int64_t style) override {
     wxWindow::SetBackgroundStyle(static_cast<wxBackgroundStyle>(style));
   }

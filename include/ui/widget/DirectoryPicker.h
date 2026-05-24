@@ -2,7 +2,7 @@
 ui/widget/DirectoryPicker.h: A modal (blocking other UI) dialog which pops up to
 select a directory from the file system.
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,14 +31,14 @@ class FilesystemPath;
 
 class DirectoryPicker : public Widget {
  public:
-  explicit DirectoryPicker(swx::DirDialog *dialog) { _wx = dialog; }
+  explicit DirectoryPicker(swx::DirDialog* dialog) { _wx = dialog; }
   ~DirectoryPicker();
 
   auto selectDirectory() -> std::optional<FilesystemPath>;
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
-  swx::DirDialog *_wx;
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
+  swx::DirDialog* _wx;
 };
 
 }  // namespace cszb_scoreboard

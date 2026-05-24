@@ -2,7 +2,7 @@
 ui/widget/TabbedDialog.cpp: A substantial pop-up dialog, which contains controls
 within tabs.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,14 +23,14 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-TabbedDialog::TabbedDialog(swx::PropertySheetDialog *dialog, int64_t buttons) {
+TabbedDialog::TabbedDialog(swx::PropertySheetDialog* dialog, int64_t buttons) {
   _wx = dialog;
   _wx->CreateButtons(buttons);
 }
 
 TabbedDialog::~TabbedDialog() { wx()->Destroy(); }
 
-void TabbedDialog::addPage(const Panel &page, const std::string &name) {
+void TabbedDialog::addPage(const Panel& page, const std::string& name) {
   _wx->GetBookCtrl()->AddPage(page.wx(), name);
 }
 

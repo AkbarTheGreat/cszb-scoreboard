@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/StaticText.h: A wrapper around wxStaticText.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ namespace cszb_scoreboard::swx {
 
 class StaticText : public wxStaticText {
  public:
-  StaticText(wxWindow *parent, wxWindowID id, const wxString &label,
-             const wxPoint &pos = wxDefaultPosition,
-             const wxSize &size = wxDefaultSize, int64_t style = 0,
-             const wxString &name = wxStaticTextNameStr)
+  StaticText(wxWindow* parent, wxWindowID id, const wxString& label,
+             const wxPoint& pos = wxDefaultPosition,
+             const wxSize& size = wxDefaultSize, int64_t style = 0,
+             const wxString& name = wxStaticTextNameStr)
       : wxStaticText(parent, id, label, pos, size, style, name) {}
 };
 

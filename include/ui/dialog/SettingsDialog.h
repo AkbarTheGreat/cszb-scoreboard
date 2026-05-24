@@ -2,7 +2,7 @@
 ui/dialog/SettingsDialog.h: A settings dialog for configuring various aspects of
 the scoreboard which are then saved as a part of the configuration protobuf.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,10 +38,10 @@ extern const wxEventTypeTag<wxCommandEvent> SETTINGS_UPDATED;
 
 class SettingsDialog : public TabbedDialog {
  public:
-  SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent);
+  SettingsDialog(swx::PropertySheetDialog* wx, MainView* parent);
 
  private:
-  void addPage(std::unique_ptr<SettingsPage> page, const std::string &name);
+  void addPage(std::unique_ptr<SettingsPage> page, const std::string& name);
   void bindEvents();
   void saveSettings();
   auto validateSettings() -> bool;
@@ -49,7 +49,7 @@ class SettingsDialog : public TabbedDialog {
   void onCancel();
   void onClose();
 
-  MainView *parent;
+  MainView* parent;
   std::vector<std::unique_ptr<SettingsPage>> pages;
 };
 

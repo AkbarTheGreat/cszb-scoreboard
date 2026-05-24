@@ -4,7 +4,7 @@ constructed via a factory, the easiest way to contain wx code is via containment
 rather than extension.  It's not my favorite thing to do, but it's what I'm
 doing for this one class, for consistency with other classes.
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,25 +39,25 @@ namespace cszb_scoreboard::swx {
 
 class WebView {
  public:
-  explicit WebView(wxWindow *parent,
-                   const wxString &url = wxWebViewDefaultURLStr,
+  explicit WebView(wxWindow* parent,
+                   const wxString& url = wxWebViewDefaultURLStr,
                    wxWindowID id = wxID_ANY,
-                   const wxPoint &pos = wxDefaultPosition,
-                   const wxSize &size = wxDefaultSize,
-                   const wxString &backend = wxWebViewBackendDefault,
-                   int64_t style = 0, const wxString &name = wxWebViewNameStr);
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   const wxString& backend = wxWebViewBackendDefault,
+                   int64_t style = 0, const wxString& name = wxWebViewNameStr);
 
   [[nodiscard]] auto valid() const -> bool { return (_wx != nullptr); }
-  auto wx() -> wxWebView * { return _wx; }
+  auto wx() -> wxWebView* { return _wx; }
 
-  void Bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
-            const std::function<void(wxWebViewEvent &)> &lambda,
+  void Bind(const wxEventTypeTag<wxWebViewEvent>& eventType,
+            const std::function<void(wxWebViewEvent&)>& lambda,
             int id = wxID_ANY) const;
-  void LoadURL(const std::string &url);
-  void RunScript(const std::string &script);
+  void LoadURL(const std::string& url);
+  void RunScript(const std::string& script);
 
  private:
-  wxWebView *_wx;
+  wxWebView* _wx;
 };
 
 }  // namespace cszb_scoreboard::swx

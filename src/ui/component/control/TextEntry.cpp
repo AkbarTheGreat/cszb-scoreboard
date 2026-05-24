@@ -2,7 +2,7 @@
 ui/component/control/TextEntry.cpp: This class is responsible for generating
 text which can go to one or all of the scoreboard screens.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,14 +37,14 @@ class Panel;
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-auto TextEntry::Create(swx::Panel *wx) -> std::unique_ptr<TextEntry> {
+auto TextEntry::Create(swx::Panel* wx) -> std::unique_ptr<TextEntry> {
   auto entry = std::make_unique<TextEntry>(wx);
   entry->initializeWidgets();
   entry->updatePreview();
   return entry;
 }
 
-TextEntry::TextEntry(swx::Panel *wx) : ScreenTextController(wx) {
+TextEntry::TextEntry(swx::Panel* wx) : ScreenTextController(wx) {
   home_text = "Home Team";
   away_text = "Away Team";
   all_text = "Enter Text";
@@ -57,7 +57,7 @@ TextEntry::TextEntry(swx::Panel *wx) : ScreenTextController(wx) {
   all_color = Color("Black");
 }
 
-void TextEntry::createControls(Panel *control_panel) {
+void TextEntry::createControls(Panel* control_panel) {
   text_label = control_panel->label("Text");
   text_entry = control_panel->text(all_text, true);
 
@@ -75,7 +75,7 @@ void TextEntry::createControls(Panel *control_panel) {
   bindEvents();
 }
 
-void TextEntry::positionWidgets(Panel *control_panel) {
+void TextEntry::positionWidgets(Panel* control_panel) {
   control_panel->addWidget(*text_label, 0, 0);
   control_panel->addWidget(*text_entry, 0, 1);
   control_panel->addWidget(*inner_panel, 0, 2);
@@ -91,20 +91,20 @@ void TextEntry::positionWidgets(Panel *control_panel) {
 
 void TextEntry::bindEvents() {
   text_entry->bind(wxEVT_KEY_UP,
-                   [this](wxKeyEvent &event) -> void { this->textUpdated(); });
+                   [this](wxKeyEvent& event) -> void { this->textUpdated(); });
   font_size_entry->bind(
-      wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void { this->textUpdated(); });
+      wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void { this->textUpdated(); });
   screen_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->screenChanged(); });
+      [this](wxCommandEvent& event) -> void { this->screenChanged(); });
   color_picker->bind(
       wxEVT_COLOURPICKER_CHANGED,
-      [this](wxColourPickerEvent &event) -> void { this->colorChanged(); });
+      [this](wxColourPickerEvent& event) -> void { this->colorChanged(); });
 }
 
-auto TextEntry::textField() -> Text * { return text_entry.get(); }
+auto TextEntry::textField() -> Text* { return text_entry.get(); }
 
-void TextEntry::updateScreenText(ScreenText *screen_text) {
+void TextEntry::updateScreenText(ScreenText* screen_text) {
   if (!isActive()) {
     return;
   }

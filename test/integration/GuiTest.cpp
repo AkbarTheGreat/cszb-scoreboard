@@ -4,7 +4,7 @@ idea for this methodology for testing wxWidgets via GoogleTest originally found
 at http://www.remy.org.uk/tech.php?tech=1407951209 and rewritten here with
 several improvements and modernizations.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,8 +46,7 @@ namespace cszb_scoreboard::test {
 
 const int TEXT_ENTRY_TAB_INDEX = 5;
 
-const std::array<const char *, 2> TEST_ARGV = {
-    {"scoreboard_testing.exe", "-n"}};
+const std::array<const char*, 2> TEST_ARGV = {{"scoreboard_testing.exe", "-n"}};
 
 void GuiTest::SetUp() {
   app = new Scoreboard();
@@ -60,32 +59,32 @@ void GuiTest::TearDown() {
   wxEntryCleanup();
 }
 
-void GuiTest::startApp(wxApp *app) {
+void GuiTest::startApp(wxApp* app) {
   wxApp::SetInstance(app);
   // Argument to wxEntryStart cannot be const, so copy to a non-const before
   // calling.
   int argc = TEST_ARGV.size();
-  wxEntryStart(argc, const_cast<char **>(TEST_ARGV.data()));
+  wxEntryStart(argc, const_cast<char**>(TEST_ARGV.data()));
   app->OnInit();
 }
 
-auto GuiTest::mainView() -> MainView * {
-  return dynamic_cast<MainView *>(
+auto GuiTest::mainView() -> MainView* {
+  return dynamic_cast<MainView*>(
       Singleton::getInstance()->frameManager()->mainView());
 }
 
-auto GuiTest::textEntry() -> TextEntry * {
+auto GuiTest::textEntry() -> TextEntry* {
   mainView()->controlPanel()->setSelection(TEXT_ENTRY_TAB_INDEX);
-  return dynamic_cast<TextEntry *>(
+  return dynamic_cast<TextEntry*>(
       mainView()->controlPanel()->textController(TEXT_ENTRY_TAB_INDEX));
 }
 
-auto GuiTest::firstPreview() -> ScreenPreview * {
+auto GuiTest::firstPreview() -> ScreenPreview* {
   return mainView()->previewPanel()->preview(0);
 }
 
-ImageAnalysis::ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode) {
-  wxWindow *widget = panel->wx();
+ImageAnalysis::ImageAnalysis(Panel* panel, ImageAnalysisMode scan_mode) {
+  wxWindow* widget = panel->wx();
   wxClientDC dc(widget);
   wxRect dimensions = widget->GetRect();
 
@@ -114,8 +113,8 @@ ImageAnalysis::ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode) {
   }
 }
 
-void ImageAnalysis::countAllPixels(const wxClientDC &dc,
-                                   const wxRect &dimensions) {
+void ImageAnalysis::countAllPixels(const wxClientDC& dc,
+                                   const wxRect& dimensions) {
   for (int x = 0; x < dimensions.GetWidth(); ++x) {
     for (int y = 0; y < dimensions.GetHeight(); ++y) {
       wxColour color;
@@ -130,8 +129,8 @@ void ImageAnalysis::countAllPixels(const wxClientDC &dc,
   }
 }
 
-void ImageAnalysis::countQuarterScanlinePixels(const wxClientDC &dc,
-                                               const wxRect &dimensions) {
+void ImageAnalysis::countQuarterScanlinePixels(const wxClientDC& dc,
+                                               const wxRect& dimensions) {
   int quarter_step = dimensions.GetHeight() / 4;
   for (int y = 0; y < dimensions.GetHeight(); y += quarter_step) {
     for (int x = 0; x < dimensions.GetWidth(); ++x) {
@@ -147,8 +146,8 @@ void ImageAnalysis::countQuarterScanlinePixels(const wxClientDC &dc,
   }
 }
 
-void ImageAnalysis::countCenterlinePixels(const wxClientDC &dc,
-                                          const wxRect &dimensions) {
+void ImageAnalysis::countCenterlinePixels(const wxClientDC& dc,
+                                          const wxRect& dimensions) {
   int y = dimensions.GetHeight() / 2;
   for (int x = 0; x < dimensions.GetWidth(); ++x) {
     wxColour color;
@@ -162,14 +161,14 @@ void ImageAnalysis::countCenterlinePixels(const wxClientDC &dc,
   }
 }
 
-auto ImageAnalysis::colorPercentage(const wxColour &color) const -> float {
+auto ImageAnalysis::colorPercentage(const wxColour& color) const -> float {
   if (color_percentages.find(color.GetRGB()) == color_percentages.end()) {
     return 0;
   }
   return color_percentages.at(color.GetRGB());
 }
 
-auto ImageAnalysis::colorAmount(const wxColour &color) -> float {
+auto ImageAnalysis::colorAmount(const wxColour& color) -> float {
   if (color_counts.find(color.GetRGB()) == color_counts.end()) {
     return 0;
   }

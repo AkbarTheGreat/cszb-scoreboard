@@ -1,7 +1,7 @@
 /*
 ui/widget/ListBox.h: A list of strings which can be reordered and edited.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,17 +36,17 @@ namespace cszb_scoreboard {
 
 class ListBox : public Widget {
  public:
-  explicit ListBox(swx::EditableListBox *list_box) { _wx = list_box; }
+  explicit ListBox(swx::EditableListBox* list_box) { _wx = list_box; }
 
-  void bind(const wxEventTypeTag<wxListEvent> &eventType,
-            const std::function<void(wxListEvent &)> &lambda,
+  void bind(const wxEventTypeTag<wxListEvent>& eventType,
+            const std::function<void(wxListEvent&)>& lambda,
             int id = wxID_ANY) {
     wx()->Bind(eventType, lambda, id);
   }
 
   // Bind an event against the "New" button on this list.
-  void bindNew(const wxEventTypeTag<wxCommandEvent> &eventType,
-               const std::function<void(wxCommandEvent &)> &lambda,
+  void bindNew(const wxEventTypeTag<wxCommandEvent>& eventType,
+               const std::function<void(wxCommandEvent&)>& lambda,
                int id = wxID_ANY) {
     _wx->GetNewButton()->Bind(eventType, lambda, id);
   }
@@ -55,13 +55,13 @@ class ListBox : public Widget {
   void selectItem(int64_t select_index);
 
   auto strings() -> std::vector<std::string>;
-  void setStrings(const std::vector<std::string> &strings);
+  void setStrings(const std::vector<std::string>& strings);
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::EditableListBox *_wx;
+  swx::EditableListBox* _wx;
 };
 
 }  // namespace cszb_scoreboard

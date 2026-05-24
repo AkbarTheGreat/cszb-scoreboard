@@ -1,7 +1,7 @@
 /*
 ui/widget/Widget.cpp: Methods common to all of our widgets.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,25 +33,25 @@ class wxWindow;
 
 namespace cszb_scoreboard {
 
-void Widget::addWidgetWithSpan(const Widget &widget, int row, int column,
+void Widget::addWidgetWithSpan(const Widget& widget, int row, int column,
                                int row_span, int column_span, int border_size,
                                int flag) {
   sizer()->Add(widget.wx(), wxGBPosition(row, column),
                wxGBSpan(row_span, column_span), flag, border_size);
 }
 
-void Widget::addSpacerWithSpan(const Size &size, int row, int column,
+void Widget::addSpacerWithSpan(const Size& size, int row, int column,
                                int row_span, int column_span, int border_size,
                                int flag) {
   sizer()->Add(size.width, size.height, wxGBPosition(row, column),
                wxGBSpan(row_span, column_span), flag, border_size);
 }
 
-auto Widget::widgetAtIndex(int row, int column) -> wxWindow * {
+auto Widget::widgetAtIndex(int row, int column) -> wxWindow* {
   if (window_sizer == nullptr) {
     return nullptr;
   }
-  wxGBSizerItem *item =
+  wxGBSizerItem* item =
       window_sizer->FindItemAtPosition(wxGBPosition(row, column));
   if (item == nullptr || !item->IsWindow()) {
     return nullptr;
@@ -59,18 +59,18 @@ auto Widget::widgetAtIndex(int row, int column) -> wxWindow * {
   return item->GetWindow();
 }
 
-void Widget::moveWidget(Widget *widget, int row, int column) {
+void Widget::moveWidget(Widget* widget, int row, int column) {
   sizer()->SetItemPosition(widget->wx(), wxGBPosition(row, column));
 }
 
-auto getOrderedRepresentation(wxGridBagSizer *sizer)
-    -> std::vector<std::vector<const wxGBSizerItem *>> {
-  std::vector<std::vector<const wxGBSizerItem *>> table;
+auto getOrderedRepresentation(wxGridBagSizer* sizer)
+    -> std::vector<std::vector<const wxGBSizerItem*>> {
+  std::vector<std::vector<const wxGBSizerItem*>> table;
   if (sizer == nullptr) {
     return table;
   }
-  for (auto *base : sizer->GetChildren()) {
-    wxGBSizerItem *item = sizer->FindItem(base->GetWindow());
+  for (auto* base : sizer->GetChildren()) {
+    wxGBSizerItem* item = sizer->FindItem(base->GetWindow());
     int32_t row;
     int32_t col;
     item->GetPos(row, col);
@@ -89,7 +89,7 @@ void Widget::removeColumnFromSizer(int column) {
   if (window_sizer == nullptr) {
     return;
   }
-  std::vector<std::vector<const wxGBSizerItem *>> table =
+  std::vector<std::vector<const wxGBSizerItem*>> table =
       getOrderedRepresentation(window_sizer);
   for (int r = 0; r < table.size(); r++) {
     for (int c = 0; c < table[r].size(); c++) {
@@ -110,7 +110,7 @@ void Widget::removeRowFromSizer(int row) {
   if (window_sizer == nullptr) {
     return;
   }
-  std::vector<std::vector<const wxGBSizerItem *>> table =
+  std::vector<std::vector<const wxGBSizerItem*>> table =
       getOrderedRepresentation(window_sizer);
   for (int r = 0; r < table.size(); r++) {
     for (int c = 0; c < table[r].size(); c++) {
@@ -128,10 +128,10 @@ void Widget::removeRowFromSizer(int row) {
 }
 
 void Widget::resetSizer() {
-  std::vector<std::vector<const wxGBSizerItem *>> table =
+  std::vector<std::vector<const wxGBSizerItem*>> table =
       getOrderedRepresentation(window_sizer);
-  for (const auto &row : table) {
-    for (const auto &widget : row) {
+  for (const auto& row : table) {
+    for (const auto& widget : row) {
       if (widget == nullptr || widget->GetWindow() == nullptr) {
         continue;
       }
@@ -142,10 +142,10 @@ void Widget::resetSizer() {
 }
 
 void Widget::runSizer() {
-  std::vector<std::vector<const wxGBSizerItem *>> table =
+  std::vector<std::vector<const wxGBSizerItem*>> table =
       getOrderedRepresentation(window_sizer);
-  for (const auto &row : table) {
-    for (const auto &widget : row) {
+  for (const auto& row : table) {
+    for (const auto& widget : row) {
       if (widget == nullptr || widget->GetWindow() == nullptr) {
         continue;
       }
@@ -168,7 +168,7 @@ auto Widget::sizeOfWidgetAtLocation(int row, int column) -> Size {
   return Size::fromWx(sizer()->GetCellSize(row, column));
 }
 
-auto Widget::sizer() -> swx::Sizer * {
+auto Widget::sizer() -> swx::Sizer* {
   if (window_sizer == nullptr) {
     window_sizer = new swx::Sizer();
     wx()->SetSizer(window_sizer);
@@ -178,11 +178,11 @@ auto Widget::sizer() -> swx::Sizer * {
 
 // Paint events also need to create a DC to work appropriately, so we handle
 // that here.
-void Widget::bind(const wxEventTypeTag<wxPaintEvent> &eventType,
-                  const std::function<void(RenderContext *)> &lambda, int id) {
+void Widget::bind(const wxEventTypeTag<wxPaintEvent>& eventType,
+                  const std::function<void(RenderContext*)>& lambda, int id) {
   wx()->Bind(
       eventType,
-      [this, lambda](wxPaintEvent &event) -> void {
+      [this, lambda](wxPaintEvent& event) -> void {
         std::unique_ptr<RenderContext> render_context =
             RenderContext::forEvent(wx());
         lambda(render_context.get());

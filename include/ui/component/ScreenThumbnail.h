@@ -3,7 +3,7 @@ ui/component/ScreenThumbnail.h: Represents a very small view of exactly what's
 on the matching ScreenPresenter, in case there's not a great view from the booth
 to all monitors.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,17 +34,17 @@ class ScreenThumbnail : public ScreenText {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  ScreenThumbnail(swx::Panel *wx, int monitor_number, const ScreenText &preview)
+  ScreenThumbnail(swx::Panel* wx, int monitor_number, const ScreenText& preview)
       : ScreenThumbnail(wx, monitor_number, preview, Singleton::getInstance()) {
   }
   // GCOVR_EXCL_STOP
 
   PUBLIC_TEST_ONLY
-  ScreenThumbnail(swx::Panel *wx, int monitor_number, const ScreenText &preview,
-                  Singleton *singleton);
+  ScreenThumbnail(swx::Panel* wx, int monitor_number, const ScreenText& preview,
+                  Singleton* singleton);
 
  private:
-  Singleton *singleton;
+  Singleton* singleton;
   auto thumbnailSize(int monitor_number) -> Size;
 };
 }  // namespace cszb_scoreboard

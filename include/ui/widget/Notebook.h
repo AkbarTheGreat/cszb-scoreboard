@@ -2,7 +2,7 @@
 ui/widget/Notebook.h: A notebook is a panel that holds other panels in a tab
 navigation style.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,22 +31,22 @@ namespace cszb_scoreboard {
 
 class Notebook : public Widget {
  public:
-  explicit Notebook(swx::Notebook *notebook) { _wx = notebook; }
-  void addTab(const Panel &tab, const std::string &name) const {
+  explicit Notebook(swx::Notebook* notebook) { _wx = notebook; }
+  void addTab(const Panel& tab, const std::string& name) const {
     _wx->AddPage(tab.wx(), name);
   }
-  void addToSizer(wxGridBagSizer *sizer, int row, int column, int row_span = 1,
+  void addToSizer(wxGridBagSizer* sizer, int row, int column, int row_span = 1,
                   int column_span = 1, int border_size = DEFAULT_BORDER_SIZE,
                   int flag = wxALL | wxGROW);
-  void bind(const wxEventTypeTag<wxAuiNotebookEvent> &eventType,
-            const std::function<void(wxAuiNotebookEvent &)> &lambda) const {
+  void bind(const wxEventTypeTag<wxAuiNotebookEvent>& eventType,
+            const std::function<void(wxAuiNotebookEvent&)>& lambda) const {
     wx()->Bind(eventType, lambda);
   }
   auto childPanel(wxWindowID id = wxID_ANY,
-                  const wxPoint &pos = wxDefaultPosition,
-                  const wxSize &size = wxDefaultSize,
+                  const wxPoint& pos = wxDefaultPosition,
+                  const wxSize& size = wxDefaultSize,
                   int64_t style = wxTAB_TRAVERSAL,
-                  const wxString &name = wxPanelNameStr) -> swx::Panel * {
+                  const wxString& name = wxPanelNameStr) -> swx::Panel* {
     return new swx::PanelImpl(wx(), id, pos, size, style, name);
   }
   void focus() const { wx()->SetFocus(); };
@@ -54,10 +54,10 @@ class Notebook : public Widget {
   void setSelection(int selection) { _wx->SetSelection(selection); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::Notebook *_wx;
+  swx::Notebook* _wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/FileDialog.h: A wrapper around wxFileDialog.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ namespace cszb_scoreboard::swx {
 class FileDialog : public wxFileDialog {
  public:
   explicit FileDialog(
-      wxWindow *parent, const wxString &message = wxFileSelectorPromptStr,
-      const wxString &defaultDir = wxEmptyString,
-      const wxString &defaultFile = wxEmptyString,
-      const wxString &wildcard = wxFileSelectorDefaultWildcardStr,
+      wxWindow* parent, const wxString& message = wxFileSelectorPromptStr,
+      const wxString& defaultDir = wxEmptyString,
+      const wxString& defaultFile = wxEmptyString,
+      const wxString& wildcard = wxFileSelectorDefaultWildcardStr,
       int64_t style = wxFD_DEFAULT_STYLE,
-      const wxPoint &pos = wxDefaultPosition,
-      const wxSize &size = wxDefaultSize,
-      const wxString &name = wxFileDialogNameStr)
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
+      const wxString& name = wxFileDialogNameStr)
       : wxFileDialog(parent, message, defaultDir, defaultFile, wildcard, style,
                      pos, size, name) {}
 };

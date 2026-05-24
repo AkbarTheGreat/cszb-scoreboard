@@ -1,7 +1,7 @@
 /*
 ui/widget/ListBox.cpp: A list of strings which can be reordered and edited.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,15 +49,15 @@ auto ListBox::strings() -> std::vector<std::string> {
   std::vector<std::string> strings;
   wxArrayString wx_strings;
   _wx->GetStrings(wx_strings);
-  for (const auto &entry : wx_strings) {
+  for (const auto& entry : wx_strings) {
     strings.push_back(entry.ToStdString());
   }
   return strings;
 }
 
-void ListBox::setStrings(const std::vector<std::string> &strings) {
+void ListBox::setStrings(const std::vector<std::string>& strings) {
   wxArrayString wx_strings;
-  for (const auto &entry : strings) {
+  for (const auto& entry : strings) {
     wx_strings.Add(entry.c_str());
   }
   _wx->SetStrings(wx_strings);

@@ -1,7 +1,7 @@
 /*
 test/FilesystemPathTest.cpp: Tests for util/FilesystemPath
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,18 +22,18 @@ limitations under the License.
 #include "util/FilesystemPath.h"  // for FilesystemPath
 
 #if defined(_WIN32) && !defined(SCOREBOARD_APPLE_IMPL)
-const char *ROOT = "C:\\test";
-const char *ROOT_WITH_SEP = "C:\\test\\";
-const char *RELATIVE_PATH_IN_ROOT = "path1\\file1.ext";
-const char *ABS_PATH_IN_ROOT = "C:\\test\\path1\\file1.ext";
-const char *ABS_PATH_OUT_OF_ROOT = "C:\\test2\\path1\\file1.ext";
+const char* ROOT = "C:\\test";
+const char* ROOT_WITH_SEP = "C:\\test\\";
+const char* RELATIVE_PATH_IN_ROOT = "path1\\file1.ext";
+const char* ABS_PATH_IN_ROOT = "C:\\test\\path1\\file1.ext";
+const char* ABS_PATH_OUT_OF_ROOT = "C:\\test2\\path1\\file1.ext";
 #else   // #if defined(_WIN32) && !defined(SCOREBOARD_APPLE_IMPL)
 // Treat Linux or Apple the same for testing
-const char *ROOT = "/test";
-const char *ROOT_WITH_SEP = "/test/";
-const char *RELATIVE_PATH_IN_ROOT = "path1/file1.ext";
-const char *ABS_PATH_IN_ROOT = "/test/path1/file1.ext";
-const char *ABS_PATH_OUT_OF_ROOT = "/test2/path1/file1.ext";
+const char* ROOT = "/test";
+const char* ROOT_WITH_SEP = "/test/";
+const char* RELATIVE_PATH_IN_ROOT = "path1/file1.ext";
+const char* ABS_PATH_IN_ROOT = "/test/path1/file1.ext";
+const char* ABS_PATH_OUT_OF_ROOT = "/test2/path1/file1.ext";
 #endif  // #if defined(_WIN32) && !defined(SCOREBOARD_APPLE_IMPL)
 
 #ifdef SCOREBOARD_APPLE_IMPL
@@ -42,11 +42,11 @@ const char *ABS_PATH_OUT_OF_ROOT = "/test2/path1/file1.ext";
 #define TESTNAME FilesystemPathTest
 #endif  // #ifdef SCOREBOARD_APPLE_IMPL
 
-const char *CURRENT_BINARY;
+const char* CURRENT_BINARY;
 
 // Has it's own main to get the current file from argv, as a means of finding a
 // valid file on the filesystem.
-auto main(int argc, char **argv) -> int {
+auto main(int argc, char** argv) -> int {
   ::testing::InitGoogleTest(&argc, argv);
   CURRENT_BINARY = argv[0];
   return RUN_ALL_TESTS();

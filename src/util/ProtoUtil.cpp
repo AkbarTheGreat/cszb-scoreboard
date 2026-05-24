@@ -2,7 +2,7 @@
 util/ProtoUtil.cpp: Convenience methods for converting between proto values and
 wxWidgets values.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ struct Size;
 
 const float DEFAULT_FONT_SIZE = 10;
 
-auto ProtoUtil::protoRct(const wxRect &input, proto::Rectangle *output)
-    -> proto::Rectangle * {
+auto ProtoUtil::protoRct(const wxRect& input, proto::Rectangle* output)
+    -> proto::Rectangle* {
   output->set_x(input.GetX());
   output->set_y(input.GetY());
   output->set_width(input.GetWidth());
@@ -37,22 +37,22 @@ auto ProtoUtil::protoRct(const wxRect &input, proto::Rectangle *output)
   return output;
 }
 
-auto ProtoUtil::wxRct(const proto::Rectangle &input) -> wxRect {
+auto ProtoUtil::wxRct(const proto::Rectangle& input) -> wxRect {
   wxRect rect(input.x(), input.y(), input.width(), input.height());
   return rect;
 }
 
-auto ProtoUtil::protoClr(const Color &input, proto::Color *output)
-    -> proto::Color * {
+auto ProtoUtil::protoClr(const Color& input, proto::Color* output)
+    -> proto::Color* {
   output->set_rgb(input.GetRGB());
   return output;
 }
 
-auto ProtoUtil::wxClr(const proto::Color &input) -> Color {
+auto ProtoUtil::wxClr(const proto::Color& input) -> Color {
   return Color(input.rgb());
 }
 
-auto ProtoUtil::wxScaledFont(const proto::Font &input, const Size &scale_size)
+auto ProtoUtil::wxScaledFont(const proto::Font& input, const Size& scale_size)
     -> wxFont {
   int scaled_size = FontUtil::scaleFactor(scale_size, input.size());
 
@@ -72,16 +72,16 @@ auto ProtoUtil::wxScaledFont(const proto::Font &input, const Size &scale_size)
   return font_info.AntiAliased();
 }
 
-void ProtoUtil::setFontColor(proto::Font *font, const Color &color) {
+void ProtoUtil::setFontColor(proto::Font* font, const Color& color) {
   protoClr(color, font->mutable_color());
 }
 
-void ProtoUtil::defaultFont(proto::Font *font) {
+void ProtoUtil::defaultFont(proto::Font* font) {
   font->set_size(DEFAULT_FONT_SIZE);
   validateFont(font);
 }
 
-void ProtoUtil::validateFont(proto::Font *font) {
+void ProtoUtil::validateFont(proto::Font* font) {
   if (font->style() == proto::Font_FontStyle_FONT_STYLE_UNDEFINED) {
 #ifdef WIN32
     font->set_style(proto::Font_FontStyle_FONT_STYLE_IMPACT);
@@ -116,7 +116,7 @@ auto ProtoUtil::noSide() -> proto::ScreenSide {
   return side;
 }
 
-auto ProtoUtil::teamSide(const proto::TeamInfo_TeamType &team)
+auto ProtoUtil::teamSide(const proto::TeamInfo_TeamType& team)
     -> proto::ScreenSide {
   switch (team) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
@@ -130,8 +130,8 @@ auto ProtoUtil::teamSide(const proto::TeamInfo_TeamType &team)
   }
 }
 
-auto ProtoUtil::sideContains(const proto::ScreenSide &side,
-                             const proto::TeamInfo_TeamType &team) -> bool {
+auto ProtoUtil::sideContains(const proto::ScreenSide& side,
+                             const proto::TeamInfo_TeamType& team) -> bool {
   switch (team) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
       return side.home();

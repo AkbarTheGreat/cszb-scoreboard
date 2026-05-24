@@ -2,7 +2,7 @@
 ui/component/control/TimerSetup.h: This class is responsible for managing timers
 which may be displayed at the bottom of every other view.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,16 +37,16 @@ class Panel;
 
 class TimerSetup : public ScreenTextController {
  public:
-  explicit TimerSetup(swx::Panel *wx)
+  explicit TimerSetup(swx::Panel* wx)
       : ScreenTextController(wx,
                              /*display_update_screens=*/false) {}
-  static auto Create(swx::Panel *wx) -> std::unique_ptr<TimerSetup>;
+  static auto Create(swx::Panel* wx) -> std::unique_ptr<TimerSetup>;
 
  private:
-  void createControls(Panel *control_panel) override;
-  void updateScreenText(ScreenText *screen_text) override;
+  void createControls(Panel* control_panel) override;
+  void updateScreenText(ScreenText* screen_text) override;
   void bindEvents();
-  void positionWidgets(Panel *control_panel);
+  void positionWidgets(Panel* control_panel);
   void startOrStopTimer();
   void showOrHideTimer();
   void resetTimer();

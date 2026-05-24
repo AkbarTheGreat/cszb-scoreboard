@@ -1,7 +1,7 @@
 /*
 util/StringUtil.h: Convenience methods for dealing with wxStrings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ namespace cszb_scoreboard {
 class StringUtil {
  public:
   static auto intToString(int value, int zero_pad = 0) -> std::string;
-  static auto stringToInt(const std::string &string, int default_value = 0)
+  static auto stringToInt(const std::string& string, int default_value = 0)
       -> int64_t;
-  static auto stringToDouble(const std::string &string, int default_value = 0)
+  static auto stringToDouble(const std::string& string, int default_value = 0)
       -> double;
   static auto doubleToString(double value, int32_t precision = 0)
       -> std::string;

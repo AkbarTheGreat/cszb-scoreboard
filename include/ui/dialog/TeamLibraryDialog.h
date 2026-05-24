@@ -2,7 +2,7 @@
 ui/dialog/TeamLibraryDialog.h: A dialog which allows a user to select a team
 from the team library or edit said library.
 
-Copyright 2023-2025 Tracy Beck
+Copyright 2023-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,21 +49,21 @@ class TeamLibraryDialog : public TabbedDialog {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  TeamLibraryDialog(swx::PropertySheetDialog *wx, ScoreControl *parent)
+  TeamLibraryDialog(swx::PropertySheetDialog* wx, ScoreControl* parent)
       : TeamLibraryDialog(wx, parent, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 
   void clearEdit();
-  void editTeam(int32_t row_number, const std::string &name,
-                const FilesystemPath &logo, proto::TeamInfo_TeamType type);
+  void editTeam(int32_t row_number, const std::string& name,
+                const FilesystemPath& logo, proto::TeamInfo_TeamType type);
 
   PUBLIC_TEST_ONLY
-  TeamLibraryDialog(swx::PropertySheetDialog *wx, ScoreControl *parent,
-                    Singleton *singleton);
+  TeamLibraryDialog(swx::PropertySheetDialog* wx, ScoreControl* parent,
+                    Singleton* singleton);
 
  private:
-  Singleton *singleton;
-  ScoreControl *parent;
+  Singleton* singleton;
+  ScoreControl* parent;
   int32_t row_for_edit;
 
   // UI elements

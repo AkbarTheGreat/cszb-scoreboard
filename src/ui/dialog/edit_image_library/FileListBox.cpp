@@ -2,7 +2,7 @@
 ui/dialog/edit_image_library/FileListBox.cpp: A subclass of wxEditableListBox
 which specifically contains a list of files.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ namespace cszb_scoreboard {
 
 const int64_t FILE_LIST_BOX_DEFAULT_STYLE = wxEL_ALLOW_NEW | wxEL_ALLOW_DELETE;
 
-FileListBox::FileListBox(swx::Panel *wx, const std::string &title,
-                         const std::vector<FilesystemPath> &file_list)
+FileListBox::FileListBox(swx::Panel* wx, const std::string& title,
+                         const std::vector<FilesystemPath>& file_list)
     : Panel(wx) {
   box = listBox(title);
   updateStrings(file_list);
@@ -44,12 +44,12 @@ FileListBox::FileListBox(swx::Panel *wx, const std::string &title,
 
 void FileListBox::bindEvents() {
   box->bindNew(wxEVT_BUTTON,
-               [this](wxCommandEvent &event) -> void { this->newPressed(); });
-  box->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
+               [this](wxCommandEvent& event) -> void { this->newPressed(); });
+  box->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent& event) -> void {
     this->fileUpdated(FilesystemPath(box->strings()[event.GetItem().GetId()]),
                       FilesystemPath(event.GetItem().GetText().ToStdString()));
   });
-  box->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent &event) -> void {
+  box->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent& event) -> void {
     this->fileDeleted(FilesystemPath(event.GetItem().GetText().ToStdString()));
   });
 }
@@ -71,12 +71,12 @@ void FileListBox::newPressed() {
   }
 }
 
-void FileListBox::fileUpdated(const FilesystemPath &prev,
-                              const FilesystemPath &curr) {
+void FileListBox::fileUpdated(const FilesystemPath& prev,
+                              const FilesystemPath& curr) {
   change_callback(prev, curr);
 }
 
-void FileListBox::fileDeleted(const FilesystemPath &file) {
+void FileListBox::fileDeleted(const FilesystemPath& file) {
   change_callback(file, FilesystemPath(""));
 }
 
@@ -84,7 +84,7 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
   std::vector<std::string> strings = box->strings();
   std::vector<FilesystemPath> filenames;
 
-  for (const auto &entry : strings) {
+  for (const auto& entry : strings) {
     if (!entry.empty()) {
       filenames.emplace_back(std::string(entry));
     }
@@ -93,11 +93,11 @@ auto FileListBox::getFilenames() -> std::vector<FilesystemPath> {
   return filenames;
 }
 
-void FileListBox::setFilenames(const std::vector<FilesystemPath> &files) {
+void FileListBox::setFilenames(const std::vector<FilesystemPath>& files) {
   std::vector<std::string> strings;
   strings.reserve(files.size());
 
-  for (const auto &entry : files) {
+  for (const auto& entry : files) {
     strings.emplace_back(entry.string());
   }
 
@@ -113,11 +113,11 @@ auto FileListBox::selectedFilename() -> FilesystemPath {
   return getFilenames()[index];
 }
 
-void FileListBox::updateStrings(const std::vector<FilesystemPath> &filenames,
+void FileListBox::updateStrings(const std::vector<FilesystemPath>& filenames,
                                 int64_t select_index) {
   std::vector<std::string> strings;
   strings.reserve(filenames.size());
-  for (const auto &file : filenames) {
+  for (const auto& file : filenames) {
     strings.push_back(file.string());
   }
   box->setStrings(strings);
@@ -128,8 +128,8 @@ void FileListBox::updateStrings(const std::vector<FilesystemPath> &filenames,
 }
 
 void FileListBox::setChangeCallback(
-    const std::function<void(const FilesystemPath &, const FilesystemPath &)>
-        &callback) {
+    const std::function<void(const FilesystemPath&, const FilesystemPath&)>&
+        callback) {
   change_callback = callback;
 }
 

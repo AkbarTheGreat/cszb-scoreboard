@@ -2,7 +2,7 @@
 config/GeneralConfig.cpp: This class is a configuration singleton which
 represents generic settings for the scoreboard.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-GeneralConfig::GeneralConfig(SingletonClass c, Singleton *singleton) {
+GeneralConfig::GeneralConfig(SingletonClass c, Singleton* singleton) {
   this->singleton = singleton;
   general_config = singleton->persistence()->loadGeneralConfig();
   bool settings_changed = false;

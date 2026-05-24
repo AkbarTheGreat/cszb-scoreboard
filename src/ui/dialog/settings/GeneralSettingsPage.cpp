@@ -2,7 +2,7 @@
 ui/dialog/settings/GeneralSettingsPage.cpp: The page of the settings notebook
 which handles general/miscellaneous settings.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace cszb_scoreboard {
 
 constexpr double DROP_SHADOW_DISTANCE = 0.08;
 
-GeneralSettingsPage::GeneralSettingsPage(swx::Panel *wx, Singleton *singleton)
+GeneralSettingsPage::GeneralSettingsPage(swx::Panel* wx, Singleton* singleton)
     : SettingsPage(wx) {
   this->singleton = singleton;
   createControls();
@@ -52,7 +52,7 @@ void GeneralSettingsPage::positionWidgets() {
 void GeneralSettingsPage::bindEvents() {
   enable_drop_shadow->bind(
       wxEVT_CHECKBOX,
-      [this](wxCommandEvent &event) -> void { this->dropShadowChanged(); });
+      [this](wxCommandEvent& event) -> void { this->dropShadowChanged(); });
 }
 
 auto GeneralSettingsPage::validateSettings() -> bool {

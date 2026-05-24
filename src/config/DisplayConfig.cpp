@@ -2,7 +2,7 @@
 config/DisplayConfig.cpp: This class is a configuration singleton which
 represents the current known state of the displays attached to this computer.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ namespace cszb_scoreboard {
 static const int DEFAULT_WIDTH = 1024;
 static const int DEFAULT_HEIGHT = 768;
 
-DisplayConfig::DisplayConfig(SingletonClass c, Singleton *singleton) {
+DisplayConfig::DisplayConfig(SingletonClass c, Singleton* singleton) {
   this->singleton = singleton;
   detectDisplays();
 }
@@ -89,7 +89,7 @@ void DisplayConfig::detectExternalMonitors(bool force_reload) {
   bool set_home = true;
 
   for (uint32_t i = 0; i < numscreens; i++) {
-    proto::DisplayInfo *display_info = display_config.add_displays();
+    proto::DisplayInfo* display_info = display_config.add_displays();
     display_info->set_id(i);
     Display display = singleton->frameManager()->monitor(i);
     LogDebug("Display %d detected: %s", i, display.debugString().c_str());
@@ -133,7 +133,7 @@ void DisplayConfig::setupWindowedMode() {
   display_config.clear_displays();
 
   for (int i = 0; i < numscreens; i++) {
-    proto::DisplayInfo *display_info = display_config.add_displays();
+    proto::DisplayInfo* display_info = display_config.add_displays();
     display_info->set_id(i);
 
     // Set our size to the configured size.
@@ -150,7 +150,7 @@ void DisplayConfig::setupWindowedMode() {
   }
 }
 
-auto DisplayConfig::setSide(int index, const proto::ScreenSide &side) -> bool {
+auto DisplayConfig::setSide(int index, const proto::ScreenSide& side) -> bool {
   assert(index < display_config.displays_size() && index >= 0);
   // Allocated with new, since display_config will take ownership of it when
   // set.
@@ -158,7 +158,7 @@ auto DisplayConfig::setSide(int index, const proto::ScreenSide &side) -> bool {
   if (diff.Compare(display_config.displays(index).side(), side)) {
     return false;
   }
-  auto *side_copy = new proto::ScreenSide(side);
+  auto* side_copy = new proto::ScreenSide(side);
   display_config.mutable_displays(index)->clear_side();
   display_config.mutable_displays(index)->set_allocated_side(side_copy);
   return true;
@@ -188,8 +188,8 @@ auto DisplayConfig::displayDetails(int index) -> proto::DisplayInfo {
 }
 
 // Determines which display currently houses the main control window.
-auto DisplayConfig::isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool {
-  Frame *main_view = singleton->frameManager()->mainView();
+auto DisplayConfig::isPrimaryDisplay(proto::DisplayInfo* display_info) -> bool {
+  Frame* main_view = singleton->frameManager()->mainView();
   if (main_view == nullptr) {
     return true;  // Guess that screen 0 is our primary, as we haven't created
                   // our main window yet.

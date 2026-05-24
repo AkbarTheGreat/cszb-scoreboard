@@ -1,7 +1,7 @@
 /*
 test/ScreenTextSideTest.cpp: Tests for ui/component/ScreenTextSide
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ class TestFrame : public Frame {
 
 class TestApp : public wxApp {
  public:
-  TestFrame *frame;
+  TestFrame* frame;
 
   auto OnInit() -> bool override {
     frame = new TestFrame();
@@ -66,9 +66,9 @@ class TestApp : public wxApp {
 
 class ScreenTextSideTest : public testing::Test {
  protected:
-  TestApp *app;
+  TestApp* app;
 
-  auto screenText() -> ScreenTextSide * {
+  auto screenText() -> ScreenTextSide* {
     return app->frame->screen_text_side.get();
   }
 

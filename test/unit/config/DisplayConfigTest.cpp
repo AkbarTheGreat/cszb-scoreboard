@@ -1,7 +1,7 @@
 /*
 test/DisplayConfigTest.cpp: Tests for config/DisplayConfig
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -68,8 +68,8 @@ using ::testing::Return;
 
 namespace cszb_scoreboard {
 
-ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
-                                 Singleton *singleton)
+ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText& preview,
+                                 Singleton* singleton)
     : Frame("Scoreboard") {}
 
 namespace test {
@@ -124,7 +124,7 @@ class DisplayConfigTest : public ::testing::Test {
     auto config = std::make_unique<proto::DisplayConfig>();
     config->set_enable_windowed_mode(true);
     config->set_window_count(2);
-    proto::DisplayInfo *display_info = config->add_displays();
+    proto::DisplayInfo* display_info = config->add_displays();
     // NOLINTNEXTLINE(readability-magic-numbers)
     displaySize(display_info, 5, 10, 1024, 768);
     display_info->set_id(0);
@@ -168,7 +168,7 @@ class DisplayConfigTest : public ::testing::Test {
     return Display(wx);
   }
 
-  static void displaySize(proto::DisplayInfo *display_info, int32_t x,
+  static void displaySize(proto::DisplayInfo* display_info, int32_t x,
                           int32_t y, int32_t width, int32_t height) {
     display_info->mutable_dimensions()->set_x(x);
     display_info->mutable_dimensions()->set_y(y);
@@ -231,7 +231,7 @@ TEST_F(DisplayConfigTest, SingleExternalMonitorSetup) {
   proto::DisplayConfig expected;
   expected.mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
   expected.mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
-  proto::DisplayInfo *expected_display = expected.add_displays();
+  proto::DisplayInfo* expected_display = expected.add_displays();
   // NOLINTNEXTLINE(readability-magic-numbers)
   displaySize(expected_display, 0, 0, 1024, 768);
   expected_display->mutable_side()->set_control(true);
@@ -254,7 +254,7 @@ TEST_F(DisplayConfigTest, DualExternalMonitorSetup) {
   proto::DisplayConfig expected;
   expected.mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
   expected.mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
-  proto::DisplayInfo *expected_display = expected.add_displays();
+  proto::DisplayInfo* expected_display = expected.add_displays();
   // NOLINTNEXTLINE(readability-magic-numbers)
   displaySize(expected_display, 0, 0, 1024, 768);
   expected_display->mutable_side()->set_control(true);
@@ -282,7 +282,7 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
   proto::DisplayConfig expected;
   expected.mutable_window_size()->set_width(EXPECTED_DEFAULT_WINDOW_WIDTH);
   expected.mutable_window_size()->set_height(EXPECTED_DEFAULT_WINDOW_HEIGHT);
-  proto::DisplayInfo *expected_display = expected.add_displays();
+  proto::DisplayInfo* expected_display = expected.add_displays();
   // NOLINTNEXTLINE(readability-magic-numbers)
   displaySize(expected_display, 0, 0, 1024, 768);
   expected_display->mutable_side()->set_control(true);
@@ -302,7 +302,7 @@ TEST_F(DisplayConfigTest, TripleExternalMonitorSetup) {
 
 TEST_F(DisplayConfigTest, SetSide) {
   DisplayConfig config(SingletonClass{}, singleton.get());
-  auto *new_side = new proto::ScreenSide();
+  auto* new_side = new proto::ScreenSide();
   new_side->set_away(false);
   new_side->set_extra(true);
   config.setSide(1, *new_side);

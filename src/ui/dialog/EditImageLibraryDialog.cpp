@@ -2,7 +2,7 @@
 ui/dialog/EditImageLibraryDialog.cpp: A dialog which allows a user to
 add/remove/edit images in the image library.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,9 +44,9 @@ class PropertySheetDialog;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog *wx,
-                                               ImageFromLibrary *parent,
-                                               Singleton *singleton)
+EditImageLibraryDialog::EditImageLibraryDialog(swx::PropertySheetDialog* wx,
+                                               ImageFromLibrary* parent,
+                                               Singleton* singleton)
     : TabbedDialog(wx) {
   this->parent = parent;
   this->singleton = singleton;
@@ -107,37 +107,37 @@ void EditImageLibraryDialog::positionWidgets() {
 
 void EditImageLibraryDialog::bindEvents() {
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onOk(); },
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onOk(); },
       wxID_OK);
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onCancel(); },
       wxID_CANCEL);
-  ImageFromLibrary *local_parent = parent;
+  ImageFromLibrary* local_parent = parent;
   // Allow the parent to be null -- for testing.
   if (local_parent != nullptr) {
-    bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
+    bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent& event) -> void {
       local_parent->onEditDialogClose();
     });
   }
-  file_list->bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent &event) -> void {
+  file_list->bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent& event) -> void {
     this->fileSelected(&event);
   });
   name_entry->bind(wxEVT_KEY_UP,
-                   [this](wxKeyEvent &event) -> void { this->nameUpdated(); });
-  root_browse->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+                   [this](wxKeyEvent& event) -> void { this->nameUpdated(); });
+  root_browse->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
     this->rootBrowsePressed();
   });
-  root_clear->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+  root_clear->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
     this->rootClearPressed();
   });
-  tag_list->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent &event) -> void {
+  tag_list->bind(wxEVT_LIST_END_LABEL_EDIT, [this](wxListEvent& event) -> void {
     this->tagsUpdated(event);
   });
-  tag_list->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent &event) -> void {
+  tag_list->bind(wxEVT_LIST_DELETE_ITEM, [this](wxListEvent& event) -> void {
     this->tagDeleted(event);
   });
   file_list->setChangeCallback(
-      [this](const FilesystemPath &prev, const FilesystemPath &curr) -> void {
+      [this](const FilesystemPath& prev, const FilesystemPath& curr) -> void {
         this->fileUpdated(prev, curr);
       });
 }
@@ -159,8 +159,8 @@ void EditImageLibraryDialog::saveSettings() {
   singleton->imageLibrary()->saveLibrary();
 }
 
-void EditImageLibraryDialog::fileUpdated(const FilesystemPath &prev,
-                                         const FilesystemPath &curr) {
+void EditImageLibraryDialog::fileUpdated(const FilesystemPath& prev,
+                                         const FilesystemPath& curr) {
   FilesystemPath empty("");
   if (prev == empty && curr == empty) {
     LogDebug(
@@ -187,14 +187,14 @@ void EditImageLibraryDialog::fileUpdated(const FilesystemPath &prev,
   refreshFiles();
 }
 
-void EditImageLibraryDialog::fileSelected(wxListEvent *event) {
+void EditImageLibraryDialog::fileSelected(wxListEvent* event) {
   FilesystemPath filename = file_list->selectedFilename();
 
   name_entry->setValue(library->name(filename));
   full_name_entry->setValue(FilesystemPath::absolutePath(
       library->libraryRoot().string(), filename.string()));
   std::vector<std::string> tags;
-  for (const auto &tag : library->tags(filename)) {
+  for (const auto& tag : library->tags(filename)) {
     tags.push_back(tag.string());
   }
   tag_list->setStrings(tags);
@@ -229,7 +229,7 @@ void EditImageLibraryDialog::rootClearPressed() {
   refreshFiles();
 }
 
-void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
+void EditImageLibraryDialog::tagDeleted(const wxListEvent& event) {
   std::vector<std::string> tags = tag_list->strings();
 
   tags.erase(tags.begin() + event.GetIndex());
@@ -240,7 +240,7 @@ void EditImageLibraryDialog::tagDeleted(const wxListEvent &event) {
   library->setTags(filename, tags);
 }
 
-void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
+void EditImageLibraryDialog::tagsUpdated(const wxListEvent& event) {
   std::vector<std::string> tags = tag_list->strings();
   int index = event.GetIndex();
   if (index >= tags.size()) {
@@ -254,7 +254,7 @@ void EditImageLibraryDialog::tagsUpdated(const wxListEvent &event) {
   library->setTags(filename, tags);
 }
 
-auto EditImageLibraryDialog::bestGuessImageName(const FilesystemPath &file)
+auto EditImageLibraryDialog::bestGuessImageName(const FilesystemPath& file)
     -> std::string {
   return file.titleName();
 }

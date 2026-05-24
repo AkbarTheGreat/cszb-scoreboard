@@ -3,7 +3,7 @@ ui/component/ScreenThumbnail.cpp: Represents a very small view of exactly what's
 on the matching ScreenPresenter, in case there's not a great view from the booth
 to all monitors.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ class Panel;
 
 const int THUMBNAIL_HEIGHT = 64;
 
-ScreenThumbnail::ScreenThumbnail(swx::Panel *wx, int monitor_number,
-                                 const ScreenText &preview,
-                                 Singleton *singleton)
+ScreenThumbnail::ScreenThumbnail(swx::Panel* wx, int monitor_number,
+                                 const ScreenText& preview,
+                                 Singleton* singleton)
     : ScreenText(wx) {
   this->singleton = singleton;
   setupPresenter(preview, thumbnailSize(monitor_number));
@@ -45,7 +45,7 @@ auto ScreenThumbnail::thumbnailSize(int monitor_number) -> Size {
   float ratio = 4 / 3;
 
   if (!display_info.side().error()) {
-    const proto::Rectangle &dimensions = display_info.dimensions();
+    const proto::Rectangle& dimensions = display_info.dimensions();
     ratio = static_cast<float>(dimensions.width()) / dimensions.height();
   }
   return Size{.width = static_cast<int>(THUMBNAIL_HEIGHT * ratio),

@@ -2,7 +2,7 @@
 ui/graphics/TeamColors.cpp: A singleton which holds the currently selected
 colors for every team.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-TeamColors::TeamColors(SingletonClass c, Singleton *singleton) {
+TeamColors::TeamColors(SingletonClass c, Singleton* singleton) {
   // Initialize colors from configured defaults
   setColor(ProtoUtil::homeSide(),
            singleton->teamConfig()->teamColor(ProtoUtil::homeSide())[0]);
@@ -38,7 +38,7 @@ TeamColors::TeamColors(SingletonClass c, Singleton *singleton) {
   all_color = Color("Black");
 }
 
-auto TeamColors::getColor(const proto::ScreenSide &side) -> Color {
+auto TeamColors::getColor(const proto::ScreenSide& side) -> Color {
   if (side.home() && side.away() && side.extra()) {
     return all_color;
   }
@@ -52,7 +52,7 @@ auto TeamColors::getColor(const proto::ScreenSide &side) -> Color {
   return Color("Black");
 }
 
-void TeamColors::setColor(const proto::ScreenSide &side, const Color &color) {
+void TeamColors::setColor(const proto::ScreenSide& side, const Color& color) {
   if (side.home() && side.away() && side.extra()) {
     all_color = color;
   } else if (side.home()) {

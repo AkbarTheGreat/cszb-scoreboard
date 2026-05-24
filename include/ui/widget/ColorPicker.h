@@ -2,7 +2,7 @@
 ui/widget/ColorPicker.h: A widget which allows selecting colors from a palatte
 or from a color wheel.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,21 +27,21 @@ namespace cszb_scoreboard {
 
 class ColorPicker : public Widget {
  public:
-  explicit ColorPicker(swx::ColourPickerCtrl *picker) { _wx = picker; }
+  explicit ColorPicker(swx::ColourPickerCtrl* picker) { _wx = picker; }
 
-  void bind(const wxEventTypeTag<wxColourPickerEvent> &eventType,
-            const std::function<void(wxColourPickerEvent &)> &lambda,
+  void bind(const wxEventTypeTag<wxColourPickerEvent>& eventType,
+            const std::function<void(wxColourPickerEvent&)>& lambda,
             int id = wxID_ANY) {
     wx()->Bind(eventType, lambda, id);
   }
   auto color() -> Color { return Color(_wx->GetColour()); }
-  void setColor(const Color &color) { _wx->SetColour(color); }
+  void setColor(const Color& color) { _wx->SetColour(color); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::ColourPickerCtrl *_wx;
+  swx::ColourPickerCtrl* _wx;
 };
 
 }  // namespace cszb_scoreboard

@@ -1,7 +1,7 @@
 /*
 ui/frame/HotkeyTable.cpp: This class manages hotkeys for the application.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ void HotkeyTable::addHotkey(int modifier_flags, int key_code,
   accel_entries.back().Set(modifier_flags, key_code, widget_id);
 }
 
-void HotkeyTable::installHotkeys(Frame *main_window) {
+void HotkeyTable::installHotkeys(Frame* main_window) {
   main_window->installHotkeys(accel_entries);
 }
 

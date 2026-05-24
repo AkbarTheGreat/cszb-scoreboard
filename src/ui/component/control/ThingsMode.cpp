@@ -2,7 +2,7 @@
 ui/component/control/ThingsMode.cpp: A control for managing 5/6 things in a
 short-form improv show.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,16 +36,16 @@ namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
-static constexpr std::array<const char *, 2> PRESENTER_OPTIONS{
+static constexpr std::array<const char*, 2> PRESENTER_OPTIONS{
     {"Activity List", "Replacements"}};
 
-auto ThingsMode::Create(swx::Panel *wx) -> std::unique_ptr<ThingsMode> {
+auto ThingsMode::Create(swx::Panel* wx) -> std::unique_ptr<ThingsMode> {
   auto entry = std::make_unique<ThingsMode>(wx);
   entry->initializeWidgets();
   return entry;
 }
 
-void ThingsMode::createControls(Panel *control_panel) {
+void ThingsMode::createControls(Panel* control_panel) {
   scrollable_panel = control_panel->scrollingPanel();
 
   button_panel = scrollable_panel->panel();
@@ -68,7 +68,7 @@ void ThingsMode::createControls(Panel *control_panel) {
   bindEvents();
 }
 
-void ThingsMode::positionWidgets(Panel *control_panel) {
+void ThingsMode::positionWidgets(Panel* control_panel) {
   button_panel->addWidget(*screen_selection, 0, 0);
   button_panel->addWidget(*presenter_selection, 0, 1);
   button_panel->addWidget(*new_activity_button, 1, 0);
@@ -93,23 +93,23 @@ void ThingsMode::positionWidgets(Panel *control_panel) {
 void ThingsMode::bindEvents() {
   new_activity_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->addActivity(); });
+      [this](wxCommandEvent& event) -> void { this->addActivity(); });
   new_replacement_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->addReplacement(); });
+      [this](wxCommandEvent& event) -> void { this->addReplacement(); });
   screen_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->screenChanged(); });
+      [this](wxCommandEvent& event) -> void { this->screenChanged(); });
   presenter_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->presentedListChanged(); });
+      [this](wxCommandEvent& event) -> void { this->presentedListChanged(); });
 }
 
-void ThingsMode::updateScreenText(ScreenText *screen_text) {
+void ThingsMode::updateScreenText(ScreenText* screen_text) {
   if (!isActive()) {
     return;
   }
-  ActivityPanel *selected_panel = all_activities_panel;
+  ActivityPanel* selected_panel = all_activities_panel;
   if (screen_selection->allSelected()) {
     // Do nothing, already set
   } else if (screen_selection->homeSelected()) {

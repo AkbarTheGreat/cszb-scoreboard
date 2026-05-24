@@ -2,7 +2,7 @@
 config/SlideShow.cpp: This class is a singleton which
 contains information for a slide show.
 
-Copyright 2025 Tracy Beck
+Copyright 2025-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-SlideShow::SlideShow(SingletonClass c, Singleton *singleton) {
+SlideShow::SlideShow(SingletonClass c, Singleton* singleton) {
   this->singleton = singleton;
   this->slide_show =
       std::move(Singleton::getInstance()->persistence()->loadSlideShow());
@@ -52,9 +52,9 @@ void SlideShow::removeSlide(int32_t index) {
 }
 
 // -1 index is the default and means to add the slide to the end of the list.
-void SlideShow::addSlide(const std::string &name, const FilesystemPath &file,
+void SlideShow::addSlide(const std::string& name, const FilesystemPath& file,
                          int32_t index) {
-  proto::SlideInfo *slide = slide_show.add_slides();
+  proto::SlideInfo* slide = slide_show.add_slides();
   slide->set_name(name);
   slide->set_file_path(file.string());
   if (index == -1) {

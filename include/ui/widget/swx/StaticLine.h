@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/StaticLine.h: A wrapper around wxStaticLine.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ namespace cszb_scoreboard::swx {
 
 class StaticLine : public wxStaticLine {
  public:
-  explicit StaticLine(wxWindow *parent, wxWindowID id = wxID_ANY,
-                      const wxPoint &pos = wxDefaultPosition,
-                      const wxSize &size = wxDefaultSize,
+  explicit StaticLine(wxWindow* parent, wxWindowID id = wxID_ANY,
+                      const wxPoint& pos = wxDefaultPosition,
+                      const wxSize& size = wxDefaultSize,
                       int64_t style = wxLI_HORIZONTAL,
-                      const wxString &name = wxStaticLineNameStr)
+                      const wxString& name = wxStaticLineNameStr)
       : wxStaticLine(parent, wxID_ANY, pos, size, style, name) {}
 };
 

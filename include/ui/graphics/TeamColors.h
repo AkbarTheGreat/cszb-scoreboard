@@ -2,7 +2,7 @@
 ui/graphics/TeamColors.h: A singleton which holds the currently selected colors
 for every team.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,11 +36,11 @@ class TeamColors {
   explicit TeamColors(SingletonClass c)
       : TeamColors(c, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  auto getColor(const proto::ScreenSide &side) -> Color;
-  void setColor(const proto::ScreenSide &side, const Color &color);
+  auto getColor(const proto::ScreenSide& side) -> Color;
+  void setColor(const proto::ScreenSide& side, const Color& color);
 
   PUBLIC_TEST_ONLY
-  TeamColors(SingletonClass c, Singleton *singleton);
+  TeamColors(SingletonClass c, Singleton* singleton);
 
  private:
   Color home_color;
