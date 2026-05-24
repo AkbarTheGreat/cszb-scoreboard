@@ -37,7 +37,7 @@ use Docker;
 our $BUILD_PATH    = 'out/osxcross';
 our $PACKAGE_PATH  = 'out/osxcross_package';
 our $BASE_DIR      = Cwd::cwd();
-our $OSX_VERSION   = '10.12';
+our $OSX_VERSION   = '11.0';
 our $APP_CONTAINER = $PACKAGE_PATH . '/CszbScoreboard.app/Contents';
 our $APP_BIN       = $APP_CONTAINER . '/MacOS';
 our $APP_RESOURCES = $APP_CONTAINER . '/Resources';
