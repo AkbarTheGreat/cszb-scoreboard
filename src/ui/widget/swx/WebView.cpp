@@ -4,7 +4,7 @@ constructed via a factory, the easiest way to contain wx code is via containment
 rather than extension.  It's not my favorite thing to do, but it's what I'm
 doing for this one class, for consistency with other classes.
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,9 +33,9 @@ namespace cszb_scoreboard::swx {
 #define WX_WEB_ENGINE wxWebViewBackendDefault
 #endif  // #ifdef _WIN32
 
-WebView::WebView(wxWindow *parent, const wxString &url, wxWindowID id,
-                 const wxPoint &pos, const wxSize &size,
-                 const wxString &backend, int64_t style, const wxString &name) {
+WebView::WebView(wxWindow* parent, const wxString& url, wxWindowID id,
+                 const wxPoint& pos, const wxSize& size,
+                 const wxString& backend, int64_t style, const wxString& name) {
   _wx = wxWebView::New(parent, id, url, pos, size, WX_WEB_ENGINE, style, name);
 #ifdef SCOREBOARD_DEBUG
   // Allow access to the developer console in debug mode.
@@ -45,21 +45,21 @@ WebView::WebView(wxWindow *parent, const wxString &url, wxWindowID id,
 #endif
 }
 
-void WebView::Bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
-                   const std::function<void(wxWebViewEvent &)> &lambda,
+void WebView::Bind(const wxEventTypeTag<wxWebViewEvent>& eventType,
+                   const std::function<void(wxWebViewEvent&)>& lambda,
                    int id) const {
   if (valid()) {
     _wx->Bind(eventType, lambda, id);
   }
 }
 
-void WebView::LoadURL(const std::string &url) {
+void WebView::LoadURL(const std::string& url) {
   if (valid()) {
     _wx->LoadURL(url);
   }
 }
 
-void WebView::RunScript(const std::string &script) {
+void WebView::RunScript(const std::string& script) {
   if (valid()) {
     _wx->RunScript(script);
   }

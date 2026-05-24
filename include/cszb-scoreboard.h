@@ -1,7 +1,7 @@
 ﻿/*
 cszb-scoreboard.h: Include for main program for the scoreboard.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class Scoreboard : public wxApp {
   static void close();
 
  private:
-  void OnInitCmdLine(wxCmdLineParser &parser) final;
-  auto OnCmdLineParsed(wxCmdLineParser &parser) -> bool final;
+  void OnInitCmdLine(wxCmdLineParser& parser) final;
+  auto OnCmdLineParsed(wxCmdLineParser& parser) -> bool final;
 };
 }  // namespace cszb_scoreboard

@@ -2,7 +2,7 @@
 ui/UiUtil.cpp: Some common ui-specific utility methods collected here to reduce
 duplication.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,14 +29,14 @@ namespace cszb_scoreboard {
 // Sizers are always transferred to a window, which takes care of cleanup, so we
 // don't bother with unique_ptr here.  But be careful if you ever need a sizer
 // and _don't_ pass it on to a window.
-auto UiUtil::sizer(int64_t rows, int64_t columns) -> wxSizer * {
-  auto *sizer = new wxFlexGridSizer(rows, columns, 0, 0);
+auto UiUtil::sizer(int64_t rows, int64_t columns) -> wxSizer* {
+  auto* sizer = new wxFlexGridSizer(rows, columns, 0, 0);
   sizer->SetFlexibleDirection(wxBOTH);
   sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
   return sizer;
 }
 
-void UiUtil::addToGridBag(wxGridBagSizer *sizer, wxWindow *item, int row,
+void UiUtil::addToGridBag(wxGridBagSizer* sizer, wxWindow* item, int row,
                           int column, int row_span, int column_span,
                           int border_size, int flags) {
   sizer->Add(item, wxGBPosition(row, column), wxGBSpan(row_span, column_span),

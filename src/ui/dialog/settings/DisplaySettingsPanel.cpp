@@ -2,7 +2,7 @@
 ui/dialog/settings/DisplaySettingsPanel.cpp: The panel which contains display
 settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@ const std::string ARROW_TOOL_TIP =
     "Change the order of displays.  This primarily affects the order used to "
     "show previews on the main screen.  Requires a restart to take effect.";
 
-DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
-                                           DisplaySettingsPage *parent,
-                                           Singleton *singleton)
+DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel* wx, int index,
+                                           DisplaySettingsPage* parent,
+                                           Singleton* singleton)
     : Panel(wx) {
   this->index = index;
   this->parent = parent;
@@ -47,7 +47,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
   this->display_id = display_info.id();
   this->display_size = buildDisplaySize(display_info.dimensions());
 
-  const proto::ScreenSide &screen_side = display_info.side();
+  const proto::ScreenSide& screen_side = display_info.side();
   // Label for this display
   display_label = label("");
   display_label->bold(true);
@@ -83,7 +83,7 @@ DisplaySettingsPanel::DisplaySettingsPanel(swx::Panel *wx, int index,
   runSizer();
 }
 
-void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel &other) {
+void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel& other) {
   this->display_id = other.display_id;
   this->display_size = other.display_size;
   copyCheckbox(*other.control_checkbox, this->control_checkbox.get());
@@ -92,14 +92,14 @@ void DisplaySettingsPanel::copyFrom(const DisplaySettingsPanel &other) {
   updateLabel();
 }
 
-auto DisplaySettingsPanel::buildDisplaySize(const proto::Rectangle &dimensions)
+auto DisplaySettingsPanel::buildDisplaySize(const proto::Rectangle& dimensions)
     -> std::string {
   return std::to_string(dimensions.height()) + "x" +
          std::to_string(dimensions.width());
 }
 
-void DisplaySettingsPanel::copyCheckbox(const CheckBox &source,
-                                        CheckBox *target) {
+void DisplaySettingsPanel::copyCheckbox(const CheckBox& source,
+                                        CheckBox* target) {
   target->setChecked(source.checked());
 }
 
@@ -118,10 +118,10 @@ void DisplaySettingsPanel::createButtonPanel() {
 
   up_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->moveDisplay(true); });
+      [this](wxCommandEvent& event) -> void { this->moveDisplay(true); });
   down_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->moveDisplay(false); });
+      [this](wxCommandEvent& event) -> void { this->moveDisplay(false); });
 
   up_button->toolTip(ARROW_TOOL_TIP);
   down_button->toolTip(ARROW_TOOL_TIP);

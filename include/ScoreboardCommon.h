@@ -3,7 +3,7 @@ ScoreboardCommon.h: This header holds common constants and macros which should
 be available anywhere in the program.  It should depend on nothing else
 internal.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ const int DEFAULT_BORDER_SIZE = 5;
 const std::string IMAGE_SELECTION_STRING =
     "Image files (bmp, gif, jpeg, png)|*.bmp;*.gif;*.jpg;*.jpeg;*.png";
 
-const std::array<const char *, 5> IMAGE_EXTENSIONS = {
+const std::array<const char*, 5> IMAGE_EXTENSIONS = {
     {".bmp", ".gif", ".jpg", ".jpeg", ".png"}};
 
 const std::string LOGO_SELECTION_STRING = "Logo files (png)|*.png";

@@ -2,7 +2,7 @@
 config/TeamConfig.cpp: This class is a configuration singleton which
 represents the team specific configuration pieces.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-TeamConfig::TeamConfig(SingletonClass c, Singleton *singleton) {
+TeamConfig::TeamConfig(SingletonClass c, Singleton* singleton) {
   this->singleton = singleton;
   team_config = singleton->persistence()->loadTeams();
   bool settings_changed = false;
@@ -99,9 +99,9 @@ auto TeamConfig::checkTeamOrder() -> bool {
   return order_updated;
 }
 
-void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {
+void TeamConfig::setTeam(proto::TeamInfo* team, proto::TeamInfo_TeamType type) {
   team->set_team_type(type);
-  proto::Color *color = team->mutable_team_color();
+  proto::Color* color = team->mutable_team_color();
   switch (type) {
     case proto::TeamInfo_TeamType_HOME_TEAM:
       ProtoUtil::protoClr(Color("Blue"), color);
@@ -116,7 +116,7 @@ void TeamConfig::setTeam(proto::TeamInfo *team, proto::TeamInfo_TeamType type) {
 }
 
 void TeamConfig::setSingleScreenOrder(
-    const std::vector<proto::TeamInfo_TeamType> &order) {
+    const std::vector<proto::TeamInfo_TeamType>& order) {
   team_config.clear_single_screen_order();
   for (auto item : order) {
     team_config.add_single_screen_order(item);
@@ -131,7 +131,7 @@ auto TeamConfig::singleScreenOrder() -> std::vector<proto::TeamInfo_TeamType> {
   return order;
 }
 
-auto TeamConfig::teamsForSide(const proto::ScreenSide &side)
+auto TeamConfig::teamsForSide(const proto::ScreenSide& side)
     -> std::vector<proto::TeamInfo_TeamType> {
   std::vector<proto::TeamInfo_TeamType> team_list;
   if (side.home()) {
@@ -159,7 +159,7 @@ auto TeamConfig::teamColor(proto::TeamInfo_TeamType team) -> Color {
   return ProtoUtil::wxClr(team_config.teams(indexForTeam(team)).team_color());
 }
 
-auto TeamConfig::teamColor(const proto::ScreenSide &side)
+auto TeamConfig::teamColor(const proto::ScreenSide& side)
     -> std::vector<Color> {
   std::vector<Color> colors;
   for (auto team : teamsForSide(side)) {
@@ -181,9 +181,9 @@ auto TeamConfig::teamName(proto::TeamInfo_TeamType team) -> std::string {
 
 auto TeamConfig::numberOfTeams() -> int { return team_config.teams_size(); }
 
-void TeamConfig::setColor(proto::TeamInfo_TeamType team, const Color &color) {
-  proto::TeamInfo *team_info = team_config.mutable_teams(indexForTeam(team));
-  proto::Color *proto_color = team_info->mutable_team_color();
+void TeamConfig::setColor(proto::TeamInfo_TeamType team, const Color& color) {
+  proto::TeamInfo* team_info = team_config.mutable_teams(indexForTeam(team));
+  proto::Color* proto_color = team_info->mutable_team_color();
   ProtoUtil::protoClr(color, proto_color);
 }
 

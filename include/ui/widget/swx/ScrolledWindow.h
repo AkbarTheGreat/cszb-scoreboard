@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/ScrolledWindow.h: A wrapper around wxScrolledWindow.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ namespace cszb_scoreboard::swx {
 
 class ScrolledWindow : public wxScrolledWindow {
  public:
-  explicit ScrolledWindow(wxWindow *parent, wxWindowID id = -1,
-                          const wxPoint &pos = wxDefaultPosition,
-                          const wxSize &size = wxDefaultSize,
+  explicit ScrolledWindow(wxWindow* parent, wxWindowID id = -1,
+                          const wxPoint& pos = wxDefaultPosition,
+                          const wxSize& size = wxDefaultSize,
                           int64_t style = wxHSCROLL | wxVSCROLL,
-                          const wxString &name = "scrolledWindow")
+                          const wxString& name = "scrolledWindow")
       : wxScrolledWindow(parent, id, pos, size, style, name) {}
 };
 

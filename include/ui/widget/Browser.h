@@ -1,7 +1,7 @@
 /*
 ui/widget/Browser.h: An embedded web browser in the application.
 
-Copyright 2022 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,21 +25,21 @@ namespace cszb_scoreboard {
 
 class Browser : public Widget {
  public:
-  explicit Browser(swx::WebView *web_view) { _wx = web_view; }
-  void setURL(const std::string &url) { _wx->LoadURL(url); }
-  void runJavascript(const std::string &script) { _wx->RunScript(script); }
-  void bind(const wxEventTypeTag<wxWebViewEvent> &eventType,
-            const std::function<void(wxWebViewEvent &)> &lambda,
+  explicit Browser(swx::WebView* web_view) { _wx = web_view; }
+  void setURL(const std::string& url) { _wx->LoadURL(url); }
+  void runJavascript(const std::string& script) { _wx->RunScript(script); }
+  void bind(const wxEventTypeTag<wxWebViewEvent>& eventType,
+            const std::function<void(wxWebViewEvent&)>& lambda,
             int id = wxID_ANY) const {
     _wx->Bind(eventType, lambda, id);
   }
   auto valid() -> bool { return _wx->valid(); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx->wx(); }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx->wx(); }
 
  private:
-  swx::WebView *_wx;
+  swx::WebView* _wx;
 };
 
 }  // namespace cszb_scoreboard

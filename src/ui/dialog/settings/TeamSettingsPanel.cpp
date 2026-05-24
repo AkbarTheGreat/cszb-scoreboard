@@ -2,7 +2,7 @@
 ui/dialog/settings/TeamSettingsPanel.cpp: The panel which contains team
 settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,10 +41,10 @@ const std::string ARROW_TOOL_TIP =
     "Change the order of teams appear on the same screen and in score "
     "controls.  Requires a restart to take effect.";
 
-TeamSettingsPanel::TeamSettingsPanel(swx::Panel *wx, int team_index,
+TeamSettingsPanel::TeamSettingsPanel(swx::Panel* wx, int team_index,
                                      proto::TeamInfo_TeamType team,
-                                     TeamSettingsPage *parent,
-                                     Singleton *singleton)
+                                     TeamSettingsPage* parent,
+                                     Singleton* singleton)
     : Panel(wx) {
   this->parent = parent;
   index = team_index;
@@ -72,7 +72,7 @@ TeamSettingsPanel::TeamSettingsPanel(swx::Panel *wx, int team_index,
   runSizer();
 }
 
-void TeamSettingsPanel::copyFrom(const TeamSettingsPanel &other) {
+void TeamSettingsPanel::copyFrom(const TeamSettingsPanel& other) {
   team_label->set(other.team_label->text());
   color_picker->setColor(other.color_picker->color());
   team_type = other.team_type;
@@ -88,10 +88,10 @@ void TeamSettingsPanel::createButtonPanel() {
 
   up_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->moveTeam(true); });
+      [this](wxCommandEvent& event) -> void { this->moveTeam(true); });
   down_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->moveTeam(false); });
+      [this](wxCommandEvent& event) -> void { this->moveTeam(false); });
 
   up_button->toolTip(ARROW_TOOL_TIP);
   down_button->toolTip(ARROW_TOOL_TIP);

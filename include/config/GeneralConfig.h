@@ -2,7 +2,7 @@
 config/GeneralConfig.h: This class is a configuration singleton which
 represents generic settings for the scoreboard.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,11 +37,11 @@ class GeneralConfig {
   void saveSettings();
 
   PUBLIC_TEST_ONLY
-  GeneralConfig(SingletonClass c, Singleton *singleton);
+  GeneralConfig(SingletonClass c, Singleton* singleton);
 
  private:
   auto checkGeneralConfig() -> bool;
   proto::GeneralConfig general_config;
-  Singleton *singleton;
+  Singleton* singleton;
 };
 }  // namespace cszb_scoreboard

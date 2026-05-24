@@ -2,7 +2,7 @@
 ui/component/control/things_mode/Activity.cpp: Represents an activity in 5/6
 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-Activity::Activity(ActivityPanel *parent, Panel *activity_frame,
-                   Panel *replacement_frame, int index, bool is_first) {
+Activity::Activity(ActivityPanel* parent, Panel* activity_frame,
+                   Panel* replacement_frame, int index, bool is_first) {
   this->index = index;
   this->parent = parent;
 
@@ -51,31 +51,31 @@ Activity::Activity(ActivityPanel *parent, Panel *activity_frame,
   positionWidgets();
 }
 
-void Activity::copyFrom(Activity *other) {
+void Activity::copyFrom(Activity* other) {
   activity_selector->setSelected(other->activity_selector->selected());
   activity_text->setValue(other->activity_text->value());
   replacement_panel = std::move(other->replacement_panel);
 }
 
 void Activity::bindEvents() {
-  auto *ap = parent;
+  auto* ap = parent;
   activity_selector->bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED,
-                          [this, ap](wxCommandEvent &event) -> void {
+                          [this, ap](wxCommandEvent& event) -> void {
                             ap->selectionChanged(this);
                           });
 
   up_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->moveButton(true); });
+      [this](wxCommandEvent& event) -> void { this->moveButton(true); });
   down_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->moveButton(false); });
+      [this](wxCommandEvent& event) -> void { this->moveButton(false); });
 
   remove_activity_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this, ap](wxCommandEvent &event) -> void { ap->deleteActivity(this); });
+      [this, ap](wxCommandEvent& event) -> void { ap->deleteActivity(this); });
   activity_text->bind(wxEVT_KEY_UP,
-                      [ap](wxKeyEvent &event) -> void { ap->textUpdated(); });
+                      [ap](wxKeyEvent& event) -> void { ap->textUpdated(); });
 }
 
 void Activity::positionWidgets() {

@@ -3,7 +3,7 @@ ui/component/PreviewPanel.cpp: The panel which holds all of the screen previews
 (which then, in turn hold the screen presenters which control the monitors
 themselves).
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace cszb_scoreboard {
 
 class ScreenText;
 
-PreviewPanel::PreviewPanel(swx::Panel *wx, Singleton *singleton)
+PreviewPanel::PreviewPanel(swx::Panel* wx, Singleton* singleton)
     : DraggablePanel(wx) {
   this->singleton = singleton;
   for (int i = 0; i < singleton->displayConfig()->numberOfDisplays(); ++i) {
@@ -59,7 +59,7 @@ PreviewPanel::PreviewPanel(swx::Panel *wx, Singleton *singleton)
 }
 
 void PreviewPanel::positionWidgets() {
-  for (const auto &screen : screens) {
+  for (const auto& screen : screens) {
     addWidget(*screen);
   }
   update();
@@ -67,27 +67,27 @@ void PreviewPanel::positionWidgets() {
 
 auto PreviewPanel::numPreviews() -> int { return screens.size(); }
 
-auto PreviewPanel::preview(int index) -> ScreenPreview * {
+auto PreviewPanel::preview(int index) -> ScreenPreview* {
   assert(index >= 0 && index < screens.size());
   return screens[index].get();
 }
 
 void PreviewPanel::forAllScreens(
-    const std::function<void(ScreenPreview *)> &lambda) {
-  for (const auto &preview : screens) {
+    const std::function<void(ScreenPreview*)>& lambda) {
+  for (const auto& preview : screens) {
     lambda(preview.get());
   }
 }
 
-void PreviewPanel::setToPresenters(ScreenText *screen_text) {
-  forAllScreens([screen_text](ScreenPreview *preview) -> void {
+void PreviewPanel::setToPresenters(ScreenText* screen_text) {
+  forAllScreens([screen_text](ScreenPreview* preview) -> void {
     preview->sendToPresenter(screen_text);
   });
 }
 
 void PreviewPanel::updatePresenters() {
   forAllScreens(
-      [](ScreenPreview *preview) -> void { preview->sendToPresenter(); });
+      [](ScreenPreview* preview) -> void { preview->sendToPresenter(); });
 }
 
 void PreviewPanel::updatePreviewsFromSettings() {
@@ -109,7 +109,7 @@ void PreviewPanel::updatePreviewsFromSettings() {
 
 void PreviewPanel::blackout() {
   forAllScreens(
-      [](ScreenPreview *preview) -> void { preview->blackoutPresenter(); });
+      [](ScreenPreview* preview) -> void { preview->blackoutPresenter(); });
 }
 
 }  // namespace cszb_scoreboard

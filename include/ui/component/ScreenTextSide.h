@@ -3,7 +3,7 @@ ui/component/ScreenTextSide.h: A single side of renderable image/text.  One or
 more of these are contained in a ScreenText, for use in presenting to a preview
 or external monitor.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,47 +48,47 @@ class ScreenTextSide : public Canvas {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
-                 const proto::ScreenSide &side, Size size,
+  ScreenTextSide(swx::Panel* wx, const std::string& initial_text,
+                 const proto::ScreenSide& side, Size size,
                  ScreenTextCategory category)
       : ScreenTextSide(wx, initial_text, side, size, category,
                        Singleton::getInstance()) {}
-  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size,
+  ScreenTextSide(swx::Panel* wx, ScreenTextSide* source_side, Size size,
                  ScreenTextCategory category)
       : ScreenTextSide(wx, source_side, size, category,
                        Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 
-  void addText(const proto::RenderableText &text,
-               const proto::ScreenSide &side);
+  void addText(const proto::RenderableText& text,
+               const proto::ScreenSide& side);
   void blackout();
-  void paintEvent(RenderContext *renderer);
-  void resetAllText(const proto::ScreenSide &side);
-  void setImage(const Image &image, bool is_scaled,
-                const proto::ScreenSide &side);
-  void setBackground(const Color &color, const proto::ScreenSide &side);
-  void setBackgroundOverlay(const Image &overlay,
+  void paintEvent(RenderContext* renderer);
+  void resetAllText(const proto::ScreenSide& side);
+  void setImage(const Image& image, bool is_scaled,
+                const proto::ScreenSide& side);
+  void setBackground(const Color& color, const proto::ScreenSide& side);
+  void setBackgroundOverlay(const Image& overlay,
                             double overlay_screen_percentage,
                             unsigned char overlay_alpha,
                             OverlayScreenPosition position,
-                            const proto::ScreenSide &side);
-  void setDefaultBackground(const proto::ScreenSide &side);
-  void setFontColor(proto::Font *font, const proto::ScreenSide &side);
-  void setText(const std::string &text, int font_size,
-               const proto::ScreenSide &side);
-  void setAll(const ScreenTextSide *source);
-  void setAutoFit(bool auto_fit, const proto::ScreenSide &side);
-  void setSize(const Size &size);
-  auto side() -> const proto::ScreenSide & { return screen_side; }
-  auto isSide(const proto::ScreenSide &side) -> bool;
+                            const proto::ScreenSide& side);
+  void setDefaultBackground(const proto::ScreenSide& side);
+  void setFontColor(proto::Font* font, const proto::ScreenSide& side);
+  void setText(const std::string& text, int font_size,
+               const proto::ScreenSide& side);
+  void setAll(const ScreenTextSide* source);
+  void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
+  void setSize(const Size& size);
+  auto side() -> const proto::ScreenSide& { return screen_side; }
+  auto isSide(const proto::ScreenSide& side) -> bool;
 
   PUBLIC_TEST_ONLY
-  ScreenTextSide(swx::Panel *wx, const std::string &initial_text,
-                 const proto::ScreenSide &side, Size size,
-                 ScreenTextCategory category, Singleton *singleton);
-  ScreenTextSide(swx::Panel *wx, ScreenTextSide *source_side, Size size,
-                 ScreenTextCategory category, Singleton *singleton);
-  static auto getTextExtent(RenderContext *renderer, const std::string &text)
+  ScreenTextSide(swx::Panel* wx, const std::string& initial_text,
+                 const proto::ScreenSide& side, Size size,
+                 ScreenTextCategory category, Singleton* singleton);
+  ScreenTextSide(swx::Panel* wx, ScreenTextSide* source_side, Size size,
+                 ScreenTextCategory category, Singleton* singleton);
+  static auto getTextExtent(RenderContext* renderer, const std::string& text)
       -> Size;
 
  private:
@@ -103,34 +103,34 @@ class ScreenTextSide : public Canvas {
   bool image_is_scaled;
   proto::ScreenSide screen_side;
   std::vector<proto::RenderableText> texts;
-  Singleton *singleton;
+  Singleton* singleton;
   ScreenTextCategory category;
 
-  ScreenTextSide(Singleton *singleton, swx::Panel *wx,
-                 const proto::ScreenSide &side);
-  static auto ratio(const Size &size) -> float;
-  static auto scaleImage(const Image &image, const Size &target_size) -> Image;
-  void autoFitText(RenderContext *renderer, proto::RenderableText *text);
+  ScreenTextSide(Singleton* singleton, swx::Panel* wx,
+                 const proto::ScreenSide& side);
+  static auto ratio(const Size& size) -> float;
+  static auto scaleImage(const Image& image, const Size& target_size) -> Image;
+  void autoFitText(RenderContext* renderer, proto::RenderableText* text);
   void bindEvents();
-  void adjustOverlayColorAndAlpha(Image *image, const Color &color) const;
-  auto bottomText(RenderContext *renderer, const std::string &text) -> Position;
-  auto centerText(RenderContext *renderer, const std::string &text) -> Position;
+  void adjustOverlayColorAndAlpha(Image* image, const Color& color) const;
+  auto bottomText(RenderContext* renderer, const std::string& text) -> Position;
+  auto centerText(RenderContext* renderer, const std::string& text) -> Position;
   void createBlackout();
-  void initializeForColor(Size size, const Color &color);
-  auto positionText(RenderContext *renderer, const proto::RenderableText &text)
+  void initializeForColor(Size size, const Color& color);
+  auto positionText(RenderContext* renderer, const proto::RenderableText& text)
       -> Position;
-  void renderBackground(RenderContext *renderer);
-  void renderOverlay(RenderContext *renderer);
-  void renderOverlayBottomCorner(RenderContext *renderer);
-  void renderOverlayCentered(RenderContext *renderer);
-  auto renderSlide(RenderContext *renderer) -> bool;
-  void renderScaledBackground(RenderContext *renderer, const Image &image);
-  void renderShadowText(RenderContext *renderer, proto::RenderableText *text);
-  void renderText(RenderContext *renderer, proto::RenderableText *text);
-  void renderTimer(RenderContext *renderer);
-  void renderAllText(RenderContext *renderer);
-  void setBackground(const Color &color);
-  auto topText(RenderContext *renderer, const std::string &text) -> Position;
+  void renderBackground(RenderContext* renderer);
+  void renderOverlay(RenderContext* renderer);
+  void renderOverlayBottomCorner(RenderContext* renderer);
+  void renderOverlayCentered(RenderContext* renderer);
+  auto renderSlide(RenderContext* renderer) -> bool;
+  void renderScaledBackground(RenderContext* renderer, const Image& image);
+  void renderShadowText(RenderContext* renderer, proto::RenderableText* text);
+  void renderText(RenderContext* renderer, proto::RenderableText* text);
+  void renderTimer(RenderContext* renderer);
+  void renderAllText(RenderContext* renderer);
+  void setBackground(const Color& color);
+  auto topText(RenderContext* renderer, const std::string& text) -> Position;
 };
 
 }  // namespace cszb_scoreboard

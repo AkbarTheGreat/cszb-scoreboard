@@ -2,7 +2,7 @@
 ui/dialog/settings/DisplaySettingsPage.cpp: The page of the settings notebook
 which handles display settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class Panel;
 
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
-DisplaySettingsPage::DisplaySettingsPage(swx::Panel *wx, Singleton *singleton)
+DisplaySettingsPage::DisplaySettingsPage(swx::Panel* wx, Singleton* singleton)
     : SettingsPage(wx) {
   this->singleton = singleton;
   createControls();
@@ -77,7 +77,7 @@ void DisplaySettingsPage::createControls() {
 }
 
 void DisplaySettingsPage::populateDisplays() {
-  for (const auto &panel : display_settings_panels) {
+  for (const auto& panel : display_settings_panels) {
     panel->destroy();
   }
   display_settings_panels.clear();
@@ -117,8 +117,8 @@ void DisplaySettingsPage::positionWidgets() {
 void DisplaySettingsPage::bindEvents() {
   enable_window_mode->bind(
       wxEVT_CHECKBOX,
-      [this](wxCommandEvent &event) -> void { this->windowModeChanged(); });
-  reset_displays->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+      [this](wxCommandEvent& event) -> void { this->windowModeChanged(); });
+  reset_displays->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
     this->resetDisplaysPressed();
   });
 }
@@ -127,7 +127,7 @@ void DisplaySettingsPage::bindEvents() {
  * if not (and returns false). */
 auto DisplaySettingsPage::validateSettings() -> bool {
   bool has_control = false;
-  for (const auto &display_panel : display_settings_panels) {
+  for (const auto& display_panel : display_settings_panels) {
     proto::ScreenSide side = display_panel->getSide();
     if (side.control()) {
       has_control = true;

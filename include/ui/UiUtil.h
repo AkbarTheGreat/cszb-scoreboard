@@ -2,7 +2,7 @@
 ui/UiUtil.h: Some common ui-specific utility methods collected here to reduce
 duplication.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ class UiUtil {
  public:
   // If making a new sizer, prefer using a wxGridBagSizer directly (it has a
   // simple constructor, so it doesn't need this helper method at all)
-  static auto sizer(int64_t rows, int64_t columns) -> wxSizer *;
-  static void addToGridBag(wxGridBagSizer *sizer, wxWindow *item, int row,
+  static auto sizer(int64_t rows, int64_t columns) -> wxSizer*;
+  static void addToGridBag(wxGridBagSizer* sizer, wxWindow* item, int row,
                            int column, int row_span = 1, int column_span = 1,
                            int border_size = DEFAULT_BORDER_SIZE,
                            int flags = wxALL | wxGROW);

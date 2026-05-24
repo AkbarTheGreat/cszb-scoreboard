@@ -2,7 +2,7 @@
 util/TimerManager.cpp: Singleton which handles the current time left on the game
 timer.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,15 +19,15 @@ limitations under the License.
 
 #include "util/TimerManager.h"
 
-#include <compare>            // for operator<, strong_ordering
-#include <ratio>              // for ratio
-#include <memory>             // for allocator
+#include <compare>  // for operator<, strong_ordering
+#include <memory>   // for allocator
+#include <ratio>    // for ratio
 
 #include "util/StringUtil.h"  // for StringUtil
 
 namespace cszb_scoreboard {
 
-TimerManager::TimerManager(SingletonClass c, Singleton *singleton) {
+TimerManager::TimerManager(SingletonClass c, Singleton* singleton) {
   timer_displayed = false;
   timer_running = false;
   this->singleton = singleton;

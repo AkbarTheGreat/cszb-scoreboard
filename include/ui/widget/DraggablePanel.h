@@ -2,7 +2,7 @@
 ui/widget/DraggablePanel.h: A panel where the contained objects are held by the
 wxWidgets Advanced UI (AUI) manager.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ class Panel;
 
 class DraggablePanel : public Panel {
  public:
-  explicit DraggablePanel(swx::Panel *panel);
+  explicit DraggablePanel(swx::Panel* panel);
   ~DraggablePanel() override;
-  void addWidget(const Widget &widget);
+  void addWidget(const Widget& widget);
   void update() { aui_manager.Update(); }
 
  private:

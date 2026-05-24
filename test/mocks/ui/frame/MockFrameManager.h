@@ -1,7 +1,7 @@
 /*
 ui/frame/MockFrameManager.h: Mock FrameManager implementation for testing.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ class MockFrameManager : public FrameManager {
  public:
   MockFrameManager() : FrameManager(SingletonClass{}) {}
 
-  MOCK_METHOD(MainView *, createMainView,
-              (const std::string &title, const Position &pos, const Size &size),
+  MOCK_METHOD(MainView*, createMainView,
+              (const std::string& title, const Position& pos, const Size& size),
               (override));
-  MOCK_METHOD(ScreenPresenter *, createScreenPresenter,
-              (int monitor_number, const ScreenText &preview), (override));
-  MOCK_METHOD(MainView *, mainView, (), (override));
+  MOCK_METHOD(ScreenPresenter*, createScreenPresenter,
+              (int monitor_number, const ScreenText& preview), (override));
+  MOCK_METHOD(MainView*, mainView, (), (override));
   MOCK_METHOD(void, refreshFrames, (), (override));
   MOCK_METHOD(void, exitFrames, (), (override));
   MOCK_METHOD(int32_t, monitorCount, (), (override));

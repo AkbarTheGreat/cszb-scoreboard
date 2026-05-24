@@ -1,7 +1,7 @@
 ﻿/*
 dialog-test.cpp : Defines the entry point for the application.
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ auto DialogTest::OnInit() -> bool {
   dialog =
       std::make_unique<DIALOG_TYPE>(frame->panel->childDialog("Test"), nullptr);
   dialog->bind(wxEVT_CLOSE_WINDOW,
-               [this](wxCloseEvent &event) -> void { std::exit(0); });
+               [this](wxCloseEvent& event) -> void { std::exit(0); });
   dialog->show();
   return true;
 }

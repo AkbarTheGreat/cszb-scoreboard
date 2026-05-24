@@ -2,7 +2,7 @@
 ui/ScreenPresenter.cpp: This class manages any content which is being
 displayed on an external screen.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 0;
 
-ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText &preview,
-                                 Singleton *singleton)
+ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText& preview,
+                                 Singleton* singleton)
     : Frame("Scoreboard") {
   this->monitor_number = monitor_number;
 

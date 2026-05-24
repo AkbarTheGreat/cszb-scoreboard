@@ -3,7 +3,7 @@ ui/component/PreviewPanel.h: The panel which holds all of the screen previews
 (which then, in turn hold the screen presenters which control the monitors
 themselves).
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,23 +41,23 @@ class PreviewPanel : public DraggablePanel {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  explicit PreviewPanel(swx::Panel *wx)
+  explicit PreviewPanel(swx::Panel* wx)
       : PreviewPanel(wx, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 
   void blackout();
-  void forAllScreens(const std::function<void(ScreenPreview *)> &lambda);
-  void setToPresenters(ScreenText *screen_text);
+  void forAllScreens(const std::function<void(ScreenPreview*)>& lambda);
+  void setToPresenters(ScreenText* screen_text);
   void updatePresenters();
   void updatePreviewsFromSettings();
 
   PUBLIC_TEST_ONLY
-  explicit PreviewPanel(swx::Panel *wx, Singleton *singleton);
-  auto preview(int index) -> ScreenPreview *;
+  explicit PreviewPanel(swx::Panel* wx, Singleton* singleton);
+  auto preview(int index) -> ScreenPreview*;
 
  private:
   std::vector<std::unique_ptr<ScreenPreview>> screens;
-  Singleton *singleton;
+  Singleton* singleton;
   auto numPreviews() -> int;
   void positionWidgets();
 };

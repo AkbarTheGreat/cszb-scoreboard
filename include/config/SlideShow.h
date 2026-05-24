@@ -2,7 +2,7 @@
 config/SlideShow.h: This class is a singleton which
 contains information for a slide show.
 
-Copyright 2025 Tracy Beck
+Copyright 2025-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class SlideShow {
   // GCOVR_EXCL_STOP
   void swapSlides(int32_t a, int32_t b);
   void removeSlide(int32_t index);
-  void addSlide(const std::string &name, const FilesystemPath &file,
+  void addSlide(const std::string& name, const FilesystemPath& file,
                 int32_t index = -1);
   void saveShow();
   auto slides(int32_t start, int32_t end) -> std::vector<proto::SlideInfo>;
@@ -58,11 +58,11 @@ class SlideShow {
   auto nextSlide() -> Image;
 
   PUBLIC_TEST_ONLY
-  SlideShow(SingletonClass c, Singleton *singleton);
+  SlideShow(SingletonClass c, Singleton* singleton);
 
  private:
   proto::SlideShow slide_show;
-  Singleton *singleton;
+  Singleton* singleton;
   int32_t slide_number = 0;
   bool is_running = false;
   std::chrono::seconds last_transition;

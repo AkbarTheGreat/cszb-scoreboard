@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/Frame.h: A wrapper around wxFrame
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ class Frame {
   virtual auto Close(bool force) -> bool = 0;
   auto Close() -> bool { return Close(false); }
   virtual auto CreateStatusBar(int number, int64_t style, wxWindowID id,
-                               const wxString &name) -> wxStatusBar * = 0;
+                               const wxString& name) -> wxStatusBar* = 0;
   auto CreateStatusBar(int number = 1, int64_t style = wxSTB_DEFAULT_STYLE,
-                       wxWindowID id = 0) -> wxStatusBar * {
+                       wxWindowID id = 0) -> wxStatusBar* {
     return CreateStatusBar(number, style, id, wxStatusBarNameStr);
   }
   virtual auto Destroy() -> bool = 0;
@@ -39,12 +39,12 @@ class Frame {
   virtual void Iconize(bool iconize) = 0;
   void Iconize() { Iconize(true); }
   virtual void Refresh() = 0;
-  virtual void SetAcceleratorTable(const wxAcceleratorTable &accel) = 0;
-  virtual void SetMenuBar(wxMenuBar *menuBar) = 0;
-  virtual void SetPosition(const wxPoint &pt) = 0;
-  virtual void SetSize(const wxSize &size) = 0;
-  virtual void SetStatusText(const wxString &text, int number) = 0;
-  void SetStatusText(const wxString &text) { SetStatusText(text, 0); }
+  virtual void SetAcceleratorTable(const wxAcceleratorTable& accel) = 0;
+  virtual void SetMenuBar(wxMenuBar* menuBar) = 0;
+  virtual void SetPosition(const wxPoint& pt) = 0;
+  virtual void SetSize(const wxSize& size) = 0;
+  virtual void SetStatusText(const wxString& text, int number) = 0;
+  void SetStatusText(const wxString& text) { SetStatusText(text, 0); }
   virtual void SetWindowStyle(int64_t style) = 0;
   virtual auto Show(bool show) -> bool = 0;
   auto Show() -> bool { return Show(true); }
@@ -57,16 +57,16 @@ class Frame {
 
 class FrameImpl : public Frame, public wxFrame {
  public:
-  FrameImpl(wxWindow *parent, wxWindowID id, const wxString &title,
-            const wxPoint &pos = wxDefaultPosition,
-            const wxSize &size = wxDefaultSize,
+  FrameImpl(wxWindow* parent, wxWindowID id, const wxString& title,
+            const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxDefaultSize,
             int64_t style = wxDEFAULT_FRAME_STYLE,
-            const wxString &name = wxFrameNameStr)
+            const wxString& name = wxFrameNameStr)
       : wxFrame(parent, id, title, pos, size, style, name) {};
 
   auto Close(bool force) -> bool override { return wxFrame::Close(force); }
   auto CreateStatusBar(int number, int64_t style, wxWindowID id,
-                       const wxString &name) -> wxStatusBar * override {
+                       const wxString& name) -> wxStatusBar* override {
     return wxFrame::CreateStatusBar(number, style, id, name);
   }
   auto Destroy() -> bool override { return wxFrame::Destroy(); }
@@ -81,13 +81,13 @@ class FrameImpl : public Frame, public wxFrame {
   }
   void Iconize(bool iconize) override { wxFrame::Iconize(iconize); }
   void Refresh() override { wxFrame::Refresh(); }
-  void SetAcceleratorTable(const wxAcceleratorTable &accel) override {
+  void SetAcceleratorTable(const wxAcceleratorTable& accel) override {
     wxFrame::SetAcceleratorTable(accel);
   }
-  void SetMenuBar(wxMenuBar *menuBar) override { wxFrame::SetMenuBar(menuBar); }
-  void SetPosition(const wxPoint &pt) override { wxFrame::SetPosition(pt); }
-  void SetSize(const wxSize &size) override { wxFrame::SetSize(size); }
-  void SetStatusText(const wxString &text, int number) override {
+  void SetMenuBar(wxMenuBar* menuBar) override { wxFrame::SetMenuBar(menuBar); }
+  void SetPosition(const wxPoint& pt) override { wxFrame::SetPosition(pt); }
+  void SetSize(const wxSize& size) override { wxFrame::SetSize(size); }
+  void SetStatusText(const wxString& text, int number) override {
     wxFrame::SetStatusText(text, number);
   }
   void SetWindowStyle(int64_t style) override {

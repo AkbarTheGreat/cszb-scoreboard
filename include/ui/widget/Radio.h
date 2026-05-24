@@ -1,7 +1,7 @@
 /*
 ui/widget/Radio.h: A collection of radio buttons.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace cszb_scoreboard {
 
 class Radio : public Widget {
  public:
-  explicit Radio(swx::RadioBox *radio) {
+  explicit Radio(swx::RadioBox* radio) {
     _wx = radio;
     _wx->SetSelection(0);
   }
@@ -35,10 +35,10 @@ class Radio : public Widget {
   void setSelection(int sel) { _wx->SetSelection(sel); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::RadioBox *_wx;
+  swx::RadioBox* _wx;
 };
 
 }  // namespace cszb_scoreboard

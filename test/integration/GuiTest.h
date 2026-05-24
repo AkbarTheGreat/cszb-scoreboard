@@ -4,7 +4,7 @@ idea for this methodology for testing wxWidgets via GoogleTest originally found
 at http://www.remy.org.uk/tech.php?tech=1407951209 and rewritten here with
 several improvements and modernizations.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -62,39 +62,39 @@ enum ImageAnalysisMode {
 /* Checking if images are correct or not is tricky, so we have this to help */
 class ImageAnalysis {
  public:
-  explicit ImageAnalysis(Panel *panel)
+  explicit ImageAnalysis(Panel* panel)
       : ImageAnalysis(panel, IA_MODE_FULL_SCAN) {}
   // Create an ImageAnalysis object where only x% of the pixels are sampled for
   // color counts, for speed.
-  ImageAnalysis(Panel *panel, ImageAnalysisMode scan_mode);
-  auto colorPercentage(const wxColour &color) const -> float;
-  auto colorAmount(const wxColour &color) -> float;
+  ImageAnalysis(Panel* panel, ImageAnalysisMode scan_mode);
+  auto colorPercentage(const wxColour& color) const -> float;
+  auto colorAmount(const wxColour& color) -> float;
   auto colorList() -> std::vector<int>;
 
  private:
   std::map<unsigned int, int> color_counts;
   std::map<unsigned int, float> color_percentages;
-  void countAllPixels(const wxClientDC &dc, const wxRect &dimensions);
-  void countCenterlinePixels(const wxClientDC &dc, const wxRect &dimensions);
-  void countQuarterScanlinePixels(const wxClientDC &dc,
-                                  const wxRect &dimensions);
+  void countAllPixels(const wxClientDC& dc, const wxRect& dimensions);
+  void countCenterlinePixels(const wxClientDC& dc, const wxRect& dimensions);
+  void countQuarterScanlinePixels(const wxClientDC& dc,
+                                  const wxRect& dimensions);
 };
 
 class GuiTest : public testing::Test {
  public:
-  static void startApp(wxApp *app);
+  static void startApp(wxApp* app);
 
  protected:
-  Scoreboard *app;
+  Scoreboard* app;
   wxUIActionSimulator act;
 
   void SetUp() override;
   void TearDown() override;
   /* Convenience method to get various UI components, for testing purposes. */
-  static auto mainView() -> MainView *;
-  static auto textEntry() -> TextEntry *;
+  static auto mainView() -> MainView*;
+  static auto textEntry() -> TextEntry*;
   /* Simply makes getting the first preview pane shorter in test code. */
-  static auto firstPreview() -> ScreenPreview *;
+  static auto firstPreview() -> ScreenPreview*;
 };
 
 }  // namespace cszb_scoreboard::test

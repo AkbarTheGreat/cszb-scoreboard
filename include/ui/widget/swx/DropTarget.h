@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/DropTarget.h: A wrapper around wxDropTarget.
 
-Copyright 2022 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace cszb_scoreboard::swx {
 
 class DropTarget : public wxDropTarget {
  public:
-  explicit DropTarget(wxDataObject *data = nullptr) : wxDropTarget(data) {}
+  explicit DropTarget(wxDataObject* data = nullptr) : wxDropTarget(data) {}
 };
 
 }  // namespace cszb_scoreboard::swx

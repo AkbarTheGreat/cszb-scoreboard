@@ -2,7 +2,7 @@
 ui/BackgroundImage.h: This class builds an image to serve as the background
 for ScreenText
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ class Color;
 
 class BackgroundImage : public Image {
  public:
-  BackgroundImage(::cszb_scoreboard::Size size, const Color &color,
+  BackgroundImage(::cszb_scoreboard::Size size, const Color& color,
                   unsigned char alpha);
-  BackgroundImage(::cszb_scoreboard::Size size, const Color &color)
+  BackgroundImage(::cszb_scoreboard::Size size, const Color& color)
       : BackgroundImage(size, color, UCHAR_MAX) {}
   static auto errorImage(::cszb_scoreboard::Size size) -> BackgroundImage;
 };

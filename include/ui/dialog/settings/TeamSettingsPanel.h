@@ -2,7 +2,7 @@
 ui/dialog/settings/TeamSettingsPanel.h: The panel which contains team
 settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,19 +45,19 @@ class TeamSettingsPanel : public Panel {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  TeamSettingsPanel(swx::Panel *wx, int team_index,
-                    proto::TeamInfo_TeamType team, TeamSettingsPage *parent)
+  TeamSettingsPanel(swx::Panel* wx, int team_index,
+                    proto::TeamInfo_TeamType team, TeamSettingsPage* parent)
       : TeamSettingsPanel(wx, team_index, team, parent,
                           Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  void copyFrom(const TeamSettingsPanel &other);
+  void copyFrom(const TeamSettingsPanel& other);
   auto teamColor() -> Color;
   auto team() -> proto::TeamInfo_TeamType { return team_type; }
 
   PUBLIC_TEST_ONLY
-  TeamSettingsPanel(swx::Panel *wx, int team_index,
-                    proto::TeamInfo_TeamType team, TeamSettingsPage *parent,
-                    Singleton *singleton);
+  TeamSettingsPanel(swx::Panel* wx, int team_index,
+                    proto::TeamInfo_TeamType team, TeamSettingsPage* parent,
+                    Singleton* singleton);
 
  private:
   int index;
@@ -66,7 +66,7 @@ class TeamSettingsPanel : public Panel {
   std::unique_ptr<ColorPicker> color_picker;
   std::unique_ptr<Panel> button_panel;
   std::unique_ptr<Button> down_button, up_button;
-  TeamSettingsPage *parent;
+  TeamSettingsPage* parent;
   void createButtonPanel();
   void moveTeam(bool is_up_button);
 };

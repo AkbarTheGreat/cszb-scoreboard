@@ -1,7 +1,7 @@
 /*
 util/StringUtil.cpp: Convenience methods for dealing with wxStrings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,11 +41,11 @@ auto StringUtil::intToString(int value, int zero_pad) -> std::string {
     format = wxString(format_str.data());
   }
   wxs.Printf(format, value);
-  const char *cstr = wxs.c_str();
+  const char* cstr = wxs.c_str();
   return {cstr};
 }
 
-auto StringUtil::stringToInt(const std::string &string, int default_value)
+auto StringUtil::stringToInt(const std::string& string, int default_value)
     -> int64_t {
   wxString wxs = string;
   long value = default_value;  // NOLINT(google-runtime-int) Must be long to
@@ -56,7 +56,7 @@ auto StringUtil::stringToInt(const std::string &string, int default_value)
   return value;
 }
 
-auto StringUtil::stringToDouble(const std::string &string, int default_value)
+auto StringUtil::stringToDouble(const std::string& string, int default_value)
     -> double {
   wxString wxs = string;
   double value = default_value;
@@ -71,7 +71,7 @@ auto StringUtil::doubleToString(double value, int32_t precision)
   snprintf(format_str.data(), format_str.size(), "%%.0%df", precision);
   wxString format = wxString(format_str.data());
   wxs.Printf(format, value);
-  const char *cstr = wxs.c_str();
+  const char* cstr = wxs.c_str();
   return {cstr};
 }
 

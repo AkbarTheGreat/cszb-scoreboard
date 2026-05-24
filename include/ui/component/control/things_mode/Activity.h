@@ -2,7 +2,7 @@
 ui/component/control/things_mode/Activity.h: Represents an activity in 5/6
 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,12 +35,12 @@ class ActivityPanel;
 
 class Activity {
  public:
-  Activity(ActivityPanel *parent, Panel *activity_frame,
-           Panel *replacement_frame, int index, bool is_first);
-  void copyFrom(Activity *other);
-  auto controlPane() -> Panel * { return control_pane.get(); }
+  Activity(ActivityPanel* parent, Panel* activity_frame,
+           Panel* replacement_frame, int index, bool is_first);
+  void copyFrom(Activity* other);
+  auto controlPane() -> Panel* { return control_pane.get(); }
   auto previewText() -> std::string;
-  auto replacementPanel() -> ReplacementPanel * {
+  auto replacementPanel() -> ReplacementPanel* {
     return replacement_panel.get();
   }
   void setIndex(int index, int max_index);
@@ -54,7 +54,7 @@ class Activity {
   std::unique_ptr<RadioButton> activity_selector;
   std::unique_ptr<Text> activity_text;
   std::unique_ptr<Button> down_button, up_button, remove_activity_button;
-  ActivityPanel *parent;
+  ActivityPanel* parent;
   std::unique_ptr<ReplacementPanel> replacement_panel;
 
   void bindEvents();

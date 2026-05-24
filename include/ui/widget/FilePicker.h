@@ -2,7 +2,7 @@
 ui/widget/FilePicker.h: A modal (blocking other UI) dialog which pops up to
 select a file from the file system.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,14 +31,14 @@ class FilesystemPath;
 
 class FilePicker : public Widget {
  public:
-  explicit FilePicker(swx::FileDialog *dialog) { _wx = dialog; }
+  explicit FilePicker(swx::FileDialog* dialog) { _wx = dialog; }
   ~FilePicker();
 
   auto selectFile() -> std::optional<FilesystemPath>;
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
-  swx::FileDialog *_wx;
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
+  swx::FileDialog* _wx;
 };
 
 }  // namespace cszb_scoreboard

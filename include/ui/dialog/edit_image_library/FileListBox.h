@@ -2,7 +2,7 @@
 ui/dialog/edit_image_library/FileListBox.h: A subclass of wxEditableListBox
 which specifically contains a list of files.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,35 +37,35 @@ class Panel;
 
 class FileListBox : public Panel {
  public:
-  FileListBox(swx::Panel *wx, const std::string &title,
-              const std::vector<FilesystemPath> &file_list);
-  void bind(const wxEventTypeTag<wxListEvent> &eventType,
-            const std::function<void(wxListEvent &)> &lambda,
+  FileListBox(swx::Panel* wx, const std::string& title,
+              const std::vector<FilesystemPath>& file_list);
+  void bind(const wxEventTypeTag<wxListEvent>& eventType,
+            const std::function<void(wxListEvent&)>& lambda,
             int id = wxID_ANY) {
     box->bind(eventType, lambda, id);
   }
   auto getFilenames() -> std::vector<FilesystemPath>;
-  void setFilenames(const std::vector<FilesystemPath> &files);
+  void setFilenames(const std::vector<FilesystemPath>& files);
   auto selectedFilename() -> FilesystemPath;
   auto selectedIndex() -> int64_t { return box->selectedIndex(); }
   void selectIndex(int64_t idx) { box->selectItem(idx); }
   // Callback takes old, then new path (or empty path for old/new for add/remove
   // respectively)
   void setChangeCallback(
-      const std::function<void(const FilesystemPath &, const FilesystemPath &)>
-          &callback);
+      const std::function<void(const FilesystemPath&, const FilesystemPath&)>&
+          callback);
 
  protected:
   void bindEvents();
   void newPressed();
-  void fileUpdated(const FilesystemPath &prev, const FilesystemPath &curr);
-  void fileDeleted(const FilesystemPath &file);
-  void updateStrings(const std::vector<FilesystemPath> &filenames,
+  void fileUpdated(const FilesystemPath& prev, const FilesystemPath& curr);
+  void fileDeleted(const FilesystemPath& file);
+  void updateStrings(const std::vector<FilesystemPath>& filenames,
                      int64_t select_index = 0);
 
  private:
   std::unique_ptr<ListBox> box;
-  std::function<void(const FilesystemPath &, const FilesystemPath &)>
+  std::function<void(const FilesystemPath&, const FilesystemPath&)>
       change_callback;
 };
 

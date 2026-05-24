@@ -2,7 +2,7 @@
 ui/component/control/things_mode/ActivityPanel.h: Represents all activities in
 5/6 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ class ActivityPanel : public Panel {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
-                const proto::ScreenSide &side)
+  ActivityPanel(swx::Panel* wx, ScreenTextController* owning_controller,
+                const proto::ScreenSide& side)
       : ActivityPanel(wx, owning_controller, side, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   void addActivity();
@@ -54,17 +54,17 @@ class ActivityPanel : public Panel {
   auto getColor() -> Color;
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;
   void refreshSizers();
-  auto replacementPanel() -> ReplacementPanel *;
+  auto replacementPanel() -> ReplacementPanel*;
   auto selectedActivityText() -> std::string;
   void swapActivities(int a, int b);
   void updateNotify();
-  void deleteActivity(Activity *deleted);
-  void selectionChanged(Activity *selected);
+  void deleteActivity(Activity* deleted);
+  void selectionChanged(Activity* selected);
   void textUpdated();
 
   PUBLIC_TEST_ONLY
-  ActivityPanel(swx::Panel *wx, ScreenTextController *owning_controller,
-                const proto::ScreenSide &side, Singleton *singleton);
+  ActivityPanel(swx::Panel* wx, ScreenTextController* owning_controller,
+                const proto::ScreenSide& side, Singleton* singleton);
 
  private:
   std::unique_ptr<LabelledArea> activity_label, replacement_label;
@@ -72,8 +72,8 @@ class ActivityPanel : public Panel {
   std::unique_ptr<ColorPicker> color_picker;
   proto::ScreenSide side;
   std::vector<std::unique_ptr<Activity>> activities;
-  ScreenTextController *owning_controller;
-  Singleton *singleton;
+  ScreenTextController* owning_controller;
+  Singleton* singleton;
 
   void bindEvents();
   void positionWidgets();

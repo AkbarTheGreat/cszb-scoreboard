@@ -2,7 +2,7 @@
 ui/component/control/ImageSearch.h: Handles searching for images from a webview
 for quick use as a bit.
 
-Copyright 2022 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,14 +46,14 @@ constexpr Size DROP_TARGET_SIZE{.width = 120, .height = 360};
 constexpr Size BROWSER_SIZE{.width = 960, .height = 360};
 constexpr int DROP_TARGET_BORDER = 50;
 
-auto ImageSearch::Create(swx::Panel *wx) -> std::unique_ptr<ImageSearch> {
+auto ImageSearch::Create(swx::Panel* wx) -> std::unique_ptr<ImageSearch> {
   auto local_image = std::make_unique<ImageSearch>(wx);
   local_image->initializeWidgets();
   local_image->updatePreview();
   return local_image;
 }
 
-void ImageSearch::createControls(Panel *control_panel) {
+void ImageSearch::createControls(Panel* control_panel) {
   ScreenImageController::createControls(control_panel);
   inner_panel = control_panel->panel();
   screen_selection->setParent(inner_panel.get());
@@ -75,7 +75,7 @@ void ImageSearch::createControls(Panel *control_panel) {
   bindEvents();
 }
 
-void ImageSearch::positionWidgets(Panel *control_panel) {
+void ImageSearch::positionWidgets(Panel* control_panel) {
   control_panel->addWidget(*inner_panel, 0, 0);
   drop_target->addWidget(*drop_text, 0, 0, DROP_TARGET_SIZE.height / 2, wxTOP);
   reset_button_panel->addWidget(*reset_button, 0, 0, NO_BORDER);
@@ -102,18 +102,18 @@ void ImageSearch::positionWidgets(Panel *control_panel) {
 void ImageSearch::bindEvents() {
   drag_handler = std::make_unique<DragAndDropHandler>(
       drop_target.get(),
-      [this](int32_t x, int32_t y, const std::string &url) -> void {
+      [this](int32_t x, int32_t y, const std::string& url) -> void {
         this->onURLDrop(url);
       });
   // If IS is disabled, wxWebViewEvent isn't linkable, so skip in compilation.
-  browser->bind(wxEVT_WEBVIEW_LOADED, [this](wxWebViewEvent &e) -> void {
+  browser->bind(wxEVT_WEBVIEW_LOADED, [this](wxWebViewEvent& e) -> void {
     this->tweakGoogleImages();
   });
   reset_button->bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                     [this](wxCommandEvent &e) -> void { this->resetURL(); });
+                     [this](wxCommandEvent& e) -> void { this->resetURL(); });
 }
 
-void ImageSearch::onURLDrop(const std::string &url) {
+void ImageSearch::onURLDrop(const std::string& url) {
   HttpReader reader;
   LogDebug("Dropped Image URL %s", url.c_str());
   std::vector<char> image_data;

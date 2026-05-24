@@ -2,7 +2,7 @@
 ui/component/control/LocalImage.h: Handles loading images from disk or from the
 clipboard.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,16 +33,16 @@ class Panel;
 
 class LocalImage : public ScreenImageController {
  public:
-  explicit LocalImage(swx::Panel *wx) : ScreenImageController(wx) {}
-  static auto Create(swx::Panel *wx) -> std::unique_ptr<LocalImage>;
+  explicit LocalImage(swx::Panel* wx) : ScreenImageController(wx) {}
+  static auto Create(swx::Panel* wx) -> std::unique_ptr<LocalImage>;
 
  private:
   std::unique_ptr<Panel> button_panel, inner_panel;
   std::unique_ptr<Button> browse_button, paste_button;
 
   void bindEvents();
-  void createControls(Panel *control_panel) override;
-  void positionWidgets(Panel *control_panel) override;
+  void createControls(Panel* control_panel) override;
+  void positionWidgets(Panel* control_panel) override;
   void browsePressed();
   void pastePressed();
 };

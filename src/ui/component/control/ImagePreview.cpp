@@ -2,7 +2,7 @@
 ui/component/control/ImagePreview.cpp: A preview thumbnail of an image,
 selectable to send to a ScreenText.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,17 +31,17 @@ namespace cszb_scoreboard {
 
 const std::string DEFAULT_PREVIEW_COLOR = "Grey";
 
-ImagePreview::ImagePreview(swx::Panel *wx) : Panel(wx) {
+ImagePreview::ImagePreview(swx::Panel* wx) : Panel(wx) {
   this->image = BackgroundImage(size(), Color(DEFAULT_PREVIEW_COLOR));
   bindEvents();
 }
 
 void ImagePreview::bindEvents() {
   bind(wxEVT_PAINT,
-       [this](RenderContext *renderer) -> void { this->paintEvent(renderer); });
+       [this](RenderContext* renderer) -> void { this->paintEvent(renderer); });
 }
 
-void ImagePreview::paintEvent(RenderContext *renderer) {
+void ImagePreview::paintEvent(RenderContext* renderer) {
   Image scaled_image = image;
   Size image_size = scaled_image.size();
   float screen_ratio = ratio(size());
@@ -67,7 +67,7 @@ void ImagePreview::paintEvent(RenderContext *renderer) {
   renderer->drawImage(scaled_image, x, y);
 }
 
-auto ImagePreview::ratio(const Size &size) -> float {
+auto ImagePreview::ratio(const Size& size) -> float {
   float ratio = 4 / 3;
   ratio = static_cast<float>(size.width) / size.height;
   return ratio;
@@ -83,7 +83,7 @@ auto ImagePreview::getFilename() const -> std::optional<FilesystemPath> {
   return filename;
 }
 
-void ImagePreview::setImage(const FilesystemPath &filename) {
+void ImagePreview::setImage(const FilesystemPath& filename) {
   // A simple check for files that've moved.  This doesn't really _fix_ them,
   // but it avoids a nasty crash.
   if (filename.existsWithRoot("")) {

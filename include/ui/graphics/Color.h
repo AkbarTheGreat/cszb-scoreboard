@@ -2,7 +2,7 @@
 ui/Color.h: A wrapper around wxColour which gives convenience methods for
 manipulating colors
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ class Color : public wxColour {
   Color(unsigned char red, unsigned char green, unsigned char blue,
         unsigned char alpha = wxALPHA_OPAQUE)
       : wxColour(red, green, blue, alpha) {}
-  explicit Color(const char *colorName) : wxColour(wxString(colorName)) {}
-  explicit Color(const wxString &colorName) : wxColour(colorName) {}
+  explicit Color(const char* colorName) : wxColour(wxString(colorName)) {}
+  explicit Color(const wxString& colorName) : wxColour(colorName) {}
   explicit Color(uint64_t colRGB) : wxColour(colRGB) {}
-  explicit Color(const wxColour &color) : wxColour(color) {}
+  explicit Color(const wxColour& color) : wxColour(color) {}
 
   // Get red by anding by a full byte.
   [[nodiscard]] inline auto red() const -> unsigned char {

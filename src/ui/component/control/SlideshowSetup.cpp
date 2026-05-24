@@ -2,7 +2,7 @@
 ui/component/control/SlideshowSetup.cpp: This class is responsible for managing
 a slideshow.  Typically, these are used for pre-show distractions.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class ScreenText;
 
 constexpr int NUM_PREVIEWS = 5;
 
-auto SlideshowSetup::Create(swx::Panel *wx) -> std::unique_ptr<SlideshowSetup> {
+auto SlideshowSetup::Create(swx::Panel* wx) -> std::unique_ptr<SlideshowSetup> {
   auto control = std::make_unique<SlideshowSetup>(wx);
   control->initializeWidgets();
   return control;
@@ -67,7 +67,7 @@ void SlideshowSetup::removeSlide(int32_t index) {
   setSlidePreviews(current_slide_page);
 }
 
-void SlideshowSetup::createControls(Panel *control_panel) {
+void SlideshowSetup::createControls(Panel* control_panel) {
   main_panel = control_panel->panel();
   config_panel = main_panel->panel();
   slide_panel = main_panel->panel();
@@ -98,7 +98,7 @@ void SlideshowSetup::createControls(Panel *control_panel) {
   setSlidePreviews(0);
 }
 
-void SlideshowSetup::positionWidgets(Panel *control_panel) {
+void SlideshowSetup::positionWidgets(Panel* control_panel) {
   control_panel->addWidget(*main_panel, 0, 0);
 
   main_panel->addWidget(*config_panel, 0, 0);
@@ -128,24 +128,24 @@ void SlideshowSetup::positionWidgets(Panel *control_panel) {
 void SlideshowSetup::bindEvents() {
   add_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->addNewSlide(); });
+      [this](wxCommandEvent& event) -> void { this->addNewSlide(); });
   previous_page->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->previousPage(); });
+      [this](wxCommandEvent& event) -> void { this->previousPage(); });
   next_page->bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                  [this](wxCommandEvent &event) -> void { this->nextPage(); });
-  delay_setting->bind(wxEVT_KEY_UP, [this](wxKeyEvent &event) -> void {
+                  [this](wxCommandEvent& event) -> void { this->nextPage(); });
+  delay_setting->bind(wxEVT_KEY_UP, [this](wxKeyEvent& event) -> void {
     this->delayUpdated();
   });
   start_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->startShow(); });
+      [this](wxCommandEvent& event) -> void { this->startShow(); });
   stop_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->stopShow(); });
+      [this](wxCommandEvent& event) -> void { this->stopShow(); });
 }
 
-void SlideshowSetup::updateScreenText(ScreenText *screen_text) {}
+void SlideshowSetup::updateScreenText(ScreenText* screen_text) {}
 
 void SlideshowSetup::addNewSlide() {
   std::unique_ptr<FilePicker> dialog =

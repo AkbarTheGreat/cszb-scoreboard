@@ -2,7 +2,7 @@
 ui/dialog/SettingsDialog.cpp: A settings dialog for configuring various aspects
 of the scoreboard which are then saved as a part of the configuration protobuf.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 wxDEFINE_EVENT(SETTINGS_UPDATED, wxCommandEvent);
 
-SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent)
+SettingsDialog::SettingsDialog(swx::PropertySheetDialog* wx, MainView* parent)
     : TabbedDialog(wx) {
   this->parent = parent;
   addPage(std::make_unique<GeneralSettingsPage>(childPanel()), "General");
@@ -50,20 +50,20 @@ SettingsDialog::SettingsDialog(swx::PropertySheetDialog *wx, MainView *parent)
 }
 
 void SettingsDialog::addPage(std::unique_ptr<SettingsPage> page,
-                             const std::string &name) {
+                             const std::string& name) {
   TabbedDialog::addPage(*page, name);
   pages.push_back(std::move(page));
 }
 
 void SettingsDialog::bindEvents() {
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onOk(); },
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onOk(); },
       wxID_OK);
   bind(
-      wxEVT_BUTTON, [this](wxCommandEvent &event) -> void { this->onCancel(); },
+      wxEVT_BUTTON, [this](wxCommandEvent& event) -> void { this->onCancel(); },
       wxID_CANCEL);
-  MainView *local_parent = parent;
-  bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent &event) -> void {
+  MainView* local_parent = parent;
+  bind(wxEVT_CLOSE_WINDOW, [local_parent](wxCloseEvent& event) -> void {
     local_parent->onSettingsClose();
   });
 }
@@ -85,13 +85,13 @@ void SettingsDialog::onCancel() { close(true); }
 
 auto SettingsDialog::validateSettings() -> bool {
   return std::all_of(pages.begin(), pages.end(),
-                     [](const std::unique_ptr<SettingsPage> &page) -> bool {
+                     [](const std::unique_ptr<SettingsPage>& page) -> bool {
                        return page->validateSettings();
                      });
 }
 
 void SettingsDialog::saveSettings() {
-  for (const auto &page : pages) {
+  for (const auto& page : pages) {
     page->saveSettings();
   }
 }

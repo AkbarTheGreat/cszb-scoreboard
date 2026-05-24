@@ -2,7 +2,7 @@
 ui/component/control/ThingsMode.h: A control for managing 5/6 things in a
 short-form improv show.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,10 +38,10 @@ class Panel;
 
 class ThingsMode : public ScreenTextController {
  public:
-  explicit ThingsMode(swx::Panel *wx) : ScreenTextController(wx) {}
-  static auto Create(swx::Panel *wx) -> std::unique_ptr<ThingsMode>;
+  explicit ThingsMode(swx::Panel* wx) : ScreenTextController(wx) {}
+  static auto Create(swx::Panel* wx) -> std::unique_ptr<ThingsMode>;
   void textUpdated();
-  void updateScreenText(ScreenText *screen_text) override;
+  void updateScreenText(ScreenText* screen_text) override;
 
  private:
   std::unique_ptr<Panel> button_panel;
@@ -51,14 +51,14 @@ class ThingsMode : public ScreenTextController {
   std::unique_ptr<TeamSelector> screen_selection;
   std::unique_ptr<ScrollingPanel> scrollable_panel;
 
-  ActivityPanel *home_activities_panel;
-  ActivityPanel *away_activities_panel;
-  ActivityPanel *all_activities_panel;
+  ActivityPanel* home_activities_panel;
+  ActivityPanel* away_activities_panel;
+  ActivityPanel* all_activities_panel;
 
-  void createControls(Panel *control_panel) override;
+  void createControls(Panel* control_panel) override;
 
   void bindEvents();
-  void positionWidgets(Panel *control_panel);
+  void positionWidgets(Panel* control_panel);
   void updateActivityPanel();
   void addActivity();
   void addReplacement();

@@ -1,7 +1,7 @@
 /*
 util/AutoUpdate.h: Singleton which handles checking for updates to the software.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,17 +33,17 @@ class FilesystemPath;
 
 class Version {
  public:
-  explicit Version(const std::string &version_string);
+  explicit Version(const std::string& version_string);
   [[nodiscard]] auto major() const -> int { return major_component; }
   [[nodiscard]] auto minor() const -> int { return minor_component; }
   [[nodiscard]] auto subminor() const -> int { return subminor_component; }
 
-  auto operator==(const Version &b) const -> bool;
-  auto operator!=(const Version &b) const -> bool;
-  auto operator<(const Version &b) const -> bool;
-  auto operator>(const Version &b) const -> bool;
-  auto operator<=(const Version &b) const -> bool;
-  auto operator>=(const Version &b) const -> bool;
+  auto operator==(const Version& b) const -> bool;
+  auto operator!=(const Version& b) const -> bool;
+  auto operator<(const Version& b) const -> bool;
+  auto operator>(const Version& b) const -> bool;
+  auto operator<=(const Version& b) const -> bool;
+  auto operator>=(const Version& b) const -> bool;
 
  private:
   int major_component, minor_component, subminor_component;
@@ -58,18 +58,18 @@ class AutoUpdate {
       : AutoUpdate(c, Singleton::getInstance(),
                    std::move(std::make_unique<HttpReader>())) {};
   // GCOVR_EXCL_STOP
-  virtual auto checkForUpdate(const std::string &current_version) -> bool;
+  virtual auto checkForUpdate(const std::string& current_version) -> bool;
   [[nodiscard]] virtual auto updateIsDownloadable() const -> bool {
     return update_size > 0;
   }
-  virtual auto downloadUpdate(std::vector<char> *update_data) -> bool;
+  virtual auto downloadUpdate(std::vector<char>* update_data) -> bool;
   virtual void removeOldUpdate();
   virtual auto updateInPlace() -> bool;
 
   PUBLIC_TEST_ONLY
-  virtual auto checkForUpdate(const std::string &current_version,
-                              const std::string &platform_name) -> bool;
-  AutoUpdate(SingletonClass c, Singleton *singleton,
+  virtual auto checkForUpdate(const std::string& current_version,
+                              const std::string& platform_name) -> bool;
+  AutoUpdate(SingletonClass c, Singleton* singleton,
              std::unique_ptr<HttpReader> reader);
 
  private:
@@ -77,9 +77,9 @@ class AutoUpdate {
   bool update_available;
   int update_size;
   std::unique_ptr<HttpReader> httpReader;
-  Singleton *singleton;
+  Singleton* singleton;
   auto backupPath() -> FilesystemPath;
-  auto downloadUpdate(const std::string &url, std::vector<char> *update_data)
+  auto downloadUpdate(const std::string& url, std::vector<char>* update_data)
       -> bool;
 };
 

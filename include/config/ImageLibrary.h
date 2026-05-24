@@ -2,7 +2,7 @@
 config/ImageLibrary.h: A singleton which represents a library of images, tagged
 by the user and quickly searchable.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,19 +33,19 @@ struct SingletonClass;
 
 class CaseOptionalString {
  public:
-  explicit CaseOptionalString(const std::string &str);
+  explicit CaseOptionalString(const std::string& str);
   [[nodiscard]] auto lower() const -> std::string { return lowercase; }
   [[nodiscard]] auto string() const -> std::string { return value; }
-  [[nodiscard]] auto find(const CaseOptionalString &b, size_t offset = 0) const
+  [[nodiscard]] auto find(const CaseOptionalString& b, size_t offset = 0) const
       -> size_t;
-  [[nodiscard]] auto substring(const CaseOptionalString &b) const -> bool;
-  [[nodiscard]] auto compare(const CaseOptionalString &b) const noexcept -> int;
-  auto operator==(const CaseOptionalString &b) const noexcept -> bool;
-  auto operator!=(const CaseOptionalString &b) const noexcept -> bool;
-  auto operator<(const CaseOptionalString &b) const noexcept -> bool;
-  auto operator<=(const CaseOptionalString &b) const noexcept -> bool;
-  auto operator>(const CaseOptionalString &b) const noexcept -> bool;
-  auto operator>=(const CaseOptionalString &b) const noexcept -> bool;
+  [[nodiscard]] auto substring(const CaseOptionalString& b) const -> bool;
+  [[nodiscard]] auto compare(const CaseOptionalString& b) const noexcept -> int;
+  auto operator==(const CaseOptionalString& b) const noexcept -> bool;
+  auto operator!=(const CaseOptionalString& b) const noexcept -> bool;
+  auto operator<(const CaseOptionalString& b) const noexcept -> bool;
+  auto operator<=(const CaseOptionalString& b) const noexcept -> bool;
+  auto operator>(const CaseOptionalString& b) const noexcept -> bool;
+  auto operator>=(const CaseOptionalString& b) const noexcept -> bool;
 
  private:
   std::string value;
@@ -54,7 +54,7 @@ class CaseOptionalString {
 
 class ImageChange {
  public:
-  ImageChange(const proto::ImageInfo &added, const proto::ImageInfo &removed) {
+  ImageChange(const proto::ImageInfo& added, const proto::ImageInfo& removed) {
     this->_added = added;
     this->_removed = removed;
   }
@@ -67,9 +67,9 @@ class ImageChange {
 
 class LibraryUpdateResults {
  public:
-  LibraryUpdateResults(const std::vector<ImageChange> &added_images,
-                       const std::vector<ImageChange> &moved_images,
-                       const std::vector<ImageChange> &removed_images) {
+  LibraryUpdateResults(const std::vector<ImageChange>& added_images,
+                       const std::vector<ImageChange>& moved_images,
+                       const std::vector<ImageChange>& removed_images) {
     this->_added = added_images;
     this->_moved = moved_images;
     this->_removed = removed_images;
@@ -96,9 +96,9 @@ class ImageSearchResults {
   auto matchedTags() -> std::vector<std::string>;
 
  private:
-  ImageSearchResults(const std::vector<proto::ImageInfo> &matched_images,
-                     const std::string &search_string,
-                     const std::vector<CaseOptionalString> &matched_tag_list);
+  ImageSearchResults(const std::vector<proto::ImageInfo>& matched_images,
+                     const std::string& search_string,
+                     const std::vector<CaseOptionalString>& matched_tag_list);
   std::vector<proto::ImageInfo> matched_images;
   std::string search_string;
   std::vector<CaseOptionalString> matched_tag_list;
@@ -115,29 +115,29 @@ class ImageLibrary {
   auto allTags(bool include_name = false) const
       -> std::vector<CaseOptionalString>;
   auto temporaryClone() -> std::unique_ptr<TemporaryImageLibrary>;
-  void copyFrom(const TemporaryImageLibrary &other);
-  auto name(const FilesystemPath &filename) -> std::string;
-  void setName(const FilesystemPath &filename, const std::string &name);
+  void copyFrom(const TemporaryImageLibrary& other);
+  auto name(const FilesystemPath& filename) -> std::string;
+  void setName(const FilesystemPath& filename, const std::string& name);
 
-  auto addImage(const FilesystemPath &file, const std::string &name,
-                const std::vector<std::string> &tags) -> proto::ImageInfo;
-  auto moveImage(const FilesystemPath &previous_path,
-                 const FilesystemPath &new_path) -> proto::ImageInfo;
-  void deleteImage(const FilesystemPath &file);
+  auto addImage(const FilesystemPath& file, const std::string& name,
+                const std::vector<std::string>& tags) -> proto::ImageInfo;
+  auto moveImage(const FilesystemPath& previous_path,
+                 const FilesystemPath& new_path) -> proto::ImageInfo;
+  void deleteImage(const FilesystemPath& file);
   auto libraryRoot() -> FilesystemPath;
   void removeLibraryRoot();
   // moveLibraryRoot moves the root without changing any relative paths.  Use
   // this if the entire directory was relocated and you want to shift them all
   // at one time.
-  void moveLibraryRoot(const FilesystemPath &root);
+  void moveLibraryRoot(const FilesystemPath& root);
   // setLibraryRoot sets the root, updating every file to match the new
   // relative location.  Use this if the root is changed, but no files are
   // moved.
-  void setLibraryRoot(const FilesystemPath &root);
+  void setLibraryRoot(const FilesystemPath& root);
   // smartUpdateLibraryRoot sets the root, and for relative paths in the
   // library makes a best effort to set their location in a way that makes
   // sense. Use this for most user operations where the root changes.
-  void smartUpdateLibraryRoot(const FilesystemPath &root);
+  void smartUpdateLibraryRoot(const FilesystemPath& root);
   // Looks for images added or moved in the library and automatically
   // updates them the best it knows how.  If delete_missing is set to true,
   // also removes any missing images from the library.
@@ -145,15 +145,15 @@ class ImageLibrary {
       -> LibraryUpdateResults;
   void clearLibrary();
   void saveLibrary();
-  auto search(const std::string &query) -> ImageSearchResults;
-  auto tags(const FilesystemPath &filename) -> std::vector<CaseOptionalString>;
-  void setTags(const FilesystemPath &filename,
-               const std::vector<std::string> &tags);
+  auto search(const std::string& query) -> ImageSearchResults;
+  auto tags(const FilesystemPath& filename) -> std::vector<CaseOptionalString>;
+  void setTags(const FilesystemPath& filename,
+               const std::vector<std::string>& tags);
 
   PUBLIC_TEST_ONLY
   // Test-available constructor which initializes this object from an
   // in-memory proto.
-  ImageLibrary(SingletonClass c, Singleton *singleton,
+  ImageLibrary(SingletonClass c, Singleton* singleton,
                proto::ImageLibrary library);
 
  protected:
@@ -161,20 +161,20 @@ class ImageLibrary {
 
  private:
   proto::ImageLibrary library;
-  Singleton *singleton;
+  Singleton* singleton;
   auto emptySearch() -> ImageSearchResults;
-  auto exactMatchSearch(const std::string &query) -> ImageSearchResults;
-  auto infoByFile(const FilesystemPath &filename) -> proto::ImageInfo;
-  auto partialMatchSearch(const std::string &query) -> ImageSearchResults;
-  void addMatch(std::vector<proto::ImageInfo> *matched_images,
-                const proto::ImageInfo &image);
+  auto exactMatchSearch(const std::string& query) -> ImageSearchResults;
+  auto infoByFile(const FilesystemPath& filename) -> proto::ImageInfo;
+  auto partialMatchSearch(const std::string& query) -> ImageSearchResults;
+  void addMatch(std::vector<proto::ImageInfo>* matched_images,
+                const proto::ImageInfo& image);
 };
 
 // A non-singleton subclass of the singleton ImageLibrary which turns off all
 // persistence functionality in the ImageLibrary, but otherwise is editable.
 class TemporaryImageLibrary : public ImageLibrary {
  public:
-  TemporaryImageLibrary(Singleton *singleton, proto::ImageLibrary library);
+  TemporaryImageLibrary(Singleton* singleton, proto::ImageLibrary library);
 };
 
 }  // namespace cszb_scoreboard

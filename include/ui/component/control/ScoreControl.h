@@ -2,7 +2,7 @@
 ui/component/control/ScoreControl.h: This class is responsible for generating a
 score update which is sent to all scoreboard screens.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,22 +47,22 @@ class Panel;
 
 class ScoreControl : public ScreenTextController {
  public:
-  explicit ScoreControl(swx::Panel *wx) : ScreenTextController(wx) {}
-  static auto Create(swx::Panel *wx) -> std::unique_ptr<ScoreControl>;
-  void setTeams(const proto::TeamLibraryDialogResponse &teams);
+  explicit ScoreControl(swx::Panel* wx) : ScreenTextController(wx) {}
+  static auto Create(swx::Panel* wx) -> std::unique_ptr<ScoreControl>;
+  void setTeams(const proto::TeamLibraryDialogResponse& teams);
   void onLibraryDialogClose();
 
  private:
-  void addHomeAwayWidgetPair(Panel *panel, int row, const Widget &home_widget,
-                             const Widget &away_widget);
-  void addToEntry(Text *entry, int amount);
+  void addHomeAwayWidgetPair(Panel* panel, int row, const Widget& home_widget,
+                             const Widget& away_widget);
+  void addToEntry(Text* entry, int amount);
   void bindEvents();
-  void createControls(Panel *control_panel) override;
-  void positionWidgets(Panel *control_panel);
+  void createControls(Panel* control_panel) override;
+  void positionWidgets(Panel* control_panel);
   auto introLines(bool isHome) -> std::vector<proto::RenderableText>;
   auto scoreLines(bool isHome) -> std::vector<proto::RenderableText>;
-  void updateScreenText(ScreenText *screen_text) override;
-  void updateScreenText(ScreenText *screen_text, bool team_intro);
+  void updateScreenText(ScreenText* screen_text) override;
+  void updateScreenText(ScreenText* screen_text, bool team_intro);
   void awayUpdated();
   void awayNameUpdated();
   void awayAddOne();

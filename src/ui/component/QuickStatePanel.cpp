@@ -1,7 +1,7 @@
 /*
 ui/component/QuickStatePanel.cpp: This panel provides quick-settable screens.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ const int PREVIEW_HEIGHT = 64;
 // happen.
 const int NUMBER_OF_QUICK_PANELS = 10;
 
-QuickStateEntry::QuickStateEntry(swx::Panel *wx, int id, Singleton *singleton)
+QuickStateEntry::QuickStateEntry(swx::Panel* wx, int id, Singleton* singleton)
     : ScreenText(wx) {
   this->singleton = singleton;
   setupPreview("", {ProtoUtil::homeSide(), ProtoUtil::awaySide()},
@@ -76,15 +76,15 @@ void QuickStateEntry::bindEvents(int id) {
   }
   std::string tooltip = tooltipText(command_button);
 
-  for (auto *side : sides()) {
+  for (auto* side : sides()) {
     // You have to bind events directly to the ScreenTextSide, as mouse events
     // don't propagate up to parent widgets (even if the child widget doesn't
     // have a handler bound for that event, apparently.)
     if (id >= 0) {
       side->bind(wxEVT_RIGHT_UP,
-                 [this](wxMouseEvent &event) -> void { this->setShortcut(); });
+                 [this](wxMouseEvent& event) -> void { this->setShortcut(); });
     }
-    side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent &event) -> void {
+    side->bind(wxEVT_LEFT_UP, [this](wxMouseEvent& event) -> void {
       this->executeShortcut();
     });
     side->toolTip(tooltip);
@@ -92,10 +92,10 @@ void QuickStateEntry::bindEvents(int id) {
 
   execute_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->executeShortcut(); });
+      [this](wxCommandEvent& event) -> void { this->executeShortcut(); });
   set_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { this->setShortcut(); });
+      [this](wxCommandEvent& event) -> void { this->setShortcut(); });
 
   singleton->hotkeyTable()->addHotkey(wxACCEL_CTRL, command_button,
                                       execute_button->id());
@@ -115,7 +115,7 @@ void QuickStateEntry::setShortcut() {
   QuickStatePanel::setShortcut(this, singleton);
 }
 
-auto QuickStateEntry::fillSingleCharTemplate(const std::string &tmpl,
+auto QuickStateEntry::fillSingleCharTemplate(const std::string& tmpl,
                                              char replacement) -> std::string {
   std::string buffer;
 
@@ -150,7 +150,7 @@ auto QuickStateEntry::tooltipText(char command_character) -> std::string {
          executeTooltipText(command_character);
 }
 
-QuickStatePanel::QuickStatePanel(swx::Panel *wx, Singleton *singleton)
+QuickStatePanel::QuickStatePanel(swx::Panel* wx, Singleton* singleton)
     : Panel(wx) {
   score_entry = std::make_unique<QuickStateEntry>(childPanel(), -1, singleton);
   for (int i = 0; i < NUMBER_OF_QUICK_PANELS; ++i) {
@@ -169,13 +169,13 @@ void QuickStatePanel::positionWidgets() {
   runSizer();
 }
 
-void QuickStatePanel::executeShortcut(QuickStateEntry *entry,
-                                      Singleton *singleton) {
+void QuickStatePanel::executeShortcut(QuickStateEntry* entry,
+                                      Singleton* singleton) {
   singleton->frameManager()->mainView()->previewPanel()->setToPresenters(entry);
 }
 
-void QuickStatePanel::setShortcut(QuickStateEntry *entry,
-                                  Singleton *singleton) {
+void QuickStatePanel::setShortcut(QuickStateEntry* entry,
+                                  Singleton* singleton) {
   singleton->frameManager()
       ->mainView()
       ->controlPanel()

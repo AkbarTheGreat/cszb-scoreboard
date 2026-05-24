@@ -1,7 +1,7 @@
 /*
 ui/widget/DropDown.cpp: A drop-down selector to pick one from many strings.
 
-Copyright 2023-2025 Tracy Beck
+Copyright 2023-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-DropDown::DropDown(swx::Choice *choice,
-                   const std::vector<std::string> &choices) {
+DropDown::DropDown(swx::Choice* choice,
+                   const std::vector<std::string>& choices) {
   _wx = choice;
-  for (const auto &choice : choices) {
+  for (const auto& choice : choices) {
     _wx->AppendString(choice);
   }
 }

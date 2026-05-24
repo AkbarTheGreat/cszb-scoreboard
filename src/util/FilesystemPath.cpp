@@ -3,7 +3,7 @@ util/FilesystemPath.cpp: In most cases, a moderately enhanced wrapper around
 std::filesystem::path. For cases where that support is unavailable, a simple
 stand-in which implements the functionality we need for our application.
 
-Copyright 2020-2025 Tracy Beck
+Copyright 2020-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,13 +39,13 @@ namespace cszb_scoreboard {
 
 FilesystemPath::FilesystemPath() { path_string = ""; }
 
-FilesystemPath::FilesystemPath(const std::string &str) { path_string = str; }
+FilesystemPath::FilesystemPath(const std::string& str) { path_string = str; }
 
-auto FilesystemPath::compare(const FilesystemPath &p) const -> int {
+auto FilesystemPath::compare(const FilesystemPath& p) const -> int {
   return path_string.compare(p.path_string);
 }
 
-auto FilesystemPath::remove(const FilesystemPath &p) -> bool {
+auto FilesystemPath::remove(const FilesystemPath& p) -> bool {
   if (p.path_string.empty()) {
     return false;
   }
@@ -54,7 +54,7 @@ auto FilesystemPath::remove(const FilesystemPath &p) -> bool {
   return (std::remove(p.path_string.c_str()) == 0);
 }
 
-void FilesystemPath::rename(const FilesystemPath &a, const FilesystemPath &b) {
+void FilesystemPath::rename(const FilesystemPath& a, const FilesystemPath& b) {
   std::rename(a.path_string.c_str(), b.path_string.c_str());
 }
 
@@ -75,7 +75,7 @@ auto FilesystemPath::pathname() const -> FilesystemPath {
   }
   return FilesystemPath(pathname);
 }
-auto FilesystemPath::replace_extension(const std::string &replacement) const
+auto FilesystemPath::replace_extension(const std::string& replacement) const
     -> FilesystemPath {
   std::string filename = path_string;
   std::size_t extension_start = filename.rfind('.');
@@ -88,14 +88,14 @@ auto FilesystemPath::replace_extension(const std::string &replacement) const
   return FilesystemPath(filename + replacement);
 }
 
-void FilesystemPath::replace_filename(const std::string &new_filename) {
+void FilesystemPath::replace_filename(const std::string& new_filename) {
   path_string = pathname().string() + '/' + new_filename;
 }
 
 #endif  // #ifdef SCOREBOARD_APPLE_IMPL
 
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-auto FilesystemPath::existsWithRoot(const std::string &root) const -> bool {
+auto FilesystemPath::existsWithRoot(const std::string& root) const -> bool {
 #ifdef SCOREBOARD_APPLE_IMPL
   // TODO(#39): This is incorrect, but will need some testing on an actual MacOS
   // device when it's implemented.
@@ -105,7 +105,7 @@ auto FilesystemPath::existsWithRoot(const std::string &root) const -> bool {
 #endif  // #ifdef SCOREBOARD_APPLE_IMPL
 }
 
-auto FilesystemPath::stripTrailingSeparator(const std::string &path)
+auto FilesystemPath::stripTrailingSeparator(const std::string& path)
     -> std::string {
   if (!path.empty() && path.at(path.length() - 1) == preferred_separator) {
     return path.substr(0, path.length() - 1);
@@ -113,8 +113,8 @@ auto FilesystemPath::stripTrailingSeparator(const std::string &path)
   return path;
 }
 
-auto FilesystemPath::absolutePath(const std::string &root,
-                                  const std::string &file_path) -> std::string {
+auto FilesystemPath::absolutePath(const std::string& root,
+                                  const std::string& file_path) -> std::string {
   if (FilesystemPath(file_path).is_absolute()) {
     return file_path;
   }
@@ -124,8 +124,8 @@ auto FilesystemPath::absolutePath(const std::string &root,
 
 // If file_path is already relative, returns file_path.  If file_path is
 // relative to root, returns the relative path.  Otherwise, returns file_path.
-auto FilesystemPath::mostRelativePath(const std::string &root,
-                                      const std::string &file_path)
+auto FilesystemPath::mostRelativePath(const std::string& root,
+                                      const std::string& file_path)
     -> std::string {
   if (FilesystemPath(file_path).is_relative() || root.empty()) {
     return file_path;
@@ -141,7 +141,7 @@ auto FilesystemPath::mostRelativePath(const std::string &root,
 
 // List grabbed from the APA style guide -- it is likely not complete, but it's
 // a good first attempt.
-const std::array<const char *, 22> TITLE_EXCEPTIONS = {
+const std::array<const char*, 22> TITLE_EXCEPTIONS = {
     {"a",  "an",  "and", "as", "at",  "but", "by",  "for", "if", "in",  "nor",
      "of", "off", "on",  "or", "per", "so",  "the", "to",  "up", "via", "yet"}};
 
@@ -188,8 +188,8 @@ this (auto-updating image libraries) will be unsupported on macs.  While it's
 unimplemented, it fails lint on our MacOS tests, so disable that check.
 */
 // NOLINTNEXTLINE (readability-convert-member-functions-to-static)
-auto FilesystemPath::findFilesOfType(
-    const std::vector<const char *> &extensions, uint32_t max_depth)
+auto FilesystemPath::findFilesOfType(const std::vector<const char*>& extensions,
+                                     uint32_t max_depth)
     -> std::unordered_set<std::string> {
   std::unordered_set<std::string> found_files;
 #ifdef SCOREBOARD_APPLE_IMPL
@@ -202,13 +202,13 @@ auto FilesystemPath::findFilesOfType(
     return found_files;
   }
 
-  for (const auto &entry : std::filesystem::directory_iterator(*this)) {
+  for (const auto& entry : std::filesystem::directory_iterator(*this)) {
     if (entry.is_directory()) {
       auto new_files = FilesystemPath(entry.path().string())
                            .findFilesOfType(extensions, max_depth - 1);
       found_files.insert(new_files.begin(), new_files.end());
     } else {
-      for (const auto &extension : extensions) {
+      for (const auto& extension : extensions) {
         if (entry.path().extension() == extension) {
           found_files.emplace(entry.path().string());
         }

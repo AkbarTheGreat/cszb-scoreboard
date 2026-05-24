@@ -2,7 +2,7 @@
 util/AutoUpdate.cpp: Singleton which handles checking for updates to the
 software.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,25 +34,25 @@ limitations under the License.
 namespace cszb_scoreboard {
 
 #ifdef _WIN32
-const char *AUTO_UPDATE_PLATFORM_NAME = "Win64";
+const char* AUTO_UPDATE_PLATFORM_NAME = "Win64";
 #else  // ifdef _WIN32
 #ifdef __APPLE__
 // Autoupdate disabled for MacOS for now, some work needs to happen to download
 // and unzip the release, which is more complicated than a Windows install. Once
 // the mechanism is in place, remove -autoupdatedisabled- below.
-const char *AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
+const char* AUTO_UPDATE_PLATFORM_NAME = "MacOS-autoupdatedisabled-";
 #else   // ifdef __APPLE__
-const char *AUTO_UPDATE_PLATFORM_NAME = "Unknown";
+const char* AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 #endif  // ifdef __APPLE__
 #endif  // ifdef _WIN32
 
-const char *AUTO_UPDATE_BACKUP_NAME = "old_version_to_be_deleted";
+const char* AUTO_UPDATE_BACKUP_NAME = "old_version_to_be_deleted";
 
-const char *LATEST_VERSION_URL =
+const char* LATEST_VERSION_URL =
     "https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases/"
     "latest";
 
-AutoUpdate::AutoUpdate(SingletonClass c, Singleton *singleton,
+AutoUpdate::AutoUpdate(SingletonClass c, Singleton* singleton,
                        std::unique_ptr<HttpReader> reader) {
   this->singleton = singleton;
   httpReader = std::move(reader);
@@ -64,12 +64,12 @@ auto AutoUpdate::backupPath() -> FilesystemPath {
   return backup_path;
 }
 
-auto AutoUpdate::checkForUpdate(const std::string &current_version) -> bool {
+auto AutoUpdate::checkForUpdate(const std::string& current_version) -> bool {
   return checkForUpdate(current_version, AUTO_UPDATE_PLATFORM_NAME);
 }
 
-auto AutoUpdate::checkForUpdate(const std::string &current_version,
-                                const std::string &platform_name) -> bool {
+auto AutoUpdate::checkForUpdate(const std::string& current_version,
+                                const std::string& platform_name) -> bool {
   HttpResponse http_response = httpReader->read(LATEST_VERSION_URL);
   if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
@@ -80,7 +80,7 @@ auto AutoUpdate::checkForUpdate(const std::string &current_version,
 
   Json::Value root;
   std::string errors;
-  Json::CharReader *json_reader = Json::CharReaderBuilder().newCharReader();
+  Json::CharReader* json_reader = Json::CharReaderBuilder().newCharReader();
   json_reader->parse(
       http_response.response.data(),
       http_response.response.data() + http_response.response.size(), &root,
@@ -92,7 +92,7 @@ auto AutoUpdate::checkForUpdate(const std::string &current_version,
   update_available = false;
   if (new_version > old_version) {
     Json::Value assets = root.get("assets", {});
-    for (const auto &asset : assets) {
+    for (const auto& asset : assets) {
       std::string asset_platform_name = asset.get("label", "").asString();
       update_size = 0;
       update_available = true;
@@ -106,8 +106,8 @@ auto AutoUpdate::checkForUpdate(const std::string &current_version,
   return update_available;
 }
 
-auto AutoUpdate::downloadUpdate(const std::string &url,
-                                std::vector<char> *update_data) -> bool {
+auto AutoUpdate::downloadUpdate(const std::string& url,
+                                std::vector<char>* update_data) -> bool {
   if (!httpReader->readBinary(url.c_str(), update_data)) {
     return false;
   }
@@ -122,7 +122,7 @@ auto AutoUpdate::downloadUpdate(const std::string &url,
   return true;
 }
 
-auto AutoUpdate::downloadUpdate(std::vector<char> *update_data) -> bool {
+auto AutoUpdate::downloadUpdate(std::vector<char>* update_data) -> bool {
   return downloadUpdate(new_binary_url, update_data);
 }
 
@@ -150,7 +150,7 @@ auto AutoUpdate::updateInPlace() -> bool {
 
 void AutoUpdate::removeOldUpdate() { FilesystemPath::remove(backupPath()); }
 
-Version::Version(const std::string &version_string) {
+Version::Version(const std::string& version_string) {
   size_t first_dot = version_string.find('.', 0);
   size_t second_dot = version_string.find('.', first_dot + 1);
   major_component = minor_component = subminor_component = 0;
@@ -179,17 +179,17 @@ Version::Version(const std::string &version_string) {
   }
 }
 
-auto Version::operator==(const Version &b) const -> bool {
+auto Version::operator==(const Version& b) const -> bool {
   return (this->major_component == b.major_component &&
           this->minor_component == b.minor_component &&
           this->subminor_component == b.subminor_component);
 }
 
-auto Version::operator!=(const Version &b) const -> bool {
+auto Version::operator!=(const Version& b) const -> bool {
   return !(*this == b);
 }
 
-auto Version::operator<(const Version &b) const -> bool {
+auto Version::operator<(const Version& b) const -> bool {
   if (this->major_component > b.major_component) {
     return false;
   }
@@ -208,11 +208,11 @@ auto Version::operator<(const Version &b) const -> bool {
   return false;
 }
 
-auto Version::operator>=(const Version &b) const -> bool {
+auto Version::operator>=(const Version& b) const -> bool {
   return !(*this < b);
 }
 
-auto Version::operator>(const Version &b) const -> bool {
+auto Version::operator>(const Version& b) const -> bool {
   if (this->major_component < b.major_component) {
     return false;
   }
@@ -231,7 +231,7 @@ auto Version::operator>(const Version &b) const -> bool {
   return false;
 }
 
-auto Version::operator<=(const Version &b) const -> bool {
+auto Version::operator<=(const Version& b) const -> bool {
   return !(*this > b);
 }
 

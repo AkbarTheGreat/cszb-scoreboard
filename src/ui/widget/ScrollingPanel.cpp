@@ -2,7 +2,7 @@
 ui/widget/ScrollingPanel.cpp: A panel which may scroll around a larger area than
 the panel itself.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ namespace cszb_scoreboard {
 const int SCROLL_X_STEP = 0;
 const int SCROLL_Y_STEP = 20;
 
-ScrollingPanel::ScrollingPanel(swx::ScrolledWindow *panel) : Panel(nullptr) {
+ScrollingPanel::ScrollingPanel(swx::ScrolledWindow* panel) : Panel(nullptr) {
   _wx = panel;
 }
 

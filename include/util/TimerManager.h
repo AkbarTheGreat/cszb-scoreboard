@@ -2,7 +2,7 @@
 util/TimerManager.h: Singleton which handles the current time left on the game
 timer.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,14 +46,14 @@ class TimerManager {
   void hideTimer();
 
   PUBLIC_TEST_ONLY
-  TimerManager(SingletonClass c, Singleton *singleton);
+  TimerManager(SingletonClass c, Singleton* singleton);
 
  private:
   auto timeLeft() -> std::chrono::seconds;
 
   bool timer_displayed;
   bool timer_running;
-  Singleton *singleton;
+  Singleton* singleton;
   // Tracks the time to the end of an active timer.
   std::chrono::seconds timer_end;
   // Tracks the static time left of a paused timer.

@@ -1,7 +1,7 @@
 /*
 ui/widget/Button.h: A simple button, nothing super fancy.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,19 +25,19 @@ namespace cszb_scoreboard {
 
 class Button : public Widget {
  public:
-  explicit Button(swx::Button *button) { _wx = button; }
+  explicit Button(swx::Button* button) { _wx = button; }
 
   void disable() { wx()->Disable(); }
   void enable() { wx()->Enable(); }
   auto id() -> int { return wx()->GetId(); }
-  void setText(const std::string &text) { wx()->SetLabel(text); }
-  void toolTip(const std::string &tip) { wx()->SetToolTip(tip); }
+  void setText(const std::string& text) { wx()->SetLabel(text); }
+  void toolTip(const std::string& tip) { wx()->SetToolTip(tip); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::Button *_wx;
+  swx::Button* _wx;
 };
 
 }  // namespace cszb_scoreboard

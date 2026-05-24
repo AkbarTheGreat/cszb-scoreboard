@@ -3,7 +3,7 @@ ui/widget/LabelledArea.h: A labelled area is a border with an in-built label,
 for grouping chunks of UI together.  To embed things inside of this object,
 reference it's holds() method.
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,18 +32,18 @@ namespace cszb_scoreboard {
 
 class LabelledArea : public Widget {
  public:
-  explicit LabelledArea(swx::StaticBox *static_box);
-  [[nodiscard]] auto holds() -> Panel * { return held_panel.get(); }
+  explicit LabelledArea(swx::StaticBox* static_box);
+  [[nodiscard]] auto holds() -> Panel* { return held_panel.get(); }
 
  private:
-  [[nodiscard]] auto wx() const -> wxWindow * override {
-    return dynamic_cast<swx::StaticBoxImpl *>(_wx);
+  [[nodiscard]] auto wx() const -> wxWindow* override {
+    return dynamic_cast<swx::StaticBoxImpl*>(_wx);
   }
 
   std::unique_ptr<Panel> held_panel;
 
  protected:
-  swx::StaticBox *_wx;
+  swx::StaticBox* _wx;
 };
 
 }  // namespace cszb_scoreboard

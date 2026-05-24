@@ -2,7 +2,7 @@
 ui/dialog/settings/DisplaySettingsPanel.h: The panel which contains display
 settings.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,21 +43,21 @@ class DisplaySettingsPanel : public Panel {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent)
+  DisplaySettingsPanel(swx::Panel* wx, int index, DisplaySettingsPage* parent)
       : DisplaySettingsPanel(wx, index, parent, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  void copyFrom(const DisplaySettingsPanel &other);
+  void copyFrom(const DisplaySettingsPanel& other);
   auto getSide() -> proto::ScreenSide;
   [[nodiscard]] auto getDisplayId() const -> int { return display_id; }
 
   PUBLIC_TEST_ONLY
-  DisplaySettingsPanel(swx::Panel *wx, int index, DisplaySettingsPage *parent,
-                       Singleton *singleton);
+  DisplaySettingsPanel(swx::Panel* wx, int index, DisplaySettingsPage* parent,
+                       Singleton* singleton);
 
  private:
-  static auto buildDisplaySize(const proto::Rectangle &dimensions)
+  static auto buildDisplaySize(const proto::Rectangle& dimensions)
       -> std::string;
-  static void copyCheckbox(const CheckBox &source, CheckBox *target);
+  static void copyCheckbox(const CheckBox& source, CheckBox* target);
   void createButtonPanel();
   void moveDisplay(bool is_up_button);
   void updateLabel();
@@ -69,7 +69,7 @@ class DisplaySettingsPanel : public Panel {
   std::unique_ptr<Label> display_label;
   std::unique_ptr<Panel> button_panel;
   std::unique_ptr<Button> down_button, up_button;
-  DisplaySettingsPage *parent;
+  DisplaySettingsPage* parent;
 };
 
 }  // namespace cszb_scoreboard

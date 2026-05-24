@@ -1,7 +1,7 @@
 /*
 test/ScreenPreviewTest.cpp: Tests for ui/ScreenPreview
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ limitations under the License.
 
 namespace cszb_scoreboard::test {
 
-void assertErrorColors(const ImageAnalysis &analysis) {
+void assertErrorColors(const ImageAnalysis& analysis) {
   // The error image on pane 0 is ~50% white, ~50% red with black text over
   // part of it.  We rely on display config to tell us which kind of display
   // we should be testing.
@@ -46,7 +46,7 @@ void assertErrorColors(const ImageAnalysis &analysis) {
   ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 20);
 }
 
-void assertTeamColors(const ImageAnalysis &analysis) {
+void assertTeamColors(const ImageAnalysis& analysis) {
   ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 70);
   ASSERT_GT(analysis.colorPercentage(wxColour("White")), 1.25);
   ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);

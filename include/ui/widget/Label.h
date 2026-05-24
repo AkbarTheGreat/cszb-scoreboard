@@ -1,7 +1,7 @@
 /*
 ui/widget/Label.h: A static text label.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,17 +30,17 @@ namespace cszb_scoreboard {
 
 class Label : public Widget {
  public:
-  explicit Label(swx::StaticText *label) { _wx = label; }
-  void set(const std::string &label) { _wx->SetLabelText(label); }
-  void setWithHotkey(const std::string &label) { wx()->SetLabel(label); }
+  explicit Label(swx::StaticText* label) { _wx = label; }
+  void set(const std::string& label) { _wx->SetLabelText(label); }
+  void setWithHotkey(const std::string& label) { wx()->SetLabel(label); }
   auto text() -> std::string { return _wx->GetLabelText().ToStdString(); }
   void bold(bool is_bold);
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::StaticText *_wx;
+  swx::StaticText* _wx;
 };
 
 }  // namespace cszb_scoreboard

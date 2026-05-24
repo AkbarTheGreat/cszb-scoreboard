@@ -1,7 +1,7 @@
 /*
 ui/widget/swx/EditableListBox.h: A wrapper around wxEditableListBox.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ namespace cszb_scoreboard::swx {
 
 class EditableListBox : public wxEditableListBox {
  public:
-  EditableListBox(wxWindow *parent, wxWindowID id, const wxString &label,
-                  const wxPoint &pos = wxDefaultPosition,
-                  const wxSize &size = wxDefaultSize,
+  EditableListBox(wxWindow* parent, wxWindowID id, const wxString& label,
+                  const wxPoint& pos = wxDefaultPosition,
+                  const wxSize& size = wxDefaultSize,
                   int64_t style = wxEL_DEFAULT_STYLE,
-                  const wxString &name = wxEditableListBoxNameStr)
+                  const wxString& name = wxEditableListBoxNameStr)
       : wxEditableListBox(parent, id, label, pos, size, style, name) {}
 };
 

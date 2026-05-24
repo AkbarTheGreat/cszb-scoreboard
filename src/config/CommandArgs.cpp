@@ -2,7 +2,7 @@
 config/CommandArgs.cpp: Parses and holds arguments that are passed in via the
 command-line.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-void CommandArgs::process_args(const wxCmdLineParser &parser, int argc,
-                               const wxCmdLineArgsArray &argv) {
+void CommandArgs::process_args(const wxCmdLineParser& parser, int argc,
+                               const wxCmdLineArgsArray& argv) {
   // TODO(akbar): This is always an absolute path on Windows, but may be a
   // relative path on Linux.  An update to always get an absolute path is
   // probably worthwhile.
-  command_path = FilesystemPath(static_cast<const char *>(argv[0].c_str()));
+  command_path = FilesystemPath(static_cast<const char*>(argv[0].c_str()));
   auto_update = !parser.Found(wxT("n"));
   reset_config = parser.Found(wxT("r"));
 }

@@ -2,7 +2,7 @@
 ui/component/control/things_mode/ActivityPanel.cpp: Represents all activities in
 5/6 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,12 +41,12 @@ const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 // existing ones.  In theory this could be 1, but it self-resolves pretty much
 // immediately whent they're repositioned, so it doesn't matter much.
 const int REPLACEMENT_BUFFER_SIZE = 5;
-static const char *BULLET = "\u2022";
+static const char* BULLET = "\u2022";
 
-ActivityPanel::ActivityPanel(swx::Panel *wx,
-                             ScreenTextController *owning_controller,
-                             const proto::ScreenSide &side,
-                             Singleton *singleton)
+ActivityPanel::ActivityPanel(swx::Panel* wx,
+                             ScreenTextController* owning_controller,
+                             const proto::ScreenSide& side,
+                             Singleton* singleton)
     : Panel(wx) {
   assert(INITIAL_NUMBER_OF_ACTIVITIES >= ACTIVITIES_FOR_SIZING);
   this->owning_controller = owning_controller;
@@ -85,13 +85,13 @@ ActivityPanel::ActivityPanel(swx::Panel *wx,
 void ActivityPanel::bindEvents() {
   color_picker->bind(
       wxEVT_COLOURPICKER_CHANGED,
-      [this](wxColourPickerEvent &event) -> void { this->colorChanged(); });
+      [this](wxColourPickerEvent& event) -> void { this->colorChanged(); });
 }
 
 void ActivityPanel::positionWidgets() {
   int row = 0;
   int first_activity = 0;
-  for (const auto &activity : activities) {
+  for (const auto& activity : activities) {
     if (activity->isSelected()) {
       first_activity = row;
     }
@@ -133,9 +133,9 @@ void ActivityPanel::addReplacement() {
   }
 }
 
-void ActivityPanel::deleteActivity(Activity *deleted) {
+void ActivityPanel::deleteActivity(Activity* deleted) {
   int offset = 0;
-  for (const auto &activity : activities) {
+  for (const auto& activity : activities) {
     if (activity.get() == deleted) {
       if (activity->isSelected()) {
         if (activities.size() > 1) {
@@ -159,7 +159,7 @@ void ActivityPanel::deleteActivity(Activity *deleted) {
   }
 }
 
-void ActivityPanel::selectionChanged(Activity *selected) {
+void ActivityPanel::selectionChanged(Activity* selected) {
   for (int i = 0; i < activities.size(); i++) {
     if (activities[i].get() == selected) {
       activities[i]->select();
@@ -215,12 +215,12 @@ auto ActivityPanel::getColor() -> Color {
   return singleton->teamColors()->getColor(side);
 }
 
-auto ActivityPanel::replacementPanel() -> ReplacementPanel * {
+auto ActivityPanel::replacementPanel() -> ReplacementPanel* {
   if (activities.empty()) {
     return nullptr;
   }
 
-  for (const auto &activity : activities) {
+  for (const auto& activity : activities) {
     if (activity->isSelected()) {
       return activity->replacementPanel();
     }
@@ -231,7 +231,7 @@ auto ActivityPanel::replacementPanel() -> ReplacementPanel * {
 }
 
 auto ActivityPanel::selectedActivityText() -> std::string {
-  for (const auto &activity : activities) {
+  for (const auto& activity : activities) {
     if (activity->isSelected()) {
       return activity->previewText();
     }
@@ -242,7 +242,7 @@ auto ActivityPanel::selectedActivityText() -> std::string {
 auto ActivityPanel::previewText(int font_size)
     -> std::vector<proto::RenderableText> {
   std::string preview_text;
-  for (const auto &activity : activities) {
+  for (const auto& activity : activities) {
     preview_text += std::string(BULLET) + " " + activity->previewText() + "\n";
   }
   std::vector<proto::RenderableText> return_vector;

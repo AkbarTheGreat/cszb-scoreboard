@@ -2,7 +2,7 @@
 ui/dialog/settings/GeneralSettingsPage.h: The page of the settings notebook
 which handles general/miscellaneous settings.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,14 +36,14 @@ class GeneralSettingsPage : public SettingsPage {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  explicit GeneralSettingsPage(swx::Panel *wx)
+  explicit GeneralSettingsPage(swx::Panel* wx)
       : GeneralSettingsPage(wx, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   void saveSettings() override;
   auto validateSettings() -> bool override;
 
   PUBLIC_TEST_ONLY
-  explicit GeneralSettingsPage(swx::Panel *wx, Singleton *singleton);
+  explicit GeneralSettingsPage(swx::Panel* wx, Singleton* singleton);
 
  private:
   void bindEvents();
@@ -53,7 +53,7 @@ class GeneralSettingsPage : public SettingsPage {
 
   std::unique_ptr<Panel> general_settings;
   std::unique_ptr<CheckBox> enable_drop_shadow;
-  Singleton *singleton;
+  Singleton* singleton;
 };
 
 }  // namespace cszb_scoreboard

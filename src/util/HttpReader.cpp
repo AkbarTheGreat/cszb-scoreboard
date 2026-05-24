@@ -1,7 +1,7 @@
 /*
 util/HttpReader.h: Simple class which uses Curl to pull data over HTTP.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ constexpr int MAX_REDIRECT_ATTEMPTS = 5;
 constexpr int MIN_HTTP_RESPONSE_SIZE = 50;
 constexpr int MAX_HTTP_RESPONSE_SIZE = 1000;
 
-auto curlCallback(void *new_content, size_t byte_size, size_t size,
-                  void *page_content) -> size_t {
+auto curlCallback(void* new_content, size_t byte_size, size_t size,
+                  void* page_content) -> size_t {
   size_t grow_size = byte_size * size;
-  auto *page_vector = static_cast<std::vector<char> *>(page_content);
+  auto* page_vector = static_cast<std::vector<char>*>(page_content);
 
   if (page_vector->empty()) {
     page_vector->push_back('\0');
@@ -54,16 +54,16 @@ auto curlCallback(void *new_content, size_t byte_size, size_t size,
   return grow_size;
 }
 
-auto HttpReader::read(const char *url) -> HttpResponse {
+auto HttpReader::read(const char* url) -> HttpResponse {
   HttpResponse http_response;
   curl_global_init(CURL_GLOBAL_ALL);
 
   // setup curl junk
-  CURL *curl_handle = curl_easy_init();
+  CURL* curl_handle = curl_easy_init();
   curl_easy_setopt(curl_handle, CURLOPT_URL, url);
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, curlCallback);
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA,
-                   static_cast<void *>(&http_response.response));
+                   static_cast<void*>(&http_response.response));
   curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
   curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1);
 
@@ -86,7 +86,7 @@ auto HttpReader::read(const char *url) -> HttpResponse {
   return http_response;
 }
 
-auto getHref(const std::string &html) -> std::string {
+auto getHref(const std::string& html) -> std::string {
   const std::string href_prefix = "href=\"";
   size_t href_start = html.find(href_prefix, 0) + href_prefix.length();
   size_t href_end = html.find('"', href_start);
@@ -101,7 +101,7 @@ auto getHref(const std::string &html) -> std::string {
 }
 
 // Returns "" if it's not a redirect
-auto isRedirect(const std::vector<char> &http_data) -> std::string {
+auto isRedirect(const std::vector<char>& http_data) -> std::string {
   if (http_data.size() > MAX_HTTP_RESPONSE_SIZE ||
       http_data.size() < MIN_HTTP_RESPONSE_SIZE) {
     return "";
@@ -116,7 +116,7 @@ auto isRedirect(const std::vector<char> &http_data) -> std::string {
   return getHref(http_data.data());
 }
 
-auto HttpReader::readBinary(const char *url, std::vector<char> *bin_data,
+auto HttpReader::readBinary(const char* url, std::vector<char>* bin_data,
                             int redirect_depth) -> bool {
   if (redirect_depth > MAX_REDIRECT_ATTEMPTS) {
     LogDebug("Too many redirects.  Cancelling update.");
@@ -155,7 +155,7 @@ auto HttpReader::readBinary(const char *url, std::vector<char> *bin_data,
   return true;
 }
 
-auto HttpReader::readDataUrl(const char *url, std::vector<char> *bin_data)
+auto HttpReader::readDataUrl(const char* url, std::vector<char>* bin_data)
     -> bool {
   std::string url_str(url);
   // Strip off the header that looks like "data:image/jpeg;base64,"

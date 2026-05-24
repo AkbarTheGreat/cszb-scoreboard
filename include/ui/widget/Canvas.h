@@ -2,7 +2,7 @@
 ui/widget/Panel.h: A canvas represents an interior panel which exists primarily
 to be drawn upon.
 
-Copyright 2022-2025 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ namespace cszb_scoreboard {
 
 class Canvas : public Panel {
  public:
-  explicit Canvas(swx::Panel *panel) : Panel(panel) {
+  explicit Canvas(swx::Panel* panel) : Panel(panel) {
     panel->setBackgroundStyle(wxBG_STYLE_PAINT);
   }
   ~Canvas() override = default;

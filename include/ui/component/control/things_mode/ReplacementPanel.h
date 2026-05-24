@@ -2,7 +2,7 @@
 ui/component/control/things_mode/ReplacementPanel.h: Represents all replacements
 for one activity in 5/6 things.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,14 +39,14 @@ class Panel;
 
 class ReplacementPanel : public Panel {
  public:
-  ReplacementPanel(swx::Panel *wx, ActivityPanel *activity_panel);
+  ReplacementPanel(swx::Panel* wx, ActivityPanel* activity_panel);
   void addReplacement();
-  void deleteReplacement(Replacement *deleted);
+  void deleteReplacement(Replacement* deleted);
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;
   void textUpdated();
 
  private:
-  ActivityPanel *activity_panel;
+  ActivityPanel* activity_panel;
   std::vector<std::unique_ptr<Replacement>> replacements;
 
   void bindEvents();

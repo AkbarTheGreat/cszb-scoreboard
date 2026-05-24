@@ -2,7 +2,7 @@
 config/DisplayConfig.h: This class is a configuration singleton which
 represents the current known state of the displays attached to this computer.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class DisplayConfig {
   explicit DisplayConfig(SingletonClass c)
       : DisplayConfig(c, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  auto isPrimaryDisplay(proto::DisplayInfo *display_info) -> bool;
+  auto isPrimaryDisplay(proto::DisplayInfo* display_info) -> bool;
   void detectDisplays(bool force_reload = false);
   auto displayDetails(int index) -> proto::DisplayInfo;
   auto numberOfDisplays() -> int;
@@ -40,7 +40,7 @@ class DisplayConfig {
   // Set the display id to the given monitor index.  Returns true if this
   // was an effective change, false if the values were identical already.
   auto setDisplayId(int index, int id) -> bool;
-  auto setSide(int index, const proto::ScreenSide &side) -> bool;
+  auto setSide(int index, const proto::ScreenSide& side) -> bool;
 
   auto windowedMode() -> bool;
   auto windowedModeNumberOfWindows() -> int;
@@ -53,12 +53,12 @@ class DisplayConfig {
   void setWindowHeight(int height);
 
   PUBLIC_TEST_ONLY
-  DisplayConfig(SingletonClass c, Singleton *singleton);
+  DisplayConfig(SingletonClass c, Singleton* singleton);
   auto displayConfig() -> proto::DisplayConfig { return display_config; }
 
  private:
   proto::DisplayConfig display_config;
-  Singleton *singleton;
+  Singleton* singleton;
   void detectExternalMonitors(bool force_reload);
   void setupWindowedMode();
 };

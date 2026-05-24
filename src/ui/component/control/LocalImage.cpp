@@ -2,7 +2,7 @@
 ui/component/control/LocalImage.cpp: Handles loading images from disk or from
 the clipboard.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,14 +40,14 @@ const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
 
 const std::string CLIPBOARD_IMAGE_MESSAGE = "<Image Loaded From Clipboard>";
 
-auto LocalImage::Create(swx::Panel *wx) -> std::unique_ptr<LocalImage> {
+auto LocalImage::Create(swx::Panel* wx) -> std::unique_ptr<LocalImage> {
   auto local_image = std::make_unique<LocalImage>(wx);
   local_image->initializeWidgets();
   local_image->updatePreview();
   return local_image;
 }
 
-void LocalImage::createControls(Panel *control_panel) {
+void LocalImage::createControls(Panel* control_panel) {
   ScreenImageController::createControls(control_panel);
   inner_panel = control_panel->panel();
 
@@ -61,7 +61,7 @@ void LocalImage::createControls(Panel *control_panel) {
   bindEvents();
 }
 
-void LocalImage::positionWidgets(Panel *control_panel) {
+void LocalImage::positionWidgets(Panel* control_panel) {
   button_panel->addWidget(*browse_button, 0, 0);
   button_panel->addWidget(*paste_button, 1, 0);
 
@@ -77,10 +77,10 @@ void LocalImage::positionWidgets(Panel *control_panel) {
 }
 
 void LocalImage::bindEvents() {
-  browse_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+  browse_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
     this->browsePressed();
   });
-  paste_button->bind(wxEVT_BUTTON, [this](wxCommandEvent &event) -> void {
+  paste_button->bind(wxEVT_BUTTON, [this](wxCommandEvent& event) -> void {
     this->pastePressed();
   });
 }

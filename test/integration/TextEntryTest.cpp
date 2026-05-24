@@ -1,7 +1,7 @@
 /*
 test/ScreenPreviewTest.cpp: Tests for ui/ScreenPreview
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,22 +38,22 @@ namespace cszb_scoreboard ::test {
 
 class TextEntryTest : public GuiTest {
  protected:
-  static void enterTextIndirect(const char *text) {
-    TextEntry *entry = textEntry();
+  static void enterTextIndirect(const char* text) {
+    TextEntry* entry = textEntry();
     WX_A(entry->textField()->focus());
     WX_A(entry->textField()->clear());
     WX_A(entry->textField()->setValue(text));
     WX_A(entry->textUpdated());
   }
 
-  void enterTextDirect(const char *text) {
-    TextEntry *entry = textEntry();
+  void enterTextDirect(const char* text) {
+    TextEntry* entry = textEntry();
     WX_A(entry->textField()->focus());
     WX_A(entry->textField()->clear());
     WX_A(act.Text(text));
   }
 
-  static void enterText(const char *text) {
+  static void enterText(const char* text) {
     // wxUIActionSimulator has problems described at
     // http://trac.wxwidgets.org/ticket/17400 which implies that there are
     // issues in some unkown circumstances? Maybe we're better off avoiding it

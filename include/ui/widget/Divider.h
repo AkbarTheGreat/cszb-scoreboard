@@ -1,7 +1,7 @@
 /*
 ui/widget/Divider.h: A line which can be rendered to show a division in a UI.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ namespace cszb_scoreboard {
 
 class Divider : public Widget {
  public:
-  explicit Divider(swx::StaticLine *line) { _wx = line; }
+  explicit Divider(swx::StaticLine* line) { _wx = line; }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::StaticLine *_wx;
+  swx::StaticLine* _wx;
 };
 
 }  // namespace cszb_scoreboard

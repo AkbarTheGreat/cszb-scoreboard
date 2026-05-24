@@ -2,7 +2,7 @@
 ui/widget/DraggablePanel.cpp: A panel where the contained objects are held by
 the wxWidgets Advanced UI (AUI) manager.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ namespace swx {
 class Panel;
 }  // namespace swx
 
-DraggablePanel::DraggablePanel(swx::Panel *panel) : Panel(panel) {
+DraggablePanel::DraggablePanel(swx::Panel* panel) : Panel(panel) {
   aui_manager.SetManagedWindow(wx());
 }
 
 DraggablePanel::~DraggablePanel() { aui_manager.UnInit(); }
 
-void DraggablePanel::addWidget(const Widget &widget) {
+void DraggablePanel::addWidget(const Widget& widget) {
   wxAuiPaneInfo pane_style;
   pane_style.CenterPane();
   pane_style.Top();

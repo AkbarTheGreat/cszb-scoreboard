@@ -2,7 +2,7 @@
 config/CommandArgs.h: Parses and holds arguments that are passed in via the
 command-line.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ class CommandArgs {
  public:
   explicit CommandArgs(SingletonClass c);
   /* parse must be called before getInstance, or an exception is thrown. */
-  void process_args(const wxCmdLineParser &parser, int argc,
-                    const wxCmdLineArgsArray &argv);
+  void process_args(const wxCmdLineParser& parser, int argc,
+                    const wxCmdLineArgsArray& argv);
 
   // flag getters
   [[nodiscard]] auto autoUpdate() const -> bool;

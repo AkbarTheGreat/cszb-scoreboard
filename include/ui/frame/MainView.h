@@ -2,7 +2,7 @@
 ui/frame/MainView.h: This class represents the main control window for the
 application.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,16 +47,16 @@ class MainView : public Frame {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  MainView(const std::string &title, const Position &pos, const Size &size)
+  MainView(const std::string& title, const Position& pos, const Size& size)
       : MainView(new swx::FrameImpl(nullptr, wxID_ANY, title, pos.toWx(),
                                     size.toWx()),
                  Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   void init();
-  auto controlPanel() -> ControlPanel * { return control_panel.get(); }
-  auto previewPanel() -> PreviewPanel * { return preview_panel.get(); }
+  auto controlPanel() -> ControlPanel* { return control_panel.get(); }
+  auto previewPanel() -> PreviewPanel* { return preview_panel.get(); }
   void resetDisplays(bool is_initial = false);
-  auto scoreQuickState() -> ScreenText * {
+  auto scoreQuickState() -> ScreenText* {
     return quick_state ? quick_state->scorePanel() : nullptr;
   }
   void onSettingsClose();
@@ -66,12 +66,12 @@ class MainView : public Frame {
   }
 
   PUBLIC_TEST_ONLY
-  MainView(swx::Frame *wx, Singleton *singleton);
+  MainView(swx::Frame* wx, Singleton* singleton);
 
  private:
   void bindEvents();
   void createMenu();
-  auto createControlNotebook() -> wxNotebook *;
+  auto createControlNotebook() -> wxNotebook*;
   void createStatusBar();
   void positionWidgets();
   void onExit();
@@ -86,7 +86,7 @@ class MainView : public Frame {
   std::unique_ptr<QuickStatePanel> quick_state;
   std::unique_ptr<UpdateTimer> update_timer;
   std::unique_ptr<LibraryScanTimer> scan_timer;
-  Singleton *singleton;
+  Singleton* singleton;
 };
 
 }  // namespace cszb_scoreboard

@@ -3,7 +3,7 @@ ui/widget/DragAndDropHandler.h: An object which handles receiving drops from
 drag and drop operations.  Currently only supports receiving URLs from a
 Browser.
 
-Copyright 2021-2022 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ class Widget;
 
 class HeldTarget : public swx::DropTarget {
  public:
-  explicit HeldTarget(const std::function<void(int32_t, int32_t,
-                                               const std::string &)> &on_drop);
+  explicit HeldTarget(
+      const std::function<void(int32_t, int32_t, const std::string&)>& on_drop);
   auto OnData(wxCoord x, wxCoord y, wxDragResult def) -> wxDragResult override;
   auto OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
       -> wxDragResult override;
@@ -48,11 +48,10 @@ class HeldTarget : public swx::DropTarget {
 class DragAndDropHandler {
  public:
   explicit DragAndDropHandler(
-      Widget *owner,
-      const std::function<void(int32_t, int32_t, const std::string &)>
-          &on_drop);
+      Widget* owner,
+      const std::function<void(int32_t, int32_t, const std::string&)>& on_drop);
 
  private:
-  HeldTarget *held;
+  HeldTarget* held;
 };
 }  // namespace cszb_scoreboard

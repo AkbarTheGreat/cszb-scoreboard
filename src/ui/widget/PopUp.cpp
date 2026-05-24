@@ -1,7 +1,7 @@
 /*
 ui/widget/PopUp.cpp: A simple pop-up message as a fire & forget method.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,29 +25,29 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-auto BoxWithIcon(const std::string &title, const std::string &msg, int64_t icon,
+auto BoxWithIcon(const std::string& title, const std::string& msg, int64_t icon,
                  int64_t buttons = wxOK) -> bool {
   // wxMessageBox puts msg & title in a weird order in my mind, so this is the
   // one place that's message first.
   return wxMessageBox(msg, title, buttons | wxCENTRE | icon) == wxOK;
 }
 
-auto PopUp::Confirmation(const std::string &title, const std::string &msg)
+auto PopUp::Confirmation(const std::string& title, const std::string& msg)
     -> bool {
   return BoxWithIcon(title, msg, wxICON_EXCLAMATION, wxOK | wxCANCEL);
 }
 
-void PopUp::Error(const std::string &title, const std::string &msg) {
+void PopUp::Error(const std::string& title, const std::string& msg) {
   BoxWithIcon(title, msg, wxICON_ERROR);
 }
 
-void PopUp::Info(const std::string &title, const std::string &msg) {
+void PopUp::Info(const std::string& title, const std::string& msg) {
   BoxWithIcon(title, msg, wxICON_INFORMATION);
 }
 
-void PopUp::Message(const std::string &msg) { wxMessageBox(msg); }
+void PopUp::Message(const std::string& msg) { wxMessageBox(msg); }
 
-void PopUp::Warning(const std::string &title, const std::string &msg) {
+void PopUp::Warning(const std::string& title, const std::string& msg) {
   BoxWithIcon(title, msg, wxICON_EXCLAMATION);
 }
 

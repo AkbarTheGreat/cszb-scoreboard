@@ -2,7 +2,7 @@
 config/swx/image.cpp: A wrapper around wxImage with methods removing the need to
 use wx types directly.
 
-Copyright 2021-2025 Tracy Beck
+Copyright 2021-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ auto Image::size() -> ::cszb_scoreboard::Size {
   return ::cszb_scoreboard::Size::fromWx(GetSize());
 }
 
-void Image::setColor(const Color &color) {
+void Image::setColor(const Color& color) {
   wxRect dimensions(wxPoint(0, 0), GetSize());
   SetRGB(dimensions, color.Red(), color.Green(), color.Blue());
 }
 
-auto Image::FromData(const std::vector<char> &bin_data) -> Image {
+auto Image::FromData(const std::vector<char>& bin_data) -> Image {
   wxMemoryInputStream inputStream(bin_data.data(), bin_data.size());
   wxImage img(inputStream, wxBITMAP_TYPE_ANY, -1);
   return Image(img);

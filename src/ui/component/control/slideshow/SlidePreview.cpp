@@ -2,7 +2,7 @@
 ui/component/control/slideshow/SlidePreview.cpp: The UI for a given slide in a
 slideshow, including buttons to modify or move the slide around.
 
-Copyright 2024-2025 Tracy Beck
+Copyright 2024-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class Panel;
 
 constexpr int SPACER_WIDTH = 48;
 
-SlidePreview::SlidePreview(swx::Panel *wx, SlideshowSetup *owning_control,
+SlidePreview::SlidePreview(swx::Panel* wx, SlideshowSetup* owning_control,
                            int32_t index)
     : Panel(wx) {
   parent = owning_control;
@@ -55,13 +55,13 @@ SlidePreview::SlidePreview(swx::Panel *wx, SlideshowSetup *owning_control,
 void SlidePreview::bindEvents() {
   left_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { parent->moveSlideLeft(index); });
+      [this](wxCommandEvent& event) -> void { parent->moveSlideLeft(index); });
   right_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { parent->moveSlideRight(index); });
+      [this](wxCommandEvent& event) -> void { parent->moveSlideRight(index); });
   remove_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
-      [this](wxCommandEvent &event) -> void { parent->removeSlide(index); });
+      [this](wxCommandEvent& event) -> void { parent->removeSlide(index); });
 }
 
 void SlidePreview::positionWidgets() {
@@ -86,7 +86,7 @@ void SlidePreview::setName(std::string name) {
   refresh();
 }
 
-void SlidePreview::setImage(const FilesystemPath &file) {
+void SlidePreview::setImage(const FilesystemPath& file) {
   slide_preview->setImage(file);
   refresh();
 }

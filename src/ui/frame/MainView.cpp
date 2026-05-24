@@ -2,7 +2,7 @@
 ui/frame/MainView.cpp: This class represents the main control window for the
 application.
 
-Copyright 2019-2025 Tracy Beck
+Copyright 2019-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ namespace cszb_scoreboard {
 
 const int BORDER_SIZE = 0;
 
-MainView::MainView(swx::Frame *wx, Singleton *singleton) : Frame(wx) {
+MainView::MainView(swx::Frame* wx, Singleton* singleton) : Frame(wx) {
   this->singleton = singleton;
 }
 
@@ -112,20 +112,20 @@ void MainView::positionWidgets() {
 
 void MainView::bindEvents() {
   bind(wxEVT_CLOSE_WINDOW,
-       [this](wxCloseEvent &event) -> void { this->onClose(); });
+       [this](wxCloseEvent& event) -> void { this->onClose(); });
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->showSettings(); },
+      [this](wxCommandEvent& event) -> void { this->showSettings(); },
       GENERAL_SETTINGS);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [this](wxCommandEvent &event) -> void { this->onExit(); }, wxID_EXIT);
+      [this](wxCommandEvent& event) -> void { this->onExit(); }, wxID_EXIT);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [](wxCommandEvent &event) -> void { onAbout(); }, wxID_ABOUT);
+      [](wxCommandEvent& event) -> void { onAbout(); }, wxID_ABOUT);
   bind(
       wxEVT_COMMAND_MENU_SELECTED,
-      [this](wxCommandEvent &event) -> void {
+      [this](wxCommandEvent& event) -> void {
         this->preview_panel->blackout();
       },
       DISPLAY_BLACK_OUT);
@@ -147,7 +147,7 @@ void MainView::showSettings() {
   settings_dialog->show();
   settings_dialog->bind(
       SETTINGS_UPDATED,
-      [this](wxCommandEvent &event) -> void { this->onSettingsChange(); });
+      [this](wxCommandEvent& event) -> void { this->onSettingsChange(); });
 }
 
 void MainView::onSettingsChange() {

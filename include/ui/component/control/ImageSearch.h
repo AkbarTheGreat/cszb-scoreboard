@@ -2,7 +2,7 @@
 ui/component/control/ImageSearch.h: Handles searching for images from a webview
 for quick use as a bit.
 
-Copyright 2022 Tracy Beck
+Copyright 2022-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ class Panel;
 
 class ImageSearch : public ScreenImageController {
  public:
-  explicit ImageSearch(swx::Panel *wx) : ScreenImageController(wx) {}
-  static auto Create(swx::Panel *wx) -> std::unique_ptr<ImageSearch>;
+  explicit ImageSearch(swx::Panel* wx) : ScreenImageController(wx) {}
+  static auto Create(swx::Panel* wx) -> std::unique_ptr<ImageSearch>;
 
  private:
   std::unique_ptr<Panel> inner_panel, drop_target, reset_button_panel;
@@ -48,9 +48,9 @@ class ImageSearch : public ScreenImageController {
   std::unique_ptr<DragAndDropHandler> drag_handler;
 
   void bindEvents();
-  void createControls(Panel *control_panel) override;
-  void positionWidgets(Panel *control_panel) override;
-  void onURLDrop(const std::string &url);
+  void createControls(Panel* control_panel) override;
+  void positionWidgets(Panel* control_panel) override;
+  void onURLDrop(const std::string& url);
   void resetURL();
   void tweakGoogleImages();
 };
