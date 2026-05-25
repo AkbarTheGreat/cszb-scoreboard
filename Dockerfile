@@ -160,7 +160,10 @@ RUN tar cvzf googletest.tgz \
 # ------------------------------------------------------------------------------
 FROM build_baseline AS protobuf_build
 
-ENV PROTOBUF_VERSION=v3.21.12
+RUN apk add --no-cache \
+    linux-headers
+
+ENV PROTOBUF_VERSION=v5.29.5
 
 WORKDIR /protobuf
 RUN git clone https://github.com/google/protobuf.git .
@@ -169,7 +172,7 @@ RUN git checkout tags/${PROTOBUF_VERSION}
 RUN git submodule update --init --recursive
 
 WORKDIR /protobuf/out
-RUN cmake ../cmake
+RUN cmake ..
 RUN make -j 4 all
 RUN make install
 
@@ -295,8 +298,8 @@ RUN osxcross-macports install \
     ncurses \
     openssl \
     pcre \
-    protobuf3-cpp \
-    webkit-gtk \
+    protobuf5-cpp \
+    webkit2-gtk \
     zlib
 
 # Patch some macports files that need tweaks
@@ -330,7 +333,7 @@ RUN apk add --no-cache \
     openjpeg-dev \
     tiff-dev
 
-ENV WXWIDGETS_VERSION=v3.2.2.1
+ENV WXWIDGETS_VERSION=v3.3.2
 
 WORKDIR /wxwidgets
 RUN git clone https://github.com/wxWidgets/wxWidgets.git .
@@ -352,7 +355,7 @@ WORKDIR /
 RUN tar cvzf wxwidgets.tgz \
     /usr/local/include/wx-* \
     /usr/local/lib/wx \
-    /usr/local/lib/cmake/wxWidgets \
+    /usr/local/lib/cmake/wxWidgets-3.3 \
     /usr/local/lib/libwx_* \
     /usr/local/bin/wxrc-* \
     /usr/local/bin/wxrc \
@@ -370,7 +373,7 @@ RUN apk add --no-cache \
     openjpeg-dev \
     tiff-dev
 
-ENV WXWIDGETS_VERSION=v3.2.2.1
+ENV WXWIDGETS_VERSION=v3.3.2
 
 WORKDIR /wxwidgets
 RUN git clone https://github.com/wxWidgets/wxWidgets.git .
@@ -567,7 +570,7 @@ RUN apk add --no-cache \
     perl-app-cpanminus \
     py3-pip \
     valgrind \
-    webkit2gtk-dev \
+    webkit2gtk-4.1-dev \
     xfce4 \
     xvfb
 

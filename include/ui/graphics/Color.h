@@ -34,7 +34,7 @@ class Color : public wxColour {
       : wxColour(red, green, blue, alpha) {}
   explicit Color(const char* colorName) : wxColour(wxString(colorName)) {}
   explicit Color(const wxString& colorName) : wxColour(colorName) {}
-  explicit Color(uint64_t colRGB) : wxColour(colRGB) {}
+  explicit Color(uint64_t colRGB) : wxColour((unsigned long)colRGB) {}
   explicit Color(const wxColour& color) : wxColour(color) {}
 
   // Get red by anding by a full byte.
