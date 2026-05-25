@@ -10,9 +10,9 @@ export PLATFORMS=linux/amd64
 set -e
 
 # Actually builds everything
-docker buildx build --platform=${PLATFORMS} --target=build_all .
+docker buildx build --load --platform=${PLATFORMS} --target=build_all .
 
 # Create some tags, for convenience. 
-docker buildx build --target=standard_test  --platform=${PLATFORMS} -t scoreboard . && \
-docker buildx build --target=macos_test     --platform=${PLATFORMS} -t osxcross   . && \
-docker buildx build --target=code_clean     --platform=${PLATFORMS} -t code_clean .
+docker buildx build --load --target=standard_test  --platform=${PLATFORMS} -t scoreboard . && \
+docker buildx build --load --target=macos_test     --platform=${PLATFORMS} -t osxcross   . && \
+docker buildx build --load --target=code_clean     --platform=${PLATFORMS} -t code_clean .
