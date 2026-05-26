@@ -102,7 +102,7 @@ package Docker {
    sub build {
       my ( $self, $file, $context, $target ) = @_;
       $self->log('Building Docker image.');
-      my @cmd = ( docker_cmd(), 'buildx', 'build', '--load');
+      my @cmd = ( docker_cmd(), 'buildx', 'build', '--load' );
       push @cmd, '-q' unless $self->{'verbose'};
       if ($target) {
          push @cmd, '--target=' . $target;

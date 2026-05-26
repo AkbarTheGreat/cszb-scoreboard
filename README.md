@@ -5,7 +5,7 @@
 ## Elevator Pitch
 
 Cszb-scoreboard is an application to manage scoreboards for theatrical sports-themed events.
-Notably, this application was inspired to be used in a ComedySportz\[^1\] match format.
+Notably, this application was inspired to be used in a ComedySportz[^1] match format.
 
 \[^1\]: This application is not endorsed by, nor sponsored by CSz worldwide or my employer. All work
 is my own or other contributors to this codebase and I hope it proves useful to anyone who would
@@ -17,9 +17,9 @@ There are plenty of free scoreboards which already exist, but they are often des
 time-keeping or don't have the support features which a comedy venue might like, such as the ability
 to display random memes on screen at any given time. Other alternatives, such as JANIS or the
 ComedySportz San Jose Scoreboard have features which are useful, but were closed source when this
-project started.  A friendly shoutout to [JANIS](https://github.com/brbill/janis), which has gone
-open source in the meantime and, as it inspired this project, is also a stellar solution to the
-same problem space.
+project started. A friendly shoutout to [JANIS](https://github.com/brbill/janis), which has gone
+open source in the meantime and, as it inspired this project, is also a stellar solution to the same
+problem space.
 
 I set out in late 2019 to create a scoreboard which would be at least as useful as the existing CSz
 themed scoreboards, but which would also be open-source, cross platform, and feature rich.
@@ -28,8 +28,8 @@ themed scoreboards, but which would also be open-source, cross platform, and fea
 
 Currently, the application is not in a functional state and ready for use. I welcome any prospective
 users to follow along with development and I welcome early feedback, as my hope is that this can be
-a valuable alternative to existing options. As features in the \[Roadmap\] section are completed,
-they will be moved to here.
+a valuable alternative to existing options. As features in the [Roadmap] section are completed, they
+will be moved to here.
 
 - A scoreboard monitor may display:
   - Arbitrary text.
@@ -60,12 +60,12 @@ ones are considered gating for a 1.0 release.
 - ~~Support for both a single monitor for a scoreboard as well as a dual monitor setup. \[Gating for
   release\]~~
 - Scoreboard may display:
-  - ~~Current score. \[Gating for release\]~~
-  - ~~Saved images. \[Gating for release\]~~
+  - ~~Current score. [Gating for release]~~
+  - ~~Saved images. [Gating for release]~~
   - ~~Images from clipboard.~~
   - Images from a Google image search.
   - Gifs from a Giphy search.
-- ~~List mode for managing a guessing game like 5 Things. \[Gating for release\]~~
+- ~~List mode for managing a guessing game like 5 Things. [Gating for release]~~
 - Support for a third external monitor for additional information or a third team.
 - ~~A saved image library with support for tags and filtering.~~
 - ~~Hotkey support for queueing up pre-set images or text.~~
