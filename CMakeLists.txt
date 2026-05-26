@@ -20,7 +20,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake ${Protobuf_INCLUDE_DIR})
 
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
@@ -37,6 +37,8 @@ set(SKIP_LINT false CACHE BOOL "Skip Lint")
 set(CLANG_TIDY_ERRORS true CACHE BOOL "Lint warnings fail build")
 set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
 
+set(PROTOC_EXECUTABLE "protobuf::protoc")
+
 if(MSVC OR OSXCROSS_HOST)
     set(LINKING_TYPE "static")
     if(MSVC)
@@ -51,7 +53,7 @@ if(OSXCROSS_HOST)
 	set(SKIP_LINT true)
 endif()
 
-find_package(Protobuf REQUIRED)
+find_package(Protobuf REQUIRED CONFIG)
 find_package(GTest REQUIRED CONFIG)
 include(GoogleTest)
 find_package(jsoncpp REQUIRED)
@@ -104,6 +106,19 @@ file(GLOB DIALOG_TEST_SRC
     "src/*/*/*/*/*.cpp"
 )
 
+set(BASE_LIBRARIES
+    ${wxWidgets_LIBRARIES}
+    ${Protobuf_LIBRARIES}
+    ${JSON_CPP_LIB}
+    CURL::libcurl
+	absl::log_internal_check_op
+	absl::log_internal_conditions
+	absl::log_internal_message
+	absl::raw_hash_set
+	absl::statusor
+	utf8_range::utf8_validity
+)
+
 IF(WIN32)
     SET(SCOREBOARD_SRC ${SCOREBOARD_SRC} "resources/scoreboard.rc")
 ENDIF(WIN32)
@@ -112,32 +127,28 @@ ENDIF(WIN32)
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
 add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
 set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
-protobuf_generate(TARGET scoreboard_proto)
+protobuf_generate(TARGET scoreboard_proto PROTOC_EXE "/usr/local/bin/protoc")
 target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
 
 
 add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
 add_dependencies(scoreboard_classes scoreboard_proto)
 set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_link_libraries(scoreboard_classes PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+target_link_libraries(scoreboard_classes PRIVATE ${BASE_LIBRARIES})
 
 add_library(dialog_test_classes OBJECT ${DIALOG_TEST_SRC})
 add_dependencies(dialog_test_classes scoreboard_proto)
 set_target_properties(dialog_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(dialog_test_classes PUBLIC FAKE_CONFIGURATION_FILES)
-target_link_libraries(dialog_test_classes PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+target_link_libraries(dialog_test_classes PRIVATE ${BASE_LIBRARIES})
 
 add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${BASE_LIBRARIES})
 
 # A test target which is used for checking dialog edits more quickly than running entire application.
 add_executable("dialog-test" WIN32 $<TARGET_OBJECTS:dialog_test_classes> $<TARGET_OBJECTS:scoreboard_proto>)
-target_link_libraries("dialog-test" PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+target_link_libraries("dialog-test" PRIVATE ${BASE_LIBRARIES})
 
 finalize_vcpkg_code(${PROJECT_NAME})
 
@@ -153,8 +164,7 @@ set_target_properties(scoreboard_ui_test_classes PROPERTIES CXX_CLANG_TIDY "${LI
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_TESTING)
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_INTEGRATION_TEST)
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_UI_TEST)
-target_link_libraries(scoreboard_ui_test_classes PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl)
+target_link_libraries(scoreboard_ui_test_classes PRIVATE ${BASE_LIBRARIES})
 
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
 function(package_add_test TESTNAME HAS_OWN_MAIN)
@@ -171,9 +181,7 @@ function(package_add_test TESTNAME HAS_OWN_MAIN)
     endif()
     # link the Google test infrastructure, mocking library, and a default main fuction to
     # the test executable.  Remove g_test_main if writing your own main function.
-    target_link_libraries(${TESTNAME} PRIVATE ${wxWidgets_LIBRARIES}
-                      ${Protobuf_LIBRARIES} ${JSON_CPP_LIB} CURL::libcurl
-                      ${GTEST_LIBS})
+    target_link_libraries(${TESTNAME} PRIVATE ${BASE_LIBRARIES} ${GTEST_LIBS})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
     gtest_discover_tests(${TESTNAME}

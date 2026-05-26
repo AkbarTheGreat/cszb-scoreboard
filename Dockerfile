@@ -20,6 +20,8 @@ ENV CXX=/usr/bin/clang++
 ENV USER=root
 ENV UNATTENDED=1
 
+ENV JSONCPP_VERSION=1.9.5
+
 RUN adduser -Du 1001 jenkins
 RUN echo "jenkins ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
@@ -49,8 +51,8 @@ RUN apk add --no-cache \
     cairo-dev
 
 ENV OSXCROSS_SDK_VERSION=26.1
-ENV MACOSX_DEPLOYMENT_TARGET=11.0
-ENV OSXCROSS_OSX_VERSION_MIN=11.0
+ENV MACOSX_DEPLOYMENT_TARGET=14.0
+ENV OSXCROSS_OSX_VERSION_MIN=14.0
 
 ENV OSXCROSS_SDK=darwin25.1
 ENV OSXCROSS_TARGET=${OSXCROSS_SDK}
@@ -100,8 +102,6 @@ RUN tar cvzf curl.tgz \
 # necessary cmake files for it to work with the scoreboard.
 # ------------------------------------------------------------------------------
 FROM build_baseline AS jsoncpp_build
-
-ENV JSONCPP_VERSION=1.9.5
 
 WORKDIR /jsoncpp
 RUN git clone https://github.com/open-source-parsers/jsoncpp.git .
@@ -247,6 +247,8 @@ ENV OSXCROSS_DIR_SDK_TOOLS=${OSXCROSS_BASE_DIR}/target/SDK/tools
 ENV OSXCROSS_BUILD_DIR=${OSXCROSS_BASE_DIR}/build
 ENV OSXCROSS_CCTOOLS_PATH=${OSXCROSS_BASE_DIR}/target/bin
 
+ENV ENABLE_ARCHS="arm64"
+
 ENV PATH=${OSXCROSS_BASE_DIR}/target/bin:${PATH}
 
 WORKDIR ${OSXCROSS_BASE_DIR}
@@ -275,6 +277,7 @@ RUN osxcross-macports fake-install \
     geoclue2 \
     gnutls \
     graphviz \
+    libde265 \
     mesa \
     py312 \
     shared-mime-info \
@@ -288,7 +291,6 @@ RUN osxcross-macports install \
     gettext \
     glib2 \
     gtest \
-    jsoncpp-devel \
     libedit \
     libffi \
     libiconv \
@@ -407,6 +409,7 @@ RUN cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DwxBUILD_PRECOMP=OFF \
     -DwxBUILD_SHARED=OFF \
+    -DwxUSE_LIBWEBP=OFF \
     -DwxUSE_WEBVIEW=ON
 RUN make -j 4 all
 RUN make install
@@ -414,6 +417,38 @@ RUN make install
 WORKDIR /
 RUN tar cvzf wxwidgets.tgz \
     ${OSXCROSS_ROOT_DIR}/wxwidgets
+
+# ------------------------------------------------------------------------------
+# JsonCPP for MacOS (jsoncpp_osxcross_build)
+#
+# Build an Osxcross jsoncpp for macos-based build.
+# OSXCross seems to has stopped shipping a macports jsoncpp package.
+# ------------------------------------------------------------------------------
+FROM osxcross_build_baseline AS jsoncpp_osxcross_build
+
+# Get osxcross to build against
+WORKDIR /
+COPY --from=osxcross_build /osxcross.tgz /
+RUN tar xvzf osxcross.tgz && rm osxcross.tgz
+
+WORKDIR /jsoncpp
+RUN git clone https://github.com/open-source-parsers/jsoncpp.git .
+RUN git fetch --all --tags
+RUN git checkout tags/${JSONCPP_VERSION}
+RUN git submodule update --init --recursive
+
+WORKDIR /jsoncpp/out
+RUN cmake .. \
+    -DCMAKE_TOOLCHAIN_FILE=${OSXCROSS_ROOT_DIR}/toolchain.cmake \
+    -DCMAKE_INSTALL_NAME_TOOL=${OSXCROSS_ROOT_DIR}/bin/${OSXCROSS_HOST}-install_name_tool \
+    -DCMAKE_INSTALL_PREFIX=${OSXCROSS_ROOT_DIR}/jsoncpp \
+    -DOSXCROSS_TARGET_DIR=${OSXCROSS_ROOT_DIR}
+RUN make -j 4 jsoncpp_object jsoncpp_static jsoncpp_lib
+RUN make install/fast
+
+WORKDIR /
+RUN tar cvzf jsoncpp.tgz \
+    ${OSXCROSS_ROOT_DIR}/jsoncpp
 
 # ------------------------------------------------------------------------------
 # MacOS Scoreboard Build (macos_build)
@@ -444,6 +479,10 @@ RUN tar xvzf osxcross.tgz && rm osxcross.tgz
 # Bring in wxWidgets built for MacOS
 COPY --from=wxwidgets_osxcross_build /wxwidgets.tgz /
 RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
+# Bring in JsonCpp built for MacOS
+COPY --from=jsoncpp_osxcross_build /jsoncpp.tgz /
+RUN tar xvzf jsoncpp.tgz
+#RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
 
 ENV DISPLAY=:1
 

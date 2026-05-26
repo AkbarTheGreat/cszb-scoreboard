@@ -23,9 +23,41 @@ if(NOT OSXCROSS_TARGET_DIR)
 	message(FATAL_ERROR "Must define OSXCROSS_TARGET_DIR")
 endif()
 
+# Protobuf gets really wonky with cross-compliation, especially across platforms.
+# For cross-compilation, we need:
+# - Native protoc binary (to run on build machine)
+# - Target protobuf libraries and headers (for linking)
+
+# Ensure Protobuf_PROTOC_EXECUTABLE is found in native (host) location BEFORE find_package
+#find_program(Protobuf_PROTOC_EXECUTABLE protoc PATHS /usr/local/bin /usr/bin NO_CMAKE_FIND_ROOT_PATH REQUIRED)
+set(PROTOC_EXECUTABLE "/usr/local/bin/protoc")
+
+message(STATUS "Found Protobuf compiler: ${Protobuf_PROTOC_EXECUTABLE}")
+
+set(OSX_INCLUDE_DIRS "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/include")
+
+# Try to find protobuf in the osxcross environment.  The protobuf cmake files
+# misbehave badly enough we actually need most or all of this, as far as I can
+# tell.  It _should_ be as simple as setting Protobuf_DIR, but for some reason, it's not.
+set(PROTOBUF_ROOT ${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/libexec/protobuf5-cpp)
+set(Protobuf_DIR "${PROTOBUF_ROOT}/lib/cmake/protobuf")
+set(Protobuf_INCLUDE_DIR "${PROTOBUF_ROOT}/include")
+set(Protobuf_INCLUDE_DIRS "${PROTOBUF_ROOT}/include")
+set(Protobuf_LIBRARY "${PROTOBUF_ROOT}/lib")
+set(Protobuf_LIBRARIES "${PROTOBUF_ROOT}/lib/libprotobuf.dylib")
+set(CMAKE_PREFIX_PATH "${PROTOBUF_ROOT}" ${CMAKE_PREFIX_PATH})
+
+set(jsoncpp_DIR ${OSXCROSS_TARGET_DIR}/jsoncpp/lib/cmake/jsoncpp)
+
+if(EXISTS "${Protobuf_DIR}/protobuf-config.cmake")
+    message(STATUS "Found Protobuf config: ${Protobuf_DIR}/protobuf-config.cmake")
+else()
+    message(STATUS "Protobuf config not found at ${Protobuf_DIR}; falling back to module lookup if needed.")
+endif()
+
 # I don't know exactly how to make this work better, but it's kind of fragile.
 # TODO: Find this cmake file dynamically.
-set(wxWidgets_USE_FILE /usr/share/cmake-3.22/Modules/UsewxWidgets.cmake)
+set(wxWidgets_USE_FILE /usr/share/cmake/Modules/UsewxWidgets.cmake)
 
 set(wx_root "${OSXCROSS_TARGET_DIR}/wxwidgets")
 set(wxWidgets_LIB_DIR ${wx_root}/lib)
@@ -38,7 +70,7 @@ set(wxWidgets_FOUND TRUE)
 set(wxWidgets_DEFINITIONS __WXOSX_COCOA__)
 
 if(NOT WXWIDGETS_VERSION)
-	set(WXWIDGETS_VERSION "3.2")
+	set(WXWIDGETS_VERSION "3.3")
 endif()
 
 set(OSX_FRAMEWORKS
@@ -138,7 +170,9 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libz.a
 	)
 
+find_package(absl REQUIRED CONFIG)
+
 add_definitions(-D_UNICODE -DUNICODE -DwxUSE_GUI=1 -DWXUSINGDLL -D__WXOSX_COCOA__)
-include_directories(SYSTEM INTERFACE ${wxWidgets_INCLUDE_DIRS})
+include_directories(SYSTEM INTERFACE ${wxWidgets_INCLUDE_DIRS} ${Protobuf_INCLUDE_DIRS} ${OSX_INCLUDE_DIRS})
 link_libraries(${wxWidgets_LINK_FLAGS})
 

@@ -244,8 +244,8 @@ things list or setting up game displays ahead of time. Whatever is convenient fo
 Right click on any of the (initially gray) boxes to set the quick state to the current screen
 preview state. Left clicking any populated quick state will send that state immediately to the
 monitors (leaving the current preview alone). Additionally there are hotkeys for each state, Ctrl +
-\[1-0\] will use the currently set state, Ctrl + Alt + \[1-0\] will set the state to the current
-preview state. Ctrl + \` (the ~ key) will display the current score.
+[1-0] will use the currently set state, Ctrl + Alt + [1-0] will set the state to the current preview
+state. Ctrl + \` (the ~ key) will display the current score.
 
 ## Hotkeys
 
