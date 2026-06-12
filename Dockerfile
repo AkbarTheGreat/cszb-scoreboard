@@ -163,7 +163,7 @@ FROM build_baseline AS protobuf_build
 RUN apk add --no-cache \
     linux-headers
 
-ENV PROTOBUF_VERSION=v5.29.5
+ENV PROTOBUF_VERSION=v21.12
 
 WORKDIR /protobuf
 RUN git clone https://github.com/google/protobuf.git .
@@ -172,17 +172,19 @@ RUN git checkout tags/${PROTOBUF_VERSION}
 RUN git submodule update --init --recursive
 
 WORKDIR /protobuf/out
-RUN cmake ..
+RUN cmake \
+    -DCMAKE_INSTALL_PREFIX=/pb/usr/local \
+    -Dprotobuf_BUILD_TESTS=ON \
+    ..
 RUN make -j 4 all
 RUN make install
 
-WORKDIR /
-RUN tar cvzf protobuf.tgz \
-    /usr/local/lib/libproto* \
-    /usr/local/bin/proto* \
-    /usr/local/lib/pkgconfig/protobuf* \
-    /usr/local/include/google/protobuf \
-    /usr/local/lib/cmake/protobuf
+# Install isn't installing this particular header, so we copy it manually.
+RUN cp /protobuf/src/google/protobuf/endian.h /pb/usr/local/include/google/protobuf/
+
+WORKDIR /pb
+RUN tar cvzf /protobuf.tgz \
+    usr/local
 
 # ------------------------------------------------------------------------------
 # Include-What-You-Use (iwyu_build)
@@ -285,6 +287,7 @@ RUN osxcross-macports fake-install \
 
 # Real Macports dependencies
 RUN osxcross-macports install \
+    abseil \
     bzip2 \
     curl \
     expat \
@@ -300,7 +303,7 @@ RUN osxcross-macports install \
     ncurses \
     openssl \
     pcre \
-    protobuf5-cpp \
+    protobuf3-cpp \
     webkit2-gtk \
     zlib
 
