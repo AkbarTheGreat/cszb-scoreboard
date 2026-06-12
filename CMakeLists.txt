@@ -53,7 +53,7 @@ if(OSXCROSS_HOST)
 	set(SKIP_LINT true)
 endif()
 
-find_package(Protobuf REQUIRED CONFIG)
+find_package(Protobuf REQUIRED)
 find_package(GTest REQUIRED CONFIG)
 include(GoogleTest)
 find_package(jsoncpp REQUIRED)
@@ -111,12 +111,6 @@ set(BASE_LIBRARIES
     ${Protobuf_LIBRARIES}
     ${JSON_CPP_LIB}
     CURL::libcurl
-	absl::log_internal_check_op
-	absl::log_internal_conditions
-	absl::log_internal_message
-	absl::raw_hash_set
-	absl::statusor
-	utf8_range::utf8_validity
 )
 
 IF(WIN32)
