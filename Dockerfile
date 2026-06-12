@@ -83,17 +83,16 @@ RUN git checkout tags/${CURL_VERSION}
 RUN git submodule update --init --recursive
 
 WORKDIR /curl/out
-RUN cmake .. -DBUILD_SHARED_LIBS=ON
+RUN cmake \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_INSTALL_PREFIX=/cm/usr/local \
+    ..
 RUN make -j 4 all
 RUN make install
 
-WORKDIR /
-RUN tar cvzf curl.tgz \
-    /usr/local/lib/libcurl* \
-    /usr/local/bin/curl* \
-    /usr/local/lib/pkgconfig/libcurl* \
-    /usr/local/include/curl \
-    /usr/local/lib/cmake/CURL
+WORKDIR /cm
+RUN tar cvzf /curl.tgz \
+    usr/local
 
 # ------------------------------------------------------------------------------
 # JsonCpp (jsoncpp_bulid)
@@ -110,17 +109,15 @@ RUN git checkout tags/${JSONCPP_VERSION}
 RUN git submodule update --init --recursive
 
 WORKDIR /jsoncpp/out
-RUN cmake ..
+RUN cmake \
+    -DCMAKE_INSTALL_PREFIX=/json/usr/local \
+    ..
 RUN make -j 4 all
 RUN make install
 
-WORKDIR /
-RUN tar cvzf jsoncpp.tgz \
-    /usr/local/lib/pkgconfig/jsoncpp* \
-    /usr/local/lib/cmake/jsoncpp \
-    /usr/local/lib/libjsoncpp* \
-    /usr/local/lib/objects-Release/jsoncpp_object \
-    /usr/local/include/json
+WORKDIR /json
+RUN tar cvzf /jsoncpp.tgz \
+    usr/local
 
 # ------------------------------------------------------------------------------
 # Googletest (googletest_build)
@@ -138,19 +135,15 @@ RUN git checkout tags/${GTEST_VERSION}
 RUN git submodule update --init --recursive
 
 WORKDIR /googletest/out
-RUN cmake ..
+RUN cmake \
+    -DCMAKE_INSTALL_PREFIX=/gt/usr/local \
+    ..
 RUN make -j 4 all
 RUN make install
 
-WORKDIR /
-RUN tar cvzf googletest.tgz \
-    /usr/local/include/gmock \
-    /usr/local/include/gtest \
-    /usr/local/lib/libgmock* \
-    /usr/local/lib/libgtest* \
-    /usr/local/lib/pkgconfig/gmock* \
-    /usr/local/lib/pkgconfig/gtest* \
-    /usr/local/lib/cmake/GTest
+WORKDIR /gt
+RUN tar cvzf /googletest.tgz \
+    usr/local
 
 # ------------------------------------------------------------------------------
 # Protobuf (protobuf_build)
@@ -174,7 +167,6 @@ RUN git submodule update --init --recursive
 WORKDIR /protobuf/out
 RUN cmake \
     -DCMAKE_INSTALL_PREFIX=/pb/usr/local \
-    -Dprotobuf_BUILD_TESTS=ON \
     ..
 RUN make -j 4 all
 RUN make install
@@ -209,17 +201,15 @@ RUN git checkout ${IWYU_VERSION}
 RUN git submodule update --init --recursive
 
 WORKDIR /iwyu/out
-RUN cmake ..
+RUN cmake \
+    -DCMAKE_INSTALL_PREFIX=/iwyu/usr/local \
+    ..
 RUN make -j 4 all
 RUN make install
 
-WORKDIR /
-RUN tar cvzf iwyu.tgz \
-    /usr/local/bin/include-what-you-use \
-    /usr/local/bin/fix_includes.py \
-    /usr/local/bin/iwyu_tool.py \
-    /usr/local/share/include-what-you-use \
-    /usr/local/share/man/man1/include-what-you-use.1
+WORKDIR /iwyu
+RUN tar cvzf /iwyu.tgz \
+    usr/local
 
 # ------------------------------------------------------------------------------
 # Osxcross (osxcross_compile)
@@ -348,6 +338,7 @@ RUN git submodule update --init --recursive
 
 WORKDIR /wxwidgets/out
 RUN cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/wx/usr/local \
     -DCMAKE_BUILD_TYPE=Debug \
     -DwxBUILD_TOOLKIT=gtk3 \
     -DwxBUILD_STRIPPED_RELEASE=OFF \
@@ -356,15 +347,14 @@ RUN cmake .. \
 RUN make -j 4 all
 RUN make install
 
-WORKDIR /
-RUN tar cvzf wxwidgets.tgz \
-    /usr/local/include/wx-* \
-    /usr/local/lib/wx \
-    /usr/local/lib/cmake/wxWidgets-3.3 \
-    /usr/local/lib/libwx_* \
-    /usr/local/bin/wxrc-* \
-    /usr/local/bin/wxrc \
-    /usr/local/bin/wx-config
+# WxWidgets encodes some of the prefix into installed config files, so massage them back to correct.
+RUN sed -i 's|/wx/usr/local|/usr/local|g' /wx/usr/local/bin/wx-config
+RUN sed -i 's|/wx/usr/local|/usr/local|g' /wx/usr/local/lib/wx/config/gtk3-unicode-3.3
+RUN sed -i 's|/wx/usr/local|/usr/local|g' /wx/usr/local/lib/wx/include/gtk3-unicode-3.3/wx/setup.h
+
+WORKDIR /wx
+RUN tar cvzf /wxwidgets.tgz \
+    usr/local
 
 # ------------------------------------------------------------------------------
 # wxWidgets for MacOS (wxwidgets_osxcross_build)
