@@ -7,8 +7,8 @@ on:
     branches: ["master"]
 
 env:
-  vcpkg_commit: 74e6536215718009aae747d86d84b78376bf9e09
-  wxwidget_commit: 44b99195bc4395944bab8071c6d7adcbdcdf8773
+  vcpkg_commit: d015e31e90838a4c9dfa3eed45979bc70d9357fc
+  wxwidget_commit: db1005db3dea2c37a46fb455a9a02e37aa360751
 
 jobs:
   docker_build:
