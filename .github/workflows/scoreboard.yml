@@ -75,7 +75,7 @@ jobs:
         build_type: [Release, Debug]
         include:
           - target_os: Win64
-            os: windows-2022
+            os: windows-2025-vs2026
 
     steps:
       - name: Cache wxWidgets install
@@ -116,6 +116,9 @@ jobs:
             wxUSE_WEBVIEW_WEBKIT=ON
             wxUSE_WEBVIEW_EDGE=ON
             wxUSE_WEBVIEW_EDGE_STATIC=ON
+            wxUSE_WEBVIEW_IE=OFF
+            wxUSE_LIBWEBP=OFF
+            CMAKE_CXX_FLAGS_RELEASE='/DwxDEBUG_LEVEL=0'
             CMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Install wxWidgets
@@ -152,7 +155,7 @@ jobs:
             build_args: --target cszb-scoreboard
             image: ghcr.io/akbarthegreat/cszb_scoreboard_macos_build_${{ github.head_ref || github.ref_name }}:latest
           - target_os: Win64
-            os: windows-2022
+            os: windows-2025-vs2026
             test: true
     steps:
       - uses: actions/checkout@v6
@@ -207,7 +210,7 @@ jobs:
             test: true
             image: ghcr.io/akbarthegreat/cszb_scoreboard_standard_build_${{ github.head_ref || github.ref_name }}:latest
           - target_os: Win64
-            os: windows-2022
+            os: windows-2025-vs2026
             test: true
 
     steps:

@@ -121,7 +121,7 @@ ENDIF(WIN32)
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
 add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
 set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
-protobuf_generate(TARGET scoreboard_proto PROTOC_EXE "/usr/local/bin/protoc")
+protobuf_generate(TARGET scoreboard_proto PROTOC_EXE ${PROTOC_EXECUTABLE})
 target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
 
 
