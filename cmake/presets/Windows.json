@@ -4,7 +4,7 @@
       {
          "name": "Win64-Debug",
          "displayName": "Debug",
-         "generator": "Visual Studio 17 2022",
+         "generator": "Visual Studio 18 2026",
          "binaryDir": "${sourceDir}/out/Win64/Debug",
          "cacheVariables": {
             "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
