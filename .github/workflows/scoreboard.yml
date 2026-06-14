@@ -29,6 +29,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: "recursive"
 
       - name: Set reusable strings
         # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
@@ -159,6 +161,8 @@ jobs:
             test: true
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: "recursive"
 
       - name: Setup vckpkg
         if: ${{ matrix.target_os == 'Win64' }}
@@ -215,6 +219,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: "recursive"
 
       - name: Setup vckpkg
         if: ${{ matrix.target_os == 'Win64' }}
