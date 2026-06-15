@@ -9,7 +9,10 @@
          "cacheVariables": {
             "CMAKE_BUILD_TYPE": "Debug",
             "SKIP_LINT": "true",
-            "INTEGRATION_TEST": "false"
+            "INTEGRATION_TEST": "false",
+            "wxBUILD_TOOLKIT": "gtk3",
+            "wxBUILD_STRIPPED_RELEASE": "OFF",
+            "wxUSE_XLOCALE": "OFF"
          }
       },
       {

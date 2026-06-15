@@ -41,6 +41,16 @@ set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
 
 set(PROTOC_EXECUTABLE "protobuf::protoc")
 
+# Common wxWidgets settings
+set(wxBUILD_MONOLITHIC "OFF")
+set(wxBUILD_SAMPLES "OFF")
+set(wxBUILD_SHARED "OFF")
+set(wxBUILD_USE_STATIC_RUNTIME "ON")
+set(wxUSE_LIBWEBP "OFF")
+set(wxUSE_STC "OFF")
+set(wxUSE_WEBVIEW_IE "OFF")
+set(wxUSE_WEBVIEW_WEBKIT "ON")
+
 if(MSVC OR OSXCROSS_HOST)
     set(LINKING_TYPE "static")
     if(MSVC)
@@ -118,9 +128,7 @@ set(BASE_LIBRARIES
 	absl::log_internal_message
 	absl::raw_hash_set
 	absl::statusor
-	utf8_range::utf8_validity
     wxWidgets
-    ${wxWidgets_LIBRARIES}
     ${Protobuf_LIBRARIES}
     ${JSON_CPP_LIB}
     CURL::libcurl
@@ -128,6 +136,10 @@ set(BASE_LIBRARIES
 
 IF(WIN32)
     SET(SCOREBOARD_SRC ${SCOREBOARD_SRC} "resources/scoreboard.rc")
+    set(BASE_LIBRARIES
+        ${BASE_LIBRARIES}
+        utf8_range::utf8_validity
+    )
 ENDIF(WIN32)
 
 # Protobuf files.
@@ -152,7 +164,6 @@ target_link_libraries(dialog_test_classes PRIVATE ${BASE_LIBRARIES})
 add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_link_libraries(${PROJECT_NAME} PRIVATE ${BASE_LIBRARIES})
-target_compile_definitions(${PROJECT_NAME} PUBLIC __WXMSW__)
 
 # A test target which is used for checking dialog edits more quickly than running entire application.
 add_executable("dialog-test" WIN32 $<TARGET_OBJECTS:dialog_test_classes> $<TARGET_OBJECTS:scoreboard_proto>)

@@ -1,3 +1,4 @@
 .git
 .vs
-out
+out/
+thirdparty/wxWidgets/src/expat/testdata/

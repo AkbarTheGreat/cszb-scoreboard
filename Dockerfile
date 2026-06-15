@@ -317,46 +317,6 @@ WORKDIR /
 RUN tar cvzf /osxcross.tgz /opt/osxcross
 
 # ------------------------------------------------------------------------------
-# wxWidgets (wxwidgets_build)
-#
-# Build a standard wxWidgets for linux-based build/test.
-# ------------------------------------------------------------------------------
-FROM gui_build_baseline AS wxwidgets_build
-
-RUN apk add --no-cache \
-    libpng-dev \
-    openjpeg-dev \
-    tiff-dev
-
-ENV WXWIDGETS_VERSION=v3.3.2
-
-WORKDIR /wxwidgets
-RUN git clone https://github.com/wxWidgets/wxWidgets.git .
-RUN git fetch --all --tags
-RUN git checkout tags/${WXWIDGETS_VERSION}
-RUN git submodule update --init --recursive
-
-WORKDIR /wxwidgets/out
-RUN cmake .. \
-    -DCMAKE_INSTALL_PREFIX=/wx/usr/local \
-    -DCMAKE_BUILD_TYPE=Debug \
-    -DwxBUILD_TOOLKIT=gtk3 \
-    -DwxBUILD_STRIPPED_RELEASE=OFF \
-    -DwxUSE_XLOCALE=OFF \
-    -DwxUSE_WEBVIEW=ON
-RUN make -j 4 all
-RUN make install
-
-# WxWidgets encodes some of the prefix into installed config files, so massage them back to correct.
-RUN sed -i 's|/wx/usr/local|/usr/local|g' /wx/usr/local/bin/wx-config
-RUN sed -i 's|/wx/usr/local|/usr/local|g' /wx/usr/local/lib/wx/config/gtk3-unicode-3.3
-RUN sed -i 's|/wx/usr/local|/usr/local|g' /wx/usr/local/lib/wx/include/gtk3-unicode-3.3/wx/setup.h
-
-WORKDIR /wx
-RUN tar cvzf /wxwidgets.tgz \
-    usr/local
-
-# ------------------------------------------------------------------------------
 # wxWidgets for MacOS (wxwidgets_osxcross_build)
 #
 # Build an Osxcross wxWidgets for macos-based build.
@@ -495,6 +455,7 @@ CMD ["/bin/echo", "Either run macos_test,exec into this container, or run build_
 FROM gui_build_baseline AS standard_build_base
 
 RUN apk add --no-cache \
+    abseil-cpp-dev \
     compiler-rt \
     faenza-icon-theme \
     gcovr \
@@ -522,9 +483,6 @@ RUN tar xvzf googletest.tgz && rm googletest.tgz
 # Bring in Protobuf
 COPY --from=protobuf_build /protobuf.tgz /
 RUN tar xvzf protobuf.tgz && rm protobuf.tgz
-# Bring in wxWidgets
-COPY --from=wxwidgets_build /wxwidgets.tgz /
-RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 
 ENV DISPLAY=:1
 ENV GCOV='llvm-cov gcov'
@@ -626,9 +584,6 @@ RUN tar xvzf googletest.tgz && rm googletest.tgz
 # Bring in Protobuf
 COPY --from=protobuf_build /protobuf.tgz /
 RUN tar xvzf protobuf.tgz && rm protobuf.tgz
-# Bring in wxWidgets
-COPY --from=wxwidgets_build /wxwidgets.tgz /
-RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 # Bring in IWYU
 COPY --from=iwyu_build /iwyu.tgz /
 RUN tar xvzf iwyu.tgz && rm iwyu.tgz
