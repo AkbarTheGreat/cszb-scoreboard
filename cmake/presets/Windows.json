@@ -14,15 +14,8 @@
             "CMAKE_C_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
             "CMAKE_CXX_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
             "VCPKG_TARGET_TRIPLET": "x64-windows-static",
-            "wxBUILD_SHARED": "False",
-            "wxBUILD_MONOLITHIC": "False",
-            "wxBUILD_USE_STATIC_RUNTIME": "True",
             "wxUSE_WEBVIEW_EDGE": "True",
-            "wxBUILD_SAMPLES": "OFF",
-            "wxUSE_WEBVIEW_WEBKIT": "True",
-            "wxUSE_WEBVIEW_IE": "False",
-            "wxUSE_WEBVIEW_EDGE_STATIC": "True",
-            "wxUSE_LIBWEBP": "OFF"
+            "wxUSE_WEBVIEW_EDGE_STATIC": "True"
          }
       },
       {
