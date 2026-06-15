@@ -8,11 +8,21 @@
          "binaryDir": "${sourceDir}/out/Win64/Debug",
          "cacheVariables": {
             "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-            "VCPKG_TARGET_TRIPLET": "x64-windows-static",
             "CMAKE_BUILD_TYPE": "Debug",
             "INTEGRATION_TEST": "False",
-            "WXWIDGETS_INSTALL_DIR": "$env{WXWIDGETS_ROOT}/x64-Debug",
-            "WXWIDGETS_VERSION": "33"
+            "CMAKE_CXX_FLAGS": "/EHsc",
+            "CMAKE_C_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
+            "CMAKE_CXX_FLAGS_DEBUG": "/MTd /Zi /Ob0 /Od /RTC1",
+            "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+            "wxBUILD_SHARED": "False",
+            "wxBUILD_MONOLITHIC": "False",
+            "wxBUILD_USE_STATIC_RUNTIME": "True",
+            "wxUSE_WEBVIEW_EDGE": "True",
+            "wxBUILD_SAMPLES": "OFF",
+            "wxUSE_WEBVIEW_WEBKIT": "True",
+            "wxUSE_WEBVIEW_IE": "False",
+            "wxUSE_WEBVIEW_EDGE_STATIC": "True",
+            "wxUSE_LIBWEBP": "OFF"
          }
       },
       {
@@ -31,7 +41,8 @@
          "binaryDir": "${sourceDir}/out/Win64/Release",
          "cacheVariables": {
             "CMAKE_BUILD_TYPE": "Release",
-            "WXWIDGETS_INSTALL_DIR": "$env{WXWIDGETS_ROOT}/x64-Release"
+            "CMAKE_C_FLAGS_RELEASE": "/MT /O2 /Ob2",
+            "CMAKE_CXX_FLAGS_RELEASE": "/MT /O2 /Ob2"
          }
       }
    ],
