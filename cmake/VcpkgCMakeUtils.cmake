@@ -21,9 +21,6 @@ macro(initialize_vcpkg_code)
         add_definitions(/MP)
     endif()
 
-    if(MSVC AND NOT WXSOURCE)
-        include(${CMAKE_SOURCE_DIR}/cmake/winmsvc.cmake)
-    endif()
     message(STATUS "CMAKE_BUILD_TYPE:${CMAKE_BUILD_TYPE}")
 endmacro(initialize_vcpkg_code)
 

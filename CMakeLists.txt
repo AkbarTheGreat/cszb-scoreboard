@@ -14,13 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.12.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake ${Protobuf_INCLUDE_DIR})
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
+#include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
+#include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake ${Protobuf_INCLUDE_DIR})
 
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
@@ -53,6 +55,7 @@ if(OSXCROSS_HOST)
 	set(SKIP_LINT true)
 endif()
 
+find_package(absl REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(GTest REQUIRED CONFIG)
 include(GoogleTest)
@@ -61,18 +64,20 @@ find_package(CURL CONFIG REQUIRED)
 
 initialize_vcpkg_code()
 
-if(NOT wxWidgets_LIBRARIES)
-   find_package(wxWidgets REQUIRED COMPONENTS net core base aui webview)
-   include(${wxWidgets_USE_FILE})
+#add_compile_definitions(_UNICODE UNICODE wxUSE_GUI=1)
+if(MSVC)
+    #add_compile_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
-    add_definitions(-DwxDEBUG_LEVEL=0)
+    add_compile_definitions(NDEBUG wxDEBUG_LEVEL=0)
 endif()
 
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
-    add_definitions(-DSCOREBOARD_DEBUG)
+    add_compile_definitions(SCOREBOARD_DEBUG _DEBUG wxDEBUG_LEVEL=1)
 endif()
+
+add_subdirectory(thirdparty/wxWidgets wxWidgets)
 
 set(LINT_OPTION, "")
 
@@ -89,6 +94,7 @@ if(NOT SKIP_LINT)
 endif() # OSXCROSS_HOST
 
 include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
+include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/thirdparty/wxWidgets/include")
 
 file(GLOB SCOREBOARD_SRC
     "src/cszb-scoreboard.cpp"
@@ -107,6 +113,13 @@ file(GLOB DIALOG_TEST_SRC
 )
 
 set(BASE_LIBRARIES
+	absl::log_internal_check_op
+	absl::log_internal_conditions
+	absl::log_internal_message
+	absl::raw_hash_set
+	absl::statusor
+	utf8_range::utf8_validity
+    wxWidgets
     ${wxWidgets_LIBRARIES}
     ${Protobuf_LIBRARIES}
     ${JSON_CPP_LIB}
@@ -139,6 +152,7 @@ target_link_libraries(dialog_test_classes PRIVATE ${BASE_LIBRARIES})
 add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_link_libraries(${PROJECT_NAME} PRIVATE ${BASE_LIBRARIES})
+target_compile_definitions(${PROJECT_NAME} PUBLIC __WXMSW__)
 
 # A test target which is used for checking dialog edits more quickly than running entire application.
 add_executable("dialog-test" WIN32 $<TARGET_OBJECTS:dialog_test_classes> $<TARGET_OBJECTS:scoreboard_proto>)
