@@ -8,7 +8,6 @@ on:
 
 env:
   vcpkg_commit: d015e31e90838a4c9dfa3eed45979bc70d9357fc
-  wxwidget_commit: db1005db3dea2c37a46fb455a9a02e37aa360751
 
 jobs:
   docker_build:
@@ -66,75 +65,9 @@ jobs:
           cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
           cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
 
-  wxwidgets_build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: true
-
-      matrix:
-        target_os: [Win64]
-        build_type: [Release, Debug]
-        include:
-          - target_os: Win64
-            os: windows-2025-vs2026
-
-    steps:
-      - name: Cache wxWidgets install
-        id: cache-wx-install
-        uses: actions/cache@v5
-        env:
-          cache-name: cache-wx-install
-        with:
-          path: ./wx/x64-${{ matrix.build_type }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-${{ env.wxwidget_commit }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - name: Checkout wxWidgets
-        if: ${{ steps.cache-wx-install.outputs.cache-hit != 'true' }}
-        run: |
-          git clone https://github.com/wxWidgets/wxWidgets.git  wxwidgets
-          cd wxwidgets
-          git fetch --all --tags
-          git checkout ${{ env.wxwidget_commit }}
-          git submodule update --init --recursive
-
-      - name: Build wxWidgets
-        if: ${{ steps.cache-wx-install.outputs.cache-hit != 'true' }}
-        uses: threeal/cmake-action@main
-        with:
-          source-dir: ${{ github.workspace }}/wxwidgets
-          build-dir: ${{ github.workspace }}/wxwidgets/out/${{ matrix.target_os }}/${{ matrix.build_type }}
-          build-args: --config ${{ matrix.build_type }}
-          options: wxBUILD_SHARED=OFF
-            wxBUILD_SAMPLES=OFF
-            wxBUILD_MONOLITHIC=OFF
-            wxBUILD_USE_STATIC_RUNTIME=ON
-            wxUSE_XLOCALE=OFF
-            wxUSE_WEBVIEW_WEBKIT=ON
-            wxUSE_WEBVIEW_EDGE=ON
-            wxUSE_WEBVIEW_EDGE_STATIC=ON
-            wxUSE_WEBVIEW_IE=OFF
-            wxUSE_LIBWEBP=OFF
-            CMAKE_CXX_FLAGS_RELEASE='/DwxDEBUG_LEVEL=0'
-            CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-
-      - name: Install wxWidgets
-        if: ${{ steps.cache-wx-install.outputs.cache-hit != 'true' }}
-        working-directory: ./wxwidgets
-        run: >
-          cmake
-          --install out/${{ matrix.target_os }}/${{ matrix.build_type }}
-          --config ${{ matrix.build_type }}
-          --prefix ${{ github.workspace }}/wx/x64-${{ matrix.build_type }}
-
   build:
     runs-on: ${{ matrix.os }}
-    needs: [docker_build, wxwidgets_build]
+    needs: [docker_build]
     container:
       image: ${{ matrix.image }}
 
@@ -170,26 +103,10 @@ jobs:
         with:
           vcpkgGitCommitId: "${{ env.vcpkg_commit }}"
 
-      - name: Cache wxWidgets install
-        if: ${{ matrix.target_os == 'Win64' }}
-        id: cache-wx-install
-        uses: actions/cache@v5
-        env:
-          cache-name: cache-wx-install
-        with:
-          path: ./wx/x64-${{ matrix.build_type }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-${{ env.wxwidget_commit }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
       - name: Build Scoreboard
         uses: threeal/cmake-action@main
         env:
           VCPKG_ROOT: ${{ github.workspace }}/vcpkg # Only used in win-64, ignored in other platforms.
-          WXWIDGETS_ROOT: ${{ github.workspace }}/wx # Only used in win-64, ignored in other platforms.
         with:
           source-dir: ${{ github.workspace }}
           build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
@@ -228,26 +145,10 @@ jobs:
         with:
           vcpkgGitCommitId: "${{ env.vcpkg_commit }}"
 
-      - name: Cache wxWidgets install
-        if: ${{ matrix.target_os == 'Win64' }}
-        id: cache-wx-install
-        uses: actions/cache@v5
-        env:
-          cache-name: cache-wx-install
-        with:
-          path: ./wx/x64-${{ matrix.build_type }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-${{ env.wxwidget_commit }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.build_type }}-
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
       - name: Build Scoreboard
         uses: threeal/cmake-action@main
         env:
           VCPKG_ROOT: ${{ github.workspace }}/vcpkg # Only used in win-64, ignored in other platforms.
-          WXWIDGETS_ROOT: ${{ github.workspace }}/wx # Only used in win-64, ignored in other platforms.
         with:
           source-dir: ${{ github.workspace }}
           build-dir: ${{ github.workspace }}/out/${{ matrix.target_os }}/${{ matrix.build_type }}
