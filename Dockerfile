@@ -240,19 +240,25 @@ ENV OSXCROSS_BUILD_DIR=${OSXCROSS_BASE_DIR}/build
 ENV OSXCROSS_CCTOOLS_PATH=${OSXCROSS_BASE_DIR}/target/bin
 
 ENV ENABLE_ARCHS="arm64"
+ENV ENABLE_COMPILER_RT_INSTALL=1
 
 ENV PATH=${OSXCROSS_BASE_DIR}/target/bin:${PATH}
+
+ENV OSXCROSS_COMMIT="e6ab3fa7423f9235ce9ed6381d6d3af191b46b59"
 
 WORKDIR ${OSXCROSS_BASE_DIR}
 RUN git clone https://github.com/tpoechtrager/osxcross.git .
 RUN git fetch --all --tags
+RUN git checkout ${OSXCROSS_COMMIT}
 RUN git submodule update --init --recursive
 
 WORKDIR ${OSXCROSS_TARBALL_DIR}
 RUN wget https://github.com/joseluisq/macosx-sdks/releases/download/${OSXCROSS_SDK_VERSION}/${OSXCROSS_SDK_ZIP}
 
 WORKDIR ${OSXCROSS_BASE_DIR}
-RUN ./build.sh
+RUN ./build.sh 
+RUN sed -i 's/print_or_run.*dylib/# removed copy of dylibs/g' build_compiler_rt.sh
+RUN ./build_compiler_rt.sh
 
 # ------------------------------------------------------------------------------
 # Osxcross (osxcross_build)
@@ -314,62 +320,7 @@ RUN ln -s ${OSXCROSS_ROOT_DIR}/macports/pkgs/opt/local/libexec/openssl3/lib/libc
 
 # Tarball it up for consumption
 WORKDIR /
-RUN tar cvzf /osxcross.tgz /opt/osxcross
-
-# ------------------------------------------------------------------------------
-# wxWidgets for MacOS (wxwidgets_osxcross_build)
-#
-# Build an Osxcross wxWidgets for macos-based build.
-# ------------------------------------------------------------------------------
-FROM osxcross_build_baseline AS wxwidgets_osxcross_build
-
-RUN apk add --no-cache \
-    libpng-dev \
-    openjpeg-dev \
-    tiff-dev
-
-ENV WXWIDGETS_VERSION=v3.3.2
-
-WORKDIR /wxwidgets
-RUN git clone https://github.com/wxWidgets/wxWidgets.git .
-RUN git fetch --all --tags
-RUN git checkout tags/${WXWIDGETS_VERSION}
-RUN git submodule update --init --recursive
-
-# Get osxcross to build against
-WORKDIR /
-COPY --from=osxcross_build /osxcross.tgz /
-RUN tar xvzf osxcross.tgz && rm osxcross.tgz
-
-# WxWidgets doesn't work with an SDK as old as I'm using because of one version-check macro -- while I can,
-# I'll patch it to keep my lowest necessary version of MacOS as low as possible.
-WORKDIR /wxwidgets
-
-# This fixes an issue that turns into the symbol ___isPlatformVersionAtLeast being unavailable
-RUN sed -i 's/__has_builtin(__builtin_available)/__has_builtin(__disabled_builtin_available)/g' \
-    include/wx/osx/private/available.h \
-    src/png/pngrutil.c
-
-# This constant doesn't exist for x86_64 architecture, so remove it forcefully.  It's gross, but it works
-RUN sed -i 's/layer.contentsFormat = kCAContentsFormatRGBA8Uint;//' src/osx/cocoa/window.mm
-
-WORKDIR /wxwidgets/out
-RUN cmake .. \
-    -DCMAKE_TOOLCHAIN_FILE=${OSXCROSS_ROOT_DIR}/toolchain.cmake \
-    -DCMAKE_INSTALL_NAME_TOOL=${OSXCROSS_ROOT_DIR}/bin/${OSXCROSS_HOST}-install_name_tool \
-    -DCMAKE_INSTALL_PREFIX=${OSXCROSS_ROOT_DIR}/wxwidgets \
-    -DOSXCROSS_TARGET_DIR=${OSXCROSS_ROOT_DIR} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DwxBUILD_PRECOMP=OFF \
-    -DwxBUILD_SHARED=OFF \
-    -DwxUSE_LIBWEBP=OFF \
-    -DwxUSE_WEBVIEW=ON
-RUN make -j 4 all
-RUN make install
-
-WORKDIR /
-RUN tar cvzf wxwidgets.tgz \
-    ${OSXCROSS_ROOT_DIR}/wxwidgets
+RUN tar cvzf /osxcross.tgz /opt/osxcross /usr/lib/llvm16/lib/clang/16/lib/darwin
 
 # ------------------------------------------------------------------------------
 # JsonCPP for MacOS (jsoncpp_osxcross_build)
@@ -411,9 +362,12 @@ RUN tar cvzf jsoncpp.tgz \
 FROM osxcross_build_baseline AS macos_build
 
 RUN apk add --no-cache \
+    libpng-dev \
+    openjpeg-dev \
     perl \
     perl-file-which \
     perl-list-allutils \
+    tiff-dev \
     zip
 
 WORKDIR /
@@ -429,15 +383,13 @@ RUN tar xvzf protobuf.tgz && rm protobuf.tgz
 # Bring in Osxcross
 COPY --from=osxcross_build /osxcross.tgz /
 RUN tar xvzf osxcross.tgz && rm osxcross.tgz
-# Bring in wxWidgets built for MacOS
-COPY --from=wxwidgets_osxcross_build /wxwidgets.tgz /
-RUN tar xvzf wxwidgets.tgz && rm wxwidgets.tgz
 # Bring in JsonCpp built for MacOS
 COPY --from=jsoncpp_osxcross_build /jsoncpp.tgz /
 RUN tar xvzf jsoncpp.tgz
 #RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
 
 ENV DISPLAY=:1
+ENV LD_LIBRARY_PATH='/opt/osxcross/lib'
 
 COPY . /cszb-scoreboard
 
