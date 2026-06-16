@@ -1,27 +1,29 @@
 {
    "version": 6,
-   "include": [ "Linux.json" ],
    "configurePresets": [
       {
          "name": "MacOS-Debug",
          "displayName": "MacOS Debug",
-         "inherits": "Linux-Debug",
+         "generator": "Unix Makefiles",
          "binaryDir": "${sourceDir}/out/MacOS/Debug",
+         "toolchainFile": "/opt/osxcross/toolchain.cmake",
          "cacheVariables": {
-            "CMAKE_OSX_DEPLOYMENT_TARGET": "10.12",
-            "CMAKE_TOOLCHAIN_FILE": "/opt/osxcross/toolchain.cmake",
-            "OPENSSL_ROOT_DIR": "/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3"
+            "CMAKE_BUILD_TYPE": "Debug",
+            "SKIP_LINT": "true",
+            "INTEGRATION_TEST": "false",
+            "CMAKE_OSX_DEPLOYMENT_TARGET": "14.0",
+            "OPENSSL_ROOT_DIR": "/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3",
+            "CMAKE_INSTALL_NAME_TOOL": "/opt/osxcross/bin/arm64-apple-darwin25.1-install_name_tool",
+            "wxBUILD_PRECOMP": "OFF"
          }
       },
       {
          "name": "MacOS-Release",
          "displayName": "MacOS Release",
-         "inherits": "Linux-Release",
+         "inherits": "MacOS-Debug",
          "binaryDir": "${sourceDir}/out/MacOS/Release",
          "cacheVariables": {
-            "CMAKE_OSX_DEPLOYMENT_TARGET": "10.12",
-            "CMAKE_TOOLCHAIN_FILE": "/opt/osxcross/toolchain.cmake",
-            "OPENSSL_ROOT_DIR": "/opt/osxcross/macports/pkgs/opt/local/libexec/openssl3"
+            "CMAKE_BUILD_TYPE": "Release"
          }
       }
    ],

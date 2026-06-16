@@ -21,8 +21,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dev_settings.cmake OPTIONAL)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the cmake-modules repo
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
-#include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake ${Protobuf_INCLUDE_DIR})
-#include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake ${Protobuf_INCLUDE_DIR})
 
 SET(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} CXX)
@@ -45,7 +43,7 @@ set(PROTOC_EXECUTABLE "protobuf::protoc")
 set(wxBUILD_MONOLITHIC "OFF")
 set(wxBUILD_SAMPLES "OFF")
 set(wxBUILD_SHARED "OFF")
-set(wxBUILD_USE_STATIC_RUNTIME "ON")
+#set(wxBUILD_USE_STATIC_RUNTIME "ON")
 set(wxUSE_LIBWEBP "OFF")
 set(wxUSE_STC "OFF")
 set(wxUSE_WEBVIEW_IE "OFF")
@@ -61,6 +59,7 @@ if(MSVC OR OSXCROSS_HOST)
 endif()
 
 if(OSXCROSS_HOST)
+    message("OSXCROSS_HOST is set")
 	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/osxcross.cmake)
 	set(SKIP_LINT true)
 endif()
@@ -74,7 +73,6 @@ find_package(CURL CONFIG REQUIRED)
 
 initialize_vcpkg_code()
 
-#add_compile_definitions(_UNICODE UNICODE wxUSE_GUI=1)
 if(MSVC)
     #add_compile_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
@@ -129,6 +127,7 @@ set(BASE_LIBRARIES
 	absl::raw_hash_set
 	absl::statusor
     wxWidgets
+    ${wxWidgets_LIBRARIES}
     ${Protobuf_LIBRARIES}
     ${JSON_CPP_LIB}
     CURL::libcurl

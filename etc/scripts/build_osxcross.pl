@@ -34,13 +34,14 @@ use FindBin;
 use lib "$FindBin::RealBin";
 use Docker;
 
-our $BUILD_PATH    = 'out/osxcross';
-our $PACKAGE_PATH  = 'out/osxcross_package';
-our $BASE_DIR      = Cwd::cwd();
-our $OSX_VERSION   = '14.0';
-our $APP_CONTAINER = $PACKAGE_PATH . '/CszbScoreboard.app/Contents';
-our $APP_BIN       = $APP_CONTAINER . '/MacOS';
-our $APP_RESOURCES = $APP_CONTAINER . '/Resources';
+our $BASE_BUILD_PATH = 'out/MacOS/';
+our $BUILD_PATH      = 'UNSET';
+our $PACKAGE_PATH    = 'out/osxcross_package';
+our $BASE_DIR        = Cwd::cwd();
+our $OSX_VERSION     = '14.0';
+our $APP_CONTAINER   = $PACKAGE_PATH . '/CszbScoreboard.app/Contents';
+our $APP_BIN         = $APP_CONTAINER . '/MacOS';
+our $APP_RESOURCES   = $APP_CONTAINER . '/Resources';
 
 our $DOCKER_TAG = 'osxcross_release';
 
@@ -101,19 +102,14 @@ sub run_cmd_tick {
 }
 
 sub build_release {
+   my $release_type = $opt_test_build ? 'Debug' : 'Release';
+   $BUILD_PATH = $BASE_BUILD_PATH . $release_type;
    say 'Building release in ' . $BUILD_PATH;
    mkpath $BUILD_PATH;
    chdir $BUILD_PATH;
-   my $release_type = $opt_test_build ? 'Debug' : 'Release';
    my $result = run_cmd( 'cmake',
-                         '-DCMAKE_OSX_DEPLOYMENT_TARGET=' . $OSX_VERSION,
-                         '-DCMAKE_TOOLCHAIN_FILE='
-                             . $ENV{'OSXCROSS_TARGET_DIR'}
-                             . '/toolchain.cmake',
-                         '-DCMAKE_BUILD_TYPE=' . $release_type,
-                         '-DOPENSSL_ROOT_DIR='
-                             . $ENV{'OSXCROSS_TARGET_DIR'}
-                             . '/macports/pkgs/opt/local/libexec/openssl3',
+                         '--preset',
+                         'MacOS-' . $release_type,
                          $BASE_DIR
                        );
    return $result if $result;

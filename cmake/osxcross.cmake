@@ -39,71 +39,34 @@ set(OSX_INCLUDE_DIRS "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/include")
 
 set(jsoncpp_DIR ${OSXCROSS_TARGET_DIR}/jsoncpp/lib/cmake/jsoncpp)
 
-# I don't know exactly how to make this work better, but it's kind of fragile.
-# TODO: Find this cmake file dynamically.
-set(wxWidgets_USE_FILE /usr/share/cmake/Modules/UsewxWidgets.cmake)
-
-set(wx_root "${OSXCROSS_TARGET_DIR}/wxwidgets")
-set(wxWidgets_LIB_DIR ${wx_root}/lib)
 set(macports_lib_dir ${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib)
 
-# wxWidgets auto-discovery doesn't work at all here, so we'll manually
-# reproduce it.  I don't love it, but it is what it is.
-
-set(wxWidgets_FOUND TRUE)
-set(wxWidgets_DEFINITIONS __WXOSX_COCOA__)
-
-if(NOT WXWIDGETS_VERSION)
-	set(WXWIDGETS_VERSION "3.3")
-endif()
-
+# The following frameworks and libraries can be found by calling `wx-config --libs`
+# on a built wxWidgets, but that doesn't exist before the build, so we just copy
+# the results and de-duplicate them here.
 set(OSX_FRAMEWORKS
-	"-framework AudioToolbox"
-	"-framework Carbon"
-	"-framework Cocoa"
-	"-framework IOKit"
-	"-framework OpenGL"
-	"-framework System"
-	"-framework SystemConfiguration"
-	"-framework WebKit"
+	 "-framework AppIntents"
+	 "-framework AppKit"
+	 "-framework AudioToolbox"
+	 "-framework CoreFoundation"
+	 "-framework Carbon"
+	 "-framework Cocoa"
+	 "-framework IOKit"
+	 "-framework OpenGL"
+	 "-framework System"
+	 "-framework SystemConfiguration"
+	 "-framework WebKit"
 	)
 
 set(wxWidgets_LINK_FLAGS
-	-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}
 	${OSX_FRAMEWORKS}
+	${CMAKE_CURRENT_BINARY_DIR}/wxWidgets/lib/libwx_baseu-3.3-Darwin.a
+	-mmacosx-version-min=14.0
 	)
 
-
-set(wxWidgets_INCLUDE_DIRS
-	${wx_root}/lib/wx/include/osx_cocoa-unicode-static-${WXWIDGETS_VERSION}
-	${wx_root}/include/wx-${WXWIDGETS_VERSION}
-	)
-
-set(wxWidgets_LIBRARY_DIRS ${wx_root}/lib)
 
 # There are likely a bunch of libraries in here we don't need.  The plan is to pare down this list.
 set(wxWidgets_LIBRARIES
-	${wxWidgets_LIB_DIR}/libwx_baseu-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_baseu_net-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_baseu_xml-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_adv-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_aui-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_core-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_html-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_media-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_propgrid-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_qa-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_ribbon-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_richtext-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_stc-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_webview-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwx_osx_cocoau_xrc-${WXWIDGETS_VERSION}-Darwin.a
-	${wxWidgets_LIB_DIR}/libwxjpeg-${WXWIDGETS_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxregexu-${WXWIDGETS_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxscintilla-${WXWIDGETS_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxpng-${WXWIDGETS_VERSION}.a
-	${wxWidgets_LIB_DIR}/libwxtiff-${WXWIDGETS_VERSION}.a
-
 	# TODO: Alphabetize these libs and deduplicate the list
 	${macports_lib_dir}/libiconv.a
 	${macports_lib_dir}/libpsl.a
@@ -111,7 +74,6 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libbrotlicommon.dylib
 	${macports_lib_dir}/libbrotlidec.dylib
 	${macports_lib_dir}/libcurl.dylib
-	#${macports_lib_dir}/libasprintf.a
 	${macports_lib_dir}/libbz2.a
 	${macports_lib_dir}/libcharset.a
 	${macports_lib_dir}/libcrypto.a
@@ -156,7 +118,6 @@ set(wxWidgets_LIBRARIES
 
 find_package(absl REQUIRED CONFIG)
 
-add_definitions(-D_UNICODE -DUNICODE -DwxUSE_GUI=1 -DWXUSINGDLL -D__WXOSX_COCOA__)
 include_directories(SYSTEM INTERFACE ${wxWidgets_INCLUDE_DIRS} ${OSX_INCLUDE_DIRS})
 link_libraries(${wxWidgets_LINK_FLAGS})
 
