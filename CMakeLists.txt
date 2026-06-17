@@ -32,7 +32,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 set(JSON_CPP_LIB "jsoncpp_lib")
 
-set(LINKING_TYPE "dynamic" CACHE STRING "Link type")
+set(LINKING_TYPE "static" CACHE STRING "Link type")
 set(SKIP_LINT false CACHE BOOL "Skip Lint")
 set(CLANG_TIDY_ERRORS true CACHE BOOL "Lint warnings fail build")
 set(INTEGRATION_TEST false CACHE BOOL "Run Full Integration Tests")
@@ -43,11 +43,14 @@ set(PROTOC_EXECUTABLE "protobuf::protoc")
 set(wxBUILD_MONOLITHIC "OFF")
 set(wxBUILD_SAMPLES "OFF")
 set(wxBUILD_SHARED "OFF")
-#set(wxBUILD_USE_STATIC_RUNTIME "ON")
 set(wxUSE_LIBWEBP "OFF")
 set(wxUSE_STC "OFF")
 set(wxUSE_WEBVIEW_IE "OFF")
 set(wxUSE_WEBVIEW_WEBKIT "ON")
+
+set(CURL_DISABLE_SSH ON CACHE INTERNAL "Disable SSH support")
+set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Build static libcurl library")
+set(CURL_STATICLIB ON CACHE INTERNAL "Use static libcurl")
 
 if(MSVC OR OSXCROSS_HOST)
     set(LINKING_TYPE "static")
@@ -69,7 +72,6 @@ find_package(Protobuf REQUIRED)
 find_package(GTest REQUIRED CONFIG)
 include(GoogleTest)
 find_package(jsoncpp REQUIRED)
-find_package(CURL CONFIG REQUIRED)
 
 initialize_vcpkg_code()
 
@@ -85,7 +87,8 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
     add_compile_definitions(SCOREBOARD_DEBUG _DEBUG wxDEBUG_LEVEL=1)
 endif()
 
-add_subdirectory(thirdparty/wxWidgets wxWidgets)
+add_subdirectory(thirdparty/wxWidgets)
+add_subdirectory(thirdparty/curl)
 
 set(LINT_OPTION, "")
 
@@ -102,7 +105,10 @@ if(NOT SKIP_LINT)
 endif() # OSXCROSS_HOST
 
 include_directories(PRIVATE "${CMAKE_SOURCE_DIR}/include")
-include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/thirdparty/wxWidgets/include")
+include_directories(PUBLIC
+    "${CMAKE_SOURCE_DIR}/thirdparty/curl/include"
+    "${CMAKE_SOURCE_DIR}/thirdparty/wxWidgets/include"
+  )
 
 file(GLOB SCOREBOARD_SRC
     "src/cszb-scoreboard.cpp"
@@ -126,11 +132,11 @@ set(BASE_LIBRARIES
 	absl::log_internal_message
 	absl::raw_hash_set
 	absl::statusor
+    libcurl
     wxWidgets
     ${wxWidgets_LIBRARIES}
     ${Protobuf_LIBRARIES}
     ${JSON_CPP_LIB}
-    CURL::libcurl
 )
 
 IF(WIN32)
@@ -329,4 +335,3 @@ if (ENABLE_CODE_COVERAGE)
 	    EXCLUDE ${COVERAGE_EXCLUDES}
 	    )
 endif()
-
