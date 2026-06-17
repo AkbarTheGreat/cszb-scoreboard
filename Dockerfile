@@ -53,46 +53,17 @@ RUN apk add --no-cache \
 ENV OSXCROSS_SDK_VERSION=26.1
 ENV MACOSX_DEPLOYMENT_TARGET=14.0
 ENV OSXCROSS_OSX_VERSION_MIN=14.0
+ENV TARGET_OSXCROSS_SDK=darwin25.1
 
-ENV OSXCROSS_SDK=darwin25.1
-ENV OSXCROSS_TARGET=${OSXCROSS_SDK}
-ENV OSXCROSS_HOST=arm64-apple-${OSXCROSS_SDK}
+ENV OSXCROSS_TARGET=${TARGET_OSXCROSS_SDK}
+ENV OSXCROSS_HOST=arm64-apple-${TARGET_OSXCROSS_SDK}
+ENV OSXCROSS_SDK_FILE=MacOSX${OSXCROSS_SDK_VERSION}.sdk
 ENV OSXCROSS_ROOT_DIR=/opt/osxcross
 ENV OSXCROSS_TARGET_DIR=${OSXCROSS_ROOT_DIR}
+ENV OSXCROSS_SDK=${OSXCROSS_ROOT_DIR}/SDK/$OSXCROSS_SDK_FILE
 
 ENV PATH=${OSXCROSS_ROOT_DIR}/bin:$PATH
 ENV LD_LIBRARY_PATH=${OSXCROSS_ROOT_DIR}/lib
-
-# ------------------------------------------------------------------------------
-# Curl (curl_bulid)
-#
-# Build a custom curl rather than take one from apk.
-# ------------------------------------------------------------------------------
-FROM build_baseline AS curl_build
-
-RUN apk add --no-cache \
-    openssl-dev \
-    perl
-
-ENV CURL_VERSION=curl-7_79_0
-
-WORKDIR /curl
-RUN git clone https://github.com/curl/curl.git .
-RUN git fetch --all --tags
-RUN git checkout tags/${CURL_VERSION}
-RUN git submodule update --init --recursive
-
-WORKDIR /curl/out
-RUN cmake \
-    -DBUILD_SHARED_LIBS=ON \
-    -DCMAKE_INSTALL_PREFIX=/cm/usr/local \
-    ..
-RUN make -j 4 all
-RUN make install
-
-WORKDIR /cm
-RUN tar cvzf /curl.tgz \
-    usr/local
 
 # ------------------------------------------------------------------------------
 # JsonCpp (jsoncpp_bulid)
@@ -277,7 +248,7 @@ RUN osxcross-macports fake-install \
     graphviz \
     libde265 \
     mesa \
-    py312 \
+    python314 \
     shared-mime-info \
     xorg
 
@@ -285,13 +256,13 @@ RUN osxcross-macports fake-install \
 RUN osxcross-macports install \
     abseil \
     bzip2 \
-    curl \
     expat \
     gettext \
     glib2 \
     gtest \
     libedit \
     libffi \
+    libssh2 \
     libiconv \
     libidn2 \
     libpsl \
@@ -423,9 +394,6 @@ RUN apk add --no-cache \
 WORKDIR /
 COPY etc/docker/supervisord.conf  ./
 
-# Bring in Curl
-COPY --from=curl_build /curl.tgz /
-RUN tar xvzf curl.tgz && rm curl.tgz
 # Bring in JsonCpp
 COPY --from=jsoncpp_build /jsoncpp.tgz /
 RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
@@ -524,9 +492,6 @@ ENV GCOV='llvm-cov gcov'
 
 WORKDIR /
 
-# Bring in Curl
-COPY --from=curl_build /curl.tgz /
-RUN tar xvzf curl.tgz && rm curl.tgz
 # Bring in JsonCpp
 COPY --from=jsoncpp_build /jsoncpp.tgz /
 RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz

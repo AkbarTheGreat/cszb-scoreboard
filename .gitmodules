@@ -4,3 +4,6 @@
 [submodule "thirdparty/wxWidgets"]
 	path = thirdparty/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
+[submodule "thirdparty/curl"]
+	path = thirdparty/curl
+	url = https://github.com/curl/curl.git
