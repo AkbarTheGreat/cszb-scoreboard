@@ -107,11 +107,8 @@ sub build_release {
    say 'Building release in ' . $BUILD_PATH;
    mkpath $BUILD_PATH;
    chdir $BUILD_PATH;
-   my $result = run_cmd( 'cmake',
-                         '--preset',
-                         'MacOS-' . $release_type,
-                         $BASE_DIR
-                       );
+   my $result
+       = run_cmd( 'cmake', '--preset', 'MacOS-' . $release_type, $BASE_DIR );
    return $result if $result;
    return run_cmd( 'make', '-j5', 'scoreboard_proto', 'cszb-scoreboard' );
 }
