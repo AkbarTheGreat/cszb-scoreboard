@@ -12,15 +12,16 @@ import { IReq, IRes } from './types/express/misc';
  */
 async function getLatest(_: IReq, res: IRes) {
   const latest = await VersionService.getLatest();
-  return res.status(HttpStatusCodes.OK).json({ latest });
+  return res.status(HttpStatusCodes.OK).json({ 'latest': latest });
 }
 
 /**
  * Get information about a version
  */
 async function getInfo(req: IReq, res: IRes) {
-  const info = await VersionService.getInfo(req.params.version);
-  return res.status(HttpStatusCodes.OK).json({ info });
+  const version = req.params.version;
+  const info = await VersionService.getInfo(version);
+  return res.status(HttpStatusCodes.OK).json({ version: info });
 }
 
 /**
@@ -28,7 +29,7 @@ async function getInfo(req: IReq, res: IRes) {
  */
 async function getAll(_: IReq, res: IRes) {
   const versions = await VersionService.getAll();
-  return res.status(HttpStatusCodes.OK).json(versions);
+  return res.status(HttpStatusCodes.OK).json({ 'versions': versions });
 }
 
 
