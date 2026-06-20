@@ -36,8 +36,8 @@ has 'release_path' => (
 # Cut down on file IO by only checking for new releases every N minutes.
 has 'release_cache_minutes' => (
     is     => 'rw',
-    isa => 'Int',
-    default => 120,
+    isa => 'Num',
+    default => $ENV{'SCOREBOARD_AU_CACHE_TIME'} // 120,
 );
 
 1;

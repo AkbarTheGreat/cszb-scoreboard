@@ -7,9 +7,14 @@ services:
     command: [morbo, -l, http://*:8080, -w, /updater, autoupdater.pl]
     environment:
       - LOCAL_TEST=1
+      - SCOREBOARD_AU_CACHE_TIME=0.5 # 30 second cache invalidation for testing
     ports:
       - 8080:8080
     volumes:
       - ./app:/updater
       - ./testdata/releases:/releases
       - ./testdata/logs:/logs
+  updater-cache:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
