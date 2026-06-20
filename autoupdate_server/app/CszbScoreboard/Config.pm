@@ -27,4 +27,17 @@ has 'access_log' => (
     default => '/logs/access.log',
 );
 
+has 'release_path' => (
+    is     => 'rw',
+    isa => 'Str',
+    default => '/releases',
+);
+
+# Cut down on file IO by only checking for new releases every N minutes.
+has 'release_cache_minutes' => (
+    is     => 'rw',
+    isa => 'Int',
+    default => 120,
+);
+
 1;

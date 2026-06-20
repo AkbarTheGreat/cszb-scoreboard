@@ -4,13 +4,20 @@ RUN apk add --no-cache \
     alpine-sdk \
     perl \
     perl-app-cpanminus \
+    perl-datetime \
+    perl-list-allutils \
     perl-module-build-tiny \
     perl-mojolicious \
+    perl-sub-identify \
+    perl-sub-name \
     perl-moose
 
 RUN cpanm \
+    Data::Printer \
     Mojolicious::Plugin::AccessLog \
-    MooseX::Singleton
+    MooseX::Privacy \
+    MooseX::Singleton \
+    Smart::Comments
 
 COPY ./app /updater
 
