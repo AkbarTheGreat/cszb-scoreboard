@@ -1,7 +1,7 @@
 /*
 ui/widget/Animation.h: A widget which renders an animated gif.
 
-Copyright 2023 Tracy Beck
+Copyright 2023-2026 Tracy Beck
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ namespace cszb_scoreboard {
 
 class Animation : public Widget {
  public:
-  explicit Animation(swx::MediaCtrl *ctrl) { _wx = ctrl; }
-  void load(const std::string &url) { auto test = _wx->Load(url); }
+  explicit Animation(swx::MediaCtrl* ctrl) { _wx = ctrl; }
+  void load(const std::string& url) { auto test = _wx->Load(url); }
 
  protected:
-  [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
+  [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }
 
  private:
-  swx::MediaCtrl *_wx;
+  swx::MediaCtrl* _wx;
 };
 
 }  // namespace cszb_scoreboard
