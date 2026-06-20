@@ -34,6 +34,7 @@ RUN echo "jenkins ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 FROM build_baseline AS gui_build_baseline
 
 RUN apk add --no-cache \
+    gstreamer-dev \
     gtk+3.0-dev \
     libnotify-dev \
     libsecret-dev \
@@ -291,7 +292,6 @@ RUN ln -s ${OSXCROSS_ROOT_DIR}/macports/pkgs/opt/local/libexec/openssl3/lib/libc
 
 # Tarball it up for consumption
 WORKDIR /
-RUN tar cvzf /osxcross.tgz /opt/osxcross /usr/lib/llvm16/lib/clang/16/lib/darwin
 
 # ------------------------------------------------------------------------------
 # JsonCPP for MacOS (jsoncpp_osxcross_build)
