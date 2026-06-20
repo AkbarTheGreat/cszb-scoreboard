@@ -18,10 +18,10 @@ async function getLatest(_: IReq, res: IRes) {
 /**
  * Get information about a version
  */
-async function getInfo(req: IReq, res: IRes) {
+async function getInfo(req: IReq<{ params: { version: string } }>, res: IRes) {
   const version = req.params.version;
   const info = await VersionService.getInfo(version);
-  return res.status(HttpStatusCodes.OK).json({ version: info });
+  return res.status(HttpStatusCodes.OK).json({ 'version': info });
 }
 
 /**
