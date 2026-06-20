@@ -15,7 +15,6 @@ import apiCb from '@spec/support/apiCb';
 import { TApiCb } from 'spec/types/misc';
 
 
-// Dummy users for GET req
 const getDummyVersions = () => {
   return ['0.5.0', '0.5.0_hotfix', '1.0.0'];
 }
@@ -24,6 +23,9 @@ const getDummyLatest = () => {
   return new Version('1.0.0', ['win64'])
 };
 
+const getDummyUpdatePaths = () => {
+  return ['api/update_path/file1', 'api/update_path/file2']
+};
 
 // Tests
 describe('VersionRouter', () => {
@@ -63,8 +65,6 @@ describe('VersionRouter', () => {
   // Version info
   describe(`"GET:${Paths.Versions.Info}"`, () => {
 
-    const ERROR_MSG = 'foo';
-
     // Setup API
     const api = (version: string | null, cb: TApiCb) =>
       agent
@@ -99,6 +99,51 @@ describe('VersionRouter', () => {
         });
       });
   });
+
+  // Version update urls
+  describe(`"GET:${Paths.Versions.UpdateURL}"`, () => {
+
+    // Setup API
+    const api = (version: string | null, release: string | null, cb: TApiCb) =>
+      agent
+        .get(Paths.Versions.UpdateURL.replace(':version', version ?? '').replace(':release', release ?? ''))
+        .end(apiCb(cb));
+
+    // Success
+    it(`should return a the two test URLs and a status code of "${HttpStatusCodes.OK}" if the `
+      + 'request was successful.', (done) => {
+        // Add spy
+        const testUrls = getDummyUpdatePaths();
+        jest.spyOn(VersionRepo, 'getUpdateURLs').mockResolvedValue(testUrls);
+        // Call api
+        api('1.0.0', 'macos', res => {
+          expect(res.status).toBe(HttpStatusCodes.OK);
+          if (res.body.urls) {
+            for (let i = 0; i < res.body.urls.length; ++i) {
+              expect(res.body.urls[i]).toMatch(testUrls[i]);
+            }
+          } else {
+            expect(res.body).toEqual({ urls: [] });
+          }
+          done();
+        });
+      });
+
+    // Version not found
+    it('should return a JSON object with the error message of ' +
+      `"${VERSION_NOT_FOUND_ERR}" and a status code of ` +
+      `"${HttpStatusCodes.NOT_FOUND}" if the version or release was not found.`, (done) => {
+        // Add spy
+        jest.spyOn(VersionRepo, 'getUpdateURLs').mockResolvedValue(null);
+        // Call api
+        api('0.0.0', 'macos', res => {
+          expect(res.status).toBe(HttpStatusCodes.NOT_FOUND);
+          expect(res.body.error).toBe(VERSION_NOT_FOUND_ERR);
+          done();
+        });
+      });
+  });
+
 
   // Get latest versions
   describe(`"GET:${Paths.Versions.Latest}"`, () => {
