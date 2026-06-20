@@ -22,8 +22,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules") # the
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VcpkgCMakeUtils.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
 
+# C was finding its way into enabled languages (likely due to submodules), so we
+# explicitly set it here.  Otherwise, coverage breaks due to incomplete compiler
+# configuration.
 SET(PROJECT_NAME "cszb-scoreboard")
-project(${PROJECT_NAME} CXX)
+project(${PROJECT_NAME} C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(Protobuf_BUILD_SHARED_LIBS OFF)
@@ -322,16 +325,17 @@ if (ENABLE_CODE_COVERAGE)
     file(RELATIVE_PATH BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     list(APPEND COVERAGE_EXCLUDES "${BUILD_DIR}/*")
     list(APPEND COVERAGE_EXCLUDES "out/*")
+    list(APPEND COVERAGE_EXCLUDES "thirdparty/*")
     setup_target_for_coverage_gcovr_html(
 	    NAME ${PROJECT_NAME}-coverage
 	    EXECUTABLE ctest
-	    BASE_DIRECTORY "${PROJECT_DIR}/src" 
+	    BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src" 
 	    EXCLUDE ${COVERAGE_EXCLUDES}
 	    )
     setup_target_for_coverage_gcovr_xml(
 	    NAME ${PROJECT_NAME}-xml-coverage
 	    EXECUTABLE ctest
-	    BASE_DIRECTORY "${PROJECT_DIR}/src" 
+	    BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src" 
 	    EXCLUDE ${COVERAGE_EXCLUDES}
 	    )
 endif()
