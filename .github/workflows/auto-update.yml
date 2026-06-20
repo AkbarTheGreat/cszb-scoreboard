@@ -1,0 +1,50 @@
+name: Autoupdate Server
+
+on:
+  push:
+    branches: [ ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings
+      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+      id: strings
+      shell: bash
+      run: |
+        echo "cache-branch=ghcr.io/akbarthegreat/cszb_autoupdate_cache_${{ github.head_ref || github.ref_name }}" >> $GITHUB_OUTPUT
+
+    - name: Login to Docker
+      env:
+        GITHUB_USER: ${{ github.actor }}
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: $GITHUB_USER
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and Push Docker Image
+      env:
+        REGISTRY: ghcr.io
+        OWNER: AkbarTheGreat
+        IMAGE_NAME: ${{ github.repository }}
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        tags: ghcr.io/akbarthegreat/cszb_autoupdate_${{ github.head_ref || github.ref_name }}:latest
+        push: true
+        cache-from: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
+        cache-to: type=registry,ref=${{ steps.strings.outputs.cache-branch }}
