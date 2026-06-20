@@ -65,12 +65,16 @@
       "@spec/*": [
         "spec/*"
       ],
+      "@proto/*": [
+        "generated/proto/*"
+      ],
     },
     "useUnknownInCatchVariables": false
   },
   "include": [
     "src/**/*.ts",
     "spec/**/*.ts",
+    "generated/proto/**/*.ts",
     "build.ts"
   ],
   "exclude": [

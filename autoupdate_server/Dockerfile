@@ -1,5 +1,7 @@
 FROM node:21-alpine
 
+RUN apk add --no-cache \
+   protoc
 
 WORKDIR /autoupdater
 COPY app/*.json /autoupdater/

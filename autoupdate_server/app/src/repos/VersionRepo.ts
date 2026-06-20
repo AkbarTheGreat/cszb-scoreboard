@@ -1,8 +1,9 @@
 import EnvVars from '@src/constants/EnvVars';
-import Filesystem from '@src/constants/Filesystem'
-import Paths from '@src/constants/Paths'
+import Filesystem from '@src/constants/Filesystem';
+import Paths from '@src/constants/Paths';
 import fs from 'fs';
-import { Version } from '@src/models/Version';
+import { Version } from '@proto/version_info';
+import VersionHelper from '@src/models/VersionHelper';
 
 // **** Functions **** //
 
@@ -32,7 +33,7 @@ async function getInfo(version: string): Promise<Version | null> {
   if (!(await allVersions).includes(version)) {
     return null;
   }
-  return new Version(version, await (getReleases(version)))
+  return VersionHelper.buildVersion(version, await (getReleases(version)))
 }
 
 async function getReleases(version: string): Promise<string[]> {
@@ -51,8 +52,8 @@ async function getUpdateURLs(version: string, release: string): Promise<string[]
   if (!(await allVersions).includes(version)) {
     return null;
   }
-  const versionData = new Version(version, await (getReleases(version)))
-  if (!(versionData.releases.includes(release))) {
+  const knownReleases = await (getReleases(version));
+  if (!(knownReleases.includes(release))) {
     return null;
   }
 
@@ -64,8 +65,8 @@ async function getUpdateURLs(version: string, release: string): Promise<string[]
 
 /* I fully believe there's a more idiomatic way to do this, but this at least works, even if it's verbose. */
 function versionSorter(a: string, b: string): number {
-  const splitA = Version.versionHierarchy(a)
-  const splitB = Version.versionHierarchy(b)
+  const splitA = VersionHelper.buildVersionHierarchy(a)
+  const splitB = VersionHelper.buildVersionHierarchy(b)
   if (splitA.major < splitB.major) {
     return -1
   }

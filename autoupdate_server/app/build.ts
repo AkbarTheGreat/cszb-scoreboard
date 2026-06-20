@@ -16,13 +16,27 @@ import childProcess from 'child_process';
     await remove('./dist/');
     // Copy front-end files
     await copy('./src/public', './dist/public');
-    // Copy back-end files
+
+    // Build  protobuf files
+    await build_protobuf(['./src/proto/version_info.proto']);
+
     await exec('tsc --build tsconfig.prod.json', './');
   } catch (err) {
     logger.err(err);
     process.exit(1);
   }
 })();
+
+/**
+ * Build protobuf sources
+ */
+async function build_protobuf(protos: string[]): Promise<void> {
+  await mkdir('./generated');
+  await mkdir('./generated/proto');
+  // TODO (akbar): Can I call the protoc plugin without using a shell to call npx?  I need to look into this.
+  const command_base = 'npx protoc --ts_out ./generated/proto --proto_path src/proto';
+  protos.map(async file => await exec(`${command_base} ${file}`, './'));
+}
 
 /**
  * Remove file
@@ -47,11 +61,24 @@ function copy(src: string, dest: string): Promise<void> {
 }
 
 /**
+ * Make directory
+ */
+function mkdir(dest: string): Promise<void> {
+  return new Promise((res, rej) => {
+    return fs.mkdir(dest, (err) => {
+      // Ignores errors, to avoid failing when the path already exists.
+      return res();
+    });
+  });
+}
+
+
+/**
  * Do command line command.
  */
 function exec(cmd: string, loc: string): Promise<void> {
   return new Promise((res, rej) => {
-    return childProcess.exec(cmd, {cwd: loc}, (err, stdout, stderr) => {
+    return childProcess.exec(cmd, { cwd: loc }, (err, stdout, stderr) => {
       if (!!stdout) {
         logger.info(stdout);
       }
