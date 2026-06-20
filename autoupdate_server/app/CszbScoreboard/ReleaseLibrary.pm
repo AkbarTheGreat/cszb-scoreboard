@@ -47,6 +47,8 @@ has '_latest_release_cache' => (
 
 sub releases {
     my ($self, $version, $log) = @_;
+    # Is latest calls versions() which refreshes the cache if necessary, so we
+    # don't need to deal with it here.
     if ($self->_is_latest($version, $log)) {
         return $self->_latest_release_cache();
     }
@@ -111,7 +113,7 @@ sub _gather_releases {
         }
         while (readdir $plat_dh) {
             next if /^\.\.?$/;
-            $rel_hash->{'files'}{$_} = {size => 0};
+            $rel_hash->{'files'}{$_} = {size => (stat $platform_dir . '/' . $_)[7]};
         }
         closedir $plat_dh;
     }
