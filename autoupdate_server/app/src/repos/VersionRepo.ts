@@ -31,9 +31,16 @@ async function getInfo(version: string): Promise<Version | null> {
   if (!(await allVersions).includes(version)) {
     return null;
   }
-  return new Version(version)
+  return new Version(version, await (getReleases(version)))
 }
 
+async function getReleases(version: string): Promise<string[]> {
+  const releases = fs.readdirSync(releaseData + '/' + version, { withFileTypes: true })
+    .filter(item => item.isDirectory() && !item.name.startsWith('.'))
+    .map(item => item.name)
+  releases.sort();
+  return releases;
+}
 
 /* I fully believe there's a more idiomatic way to do this, but this at least works, even if it's verbose. */
 function versionSorter(a: string, b: string): number {

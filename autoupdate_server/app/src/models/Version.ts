@@ -10,9 +10,9 @@ interface VersionHierarchy {
 export class Version {
   name: string;
   hierarchy: VersionHierarchy;
-  releases: [string] | [];
+  releases: string[];
 
-  constructor(name: string, releases?: [string]) {
+  constructor(name: string, releases?: string[]) {
     this.name = name ?? '';
     this.hierarchy = Version.versionHierarchy(name)
     this.releases = releases ?? [];
