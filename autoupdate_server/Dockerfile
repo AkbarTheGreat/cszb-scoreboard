@@ -1,25 +1,26 @@
-FROM ubuntu:jammy
+FROM alpine:latest
 
-ENV CC /usr/bin/clang
-ENV CXX /usr/bin/clang++
-ENV DISPLAY localhost:0.0 
-ENV USER root
+RUN apk add --no-cache \
+    alpine-sdk \
+    perl \
+    perl-app-cpanminus \
+    perl-module-build-tiny \
+    perl-mojolicious \
+    perl-moose
 
-# This is a very insecure password, obviously.  Don't trust this container to run long-term without tweaking this
-RUN mkdir -p /root/.vnc
-RUN echo "pass" > /root/.vnc/passwd
-RUN chmod 0600 /root/.vnc/passwd
+RUN cpanm \
+    Mojolicious::Plugin::AccessLog \
+    MooseX::Singleton
 
-COPY etc/scripts/docker_packages.sh /setup/docker_packages.sh
-RUN /setup/docker_packages.sh
+COPY ./app /updater
 
-COPY etc/scripts/docker_dependencies.pl /setup/docker_dependencies.pl
-RUN /setup/docker_dependencies.pl
+# /releases will likely always be a mounted volume, for persistence, but create a space in case they're not
+RUN mkdir -p /releases
 
-COPY ./ /src/updater
+WORKDIR /updater
 
-RUN mkdir -p /src/updater/out
-WORKDIR /src/updater/out
+EXPOSE 8080
 
-CMD cmake -DCMAKE_BUILD_TYPE=Debug -DSKIP_LINT=false -DCLANG_TIDY_ERRORS=true -DINTEGRATION_TEST=true ../ && make -j6 updater_proto all test
+# TODO -- this may not be appropriate for production deployment -- update if not.
+CMD [/usr/bin/perl, autoupdater.pl, daemon, -l, http://*:8080, -m, production]
 
