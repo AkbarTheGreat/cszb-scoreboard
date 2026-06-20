@@ -41,17 +41,32 @@ sub api_base {
     # @VALID_API_VERSIONS, above.
     return (api_version => '1.0');
 }
+
+sub _version_info_worker {
+    my ($self, $version, $mojo) = @_;
+    my $lib = CszbScoreboard::ReleaseLibrary->instance();
+    return {$self->api_base(),
+       version => $version,
+       releases => $lib->releases($version, $mojo->app->log),
+    };
+}
  
 sub versions {
-    my ($self, $log) = @_;
+    my ($self, $mojo) = @_;
     my $lib = CszbScoreboard::ReleaseLibrary->instance();
-    return {$self->api_base(), 'versions' => $lib->versions($log)};
+    return {$self->api_base(), 'versions' => $lib->versions($mojo->app->log)};
+}
+
+sub version_info {
+    my ($self, $mojo) = @_;
+    my $version = $mojo->param('version');
+    return $self->_version_info_worker($version, $mojo);
 }
 
 sub latest {
-    my ($self, $log) = @_;
+    my ($self, $mojo) = @_;
     my $lib = CszbScoreboard::ReleaseLibrary->instance();
-    return {$self->api_base(), 'latest' => $lib->versions($log)->[-1]};
+    return $self->_version_info_worker($lib->versions($mojo->app->log)->[-1], $mojo);
 }
 
 sub dispatch {
@@ -66,7 +81,7 @@ sub dispatch {
     if (none {$_ eq $route} keys %DISPATCH_TREE) {
         raise 'CszBoston::UpdaterAPI::InvalidMethod', 'Invalid Method: ' . $route;
     }
-    return $DISPATCH_TREE{$route}->($self, $mojo->app->log);
+    return $DISPATCH_TREE{$route}->($self, $mojo);
 }
 
 1;
