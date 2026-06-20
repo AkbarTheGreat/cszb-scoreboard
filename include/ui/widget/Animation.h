@@ -26,7 +26,7 @@ namespace cszb_scoreboard {
 class Animation : public Widget {
  public:
   explicit Animation(swx::MediaCtrl *ctrl) { _wx = ctrl; }
-  void load(std::string url) { auto test = _wx->Load(url); }
+  void load(const std::string &url) { auto test = _wx->Load(url); }
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow * override { return _wx; }
