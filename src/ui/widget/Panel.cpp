@@ -25,6 +25,7 @@ limitations under the License.
 
 #include <vector>  // for vector
 
+#include "ui/widget/Animation.h"
 #include "ui/widget/Browser.h"               // for Browser
 #include "ui/widget/Button.h"                // for Button
 #include "ui/widget/CheckBox.h"              // for CheckBox
@@ -49,17 +50,18 @@ limitations under the License.
 #include "ui/widget/swx/DirDialog.h"         // for DirDialog
 #include "ui/widget/swx/EditableListBox.h"   // for EditableListBox
 #include "ui/widget/swx/FileDialog.h"        // for FileDialog
-#include "ui/widget/swx/RadioBox.h"          // for RadioBox
-#include "ui/widget/swx/RadioButton.h"       // for RadioButton
-#include "ui/widget/swx/ScrolledWindow.h"    // for ScrolledWindow
-#include "ui/widget/swx/SearchCtrl.h"        // for SearchCtrl
-#include "ui/widget/swx/StaticBox.h"         // for StaticBoxImpl
-#include "ui/widget/swx/StaticLine.h"        // for StaticLine
-#include "ui/widget/swx/StaticText.h"        // for StaticText
-#include "ui/widget/swx/TextCtrl.h"          // for TextCtrl
-#include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
-#include "ui/widget/swx/WebView.h"           // for WebView
-#include "util/FilesystemPath.h"             // for FilesystemPath
+#include "ui/widget/swx/MediaCtrl.h"
+#include "ui/widget/swx/RadioBox.h"        // for RadioBox
+#include "ui/widget/swx/RadioButton.h"     // for RadioButton
+#include "ui/widget/swx/ScrolledWindow.h"  // for ScrolledWindow
+#include "ui/widget/swx/SearchCtrl.h"      // for SearchCtrl
+#include "ui/widget/swx/StaticBox.h"       // for StaticBoxImpl
+#include "ui/widget/swx/StaticLine.h"      // for StaticLine
+#include "ui/widget/swx/StaticText.h"      // for StaticText
+#include "ui/widget/swx/TextCtrl.h"        // for TextCtrl
+#include "ui/widget/swx/ToggleButton.h"    // for ToggleButton
+#include "ui/widget/swx/WebView.h"         // for WebView
+#include "util/FilesystemPath.h"           // for FilesystemPath
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
@@ -81,6 +83,12 @@ auto Panel::childPanel() const -> swx::Panel* {
 auto Panel::childPanel(int width, int height) const -> swx::Panel* {
   return new swx::PanelImpl(wx(), wxID_ANY, wxDefaultPosition,
                             wxSize(width, height));
+}
+
+auto Panel::animation(const std::string& filename) const
+    -> std::unique_ptr<Animation> {
+  return std::make_unique<Animation>(
+      new swx::MediaCtrl(wx(), wxID_ANY, filename));
 }
 
 auto Panel::button(const std::string& label, bool exact_fit) const
