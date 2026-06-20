@@ -1,10 +1,11 @@
 FROM node:21-alpine
 
-COPY app /autoupdater
 
 WORKDIR /autoupdater
-
+COPY app/*.json /autoupdater/
 RUN npm install
+
+COPY app /autoupdater
 RUN npm run build
 
 ENV DEBUG=myapp:*
