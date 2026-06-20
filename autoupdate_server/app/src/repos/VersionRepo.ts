@@ -1,7 +1,8 @@
-import { Version } from '@src/models/Version';
+import EnvVars from '@src/constants/EnvVars';
 import fs from 'fs';
+import { Version } from '@src/models/Version';
 
-const releaseData = '/releases/';
+const releaseData = EnvVars.NodeEnv == 'test' ? '../testdata/releases/' : '/releases/';
 
 // **** Functions **** //
 
@@ -70,16 +71,20 @@ function versionSorter(a: string, b: string): number {
   if (splitA.tag < splitB.tag) {
     return -1
   }
-  if (splitA.sub > splitB.sub) {
+  if (splitA.tag > splitB.tag) {
     return 1
   }
 
   return 0;
 }
+
 // **** Export default **** //
+
 
 export default {
   getAll,
   getInfo,
   getLatest,
 } as const;
+
+export const _versionSorter = (EnvVars.NodeEnv === "test") ? versionSorter : null;
