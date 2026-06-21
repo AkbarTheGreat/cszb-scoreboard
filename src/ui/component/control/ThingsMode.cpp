@@ -57,11 +57,13 @@ void ThingsMode::createControls(Panel* control_panel) {
   new_activity_button = button_panel->button("New Activity");
   new_replacement_button = button_panel->button("New Replacement");
 
-  home_activities_panel = new ActivityPanel(scrollable_panel->childPanel(),
-                                            this, ProtoUtil::homeSide());
-  away_activities_panel = new ActivityPanel(scrollable_panel->childPanel(),
-                                            this, ProtoUtil::awaySide());
-  all_activities_panel = new ActivityPanel(scrollable_panel->childPanel(), this,
+  activity_panels =
+      std::make_unique<MultiWidgetPanel>(scrollable_panel->childPanel());
+  home_activities_panel = new ActivityPanel(activity_panels->childPanel(), this,
+                                            ProtoUtil::homeSide());
+  away_activities_panel = new ActivityPanel(activity_panels->childPanel(), this,
+                                            ProtoUtil::awaySide());
+  all_activities_panel = new ActivityPanel(activity_panels->childPanel(), this,
                                            ProtoUtil::allSide());
 
   positionWidgets(control_panel);
@@ -77,9 +79,11 @@ void ThingsMode::positionWidgets(Panel* control_panel) {
   button_panel->runSizer();
 
   scrollable_panel->addWidget(*button_panel, 0, 0);
-  scrollable_panel->addWidget(*home_activities_panel, 1, 0, NO_BORDER);
-  scrollable_panel->addWidget(*away_activities_panel, 2, 0, NO_BORDER);
-  scrollable_panel->addWidget(*all_activities_panel, 3, 0, NO_BORDER);
+  scrollable_panel->addWidget(*activity_panels, 1, 0);
+
+  activity_panels->addWidget(*home_activities_panel);
+  activity_panels->addWidget(*away_activities_panel);
+  activity_panels->addWidget(*all_activities_panel);
 
   updateActivityPanel();
 
@@ -141,17 +145,11 @@ void ThingsMode::textUpdated() { updatePreview(); }
 
 void ThingsMode::updateActivityPanel() {
   if (screen_selection->allSelected()) {
-    home_activities_panel->hide();
-    away_activities_panel->hide();
-    all_activities_panel->show();
+    activity_panels->showWidget(*all_activities_panel);
   } else if (screen_selection->homeSelected()) {
-    away_activities_panel->hide();
-    all_activities_panel->hide();
-    home_activities_panel->show();
+    activity_panels->showWidget(*home_activities_panel);
   } else if (screen_selection->awaySelected()) {
-    home_activities_panel->hide();
-    all_activities_panel->hide();
-    away_activities_panel->show();
+    activity_panels->showWidget(*away_activities_panel);
   }
 }
 

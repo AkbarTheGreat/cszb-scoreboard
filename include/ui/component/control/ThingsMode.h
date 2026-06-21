@@ -24,9 +24,10 @@ limitations under the License.
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/TeamSelector.h"          // for TeamSelector
 #include "ui/widget/Button.h"                           // for Button
-#include "ui/widget/Panel.h"                            // for Panel
-#include "ui/widget/Radio.h"                            // for Radio
-#include "ui/widget/ScrollingPanel.h"                   // for ScrollingPanel
+#include "ui/widget/MultiWidgetPanel.h"
+#include "ui/widget/Panel.h"           // for Panel
+#include "ui/widget/Radio.h"           // for Radio
+#include "ui/widget/ScrollingPanel.h"  // for ScrollingPanel
 
 namespace cszb_scoreboard {
 class ActivityPanel;
@@ -50,6 +51,7 @@ class ThingsMode : public ScreenTextController {
   std::unique_ptr<Radio> presenter_selection;
   std::unique_ptr<TeamSelector> screen_selection;
   std::unique_ptr<ScrollingPanel> scrollable_panel;
+  std::unique_ptr<MultiWidgetPanel> activity_panels;
 
   ActivityPanel* home_activities_panel;
   ActivityPanel* away_activities_panel;
