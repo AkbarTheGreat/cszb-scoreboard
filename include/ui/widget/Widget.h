@@ -31,6 +31,7 @@ class RenderContext;
 
 namespace swx {
 class Sizer;
+class SwappableSizer;
 }  // namespace swx
 
 const int NO_BORDER = 0;
@@ -112,10 +113,14 @@ class Widget {
 
   [[nodiscard]] virtual auto wx() const -> wxWindow* = 0;
 
+ protected:
+  auto swappable_sizer() -> swx::SwappableSizer*;
+
  private:
   // wxWidget will clean up our sizer for us, so keep it as an unmanaged
   // pointer.
   swx::Sizer* window_sizer = nullptr;
+  swx::SwappableSizer* swappable_window_sizer = nullptr;
   auto widgetAtIndex(int row, int column) -> wxWindow*;
 };
 

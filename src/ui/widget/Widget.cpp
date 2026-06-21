@@ -25,8 +25,9 @@ limitations under the License.
 #include <memory>   // for allocator_traits<>::value_type
 #include <vector>   // for vector
 
-#include "ui/widget/RenderContext.h"  // for RenderContext
-#include "ui/widget/swx/Sizer.h"      // for Sizer
+#include "ui/widget/RenderContext.h"       // for RenderContext
+#include "ui/widget/swx/Sizer.h"           // for Sizer
+#include "ui/widget/swx/SwappableSizer.h"  // for SwappableSizer
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 class wxWindow;
@@ -169,11 +170,27 @@ auto Widget::sizeOfWidgetAtLocation(int row, int column) -> Size {
 }
 
 auto Widget::sizer() -> swx::Sizer* {
+  if (swappable_window_sizer != nullptr) {
+    throw std::runtime_error(
+        "Cannot use sizer() if swappable_sizer() is already in use");
+  }
   if (window_sizer == nullptr) {
     window_sizer = new swx::Sizer();
     wx()->SetSizer(window_sizer);
   }
   return window_sizer;
+}
+
+auto Widget::swappable_sizer() -> swx::SwappableSizer* {
+  if (window_sizer != nullptr) {
+    throw std::runtime_error(
+        "Cannot use swappable_sizer() if sizer() is already in use");
+  }
+  if (swappable_window_sizer == nullptr) {
+    swappable_window_sizer = new swx::SwappableSizer();
+    wx()->SetSizer(swappable_window_sizer);
+  }
+  return swappable_window_sizer;
 }
 
 // Paint events also need to create a DC to work appropriately, so we handle
