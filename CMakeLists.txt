@@ -157,6 +157,10 @@ set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
 protobuf_generate(TARGET scoreboard_proto PROTOC_EXE ${PROTOC_EXECUTABLE})
 target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
 
+# By setting IWYU here, we don't run IWYU on thirdparty or protobuf targets, which we don't want to modify.
+if(SCOREBOARD_IWYU)
+    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${SCOREBOARD_IWYU})
+endif()
 
 add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
 add_dependencies(scoreboard_classes scoreboard_proto)

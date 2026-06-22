@@ -41,21 +41,23 @@ our $DOCKER_BUILD_PATH = '/src/out/iwyu';
 our $BUILD_PATH        = $BASE_DIR . q{/out/iwyu};
 my $DOCKER_ROOT = '/cszb-scoreboard';
 
-our @SKIP_MARKDOWN_FILES = qw(
-    cmake/modules/README.md
+our @SKIP_MARKDOWN_FILE_PREFIXES = qw(
+    cmake/modules
+    thirdparty/
 );
 
 our $IS_WSL = undef;
 
 my ( $opt_help, $opt_local );
-my $opt_procs = 2;
+my $opt_procs = q{};
 
 # No real options yet, but it makes pretty boilerplate.
 my %options = (
    'help|?'      => { 'val' => \$opt_help, 'help' => 'This help' },
    'processes=i' => {
-         'val'  => \$opt_procs,
-         'help' => 'The number of jobs to run per build execution (default 2)'
+      'val'  => \$opt_procs,
+      'help' =>
+          'The number of jobs to run per build execution (default is the number of processors on the machine)',
    },
    'local' => {
       'val'  => \$opt_local,
@@ -143,14 +145,9 @@ sub cmake {
       $ENV{'CXX'} = '/usr/bin/clang++';
    }
    workdir( $docker, $build_path );
-   sys( $docker,
-        'cmake',
-        '-DSKIP_LINT=true',
-        '-DCMAKE_CXX_INCLUDE_WHAT_YOU_USE='
-            . $iwyu
-            . ';-Xiwyu;any;-Xiwyu;iwyu;-Xiwyu;args',
-        $code_path
-      );
+   sys( $docker, 'cmake', '-DSKIP_LINT=true',
+        '-DSCOREBOARD_IWYU=' . $iwyu . ';-Xiwyu;any;-Xiwyu;iwyu;-Xiwyu;args',
+        $code_path );
 }
 
 sub find_files_with_extension {
@@ -182,17 +179,17 @@ sub run_iwyu {
 
    cmake($docker);
 
-# Don't capture any iwyu output for protobuf generated files, but redirect it to /dev/null to quiet things down.
+# Pre-build some dependencies so that warnings from them don't taint iwyu output.
    sys_io( $docker, 'make', '-j' . $opt_procs,
-           'clean', 'scoreboard_proto', '2>/dev/null' );
+           'clean', 'curl', 'wxcore', '2>/dev/null' );
    sys_io( $docker, 'make', '-j' . $opt_procs, 'all', '2>iwyu_data.txt' );
    return $docker;
 }
 
 sub run_fix_include {
    my ($docker) = @_;
-   sys_io( $docker, 'cat', 'iwyu_data.txt', '|',
-           '/usr/local/bin/fix_includes.py',
+   sys_io( $docker, 'cat', 'iwyu_data.txt',
+           '|',          '/usr/local/bin/fix_includes.py',
            '--comments', '--nosafe_headers' );
 }
 
@@ -207,7 +204,7 @@ sub run_mdformat {
    workdir( $docker, q{} );
    my @markdown_files = find_files_with_extension('md');
    for my $file (@markdown_files) {
-      next if any { $_ eq $file } @SKIP_MARKDOWN_FILES;
+      next if any { $file =~ /^$_/ } @SKIP_MARKDOWN_FILE_PREFIXES;
       sys( $docker, 'mdformat', '--wrap=100', $file );
    }
 }
