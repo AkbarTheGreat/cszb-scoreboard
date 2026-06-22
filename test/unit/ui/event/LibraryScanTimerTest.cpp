@@ -1,12 +1,11 @@
-#include <gmock/gmock.h>  // for GMOCK_PP_INTERNAL_IF_0
-#include <gtest/gtest.h>  // for TestInfo (ptr only)
-#include <wx/string.h>    // for wxString, operator==
+#include <wx/string.h>  // for wxString, operator==
 
-#include <algorithm>  // for max
-#include <memory>     // for unique_ptr, allocator
-#include <vector>     // for vector
+#include <memory>  // for unique_ptr, allocator
+#include <vector>  // for vector
 
 #include "config/ImageLibrary.h"                 // for LibraryUpdateResults
+#include "gmock/gmock.h"                         // for GMOCK_PP_INTERNAL_IF_0
+#include "gtest/gtest.h"                         // for Matcher, TEST_F, Test
 #include "image_library.pb.h"                    // for ImageInfo, ImageLibrary
 #include "test/mocks/ui/frame/MockMainView.h"    // for MockMainView
 #include "test/mocks/ui/widget/swx/MockFrame.h"  // for MockFrame

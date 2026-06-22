@@ -19,12 +19,13 @@ limitations under the License.
 
 #pragma once
 
-#include "ui/widget/Panel.h"               // for Panel
-#include "ui/widget/swx/ScrolledWindow.h"  // for ScrolledWindow
-
-class wxWindow;
+#include "ui/widget/Panel.h"  // for Panel
 
 namespace cszb_scoreboard {
+class Widget;
+namespace swx {
+class Panel;
+}  // namespace swx
 
 class MultiWidgetPanel : public Panel {
  public:

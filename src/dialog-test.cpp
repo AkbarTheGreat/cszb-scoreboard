@@ -17,20 +17,20 @@ limitations under the License.
 */
 
 #include <wx/app.h>    // for wxIMPLEMENT_APP
-#include <wx/event.h>  // for wxCloseEvent (ptr only)
+#include <wx/event.h>  // for wxEVT_CLOSE_WINDOW
 
 #include <cstdlib>  // for exit
-#include <memory>   // for unique_ptr, make_unique
+#include <memory>   // for unique_ptr, allocator, make_un...
 
 #include "config/Position.h"                   // for Position, Size
 #include "ui/dialog/EditImageLibraryDialog.h"  // IWYU pragma: keep for EditImageLibraryDialog
-#include "ui/dialog/SettingsDialog.h"  // IWYU pragma: keep for SettingsDialog
+#include "ui/dialog/SettingsDialog.h"  // for SettingsDialog
 #include "ui/dialog/TeamLibraryDialog.h"  // IWYU pragma: keep for TeamLibraryDialog
 #include "ui/widget/Frame.h"              // for Frame
 #include "ui/widget/Panel.h"              // for Panel
 #include "util/Singleton.h"               // for Singleton
-// IWYU pragma: no_include <wx/unix/app.h>
-// IWYU pragma: no_include <wx/gtk/app.h>
+// IWYU pragma: no_include "wx/unix/app.h"
+// IWYU pragma: no_include "wx/gtk/app.h"
 
 namespace cszb_scoreboard {
 

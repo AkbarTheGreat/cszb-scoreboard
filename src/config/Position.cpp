@@ -20,6 +20,7 @@ limitations under the License.
 #include "config/Position.h"
 
 #include "config.pb.h"  // for Rectangle
+#include "wx/gdicmn.h"  // for wxPoint, wxSize
 
 namespace cszb_scoreboard {
 

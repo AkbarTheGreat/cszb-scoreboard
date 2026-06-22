@@ -19,12 +19,12 @@ limitations under the License.
 
 #pragma once
 
-#include <chrono>   // for seconds
 #include <cstdint>  // for int64_t
 #include <string>   // for string
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
 #include "util/Singleton.h"    // for Singleton, SingletonClass
+// IWYU pragma: no_include <bits/chrono.h>
 
 namespace cszb_scoreboard {
 

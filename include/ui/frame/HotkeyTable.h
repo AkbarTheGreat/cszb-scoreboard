@@ -26,7 +26,8 @@ limitations under the License.
 
 #include <vector>  // for vector
 
-#include "util/Singleton.h"
+#include "util/Singleton.h"  // for SingletonClass
+#include "wx/accel.h"        // for wxAcceleratorEntry (ptr only)
 
 namespace cszb_scoreboard {
 class Frame;

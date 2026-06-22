@@ -23,6 +23,13 @@ limitations under the License.
 
 #include <wx/event.h>  // for wxEventTypeTag
 
+#include "wx/defs.h"     // for wxWindowID
+#include "wx/webview.h"  // for wxWebView, wxWebViewBackendDefault, wxWebVie...
+
+class wxPoint;
+class wxSize;
+class wxString;
+
 namespace cszb_scoreboard::swx {
 
 #ifdef _WIN32

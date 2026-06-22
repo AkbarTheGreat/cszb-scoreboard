@@ -62,7 +62,7 @@ class FrameImpl : public Frame, public wxFrame {
             const wxSize& size = wxDefaultSize,
             int64_t style = wxDEFAULT_FRAME_STYLE,
             const wxString& name = wxFrameNameStr)
-      : wxFrame(parent, id, title, pos, size, style, name) {};
+      : wxFrame(parent, id, title, pos, size, style, name){};
 
   auto Close(bool force) -> bool override { return wxFrame::Close(force); }
   auto CreateStatusBar(int number, int64_t style, wxWindowID id,

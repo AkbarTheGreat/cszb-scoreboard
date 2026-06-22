@@ -19,8 +19,10 @@ limitations under the License.
 
 #include "ui/UiUtil.h"
 
-#include <wx/gbsizer.h>
-#include <wx/sizer.h>
+#include <wx/gbsizer.h>  // for wxGBPosition, wxGBSpan, wxGridBagSizer
+#include <wx/sizer.h>    // for wxFlexGridSizer, wxFlexSizerGrowMode
+
+#include "wx/defs.h"  // for wxOrientation
 
 class wxWindow;
 

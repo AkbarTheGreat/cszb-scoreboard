@@ -19,10 +19,19 @@ limitations under the License.
 
 #include "ui/widget/MultiWidgetPanel.h"
 
-#include "ui/widget/swx/SwappableSizer.h"
-#include "wx/window.h"  // for wxWindow
+#include <list>  // for operator==, _List_iterator
+
+#include "ScoreboardCommon.h"              // for DEFAULT_BORDER_SIZE
+#include "ui/widget/Widget.h"              // for Widget
+#include "ui/widget/swx/SwappableSizer.h"  // for SwappableSizer
+#include "wx/defs.h"                       // for operator|, wxDirection
+#include "wx/sizer.h"                      // for wxSizerItemList, wxSizerItem
+#include "wx/window.h"                     // for wxWindow
 
 namespace cszb_scoreboard {
+namespace swx {
+class Panel;
+}  // namespace swx
 
 MultiWidgetPanel::MultiWidgetPanel(swx::Panel* panel) : Panel(panel) {}
 

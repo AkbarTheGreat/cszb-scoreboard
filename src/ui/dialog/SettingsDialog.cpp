@@ -19,16 +19,17 @@ limitations under the License.
 
 #include "ui/dialog/SettingsDialog.h"
 
-#include <wx/defs.h>  // for wxID_CANCEL, wxI...
+#include <wx/defs.h>  // for wxStandardID
 
-#include <algorithm>
-#include <utility>  // for move
+#include <algorithm>  // for all_of
+#include <utility>    // for move
 
 #include "ScoreboardCommon.h"                        // for DEFAULT_BORDER_SIZE
 #include "ui/dialog/settings/DisplaySettingsPage.h"  // for DisplaySettingsPage
-#include "ui/dialog/settings/GeneralSettingsPage.h"
-#include "ui/dialog/settings/TeamSettingsPage.h"  // for TeamSettingsPage
-#include "ui/frame/MainView.h"
+#include "ui/dialog/settings/GeneralSettingsPage.h"  // for GeneralSettingsPage
+#include "ui/dialog/settings/TeamSettingsPage.h"     // for TeamSettingsPage
+#include "ui/frame/MainView.h"                       // for MainView
+#include "wx/event.h"                                // for wxCommandEvent
 
 namespace cszb_scoreboard {
 namespace swx {

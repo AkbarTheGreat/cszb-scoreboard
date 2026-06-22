@@ -24,7 +24,9 @@ limitations under the License.
 
 #include "config/Position.h"  // for Position, Size
 #include "wx/window.h"        // for wxWindow
-// IWYU pragma: no_include <wx/gtk/menu.h>
+
+class wxString;
+// IWYU pragma: no_include "wx/gtk/menu.h"
 
 namespace cszb_scoreboard {
 

@@ -26,6 +26,7 @@ limitations under the License.
 #include <memory>  // for allocator
 
 #include "util/Singleton.h"  // for SingletonClass
+#include "wx/cmdline.h"      // for wxCmdLineParser
 
 namespace cszb_scoreboard {
 

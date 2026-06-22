@@ -19,8 +19,9 @@ limitations under the License.
 
 #include "ui/widget/DraggablePanel.h"
 
-#include "ui/widget/Widget.h"  // for Widget
-#include "wx/window.h"         // for wxWindow
+#include "ui/widget/Widget.h"     // for Widget
+#include "wx/aui/framemanager.h"  // for wxAuiPaneInfo, wxAuiManager
+#include "wx/window.h"            // for wxWindow
 
 namespace cszb_scoreboard {
 namespace swx {

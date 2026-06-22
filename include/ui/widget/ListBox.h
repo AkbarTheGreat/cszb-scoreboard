@@ -25,12 +25,12 @@ limitations under the License.
 #include <string>      // for string
 #include <vector>      // for vector
 
-#include "config/swx/defs.h"                // for wxID_ANY
-#include "config/swx/event.h"               // for wxEventTypeTag
+#include "config/swx/defs.h"                // for wxStandardID
+#include "config/swx/event.h"               // for wxEventTypeTag, wxCommand...
 #include "ui/widget/Widget.h"               // for Widget
 #include "ui/widget/swx/EditableListBox.h"  // for EditableListBox
 #include "wx/window.h"                      // for wxWindow
-// IWYU pragma: no_include <wx/gtk/bmpbuttn.h>
+// IWYU pragma: no_include "wx/gtk/bmpbuttn.h"
 
 namespace cszb_scoreboard {
 

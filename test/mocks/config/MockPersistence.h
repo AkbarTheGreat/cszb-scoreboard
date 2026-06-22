@@ -32,15 +32,15 @@ and save{method_base} are overrides of the Persistence class.  A third method,
 reset{method_base}, is added to reset the faked persistence.
 */
 
-#define MOCK_PERSISTENCE_METHODS(method_base, proto)                         \
- private:                                                                    \
-  proto local_##method_base;                                                 \
-                                                                             \
- public:                                                                     \
-  auto load##method_base() -> proto override { return local_##method_base; } \
-  void save##method_base(const proto& var) override {                        \
-    local_##method_base = var;                                               \
-  }                                                                          \
+#define MOCK_PERSISTENCE_METHODS(method_base, proto)                       \
+ private:                                                                  \
+  proto local_##method_base;                                               \
+                                                                           \
+ public:                                                                   \
+  auto load##method_base()->proto override { return local_##method_base; } \
+  void save##method_base(const proto& var) override {                      \
+    local_##method_base = var;                                             \
+  }                                                                        \
   void reset##method_base() { local_##method_base = {}; }
 
 class MockPersistence : public Persistence {

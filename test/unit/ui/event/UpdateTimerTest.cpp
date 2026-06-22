@@ -1,10 +1,10 @@
-#include <gmock/gmock.h>  // for GMOCK_PP_INTERNAL_IF_0
-#include <gtest/gtest.h>  // for Matcher
-#include <wx/string.h>    // for wxString, operator==
+#include <wx/string.h>  // for wxString, operator==
 
 #include <memory>  // for unique_ptr, make_unique
 #include <string>  // for string
 
+#include "gmock/gmock.h"                         // for GMOCK_PP_INTERNAL_IF_0
+#include "gtest/gtest.h"                         // for Matcher, TEST_F, Test
 #include "test/mocks/ui/frame/MockMainView.h"    // for MockMainView
 #include "test/mocks/ui/widget/swx/MockFrame.h"  // for MockFrame
 #include "test/mocks/util/MockHttpReader.h"      // for MockHttpReader

@@ -22,6 +22,7 @@ limitations under the License.
 #include <wx/font.h>  // for wxFontInfo, wxFont, wxFontFamily
 
 #include "util/FontUtil.h"  // for FontUtil
+#include "wx/gdicmn.h"      // for wxRect
 
 namespace cszb_scoreboard {
 struct Size;

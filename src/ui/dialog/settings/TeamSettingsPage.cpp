@@ -19,8 +19,7 @@ limitations under the License.
 
 #include "ui/dialog/settings/TeamSettingsPage.h"
 
-#include <algorithm>  // for max
-#include <utility>    // for move
+#include <utility>  // for move
 
 #include "ScoreboardCommon.h"   // for DEFAULT_BORDER_SIZE
 #include "config.pb.h"          // for TeamInfo_TeamType

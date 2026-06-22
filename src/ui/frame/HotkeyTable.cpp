@@ -18,9 +18,8 @@ limitations under the License.
 
 #include "ui/frame/HotkeyTable.h"
 
-#include <algorithm>  // for max
-
 #include "ui/widget/Frame.h"  // for Frame
+#include "wx/defs.h"          // for wxWindowID
 
 namespace cszb_scoreboard {
 

@@ -60,6 +60,9 @@ limitations under the License.
 #include "ui/widget/swx/ToggleButton.h"      // for ToggleButton
 #include "ui/widget/swx/WebView.h"           // for WebView
 #include "util/FilesystemPath.h"             // for FilesystemPath
+#include "wx/gdicmn.h"                       // for wxSize
+#include "wx/string.h"                       // for wxString
+#include "wx/tbarbase.h"                     // for wxDefaultPosition, wxDef...
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {

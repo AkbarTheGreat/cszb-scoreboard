@@ -19,10 +19,11 @@ limitations under the License.
 
 #include "config/swx/image.h"
 
-#include <wx/gdicmn.h>  // for wxPoint, wxRect
-#include <wx/mstream.h>
+#include <wx/gdicmn.h>   // for wxBitmapType, wxPoint, wxRect
+#include <wx/mstream.h>  // for wxMemoryInputStream
 
 #include "ui/graphics/Color.h"  // for Color
+#include "wx/image.h"           // for wxImage
 
 namespace cszb_scoreboard {
 

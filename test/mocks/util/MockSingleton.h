@@ -45,7 +45,7 @@ class MockSingleton : public Singleton {
                const wxCmdLineArgsArray& argv),
               (override));
 
-  ~MockSingleton() {};
+  ~MockSingleton(){};
 };
 
 }  // namespace test

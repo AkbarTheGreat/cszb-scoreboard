@@ -18,9 +18,8 @@ limitations under the License.
 */
 #include "ui/frame/MainView.h"
 
-#include <algorithm>  // for max
-#include <string>     // for char_traits, operator+, string
-#include <vector>     // for vector
+#include <string>  // for char_traits, operator+, string
+#include <vector>  // for vector
 
 #include "ScoreboardCommon.h"       // for SCOREBOARD_VERSION
 #include "config/CommandArgs.h"     // for CommandArgs
@@ -31,6 +30,7 @@ limitations under the License.
 #include "ui/frame/HotkeyTable.h"   // for HotkeyTable
 #include "ui/widget/PopUp.h"        // for PopUp
 #include "util/StringUtil.h"        // for StringUtil
+#include "wx/defs.h"                // for wxStandardID
 
 namespace cszb_scoreboard {
 

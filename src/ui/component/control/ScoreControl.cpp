@@ -19,7 +19,6 @@ limitations under the License.
 
 #include "ui/component/control/ScoreControl.h"
 
-#include <algorithm>   // for max
 #include <cstdint>     // for int64_t
 #include <filesystem>  // for path
 #include <string>      // for string

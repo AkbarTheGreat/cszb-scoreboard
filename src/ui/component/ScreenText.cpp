@@ -21,8 +21,6 @@ limitations under the License.
 
 #include <wx/event.h>  // for wxEVT_PAINT
 
-#include <algorithm>  // for max
-
 #include "config.pb.h"                    // for RenderableText, ScreenSide
 #include "config/SlideShow.h"             // for SlideShow
 #include "config/TeamConfig.h"            // for TeamConfig

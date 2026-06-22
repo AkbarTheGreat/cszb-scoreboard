@@ -19,18 +19,18 @@ limitations under the License.
 #include "ui/widget/Widget.h"
 
 #include <wx/gbsizer.h>  // for wxGBSizerItem, wxGBPosition
-#include <wx/sizer.h>    // for wxSizerItemList, wxSizerItemLis...
+#include <wx/sizer.h>    // for wxSizerItemList, wxSizerItem
 
-#include <cstdint>  // for int32_t
-#include <memory>   // for allocator_traits<>::value_type
-#include <vector>   // for vector
+#include <cstdint>    // for int32_t
+#include <list>       // for operator==, _List_iterator
+#include <memory>     // for unique_ptr
+#include <stdexcept>  // for runtime_error
+#include <vector>     // for vector
 
 #include "ui/widget/RenderContext.h"       // for RenderContext
 #include "ui/widget/swx/Sizer.h"           // for Sizer
 #include "ui/widget/swx/SwappableSizer.h"  // for SwappableSizer
 // IWYU pragma: no_include <ext/alloc_traits.h>
-
-class wxWindow;
 
 namespace cszb_scoreboard {
 

@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <wx/gdicmn.h>    // for wxPoint, wxSize (ptr ...
+#include <wx/gdicmn.h>    // for wxPoint
 #include <wx/panel.h>     // for wxPanelNameStr
 #include <wx/string.h>    // for wxString
 #include <wx/tbarbase.h>  // for wxDefaultPosition
@@ -28,13 +28,13 @@ limitations under the License.
 #include <memory>   // for unique_ptr
 #include <string>   // for string
 
-#include "config/swx/defs.h"                    // for wxCANCEL, wxID_ANY, wxOK
+#include "config/swx/defs.h"                    // for wxStandardID, wxCANCEL
 #include "ui/widget/Widget.h"                   // for Widget
 #include "ui/widget/swx/Panel.h"                // for PanelImpl, Panel (ptr...
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 #include "wx/notebook.h"                        // IWYU pragma: keep
 #include "wx/window.h"                          // for wxWindow
-// IWYU pragma: no_include <wx/bookctrl.h>
+// IWYU pragma: no_include "wx/bookctrl.h"
 
 class wxEvent;
 

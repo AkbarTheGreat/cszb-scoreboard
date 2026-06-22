@@ -66,7 +66,7 @@ auto FrameManager::monitor(uint32_t index) -> Display { return Display(0); }
 MainView::MainView(cszb_scoreboard::swx::Frame* wx,
                    cszb_scoreboard::Singleton* singleton)
     : Frame(wx) {}
-void cszb_scoreboard::MainView::init() {};
+void cszb_scoreboard::MainView::init(){};
 #endif  // #ifdef TEST_STUB_MAIN_VIEW
 
 /* Stubbed methods from PersistentTimer.h */

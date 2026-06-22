@@ -22,7 +22,7 @@ limitations under the License.
 #include <wx/accel.h>        // for wxAcceleratorEntry
 #include <wx/aui/auibook.h>  // for wxAuiNotebookOption
 #include <wx/dialog.h>       // for wxDEFAULT_DIALOG_STYLE
-#include <wx/gdicmn.h>       // for wxPoint, wxSize (ptr ...
+#include <wx/gdicmn.h>       // for wxPoint
 #include <wx/panel.h>        // for wxPanelNameStr
 #include <wx/string.h>       // for wxString
 #include <wx/tbarbase.h>     // for wxDefaultPosition
@@ -42,7 +42,7 @@ limitations under the License.
 #include "ui/widget/swx/PropertySheetDialog.h"  // for PropertySheetDialog
 
 class wxWindow;
-// IWYU pragma: no_include <wx/generic/accel.h>
+// IWYU pragma: no_include "wx/generic/accel.h"
 
 namespace cszb_scoreboard {
 

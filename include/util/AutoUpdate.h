@@ -56,7 +56,7 @@ class AutoUpdate {
   // allows mocking of singletons.
   explicit AutoUpdate(SingletonClass c)
       : AutoUpdate(c, Singleton::getInstance(),
-                   std::move(std::make_unique<HttpReader>())) {};
+                   std::move(std::make_unique<HttpReader>())){};
   // GCOVR_EXCL_STOP
   virtual auto checkForUpdate(const std::string& current_version) -> bool;
   [[nodiscard]] virtual auto updateIsDownloadable() const -> bool {

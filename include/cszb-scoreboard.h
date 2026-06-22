@@ -19,8 +19,9 @@ limitations under the License.
 #pragma once
 
 #include <wx/app.h>  // IWYU pragma: keep for wxApp
-// IWYU pragma: no_include <wx/gtk/app.h>
-#include "include/ScoreboardCommon.h"
+
+#include "include/ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
+// IWYU pragma: no_include "wx/gtk/app.h"
 
 class wxCmdLineParser;
 

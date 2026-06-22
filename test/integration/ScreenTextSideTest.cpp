@@ -31,7 +31,7 @@ limitations under the License.
 #include "ui/widget/RenderContext.h"      // for RenderContext
 #include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
-// IWYU pragma: no_include <wx/gtk/app.h>
+// IWYU pragma: no_include "wx/gtk/app.h"
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
