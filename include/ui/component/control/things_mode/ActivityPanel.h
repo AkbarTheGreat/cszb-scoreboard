@@ -23,18 +23,20 @@ limitations under the License.
 #include <string>  // for string
 #include <vector>  // for vector
 
-#include "ScoreboardCommon.h"
-#include "config.pb.h"                                  // for RenderableTex...
+#include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
 #include "ui/component/control/things_mode/Activity.h"  // for Activity
 #include "ui/graphics/Color.h"                          // for Color
-#include "ui/widget/ColorPicker.h"                      // for ColorPicker
-#include "ui/widget/LabelledArea.h"
-#include "ui/widget/Panel.h"  // for Panel
-#include "util/Singleton.h"
+#include "ui/widget/LabelledArea.h"                     // for LabelledArea
+#include "ui/widget/Panel.h"                            // for Panel
+#include "util/Singleton.h"                             // for Singleton
 
 namespace cszb_scoreboard {
 class ReplacementPanel;
 class ScreenTextController;
+namespace proto {
+class RenderableText;
+class ScreenSide;
+}  // namespace proto
 
 namespace swx {
 class Panel;
@@ -45,14 +47,11 @@ class ActivityPanel : public Panel {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  ActivityPanel(swx::Panel* wx, ScreenTextController* owning_controller,
-                const proto::ScreenSide& side)
-      : ActivityPanel(wx, owning_controller, side, Singleton::getInstance()) {}
+  ActivityPanel(swx::Panel* wx, ScreenTextController* owning_controller)
+      : ActivityPanel(wx, owning_controller, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   void addActivity();
   void addReplacement();
-  auto getColor() -> Color;
-  auto previewText(int font_size) -> std::vector<proto::RenderableText>;
   void refreshSizers();
   auto replacementPanel() -> ReplacementPanel*;
   auto selectedActivityText() -> std::string;
@@ -62,22 +61,29 @@ class ActivityPanel : public Panel {
   void selectionChanged(Activity* selected);
   void textUpdated();
 
+  virtual auto activityText(const proto::ScreenSide& side, int font_size)
+      -> std::vector<proto::RenderableText> = 0;
+  virtual auto color(const proto::ScreenSide& side) -> Color = 0;
+  virtual auto replacementColor() -> Color = 0;
+  virtual auto replacementText(const proto::ScreenSide& side, int font_size)
+      -> std::vector<proto::RenderableText> = 0;
+  virtual auto splitScreens() -> bool = 0;
+
   PUBLIC_TEST_ONLY
   ActivityPanel(swx::Panel* wx, ScreenTextController* owning_controller,
-                const proto::ScreenSide& side, Singleton* singleton);
+                Singleton* singleton);
+
+ protected:
+  ScreenTextController* owning_controller;
+  std::vector<std::unique_ptr<Activity>> activities;
 
  private:
   std::unique_ptr<LabelledArea> activity_label, replacement_label;
   std::unique_ptr<Panel> activity_half, replacement_half;
-  std::unique_ptr<ColorPicker> color_picker;
-  proto::ScreenSide side;
-  std::vector<std::unique_ptr<Activity>> activities;
-  ScreenTextController* owning_controller;
   Singleton* singleton;
 
   void bindEvents();
   void positionWidgets();
-  void colorChanged();
   void resetActivityMoveButtons();
   void hideAllReplacements();
   void showReplacement(int index);

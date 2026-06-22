@@ -22,14 +22,13 @@ limitations under the License.
 #include <array>   // for array
 #include <vector>  // for vector
 
-#include "ScoreboardCommon.h"                                   // for DEFAU...
-#include "config.pb.h"                                          // for Rende...
-#include "config/swx/event.h"                                   // for wxEVT...
-#include "ui/component/ScreenText.h"                            // for Scree...
-#include "ui/component/control/things_mode/ActivityPanel.h"     // for Activ...
-#include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
-#include "ui/graphics/Color.h"                                  // for Color
-#include "util/ProtoUtil.h"                                     // for Proto...
+#include "ScoreboardCommon.h"                                // for DEFAULT_...
+#include "config.pb.h"                                       // for Renderab...
+#include "config/swx/event.h"                                // for wxEVT_CO...
+#include "ui/component/ScreenText.h"                         // for ScreenText
+#include "ui/component/control/things_mode/ActivityPanel.h"  // for Activity...
+#include "ui/graphics/Color.h"                               // for Color
+#include "util/ProtoUtil.h"                                  // for ProtoUtil
 
 namespace cszb_scoreboard {
 
@@ -58,12 +57,12 @@ void ThingsMode::createControls(Panel* control_panel) {
 
   activity_panels =
       std::make_unique<MultiWidgetPanel>(scrollable_panel->childPanel());
-  home_activities_panel = new ActivityPanel(activity_panels->childPanel(), this,
-                                            ProtoUtil::homeSide());
-  away_activities_panel = new ActivityPanel(activity_panels->childPanel(), this,
-                                            ProtoUtil::awaySide());
-  all_activities_panel = new ActivityPanel(activity_panels->childPanel(), this,
-                                           ProtoUtil::allSide());
+  home_activities_panel = std::make_unique<SingleTeamActivityPanel>(
+      activity_panels->childPanel(), this, ProtoUtil::homeSide());
+  away_activities_panel = std::make_unique<SingleTeamActivityPanel>(
+      activity_panels->childPanel(), this, ProtoUtil::awaySide());
+  all_activities_panel = std::make_unique<SingleTeamActivityPanel>(
+      activity_panels->childPanel(), this, ProtoUtil::allSide());
 
   positionWidgets(control_panel);
   bindEvents();
@@ -112,32 +111,47 @@ void ThingsMode::updateScreenText(ScreenText* screen_text) {
   if (!isActive()) {
     return;
   }
-  ActivityPanel* selected_panel = all_activities_panel;
+
+  ActivityPanel* selected_panel = all_activities_panel.get();
   if (screen_selection->allSelected()) {
     // Do nothing, already set
   } else if (screen_selection->homeSelected()) {
-    selected_panel = home_activities_panel;
+    selected_panel = home_activities_panel.get();
   } else if (screen_selection->awaySelected()) {
-    selected_panel = away_activities_panel;
+    selected_panel = away_activities_panel.get();
   }
 
   selected_panel->refreshSizers();
-  Color screen_color = selected_panel->getColor();
 
   // Re-size for scrollable windows
   scrollable_panel->runSizer();
 
-  std::vector<proto::RenderableText> screen_lines;
+  std::vector<proto::RenderableText> home_screen_lines, away_screen_lines;
+  Color home_screen_color = selected_panel->color(ProtoUtil::homeSide());
+  Color away_screen_color = selected_panel->color(ProtoUtil::awaySide());
 
   if (presenter_selection->selection() == 0) {
-    screen_lines = selected_panel->previewText(DEFAULT_FONT_SIZE);
+    home_screen_lines =
+        selected_panel->activityText(ProtoUtil::homeSide(), DEFAULT_FONT_SIZE);
+    away_screen_lines =
+        selected_panel->activityText(ProtoUtil::awaySide(), DEFAULT_FONT_SIZE);
   } else {
-    screen_lines =
-        selected_panel->replacementPanel()->previewText(DEFAULT_FONT_SIZE);
+    home_screen_lines = selected_panel->replacementText(ProtoUtil::homeSide(),
+                                                        DEFAULT_FONT_SIZE);
+    away_screen_lines = selected_panel->replacementText(ProtoUtil::awaySide(),
+                                                        DEFAULT_FONT_SIZE);
   }
 
-  screen_text->setAllText(screen_lines, screen_color, true,
-                          ProtoUtil::allSide());
+  if (selected_panel->splitScreens()) {
+    screen_text->setAllText(home_screen_lines, home_screen_color, true,
+                            ProtoUtil::homeSide());
+    screen_text->setAllText(away_screen_lines, away_screen_color, true,
+                            ProtoUtil::awaySide());
+  } else {
+    screen_text->setAllText(home_screen_lines, home_screen_color, true,
+                            ProtoUtil::allSide());
+  }
+  return;
 }
 
 void ThingsMode::textUpdated() { updatePreview(); }

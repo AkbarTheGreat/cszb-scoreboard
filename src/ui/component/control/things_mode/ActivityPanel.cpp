@@ -23,10 +23,8 @@ limitations under the License.
 #include <cassert>    // for assert
 
 #include "ScoreboardCommon.h"                                   // for DEFAU...
-#include "config/swx/event.h"                                   // for wxEVT...
 #include "ui/component/control/ScreenTextController.h"          // for Scree...
 #include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
-#include "ui/graphics/TeamColors.h"                             // for TeamC...
 #include "ui/widget/Widget.h"                                   // for NO_BO...
 
 namespace cszb_scoreboard {
@@ -41,22 +39,18 @@ const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 // existing ones.  In theory this could be 1, but it self-resolves pretty much
 // immediately whent they're repositioned, so it doesn't matter much.
 const int REPLACEMENT_BUFFER_SIZE = 5;
-static const char* BULLET = "\u2022";
 
 ActivityPanel::ActivityPanel(swx::Panel* wx,
                              ScreenTextController* owning_controller,
-                             const proto::ScreenSide& side,
                              Singleton* singleton)
     : Panel(wx) {
   assert(INITIAL_NUMBER_OF_ACTIVITIES >= ACTIVITIES_FOR_SIZING);
   this->owning_controller = owning_controller;
-  this->side = side;
   this->singleton = singleton;
   activity_label = labelledArea("Activities");
   replacement_label = labelledArea("Replacements");
   activity_half = activity_label->holds()->panel();
   replacement_half = replacement_label->holds()->panel();
-  color_picker = colorPicker(singleton->teamColors()->getColor(side));
 
   // Add only as many activites as we want the initial pane size to be sized
   // for.
@@ -82,11 +76,7 @@ ActivityPanel::ActivityPanel(swx::Panel* wx,
   resetActivityMoveButtons();
 }
 
-void ActivityPanel::bindEvents() {
-  color_picker->bind(
-      wxEVT_COLOURPICKER_CHANGED,
-      [this](wxColourPickerEvent& event) -> void { this->colorChanged(); });
-}
+void ActivityPanel::bindEvents() {}
 
 void ActivityPanel::positionWidgets() {
   int row = 0;
@@ -107,7 +97,6 @@ void ActivityPanel::positionWidgets() {
 
   addWidget(*activity_label, 0, 0);
   addWidget(*replacement_label, 0, 1);
-  addWidget(*color_picker, 1, 0);
   runSizer();
 }
 
@@ -178,12 +167,6 @@ void ActivityPanel::updateNotify() {
   owning_controller->updatePreview();
 }
 
-void ActivityPanel::colorChanged() {
-  singleton->teamColors()->setColor(side, color_picker->color());
-
-  owning_controller->updatePreview();
-}
-
 void ActivityPanel::refreshSizers() {
   replacement_half->runSizer();
   activity_half->runSizer();
@@ -210,11 +193,6 @@ void ActivityPanel::swapActivities(int a, int b) {
   updateNotify();
 }
 
-auto ActivityPanel::getColor() -> Color {
-  color_picker->setColor(singleton->teamColors()->getColor(side));
-  return singleton->teamColors()->getColor(side);
-}
-
 auto ActivityPanel::replacementPanel() -> ReplacementPanel* {
   if (activities.empty()) {
     return nullptr;
@@ -237,19 +215,6 @@ auto ActivityPanel::selectedActivityText() -> std::string {
     }
   }
   return " ";
-}
-
-auto ActivityPanel::previewText(int font_size)
-    -> std::vector<proto::RenderableText> {
-  std::string preview_text;
-  for (const auto& activity : activities) {
-    preview_text += std::string(BULLET) + " " + activity->previewText() + "\n";
-  }
-  std::vector<proto::RenderableText> return_vector;
-  return_vector.emplace_back();
-  return_vector.back().set_text(preview_text);
-  return_vector.back().mutable_font()->set_size(font_size);
-  return return_vector;
 }
 
 void ActivityPanel::resetActivityMoveButtons() {
