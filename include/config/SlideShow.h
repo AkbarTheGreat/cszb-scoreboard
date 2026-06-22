@@ -18,9 +18,9 @@ limitations under the License.
 */
 #pragma once
 
-#include <bits/chrono.h>  // for seconds
-#include <stdint.h>       // for int32_t
+#include <stdint.h>  // for int32_t
 
+#include <chrono>  // for seconds
 #include <string>  // for string
 #include <vector>  // for vector
 
@@ -28,7 +28,7 @@ limitations under the License.
 #include "config/swx/image.h"  // for Image
 #include "slide_show.pb.h"     // for SlideShow, SlideInfo (ptr only)
 #include "util/Singleton.h"    // for Singleton, SingletonClass
-// IWYU pragma: no_include "<bits/chrono.h>"
+// IWYU pragma: no_include <bits/chrono.h>
 
 namespace cszb_scoreboard {
 class FilesystemPath;
