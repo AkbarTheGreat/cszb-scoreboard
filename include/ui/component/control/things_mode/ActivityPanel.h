@@ -63,11 +63,14 @@ class ActivityPanel : public Panel {
 
   virtual auto activityText(const proto::ScreenSide& side, int font_size)
       -> std::vector<proto::RenderableText> = 0;
-  virtual auto color(const proto::ScreenSide& side) -> Color = 0;
-  virtual auto replacementColor() -> Color = 0;
+  virtual auto color(const proto::ScreenSide& side, bool forReplacement)
+      -> Color = 0;
   virtual auto replacementText(const proto::ScreenSide& side, int font_size)
       -> std::vector<proto::RenderableText> = 0;
-  virtual auto splitScreens() -> bool = 0;
+  virtual void setTeamForNewActivity(int index){};
+  // If the screen is not split, we presume to use whatever is returned as the
+  // "home" color and lines for everything.
+  virtual auto splitScreens(bool forReplacement) -> bool = 0;
 
   PUBLIC_TEST_ONLY
   ActivityPanel(swx::Panel* wx, ScreenTextController* owning_controller,

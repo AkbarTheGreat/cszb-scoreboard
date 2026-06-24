@@ -22,6 +22,7 @@ limitations under the License.
 #include <memory>  // for uniqu...
 #include <string>  // for string
 
+#include "config.pb.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
 #include "ui/widget/Button.h"                                   // for Button
 #include "ui/widget/Panel.h"                                    // for Panel
@@ -39,27 +40,32 @@ class Activity {
            Panel* replacement_frame, int index, bool is_first);
   void copyFrom(Activity* other);
   auto controlPane() -> Panel* { return control_pane.get(); }
+  auto getTeam() -> proto::ScreenSide;
   auto previewText() -> std::string;
   auto replacementPanel() -> ReplacementPanel* {
     return replacement_panel.get();
   }
   void setIndex(int index, int max_index);
+  void setTeam(bool is_home);
   auto isSelected() -> bool;
   void select();
   void unselect();
 
  private:
   int index;
+  proto::ScreenSide team;
   std::unique_ptr<Panel> control_pane;
   std::unique_ptr<RadioButton> activity_selector;
   std::unique_ptr<Text> activity_text;
-  std::unique_ptr<Button> down_button, up_button, remove_activity_button;
+  std::unique_ptr<Button> down_button, up_button, team_button,
+      remove_activity_button;
   ActivityPanel* parent;
   std::unique_ptr<ReplacementPanel> replacement_panel;
 
   void bindEvents();
   void positionWidgets();
   void moveButton(bool is_up);
+  void toggleTeam();
 };
 
 }  // namespace cszb_scoreboard

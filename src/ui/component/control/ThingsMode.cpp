@@ -27,15 +27,24 @@ limitations under the License.
 #include "config/swx/event.h"                                // for wxEVT_CO...
 #include "ui/component/ScreenText.h"                         // for ScreenText
 #include "ui/component/control/things_mode/ActivityPanel.h"  // for Activity...
-#include "ui/graphics/Color.h"                               // for Color
-#include "util/ProtoUtil.h"                                  // for ProtoUtil
+#include "ui/component/control/things_mode/HeadToHeadActivityPanel.h"  // for Hea...
+#include "ui/graphics/Color.h"  // for Color
+#include "util/ProtoUtil.h"     // for ProtoUtil
 
 namespace cszb_scoreboard {
 
 const int DEFAULT_FONT_SIZE = 10;
 const int BORDER_SIZE = DEFAULT_BORDER_SIZE;
+
+constexpr int PRESENT_ACTIVITY_LIST = 0;
+constexpr int PRESENT_REPLACEMENTS = 1;
 static constexpr std::array<const char*, 2> PRESENTER_OPTIONS{
     {"Activity List", "Replacements"}};
+
+constexpr int SINGLE_TEAM_MODE = 0;
+constexpr int HEAD_TO_HEAD_MODE = 1;
+static constexpr std::array<const char*, 2> GAME_MODE_OPTIONS{
+    {"Single Team", "Head-to-Head"}};
 
 auto ThingsMode::Create(swx::Panel* wx) -> std::unique_ptr<ThingsMode> {
   auto entry = std::make_unique<ThingsMode>(wx);
@@ -52,6 +61,9 @@ void ThingsMode::createControls(Panel* control_panel) {
   presenter_selection = button_panel->radio("Present", PRESENTER_OPTIONS.data(),
                                             PRESENTER_OPTIONS.size());
 
+  game_mode_selection = button_panel->radio(
+      "Game Mode", GAME_MODE_OPTIONS.data(), GAME_MODE_OPTIONS.size());
+
   new_activity_button = button_panel->button("New Activity");
   new_replacement_button = button_panel->button("New Replacement");
 
@@ -63,6 +75,8 @@ void ThingsMode::createControls(Panel* control_panel) {
       activity_panels->childPanel(), this, ProtoUtil::awaySide());
   all_activities_panel = std::make_unique<SingleTeamActivityPanel>(
       activity_panels->childPanel(), this, ProtoUtil::allSide());
+  head_to_head_activities_panel = std::make_unique<HeadToHeadActivityPanel>(
+      activity_panels->childPanel(), this);
 
   positionWidgets(control_panel);
   bindEvents();
@@ -71,6 +85,7 @@ void ThingsMode::createControls(Panel* control_panel) {
 void ThingsMode::positionWidgets(Panel* control_panel) {
   button_panel->addWidget(*screen_selection, 0, 0);
   button_panel->addWidget(*presenter_selection, 0, 1);
+  button_panel->addWidget(*game_mode_selection, 0, 2);
   button_panel->addWidget(*new_activity_button, 1, 0);
   button_panel->addWidget(*new_replacement_button, 1, 1);
 
@@ -82,6 +97,7 @@ void ThingsMode::positionWidgets(Panel* control_panel) {
   activity_panels->addWidget(*home_activities_panel);
   activity_panels->addWidget(*away_activities_panel);
   activity_panels->addWidget(*all_activities_panel);
+  activity_panels->addWidget(*head_to_head_activities_panel);
 
   updateActivityPanel();
 
@@ -105,6 +121,9 @@ void ThingsMode::bindEvents() {
   presenter_selection->bind(
       wxEVT_COMMAND_RADIOBOX_SELECTED,
       [this](wxCommandEvent& event) -> void { this->presentedListChanged(); });
+  game_mode_selection->bind(
+      wxEVT_COMMAND_RADIOBOX_SELECTED,
+      [this](wxCommandEvent& event) -> void { this->gameModeChanged(); });
 }
 
 void ThingsMode::updateScreenText(ScreenText* screen_text) {
@@ -112,13 +131,16 @@ void ThingsMode::updateScreenText(ScreenText* screen_text) {
     return;
   }
 
-  ActivityPanel* selected_panel = all_activities_panel.get();
-  if (screen_selection->allSelected()) {
-    // Do nothing, already set
-  } else if (screen_selection->homeSelected()) {
-    selected_panel = home_activities_panel.get();
-  } else if (screen_selection->awaySelected()) {
-    selected_panel = away_activities_panel.get();
+  ActivityPanel* selected_panel = head_to_head_activities_panel.get();
+
+  if (game_mode_selection->selection() == SINGLE_TEAM_MODE) {
+    if (screen_selection->allSelected()) {
+      selected_panel = all_activities_panel.get();
+    } else if (screen_selection->homeSelected()) {
+      selected_panel = home_activities_panel.get();
+    } else if (screen_selection->awaySelected()) {
+      selected_panel = away_activities_panel.get();
+    }
   }
 
   selected_panel->refreshSizers();
@@ -127,22 +149,27 @@ void ThingsMode::updateScreenText(ScreenText* screen_text) {
   scrollable_panel->runSizer();
 
   std::vector<proto::RenderableText> home_screen_lines, away_screen_lines;
-  Color home_screen_color = selected_panel->color(ProtoUtil::homeSide());
-  Color away_screen_color = selected_panel->color(ProtoUtil::awaySide());
+  bool presenting_replacement =
+      presenter_selection->selection() == PRESENT_REPLACEMENTS;
 
-  if (presenter_selection->selection() == 0) {
-    home_screen_lines =
-        selected_panel->activityText(ProtoUtil::homeSide(), DEFAULT_FONT_SIZE);
-    away_screen_lines =
-        selected_panel->activityText(ProtoUtil::awaySide(), DEFAULT_FONT_SIZE);
-  } else {
+  Color home_screen_color =
+      selected_panel->color(ProtoUtil::homeSide(), presenting_replacement);
+  Color away_screen_color =
+      selected_panel->color(ProtoUtil::awaySide(), presenting_replacement);
+
+  if (presenting_replacement) {
     home_screen_lines = selected_panel->replacementText(ProtoUtil::homeSide(),
                                                         DEFAULT_FONT_SIZE);
     away_screen_lines = selected_panel->replacementText(ProtoUtil::awaySide(),
                                                         DEFAULT_FONT_SIZE);
+  } else {
+    home_screen_lines =
+        selected_panel->activityText(ProtoUtil::homeSide(), DEFAULT_FONT_SIZE);
+    away_screen_lines =
+        selected_panel->activityText(ProtoUtil::awaySide(), DEFAULT_FONT_SIZE);
   }
 
-  if (selected_panel->splitScreens()) {
+  if (selected_panel->splitScreens(presenting_replacement)) {
     screen_text->setAllText(home_screen_lines, home_screen_color, true,
                             ProtoUtil::homeSide());
     screen_text->setAllText(away_screen_lines, away_screen_color, true,
@@ -157,12 +184,16 @@ void ThingsMode::updateScreenText(ScreenText* screen_text) {
 void ThingsMode::textUpdated() { updatePreview(); }
 
 void ThingsMode::updateActivityPanel() {
-  if (screen_selection->allSelected()) {
-    activity_panels->showWidget(*all_activities_panel);
-  } else if (screen_selection->homeSelected()) {
-    activity_panels->showWidget(*home_activities_panel);
-  } else if (screen_selection->awaySelected()) {
-    activity_panels->showWidget(*away_activities_panel);
+  if (game_mode_selection->selection() == HEAD_TO_HEAD_MODE) {
+    activity_panels->showWidget(*head_to_head_activities_panel);
+  } else {
+    if (screen_selection->allSelected()) {
+      activity_panels->showWidget(*all_activities_panel);
+    } else if (screen_selection->homeSelected()) {
+      activity_panels->showWidget(*home_activities_panel);
+    } else if (screen_selection->awaySelected()) {
+      activity_panels->showWidget(*away_activities_panel);
+    }
   }
 }
 
@@ -173,7 +204,25 @@ void ThingsMode::screenChanged() {
 
 void ThingsMode::presentedListChanged() { updatePreview(); }
 
+void ThingsMode::gameModeChanged() {
+  if (game_mode_selection->selection() == 0) {
+    // Single team mode, enable screen selection, use the selected team's
+    // lists.
+    screen_selection->enable();
+  } else {
+    // Head-to-head mode, disable screen selection and use the head-to-head
+    // configurations.
+    screen_selection->disable();
+  }
+  screenChanged();
+}
+
 void ThingsMode::addActivity() {
+  if (game_mode_selection->selection() == HEAD_TO_HEAD_MODE) {
+    head_to_head_activities_panel->addActivity();
+    return;
+  }
+
   if (screen_selection->allSelected()) {
     all_activities_panel->addActivity();
   } else if (screen_selection->homeSelected()) {
@@ -184,6 +233,11 @@ void ThingsMode::addActivity() {
 }
 
 void ThingsMode::addReplacement() {
+  if (game_mode_selection->selection() == HEAD_TO_HEAD_MODE) {
+    head_to_head_activities_panel->addReplacement();
+    return;
+  }
+
   if (screen_selection->allSelected()) {
     all_activities_panel->addReplacement();
   } else if (screen_selection->homeSelected()) {

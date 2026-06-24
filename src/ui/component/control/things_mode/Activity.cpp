@@ -24,6 +24,7 @@ limitations under the License.
 #include "ScoreboardCommon.h"
 #include "config/swx/event.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
+#include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard {
 
@@ -41,6 +42,7 @@ Activity::Activity(ActivityPanel* parent, Panel* activity_frame,
   if (is_first) {
     activity_selector->setSelected(true);
   }
+  team_button = control_pane->button("H", true);
   activity_text = control_pane->text("", true);
   up_button = control_pane->button("^", true);
   down_button = control_pane->button("v", true);
@@ -64,6 +66,9 @@ void Activity::bindEvents() {
                             ap->selectionChanged(this);
                           });
 
+  team_button->bind(
+      wxEVT_COMMAND_BUTTON_CLICKED,
+      [this](wxCommandEvent& event) -> void { this->toggleTeam(); });
   up_button->bind(
       wxEVT_COMMAND_BUTTON_CLICKED,
       [this](wxCommandEvent& event) -> void { this->moveButton(true); });
@@ -80,10 +85,12 @@ void Activity::bindEvents() {
 
 void Activity::positionWidgets() {
   control_pane->addWidget(*activity_selector, 0, 0);
-  control_pane->addWidgetWithSpan(*activity_text, 0, 1, 2, 1);
-  control_pane->addWidget(*up_button, 0, 2);
-  control_pane->addWidget(*down_button, 0, 3);
-  control_pane->addWidget(*remove_activity_button, 0, 4);
+  control_pane->addWidget(*team_button, 0, 1);
+  team_button->hide();
+  control_pane->addWidgetWithSpan(*activity_text, 0, 2, 2, 1);
+  control_pane->addWidget(*up_button, 0, 3);
+  control_pane->addWidget(*down_button, 0, 4);
+  control_pane->addWidget(*remove_activity_button, 0, 5);
   control_pane->runSizer();
 }
 
@@ -118,6 +125,27 @@ void Activity::setIndex(int index, int max_index) {
   } else {
     down_button->enable();
   }
+}
+
+auto Activity::getTeam() -> proto::ScreenSide { return team; }
+
+void Activity::setTeam(bool is_home) {
+  if (team_button->hidden()) {
+    team_button->show();
+    control_pane->runSizer();
+  }
+  if (is_home) {
+    team = ProtoUtil::homeSide();
+    team_button->setText("H");
+  } else {
+    team = ProtoUtil::awaySide();
+    team_button->setText("A");
+  }
+}
+
+void Activity::toggleTeam() {
+  setTeam(getTeam().away());
+  parent->updateNotify();
 }
 
 auto Activity::previewText() -> std::string {

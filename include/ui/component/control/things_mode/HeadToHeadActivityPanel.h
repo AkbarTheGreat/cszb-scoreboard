@@ -1,6 +1,6 @@
 /*
-ui/component/control/things_mode/SingleTeamActivityPanel.h: Represents all
-activities in 5/6 things when played by one team for the entirety of the game.
+ui/component/control/things_mode/HeadToHeadActivityPanel.h: Represents all
+activities in 5/6 things when played by both teams at the same time.
 
 Copyright 2026 Tracy Beck
 
@@ -23,7 +23,6 @@ limitations under the License.
 #include <vector>  // for vector
 
 #include "ScoreboardCommon.h"                                // for PUBLIC_T...
-#include "config.pb.h"                                       // for Renderab...
 #include "ui/component/control/things_mode/ActivityPanel.h"  // for Activity...
 #include "ui/graphics/Color.h"                               // for Color
 #include "ui/widget/ColorPicker.h"                           // for ColorPicker
@@ -31,43 +30,46 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 class ScreenTextController;
+namespace proto {
+class RenderableText;
+class ScreenSide;
+}  // namespace proto
 
 namespace swx {
 class Panel;
 }  // namespace swx
 
-class SingleTeamActivityPanel : public ActivityPanel {
+class HeadToHeadActivityPanel : public ActivityPanel {
  public:
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  SingleTeamActivityPanel(swx::Panel* wx,
-                          ScreenTextController* owning_controller,
-                          const proto::ScreenSide& side)
-      : SingleTeamActivityPanel(wx, owning_controller, side,
+  HeadToHeadActivityPanel(swx::Panel* wx,
+                          ScreenTextController* owning_controller)
+      : HeadToHeadActivityPanel(wx, owning_controller,
                                 Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-
-  PUBLIC_TEST_ONLY
-  SingleTeamActivityPanel(swx::Panel* wx,
-                          ScreenTextController* owning_controller,
-                          const proto::ScreenSide& side, Singleton* singleton);
-
   virtual auto activityText(const proto::ScreenSide& side, int font_size)
       -> std::vector<proto::RenderableText>;
   virtual auto color(const proto::ScreenSide& side, bool forReplacement)
       -> Color;
   virtual auto replacementText(const proto::ScreenSide& side, int font_size)
       -> std::vector<proto::RenderableText>;
-  virtual auto splitScreens(bool forReplacement) -> bool { return false; }
+  virtual void setTeamForNewActivity(int index);
+  virtual auto splitScreens(bool forReplacement) -> bool;
+
+  PUBLIC_TEST_ONLY
+  HeadToHeadActivityPanel(swx::Panel* wx,
+                          ScreenTextController* owning_controller,
+                          Singleton* singleton);
 
  private:
-  std::unique_ptr<ColorPicker> color_picker;
-  proto::ScreenSide side;
+  std::unique_ptr<ColorPicker> away_color_picker, home_color_picker;
   Singleton* singleton;
 
   void bindEvents();
-  void colorChanged();
   void positionWidgets();
+  void awayColorChanged();
+  void homeColorChanged();
 };
 }  // namespace cszb_scoreboard

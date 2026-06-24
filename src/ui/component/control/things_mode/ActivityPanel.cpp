@@ -111,6 +111,7 @@ void ActivityPanel::addActivity() {
                               activities.size() + REPLACEMENT_BUFFER_SIZE, 0);
   activities.back()->select();
 
+  setTeamForNewActivity(activities.size() - 1);
   resetActivityMoveButtons();
   updateNotify();
 }

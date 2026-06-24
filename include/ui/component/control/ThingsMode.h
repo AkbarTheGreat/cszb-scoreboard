@@ -23,6 +23,7 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/TeamSelector.h"          // for TeamSelector
+#include "ui/component/control/things_mode/HeadToHeadActivityPanel.h"
 #include "ui/component/control/things_mode/SingleTeamActivityPanel.h"
 #include "ui/widget/Button.h"  // for Button
 #include "ui/widget/MultiWidgetPanel.h"
@@ -49,6 +50,7 @@ class ThingsMode : public ScreenTextController {
   std::unique_ptr<Button> new_activity_button;
   std::unique_ptr<Button> new_replacement_button;
   std::unique_ptr<Radio> presenter_selection;
+  std::unique_ptr<Radio> game_mode_selection;
   std::unique_ptr<TeamSelector> screen_selection;
   std::unique_ptr<ScrollingPanel> scrollable_panel;
   std::unique_ptr<MultiWidgetPanel> activity_panels;
@@ -56,6 +58,7 @@ class ThingsMode : public ScreenTextController {
   std::unique_ptr<SingleTeamActivityPanel> home_activities_panel;
   std::unique_ptr<SingleTeamActivityPanel> away_activities_panel;
   std::unique_ptr<SingleTeamActivityPanel> all_activities_panel;
+  std::unique_ptr<HeadToHeadActivityPanel> head_to_head_activities_panel;
 
   void createControls(Panel* control_panel) override;
 
@@ -65,6 +68,7 @@ class ThingsMode : public ScreenTextController {
   void addActivity();
   void addReplacement();
   void presentedListChanged();
+  void gameModeChanged();
   void screenChanged();
 };
 

@@ -40,6 +40,8 @@ class TeamSelector : public Panel {
   auto awaySelected() -> bool;
   auto homeSelected() -> bool;
   void setSelection(int sel) { selector->setSelection(sel); }
+  void disable() { selector->disable(); }
+  void enable() { selector->enable(); }
 
  private:
   std::unique_ptr<Radio> selector;

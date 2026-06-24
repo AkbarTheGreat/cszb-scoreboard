@@ -33,6 +33,8 @@ class Radio : public Widget {
   }
   auto selection() -> int { return _wx->GetSelection(); }
   void setSelection(int sel) { _wx->SetSelection(sel); }
+  void disable() { _wx->Disable(); }
+  void enable() { _wx->Enable(); }
 
  protected:
   [[nodiscard]] auto wx() const -> wxWindow* override { return _wx; }

@@ -26,7 +26,6 @@ limitations under the License.
 #include "ui/component/control/things_mode/Activity.h"          // for Activity
 #include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
 #include "ui/graphics/TeamColors.h"                             // for TeamC...
-#include "util/ProtoUtil.h"                                     // for Proto...
 #include "wx/clrpicker.h"                                       // for wxCol...
 
 namespace cszb_scoreboard {
@@ -75,13 +74,13 @@ auto SingleTeamActivityPanel::activityText(const proto::ScreenSide& side,
   return return_vector;
 }
 
-auto SingleTeamActivityPanel::color(const proto::ScreenSide& side) -> Color {
+// Single team displays just return the same color regardless of whether it's
+// for replacements or what side monitor is asked for, since it never splits and
+// the "home" color is always used.
+auto SingleTeamActivityPanel::color(const proto::ScreenSide& side,
+                                    bool forReplacement) -> Color {
   color_picker->setColor(singleton->teamColors()->getColor(side));
   return singleton->teamColors()->getColor(side);
-}
-
-auto SingleTeamActivityPanel::replacementColor() -> Color {
-  return color(ProtoUtil::noSide());
 }
 
 auto SingleTeamActivityPanel::replacementText(const proto::ScreenSide& side,
