@@ -20,7 +20,7 @@ limitations under the License.
 
 #include <stdint.h>  // for int32_t
 
-#include <chrono>  // for seconds
+#include <chrono>  // IWYU pragma: keep for seconds
 #include <string>  // for string
 #include <vector>  // for vector
 

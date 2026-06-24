@@ -19,7 +19,7 @@ limitations under the License.
 
 #pragma once
 
-#include <chrono>   // for seconds
+#include <chrono>   // IWYU pragma: keep for seconds
 #include <cstdint>  // for int64_t
 #include <string>   // for string
 
