@@ -30,7 +30,13 @@ echo "Preset is ${BUILD_PLATFORM}-${BUILD_PRESET}"
 echo "Configure CMake..."
 cmake --preset ${BUILD_PLATFORM}-${BUILD_PRESET}
 
-echo "Building..."
+
+THREAD_COUNT="maximum caclulated threads"
+if [ !-z ${BUILD_THREADS} ]; then
+  THREAD_COUNT="${BUILD_THREADS} thread(s)"
+fi
+
+echo "Building using ${THREAD_COUNT}..."
 cmake --build --preset ${BUILD_PLATFORM}-${BUILD_PRESET} --parallel ${BUILD_THREADS}
 
 if [ -n "${RUN_TESTS}" ]; then
