@@ -47,13 +47,12 @@ void assertErrorColors(const ImageAnalysis& analysis) {
 }
 
 void assertTeamColors(const ImageAnalysis& analysis) {
-  ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 70);
-  ASSERT_GT(analysis.colorPercentage(wxColour("White")), 1.25);
-  ASSERT_LT(analysis.colorPercentage(wxColour("White")), 7);
+  ASSERT_GT(analysis.colorPercentage(wxColour("Blue")), 60);
+  ASSERT_GT(analysis.colorPercentage(wxColour("White")), 5);
+  ASSERT_LT(analysis.colorPercentage(wxColour("White")), 15);
 }
 
 TEST_F(GuiTest, ScreenPreviewInitializationTest) {
-  GTEST_SKIP() << "Skipping for now as it fails on github";
   // Probably unnecessary to set the focus, but doing it anyway
   WX_A(mainView()->focus());
   WX_A(textEntry()->selectTeam(0));

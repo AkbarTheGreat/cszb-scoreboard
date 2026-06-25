@@ -196,6 +196,7 @@ add_dependencies(scoreboard_ui_test_classes scoreboard_proto)
 set_target_properties(scoreboard_ui_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_TESTING)
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_INTEGRATION_TEST)
+target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_DISABLE_IMAGE_SEARCH)
 target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_UI_TEST)
 target_link_libraries(scoreboard_ui_test_classes PRIVATE ${BASE_LIBRARIES})
 
