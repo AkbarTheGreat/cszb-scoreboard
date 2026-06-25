@@ -4,6 +4,7 @@
     "curl",
     "gtest",
     "jsoncpp",
+    "openssl",
     "protobuf",
     "webview2"
   ]

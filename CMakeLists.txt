@@ -54,6 +54,8 @@ set(wxUSE_WEBVIEW_WEBKIT "ON")
 set(CURL_DISABLE_SSH ON CACHE INTERNAL "Disable SSH support")
 set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Build static libcurl library")
 set(CURL_STATICLIB ON CACHE INTERNAL "Use static libcurl")
+set(CURL_USE_OPENSSL ON CACHE INTERNAL "")
+set(CURL_USE_LIBPSL OFF CACHE INTERNAL "Disable Public Suffix List")
 
 if(MSVC OR OSXCROSS_HOST)
     set(LINKING_TYPE "static")
