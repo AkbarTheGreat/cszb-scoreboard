@@ -53,13 +53,13 @@ class SingleTeamActivityPanel : public ActivityPanel {
                           ScreenTextController* owning_controller,
                           const proto::ScreenSide& side, Singleton* singleton);
 
-  virtual auto activityText(const proto::ScreenSide& side, int font_size)
-      -> std::vector<proto::RenderableText>;
-  virtual auto color(const proto::ScreenSide& side, bool forReplacement)
-      -> Color;
-  virtual auto replacementText(const proto::ScreenSide& side, int font_size)
-      -> std::vector<proto::RenderableText>;
-  virtual auto splitScreens(bool forReplacement) -> bool { return false; }
+  auto activityText(const proto::ScreenSide& side, int font_size)
+      -> std::vector<proto::RenderableText> override;
+  auto color(const proto::ScreenSide& side, bool forReplacement)
+      -> Color override;
+  auto replacementText(const proto::ScreenSide& side, int font_size)
+      -> std::vector<proto::RenderableText> override;
+  auto splitScreens(bool forReplacement) -> bool override { return false; }
 
  private:
   std::unique_ptr<ColorPicker> color_picker;

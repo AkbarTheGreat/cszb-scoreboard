@@ -148,7 +148,8 @@ void ThingsMode::updateScreenText(ScreenText* screen_text) {
   // Re-size for scrollable windows
   scrollable_panel->runSizer();
 
-  std::vector<proto::RenderableText> home_screen_lines, away_screen_lines;
+  std::vector<proto::RenderableText> home_screen_lines;
+  std::vector<proto::RenderableText> away_screen_lines;
   bool presenting_replacement =
       presenter_selection->selection() == PRESENT_REPLACEMENTS;
 
@@ -178,7 +179,6 @@ void ThingsMode::updateScreenText(ScreenText* screen_text) {
     screen_text->setAllText(home_screen_lines, home_screen_color, true,
                             ProtoUtil::allSide());
   }
-  return;
 }
 
 void ThingsMode::textUpdated() { updatePreview(); }

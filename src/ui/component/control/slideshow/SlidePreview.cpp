@@ -30,6 +30,7 @@ class Panel;
 }  // namespace swx
 
 constexpr int SPACER_WIDTH = 48;
+constexpr int COLUMN_SPAN = 5;
 
 SlidePreview::SlidePreview(swx::Panel* wx, SlideshowSetup* owning_control,
                            int32_t index)
@@ -65,8 +66,8 @@ void SlidePreview::bindEvents() {
 }
 
 void SlidePreview::positionWidgets() {
-  this->addWidgetWithSpan(*slide_name, 0, 0, 1, 5);
-  this->addWidgetWithSpan(*slide_preview, 1, 0, 1, 5);
+  this->addWidgetWithSpan(*slide_name, 0, 0, 1, COLUMN_SPAN);
+  this->addWidgetWithSpan(*slide_preview, 1, 0, 1, COLUMN_SPAN);
   this->addSpacer({.width = SPACER_WIDTH}, 2, 0, NO_BORDER);
   this->addWidget(*left_button, 2, 1);
   this->addWidget(*remove_button, 2, 2);
@@ -81,7 +82,7 @@ void SlidePreview::clear() {
   refresh();
 }
 
-void SlidePreview::setName(std::string name) {
+void SlidePreview::setName(const std::string& name) {
   slide_name->set(name);
   refresh();
 }

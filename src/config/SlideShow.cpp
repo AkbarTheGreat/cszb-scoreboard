@@ -105,6 +105,7 @@ auto SlideShow::nextSlide() -> Image {
   auto left_millis = std::chrono::duration_cast<std::chrono::milliseconds>(
                          std::chrono::system_clock::now().time_since_epoch()) -
                      last_transition;
+  // NOLINTNEXTLINE(readability-magic-numbers)
   double time_left = left_millis.count() / 1000.0;
   if (time_left > slide_show.delay()) {
     last_transition = std::chrono::duration_cast<std::chrono::seconds>(

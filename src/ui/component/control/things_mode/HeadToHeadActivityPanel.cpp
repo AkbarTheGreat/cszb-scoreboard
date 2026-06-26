@@ -122,8 +122,7 @@ void HeadToHeadActivityPanel::setTeamForNewActivity(int index) {
     return;
   }
 
-  activities[index]->setTeam(activities[index - 1]->getTeam().home() ? false
-                                                                     : true);
+  activities[index]->setTeam(!activities[index - 1]->getTeam().home());
 }
 
 // We split screens for head-to-head activities, but not for replacements.

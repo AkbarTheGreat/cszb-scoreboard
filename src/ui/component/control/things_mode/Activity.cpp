@@ -84,13 +84,14 @@ void Activity::bindEvents() {
 }
 
 void Activity::positionWidgets() {
-  control_pane->addWidget(*activity_selector, 0, 0);
-  control_pane->addWidget(*team_button, 0, 1);
+  int col = 0;
+  control_pane->addWidget(*activity_selector, 0, col++);
+  control_pane->addWidget(*team_button, 0, col++);
   team_button->hide();
-  control_pane->addWidgetWithSpan(*activity_text, 0, 2, 2, 1);
-  control_pane->addWidget(*up_button, 0, 3);
-  control_pane->addWidget(*down_button, 0, 4);
-  control_pane->addWidget(*remove_activity_button, 0, 5);
+  control_pane->addWidgetWithSpan(*activity_text, 0, col++, 2, 1);
+  control_pane->addWidget(*up_button, 0, col++);
+  control_pane->addWidget(*down_button, 0, col++);
+  control_pane->addWidget(*remove_activity_button, 0, col++);
   control_pane->runSizer();
 }
 

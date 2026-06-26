@@ -31,7 +31,7 @@ class AutoRefreshTimer : public PersistentTimer {
   // GCOVR_EXCL_START - This class uses our singleton objects.  In test, we
   // always call the constructor that passes in the Singleton object, as it
   // allows mocking of singletons.
-  AutoRefreshTimer(SingletonClass c)
+  explicit AutoRefreshTimer(SingletonClass c)
       : AutoRefreshTimer(Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
 

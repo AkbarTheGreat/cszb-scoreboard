@@ -82,4 +82,5 @@ auto DialogTest::OnInit() -> bool {
 
 }  // namespace cszb_scoreboard
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 wxIMPLEMENT_APP(cszb_scoreboard::DialogTest);

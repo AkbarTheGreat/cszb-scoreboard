@@ -190,7 +190,9 @@ void SlideshowSetup::setSlidePreviews(unsigned int page_number) {
 }
 
 void SlideshowSetup::previousPage() {
-  if (current_slide_page <= 0) return;
+  if (current_slide_page <= 0) {
+    return;
+  }
   setSlidePreviews(current_slide_page - 1);
 }
 

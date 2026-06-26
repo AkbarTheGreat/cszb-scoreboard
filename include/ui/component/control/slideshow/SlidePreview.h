@@ -44,7 +44,7 @@ class SlidePreview : public Panel {
                         int32_t index);
 
   void clear();
-  void setName(std::string name);
+  void setName(const std::string& name);
   void setImage(const FilesystemPath& file);
 
   const static int PREVIEW_WIDTH = ImagePreview::PREVIEW_WIDTH;

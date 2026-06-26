@@ -49,14 +49,14 @@ class HeadToHeadActivityPanel : public ActivityPanel {
       : HeadToHeadActivityPanel(wx, owning_controller,
                                 Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
-  virtual auto activityText(const proto::ScreenSide& side, int font_size)
-      -> std::vector<proto::RenderableText>;
-  virtual auto color(const proto::ScreenSide& side, bool forReplacement)
-      -> Color;
-  virtual auto replacementText(const proto::ScreenSide& side, int font_size)
-      -> std::vector<proto::RenderableText>;
-  virtual void setTeamForNewActivity(int index);
-  virtual auto splitScreens(bool forReplacement) -> bool;
+  auto activityText(const proto::ScreenSide& side, int font_size)
+      -> std::vector<proto::RenderableText> override;
+  auto color(const proto::ScreenSide& side, bool forReplacement)
+      -> Color override;
+  auto replacementText(const proto::ScreenSide& side, int font_size)
+      -> std::vector<proto::RenderableText> override;
+  void setTeamForNewActivity(int index) override;
+  auto splitScreens(bool forReplacement) -> bool override;
 
   PUBLIC_TEST_ONLY
   HeadToHeadActivityPanel(swx::Panel* wx,

@@ -33,7 +33,7 @@ limitations under the License.
 namespace cszb_scoreboard {
 class FilesystemPath;
 
-constexpr double DEFAULT_SLIDESHOW_DELAY = 5.0f;
+constexpr double DEFAULT_SLIDESHOW_DELAY = 5.0F;
 
 class SlideShow {
  public:
@@ -54,7 +54,7 @@ class SlideShow {
                                   : DEFAULT_SLIDESHOW_DELAY;
   }
   void setDelay(double delay) { slide_show.set_delay(delay); }
-  auto isRunning() -> bool { return is_running; }
+  [[nodiscard]] auto isRunning() const -> bool { return is_running; }
   void start();
   void stop();
   auto nextSlide() -> Image;
