@@ -33,7 +33,7 @@ limitations under the License.
 #include "ui/component/ScreenTextSide.h"  // for OverlayScreenPosition
 #include "ui/dialog/TeamLibraryDialog.h"  // for TeamLibraryDialog
 #include "ui/frame/FrameManager.h"        // for FrameManager
-#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxAcceleratorE...
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable
 #include "ui/frame/MainView.h"            // for MainView
 #include "ui/graphics/Color.h"            // for Color
 #include "ui/graphics/TeamColors.h"       // for TeamColors
@@ -42,6 +42,7 @@ limitations under the License.
 #include "util/ProtoUtil.h"               // for ProtoUtil
 #include "util/Singleton.h"               // for Singleton
 #include "util/StringUtil.h"              // for StringUtil
+#include "wx/accel.h"                     // for wxAcceleratorEntryFlags
 
 namespace cszb_scoreboard {
 class Widget;

@@ -21,7 +21,7 @@ limitations under the License.
 #include <algorithm>  // for find
 #include <cstddef>    // for size_t
 #include <cstdio>     // for snprintf
-#include <string>     // for string, char_traits, operator+
+#include <string>     // for char_traits, string, operator+
 #include <utility>    // for move
 
 #include "config.pb.h"                    // for ScreenSide
@@ -31,10 +31,11 @@ limitations under the License.
 #include "ui/component/PreviewPanel.h"    // for PreviewPanel
 #include "ui/component/ScreenTextSide.h"  // for ScreenTextSide
 #include "ui/frame/FrameManager.h"        // for FrameManager
-#include "ui/frame/HotkeyTable.h"         // for HotkeyTable, wxACCEL_CTRL
+#include "ui/frame/HotkeyTable.h"         // for HotkeyTable
 #include "ui/frame/MainView.h"            // for MainView
 #include "ui/graphics/Color.h"            // for Color
 #include "util/ProtoUtil.h"               // for ProtoUtil
+#include "wx/accel.h"                     // for wxAcceleratorEntryFlags
 
 namespace cszb_scoreboard {
 

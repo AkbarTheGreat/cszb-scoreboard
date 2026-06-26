@@ -20,16 +20,17 @@ limitations under the License.
 
 #include "ui/component/control/ScreenTextController.h"
 
-#include "ScoreboardCommon.h"
-#include "config/swx/defs.h"
-#include "config/swx/event.h"
-#include "ui/component/ControlPanel.h"
-#include "ui/component/PreviewPanel.h"
-#include "ui/component/ScreenPreview.h"
-#include "ui/frame/FrameManager.h"
-#include "ui/frame/HotkeyTable.h"
-#include "ui/frame/MainView.h"
-#include "ui/widget/Widget.h"
+#include "ScoreboardCommon.h"            // for DEFAULT_BORDER_SIZE
+#include "config/swx/defs.h"             // for wxKeyCode
+#include "config/swx/event.h"            // for wxEVT_COMMAND_BUTTON_CLICKED
+#include "ui/component/ControlPanel.h"   // for ControlPanel
+#include "ui/component/PreviewPanel.h"   // for PreviewPanel
+#include "ui/component/ScreenPreview.h"  // for ScreenPreview
+#include "ui/frame/FrameManager.h"       // for FrameManager
+#include "ui/frame/HotkeyTable.h"        // for HotkeyTable
+#include "ui/frame/MainView.h"           // for MainView
+#include "ui/widget/Widget.h"            // for NO_BORDER
+#include "wx/accel.h"                    // for wxAcceleratorEntryFlags
 
 namespace cszb_scoreboard {
 namespace swx {

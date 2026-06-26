@@ -27,10 +27,10 @@ limitations under the License.
 #include "ui/component/control/ImageSearch.h"       // for ImageSearch
 #include "ui/component/control/LocalImage.h"        // for LocalImage
 #include "ui/component/control/ScoreControl.h"      // for ScoreControl
-#include "ui/component/control/SlideshowSetup.h"
-#include "ui/component/control/TextEntry.h"   // for TextEntry
-#include "ui/component/control/ThingsMode.h"  // for ThingsMode
-#include "ui/component/control/TimerSetup.h"  // for TimerSetup
+#include "ui/component/control/SlideshowSetup.h"    // for SlideshowSetup
+#include "ui/component/control/TextEntry.h"         // for TextEntry
+#include "ui/component/control/ThingsMode.h"        // for ThingsMode
+#include "ui/component/control/TimerSetup.h"        // for TimerSetup
 
 namespace cszb_scoreboard {
 class ScreenText;
