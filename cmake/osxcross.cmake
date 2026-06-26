@@ -88,4 +88,5 @@ set(wxWidgets_LIBRARIES
 	)
 
 include_directories(SYSTEM INTERFACE ${wxWidgets_INCLUDE_DIRS} ${OSX_INCLUDE_DIRS})
+link_directories(${macports_lib_dir})
 
