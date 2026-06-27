@@ -1,4 +1,4 @@
-﻿# CMakeList.txt : CMake project for cszb-scoreboard
+# CMakeList.txt : CMake project for cszb-scoreboard
 # 
 # Copyright 2019-2026 Tracy Beck
 # 
@@ -25,7 +25,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang-format.cmake)
 # C was finding its way into enabled languages (likely due to submodules), so we
 # explicitly set it here.  Otherwise, coverage breaks due to incomplete compiler
 # configuration.
-SET(PROJECT_NAME "cszb-scoreboard")
+set(PROJECT_NAME "cszb-scoreboard")
 project(${PROJECT_NAME} C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -80,10 +80,6 @@ find_package(jsoncpp REQUIRED)
 
 initialize_vcpkg_code()
 
-if(MSVC)
-    #add_compile_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
-
 if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
     add_compile_definitions(NDEBUG wxDEBUG_LEVEL=0)
 endif()
@@ -95,7 +91,7 @@ endif()
 add_subdirectory(thirdparty/wxWidgets)
 add_subdirectory(thirdparty/curl)
 
-set(LINT_OPTION, "")
+set(LINT_OPTION "")
 
 # Clang tidy piece adapted from https://gitlab.kitware.com/cmake/cmake/-/issues/18926
 if(NOT SKIP_LINT)
@@ -115,20 +111,11 @@ include_directories(PUBLIC
     "${CMAKE_SOURCE_DIR}/thirdparty/wxWidgets/include"
   )
 
-file(GLOB SCOREBOARD_SRC
-    "src/cszb-scoreboard.cpp"
-    "src/*/*.cpp"
-    "src/*/*/*.cpp"
-    "src/*/*/*/*.cpp"
-    "src/*/*/*/*/*.cpp"
-)
-
-file(GLOB DIALOG_TEST_SRC
-    "src/dialog-test.cpp"
-    "src/*/*.cpp"
-    "src/*/*/*.cpp"
-    "src/*/*/*/*.cpp"
-    "src/*/*/*/*/*.cpp"
+# Gather all source files recursively using CONFIGURE_DEPENDS
+file(GLOB_RECURSE CORE_SRC CONFIGURE_DEPENDS "src/*.cpp")
+list(REMOVE_ITEM CORE_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/cszb-scoreboard.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/dialog-test.cpp"
 )
 
 set(BASE_LIBRARIES
@@ -144,66 +131,76 @@ set(BASE_LIBRARIES
     ${JSON_CPP_LIB}
 )
 
-IF(WIN32)
-    SET(SCOREBOARD_SRC ${SCOREBOARD_SRC} "resources/scoreboard.rc")
-    set(BASE_LIBRARIES
-        ${BASE_LIBRARIES}
-        utf8_range::utf8_validity
-    )
-ENDIF(WIN32)
+if(WIN32)
+    list(APPEND BASE_LIBRARIES utf8_range::utf8_validity)
+endif()
 
 # Protobuf files.
 file(GLOB SCOREBOARD_PROTO_SOURCES "*.proto")
-add_library(scoreboard_proto OBJECT ${SCOREBOARD_PROTO_SOURCES})
+add_library(scoreboard_proto STATIC ${SCOREBOARD_PROTO_SOURCES})
 set_target_properties(scoreboard_proto PROPERTIES CXX_CLANG_TIDY "")
 protobuf_generate(TARGET scoreboard_proto PROTOC_EXE ${PROTOC_EXECUTABLE})
-target_link_libraries(scoreboard_proto PRIVATE ${JSON_CPP_LIB})
+target_link_libraries(scoreboard_proto PUBLIC ${JSON_CPP_LIB} ${Protobuf_LIBRARIES})
 
 # By setting IWYU here, we don't run IWYU on thirdparty or protobuf targets, which we don't want to modify.
 if(SCOREBOARD_IWYU)
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${SCOREBOARD_IWYU})
 endif()
 
-add_library(scoreboard_classes OBJECT ${SCOREBOARD_SRC})
-add_dependencies(scoreboard_classes scoreboard_proto)
-set_target_properties(scoreboard_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_link_libraries(scoreboard_classes PRIVATE ${BASE_LIBRARIES})
+# Core application logic static library
+add_library(scoreboard_core STATIC ${CORE_SRC})
+add_dependencies(scoreboard_core scoreboard_proto)
+set_target_properties(scoreboard_core PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_link_libraries(scoreboard_core PUBLIC ${BASE_LIBRARIES} scoreboard_proto)
 
-add_library(dialog_test_classes OBJECT ${DIALOG_TEST_SRC})
-add_dependencies(dialog_test_classes scoreboard_proto)
-set_target_properties(dialog_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_compile_definitions(dialog_test_classes PUBLIC FAKE_CONFIGURATION_FILES)
-target_link_libraries(dialog_test_classes PRIVATE ${BASE_LIBRARIES})
+# Core library with test definitions enabled (includes cszb-scoreboard.cpp for tests)
+add_library(scoreboard_core_testing STATIC ${CORE_SRC} src/cszb-scoreboard.cpp)
+add_dependencies(scoreboard_core_testing scoreboard_proto)
+set_target_properties(scoreboard_core_testing PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_compile_definitions(scoreboard_core_testing PUBLIC
+    SCOREBOARD_TESTING
+    SCOREBOARD_DISABLE_IMAGE_SEARCH
+)
+target_link_libraries(scoreboard_core_testing PUBLIC ${BASE_LIBRARIES} scoreboard_proto)
 
-add_executable(${PROJECT_NAME} WIN32 $<TARGET_OBJECTS:scoreboard_classes> $<TARGET_OBJECTS:scoreboard_proto>)
+# Core library with UI test definitions enabled (includes cszb-scoreboard.cpp and UI test macros)
+add_library(scoreboard_core_ui_testing STATIC ${CORE_SRC} src/cszb-scoreboard.cpp)
+add_dependencies(scoreboard_core_ui_testing scoreboard_proto)
+set_target_properties(scoreboard_core_ui_testing PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_compile_definitions(scoreboard_core_ui_testing PUBLIC
+    SCOREBOARD_TESTING
+    SCOREBOARD_DISABLE_IMAGE_SEARCH
+    SCOREBOARD_UI_TEST
+)
+target_link_libraries(scoreboard_core_ui_testing PUBLIC ${BASE_LIBRARIES} scoreboard_proto)
+
+# Main Executable
+add_executable(${PROJECT_NAME} WIN32 src/cszb-scoreboard.cpp)
+if(WIN32)
+    target_sources(${PROJECT_NAME} PRIVATE "resources/scoreboard.rc")
+endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_link_libraries(${PROJECT_NAME} PRIVATE ${BASE_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE scoreboard_core)
 
 # A test target which is used for checking dialog edits more quickly than running entire application.
-add_executable("dialog-test" WIN32 $<TARGET_OBJECTS:dialog_test_classes> $<TARGET_OBJECTS:scoreboard_proto>)
-target_link_libraries("dialog-test" PRIVATE ${BASE_LIBRARIES})
+add_executable("dialog-test" WIN32 src/dialog-test.cpp)
+set_target_properties("dialog-test" PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
+target_compile_definitions(dialog-test PUBLIC FAKE_CONFIGURATION_FILES)
+target_link_libraries("dialog-test" PRIVATE scoreboard_core)
 
 finalize_vcpkg_code(${PROJECT_NAME})
 
 # Testing specific code follows.
+enable_testing()
 
-list(APPEND TEST_ONLY_SRC
-    "test/integration/GuiTest.cpp"
-)
-
-add_library(scoreboard_ui_test_classes OBJECT ${TEST_ONLY_SRC} ${SCOREBOARD_SRC})
-add_dependencies(scoreboard_ui_test_classes scoreboard_proto)
-set_target_properties(scoreboard_ui_test_classes PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
-target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_TESTING)
-target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_INTEGRATION_TEST)
-target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_DISABLE_IMAGE_SEARCH)
-target_compile_definitions(scoreboard_ui_test_classes PUBLIC SCOREBOARD_UI_TEST)
-target_link_libraries(scoreboard_ui_test_classes PRIVATE ${BASE_LIBRARIES})
+# Shared UI Test base library
+add_library(scoreboard_ui_test_base STATIC test/integration/GuiTest.cpp)
+target_link_libraries(scoreboard_ui_test_base PUBLIC scoreboard_core_ui_testing)
 
 # Taken from modern cbuild (https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html)
-function(package_add_test TESTNAME HAS_OWN_MAIN)
-    # create an exectuable in which the tests will be stored.  Always include our proto files, for convenience
-    add_executable(${TESTNAME} $<TARGET_OBJECTS:scoreboard_proto> ${ARGN})
+function(package_add_test_impl TESTNAME HAS_OWN_MAIN CORE_LIB)
+    # create an executable in which the tests will be stored.
+    add_executable(${TESTNAME} ${ARGN})
     target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_TESTING)
     if (INTEGRATION_TEST)
         target_compile_definitions(${TESTNAME} PUBLIC SCOREBOARD_INTEGRATION_TEST)
@@ -213,13 +210,10 @@ function(package_add_test TESTNAME HAS_OWN_MAIN)
     else()
         set(GTEST_LIBS ${GTEST_BOTH_LIBRARIES} GTest::gmock GTest::gmock_main)
     endif()
-    # link the Google test infrastructure, mocking library, and a default main fuction to
-    # the test executable.  Remove g_test_main if writing your own main function.
-    target_link_libraries(${TESTNAME} PRIVATE ${BASE_LIBRARIES} ${GTEST_LIBS})
-    # gtest_discover_tests replaces gtest_add_tests,
-    # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
+
+    target_link_libraries(${TESTNAME} PRIVATE ${CORE_LIB} ${GTEST_LIBS})
+
     gtest_discover_tests(${TESTNAME}
-        # set a working directory so your project root so that you can find test data via paths relative to the project root
         WORKING_DIRECTORY ${PROJECT_DIR}
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
         XML_OUTPUT_DIR gtest
@@ -227,9 +221,14 @@ function(package_add_test TESTNAME HAS_OWN_MAIN)
     set_target_properties(${TESTNAME} PROPERTIES FOLDER test CXX_CLANG_TIDY "${LINT_OPTION}")
 endfunction()
 
+function(package_add_test TESTNAME HAS_OWN_MAIN)
+    package_add_test_impl(${TESTNAME} ${HAS_OWN_MAIN} scoreboard_core_testing ${ARGN})
+endfunction()
+
 function(package_add_ui_test TESTNAME HAS_OWN_MAIN)
     if (INTEGRATION_TEST)
-	    package_add_test(${TESTNAME} ${HAS_OWN_MAIN} ${ARGN} $<TARGET_OBJECTS:scoreboard_ui_test_classes>)
+	    package_add_test_impl(${TESTNAME} ${HAS_OWN_MAIN} scoreboard_core_ui_testing ${ARGN})
+        target_link_libraries(${TESTNAME} PRIVATE scoreboard_ui_test_base)
     endif()
 endfunction()
 
@@ -238,92 +237,36 @@ function(package_add_macos_test TESTNAME HAS_OWN_MAIN)
     target_compile_definitions(${TESTNAME}_MacOS PUBLIC SCOREBOARD_APPLE_IMPL)
 endfunction()
 
-enable_testing()
-
 # meta/ tests
 package_add_test(TempFilesystemTest      FALSE test/unit/meta/TempFilesystemTest.cpp)
 
 # config/ tests
-package_add_test(CommandArgsTest         FALSE test/unit/config/CommandArgsTest.cpp
-                                                src/config/CommandArgs.cpp)
-
-package_add_test(DisplayConfigTest       FALSE test/unit/config/DisplayConfigTest.cpp
-                                                src/config/DisplayConfig.cpp
-                                                src/config/Persistence.cpp
-                                                src/config/Position.cpp
-                                                src/ui/widget/Display.cpp
-                                                src/ui/widget/Frame.cpp
-                                                src/util/FontUtil.cpp
-                                                src/util/ProtoUtil.cpp
-)
-
-package_add_test(GeneralConfigTest       FALSE test/unit/config/GeneralConfigTest.cpp
-                                                src/config/GeneralConfig.cpp
-                                                src/config/Persistence.cpp
-)
-
-package_add_test(ImageLibraryTest        FALSE test/unit/config/ImageLibraryTest.cpp
-                                                src/config/ImageLibrary.cpp
-                                                src/config/Persistence.cpp
-                                                src/util/FilesystemPath.cpp
-)
-
-package_add_test(CaseOptionalStringTest  FALSE test/unit/config/ImageLibrary/CaseOptionalStringTest.cpp
-                                                src/config/ImageLibrary.cpp
-                                                src/util/FilesystemPath.cpp
-)
+package_add_test(CommandArgsTest         FALSE test/unit/config/CommandArgsTest.cpp)
+package_add_test(DisplayConfigTest       FALSE test/unit/config/DisplayConfigTest.cpp)
+package_add_test(GeneralConfigTest       FALSE test/unit/config/GeneralConfigTest.cpp)
+package_add_test(ImageLibraryTest        FALSE test/unit/config/ImageLibraryTest.cpp)
+package_add_test(CaseOptionalStringTest  FALSE test/unit/config/ImageLibrary/CaseOptionalStringTest.cpp)
 
 # util/ tests
-package_add_test(AutoUpdateTest          FALSE test/unit/util/AutoUpdateTest.cpp
-                                                src/util/AutoUpdate.cpp
-                                                src/config/CommandArgs.cpp
-                                                src/util/Base64.cpp
-                                                src/util/HttpReader.cpp
-                                                src/util/StringUtil.cpp
-)
-package_add_test(Base64Test              FALSE test/unit/util/Base64Test.cpp
-                                                src/util/Base64.cpp
-)
+package_add_test(AutoUpdateTest          FALSE test/unit/util/AutoUpdateTest.cpp)
+package_add_test(Base64Test              FALSE test/unit/util/Base64Test.cpp)
 package_add_test(FilesystemPathTest      TRUE  test/unit/util/FilesystemPathTest.cpp
-                                                src/util/FilesystemPath.cpp
-)
-package_add_test(ProtoUtilTest           FALSE test/unit/util/ProtoUtilTest.cpp
-                                                src/util/ProtoUtil.cpp
-                                                src/util/FontUtil.cpp
-                                                src/ui/graphics/Color.cpp
-)
-package_add_test(StringUtilTest          FALSE test/unit/util/StringUtilTest.cpp
-                                                src/util/StringUtil.cpp
-)
+                                                src/util/FilesystemPath.cpp)
+package_add_test(ProtoUtilTest           FALSE test/unit/util/ProtoUtilTest.cpp)
+package_add_test(StringUtilTest          FALSE test/unit/util/StringUtilTest.cpp)
 
 # ui/event tests
-package_add_test(UpdateTimerTest         FALSE test/unit/ui/event/UpdateTimerTest.cpp
-                                                src/ui/event/UpdateTimer.cpp
-                                                src/util/AutoUpdate.cpp
-                                                src/config/CommandArgs.cpp
-                                                src/util/Base64.cpp
-                                                src/util/HttpReader.cpp
-                                                src/util/StringUtil.cpp
-                                                src/ui/widget/Frame.cpp
-)
-
-package_add_test(LibraryScanTimerTest    FALSE test/unit/ui/event/LibraryScanTimerTest.cpp
-                                                src/ui/event/LibraryScanTimer.cpp
-                                                src/config/ImageLibrary.cpp
-                                                src/util/FilesystemPath.cpp
-                                                src/ui/widget/Frame.cpp
-)
+package_add_test(UpdateTimerTest         FALSE test/unit/ui/event/UpdateTimerTest.cpp)
+package_add_test(LibraryScanTimerTest    FALSE test/unit/ui/event/LibraryScanTimerTest.cpp)
 
 # integration tests
-package_add_ui_test(ScreenPreviewTest  FALSE test/integration/ScreenPreviewTest.cpp)
-package_add_ui_test(TextEntryTest      FALSE test/integration/TextEntryTest.cpp)
-package_add_ui_test(ScreenTextSideTest FALSE test/integration/ScreenTextSideTest.cpp)
+package_add_ui_test(ScreenPreviewTest    FALSE test/integration/ScreenPreviewTest.cpp)
+package_add_ui_test(TextEntryTest        FALSE test/integration/TextEntryTest.cpp)
+package_add_ui_test(ScreenTextSideTest   FALSE test/integration/ScreenTextSideTest.cpp)
 
-# Tests here are Mac-specific builds of other tests.  These tests may be compiled/run anywhere,
-# but they test functionality that is written to be mac-specific.
+# Tests here are Mac-specific builds of other tests.
 package_add_macos_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
-                                                 src/util/FilesystemPath.cpp
-)
+                                                 src/util/FilesystemPath.cpp)
  
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)
