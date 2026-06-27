@@ -23,25 +23,25 @@ if(NOT OSXCROSS_TARGET_DIR)
 	message(FATAL_ERROR "Must define OSXCROSS_TARGET_DIR")
 endif()
 
-# Protobuf gets really wonky with cross-compliation, especially across platforms.
+# Protobuf gets really wonky with cross-compilation, especially across platforms.
 # For cross-compilation, we need:
 # - Native protoc binary (to run on build machine)
 # - Target protobuf libraries and headers (for linking)
 
-# Ensure Protobuf_PROTOC_EXECUTABLE is found in native (host) location BEFORE find_package
-#find_program(Protobuf_PROTOC_EXECUTABLE protoc PATHS /usr/local/bin /usr/bin NO_CMAKE_FIND_ROOT_PATH REQUIRED)
-set(PROTOC_EXECUTABLE "/usr/local/bin/protoc")
+# Find the host's native protoc compiler dynamically rather than hardcoding paths.
+# We must use NO_CMAKE_FIND_ROOT_PATH to prevent CMake from finding the target (macOS) protoc inside macports.
+find_program(PROTOC_EXECUTABLE protoc NO_CMAKE_FIND_ROOT_PATH REQUIRED)
 
-message(STATUS "Found Protobuf compiler: ${Protobuf_PROTOC_EXECUTABLE}")
+message(STATUS "Found Protobuf compiler: ${PROTOC_EXECUTABLE}")
 
 set(OSX_INCLUDE_DIRS "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/include")
-
 
 set(jsoncpp_DIR ${OSXCROSS_TARGET_DIR}/jsoncpp/lib/cmake/jsoncpp)
 
 set(macports_lib_dir ${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib)
 
-# There are likely a bunch of libraries in here we don't need.  The plan is to pare down this list.
+# Manually list target libraries needed by static wxWidgets under macOS cross-compilation
+# Removed redundant and irrelevant test libraries (libgtest, libgmock, etc.)
 set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libbrotlicommon.dylib
 	${macports_lib_dir}/libbrotlidec.dylib
@@ -57,12 +57,8 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libgettextpo.a
 	${macports_lib_dir}/libgio-2.0.a
 	${macports_lib_dir}/libglib-2.0.a
-	${macports_lib_dir}/libgmock.a
-	${macports_lib_dir}/libgmock_main.a
 	${macports_lib_dir}/libgmodule-2.0.a
 	${macports_lib_dir}/libgobject-2.0.a
-	${macports_lib_dir}/libgtest.a
-	${macports_lib_dir}/libgtest_main.a
 	${macports_lib_dir}/libgthread-2.0.a
 	${macports_lib_dir}/libiconv.a
 	${macports_lib_dir}/libidn2.a
@@ -87,6 +83,6 @@ set(wxWidgets_LIBRARIES
 	${macports_lib_dir}/libzstd.a
 	)
 
-include_directories(SYSTEM INTERFACE ${wxWidgets_INCLUDE_DIRS} ${OSX_INCLUDE_DIRS})
+# Removed the invalid 'INTERFACE' keyword which was incorrectly parsed as a directory name
+include_directories(SYSTEM ${wxWidgets_INCLUDE_DIRS} ${OSX_INCLUDE_DIRS})
 link_directories(${macports_lib_dir})
-
