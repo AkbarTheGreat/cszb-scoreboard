@@ -6,6 +6,9 @@
 # ------------------------------------------------------------------------------
 FROM alpine:3.18 AS build_baseline 
 
+# Enable community repository for jsoncpp, gtest, iwyu
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/community" >> /etc/apk/repositories
+
 RUN apk add --no-cache \
     alpine-sdk \
     bash \
@@ -13,7 +16,12 @@ RUN apk add --no-cache \
     clang-extra-tools \
     cmake \
     git \
-    sudo
+    sudo \
+    jsoncpp-dev \
+    gtest-dev \
+    protobuf-dev \
+    protobuf \
+    include-what-you-use
 
 ENV CC=/usr/bin/clang
 ENV CXX=/usr/bin/clang++
@@ -66,123 +74,6 @@ ENV PATH=${OSXCROSS_ROOT_DIR}/bin:$PATH
 ENV LD_LIBRARY_PATH=${OSXCROSS_ROOT_DIR}/lib
 
 # ------------------------------------------------------------------------------
-# JsonCpp (jsoncpp_bulid)
-#
-# Build JsonCpp -- mostly because the Alpine packages do not include the
-# necessary cmake files for it to work with the scoreboard.
-# ------------------------------------------------------------------------------
-FROM build_baseline AS jsoncpp_build
-
-WORKDIR /jsoncpp
-RUN git clone https://github.com/open-source-parsers/jsoncpp.git .
-RUN git fetch --all --tags
-RUN git checkout tags/${JSONCPP_VERSION}
-RUN git submodule update --init --recursive
-
-WORKDIR /jsoncpp/out
-RUN cmake \
-    -DCMAKE_INSTALL_PREFIX=/json/usr/local \
-    ..
-RUN make -j 4 all
-RUN make install
-
-WORKDIR /json
-RUN tar cvzf /jsoncpp.tgz \
-    usr/local
-
-# ------------------------------------------------------------------------------
-# Googletest (googletest_build)
-#
-# Build GTest and GMock for testing
-# ------------------------------------------------------------------------------
-FROM build_baseline AS googletest_build
-
-ENV GTEST_VERSION=v1.13.0
-
-WORKDIR /googletest
-RUN git clone https://github.com/google/googletest.git .
-RUN git fetch --all --tags
-RUN git checkout tags/${GTEST_VERSION}
-RUN git submodule update --init --recursive
-
-WORKDIR /googletest/out
-RUN cmake \
-    -DCMAKE_INSTALL_PREFIX=/gt/usr/local \
-    ..
-RUN make -j 4 all
-RUN make install
-
-WORKDIR /gt
-RUN tar cvzf /googletest.tgz \
-    usr/local
-
-# ------------------------------------------------------------------------------
-# Protobuf (protobuf_build)
-#
-# Build protobuf -- this is partly to keep it lockstep with the version osxcross
-# pulls from macports, but also for consistency between builds.
-# ------------------------------------------------------------------------------
-FROM build_baseline AS protobuf_build
-
-RUN apk add --no-cache \
-    linux-headers
-
-ENV PROTOBUF_VERSION=v21.12
-
-WORKDIR /protobuf
-RUN git clone https://github.com/google/protobuf.git .
-RUN git fetch --all --tags
-RUN git checkout tags/${PROTOBUF_VERSION}
-RUN git submodule update --init --recursive
-
-WORKDIR /protobuf/out
-RUN cmake \
-    -DCMAKE_INSTALL_PREFIX=/pb/usr/local \
-    ..
-RUN make -j 4 all
-RUN make install
-
-# Install isn't installing this particular header, so we copy it manually.
-RUN cp /protobuf/src/google/protobuf/endian.h /pb/usr/local/include/google/protobuf/
-
-WORKDIR /pb
-RUN tar cvzf /protobuf.tgz \
-    usr/local
-
-# ------------------------------------------------------------------------------
-# Include-What-You-Use (iwyu_build)
-#
-# Build IWYU -- Alpine doesn't seem to have a complete include-what-you-use
-# install, so we'll just build our own.
-# ------------------------------------------------------------------------------
-FROM build_baseline AS iwyu_build
-
-RUN apk add --no-cache \
-    clang-dev \
-    clang-static \
-    llvm-dev \
-    llvm-static
-
-ENV IWYU_VERSION=clang_16
-
-WORKDIR /iwyu
-RUN git clone https://github.com/include-what-you-use/include-what-you-use.git .
-RUN git fetch --all --tags
-RUN git checkout ${IWYU_VERSION}
-RUN git submodule update --init --recursive
-
-WORKDIR /iwyu/out
-RUN cmake \
-    -DCMAKE_INSTALL_PREFIX=/iwyu/usr/local \
-    ..
-RUN make -j 4 all
-RUN make install
-
-WORKDIR /iwyu
-RUN tar cvzf /iwyu.tgz \
-    usr/local
-
-# ------------------------------------------------------------------------------
 # Osxcross (osxcross_compile)
 #
 # Build osxcross -- This compiles osxcross itself, see osxcross_build for more.
@@ -199,8 +90,6 @@ ENV OSXCROSS_SDK_FILE=MacOSX${OSXCROSS_SDK_VERSION}.sdk
 ENV OSXCROSS_SDK_ZIP=${OSXCROSS_SDK_FILE}.tar.xz
 
 ENV OSXCROSS_BASE_DIR=/osxcross
-# While we're building osxcross, the target is the location we build into -- 
-# after we've installed it, it moves back to OSXCROSS_ROOT_DIR
 ENV OSXCROSS_TARGET_DIR=${OSXCROSS_BASE_DIR}/target
 ENV OSXCROSS_SDK=${OSXCROSS_BASE_DIR}/target/SDK/$OSXCROSS_SDK_FILE
 ENV OSXCROSS_SDK_DIR=${OSXCROSS_BASE_DIR}/target/SDK
@@ -342,22 +231,12 @@ RUN apk add --no-cache \
     zip
 
 WORKDIR /
-# Bring in JsonCpp
-COPY --from=jsoncpp_build /jsoncpp.tgz /
-RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
-# Bring in GTest
-COPY --from=googletest_build /googletest.tgz /
-RUN tar xvzf googletest.tgz && rm googletest.tgz
-# Bring in Protobuf
-COPY --from=protobuf_build /protobuf.tgz /
-RUN tar xvzf protobuf.tgz && rm protobuf.tgz
 # Bring in Osxcross
 COPY --from=osxcross_build /osxcross.tgz /
 RUN tar xvzf osxcross.tgz && rm osxcross.tgz
 # Bring in JsonCpp built for MacOS
 COPY --from=jsoncpp_osxcross_build /jsoncpp.tgz /
-RUN tar xvzf jsoncpp.tgz
-#RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
+RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
 
 ENV DISPLAY=:1
 ENV LD_LIBRARY_PATH='/opt/osxcross/lib'
@@ -394,16 +273,6 @@ RUN apk add --no-cache \
 WORKDIR /
 COPY etc/docker/supervisord.conf  ./
 
-# Bring in JsonCpp
-COPY --from=jsoncpp_build /jsoncpp.tgz /
-RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
-# Bring in GTest
-COPY --from=googletest_build /googletest.tgz /
-RUN tar xvzf googletest.tgz && rm googletest.tgz
-# Bring in Protobuf
-COPY --from=protobuf_build /protobuf.tgz /
-RUN tar xvzf protobuf.tgz && rm protobuf.tgz
-
 ENV DISPLAY=:1
 ENV GCOV='llvm-cov gcov'
 
@@ -430,7 +299,6 @@ CMD ["/bin/echo", "Either run without a target or exec into this container."]
 # ------------------------------------------------------------------------------
 FROM standard_build_base AS code_clean
 
-#    clang-format \
 RUN apk add --no-cache \
     bash \
     perl \
@@ -440,11 +308,6 @@ RUN apk add --no-cache \
 RUN cpanm Perl::Tidy
 
 RUN pip install mdformat
-
-WORKDIR /
-# Bring in IWYU
-COPY --from=iwyu_build /iwyu.tgz /
-RUN tar xvzf iwyu.tgz && rm iwyu.tgz
 
 COPY . /cszb-scoreboard
 
@@ -459,6 +322,8 @@ CMD ["/bin/echo", "Please run etc/scripts/clean_code.pl"]
 # dependencies as well as code cleanup tools
 # ------------------------------------------------------------------------------
 FROM mcr.microsoft.com/devcontainers/base:alpine AS dev
+
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/community" >> /etc/apk/repositories
 
 RUN apk add --no-cache \
     alpine-sdk \
@@ -482,28 +347,18 @@ RUN apk add --no-cache \
     valgrind \
     webkit2gtk-4.1-dev \
     xfce4 \
-    xvfb
+    xvfb \
+    jsoncpp-dev \
+    gtest-dev \
+    protobuf-dev \
+    protobuf \
+    include-what-you-use
 
 RUN cpanm Perl::Tidy
 
 RUN python3 -m venv /mdformat-venv && /mdformat-venv/bin/pip install mdformat
 
 ENV GCOV='llvm-cov gcov'
-
-WORKDIR /
-
-# Bring in JsonCpp
-COPY --from=jsoncpp_build /jsoncpp.tgz /
-RUN tar xvzf jsoncpp.tgz && rm jsoncpp.tgz
-# Bring in GTest
-COPY --from=googletest_build /googletest.tgz /
-RUN tar xvzf googletest.tgz && rm googletest.tgz
-# Bring in Protobuf
-COPY --from=protobuf_build /protobuf.tgz /
-RUN tar xvzf protobuf.tgz && rm protobuf.tgz
-# Bring in IWYU
-COPY --from=iwyu_build /iwyu.tgz /
-RUN tar xvzf iwyu.tgz && rm iwyu.tgz
 
 COPY . /cszb-scoreboard
 WORKDIR /cszb-scoreboard
