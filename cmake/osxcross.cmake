@@ -43,44 +43,7 @@ set(macports_lib_dir ${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib)
 # Manually list target libraries needed by static wxWidgets under macOS cross-compilation
 # Removed redundant and irrelevant test libraries (libgtest, libgmock, etc.)
 set(wxWidgets_LIBRARIES
-	${macports_lib_dir}/libbrotlicommon.dylib
-	${macports_lib_dir}/libbrotlidec.dylib
-	${macports_lib_dir}/libbz2.a
-	${macports_lib_dir}/libcharset.a
-	${macports_lib_dir}/libcrypto.a
-	${macports_lib_dir}/libcurses.a
-	${macports_lib_dir}/libedit.a
-	${macports_lib_dir}/libexpat.a
-	${macports_lib_dir}/libffi.a
-	${macports_lib_dir}/libform.a
-	${macports_lib_dir}/libformw.a
-	${macports_lib_dir}/libgettextpo.a
-	${macports_lib_dir}/libgio-2.0.a
-	${macports_lib_dir}/libglib-2.0.a
-	${macports_lib_dir}/libgmodule-2.0.a
-	${macports_lib_dir}/libgobject-2.0.a
-	${macports_lib_dir}/libgthread-2.0.a
-	${macports_lib_dir}/libiconv.a
-	${macports_lib_dir}/libidn2.a
-	${macports_lib_dir}/libintl.a
-	${macports_lib_dir}/libmenu.a
-	${macports_lib_dir}/libmenuw.a
-	${macports_lib_dir}/libncurses++.a
-	${macports_lib_dir}/libncurses++w.a
-	${macports_lib_dir}/libncurses.a
-	${macports_lib_dir}/libncursesw.a
-	${macports_lib_dir}/libpanel.a
-	${macports_lib_dir}/libpanelw.a
-	${macports_lib_dir}/libpcre.a
-	${macports_lib_dir}/libpcre16.a
-	${macports_lib_dir}/libpcre32.a
-	${macports_lib_dir}/libpcrecpp.a
-	${macports_lib_dir}/libpcreposix.a
-	${macports_lib_dir}/libpsl.a
-	${macports_lib_dir}/libssl.a
-	${macports_lib_dir}/libunistring.a
-	${macports_lib_dir}/libz.a
-	${macports_lib_dir}/libzstd.a
+	iconv
 	)
 
 # Removed the invalid 'INTERFACE' keyword which was incorrectly parsed as a directory name
