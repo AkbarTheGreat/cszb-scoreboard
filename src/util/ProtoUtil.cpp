@@ -70,7 +70,14 @@ auto ProtoUtil::wxScaledFont(const proto::Font& input, const Size& scale_size)
       break;
   }
 
-  return font_info.AntiAliased();
+  wxFont font(font_info.AntiAliased());
+  if (!font.IsOk() && wxNORMAL_FONT != nullptr) {
+    font = *wxNORMAL_FONT;
+    if (font.IsOk()) {
+      font.SetPointSize(scaled_size);
+    }
+  }
+  return font;
 }
 
 void ProtoUtil::setFontColor(proto::Font* font, const Color& color) {

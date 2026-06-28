@@ -48,7 +48,14 @@ namespace cszb_scoreboard::test {
 
 const int TEXT_ENTRY_TAB_INDEX = 4;
 
-const std::array<const char*, 2> TEST_ARGV = {{"scoreboard_testing.exe", "-n"}};
+static char arg0[] = "scoreboard_testing.exe";
+static char arg1[] = "-n";
+
+std::array<char*, 3> TEST_ARGV = {{
+    arg0,
+    arg1,
+    nullptr
+}};
 
 void GuiTest::SetUp() {
   app = new Scoreboard();
@@ -62,11 +69,12 @@ void GuiTest::TearDown() {
 }
 
 void GuiTest::startApp(wxApp* app) {
+  wxSetAssertHandler(nullptr);
   wxApp::SetInstance(app);
   // Argument to wxEntryStart cannot be const, so copy to a non-const before
   // calling.
-  int argc = TEST_ARGV.size();
-  wxEntryStart(argc, const_cast<char**>(TEST_ARGV.data()));
+  int argc = TEST_ARGV.size() - 1;
+  wxEntryStart(argc, TEST_ARGV.data());
   app->OnInit();
 }
 

@@ -1,4 +1,6 @@
-.git
-.vs
+**/.git
+**/.git/**
+**/.vs
+**/.vs/**
 out/
 thirdparty/wxWidgets/src/expat/testdata/

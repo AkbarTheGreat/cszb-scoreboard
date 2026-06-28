@@ -32,7 +32,7 @@ cmake --preset ${BUILD_PLATFORM}-${BUILD_PRESET}
 
 
 THREAD_COUNT="maximum caclulated threads"
-if [ !-z ${BUILD_THREADS} ]; then
+if [ -n "${BUILD_THREADS}" ]; then
   THREAD_COUNT="${BUILD_THREADS} thread(s)"
 fi
 
@@ -41,6 +41,6 @@ cmake --build --preset ${BUILD_PLATFORM}-${BUILD_PRESET} --parallel ${BUILD_THRE
 
 if [ -n "${RUN_TESTS}" ]; then
   echo "Build complete, running tests"
-  ctest --preset ${BUILD_PLATFORM}-${BUILD_PRESET}
+  ctest --preset ${BUILD_PLATFORM}-${BUILD_PRESET} --output-on-failure
 fi
 

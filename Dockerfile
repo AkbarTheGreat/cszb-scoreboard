@@ -45,7 +45,9 @@ RUN apk add --no-cache \
     gtk+3.0-dev \
     libnotify-dev \
     libsecret-dev \
-    webkit2gtk-dev
+    webkit2gtk-dev \
+    fontconfig \
+    ttf-dejavu
 
 # ------------------------------------------------------------------------------
 # MacOS Baseline (osxcross_build_baseline)
