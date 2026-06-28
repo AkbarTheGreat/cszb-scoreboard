@@ -22,7 +22,7 @@ fi
 # Setup any integration dependencies (like supervisord)
 if [ ${BUILD_PRESET} == "Integration" ]; then
   echo "Integration test setup..."
-  supervisord -c /supervisord.conf
+  supervisord -c /supervisord.conf -j /tmp/supervisord.pid
 fi
 
 echo "Preset is ${BUILD_PLATFORM}-${BUILD_PRESET}"
