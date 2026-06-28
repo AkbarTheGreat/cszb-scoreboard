@@ -19,6 +19,7 @@ limitations under the License.
 #pragma once
 
 #include <functional>  // for function
+#include <memory>      // for shared_ptr, make_shared, weak_ptr
 
 #include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
 #include "config/Position.h"   // for Size
@@ -114,6 +115,8 @@ class Widget {
 
   [[nodiscard]] virtual auto wx() const -> wxWindow* = 0;
 
+  ~Widget() = default;
+
  protected:
   auto swappable_sizer() -> swx::SwappableSizer*;
 
@@ -122,6 +125,9 @@ class Widget {
   // pointer.
   swx::Sizer* window_sizer = nullptr;
   swx::SwappableSizer* swappable_window_sizer = nullptr;
+  // Used to safely verify that the C++ wrapper object is still alive when
+  // executing bound lambdas from asynchronous event handlers.
+  std::shared_ptr<bool> lifetime_token = std::make_shared<bool>(true);
   auto widgetAtIndex(int row, int column) -> wxWindow*;
 };
 
