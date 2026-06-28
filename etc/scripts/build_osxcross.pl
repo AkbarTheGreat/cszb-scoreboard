@@ -144,11 +144,12 @@ sub plist_content {
 }
 
 sub fix_dylibs {
-   my ( $process_binary, @processed_libs ) = @_;
+   my ( $process_binary, $processed_libs ) = @_;
+   $processed_libs //= {};
 
    # Avoid doubling back, because that way lies infinite recursion.
-   next if any { $_ eq $process_binary } @processed_libs;
-   push @processed_libs, $process_binary;
+   return 0 if $processed_libs->{$process_binary};
+   $processed_libs->{$process_binary} = 1;
 
    my $otool
        = $ENV{'OSXCROSS_TARGET_DIR'} . '/bin/'
@@ -160,6 +161,8 @@ sub fix_dylibs {
        . '-install_name_tool';
 
    my @libraries = run_cmd_tick( $otool, '-L', $process_binary );
+   my @changes;
+   my @libs_to_fix;
    for my $found_lib (@libraries) {
       chomp($found_lib);
       $found_lib =~ s/\s+\(.*//;
@@ -174,19 +177,24 @@ sub fix_dylibs {
 
       die 'Library ' . $source_lib . ' not found!' unless -e $source_lib;
 
-      unless ( -e $APP_BIN . q{/} . $lib ) {
+      unless ( -e $APP_BIN . q{/} . $libname ) {
          copy( $source_lib, $target_lib )
              or die 'Copy of library ' . $lib . ' failed: ' . $!;
       }
-      my $result
-          = run_cmd( $install_name_tool, '-change', $found_lib,
-                     '@executable_path/' . $libname,
-                     $process_binary );
-      return $result if $result;
-      $result = fix_dylibs( $target_lib, @processed_libs );
+      push @changes, '-change', $found_lib, '@executable_path/' . $libname;
+      push @libs_to_fix, $target_lib;
+   }
+
+   if (@changes) {
+      my $result = run_cmd( $install_name_tool, @changes, $process_binary );
       return $result if $result;
    }
 
+   for my $target_lib (@libs_to_fix) {
+      my $result = fix_dylibs($target_lib, $processed_libs);
+      return $result if $result;
+   }
+   return 0;
 }
 
 sub dl_file {
