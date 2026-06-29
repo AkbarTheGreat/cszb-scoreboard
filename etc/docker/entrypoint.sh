@@ -20,7 +20,7 @@ if [ -z ${BUILD_PRESET} ]; then
 fi
 
 # Setup any integration dependencies (like supervisord)
-if [ ${BUILD_PRESET} == "Integration" ]; then
+if [[ ${BUILD_PRESET} == "Integration" || ${BUILD_PRESET} == "Coverage" ]]; then
   echo "Integration test setup..."
   supervisord -c /supervisord.conf -j /tmp/supervisord.pid
 fi

@@ -42,6 +42,7 @@
          "binaryDir": "${sourceDir}/out/Linux/Coverage",
          "cacheVariables": {
             "ENABLE_CODE_COVERAGE": "true",
+            "INTEGRATION_TEST": "true",
             "CMAKE_CXX_FLAGS": "-DSCOREBOARD_ENABLE_LOGGING"
          }
       }
