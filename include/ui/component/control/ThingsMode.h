@@ -45,6 +45,27 @@ class ThingsMode : public ScreenTextController {
   void textUpdated();
   void updateScreenText(ScreenText* screen_text) override;
 
+  PUBLIC_TEST_ONLY
+  void selectGameMode(int selection) {
+    game_mode_selection->setSelection(selection);
+    gameModeChanged();
+  }
+  void selectPresenterMode(int selection) {
+    presenter_selection->setSelection(selection);
+    presentedListChanged();
+  }
+  void selectScreen(int selection) {
+    screen_selection->setSelection(selection);
+    screenChanged();
+  }
+  void clickNewActivity() { addActivity(); }
+  void clickNewReplacement() { addReplacement(); }
+
+  auto homePanel() -> SingleTeamActivityPanel* { return home_activities_panel.get(); }
+  auto awayPanel() -> SingleTeamActivityPanel* { return away_activities_panel.get(); }
+  auto allPanel() -> SingleTeamActivityPanel* { return all_activities_panel.get(); }
+  auto headToHeadPanel() -> HeadToHeadActivityPanel* { return head_to_head_activities_panel.get(); }
+
  private:
   std::unique_ptr<Panel> button_panel;
   std::unique_ptr<Button> new_activity_button;

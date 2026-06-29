@@ -75,6 +75,7 @@ class ActivityPanel : public Panel {
   PUBLIC_TEST_ONLY
   ActivityPanel(swx::Panel* wx, ScreenTextController* owning_controller,
                 Singleton* singleton);
+  auto activitiesCount() -> int { return activities.size(); }
 
  protected:
   ScreenTextController* owning_controller;

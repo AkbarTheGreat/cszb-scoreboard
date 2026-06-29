@@ -264,6 +264,10 @@ package_add_test(DisplayConfigTest       FALSE test/unit/config/DisplayConfigTes
 package_add_test(GeneralConfigTest       FALSE test/unit/config/GeneralConfigTest.cpp)
 package_add_test(ImageLibraryTest        FALSE test/unit/config/ImageLibraryTest.cpp)
 package_add_test(CaseOptionalStringTest  FALSE test/unit/config/ImageLibrary/CaseOptionalStringTest.cpp)
+package_add_test(PositionTest            FALSE test/unit/config/PositionTest.cpp)
+package_add_test(PersistenceTest         FALSE test/unit/config/PersistenceTest.cpp)
+package_add_test(SlideShowTest           FALSE test/unit/config/SlideShowTest.cpp)
+package_add_test(TeamConfigTest          FALSE test/unit/config/TeamConfigTest.cpp)
 
 # util/ tests
 package_add_test(AutoUpdateTest          FALSE test/unit/util/AutoUpdateTest.cpp)
@@ -272,15 +276,24 @@ package_add_test(FilesystemPathTest      TRUE  test/unit/util/FilesystemPathTest
                                                 src/util/FilesystemPath.cpp)
 package_add_test(ProtoUtilTest           FALSE test/unit/util/ProtoUtilTest.cpp)
 package_add_test(StringUtilTest          FALSE test/unit/util/StringUtilTest.cpp)
+package_add_test(FontUtilTest            FALSE test/unit/util/FontUtilTest.cpp)
+package_add_test(TimerManagerTest        FALSE test/unit/util/TimerManagerTest.cpp)
+package_add_test(HttpReaderTest          FALSE test/unit/util/HttpReaderTest.cpp)
+package_add_test(SingletonTest           FALSE test/unit/util/SingletonTest.cpp)
 
 # ui/event tests
 package_add_test(UpdateTimerTest         FALSE test/unit/ui/event/UpdateTimerTest.cpp)
 package_add_test(LibraryScanTimerTest    FALSE test/unit/ui/event/LibraryScanTimerTest.cpp)
 
+# ui/graphics tests
+package_add_test(TeamColorsTest           FALSE test/unit/ui/graphics/TeamColorsTest.cpp)
+
 # integration tests
 package_add_ui_test(ScreenPreviewTest    FALSE test/integration/ScreenPreviewTest.cpp)
 package_add_ui_test(TextEntryTest        FALSE test/integration/TextEntryTest.cpp)
 package_add_ui_test(ScreenTextSideTest   FALSE test/integration/ScreenTextSideTest.cpp)
+package_add_ui_test(ScoreControlTest     FALSE test/integration/ScoreControlTest.cpp)
+package_add_ui_test(ThingsModeTest       FALSE test/integration/ThingsModeTest.cpp)
 
 # Tests here are Mac-specific builds of other tests.
 package_add_macos_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTest.cpp
@@ -288,7 +301,7 @@ package_add_macos_test(FilesystemPathTest  TRUE  test/unit/util/FilesystemPathTe
  
 if (ENABLE_CODE_COVERAGE)
     include(CodeCoverage)
-    set(EXTRA_GCOVR_ARGS "--merge-mode-functions=separate")
+    set(GCOVR_ADDITIONAL_ARGS "--merge-mode-functions=separate;-j;10")
     append_coverage_compiler_flags()
     file(RELATIVE_PATH BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     list(APPEND COVERAGE_EXCLUDES "${BUILD_DIR}/*")
