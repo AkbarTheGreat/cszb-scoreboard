@@ -111,7 +111,9 @@ if(NOT SKIP_LINT)
         if(CLANG_TIDY_ERRORS)
             set(CLANG_TIDY_ERROR_CHECK ";-warnings-as-errors=*")
         endif()
-	set(LINT_OPTION "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
+        set(LINT_OPTION "${CLANG_TIDY_COMMAND};-checks=${CLANG_TIDY_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
+        set(LINT_TEST_CHECKS "${CLANG_TIDY_CHECKS},-readability-magic-numbers,-readability-function-cognitive-complexity")
+        set(LINT_TEST_OPTION "${CLANG_TIDY_COMMAND};-checks=${LINT_TEST_CHECKS}${CLANG_TIDY_ERROR_CHECK};-header-filter=${CMAKE_SOURCE_DIR}/include/.*")
     endif() # CLANG_TIDY_COMMAND
 endif() # OSXCROSS_HOST
 
@@ -236,7 +238,7 @@ function(package_add_test_impl TESTNAME HAS_OWN_MAIN CORE_LIB)
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
         XML_OUTPUT_DIR gtest
     )
-    set_target_properties(${TESTNAME} PROPERTIES FOLDER test CXX_CLANG_TIDY "${LINT_OPTION}")
+    set_target_properties(${TESTNAME} PROPERTIES FOLDER test CXX_CLANG_TIDY "${LINT_TEST_OPTION}")
 endfunction()
 
 function(package_add_test TESTNAME HAS_OWN_MAIN)
