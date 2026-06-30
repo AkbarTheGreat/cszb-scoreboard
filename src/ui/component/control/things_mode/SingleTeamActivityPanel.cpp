@@ -77,10 +77,10 @@ auto SingleTeamActivityPanel::activityText(const proto::ScreenSide& side,
 // Single team displays just return the same color regardless of whether it's
 // for replacements or what side monitor is asked for, since it never splits and
 // the "home" color is always used.
-auto SingleTeamActivityPanel::color(const proto::ScreenSide& side,
+auto SingleTeamActivityPanel::color(const proto::ScreenSide& /*side*/,
                                     bool forReplacement) -> Color {
-  color_picker->setColor(singleton->teamColors()->getColor(side));
-  return singleton->teamColors()->getColor(side);
+  color_picker->setColor(singleton->teamColors()->getColor(this->side));
+  return singleton->teamColors()->getColor(this->side);
 }
 
 auto SingleTeamActivityPanel::replacementText(const proto::ScreenSide& side,
