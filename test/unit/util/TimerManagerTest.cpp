@@ -16,12 +16,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "util/TimerManager.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "test/mocks/util/MockSingleton.h"
+#include "util/TimerManager.h"
 
 namespace cszb_scoreboard::test {
 
@@ -70,7 +69,8 @@ TEST(TimerManagerTest, ShowHideTimer) {
   timer_manager.showTimer();
   EXPECT_TRUE(timer_manager.timerOn());
 
-  // Second call shouldn't call autoRefreshTimer again since it's already displayed
+  // Second call shouldn't call autoRefreshTimer again since it's already
+  // displayed
   timer_manager.showTimer();
   EXPECT_TRUE(timer_manager.timerOn());
 

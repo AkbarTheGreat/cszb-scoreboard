@@ -196,8 +196,9 @@ auto Widget::swappable_sizer() -> swx::SwappableSizer* {
 // Paint events also need to create a DC to work appropriately, so we handle
 // that here.
 // Note: We capture a weak_ptr of lifetime_token and lock it inside the lambda
-// to prevent use-after-free segfaults if a paint event is processed by wxWidgets
-// asynchronously after the C++ Widget wrapper has already been destructed.
+// to prevent use-after-free segfaults if a paint event is processed by
+// wxWidgets asynchronously after the C++ Widget wrapper has already been
+// destructed.
 void Widget::bind(const wxEventTypeTag<wxPaintEvent>& eventType,
                   const std::function<void(RenderContext*)>& lambda, int id) {
   std::weak_ptr<bool> weak_token = lifetime_token;

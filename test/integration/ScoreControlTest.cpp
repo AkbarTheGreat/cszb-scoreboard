@@ -1,5 +1,6 @@
 /*
-test/integration/ScoreControlTest.cpp: Tests for ui/component/control/ScoreControl
+test/integration/ScoreControlTest.cpp: Tests for
+ui/component/control/ScoreControl
 
 Copyright 2026 Tracy Beck
 
@@ -16,15 +17,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/component/control/ScoreControl.h"
-
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for SuiteApiResolver, TestFa...
 
-#include "gtest/gtest_pred_impl.h"              // for TEST_F
-#include "test/integration/GuiTest.h"            // for WX_A, GuiTest
-#include "ui/component/ControlPanel.h"          // for ControlPanel
-#include "ui/frame/MainView.h"                  // for MainView
+#include "gtest/gtest_pred_impl.h"      // for TEST_F
+#include "test/integration/GuiTest.h"   // for WX_A, GuiTest
+#include "ui/component/ControlPanel.h"  // for ControlPanel
+#include "ui/component/control/ScoreControl.h"
+#include "ui/frame/MainView.h"  // for MainView
 
 namespace cszb_scoreboard::test {
 

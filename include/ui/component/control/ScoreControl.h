@@ -58,17 +58,32 @@ class ScoreControl : public ScreenTextController {
   auto homeName() -> std::string { return home_name_entry->value(); }
   auto awayName() -> std::string { return away_name_entry->value(); }
   auto isIntro() -> bool { return team_intro_button->value(); }
-  void setHomeScore(const std::string& score) { home_score_entry->setValue(score); homeUpdated(); }
-  void setAwayScore(const std::string& score) { away_score_entry->setValue(score); awayUpdated(); }
-  void setHomeName(const std::string& name) { home_name_entry->setValue(name); homeNameUpdated(); }
-  void setAwayName(const std::string& name) { away_name_entry->setValue(name); awayNameUpdated(); }
+  void setHomeScore(const std::string& score) {
+    home_score_entry->setValue(score);
+    homeUpdated();
+  }
+  void setAwayScore(const std::string& score) {
+    away_score_entry->setValue(score);
+    awayUpdated();
+  }
+  void setHomeName(const std::string& name) {
+    home_name_entry->setValue(name);
+    homeNameUpdated();
+  }
+  void setAwayName(const std::string& name) {
+    away_name_entry->setValue(name);
+    awayNameUpdated();
+  }
   void clickHomeAddOne() { homeAddOne(); }
   void clickHomeAddFive() { homeAddFive(); }
   void clickHomeMinusOne() { homeMinusOne(); }
   void clickAwayAddOne() { awayAddOne(); }
   void clickAwayAddFive() { awayAddFive(); }
   void clickAwayMinusOne() { awayMinusOne(); }
-  void clickToggleIntro() { team_intro_button->toggle(); toggleIntroMode(); }
+  void clickToggleIntro() {
+    team_intro_button->toggle();
+    toggleIntroMode();
+  }
 
  private:
   void addHomeAwayWidgetPair(Panel* panel, int row, const Widget& home_widget,

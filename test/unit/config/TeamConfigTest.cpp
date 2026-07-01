@@ -16,13 +16,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "config/TeamConfig.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <wx/gdicmn.h>
 
 #include "config/Persistence.h"
+#include "config/TeamConfig.h"
 #include "test/mocks/config/MockPersistence.h"
 #include "test/mocks/util/MockSingleton.h"
 #include "ui/graphics/Color.h"
@@ -43,7 +42,8 @@ class TeamConfigTest : public ::testing::Test {
     }
     singleton = std::make_unique<MockSingleton>();
     persist = std::make_unique<MockPersistence>(singleton.get());
-    EXPECT_CALL(*singleton, persistence()).WillRepeatedly(Return(persist.get()));
+    EXPECT_CALL(*singleton, persistence())
+        .WillRepeatedly(Return(persist.get()));
   }
 };
 
@@ -55,7 +55,8 @@ TEST_F(TeamConfigTest, InitializesWithDefaultsWhenEmpty) {
 
   // Should auto-initialize home and away teams
   EXPECT_EQ(config.numberOfTeams(), 2);
-  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_HOME_TEAM), Color("Blue"));
+  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_HOME_TEAM),
+            Color("Blue"));
   EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_AWAY_TEAM), Color("Red"));
 
   std::vector<proto::TeamInfo_TeamType> order = config.singleScreenOrder();
@@ -68,21 +69,26 @@ TEST_F(TeamConfigTest, TeamColorsAndOrder) {
   proto::TeamConfig initial;
   auto* home = initial.add_teams();
   home->set_team_type(proto::TeamInfo_TeamType_HOME_TEAM);
-  ProtoUtil::protoClr(Color(0, 128, 0), home->mutable_team_color()); // Green Home
+  ProtoUtil::protoClr(Color(0, 128, 0),
+                      home->mutable_team_color());  // Green Home
 
   auto* away = initial.add_teams();
   away->set_team_type(proto::TeamInfo_TeamType_AWAY_TEAM);
-  ProtoUtil::protoClr(Color(255, 255, 0), away->mutable_team_color()); // Yellow Away
+  ProtoUtil::protoClr(Color(255, 255, 0),
+                      away->mutable_team_color());  // Yellow Away
 
   persist->saveTeams(initial);
 
   TeamConfig config(SingletonClass{}, singleton.get());
-  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_HOME_TEAM), Color("Green"));
-  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_AWAY_TEAM), Color("Yellow"));
+  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_HOME_TEAM),
+            Color("Green"));
+  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_AWAY_TEAM),
+            Color("Yellow"));
 
   // Modify color
   config.setColor(proto::TeamInfo_TeamType_HOME_TEAM, Color("Purple"));
-  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_HOME_TEAM), Color("Purple"));
+  EXPECT_EQ(config.teamColor(proto::TeamInfo_TeamType_HOME_TEAM),
+            Color("Purple"));
 
   // Change single screen order
   std::vector<proto::TeamInfo_TeamType> new_order = {
@@ -100,11 +106,13 @@ TEST_F(TeamConfigTest, TeamColorForSide) {
   proto::TeamConfig initial;
   auto* home = initial.add_teams();
   home->set_team_type(proto::TeamInfo_TeamType_HOME_TEAM);
-  ProtoUtil::protoClr(Color(255, 0, 0), home->mutable_team_color()); // Red Home
+  ProtoUtil::protoClr(Color(255, 0, 0),
+                      home->mutable_team_color());  // Red Home
 
   auto* away = initial.add_teams();
   away->set_team_type(proto::TeamInfo_TeamType_AWAY_TEAM);
-  ProtoUtil::protoClr(Color(0, 0, 255), away->mutable_team_color()); // Blue Away
+  ProtoUtil::protoClr(Color(0, 0, 255),
+                      away->mutable_team_color());  // Blue Away
 
   persist->saveTeams(initial);
 
@@ -127,7 +135,8 @@ TEST_F(TeamConfigTest, TeamColorForSide) {
 TEST_F(TeamConfigTest, StaticHelpers) {
   EXPECT_EQ(TeamConfig::teamName(proto::TeamInfo_TeamType_HOME_TEAM), "Home");
   EXPECT_EQ(TeamConfig::teamName(proto::TeamInfo_TeamType_AWAY_TEAM), "Away");
-  EXPECT_EQ(TeamConfig::teamName(proto::TeamInfo_TeamType_EXTRA_TEAM), "Unknown");
+  EXPECT_EQ(TeamConfig::teamName(proto::TeamInfo_TeamType_EXTRA_TEAM),
+            "Unknown");
 }
 
 }  // namespace cszb_scoreboard::test

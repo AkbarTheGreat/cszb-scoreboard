@@ -16,12 +16,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "config/Position.h"
-
 #include <gtest/gtest.h>
 #include <wx/gdicmn.h>
 
 #include "config.pb.h"
+#include "config/Position.h"
 
 namespace cszb_scoreboard::test {
 

@@ -61,10 +61,18 @@ class ThingsMode : public ScreenTextController {
   void clickNewActivity() { addActivity(); }
   void clickNewReplacement() { addReplacement(); }
 
-  auto homePanel() -> SingleTeamActivityPanel* { return home_activities_panel.get(); }
-  auto awayPanel() -> SingleTeamActivityPanel* { return away_activities_panel.get(); }
-  auto allPanel() -> SingleTeamActivityPanel* { return all_activities_panel.get(); }
-  auto headToHeadPanel() -> HeadToHeadActivityPanel* { return head_to_head_activities_panel.get(); }
+  auto homePanel() -> SingleTeamActivityPanel* {
+    return home_activities_panel.get();
+  }
+  auto awayPanel() -> SingleTeamActivityPanel* {
+    return away_activities_panel.get();
+  }
+  auto allPanel() -> SingleTeamActivityPanel* {
+    return all_activities_panel.get();
+  }
+  auto headToHeadPanel() -> HeadToHeadActivityPanel* {
+    return head_to_head_activities_panel.get();
+  }
 
  private:
   std::unique_ptr<Panel> button_panel;

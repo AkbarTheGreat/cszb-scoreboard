@@ -16,16 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/component/control/ThingsMode.h"
-
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for SuiteApiResolver, TestFa...
 
-#include "gtest/gtest_pred_impl.h"                      // for TEST_F
-#include "test/integration/GuiTest.h"                    // for WX_A, GuiTest
-#include "ui/component/ControlPanel.h"                  // for ControlPanel
+#include "gtest/gtest_pred_impl.h"      // for TEST_F
+#include "test/integration/GuiTest.h"   // for WX_A, GuiTest
+#include "ui/component/ControlPanel.h"  // for ControlPanel
+#include "ui/component/control/ThingsMode.h"
 #include "ui/component/control/things_mode/ActivityPanel.h"
-#include "ui/frame/MainView.h"                          // for MainView
+#include "ui/frame/MainView.h"  // for MainView
 
 namespace cszb_scoreboard::test {
 
@@ -63,27 +62,28 @@ TEST_F(ThingsModeTest, ActivityListManagement) {
   int initial_away_count = things->awayPanel()->activitiesCount();
 
   // 1. Select "All" screen and add an activity
-  WX_A(things->selectScreen(2)); // Index 2 is All
+  WX_A(things->selectScreen(2));  // Index 2 is All
   WX_A(things->clickNewActivity());
   EXPECT_EQ(things->allPanel()->activitiesCount(), initial_all_count + 1);
 
   // 2. Select "Home" screen and add an activity
-  WX_A(things->selectScreen(0)); // Index 0 is Home
+  WX_A(things->selectScreen(0));  // Index 0 is Home
   WX_A(things->clickNewActivity());
   EXPECT_EQ(things->homePanel()->activitiesCount(), initial_home_count + 1);
 
   // 3. Select "Away" screen and add an activity
-  WX_A(things->selectScreen(1)); // Index 1 is Away
+  WX_A(things->selectScreen(1));  // Index 1 is Away
   WX_A(things->clickNewActivity());
   EXPECT_EQ(things->awayPanel()->activitiesCount(), initial_away_count + 1);
 
   // 4. Test Head-to-Head Mode (index 1)
-  WX_A(things->selectGameMode(1)); // Index 1 is Head-to-Head
+  WX_A(things->selectGameMode(1));  // Index 1 is Head-to-Head
   ASSERT_NE(things->headToHeadPanel(), nullptr);
 
   int initial_h2h_count = things->headToHeadPanel()->activitiesCount();
   WX_A(things->clickNewActivity());
-  EXPECT_EQ(things->headToHeadPanel()->activitiesCount(), initial_h2h_count + 1);
+  EXPECT_EQ(things->headToHeadPanel()->activitiesCount(),
+            initial_h2h_count + 1);
 }
 
 }  // namespace cszb_scoreboard::test

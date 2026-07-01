@@ -16,8 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "util/HttpReader.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -25,6 +23,7 @@ limitations under the License.
 #include <vector>
 
 #include "test/mocks/util/MockHttpReader.h"
+#include "util/HttpReader.h"
 
 namespace cszb_scoreboard::test {
 
@@ -48,7 +47,8 @@ TEST(HttpReaderTest, SuccessfulBinaryRead) {
   std::string binary_content = "some binary data";
   HttpResponse normal_response{
       "", std::vector<char>(binary_content.begin(), binary_content.end())};
-  normal_response.response.push_back('\0'); // readBinary sheds the trailing null
+  normal_response.response.push_back(
+      '\0');  // readBinary sheds the trailing null
 
   EXPECT_CALL(reader, read(testing::StrEq("http://normal.com")))
       .WillOnce(Return(normal_response));
@@ -61,7 +61,8 @@ TEST(HttpReaderTest, SuccessfulBinaryRead) {
 TEST(HttpReaderTest, RedirectsToNewLocation) {
   MockHttpReader reader;
 
-  // HTML response matching isRedirect criteria: starts with <html>, size between 50 and 1000, contains href
+  // HTML response matching isRedirect criteria: starts with <html>, size
+  // between 50 and 1000, contains href
   std::string html_redirect =
       "<html><body><a href=\"http://redirected.com\">Redirect "
       "link here</a></body></html>";

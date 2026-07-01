@@ -16,14 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "config/SlideShow.h"
-
 #include <gtest/gtest.h>
 #include <wx/log.h>
 
 #include <thread>
 
 #include "config/Persistence.h"
+#include "config/SlideShow.h"
 #include "gmock/gmock.h"
 #include "slide_show.pb.h"
 #include "test/mocks/config/MockPersistence.h"
@@ -104,10 +103,10 @@ TEST_F(SlideShowTest, SlideOperations) {
   show.addSlide("SlideD", FilesystemPath("fileD.png"), 1);
   list = show.slides(0, 4);
   ASSERT_EQ(list.size(), 4);
-  EXPECT_EQ(list[1].name(), "SlideD"); // Inserted at 1
+  EXPECT_EQ(list[1].name(), "SlideD");  // Inserted at 1
 
   // Test removeSlide
-  show.removeSlide(1); // removes SlideD
+  show.removeSlide(1);  // removes SlideD
   list = show.slides(0, 4);
   ASSERT_EQ(list.size(), 3);
   EXPECT_EQ(list[0].name(), "SlideB");
@@ -125,7 +124,7 @@ TEST_F(SlideShowTest, SlideOperations) {
 
 TEST_F(SlideShowTest, TimingAndTransitions) {
   proto::SlideShow initial_show;
-  initial_show.set_delay(0.001); // minimal delay for fast testing
+  initial_show.set_delay(0.001);  // minimal delay for fast testing
   auto* slide1 = initial_show.add_slides();
   slide1->set_name("SlideA");
   slide1->set_file_path("");
@@ -162,7 +161,7 @@ TEST_F(SlideShowTest, EmptyShowGracefulExit) {
   EXPECT_TRUE(show.isRunning());
 
   Image img = show.nextSlide();
-  EXPECT_FALSE(show.isRunning()); // Stops running automatically if empty
+  EXPECT_FALSE(show.isRunning());  // Stops running automatically if empty
 }
 
 }  // namespace cszb_scoreboard::test

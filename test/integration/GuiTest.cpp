@@ -51,11 +51,7 @@ const int TEXT_ENTRY_TAB_INDEX = 4;
 static char arg0[] = "scoreboard_testing.exe";
 static char arg1[] = "-n";
 
-std::array<char*, 3> TEST_ARGV = {{
-    arg0,
-    arg1,
-    nullptr
-}};
+std::array<char*, 3> TEST_ARGV = {{arg0, arg1, nullptr}};
 
 void GuiTest::SetUp() {
   app = new Scoreboard();

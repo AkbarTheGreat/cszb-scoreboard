@@ -16,11 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "util/FontUtil.h"
-
 #include <gtest/gtest.h>
 
 #include "config/Position.h"
+#include "util/FontUtil.h"
 
 namespace cszb_scoreboard::test {
 

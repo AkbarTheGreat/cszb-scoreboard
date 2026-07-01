@@ -16,8 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "ui/graphics/TeamColors.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <wx/gdicmn.h>
@@ -27,6 +25,7 @@ limitations under the License.
 #include "test/mocks/config/MockPersistence.h"
 #include "test/mocks/util/MockSingleton.h"
 #include "ui/graphics/Color.h"
+#include "ui/graphics/TeamColors.h"
 #include "util/ProtoUtil.h"
 
 namespace cszb_scoreboard::test {
@@ -60,7 +59,8 @@ class TeamColorsTest : public ::testing::Test {
 
     persistence->saveTeams(default_config);
 
-    team_config = std::make_unique<TeamConfig>(SingletonClass{}, singleton.get());
+    team_config =
+        std::make_unique<TeamConfig>(SingletonClass{}, singleton.get());
     EXPECT_CALL(*singleton, teamConfig())
         .WillRepeatedly(Return(team_config.get()));
   }

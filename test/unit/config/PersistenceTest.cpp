@@ -16,12 +16,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "config/Persistence.h"
-
 #include <gtest/gtest.h>
 #include <wx/gdicmn.h>
 
 #include "config.pb.h"
+#include "config/Persistence.h"
 #include "image_library.pb.h"
 #include "slide_show.pb.h"
 #include "team_library.pb.h"

@@ -191,7 +191,7 @@ sub fix_dylibs {
    }
 
    for my $target_lib (@libs_to_fix) {
-      my $result = fix_dylibs($target_lib, $processed_libs);
+      my $result = fix_dylibs( $target_lib, $processed_libs );
       return $result if $result;
    }
    return 0;
