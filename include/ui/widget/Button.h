@@ -18,6 +18,7 @@ limitations under the License.
 
 #pragma once
 
+#include "ui/graphics/Color.h"
 #include "ui/widget/Widget.h"
 #include "ui/widget/swx/Button.h"
 

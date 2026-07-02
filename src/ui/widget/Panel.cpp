@@ -25,14 +25,15 @@ limitations under the License.
 
 #include <vector>  // for vector
 
-#include "ui/widget/Browser.h"               // for Browser
-#include "ui/widget/Button.h"                // for Button
-#include "ui/widget/CheckBox.h"              // for CheckBox
-#include "ui/widget/ColorPicker.h"           // for ColorPicker
-#include "ui/widget/DirectoryPicker.h"       // for DirectoryPicker
-#include "ui/widget/Divider.h"               // for Divider
-#include "ui/widget/DropDown.h"              // for DropDown
-#include "ui/widget/FilePicker.h"            // for FilePicker
+#include "ui/widget/Browser.h"          // for Browser
+#include "ui/widget/Button.h"           // for Button
+#include "ui/widget/CheckBox.h"         // for CheckBox
+#include "ui/widget/ColorPicker.h"      // for ColorPicker
+#include "ui/widget/DirectoryPicker.h"  // for DirectoryPicker
+#include "ui/widget/Divider.h"          // for Divider
+#include "ui/widget/DropDown.h"         // for DropDown
+#include "ui/widget/FilePicker.h"       // for FilePicker
+#include "ui/widget/IndicatorButton.h"
 #include "ui/widget/Label.h"                 // for Label
 #include "ui/widget/LabelledArea.h"          // for LabelledArea
 #include "ui/widget/ListBox.h"               // for ListBox
@@ -94,6 +95,17 @@ auto Panel::button(const std::string& label, bool exact_fit) const
                         wxBU_EXACTFIT));
   }
   return std::make_unique<Button>(new swx::Button(wx(), wxID_ANY, label));
+}
+
+auto Panel::indicatorButton(const std::string& label, bool exact_fit) const
+    -> std::unique_ptr<IndicatorButton> {
+  if (exact_fit) {
+    return std::make_unique<IndicatorButton>(
+        new swx::Button(wx(), wxID_ANY, label, wxDefaultPosition, wxDefaultSize,
+                        wxBU_EXACTFIT));
+  }
+  return std::make_unique<IndicatorButton>(
+      new swx::Button(wx(), wxID_ANY, label));
 }
 
 auto Panel::browser(const std::string& url) const -> std::unique_ptr<Browser> {

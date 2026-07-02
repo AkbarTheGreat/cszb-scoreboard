@@ -19,12 +19,13 @@ limitations under the License.
 
 #include "ui/component/control/things_mode/Activity.h"
 
-#include <utility>
+#include <utility>  // for move
 
-#include "ScoreboardCommon.h"
-#include "config/swx/event.h"
-#include "ui/component/control/things_mode/ActivityPanel.h"
-#include "util/ProtoUtil.h"
+#include "ScoreboardCommon.h"                                // for DEFAULT_...
+#include "config/swx/event.h"                                // for wxEVT_CO...
+#include "ui/component/control/things_mode/ActivityPanel.h"  // for Activity...
+#include "ui/graphics/Color.h"                               // for Color
+#include "util/ProtoUtil.h"                                  // for ProtoUtil
 
 namespace cszb_scoreboard {
 
@@ -42,7 +43,7 @@ Activity::Activity(ActivityPanel* parent, Panel* activity_frame,
   if (is_first) {
     activity_selector->setSelected(true);
   }
-  team_button = control_pane->button("H", true);
+  team_button = control_pane->indicatorButton("H", true);
   activity_text = control_pane->text("", true);
   up_button = control_pane->button("^", true);
   down_button = control_pane->button("v", true);
@@ -142,6 +143,7 @@ void Activity::setTeam(bool is_home) {
     team = ProtoUtil::awaySide();
     team_button->setText("A");
   }
+  updateStripeColor();
 }
 
 void Activity::toggleTeam() {
@@ -154,6 +156,13 @@ auto Activity::previewText() -> std::string {
     return " ";
   }
   return activity_text->value();
+}
+
+void Activity::updateStripeColor() {
+  if (team_button && !team_button->hidden()) {
+    Color color = parent->color(team, false);
+    team_button->setIndicatorColor(color);
+  }
 }
 
 }  // namespace cszb_scoreboard

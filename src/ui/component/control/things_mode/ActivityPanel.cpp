@@ -178,6 +178,9 @@ void ActivityPanel::textUpdated() { updateNotify(); }
 
 void ActivityPanel::updateNotify() {
   refreshSizers();
+  for (const auto& activity : activities) {
+    activity->updateStripeColor();
+  }
   if (connector_panel) {
     connector_panel->refresh();
   }

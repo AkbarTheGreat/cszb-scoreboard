@@ -25,9 +25,10 @@ limitations under the License.
 #include "config.pb.h"
 #include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
 #include "ui/widget/Button.h"                                   // for Button
-#include "ui/widget/Panel.h"                                    // for Panel
-#include "ui/widget/RadioButton.h"                              // for Radio...
-#include "ui/widget/Text.h"                                     // for Text
+#include "ui/widget/IndicatorButton.h"
+#include "ui/widget/Panel.h"        // for Panel
+#include "ui/widget/RadioButton.h"  // for Radio...
+#include "ui/widget/Text.h"         // for Text
 
 namespace cszb_scoreboard {
 
@@ -47,6 +48,7 @@ class Activity {
   }
   void setIndex(int index, int max_index);
   void setTeam(bool is_home);
+  void updateStripeColor();
   auto isSelected() -> bool;
   void select();
   void unselect();
@@ -57,8 +59,8 @@ class Activity {
   std::unique_ptr<Panel> control_pane;
   std::unique_ptr<RadioButton> activity_selector;
   std::unique_ptr<Text> activity_text;
-  std::unique_ptr<Button> down_button, up_button, team_button,
-      remove_activity_button;
+  std::unique_ptr<Button> down_button, up_button, remove_activity_button;
+  std::unique_ptr<IndicatorButton> team_button;
   ActivityPanel* parent;
   std::unique_ptr<ReplacementPanel> replacement_panel;
 

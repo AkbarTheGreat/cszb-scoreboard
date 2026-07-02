@@ -30,6 +30,14 @@ class Button : public wxButton {
          const wxValidator& validator = wxDefaultValidator,
          const wxString& name = wxButtonNameStr)
       : wxButton(parent, id, label, pos, size, style, validator, name) {}
+
+  virtual void SetBitmap(const wxBitmapBundle& bitmap) {
+    wxButton::SetBitmap(bitmap);
+  }
+
+  virtual void SetBitmapPosition(wxDirection dir) {
+    wxButton::SetBitmapPosition(dir);
+  }
 };
 
 }  // namespace cszb_scoreboard::swx
