@@ -16,10 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>
-#include <wx/gdicmn.h>
+#include <wx/gdicmn.h>  // for wxTheColourDatabase, wxColourDatabase
 
-#include "util/Singleton.h"
+#include <memory>  // for allocator
+
+#include "gtest/gtest.h"     // for CmpHelperNE, Message, TestPartResult
+#include "util/Singleton.h"  // for Singleton
+// IWYU pragma: no_include <gtest/gtest.h>
 
 namespace cszb_scoreboard::test {
 

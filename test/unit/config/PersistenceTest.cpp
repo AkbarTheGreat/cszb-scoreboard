@@ -16,17 +16,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>
-#include <wx/gdicmn.h>
+#include <gtest/gtest.h>  // for TestInfo (ptr only), EXPE...
+#include <wx/gdicmn.h>    // for wxTheColourDatabase, wxCo...
 
-#include "config.pb.h"
-#include "config/Persistence.h"
-#include "image_library.pb.h"
-#include "slide_show.pb.h"
-#include "team_library.pb.h"
-#include "test/mocks/util/MockSingleton.h"
-#include "ui/graphics/Color.h"
-#include "util/ProtoUtil.h"
+#include <memory>  // for allocator, unique_ptr
+
+#include "config.pb.h"                      // for TeamConfig, DisplayConfig
+#include "config/Persistence.h"             // for Persistence
+#include "gtest/gtest.h"                    // for Message, TestPartResult
+#include "image_library.pb.h"               // for ImageLibrary
+#include "slide_show.pb.h"                  // for SlideShow
+#include "team_library.pb.h"                // for TeamLibrary, TeamLibInfo
+#include "test/mocks/util/MockSingleton.h"  // for MockSingleton
+#include "ui/graphics/Color.h"              // for Color
+#include "util/ProtoUtil.h"                 // for ProtoUtil
+#include "util/Singleton.h"                 // for SingletonClass
 
 namespace cszb_scoreboard::test {
 

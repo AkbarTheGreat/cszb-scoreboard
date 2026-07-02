@@ -24,7 +24,6 @@ limitations under the License.
 #include <utility>  // for move
 
 #include "ui/component/control/ImageFromLibrary.h"  // for ImageFromLibrary
-#include "ui/component/control/ImageSearch.h"       // for ImageSearch
 #include "ui/component/control/LocalImage.h"        // for LocalImage
 #include "ui/component/control/ScoreControl.h"      // for ScoreControl
 #include "ui/component/control/SlideshowSetup.h"    // for SlideshowSetup

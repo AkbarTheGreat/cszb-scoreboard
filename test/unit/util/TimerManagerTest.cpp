@@ -16,11 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include <memory>  // for allocator
 
-#include "test/mocks/util/MockSingleton.h"
-#include "util/TimerManager.h"
+#include "gmock/gmock.h"                    // for Return, ReturnAction, EXP...
+#include "gtest/gtest.h"                    // for AssertionResult, Test
+#include "test/mocks/util/MockSingleton.h"  // for MockSingleton
+#include "util/Singleton.h"                 // for SingletonClass
+#include "util/TimerManager.h"              // for TimerManager
+// IWYU pragma: no_include <gtest/gtest.h>
 
 namespace cszb_scoreboard::test {
 

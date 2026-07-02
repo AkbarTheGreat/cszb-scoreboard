@@ -23,14 +23,13 @@ limitations under the License.
 #include <algorithm>  // for count, transform
 #include <array>      // for array
 #include <cctype>     // for toupper
-#include <cstddef>    // for size_t
+#include <cstddef>    // IWYU keep for size_t
 #include <sstream>    // for basic_istream, istringstream
-#include <stdexcept>  // for runtime_error
 
 #ifdef SCOREBOARD_APPLE_IMPL
 #include <cstdio>  // for size_t, remove, rename
 #else
-#include <filesystem>
+#include <filesystem>  // for directory_iterator, path, directory_entry, begin
 #endif
 
 namespace cszb_scoreboard {

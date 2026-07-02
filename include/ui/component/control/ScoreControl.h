@@ -21,17 +21,19 @@ limitations under the License.
 
 #include <memory>    // for unique_ptr
 #include <optional>  // for optional
+#include <string>    // for string
 #include <vector>    // for vector
 
+#include "ScoreboardCommon.h"                           // for PUBLIC_TEST_ONLY
 #include "config/swx/image.h"                           // for Image
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
-#include "ui/dialog/TeamLibraryDialog.h"
-#include "ui/widget/Button.h"       // for Button
-#include "ui/widget/ColorPicker.h"  // for ColorPicker
-#include "ui/widget/Label.h"        // for Label
-#include "ui/widget/Panel.h"        // for Panel
-#include "ui/widget/Text.h"         // for Text
-#include "ui/widget/Toggle.h"       // for Toggle
+#include "ui/dialog/TeamLibraryDialog.h"                // for TeamLibraryDi...
+#include "ui/widget/Button.h"                           // for Button
+#include "ui/widget/ColorPicker.h"                      // for ColorPicker
+#include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Panel.h"                            // for Panel
+#include "ui/widget/Text.h"                             // for Text
+#include "ui/widget/Toggle.h"                           // for Toggle
 
 namespace cszb_scoreboard {
 class ScreenText;

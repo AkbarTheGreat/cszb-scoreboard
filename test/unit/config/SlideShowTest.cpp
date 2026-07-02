@@ -16,21 +16,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>
-#include <wx/log.h>
+#include <bits/chrono.h>  // for milliseconds
+#include <wx/log.h>       // for wxLogNull
 
-#include <thread>
+#include <memory>  // for allocator, unique_ptr
+#include <thread>  // for sleep_for
+#include <vector>  // for vector
 
-#include "config/Persistence.h"
-#include "config/SlideShow.h"
-#include "gmock/gmock.h"
-#include "slide_show.pb.h"
-#include "test/mocks/config/MockPersistence.h"
-#include "test/mocks/util/MockSingleton.h"
-#include "util/FilesystemPath.h"
+#include "config/SlideShow.h"                   // for SlideShow
+#include "config/swx/image.h"                   // for Image
+#include "gmock/gmock.h"                        // for Return, ReturnAction
+#include "gtest/gtest.h"                        // for AssertionResult, Message
+#include "slide_show.pb.h"                      // for SlideInfo, SlideShow
+#include "test/mocks/config/MockPersistence.h"  // for MockPersistence
+#include "test/mocks/util/MockSingleton.h"      // for MockSingleton
+#include "util/FilesystemPath.h"                // for FilesystemPath
+#include "util/Singleton.h"                     // for SingletonClass, Singl...
+// IWYU pragma: no_include <gtest/gtest.h>
 
 #define TEST_STUB_SINGLETON
-#include "test/mocks/Stubs.h"
+#include "test/mocks/Stubs.h"  // for Singleton::getInstance
 
 namespace cszb_scoreboard::test {
 

@@ -36,6 +36,7 @@ limitations under the License.
 #include "ui/widget/Panel.h"                            // for Panel
 #include "util/Singleton.h"                             // for Singleton
 #include "wx/dcclient.h"                                // for wxClientDC
+#include "wx/defs.h"                                    // for wxSetAssertHa...
 #include "wx/gdicmn.h"                                  // for wxRect
 #include "wx/window.h"                                  // for wxWindow
 // IWYU pragma: no_include "wx/gtk/app.h"

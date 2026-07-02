@@ -16,14 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include <string>  // for allocator, string
+#include <vector>  // for vector
 
-#include <string>
-#include <vector>
-
-#include "test/mocks/util/MockHttpReader.h"
-#include "util/HttpReader.h"
+#include "gmock/gmock.h"                     // for Return, ReturnAction, StrEq
+#include "gtest/gtest.h"                     // for Test, AssertionResult
+#include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
+#include "util/HttpReader.h"                 // for HttpResponse, HttpReader
+// IWYU pragma: no_include <gtest/gtest.h>
 
 namespace cszb_scoreboard::test {
 

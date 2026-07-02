@@ -21,6 +21,7 @@ limitations under the License.
 
 #include <memory>  // for unique_ptr
 
+#include "ScoreboardCommon.h"
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/TeamSelector.h"          // for TeamSelector
 #include "ui/component/control/things_mode/HeadToHeadActivityPanel.h"

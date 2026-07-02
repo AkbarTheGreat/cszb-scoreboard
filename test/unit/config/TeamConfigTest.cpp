@@ -16,16 +16,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <wx/gdicmn.h>
+#include <wx/gdicmn.h>  // for wxTheColourDatabase
 
-#include "config/Persistence.h"
-#include "config/TeamConfig.h"
-#include "test/mocks/config/MockPersistence.h"
-#include "test/mocks/util/MockSingleton.h"
-#include "ui/graphics/Color.h"
-#include "util/ProtoUtil.h"
+#include <memory>  // for unique_ptr, allocator
+#include <vector>  // for vector
+
+#include "config.pb.h"                          // for TeamInfo_TeamType
+#include "config/TeamConfig.h"                  // for TeamConfig
+#include "gmock/gmock.h"                        // for Return, ReturnAction
+#include "gtest/gtest.h"                        // for Message, TestPartResult
+#include "test/mocks/config/MockPersistence.h"  // for MockPersistence
+#include "test/mocks/util/MockSingleton.h"      // for MockSingleton
+#include "ui/graphics/Color.h"                  // for Color
+#include "util/ProtoUtil.h"                     // for ProtoUtil
+#include "util/Singleton.h"                     // for SingletonClass
+// IWYU pragma: no_include <gtest/gtest.h>
 
 namespace cszb_scoreboard::test {
 
