@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 FROM alpine:3.18 AS build_baseline 
 
-# Enable community repository for jsoncpp, gtest, iwyu
+# Enable community repository for jsoncpp, gtest
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/community" >> /etc/apk/repositories
 
 RUN apk add --no-cache \
@@ -20,8 +20,7 @@ RUN apk add --no-cache \
     jsoncpp-dev \
     gtest-dev \
     protobuf-dev \
-    protobuf \
-    include-what-you-use
+    protobuf
 
 ENV CC=/usr/bin/clang
 ENV CXX=/usr/bin/clang++
@@ -217,6 +216,39 @@ RUN tar cvzf jsoncpp.tgz \
     ${OSXCROSS_ROOT_DIR}/jsoncpp
 
 # ------------------------------------------------------------------------------
+# Include-What-You-Use (iwyu_build)
+#
+# Build IWYU -- Alpine doesn't seem to have a complete include-what-you-use
+# install, so we'll just build our own.
+# ------------------------------------------------------------------------------
+FROM build_baseline AS iwyu_build
+
+RUN apk add --no-cache \
+    clang-dev \
+    clang-static \
+    llvm-dev \
+    llvm-static
+
+ENV IWYU_VERSION=clang_16
+
+WORKDIR /iwyu
+RUN git clone https://github.com/include-what-you-use/include-what-you-use.git .
+RUN git fetch --all --tags
+RUN git checkout ${IWYU_VERSION}
+RUN git submodule update --init --recursive
+
+WORKDIR /iwyu/out
+RUN cmake \
+    -DCMAKE_INSTALL_PREFIX=/iwyu/usr/local \
+    ..
+RUN make -j 4 all
+RUN make install
+
+WORKDIR /iwyu
+RUN tar cvzf /iwyu.tgz \
+    usr/local
+
+# ------------------------------------------------------------------------------
 # MacOS Scoreboard Build (macos_build)
 #
 # Sets up a macos build environment for the scoreboard
@@ -311,6 +343,11 @@ RUN cpanm Perl::Tidy
 
 RUN pip install mdformat
 
+WORKDIR /
+# Bring in IWYU
+COPY --from=iwyu_build /iwyu.tgz /
+RUN tar xvzf iwyu.tgz && rm iwyu.tgz
+
 COPY . /cszb-scoreboard
 
 WORKDIR /cszb-scoreboard
@@ -353,14 +390,18 @@ RUN apk add --no-cache \
     jsoncpp-dev \
     gtest-dev \
     protobuf-dev \
-    protobuf \
-    include-what-you-use
+    protobuf
 
 RUN cpanm Perl::Tidy
 
 RUN python3 -m venv /mdformat-venv && /mdformat-venv/bin/pip install mdformat
 
 ENV GCOV='llvm-cov gcov'
+
+WORKDIR /
+# Bring in IWYU
+COPY --from=iwyu_build /iwyu.tgz /
+RUN tar xvzf iwyu.tgz && rm iwyu.tgz
 
 COPY . /cszb-scoreboard
 WORKDIR /cszb-scoreboard
