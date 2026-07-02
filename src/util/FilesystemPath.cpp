@@ -23,7 +23,7 @@ limitations under the License.
 #include <algorithm>  // for count, transform
 #include <array>      // for array
 #include <cctype>     // for toupper
-#include <cstddef>    // IWYU keep for size_t
+#include <cstddef>    // IWYU pragma: keep for size_t
 #include <sstream>    // for basic_istream, istringstream
 
 #ifdef SCOREBOARD_APPLE_IMPL

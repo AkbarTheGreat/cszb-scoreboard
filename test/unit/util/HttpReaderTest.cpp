@@ -16,8 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <string>  // for allocator, string
-#include <vector>  // for vector
+#include <algorithm>  // IWYU pragma: keep for max
+#include <string>     // for allocator, string
+#include <vector>     // for vector
 
 #include "gmock/gmock.h"                     // for Return, ReturnAction, StrEq
 #include "gtest/gtest.h"                     // for Test, AssertionResult

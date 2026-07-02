@@ -16,9 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <bits/chrono.h>  // for milliseconds
-#include <wx/log.h>       // for wxLogNull
+#include <wx/log.h>  // for wxLogNull
 
+#include <chrono>  // IWYU pragma: keep for seconds
 #include <memory>  // for allocator, unique_ptr
 #include <thread>  // for sleep_for
 #include <vector>  // for vector
@@ -32,6 +32,7 @@ limitations under the License.
 #include "test/mocks/util/MockSingleton.h"      // for MockSingleton
 #include "util/FilesystemPath.h"                // for FilesystemPath
 #include "util/Singleton.h"                     // for SingletonClass, Singl...
+// IWYU pragma: no_include <bits/chrono.h>
 // IWYU pragma: no_include <gtest/gtest.h>
 
 #define TEST_STUB_SINGLETON

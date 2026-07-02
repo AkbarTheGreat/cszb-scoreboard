@@ -16,8 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <gtest/gtest.h>  // for TestInfo (ptr only), EXPE...
-#include <wx/gdicmn.h>    // for wxTheColourDatabase, wxCo...
+#include <wx/gdicmn.h>  // for wxTheColourDatabase, wxCo...
 
 #include <memory>  // for allocator, unique_ptr
 
@@ -31,6 +30,7 @@ limitations under the License.
 #include "ui/graphics/Color.h"              // for Color
 #include "util/ProtoUtil.h"                 // for ProtoUtil
 #include "util/Singleton.h"                 // for SingletonClass
+// IWYU pragma: no_include <gtest/gtest.h>
 
 namespace cszb_scoreboard::test {
 
