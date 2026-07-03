@@ -28,8 +28,10 @@ limitations under the License.
 #include "ui/graphics/Color.h"  // for Color
 #include "util/ProtoUtil.h"     // for ProtoUtil
 #include "wx/bitmap.h"          // for wxBitmap
-#include "wx/gtk/brush.h"       // for wxBrush
-#include "wx/gtk/pen.h"         // for wxPen
+#include "wx/brush.h"           // IWYU pragma: keep for wxBrush
+#include "wx/pen.h"             // IWYU pragma: keep for wxPen
+// IWYU pragma: no_include "wx/gtk/brush.h"
+// IWYU pragma: no_include "wx/gtk/pen.h"
 
 class wxWindow;
 
