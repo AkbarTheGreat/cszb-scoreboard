@@ -182,7 +182,7 @@ error if the clipboard does not appear to contain an image.
 
 ### 5/6 Things
 
-![alt](img/5_things.png "5/6 Things") _(image taken in version 1.5.0, some visuals may have
+![alt](img/5_things.png "5/6 Things") _(image taken in version 1.9.0, some visuals may have
 changed)_
 
 The 5/6 Things tab is useful for displaying lists of items for guessing games, in particular 5
@@ -198,9 +198,10 @@ activity for editing or display. The "present" selector at the top determines wh
 activities or the list of replacements will be shown on the screen previews (and then on to the
 screens themselves, potentially).
 
-An important note is that each team's list is a separate list (as well as the combined list), so in
-a head-to-head game of 6 things, for instance, where each team has 3 activities, the app can manage
-two lists of three activites, one for each team.
+Beginning with version 1.9.0, there is a head-to-head mode, which allows you to place activities for both the home and away team on the same list.  A new button toggles which team each activity is for.
+
+![alt](img/5_things_head_to_head.png "5/6 Things Head to Head") _(image taken in version 1.9.0, some visuals may have
+changed)_
 
 ### Text
 
@@ -223,8 +224,16 @@ timer, show/hide the timer, and reset the timer to it's specified value (in the 
 respectively. Changing the value of the timer in the numeric fields implicitly resets the timer to
 the new value, even if the timer is currently running. Once running, the timer looks like this:
 
-![alt](img/timer_running.png "Timer in progress") _(image taken in version 1.5.0, some visuals may
-have changed)_
+### Slide Show
+
+The slide show is a fairly simple sequence of images, meant to be used as a pre-match crawl.
+
+![alt](img/slide_show.png "Slide Show") _(image taken in version 1.8.0, some visuals may have
+changed)_
+
+The "Add New Slide" button will bring up a file browser for you to select an image to add.  The new image will be added at the end of the slide show.  The arrows below that button move the browser left/right to see the full slide deck.  Start starts the show and stop stops it, the slide show will show on the thumbnails and monitors themselves, but not in the preview panes.  Upon stopping the slide show, the monitors and thumbnails will revert to the state they were in at the time start was pressed.
+
+The buttons below each image allow you to reorder the images or remove one from the deck.  Below that, the time between slides may be set.
 
 ## Quick States
 
