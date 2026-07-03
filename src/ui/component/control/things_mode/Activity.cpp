@@ -57,6 +57,18 @@ Activity::Activity(ActivityPanel* parent, Panel* activity_frame,
 void Activity::copyFrom(Activity* other) {
   activity_selector->setSelected(other->activity_selector->selected());
   activity_text->setValue(other->activity_text->value());
+  team = other->team;
+  if (other->team_button->hidden()) {
+    team_button->hide();
+  } else {
+    team_button->show();
+    if (team.home()) {
+      team_button->setText("H");
+    } else {
+      team_button->setText("A");
+    }
+    updateStripeColor();
+  }
   replacement_panel = std::move(other->replacement_panel);
 }
 

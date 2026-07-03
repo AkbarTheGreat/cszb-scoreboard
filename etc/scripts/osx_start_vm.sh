@@ -13,5 +13,6 @@ docker run -it \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
     -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
     -e SHORTNAME=tahoe \
+    --name osx-desktop \
     sickcodes/docker-osx:latest
 
