@@ -171,7 +171,6 @@ add_dependencies(scoreboard_core_testing scoreboard_proto)
 set_target_properties(scoreboard_core_testing PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(scoreboard_core_testing PUBLIC
     SCOREBOARD_TESTING
-    SCOREBOARD_DISABLE_IMAGE_SEARCH
 )
 target_link_libraries(scoreboard_core_testing PUBLIC ${BASE_LIBRARIES} scoreboard_proto)
 
@@ -181,7 +180,6 @@ add_dependencies(scoreboard_core_ui_testing scoreboard_proto)
 set_target_properties(scoreboard_core_ui_testing PROPERTIES CXX_CLANG_TIDY "${LINT_OPTION}")
 target_compile_definitions(scoreboard_core_ui_testing PUBLIC
     SCOREBOARD_TESTING
-    SCOREBOARD_DISABLE_IMAGE_SEARCH
     SCOREBOARD_UI_TEST
 )
 target_link_libraries(scoreboard_core_ui_testing PUBLIC ${BASE_LIBRARIES} scoreboard_proto)

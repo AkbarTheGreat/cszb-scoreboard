@@ -53,6 +53,9 @@ class ControlPanel : public Notebook {
 
 #ifdef SCOREBOARD_TESTING
   auto textController(int index) -> ScreenTextController* {
+    if (index < 0 || index >= controllers.size()) {
+      return nullptr;
+    }
     return controllers[index].get();
   }
 #endif

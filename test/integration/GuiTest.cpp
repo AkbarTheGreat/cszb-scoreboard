@@ -21,24 +21,22 @@ limitations under the License.
 
 #include "test/integration/GuiTest.h"
 
-#include <wx/init.h>  // for wxEntryCleanup
+#include <wx/init.h>  // for wxEntryCleanup, wxEntryS...
 
 #include <array>    // for array
 #include <utility>  // for pair
 
-#include "cszb-scoreboard.h"                            // for Scoreboard
-#include "ui/component/ControlPanel.h"                  // for ControlPanel
+#include "cszb-scoreboard.h"                 // for Scoreboard
+#include "ui/component/control/TextEntry.h"  // for TextEntry
 #include "ui/component/PreviewPanel.h"                  // for PreviewPanel
-#include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
-#include "ui/component/control/TextEntry.h"             // for TextEntry
-#include "ui/frame/FrameManager.h"                      // for FrameManager
-#include "ui/frame/MainView.h"                          // for MainView
-#include "ui/widget/Panel.h"                            // for Panel
-#include "util/Singleton.h"                             // for Singleton
-#include "wx/dcclient.h"                                // for wxClientDC
-#include "wx/defs.h"                                    // for wxSetAssertHa...
-#include "wx/gdicmn.h"                                  // for wxRect
-#include "wx/window.h"                                  // for wxWindow
+#include "ui/frame/FrameManager.h"           // for FrameManager
+#include "ui/frame/MainView.h"               // for MainView
+#include "ui/widget/Panel.h"                 // for Panel
+#include "util/Singleton.h"                  // for Singleton
+#include "wx/dcclient.h"                     // for wxClientDC
+#include "wx/defs.h"                         // for wxSetAssertHandler
+#include "wx/gdicmn.h"                       // for wxRect
+#include "wx/window.h"                       // for wxWindow
 // IWYU pragma: no_include "wx/gtk/app.h"
 
 namespace cszb_scoreboard {
@@ -46,8 +44,6 @@ class ScreenPreview;
 }  // namespace cszb_scoreboard
 
 namespace cszb_scoreboard::test {
-
-const int TEXT_ENTRY_TAB_INDEX = 4;
 
 static char arg0[] = "scoreboard_testing.exe";
 static char arg1[] = "-n";
@@ -81,9 +77,7 @@ auto GuiTest::mainView() -> MainView* {
 }
 
 auto GuiTest::textEntry() -> TextEntry* {
-  mainView()->controlPanel()->setSelection(TEXT_ENTRY_TAB_INDEX);
-  return dynamic_cast<TextEntry*>(
-      mainView()->controlPanel()->textController(TEXT_ENTRY_TAB_INDEX));
+  return findController<TextEntry>(true);
 }
 
 auto GuiTest::firstPreview() -> ScreenPreview* {

@@ -31,19 +31,7 @@ namespace cszb_scoreboard::test {
 class ThingsModeTest : public GuiTest {
  protected:
   static auto thingsMode() -> ThingsMode* {
-    int i = 0;
-    while (true) {
-      auto* controller = mainView()->controlPanel()->textController(i);
-      if (controller == nullptr) {
-        break;
-      }
-      auto* things = dynamic_cast<ThingsMode*>(controller);
-      if (things != nullptr) {
-        return things;
-      }
-      i++;
-    }
-    return nullptr;
+    return findController<ThingsMode>();
   }
 };
 

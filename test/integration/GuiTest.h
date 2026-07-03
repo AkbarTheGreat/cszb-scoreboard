@@ -95,6 +95,36 @@ class GuiTest : public testing::Test {
   static auto textEntry() -> TextEntry*;
   /* Simply makes getting the first preview pane shorter in test code. */
   static auto firstPreview() -> ScreenPreview*;
+
+  template <typename T>
+  static auto findController(bool select = false) -> T*;
 };
+
+}  // namespace cszb_scoreboard::test
+
+#include "ui/component/ControlPanel.h"
+#include "ui/frame/MainView.h"
+
+namespace cszb_scoreboard::test {
+
+template <typename T>
+auto GuiTest::findController(bool select) -> T* {
+  int i = 0;
+  while (true) {
+    auto* controller = mainView()->controlPanel()->textController(i);
+    if (controller == nullptr) {
+      break;
+    }
+    auto* matched = dynamic_cast<T*>(controller);
+    if (matched != nullptr) {
+      if (select) {
+        mainView()->controlPanel()->setSelection(i);
+      }
+      return matched;
+    }
+    i++;
+  }
+  return nullptr;
+}
 
 }  // namespace cszb_scoreboard::test

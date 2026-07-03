@@ -43,7 +43,18 @@ namespace cszb_scoreboard::swx {
 WebView::WebView(wxWindow* parent, const wxString& url, wxWindowID id,
                  const wxPoint& pos, const wxSize& size,
                  const wxString& backend, int64_t style, const wxString& name) {
+#if defined(SCOREBOARD_TESTING) && defined(_WIN32)
+  // On Windows, the Edge WebView2 backend initializes asynchronously. During
+  // fast integration tests, the parent window or the WebView control itself is
+  // destroyed before asynchronous initialization completes, leading to
+  // 0x80004004 (Operation aborted) callback failures and subsequent unhandled
+  // crash exceptions. We disable the WebView component during Windows testing
+  // since it is not needed for integration tests, and the application already
+  // gracefully checks valid() status.
+  _wx = nullptr;
+#else
   _wx = wxWebView::New(parent, id, url, pos, size, WX_WEB_ENGINE, style, name);
+#endif
 #ifdef SCOREBOARD_DEBUG
   // Allow access to the developer console in debug mode.
   if (_wx != nullptr) {

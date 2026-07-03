@@ -31,8 +31,7 @@ namespace cszb_scoreboard::test {
 class ScoreControlTest : public GuiTest {
  protected:
   static auto scoreControl() -> ScoreControl* {
-    return dynamic_cast<ScoreControl*>(
-        mainView()->controlPanel()->textController(0));
+    return findController<ScoreControl>();
   }
 };
 
