@@ -21,11 +21,16 @@ limitations under the License.
 
 #include <algorithm>  // for max
 #include <cassert>    // for assert
+#include <cstdint>    // for int32_t
 
 #include "ScoreboardCommon.h"                                   // for DEFAU...
+#include "config/Position.h"                                    // for Position
 #include "ui/component/control/ScreenTextController.h"          // for Scree...
+#include "ui/component/control/things_mode/Replacement.h"       // for Repla...
 #include "ui/component/control/things_mode/ReplacementPanel.h"  // for Repla...
+#include "ui/widget/RenderContext.h"                            // for Rende...
 #include "ui/widget/Widget.h"                                   // for NO_BO...
+#include "wx/event.h"                                           // for wxEVT...
 
 namespace cszb_scoreboard {
 namespace swx {
@@ -39,6 +44,7 @@ const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 // existing ones.  In theory this could be 1, but it self-resolves pretty much
 // immediately whent they're repositioned, so it doesn't matter much.
 const int REPLACEMENT_BUFFER_SIZE = 5;
+const int CONNECTOR_WIDTH = 40;
 
 ActivityPanel::ActivityPanel(swx::Panel* wx,
                              ScreenTextController* owning_controller,
@@ -48,9 +54,15 @@ ActivityPanel::ActivityPanel(swx::Panel* wx,
   this->owning_controller = owning_controller;
   this->singleton = singleton;
   activity_label = labelledArea("Activities");
+  connector_panel = panel();
+  connector_panel->setMinSize(Size{.width = CONNECTOR_WIDTH, .height = -1});
   replacement_label = labelledArea("Replacements");
   activity_half = activity_label->holds()->panel();
   replacement_half = replacement_label->holds()->panel();
+
+  connector_panel->bind(wxEVT_PAINT, [this](RenderContext* renderer) -> void {
+    this->drawConnector(renderer);
+  });
 
   // Add only as many activites as we want the initial pane size to be sized
   // for.
@@ -96,7 +108,8 @@ void ActivityPanel::positionWidgets() {
   replacement_label->holds()->addWidget(*replacement_half, 0, 1, NO_BORDER);
 
   addWidget(*activity_label, 0, 0);
-  addWidget(*replacement_label, 0, 1);
+  addWidget(*connector_panel, 0, 1);
+  addWidget(*replacement_label, 0, 2);
   runSizer();
 }
 
@@ -165,6 +178,9 @@ void ActivityPanel::textUpdated() { updateNotify(); }
 
 void ActivityPanel::updateNotify() {
   refreshSizers();
+  if (connector_panel) {
+    connector_panel->refresh();
+  }
   owning_controller->updatePreview();
 }
 
@@ -244,6 +260,91 @@ void ActivityPanel::showReplacement(int index) {
   hideAllReplacements();
   replacement_half->moveWidget(activities[index]->replacementPanel(), 0, 0);
   activities[index]->replacementPanel()->show();
+}
+
+void ActivityPanel::drawConnector(RenderContext* renderer) {
+  if (connector_panel && !connector_panel->hidden()) {
+    renderer->clear(connector_panel->backgroundColor());
+  }
+
+  if (activities.empty()) {
+    return;
+  }
+
+  Position start{.x = 0, .y = -1};
+
+  // Find the selected activity's Y center
+  for (const auto& activity : activities) {
+    if (activity->isSelected()) {
+      if (activity->controlPane() != nullptr &&
+          !activity->controlPane()->hidden()) {
+        start.y =
+            activity->controlPane()->relativeVerticalCenter(*connector_panel);
+      }
+      break;
+    }
+  }
+
+  if (start.y == -1) {
+    return;
+  }
+
+  // Find all replacement Y centers
+  int64_t end_x = connector_panel->size().width;
+  std::vector<Position> ends;
+  ReplacementPanel* rp = replacementPanel();
+  if (rp != nullptr && !rp->hidden()) {
+    for (const auto& replacement : rp->getReplacements()) {
+      if (replacement->controlPane() != nullptr &&
+          !replacement->controlPane()->hidden()) {
+        int32_t y = replacement->controlPane()->relativeVerticalCenter(
+            *connector_panel);
+        ends.push_back({.x = end_x, .y = y});
+      }
+    }
+  }
+
+  if (ends.empty()) {
+    return;
+  }
+
+  Position midpoint{.x = end_x / 2, .y = start.y};
+
+  // Draw lines
+  renderer->setPen(Color("Gray"), 2);
+
+  // Draw horizontal line from selected activity to the trunk
+  renderer->drawLine(start, midpoint);
+
+  // Draw the branching lines
+  for (auto end : ends) {
+    drawBranchLine(renderer, midpoint, end);
+  }
+}
+
+void ActivityPanel::drawBranchLine(RenderContext* renderer,
+                                   const Position& midpoint,
+                                   const Position& end) {
+  Position split_point{.x = midpoint.x, .y = end.y};
+
+  // Draw vertical line from trunk to replacement height
+  renderer->drawLine(midpoint, split_point);
+  // Draw horizontal line from trunk to the right edge
+  renderer->drawLine(split_point, end);
+
+  drawRightArrowhead(renderer, end);
+}
+
+void ActivityPanel::drawRightArrowhead(RenderContext* renderer,
+                                       const Position& tip) {
+  constexpr int ARROWHEAD_LENGTH = 6;
+  constexpr int ARROWHEAD_WIDTH = 4;
+  auto top_peak =
+      Position{.x = tip.x - ARROWHEAD_LENGTH, .y = tip.y - ARROWHEAD_WIDTH};
+  auto bottom_peak =
+      Position{.x = tip.x - ARROWHEAD_LENGTH, .y = tip.y + ARROWHEAD_WIDTH};
+  renderer->drawLine(tip, top_peak);
+  renderer->drawLine(tip, bottom_peak);
 }
 
 }  // namespace cszb_scoreboard

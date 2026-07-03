@@ -43,6 +43,10 @@ class ReplacementPanel : public Panel {
   void addReplacement();
   void deleteReplacement(Replacement* deleted);
   auto previewText(int font_size) -> std::vector<proto::RenderableText>;
+  [[nodiscard]] auto getReplacements() const
+      -> const std::vector<std::unique_ptr<Replacement>>& {
+    return replacements;
+  }
   void textUpdated();
 
  private:

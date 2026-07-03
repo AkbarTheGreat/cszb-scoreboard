@@ -55,10 +55,13 @@ class RenderContext {
   static auto forEvent(wxWindow* wx) -> std::unique_ptr<RenderContext>;
   static auto forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext>;
 
+  void clear(const Color& color);
   void drawImage(const Image& image, int64_t x, int64_t y,
                  bool use_mask = false);
+  void drawLine(const Position& start, const Position& end);
   void drawText(const std::string& text, int64_t x, int64_t y);
   void setFont(const proto::Font& font, const Size& font_size);
+  void setPen(const Color& color, int width = 1);
   void setTextColor(const Color& color);
   void textExtent(const std::string& text, int* width, int* height);
   auto textExtent(const std::string& text) -> Size;

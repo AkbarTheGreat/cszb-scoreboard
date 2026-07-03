@@ -25,9 +25,10 @@ limitations under the License.
 #include <cctype>     // for toupper
 #include <cstddef>    // IWYU pragma: keep for size_t
 #include <sstream>    // for basic_istream, istringstream
+// IWYU pragma: no_include <stdexcept>
 
 #ifdef SCOREBOARD_APPLE_IMPL
-#include <cstdio>  // for size_t, remove, rename
+#include <cstdio>  // for remove, rename
 #else
 #include <filesystem>  // for directory_iterator, path, directory_entry, begin
 #endif

@@ -18,16 +18,19 @@ limitations under the License.
 
 #pragma once
 
+#include <stdint.h>  // for int32_t
+
 #include <functional>  // for function
-#include <memory>      // for shared_ptr, make_shared, weak_ptr
+#include <memory>      // for make_shared, shared_ptr
 
 #include "ScoreboardCommon.h"  // for DEFAULT_BORDER_SIZE
 #include "config/Position.h"   // for Size
-#include "config/swx/defs.h"   // for operator|, wxID_ANY, wxALL, wxGROW
-#include "config/swx/event.h"  // for wxEventTypeTag
+#include "config/swx/defs.h"   // for operator|, wxDirection, wxStretch, wxS...
+#include "config/swx/event.h"  // for wxEventTypeTag, wxCloseEvent, wxComman...
 #include "wx/window.h"         // for wxWindow
 
 namespace cszb_scoreboard {
+class Color;
 class RenderContext;
 
 namespace swx {
@@ -100,6 +103,9 @@ class Widget {
   void hide() const { wx()->Hide(); }
   void show() const { wx()->Show(); }
   [[nodiscard]] auto hidden() const -> bool { return !wx()->IsShown(); }
+  [[nodiscard]] auto backgroundColor() const -> Color;
+  [[nodiscard]] auto relativeVerticalCenter(const Widget& relative_to) const
+      -> int32_t;
   void moveWidget(Widget* widget, int row, int column);
   void removeColumnFromSizer(int column);
   void removeRowFromSizer(int row);

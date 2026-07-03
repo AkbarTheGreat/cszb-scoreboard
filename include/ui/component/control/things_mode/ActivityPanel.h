@@ -33,6 +33,9 @@ limitations under the License.
 namespace cszb_scoreboard {
 class ReplacementPanel;
 class ScreenTextController;
+class Position;
+class RenderContext;
+
 namespace proto {
 class RenderableText;
 class ScreenSide;
@@ -82,15 +85,19 @@ class ActivityPanel : public Panel {
   std::vector<std::unique_ptr<Activity>> activities;
 
  private:
+  std::unique_ptr<Panel> activity_half, replacement_half, connector_panel;
   std::unique_ptr<LabelledArea> activity_label, replacement_label;
-  std::unique_ptr<Panel> activity_half, replacement_half;
   Singleton* singleton;
 
   void bindEvents();
+  void drawConnector(RenderContext* renderer);
   void positionWidgets();
   void resetActivityMoveButtons();
   void hideAllReplacements();
   void showReplacement(int index);
   void showSelectedReplacement();
+  static void drawBranchLine(RenderContext* renderer, const Position& midpoint,
+                             const Position& end);
+  static void drawRightArrowhead(RenderContext* renderer, const Position& tip);
 };
 }  // namespace cszb_scoreboard

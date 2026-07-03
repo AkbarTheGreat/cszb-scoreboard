@@ -65,7 +65,7 @@ void HeadToHeadActivityPanel::bindEvents() {
 
 void HeadToHeadActivityPanel::positionWidgets() {
   addWidget(*home_color_picker, 1, 0);
-  addWidget(*away_color_picker, 1, 1);
+  addWidget(*away_color_picker, 1, 2);
   runSizer();
   refreshSizers();
 }

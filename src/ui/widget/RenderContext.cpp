@@ -21,22 +21,37 @@ limitations under the License.
 
 #include <wx/dc.h>       // for wxDC
 #include <wx/string.h>   // for wxString
-#include <wx/tokenzr.h>  // for wxStringTokenizer, wxTOKEN_RET_EMPTY_ALL
+#include <wx/tokenzr.h>  // for wxStringTokenizer, wxStringTokenizerMode
 
 #include "config.pb.h"          // for Font
 #include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
 #include "util/ProtoUtil.h"     // for ProtoUtil
 #include "wx/bitmap.h"          // for wxBitmap
+#include "wx/gtk/brush.h"       // for wxBrush
+#include "wx/gtk/pen.h"         // for wxPen
 
 class wxWindow;
 
 namespace cszb_scoreboard {
 
+void RenderContext::clear(const Color& color) {
+  runAgainstActiveContext([color](wxDC* context) -> void {
+    context->SetBackground(wxBrush(color));
+    context->Clear();
+  });
+}
+
 void RenderContext::drawImage(const Image& image, int64_t x, int64_t y,
                               bool use_mask) {
   runAgainstActiveContext([image, x, y, use_mask](wxDC* context) -> void {
     context->DrawBitmap(wxBitmap(image), x, y, use_mask);
+  });
+}
+
+void RenderContext::drawLine(const Position& start, const Position& end) {
+  runAgainstActiveContext([start, end](wxDC* context) -> void {
+    context->DrawLine(start.toWx(), end.toWx());
   });
 }
 
@@ -48,6 +63,12 @@ void RenderContext::drawText(const std::string& text, int64_t x, int64_t y) {
 void RenderContext::setFont(const proto::Font& font, const Size& font_size) {
   runAgainstActiveContext([font, font_size](wxDC* context) -> void {
     context->SetFont(ProtoUtil::wxScaledFont(font, font_size));
+  });
+}
+
+void RenderContext::setPen(const Color& color, int width) {
+  runAgainstActiveContext([color, width](wxDC* context) -> void {
+    context->SetPen(wxPen(color, width));
   });
 }
 

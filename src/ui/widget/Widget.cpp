@@ -21,15 +21,16 @@ limitations under the License.
 #include <wx/gbsizer.h>  // for wxGBSizerItem, wxGBPosition
 #include <wx/sizer.h>    // for wxSizerItemList, wxSizerItem
 
-#include <cstdint>    // for int32_t
 #include <list>       // for operator==, _List_iterator
-#include <memory>     // for unique_ptr
+#include <memory>     // for weak_ptr, shared_ptr, uniq...
 #include <stdexcept>  // for runtime_error
 #include <vector>     // for vector
 
+#include "ui/graphics/Color.h"             // for Color
 #include "ui/widget/RenderContext.h"       // for RenderContext
 #include "ui/widget/swx/Sizer.h"           // for Sizer
 #include "ui/widget/swx/SwappableSizer.h"  // for SwappableSizer
+#include "wx/gdicmn.h"                     // for wxPoint, wxSize
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 namespace cszb_scoreboard {
@@ -212,6 +213,25 @@ void Widget::bind(const wxEventTypeTag<wxPaintEvent>& eventType,
         }
       },
       id);
+}
+
+auto Widget::backgroundColor() const -> Color {
+  if (wx() == nullptr) {
+    return Color("Black");
+  }
+  return Color(wx()->GetBackgroundColour());
+}
+
+auto Widget::relativeVerticalCenter(const Widget& relative_to) const
+    -> int32_t {
+  if (wx() == nullptr || relative_to.wx() == nullptr) {
+    return -1;
+  }
+  wxPoint screen_pos = wx()->GetScreenPosition();
+  int height = wx()->GetSize().GetHeight();
+  wxPoint client_pos = relative_to.wx()->ScreenToClient(
+      wxPoint(screen_pos.x, screen_pos.y + height / 2));
+  return client_pos.y;
 }
 
 }  // namespace cszb_scoreboard
