@@ -144,10 +144,11 @@ void Activity::setIndex(int index, int max_index) {
 auto Activity::getTeam() -> proto::ScreenSide { return team; }
 
 void Activity::setTeam(bool is_home) {
-  if (team_button->hidden()) {
+  bool first_view = team_button->hidden();
+  if (first_view) {
     team_button->show();
-    control_pane->runSizer();
   }
+
   if (is_home) {
     team = ProtoUtil::homeSide();
     team_button->setText("H");
@@ -156,6 +157,10 @@ void Activity::setTeam(bool is_home) {
     team_button->setText("A");
   }
   updateStripeColor();
+
+  if (first_view) {
+    control_pane->runSizer();
+  }
 }
 
 void Activity::toggleTeam() {

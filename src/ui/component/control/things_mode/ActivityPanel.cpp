@@ -45,6 +45,7 @@ const int INITIAL_NUMBER_OF_ACTIVITIES = 5;
 // immediately whent they're repositioned, so it doesn't matter much.
 const int REPLACEMENT_BUFFER_SIZE = 5;
 const int CONNECTOR_WIDTH = 40;
+const int SCROLLBAR_PADDING = 15;
 
 ActivityPanel::ActivityPanel(swx::Panel* wx,
                              ScreenTextController* owning_controller,
@@ -110,6 +111,8 @@ void ActivityPanel::positionWidgets() {
   addWidget(*activity_label, 0, 0);
   addWidget(*connector_panel, 0, 1);
   addWidget(*replacement_label, 0, 2);
+  // Add a right spacer to prevent the vertical scrollbar from overlapping the border.
+  addSpacer(Size{.width = SCROLLBAR_PADDING, .height = 0}, 0, 3, 0);
   runSizer();
 }
 
