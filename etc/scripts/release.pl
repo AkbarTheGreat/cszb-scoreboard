@@ -99,7 +99,9 @@ sub run_cmd {
 
 sub get_repo {
    die 'Incorrect number of arguments to get_repo' if ( @_ != 0 );
-   return run_cmd( $GIT_CMD, 'clone', $GIT_REPO, $repo_path );
+   my $retval = run_cmd( $GIT_CMD, 'clone', $GIT_REPO, $repo_path );
+   return $retval if $retval;
+   return run_cmd( $GIT_CMD, '-C', $repo_path, 'submodule', 'update', '--init', '--recursive' );
 }
 
 sub update_version {
