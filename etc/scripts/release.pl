@@ -44,17 +44,9 @@ our $TEMP_ROOT    = 'S:/temp';
 our $GIT_REPO     = 'git@github.com:AkbarTheGreat/cszb-scoreboard.git';
 our $VERSION_FILE = '/include/ScoreboardCommon.h';
 
-# These should be the parts that are very specific to my machine
-our $VCPKG_CMAKE = $ENV{'VCPKG_ROOT'} . '/scripts/buildsystems/vcpkg.cmake';
-our $GIT_CMD     = 'C:/Program Files/Git/cmd/git.exe';
-our $GEN_STRING  = 'Visual Studio 17 2022';
-our $CMAKE_ROOT
-    = 'C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/';
-our $WXWIDGETS_PATH    = $ENV{'WXWIDGETS_ROOT'} . '/x64-Release';
-our $WXWIDGETS_VERSION = '33';
-
-our $CMAKE_CMD = $CMAKE_ROOT . 'cmake.exe';
-our $CTEST_CMD = $CMAKE_ROOT . 'ctest.exe';
+our $GIT_CMD   = 'C:\Program Files\Git\cmd\git.exe';
+our $CMAKE_CMD = 'C:\Program Files\CMake\bin\cmake.exe';
+our $CTEST_CMD = 'C:\Program Files\CMake\bin\ctest.exe';
 
 my ( $opt_help, $opt_version, $opt_dry_run, $opt_keep_dir, $opt_skip_git );
 
@@ -138,45 +130,25 @@ sub cmake {
    die 'Incorrect number of arguments to cmake' if ( @_ != 0 );
 
    unless ($opt_dry_run) {
-      make_path( $repo_path . '/out/build' );
-      chdir( $repo_path . '/out/build' );
+      chdir($repo_path)
+          or die 'Could not change directory to ' . $repo_path . ': ' . $!;
    }
 
-   my @cmake_args = (
-               '-G',
-               $GEN_STRING,
-               '-A',
-               'x64',
-               '-DCMAKE_INSTALL_PREFIX:PATH="' . $repo_path . '/out/install"',
-               '-DCMAKE_TOOLCHAIN_FILE="' . $VCPKG_CMAKE . q{"},
-               '-DVCPKG_TARGET_TRIPLET:STRING="x64-windows-static"',
-               '-DCMAKE_BUILD_TYPE:STRING="Release"',
-               '-DCMAKE_CONFIGURATION_TYPES="Release"',
-               '-DWXWIDGETS_INSTALL_DIR="' . $WXWIDGETS_PATH . q{"},
-               '-DWXWIDGETS_VERSION="' . $WXWIDGETS_VERSION . q{"},
-   );
+   my @cmake_args = ( '--preset', 'Win64-Release' );
 
-   return run_cmd( $CMAKE_CMD, @cmake_args, $repo_path );
-}
-
-sub generate_protobuf {
-   die 'Incorrect number of arguments to generate_protobuf' if ( @_ != 0 );
-
-   return
-       run_cmd( $CMAKE_CMD, '--build', '.', '--config', 'Release',
-                '--target', 'scoreboard_proto' );
+   return run_cmd( $CMAKE_CMD, @cmake_args );
 }
 
 sub make {
    die 'Incorrect number of arguments to make' if ( @_ != 0 );
 
-   return run_cmd( $CMAKE_CMD, '--build', '.', '--config', 'Release' );
+   return run_cmd( $CMAKE_CMD, '--build', '--preset', 'Win64-Release' );
 }
 
 sub test {
    die 'Incorrect number of arguments to test' if ( @_ != 0 );
 
-   return run_cmd($CTEST_CMD);
+   return run_cmd( $CTEST_CMD, '--preset', 'Win64-Release' );
 }
 
 sub build_osx {
@@ -218,9 +190,6 @@ sub main {
    if ( cmake() != 0 ) {
       die 'Error running cmake: ' . $!;
    }
-   if ( generate_protobuf() != 0 ) {
-      die 'Error generating protobufs: ' . $!;
-   }
    if ( make() != 0 ) {
       die 'Error building: ' . $!;
    }
@@ -241,11 +210,11 @@ sub main {
       die 'Error creating release at Github: ' . $!;
    }
    if ( GitHub::upload_binary(
-                        $upload_path,
-                        'cszb-scoreboard.exe',
-                        'Win64',
-                        $repo_path . '/out/build/Release/cszb-scoreboard.exe',
-                        $repo_path . '/out/build/Release/copy_test.exe'
+                $upload_path,
+                'cszb-scoreboard.exe',
+                'Win64',
+                $repo_path . '/out/Win64/Release/Release/cszb-scoreboard.exe',
+                $repo_path . '/out/Win64/Release/Release/copy_test.exe'
         ) != 0
       )
    {

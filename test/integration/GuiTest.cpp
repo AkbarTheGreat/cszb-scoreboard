@@ -27,8 +27,8 @@ limitations under the License.
 #include <utility>  // for pair
 
 #include "cszb-scoreboard.h"                 // for Scoreboard
+#include "ui/component/PreviewPanel.h"       // for PreviewPanel
 #include "ui/component/control/TextEntry.h"  // for TextEntry
-#include "ui/component/PreviewPanel.h"                  // for PreviewPanel
 #include "ui/frame/FrameManager.h"           // for FrameManager
 #include "ui/frame/MainView.h"               // for MainView
 #include "ui/widget/Panel.h"                 // for Panel

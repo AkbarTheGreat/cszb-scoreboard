@@ -111,7 +111,8 @@ void ActivityPanel::positionWidgets() {
   addWidget(*activity_label, 0, 0);
   addWidget(*connector_panel, 0, 1);
   addWidget(*replacement_label, 0, 2);
-  // Add a right spacer to prevent the vertical scrollbar from overlapping the border.
+  // Add a right spacer to prevent the vertical scrollbar from overlapping the
+  // border.
   addSpacer(Size{.width = SCROLLBAR_PADDING, .height = 0}, 0, 3, 0);
   runSizer();
 }

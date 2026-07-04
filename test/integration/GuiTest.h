@@ -102,8 +102,8 @@ class GuiTest : public testing::Test {
 
 }  // namespace cszb_scoreboard::test
 
-#include "ui/component/ControlPanel.h"
-#include "ui/frame/MainView.h"
+#include "ui/component/ControlPanel.h"  // for ControlPanel
+#include "ui/frame/MainView.h"          // for MainView
 
 namespace cszb_scoreboard::test {
 
