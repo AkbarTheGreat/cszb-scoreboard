@@ -20,8 +20,8 @@ limitations under the License.
 
 #include <climits>  // for UCHAR_MAX
 
-#include "config/Position.h"   // for Size
-#include "config/swx/image.h"  // for Image
+#include "config/Position.h"  // for Size
+#include "ui/widget/Image.h"  // for Image
 
 namespace cszb_scoreboard {
 class Color;

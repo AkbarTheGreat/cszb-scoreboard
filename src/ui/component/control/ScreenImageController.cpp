@@ -54,17 +54,17 @@ void ScreenImageController::updateScreenText(ScreenText* screen_text) {
   if (!isActive()) {
     return;
   }
-  if (screen_selection->allSelected() && all_screen_image.IsOk()) {
+  if (screen_selection->allSelected() && all_screen_image.isOk()) {
     // Send the image to both screens
     screen_text->setAllText("", 1, Color("Black"), false, ProtoUtil::allSide());
     screen_text->setImage(all_screen_image, ProtoUtil::allSide());
   } else {
-    if (home_screen_image.IsOk()) {
+    if (home_screen_image.isOk()) {
       screen_text->setAllText("", 1, Color("Black"), false,
                               ProtoUtil::homeSide());
       screen_text->setImage(home_screen_image, ProtoUtil::homeSide());
     }
-    if (away_screen_image.IsOk()) {
+    if (away_screen_image.isOk()) {
       screen_text->setAllText("", 1, Color("Black"), false,
                               ProtoUtil::awaySide());
       screen_text->setImage(away_screen_image, ProtoUtil::awaySide());

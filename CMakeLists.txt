@@ -288,6 +288,7 @@ package_add_test(LibraryScanTimerTest    FALSE test/unit/ui/event/LibraryScanTim
 
 # ui/graphics tests
 package_add_test(TeamColorsTest           FALSE test/unit/ui/graphics/TeamColorsTest.cpp)
+package_add_ui_test(ImageTest                FALSE test/unit/ui/widget/ImageTest.cpp)
 
 # integration tests
 package_add_ui_test(ScreenPreviewTest    FALSE test/integration/ScreenPreviewTest.cpp)

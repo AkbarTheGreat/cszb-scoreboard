@@ -29,8 +29,8 @@ limitations under the License.
 #include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
 #include "config/Position.h"                    // for Size
 #include "config/swx/event.h"                   // for wxEVT_COMMAND_BUTTON_...
-#include "config/swx/image.h"                   // for Image
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
+#include "ui/widget/Image.h"                    // for Image
 #include "ui/widget/Label.h"                    // for Label
 #include "ui/widget/Widget.h"                   // for NO_BORDER
 #include "util/HttpReader.h"                    // for HttpReader
@@ -118,7 +118,7 @@ void ImageSearch::onURLDrop(const std::string& url) {
   LogDebug("Dropped Image URL %s", url.c_str());
   std::vector<char> image_data;
   reader.readBinary(url.c_str(), &image_data);
-  Image urlImage = Image::FromData(image_data);
+  Image urlImage(image_data);
   if (screen_selection->allSelected()) {
     all_screen_image = urlImage;
   } else if (screen_selection->awaySelected()) {

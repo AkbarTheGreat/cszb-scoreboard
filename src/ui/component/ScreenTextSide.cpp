@@ -20,22 +20,20 @@ limitations under the License.
 
 #include "ui/component/ScreenTextSide.h"
 
-#include <wx/gdicmn.h>  // for wxSize
-
 #include <algorithm>  // for max
-#include <cstdint>    // for int64_t
+#include <cstdint>    // for int64_t, int32_t
 
-#include "config/GeneralConfig.h"
-#include "config/Position.h"  // for Size, Position
-#include "config/SlideShow.h"
+#include "config/GeneralConfig.h"         // for GeneralConfig
+#include "config/Position.h"              // for Size, Position
+#include "config/SlideShow.h"             // for SlideShow
 #include "config/TeamConfig.h"            // for TeamConfig
 #include "config/swx/event.h"             // for wxEVT_PAINT
 #include "ui/graphics/BackgroundImage.h"  // for BackgroundImage
 #include "ui/widget/Panel.h"              // for Panel
 #include "ui/widget/RenderContext.h"      // for RenderContext
-#include "util/FontUtil.h"
-#include "util/ProtoUtil.h"     // for ProtoUtil
-#include "util/TimerManager.h"  // for TimerManager
+#include "util/FontUtil.h"                // for FontUtil
+#include "util/ProtoUtil.h"               // for ProtoUtil
+#include "util/TimerManager.h"            // for TimerManager
 
 namespace cszb_scoreboard {
 
@@ -148,7 +146,7 @@ void ScreenTextSide::initializeForColor(Size size, const Color& color) {
 }
 
 void ScreenTextSide::createBlackout() {
-  if (!blackout_image.IsOk() || size() != blackout_image.size()) {
+  if (!blackout_image.isOk() || size() != blackout_image.size()) {
     blackout_image = BackgroundImage(size(), Color("Black"));
   }
 }
@@ -270,7 +268,7 @@ auto ScreenTextSide::scaleImage(const Image& image, const Size& target_size)
     image_height = target_size.width / image_ratio;
   }
 
-  scaled_image.Rescale(image_width, image_height);
+  scaled_image.rescale(image_width, image_height);
   return scaled_image;
 }
 
@@ -278,10 +276,9 @@ void ScreenTextSide::adjustOverlayColorAndAlpha(Image* image,
                                                 const Color& color) const {
   // We presume that the overlay is predominantly black, so subtracting it from
   // the font color should give us that color most of the time.
-  image->setColor(color);
-  unsigned char* alpha = image->GetAlpha();
-  for (int i = 0;
-       i < image->GetSize().GetWidth() * image->GetSize().GetHeight(); i++) {
+  image->color(color);
+  unsigned char* alpha = image->alpha();
+  for (int i = 0; i < image->size().width * image->size().height; i++) {
     if (alpha[i] > overlay_alpha) {
       alpha[i] = overlay_alpha;
     }

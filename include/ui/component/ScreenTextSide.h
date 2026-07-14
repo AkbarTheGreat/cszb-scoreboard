@@ -27,9 +27,9 @@ limitations under the License.
 #include "ScoreboardCommon.h"   // for PUBLIC_TEST_ONLY
 #include "config.pb.h"          // for RenderableText, Font (ptr only), Scre...
 #include "config/Position.h"    // for Position, Size
-#include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
 #include "ui/widget/Canvas.h"   // for Panel
+#include "ui/widget/Image.h"    // for Image
 #include "util/Singleton.h"
 
 namespace cszb_scoreboard {

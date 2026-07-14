@@ -35,7 +35,7 @@ limitations under the License.
 class wxApp;
 
 namespace cszb_scoreboard {
-class MainView;
+class MainView;  // IWYU likes to remove this.  Keep it.
 class Panel;
 class Scoreboard;
 class ScreenPreview;

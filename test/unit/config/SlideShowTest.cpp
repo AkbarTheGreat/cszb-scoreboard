@@ -25,10 +25,10 @@ limitations under the License.
 #include <vector>  // for vector
 
 #include "config/SlideShow.h"                   // for SlideShow
-#include "config/swx/image.h"                   // for Image
 #include "slide_show.pb.h"                      // for SlideInfo, SlideShow
 #include "test/mocks/config/MockPersistence.h"  // for MockPersistence
 #include "test/mocks/util/MockSingleton.h"      // for MockSingleton
+#include "ui/widget/Image.h"                    // for Image
 #include "util/FilesystemPath.h"                // for FilesystemPath
 #include "util/Singleton.h"                     // for SingletonClass, Singl...
 // IWYU pragma: no_include <bits/chrono.h>

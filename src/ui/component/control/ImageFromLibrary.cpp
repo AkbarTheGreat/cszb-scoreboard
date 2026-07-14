@@ -27,9 +27,9 @@ limitations under the License.
 #include "config/ImageLibrary.h"                // for ImageLibrary, ImageSe...
 #include "config/swx/defs.h"                    // for operator|, wxDirection
 #include "config/swx/event.h"                   // for wxEVT_COMMAND_BUTTON_...
-#include "config/swx/image.h"                   // for Image
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
 #include "ui/dialog/EditImageLibraryDialog.h"   // for EditImageLibraryDialog
+#include "ui/widget/Image.h"                    // for Image
 #include "util/FilesystemPath.h"                // for FilesystemPath
 #include "util/Singleton.h"                     // for Singleton
 
