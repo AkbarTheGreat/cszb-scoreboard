@@ -126,7 +126,6 @@ class Panel : public Widget {
   // Create a child wx entry, sized as large as the given rectangle.
   [[nodiscard]] auto childPanel(int width, int height) const -> swx::Panel*;
   void hide() const { wx()->Hide(); }
-  void refresh() const { wx()->Refresh(); }
   void setBorder(bool has_border = true) const;
   // TODO(akbar): Get rid of this duplicate setSize method
   void setSize(const wxSize& size) const { wx()->SetSize(size); }

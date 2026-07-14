@@ -102,6 +102,7 @@ class Widget {
   void focus() const { wx()->SetFocus(); }
   void hide() const { wx()->Hide(); }
   void show() const { wx()->Show(); }
+  virtual void refresh() const { wx()->Refresh(); }
   [[nodiscard]] auto hidden() const -> bool { return !wx()->IsShown(); }
   [[nodiscard]] auto backgroundColor() const -> Color;
   [[nodiscard]] auto relativeVerticalCenter(const Widget& relative_to) const
