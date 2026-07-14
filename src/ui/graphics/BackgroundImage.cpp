@@ -36,13 +36,13 @@ BackgroundImage::BackgroundImage(::cszb_scoreboard::Size size,
                                  const Color& color, unsigned char alpha)
     : Image(size, true) {
   wxRect fullMask(0, 0, size.width, size.height);
-  SetRGB(fullMask, color.red(), color.green(), color.blue());
+  rgb(fullMask, color.red(), color.green(), color.blue());
   size_t ptr_size = size.width * size.height;
   auto* alpha_ptr = static_cast<unsigned char*>(malloc(ptr_size));
   if (alpha_ptr != nullptr) {
     memset(alpha_ptr, alpha, ptr_size);
-    InitAlpha();
-    SetAlpha(alpha_ptr);
+    initAlpha();
+    this->alpha(alpha_ptr);
   }
 }
 
@@ -57,7 +57,7 @@ auto BackgroundImage::errorImage(::cszb_scoreboard::Size size)
     for (int y = 0; y < size.height; ++y) {
       bool y_toggle = static_cast<bool>((y / square_size) & 1);
       if (x_toggle ^ y_toggle) {
-        error.SetRGB(x, y, white.red(), white.green(), white.blue());
+        error.rgb(x, y, white.red(), white.green(), white.blue());
       }
     }
   }

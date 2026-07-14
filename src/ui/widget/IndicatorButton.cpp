@@ -21,7 +21,7 @@ limitations under the License.
 #include <wx/bitmap.h>  // for wxBitmap
 
 #include "config/Position.h"       // for Size
-#include "config/swx/image.h"      // for Image
+#include "ui/widget/Image.h"       // for Image
 #include "ui/widget/swx/Button.h"  // for Button
 #include "wx/defs.h"               // for wxDirection
 #include "wx/window.h"             // for wxWindow
@@ -34,8 +34,8 @@ void IndicatorButton::setIndicatorColor(const Color& color) {
   constexpr int STRIPE_WIDTH = 6;
   constexpr int STRIPE_HEIGHT = 16;
   Image image(Size{.width = STRIPE_WIDTH, .height = STRIPE_HEIGHT});
-  image.setColor(color);
-  wxBitmap bitmap(image);
+  image.color(color);
+  wxBitmap bitmap(image.wx());
 
   auto* btn = dynamic_cast<swx::Button*>(wx());
   if (btn != nullptr) {

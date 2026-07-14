@@ -25,9 +25,9 @@ limitations under the License.
 
 #include "ScoreboardCommon.h"                   // for DEFAULT_BORDER_SIZE
 #include "config/swx/event.h"                   // for wxEVT_BUTTON
-#include "config/swx/image.h"                   // for Image
 #include "ui/component/control/TeamSelector.h"  // for TeamSelector
 #include "ui/widget/FilePicker.h"               // for FilePicker
+#include "ui/widget/Image.h"                    // for Image
 #include "ui/widget/Label.h"                    // for Label
 #include "ui/widget/PopUp.h"                    // for PopUp
 #include "ui/widget/Widget.h"                   // for NO_BORDER

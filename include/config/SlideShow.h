@@ -25,8 +25,8 @@ limitations under the License.
 #include <vector>  // for vector
 
 #include "ScoreboardCommon.h"  // for PUBLIC_TEST_ONLY
-#include "config/swx/image.h"  // for Image
 #include "slide_show.pb.h"     // for SlideShow, SlideInfo (ptr only)
+#include "ui/widget/Image.h"   // for Image
 #include "util/Singleton.h"    // for Singleton, SingletonClass
 // IWYU pragma: no_include <bits/chrono.h>
 

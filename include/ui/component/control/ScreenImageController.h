@@ -25,10 +25,10 @@ limitations under the License.
 #include <memory>  // for unique_ptr
 #include <string>  // for string
 
-#include "config/swx/image.h"
 #include "ui/component/control/ScreenTextController.h"  // for ScreenTextCon...
 #include "ui/component/control/TeamSelector.h"          // for TeamSelector
-#include "ui/widget/Label.h"                            // for Label
+#include "ui/widget/Image.h"
+#include "ui/widget/Label.h"  // for Label
 
 namespace cszb_scoreboard {
 class Panel;

@@ -21,7 +21,7 @@ limitations under the License.
 #include <optional>
 
 #include "config/swx/clipbrd.h"
-#include "config/swx/image.h"
+#include "ui/widget/Image.h"
 
 namespace cszb_scoreboard {
 

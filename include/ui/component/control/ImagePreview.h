@@ -21,7 +21,7 @@ limitations under the License.
 
 #include <optional>  // for optional
 
-#include "config/swx/image.h"     // for Image
+#include "ui/widget/Image.h"      // for Image
 #include "ui/widget/Panel.h"      // for Panel
 #include "util/FilesystemPath.h"  // for FilesystemPath
 

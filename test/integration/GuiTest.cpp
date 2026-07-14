@@ -28,13 +28,13 @@ limitations under the License.
 #include <memory>   // for unique_ptr
 #include <utility>  // for pair
 
-#include "config/swx/image.h"                // for Image
 #include "cszb-scoreboard.h"                 // for Scoreboard
 #include "ui/component/PreviewPanel.h"       // for PreviewPanel
 #include "ui/component/ScreenTextSide.h"     // for ScreenTextSide
 #include "ui/component/control/TextEntry.h"  // for TextEntry
 #include "ui/frame/FrameManager.h"           // for FrameManager
 #include "ui/frame/MainView.h"               // for MainView
+#include "ui/widget/Image.h"                 // for Image
 #include "ui/widget/Panel.h"                 // for Panel
 #include "ui/widget/RenderContext.h"         // for RenderContext
 #include "util/Singleton.h"                  // for Singleton
@@ -113,9 +113,8 @@ ImageAnalysis::ImageAnalysis(Panel* panel, ImageAnalysisMode scan_mode) {
       case IA_MODE_CENTERLINE_SCAN: {
         int y = dimensions.GetHeight() / 2;
         for (int x = 0; x < dimensions.GetWidth(); ++x) {
-          wxColour color(rendered_image.GetRed(x, y),
-                         rendered_image.GetGreen(x, y),
-                         rendered_image.GetBlue(x, y));
+          wxColour color(rendered_image.red(x, y), rendered_image.green(x, y),
+                         rendered_image.blue(x, y));
           color_counts[color.GetRGB()]++;
         }
         total = dimensions.GetWidth();
@@ -129,9 +128,8 @@ ImageAnalysis::ImageAnalysis(Panel* panel, ImageAnalysisMode scan_mode) {
         for (int y = 0; y < dimensions.GetHeight(); y += quarter_step) {
           lines++;
           for (int x = 0; x < dimensions.GetWidth(); ++x) {
-            wxColour color(rendered_image.GetRed(x, y),
-                           rendered_image.GetGreen(x, y),
-                           rendered_image.GetBlue(x, y));
+            wxColour color(rendered_image.red(x, y), rendered_image.green(x, y),
+                           rendered_image.blue(x, y));
             color_counts[color.GetRGB()]++;
           }
         }
@@ -141,9 +139,8 @@ ImageAnalysis::ImageAnalysis(Panel* panel, ImageAnalysisMode scan_mode) {
       default: {
         for (int x = 0; x < dimensions.GetWidth(); ++x) {
           for (int y = 0; y < dimensions.GetHeight(); ++y) {
-            wxColour color(rendered_image.GetRed(x, y),
-                           rendered_image.GetGreen(x, y),
-                           rendered_image.GetBlue(x, y));
+            wxColour color(rendered_image.red(x, y), rendered_image.green(x, y),
+                           rendered_image.blue(x, y));
             color_counts[color.GetRGB()]++;
           }
         }

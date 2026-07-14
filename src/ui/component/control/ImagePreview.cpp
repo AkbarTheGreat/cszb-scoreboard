@@ -59,7 +59,7 @@ void ImagePreview::paintEvent(RenderContext* renderer) {
     image_height = size().width / image_ratio;
   }
 
-  scaled_image.Rescale(image_width, image_height);
+  scaled_image.rescale(image_width, image_height);
   int x = (size().width - image_width) / 2;
   int y = (size().height - image_height) / 2;
 

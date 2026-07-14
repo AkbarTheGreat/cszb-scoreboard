@@ -24,8 +24,8 @@ limitations under the License.
 #include <wx/tokenzr.h>  // for wxStringTokenizer, wxStringTokenizerMode
 
 #include "config.pb.h"          // for Font
-#include "config/swx/image.h"   // for Image
 #include "ui/graphics/Color.h"  // for Color
+#include "ui/widget/Image.h"    // for Image
 #include "util/ProtoUtil.h"     // for ProtoUtil
 #include "wx/bitmap.h"          // for wxBitmap
 #include "wx/brush.h"           // IWYU pragma: keep for wxBrush
@@ -47,7 +47,7 @@ void RenderContext::clear(const Color& color) {
 void RenderContext::drawImage(const Image& image, int64_t x, int64_t y,
                               bool use_mask) {
   runAgainstActiveContext([image, x, y, use_mask](wxDC* context) -> void {
-    context->DrawBitmap(wxBitmap(image), x, y, use_mask);
+    context->DrawBitmap(wxBitmap(image.wx()), x, y, use_mask);
   });
 }
 

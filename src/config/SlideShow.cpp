@@ -24,6 +24,7 @@ limitations under the License.
 #include "config/Persistence.h"   // for Persistence
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "util/Singleton.h"       // for Singleton, SingletonClass
+// IWYU pragma: no_include <algorithm> -- it's nondeterministically included
 // IWYU pragma: no_include <google/protobuf/repeated_ptr_field.h>
 // IWYU pragma: no_include "net/proto2/public/repeated_field.h"
 
