@@ -61,8 +61,16 @@ class MainView : public Frame {
   }
   void onSettingsClose();
   virtual void refreshPreviews() {
-    preview_panel->refresh();
-    quick_state->refresh();
+    // These should all exist by now, but check as a matter of safety.
+    if (preview_panel != nullptr) {
+      preview_panel->refresh();
+    }
+    if (quick_state != nullptr) {
+      quick_state->refresh();
+    }
+    if (control_panel != nullptr) {
+      control_panel->refresh();
+    }
   }
 
   PUBLIC_TEST_ONLY

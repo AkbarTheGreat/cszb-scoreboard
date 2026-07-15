@@ -92,4 +92,10 @@ void SlidePreview::setImage(const FilesystemPath& file) {
   refresh();
 }
 
+void SlidePreview::refresh() const {
+  if (slide_preview != nullptr) {
+    slide_preview->refresh();
+  }
+}
+
 }  // namespace cszb_scoreboard

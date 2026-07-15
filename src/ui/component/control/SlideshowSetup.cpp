@@ -213,4 +213,6 @@ void SlideshowSetup::startShow() {
 
 void SlideshowSetup::stopShow() { singleton->slideShow()->stop(); }
 
+void SlideshowSetup::refresh() const {}
+
 }  // namespace cszb_scoreboard

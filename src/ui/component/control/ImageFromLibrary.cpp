@@ -239,4 +239,6 @@ void ImageFromLibrary::setImages(const std::string& search,
   }
 }
 
+void ImageFromLibrary::refresh() const {}
+
 }  // namespace cszb_scoreboard

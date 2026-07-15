@@ -87,6 +87,7 @@ class ScreenText : public Panel {
                   const proto::ScreenSide& side);
   void setAll(const ScreenText& source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
+  void refresh() const override;
   auto sides() -> std::vector<ScreenTextSide*> { return text_sides; }
 
   PUBLIC_TEST_ONLY

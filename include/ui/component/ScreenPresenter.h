@@ -36,6 +36,7 @@ class ScreenPresenter : public Frame {
   // GCOVR_EXCL_STOP
   void blackout() { screen_text->blackout(); }
   void setAll(const ScreenText& source) { screen_text->setAll(source); }
+  void refreshWindow() override;
 
   PUBLIC_TEST_ONLY
   ScreenPresenter(int monitor_number, const ScreenText& preview,

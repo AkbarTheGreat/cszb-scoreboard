@@ -112,4 +112,6 @@ void PreviewPanel::blackout() {
       [](ScreenPreview* preview) -> void { preview->blackoutPresenter(); });
 }
 
+void PreviewPanel::refresh() const {}
+
 }  // namespace cszb_scoreboard

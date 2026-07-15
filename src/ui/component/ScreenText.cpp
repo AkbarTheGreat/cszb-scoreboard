@@ -313,4 +313,11 @@ void ScreenText::setAll(const ScreenText& source) {
   }
 }
 
+void ScreenText::refresh() const {
+  Panel::refresh();
+  for (auto* text_side : text_sides) {
+    text_side->refresh();
+  }
+}
+
 }  // namespace cszb_scoreboard

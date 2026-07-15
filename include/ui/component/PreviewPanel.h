@@ -50,6 +50,7 @@ class PreviewPanel : public DraggablePanel {
   void setToPresenters(ScreenText* screen_text);
   void updatePresenters();
   void updatePreviewsFromSettings();
+  void refresh() const override;
 
   PUBLIC_TEST_ONLY
   explicit PreviewPanel(swx::Panel* wx, Singleton* singleton);
