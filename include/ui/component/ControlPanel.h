@@ -46,7 +46,8 @@ class ControlPanel : public Notebook {
       : ControlPanel(wx, Singleton::getInstance()) {}
   // GCOVR_EXCL_STOP
   void updateScreenTextFromSelected(ScreenText* screen_text);
-  auto isSelected(ScreenTextController* controller) -> bool;
+  auto isSelected(ScreenTextController* controller) const -> bool;
+  void refresh() const override;
 
   PUBLIC_TEST_ONLY
   ControlPanel(swx::Notebook* wx, Singleton* singleton);

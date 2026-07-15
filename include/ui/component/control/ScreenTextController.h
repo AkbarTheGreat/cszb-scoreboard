@@ -45,6 +45,7 @@ class ScreenTextController : public Panel {
 
   /* May be used to select the current preview panel*/
   void updatePreview();
+  void refresh() const override;
 
  protected:
   /* Populate this control_panel in child classes with whatever controls this

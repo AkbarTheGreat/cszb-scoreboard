@@ -65,4 +65,11 @@ ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText& preview,
   setDimensions(screen_pos, screen_size);
 }
 
+void ScreenPresenter::refreshWindow() {
+  Frame::refreshWindow();
+  if (screen_text) {
+    screen_text->refresh();
+  }
+}
+
 }  // namespace cszb_scoreboard

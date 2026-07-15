@@ -46,7 +46,7 @@ class SlidePreview : public Panel {
   void clear();
   void setName(const std::string& name);
   void setImage(const FilesystemPath& file);
-
+  void refresh() const override;
   const static int PREVIEW_WIDTH = ImagePreview::PREVIEW_WIDTH;
   const static int PREVIEW_HEIGHT = ImagePreview::PREVIEW_HEIGHT + 20;
 

@@ -107,4 +107,6 @@ void ScreenTextController::updatePreview() {
   });
 }
 
+void ScreenTextController::refresh() const {}
+
 }  // namespace cszb_scoreboard

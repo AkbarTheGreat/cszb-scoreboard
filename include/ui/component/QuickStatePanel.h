@@ -64,6 +64,7 @@ class QuickStatePanel : public Panel {
   static void executeShortcut(QuickStateEntry* entry, Singleton* singleton);
   static void setShortcut(QuickStateEntry* entry, Singleton* singleton);
   auto scorePanel() -> ScreenText* { return score_entry.get(); }
+  void refresh() const override;
 
   PUBLIC_TEST_ONLY
   QuickStatePanel(swx::Panel* wx, Singleton* singleton);

@@ -44,6 +44,7 @@ class SlideshowSetup : public ScreenTextController {
       : ScreenTextController(wx,
                              /*display_update_screens=*/false) {}
   static auto Create(swx::Panel* wx) -> std::unique_ptr<SlideshowSetup>;
+  void refresh() const override;
   void moveSlideLeft(int32_t index);
   void moveSlideRight(int32_t index);
   void removeSlide(int32_t index);

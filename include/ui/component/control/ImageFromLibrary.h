@@ -43,6 +43,7 @@ class ImageFromLibrary : public ScreenImageController {
   explicit ImageFromLibrary(swx::Panel* wx) : ScreenImageController(wx) {}
   static auto Create(swx::Panel* wx) -> std::unique_ptr<ImageFromLibrary>;
   void onEditDialogClose();
+  void refresh() const override;
 
  private:
   int current_image_page = 0;

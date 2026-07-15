@@ -183,4 +183,6 @@ void QuickStatePanel::setShortcut(QuickStateEntry* entry,
       ->updateScreenTextFromSelected(entry);
 }
 
+void QuickStatePanel::refresh() const {}
+
 }  // namespace cszb_scoreboard
