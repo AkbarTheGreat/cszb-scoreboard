@@ -34,6 +34,9 @@ limitations under the License.
 #include "util/FontUtil.h"                // for FontUtil
 #include "util/ProtoUtil.h"               // for ProtoUtil
 #include "util/TimerManager.h"            // for TimerManager
+#include "wx/image.h"                     // for wxImage
+
+// IWYU pragma: no_include "wx/gtk/colour.h"
 
 namespace cszb_scoreboard {
 
@@ -183,7 +186,18 @@ void ScreenTextSide::blackout() {
 
 void ScreenTextSide::renderScaledBackground(RenderContext* renderer,
                                             const Image& image) {
-  Image scaled_image = scaleImage(image, size());
+  bool isSame = false;
+  if (!image.isOk() && !last_source_image.isOk()) {
+    isSame = true;
+  } else if (image.isOk() && last_source_image.isOk()) {
+    isSame = (image.wx().GetData() == last_source_image.wx().GetData());
+  }
+
+  if (!isSame || size() != last_target_size) {
+    scaled_image = scaleImage(image, size());
+    last_source_image = image;
+    last_target_size = size();
+  }
   int x = (size().width - scaled_image.size().width) / 2;
   int y = (size().height - scaled_image.size().height) / 2;
   renderer->drawImage(blackout_image, 0, 0);
@@ -203,32 +217,61 @@ void ScreenTextSide::renderOverlay(RenderContext* renderer) {
 }
 
 void ScreenTextSide::renderOverlayBottomCorner(RenderContext* renderer) {
-  Image scaled_image =
-      scaleImage(*background_overlay, size() * BOTTOM_CORNER_OVERLAY_SCALE);
   Color font_color("White");
   if (!texts.empty()) {
     font_color = ProtoUtil::wxClr(texts[0].font().color());
   }
-  adjustOverlayColorAndAlpha(&scaled_image, font_color);
+  Size target_size = size() * BOTTOM_CORNER_OVERLAY_SCALE;
+
+  bool isSame = false;
+  if (!background_overlay->isOk() && !last_overlay_source_image.isOk()) {
+    isSame = true;
+  } else if (background_overlay->isOk() && last_overlay_source_image.isOk()) {
+    isSame = (background_overlay->wx().GetData() ==
+              last_overlay_source_image.wx().GetData());
+  }
+
+  if (!isSame || target_size != last_overlay_target_size ||
+      font_color != last_overlay_font_color) {
+    scaled_overlay = scaleImage(*background_overlay, target_size);
+    adjustOverlayColorAndAlpha(&scaled_overlay, font_color);
+    last_overlay_source_image = *background_overlay;
+    last_overlay_target_size = target_size;
+    last_overlay_font_color = font_color;
+  }
 
   int x = TOP_OR_BOTTOM_MARGIN;
-  int y = size().height - scaled_image.size().height - TOP_OR_BOTTOM_MARGIN;
-  renderer->drawImage(scaled_image, x, y);
+  int y = size().height - scaled_overlay.size().height - TOP_OR_BOTTOM_MARGIN;
+  renderer->drawImage(scaled_overlay, x, y);
 }
 
 void ScreenTextSide::renderOverlayCentered(RenderContext* renderer) {
-  Image scaled_image =
-      scaleImage(*background_overlay, size() * overlay_percentage);
-
   Color font_color("White");
   if (!texts.empty()) {
     font_color = ProtoUtil::wxClr(texts[0].font().color());
   }
-  adjustOverlayColorAndAlpha(&scaled_image, font_color);
+  Size target_size = size() * overlay_percentage;
 
-  int x = (size().width - scaled_image.size().width) / 2;
-  int y = (size().height - scaled_image.size().height) / 2;
-  renderer->drawImage(scaled_image, x, y);
+  bool isSame = false;
+  if (!background_overlay->isOk() && !last_overlay_source_image.isOk()) {
+    isSame = true;
+  } else if (background_overlay->isOk() && last_overlay_source_image.isOk()) {
+    isSame = (background_overlay->wx().GetData() ==
+              last_overlay_source_image.wx().GetData());
+  }
+
+  if (!isSame || target_size != last_overlay_target_size ||
+      font_color != last_overlay_font_color) {
+    scaled_overlay = scaleImage(*background_overlay, target_size);
+    adjustOverlayColorAndAlpha(&scaled_overlay, font_color);
+    last_overlay_source_image = *background_overlay;
+    last_overlay_target_size = target_size;
+    last_overlay_font_color = font_color;
+  }
+
+  int x = (size().width - scaled_overlay.size().width) / 2;
+  int y = (size().height - scaled_overlay.size().height) / 2;
+  renderer->drawImage(scaled_overlay, x, y);
 }
 
 auto ScreenTextSide::renderSlide(RenderContext* renderer) -> bool {
@@ -516,6 +559,25 @@ auto ScreenTextSide::ratio(const Size& size) -> float {
   float ratio = 4 / 3;
   ratio = static_cast<float>(size.width) / size.height;
   return ratio;
+}
+
+auto ScreenTextSide::hasAnimation() const -> bool {
+  if (category == ScreenTextCategory::Presenter &&
+      singleton->slideShow()->isRunning()) {
+    return true;
+  }
+  if (image.isOk() && image.isAnimated()) {
+    return true;
+  }
+  if (background_overlay.has_value() && background_overlay->isOk() &&
+      background_overlay->isAnimated()) {
+    return true;
+  }
+  if (singleton->timerManager()->timerOn() &&
+      singleton->timerManager()->timerRunning()) {
+    return true;
+  }
+  return false;
 }
 
 }  // namespace cszb_scoreboard

@@ -81,6 +81,7 @@ class ScreenTextSide : public Canvas {
   void setSize(const Size& size);
   auto side() -> const proto::ScreenSide& { return screen_side; }
   auto isSide(const proto::ScreenSide& side) -> bool;
+  [[nodiscard]] auto hasAnimation() const -> bool;
 
   PUBLIC_TEST_ONLY
   ScreenTextSide(swx::Panel* wx, const std::string& initial_text,
@@ -105,6 +106,15 @@ class ScreenTextSide : public Canvas {
   std::vector<proto::RenderableText> texts;
   Singleton* singleton;
   ScreenTextCategory category;
+
+  Image scaled_image;
+  Image last_source_image;
+  Size last_target_size;
+
+  Image scaled_overlay;
+  Image last_overlay_source_image;
+  Size last_overlay_target_size;
+  Color last_overlay_font_color;
 
   ScreenTextSide(Singleton* singleton, swx::Panel* wx,
                  const proto::ScreenSide& side);

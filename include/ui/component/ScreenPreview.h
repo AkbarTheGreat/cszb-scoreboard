@@ -83,6 +83,7 @@ class ScreenPreview : public Panel {
   void setImage(const Image& image, const proto::ScreenSide& side) {
     screen_text->setImage(image, side);
   }
+  void refresh();
 
   PUBLIC_TEST_ONLY
   ScreenPreview(swx::Panel* wx, std::vector<proto::ScreenSide> sides,

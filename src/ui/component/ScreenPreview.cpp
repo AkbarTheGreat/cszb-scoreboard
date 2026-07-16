@@ -112,4 +112,9 @@ void ScreenPreview::blackoutPresenter() {
   thumbnail->blackout();
 }
 
+void ScreenPreview::refresh() {
+  screen_text->refresh();
+  thumbnail->refresh();
+}
+
 }  // namespace cszb_scoreboard

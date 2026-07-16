@@ -28,8 +28,6 @@ limitations under the License.
 
 namespace cszb_scoreboard {
 
-class ScreenText;
-
 PreviewPanel::PreviewPanel(swx::Panel* wx, Singleton* singleton)
     : DraggablePanel(wx) {
   this->singleton = singleton;
@@ -112,6 +110,10 @@ void PreviewPanel::blackout() {
       [](ScreenPreview* preview) -> void { preview->blackoutPresenter(); });
 }
 
-void PreviewPanel::refresh() const {}
+void PreviewPanel::refresh() const {
+  for (const auto& screen : screens) {
+    screen->refresh();
+  }
+}
 
 }  // namespace cszb_scoreboard

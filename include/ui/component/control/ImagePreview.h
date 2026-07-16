@@ -40,6 +40,7 @@ class ImagePreview : public Panel {
   void clearImage();
   [[nodiscard]] auto getFilename() const -> std::optional<FilesystemPath>;
   void setImage(const FilesystemPath& filename);
+  [[nodiscard]] auto hasAnimation() const -> bool;
 
   const static int PREVIEW_WIDTH = 160;
   const static int PREVIEW_HEIGHT = 90;
