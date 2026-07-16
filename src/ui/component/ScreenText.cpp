@@ -21,6 +21,8 @@ limitations under the License.
 
 #include <wx/event.h>  // for wxEVT_PAINT
 
+#include <algorithm>
+
 #include "config.pb.h"                    // for RenderableText, ScreenSide
 #include "config/SlideShow.h"             // for SlideShow
 #include "config/TeamConfig.h"            // for TeamConfig
@@ -318,6 +320,11 @@ void ScreenText::refresh() const {
   for (auto* text_side : text_sides) {
     text_side->refresh();
   }
+}
+
+auto ScreenText::hasAnimation() const -> bool {
+  return std::any_of(text_sides.begin(), text_sides.end(),
+                     [](auto* text_side) { return text_side->hasAnimation(); });
 }
 
 }  // namespace cszb_scoreboard

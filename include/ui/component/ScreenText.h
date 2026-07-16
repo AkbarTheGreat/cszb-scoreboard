@@ -88,6 +88,7 @@ class ScreenText : public Panel {
   void setAll(const ScreenText& source);
   void setAutoFit(bool auto_fit, const proto::ScreenSide& side);
   void refresh() const override;
+  [[nodiscard]] auto hasAnimation() const -> bool;
   auto sides() -> std::vector<ScreenTextSide*> { return text_sides; }
 
   PUBLIC_TEST_ONLY
