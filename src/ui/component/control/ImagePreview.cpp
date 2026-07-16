@@ -64,7 +64,7 @@ void ImagePreview::paintEvent(RenderContext* renderer) {
   int y = (size().height - image_height) / 2;
 
   renderer->drawImage(BackgroundImage(size(), Color("Black")), 0, 0);
-  renderer->drawImage(scaled_image, x, y);
+  renderer->drawImage(scaled_image, x, y, /*use_mask=*/true, /*animate=*/false);
 }
 
 auto ImagePreview::ratio(const Size& size) -> float {
@@ -92,5 +92,11 @@ void ImagePreview::setImage(const FilesystemPath& filename) {
   }
   refresh();
 }
+
+// Currently, image previews are never animated, so ImageFromLibrary and
+// SlideshowSetup will never really call refresh.  But this is a single place to
+// enable it for the future, and the other classes can gracefully not animate as
+// this returns false.
+auto ImagePreview::hasAnimation() const -> bool { return false; }
 
 }  // namespace cszb_scoreboard

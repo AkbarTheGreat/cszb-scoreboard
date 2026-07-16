@@ -44,6 +44,7 @@ void SlideShow::swapSlides(int32_t a, int32_t b) {
     return;
   }
   slide_show.mutable_slides()->SwapElements(a, b);
+  last_returned_slide_number = -1;
 }
 
 void SlideShow::removeSlide(int32_t index) {
@@ -51,6 +52,7 @@ void SlideShow::removeSlide(int32_t index) {
     slide_show.mutable_slides()->SwapElements(i, i + 1);
   }
   slide_show.mutable_slides()->RemoveLast();
+  last_returned_slide_number = -1;
 }
 
 // -1 index is the default and means to add the slide to the end of the list.
@@ -67,6 +69,7 @@ void SlideShow::addSlide(const std::string& name, const FilesystemPath& file,
     swapSlides(i, i - 1);
     --i;
   }
+  last_returned_slide_number = -1;
 }
 
 void SlideShow::saveShow() {
@@ -87,6 +90,7 @@ void SlideShow::start() {
   is_running = true;
   last_transition = std::chrono::duration_cast<std::chrono::seconds>(
       std::chrono::system_clock::now().time_since_epoch());
+  last_returned_slide_number = -1;
 }
 void SlideShow::stop() { is_running = false; }
 
@@ -112,8 +116,19 @@ auto SlideShow::nextSlide() -> Image {
     last_transition = std::chrono::duration_cast<std::chrono::seconds>(
         std::chrono::system_clock::now().time_since_epoch());
     ++slide_number;
+    if (slide_number >= slide_show.slides_size()) {
+      slide_number = 0;
+    }
+    slide = slide_show.slides(slide_number);
   }
-  return Image(FilesystemPath(slide.file_path()));
+
+  if (slide_number == last_returned_slide_number) {
+    return cached_image;
+  }
+
+  last_returned_slide_number = slide_number;
+  cached_image = Image(FilesystemPath(slide.file_path()));
+  return cached_image;
 }
 
 }  // namespace cszb_scoreboard

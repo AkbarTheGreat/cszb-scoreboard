@@ -213,6 +213,12 @@ void SlideshowSetup::startShow() {
 
 void SlideshowSetup::stopShow() { singleton->slideShow()->stop(); }
 
-void SlideshowSetup::refresh() const {}
+void SlideshowSetup::refresh() const {
+  for (const auto& preview : slide_previews) {
+    if (preview && preview->hasAnimation()) {
+      preview->refresh();
+    }
+  }
+}
 
 }  // namespace cszb_scoreboard

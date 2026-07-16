@@ -98,4 +98,8 @@ void SlidePreview::refresh() const {
   }
 }
 
+auto SlidePreview::hasAnimation() const -> bool {
+  return slide_preview != nullptr && slide_preview->hasAnimation();
+}
+
 }  // namespace cszb_scoreboard
