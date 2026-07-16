@@ -20,6 +20,7 @@ limitations under the License.
 #include "ui/widget/RenderContext.h"
 
 #include <wx/dc.h>       // for wxDC
+#include <wx/font.h>     // for wxFont, wxFontFamily, wxFontStyle
 #include <wx/string.h>   // for wxString
 #include <wx/tokenzr.h>  // for wxStringTokenizer, wxStringTokenizerMode
 
@@ -29,13 +30,62 @@ limitations under the License.
 #include "util/ProtoUtil.h"     // for ProtoUtil
 #include "wx/bitmap.h"          // for wxBitmap
 #include "wx/brush.h"           // IWYU pragma: keep for wxBrush
+#include "wx/colour.h"          // for wxColor, wxColour
+#include "wx/gdicmn.h"          // for wxTRANSPARENT_PEN, wxWHITE
 #include "wx/pen.h"             // IWYU pragma: keep for wxPen
+
+// IWYU pragma: no_include <bits/chrono.h>
 // IWYU pragma: no_include "wx/gtk/brush.h"
 // IWYU pragma: no_include "wx/gtk/pen.h"
 
 class wxWindow;
 
 namespace cszb_scoreboard {
+
+/*
+Draws a small "GIF" stamp at the bottom-right corner of an image to indicate
+that it is an animated GIF.  This is used when the image is rendered as a static
+image.
+ */
+void drawGifStamp(wxDC* context, const Position& image_position,
+                  const Size& image_size) {
+  // Draw a small "GIF" stamp at the bottom-right corner of the image
+  constexpr int STAMP_WIDTH = 28;
+  constexpr int STAMP_HEIGHT = 14;
+  constexpr int STAMP_PADDING = 4;
+  constexpr int STAMP_BG_COLOR_VAL = 50;
+  constexpr int STAMP_BG_ALPHA = 180;
+  constexpr int STAMP_FONT_SIZE = 8;
+  constexpr int STAMP_TEXT_X_OFFSET = 3;
+
+  int stamp_x =
+      image_position.x + image_size.width - STAMP_WIDTH - STAMP_PADDING;
+  int stamp_y =
+      image_position.y + image_size.height - STAMP_HEIGHT - STAMP_PADDING;
+  if (stamp_x >= image_position.x && stamp_y >= image_position.y) {
+    wxPen oldPen = context->GetPen();
+    wxBrush oldBrush = context->GetBrush();
+    wxFont oldFont = context->GetFont();
+    wxColor oldTextForeground = context->GetTextForeground();
+
+    context->SetPen(*wxTRANSPARENT_PEN);
+    // Dark grey translucent brush
+    context->SetBrush(wxBrush(wxColor(STAMP_BG_COLOR_VAL, STAMP_BG_COLOR_VAL,
+                                      STAMP_BG_COLOR_VAL, STAMP_BG_ALPHA)));
+    context->DrawRectangle(stamp_x, stamp_y, STAMP_WIDTH, STAMP_HEIGHT);
+
+    context->SetTextForeground(*wxWHITE);
+    wxFont font(STAMP_FONT_SIZE, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+                wxFONTWEIGHT_BOLD);
+    context->SetFont(font);
+    context->DrawText("GIF", stamp_x + STAMP_TEXT_X_OFFSET, stamp_y);
+
+    context->SetPen(oldPen);
+    context->SetBrush(oldBrush);
+    context->SetFont(oldFont);
+    context->SetTextForeground(oldTextForeground);
+  }
+}
 
 void RenderContext::clear(const Color& color) {
   runAgainstActiveContext([color](wxDC* context) -> void {
@@ -45,10 +95,21 @@ void RenderContext::clear(const Color& color) {
 }
 
 void RenderContext::drawImage(const Image& image, int64_t x, int64_t y,
-                              bool use_mask) {
-  runAgainstActiveContext([image, x, y, use_mask](wxDC* context) -> void {
-    context->DrawBitmap(wxBitmap(image.wx()), x, y, use_mask);
-  });
+                              bool use_mask, bool animate) {
+  runAgainstActiveContext(
+      [image, x, y, use_mask, animate](wxDC* context) -> void {
+        if (image.isAnimated() && animate) {
+          auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
+                         std::chrono::steady_clock::now().time_since_epoch())
+                         .count();
+          context->DrawBitmap(wxBitmap(image.animate(now)), x, y, use_mask);
+        } else {
+          context->DrawBitmap(wxBitmap(image.wx()), x, y, use_mask);
+          if (image.isAnimated() && !animate) {
+            drawGifStamp(context, Position{x, y}, image.size());
+          }
+        }
+      });
 }
 
 void RenderContext::drawLine(const Position& start, const Position& end) {
