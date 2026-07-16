@@ -1,4 +1,4 @@
-﻿/*
+/*
 cszb-scoreboard.cpp : Defines the entry point for the application.
 
 Copyright 2019-2026 Tracy Beck
@@ -51,6 +51,7 @@ auto Scoreboard::OnInit() -> bool {
   }
   wxInitAllImageHandlers();
   LogDebug("Starting up main loop");
+  Singleton::getInstance()->autoRefreshTimer();
   Singleton::getInstance()
       ->frameManager()
       ->createMainView("ComedySportz Scoreboard",
