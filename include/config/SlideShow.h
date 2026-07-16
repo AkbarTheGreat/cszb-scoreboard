@@ -68,5 +68,7 @@ class SlideShow {
   int32_t slide_number = 0;
   bool is_running = false;
   std::chrono::seconds last_transition;
+  Image cached_image;
+  int32_t last_returned_slide_number = -1;
 };
 }  // namespace cszb_scoreboard

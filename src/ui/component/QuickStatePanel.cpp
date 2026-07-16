@@ -183,6 +183,15 @@ void QuickStatePanel::setShortcut(QuickStateEntry* entry,
       ->updateScreenTextFromSelected(entry);
 }
 
-void QuickStatePanel::refresh() const {}
+void QuickStatePanel::refresh() const {
+  if (score_entry != nullptr && score_entry->hasAnimation()) {
+    score_entry->refresh();
+  }
+  for (const auto& entry : entries) {
+    if (entry != nullptr && entry->hasAnimation()) {
+      entry->refresh();
+    }
+  }
+}
 
 }  // namespace cszb_scoreboard

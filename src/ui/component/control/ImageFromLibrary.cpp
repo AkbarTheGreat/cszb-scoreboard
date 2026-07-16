@@ -239,6 +239,12 @@ void ImageFromLibrary::setImages(const std::string& search,
   }
 }
 
-void ImageFromLibrary::refresh() const {}
+void ImageFromLibrary::refresh() const {
+  for (const auto& preview : image_previews) {
+    if (preview && preview->hasAnimation()) {
+      preview->refresh();
+    }
+  }
+}
 
 }  // namespace cszb_scoreboard
