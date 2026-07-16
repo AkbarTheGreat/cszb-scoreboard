@@ -57,8 +57,8 @@ class RenderContext {
   static auto forDC(wxDC* dc) -> std::unique_ptr<RenderContext>;
 
   void clear(const Color& color);
-  void drawImage(const Image& image, int64_t x, int64_t y,
-                 bool use_mask = false);
+  void drawImage(const Image& image, int64_t x, int64_t y, bool use_mask = true,
+                 bool animate = true);
   void drawLine(const Position& start, const Position& end);
   void drawText(const std::string& text, int64_t x, int64_t y);
   void setFont(const proto::Font& font, const Size& font_size);
