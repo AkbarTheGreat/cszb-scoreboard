@@ -18,9 +18,9 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for TestPartResult, SuiteApiRes...
-#include <gtest/gtest.h>            // IWYU pragma: keep
-#include <wx/app.h>                 // IWYU pragma: keep for wxApp
-#include <wx/init.h>                // for wxEntryCleanup
+#include <gtest/gtest.h>
+#include <wx/app.h>   // IWYU pragma: keep for wxApp
+#include <wx/init.h>  // for wxEntryCleanup
 
 #include <memory>  // for unique_ptr, allocator, make...
 
@@ -31,9 +31,12 @@ limitations under the License.
 #include "ui/widget/RenderContext.h"      // for RenderContext
 #include "ui/widget/swx/Panel.h"          // for Panel
 #include "util/ProtoUtil.h"               // for ProtoUtil
-// IWYU pragma: no_include "wx/gtk/app.h"
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"
+// IWYU pragma: no_include "wx/gtk/app.h"
 
 namespace cszb_scoreboard ::test {
 

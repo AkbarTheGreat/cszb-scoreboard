@@ -18,10 +18,17 @@ limitations under the License.
 
 #pragma once
 
-#include "gmock/gmock.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
 #include "test/mocks/ui/widget/swx/MockFrame.h"
 #include "test/mocks/util/MockSingleton.h"
 #include "ui/frame/MainView.h"
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

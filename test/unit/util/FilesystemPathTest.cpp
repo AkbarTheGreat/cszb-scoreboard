@@ -16,10 +16,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gtest/gtest.h>
+
 #include <string>  // for allocator
 
-#include "gtest/gtest.h"          // for Test, EXPECT_EQ, Message, TestPartR...
 #include "util/FilesystemPath.h"  // for FilesystemPath
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 #if defined(_WIN32) && !defined(SCOREBOARD_APPLE_IMPL)
 const char* ROOT = "C:\\test";

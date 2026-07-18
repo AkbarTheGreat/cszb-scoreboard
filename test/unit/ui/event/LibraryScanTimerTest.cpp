@@ -1,11 +1,11 @@
-#include <wx/string.h>  // for wxString, operator==
+#include <gtest/gtest.h>  // for TestInfo (ptr only)
+#include <wx/string.h>    // for wxString, operator==
 
-#include <memory>  // for unique_ptr, allocator
-#include <vector>  // for vector
+#include <algorithm>  // for max
+#include <memory>     // for unique_ptr, allocator
+#include <vector>     // for vector
 
 #include "config/ImageLibrary.h"                 // for LibraryUpdateResults
-#include "gmock/gmock.h"                         // for GMOCK_PP_INTERNAL_IF_0
-#include "gtest/gtest.h"                         // for Matcher, TEST_F, Test
 #include "image_library.pb.h"                    // for ImageInfo, ImageLibrary
 #include "test/mocks/ui/frame/MockMainView.h"    // for MockMainView
 #include "test/mocks/ui/widget/swx/MockFrame.h"  // for MockFrame
@@ -18,6 +18,11 @@
 #define TEST_STUB_SINGLETON
 #include "test/mocks/Stubs.h"  // for PersistentTimer::tri...
 
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
+
 using ::testing::_;
 using ::testing::Return;
 
@@ -26,7 +31,7 @@ namespace cszb_scoreboard::test {
 // NOLINTBEGIN
 class MockImageLibrary : public ImageLibrary {
  public:
-  explicit MockImageLibrary(MockSingleton *singleton)
+  explicit MockImageLibrary(MockSingleton* singleton)
       : ImageLibrary(SingletonClass{}, singleton, proto::ImageLibrary()) {}
   MOCK_METHOD(LibraryUpdateResults, detectLibraryChanges, (bool delete_missing),
               (override));

@@ -63,7 +63,8 @@
       {
          "name": "Win64-Debug",
          "displayName": "Debug",
-         "configurePreset": "Win64-Debug"
+         "configurePreset": "Win64-Debug",
+         "configuration": "Debug"
       },
       {
          "name": "Win64-Integration",
@@ -74,7 +75,8 @@
       {
          "name": "Win64-Release",
          "displayName": "Release",
-         "configurePreset": "Win64-Release"
+         "configurePreset": "Win64-Release",
+         "configuration": "Release"
       }
    ]
 }

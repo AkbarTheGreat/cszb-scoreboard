@@ -16,7 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <wx/log.h>  // for wxLogNull
+#include <gtest/gtest.h>  // for EXPECT_EQ, TestInfo (...
+#include <wx/log.h>       // for wxLogNull
 
 #include <chrono>  // IWYU pragma: keep for seconds
 #include <memory>  // for allocator, unique_ptr
@@ -25,18 +26,20 @@ limitations under the License.
 
 #include "config/SlideShow.h"                   // for SlideShow
 #include "config/swx/image.h"                   // for Image
-#include "gmock/gmock.h"                        // for Return, ReturnAction
-#include "gtest/gtest.h"                        // for AssertionResult, Message
 #include "slide_show.pb.h"                      // for SlideInfo, SlideShow
 #include "test/mocks/config/MockPersistence.h"  // for MockPersistence
 #include "test/mocks/util/MockSingleton.h"      // for MockSingleton
 #include "util/FilesystemPath.h"                // for FilesystemPath
 #include "util/Singleton.h"                     // for SingletonClass, Singl...
 // IWYU pragma: no_include <bits/chrono.h>
-// IWYU pragma: no_include <gtest/gtest.h>
 
 #define TEST_STUB_SINGLETON
 #include "test/mocks/Stubs.h"  // for Singleton::getInstance
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

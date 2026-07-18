@@ -16,15 +16,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gtest/gtest.h>  // for TestInfo (ptr only)
+
 #include <memory>  // for unique_ptr, allocator
 
 #include "config.pb.h"                          // for GeneralConfig
 #include "config/GeneralConfig.h"               // for GeneralConfig
-#include "gmock/gmock.h"                        // for Return, ReturnAction
-#include "gtest/gtest.h"                        // for AssertionResult, Message
 #include "test/mocks/config/MockPersistence.h"  // for MockPersistence
 #include "test/mocks/util/MockSingleton.h"      // for MockSingleton
 #include "util/Singleton.h"                     // for SingletonClass
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

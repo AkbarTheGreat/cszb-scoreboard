@@ -18,13 +18,13 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for SuiteApiResolver, TestFa...
-#include <wx/uiaction.h>            // for wxUIActionSimulator
+#include <gtest/gtest.h>
+#include <wx/uiaction.h>  // for wxUIActionSimulator
 
 #include <memory>  // for allocator
 
 #include "config.pb.h"                       // for DisplayInfo, ScreenSide
 #include "config/DisplayConfig.h"            // for DisplayConfig
-#include "gtest/gtest_pred_impl.h"           // for ASSERT_LT, TEST_F
 #include "test/integration/GuiTest.h"        // for WX_A, ImageAnalysis, Gui...
 #include "ui/component/ScreenPreview.h"      // for ScreenPreview
 #include "ui/component/ScreenText.h"         // for ScreenText
@@ -33,6 +33,11 @@ limitations under the License.
 #include "ui/frame/MainView.h"               // for MainView
 #include "ui/widget/Text.h"                  // for Text
 #include "wx/colour.h"                       // for wxColour
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard ::test {
 

@@ -232,6 +232,7 @@ function(package_add_test_impl TESTNAME HAS_OWN_MAIN CORE_LIB)
     target_link_libraries(${TESTNAME} PRIVATE ${CORE_LIB} ${GTEST_LIBS})
 
     gtest_discover_tests(${TESTNAME}
+        DISCOVERY_MODE PRE_TEST
         WORKING_DIRECTORY ${PROJECT_DIR}
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
         XML_OUTPUT_DIR gtest

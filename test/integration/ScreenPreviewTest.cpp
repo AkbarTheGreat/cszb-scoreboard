@@ -18,12 +18,12 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>
 #include <gtest/gtest-test-part.h>
+#include <gtest/gtest.h>
 
 #include <vector>
 
 #include "config.pb.h"
 #include "config/DisplayConfig.h"
-#include "gtest/gtest_pred_impl.h"
 #include "test/integration/GuiTest.h"
 #include "ui/component/ScreenPreview.h"
 #include "ui/component/ScreenText.h"
@@ -31,6 +31,11 @@ limitations under the License.
 #include "ui/component/control/TextEntry.h"
 #include "ui/frame/MainView.h"
 #include "wx/colour.h"
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

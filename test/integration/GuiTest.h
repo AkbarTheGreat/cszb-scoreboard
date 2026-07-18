@@ -21,7 +21,7 @@ limitations under the License.
 
 #pragma once
 
-#include <gtest/gtest.h>  // IWYU pragma: keep for Test
+#include <gtest/gtest.h>  // for Test
 #include <wx/app.h>       // IWYU pragma: keep for wxApp
 #include <wx/dcclient.h>  // for wxClientDC
 #include <wx/gdicmn.h>    // for wxRect
@@ -104,6 +104,11 @@ class GuiTest : public testing::Test {
 
 #include "ui/component/ControlPanel.h"  // for ControlPanel
 #include "ui/frame/MainView.h"          // for MainView
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

@@ -20,8 +20,6 @@ limitations under the License.
 
 #include <gtest/gtest.h>  // IWYU pragma: keep for Test
 
-#include "gtest/gtest_pred_impl.h"  // for Test
-
 // Allow us to test that assertions work in debug tests, but since assertions go
 // away in release mode, turn EXPECT_ASSERT into a Nop.
 #ifdef SCOREBOARD_DEBUG

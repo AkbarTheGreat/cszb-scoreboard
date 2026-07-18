@@ -19,14 +19,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gtest/gtest.h>
+
 #include <string>  // for allocator, string
 
-#include "config/ImageLibrary.h"  // for CaseOptionalString
-#include "gtest/gtest.h"          // for AssertionResult, Message, TestPartR...
+#include "config/ImageLibrary.h"            // for CaseOptionalString
 #include "test/mocks/util/MockSingleton.h"  // IWYU pragma: keep
 
 #define TEST_STUB_SINGLETON
 #include "test/mocks/Stubs.h"
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

@@ -16,13 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gtest/gtest.h>
 #include <wx/gdicmn.h>  // for wxTheColourDatabase, wxCo...
 
 #include <memory>  // for allocator, unique_ptr
 
 #include "config.pb.h"                      // for TeamConfig, DisplayConfig
 #include "config/Persistence.h"             // for Persistence
-#include "gtest/gtest.h"                    // for Message, TestPartResult
 #include "image_library.pb.h"               // for ImageLibrary
 #include "slide_show.pb.h"                  // for SlideShow
 #include "team_library.pb.h"                // for TeamLibrary, TeamLibInfo
@@ -30,7 +30,11 @@ limitations under the License.
 #include "ui/graphics/Color.h"              // for Color
 #include "util/ProtoUtil.h"                 // for ProtoUtil
 #include "util/Singleton.h"                 // for SingletonClass
-// IWYU pragma: no_include <gtest/gtest.h>
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gtest/gtest.h>
 #include <wx/cmdargs.h>  // for wxCmdLineArgsArray
 #include <wx/cmdline.h>  // for wxCmdLineParser
 
@@ -23,9 +24,13 @@ limitations under the License.
 #include <memory>  // for allocator, unique_ptr, make_unique
 
 #include "config/CommandArgs.h"   // for CommandArgs, ARG_LIST
-#include "gtest/gtest.h"          // for AssertionResult, Test, Message, Tes...
 #include "util/FilesystemPath.h"  // for FilesystemPath
 #include "util/Singleton.h"       // for SingletonClass
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 // Macro to manage repetitive unpacking of a std::array for our helper methods
 #define ARG_ARR(arr) arr.size(), const_cast<char**>(arr.data())

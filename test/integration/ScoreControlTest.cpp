@@ -19,12 +19,17 @@ limitations under the License.
 
 #include <gtest/gtest-message.h>    // for Message
 #include <gtest/gtest-test-part.h>  // for SuiteApiResolver, TestFa...
+#include <gtest/gtest.h>
 
-#include "gtest/gtest_pred_impl.h"      // for TEST_F
 #include "test/integration/GuiTest.h"   // for WX_A, GuiTest
 #include "ui/component/ControlPanel.h"  // for ControlPanel
 #include "ui/component/control/ScoreControl.h"
 #include "ui/frame/MainView.h"  // for MainView
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

@@ -16,24 +16,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <algorithm>  // for max
-#include <filesystem>
-#include <memory>  // for unique_ptr
-#include <string>  // for operator+, allocator, cha...
-#include <vector>  // for vector
+#include <gtest/gtest.h>  // for TestInfo (ptr only)
 
-#include "config/ImageLibrary.h"  // for ImageLibrary, ImageSearch...
-#include "gmock/gmock.h"          // for ElementsAre, MakePredicat...
-#include "gtest/gtest.h"          // for Test, Message, TestPartRe...
-#include "image_library.pb.h"     // for ImageInfo, ImageLibrary
-#include "test/mocks/config/MockPersistence.h"
-#include "test/mocks/util/MockSingleton.h"  // for MockSingleton
-#include "test/util/TempFilesystem.h"
-#include "util/FilesystemPath.h"  // for FilesystemPath
-#include "util/Singleton.h"       // for SingletonClass
+#include <algorithm>   // for max
+#include <filesystem>  // for path, operator/, temp...
+#include <memory>      // for allocator, unique_ptr
+#include <string>      // for string
+#include <vector>      // for vector
+
+#include "config/ImageLibrary.h"                // for ImageLibrary, ImageCh...
+#include "image_library.pb.h"                   // for ImageInfo, ImageLibrary
+#include "test/mocks/config/MockPersistence.h"  // for MockPersistence
+#include "test/mocks/util/MockSingleton.h"      // for MockSingleton
+#include "test/util/TempFilesystem.h"           // for TempFilesystem
+#include "util/FilesystemPath.h"                // for FilesystemPath
+#include "util/Singleton.h"                     // for SingletonClass
 
 #define TEST_STUB_SINGLETON
 #include "test/mocks/Stubs.h"
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

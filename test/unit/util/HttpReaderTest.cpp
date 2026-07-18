@@ -16,15 +16,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <algorithm>  // IWYU pragma: keep for max
+#include <gtest/gtest.h>  // for Test, TestInfo (ptr only)
+
+#include <algorithm>  // for copy, max
 #include <string>     // for allocator, string
 #include <vector>     // for vector
 
-#include "gmock/gmock.h"                     // for Return, ReturnAction, StrEq
-#include "gtest/gtest.h"                     // for Test, AssertionResult
 #include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
 #include "util/HttpReader.h"                 // for HttpResponse, HttpReader
-// IWYU pragma: no_include <gtest/gtest.h>
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

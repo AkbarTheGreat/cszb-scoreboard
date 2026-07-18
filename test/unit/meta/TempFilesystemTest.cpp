@@ -18,12 +18,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+#include <gmock/gmock.h>  // for MakePredicateFormatterFromMatcher
+#include <gtest/gtest.h>  // for TestInfo (ptr only), TEST_F
+
 #include <filesystem>  // for exists, operator/, path, temp_...
 #include <memory>      // for allocator, unique_ptr, make_un...
 
-#include "gmock/gmock.h"               // for MakePredicateFormatterFromMatcher
-#include "gtest/gtest.h"               // for AssertionResult, Message, Test...
 #include "test/util/TempFilesystem.h"  // for TempFilesystem
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 namespace cszb_scoreboard::test {
 

@@ -16,13 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <memory>   // for allocator, unique_ptr
-#include <string>   // for string
-#include <utility>  // for move
-#include <vector>   // for vector
+#include <gtest/gtest.h>  // for Test, CmpHelperGE, CmpHe...
 
-#include "gmock/gmock.h"                     // for Return, ReturnAction
-#include "gtest/gtest.h"                     // for AssertionResult, Message
+#include <algorithm>  // for copy, fill_n
+#include <memory>     // for allocator, unique_ptr
+#include <string>     // for string
+#include <utility>    // for move
+#include <vector>     // for vector
+
 #include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
 #include "test/mocks/util/MockSingleton.h"   // for MockSingleton
 #include "util/AutoUpdate.h"                 // for Version, AutoUpdate
@@ -31,6 +32,11 @@ limitations under the License.
 
 #define TEST_STUB_SINGLETON
 #include "test/mocks/Stubs.h"
+
+// IWYU pragma: no_include "gmock/gmock.h"
+// IWYU pragma: no_include "gtest/gtest.h"
+// IWYU pragma: no_include <gtest/gtest_pred_impl.h>
+// IWYU pragma: no_include "gtest/gtest_pred_impl.h"
 
 using ::testing::_;
 using ::testing::HasSubstr;
