@@ -33,9 +33,7 @@ limitations under the License.
 #include "test/mocks/ui/widget/swx/MockDisplay.h"  // for MockDisplay
 #include "test/mocks/ui/widget/swx/MockFrame.h"    // for MockFrame
 #include "test/mocks/util/MockSingleton.h"         // for MockSingleton
-#include "ui/component/ScreenPresenter.h"          // for ScreenPresenter
 #include "ui/widget/Display.h"                     // for Display
-#include "ui/widget/Frame.h"                       // for Frame
 #include "util/Singleton.h"                        // for SingletonClass
 
 #define TEST_STUB_FRAME_MANAGER
@@ -46,10 +44,6 @@ limitations under the License.
 // IWYU pragma: no_include "gtest/gtest.h"
 // IWYU pragma: no_include <gtest/gtest_pred_impl.h>
 // IWYU pragma: no_include "gtest/gtest_pred_impl.h"
-
-namespace cszb_scoreboard {
-class ScreenText;
-}  // namespace cszb_scoreboard
 
 using ::testing::_;
 using ::testing::Return;
@@ -67,13 +61,7 @@ using ::testing::Return;
         << diff_report << "end proto diff";        \
   }
 
-namespace cszb_scoreboard {
-
-ScreenPresenter::ScreenPresenter(int monitor_number, const ScreenText& preview,
-                                 Singleton* singleton)
-    : Frame("Scoreboard") {}
-
-namespace test {
+namespace cszb_scoreboard::test {
 
 constexpr int32_t EXPECTED_DEFAULT_WINDOW_WIDTH = 1024;
 constexpr int32_t EXPECTED_DEFAULT_WINDOW_HEIGHT = 768;
@@ -416,5 +404,4 @@ TEST_F(DisplayConfigTest, SetAndGetWindowSize) {
   EXPECT_EQ(1, config.windowHeight());
 }
 
-}  // namespace test
-}  // namespace cszb_scoreboard
+}  // namespace cszb_scoreboard::test
