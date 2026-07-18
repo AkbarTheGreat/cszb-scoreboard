@@ -168,7 +168,9 @@ void ScreenTextSide::setSize(const Size& size) {
     return;
   }
   Panel::setSize(size);
-  if (background_color.has_value()) {
+  if (screen_side.error()) {
+    image = BackgroundImage::errorImage(this->size());
+  } else if (background_color.has_value()) {
     initializeForColor(this->size(), *background_color);
   }
   createBlackout();

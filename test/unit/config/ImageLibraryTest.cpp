@@ -18,7 +18,6 @@ limitations under the License.
 
 #include <gtest/gtest.h>  // for TestInfo (ptr only)
 
-#include <algorithm>   // for max
 #include <filesystem>  // for path, operator/, temp...
 #include <memory>      // for allocator, unique_ptr
 #include <string>      // for string

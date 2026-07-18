@@ -18,11 +18,10 @@ limitations under the License.
 
 #include <gtest/gtest.h>  // for Test, CmpHelperGE, CmpHe...
 
-#include <algorithm>  // for copy, fill_n
-#include <memory>     // for allocator, unique_ptr
-#include <string>     // for string
-#include <utility>    // for move
-#include <vector>     // for vector
+#include <memory>   // for allocator, unique_ptr
+#include <string>   // for string
+#include <utility>  // for move
+#include <vector>   // for vector
 
 #include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
 #include "test/mocks/util/MockSingleton.h"   // for MockSingleton

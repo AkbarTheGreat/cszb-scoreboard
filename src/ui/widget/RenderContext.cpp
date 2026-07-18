@@ -128,11 +128,19 @@ auto RenderContext::forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext> {
   return renderer;
 }
 
+auto RenderContext::forDC(wxDC* dc) -> std::unique_ptr<RenderContext> {
+  auto renderer = std::make_unique<RenderContext>(Token{});
+  renderer->raw_context = dc;
+  return renderer;
+}
+
 void RenderContext::runAgainstActiveContext(
     const std::function<void(wxDC*)>& lambda) {
-  if (event_context) {
+  if (raw_context != nullptr) {
+    lambda(raw_context);
+  } else if (event_context != nullptr) {
     lambda(event_context.get());
-  } else if (generic_context) {
+  } else if (generic_context != nullptr) {
     lambda(generic_context.get());
   }
   // If neither of the above is true, this behavior is undefined.

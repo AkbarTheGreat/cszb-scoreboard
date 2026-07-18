@@ -18,9 +18,8 @@ limitations under the License.
 
 #include <gtest/gtest.h>  // for Test, TestInfo (ptr only)
 
-#include <algorithm>  // for copy, max
-#include <string>     // for allocator, string
-#include <vector>     // for vector
+#include <string>  // for allocator, string
+#include <vector>  // for vector
 
 #include "test/mocks/util/MockHttpReader.h"  // for MockHttpReader
 #include "util/HttpReader.h"                 // for HttpResponse, HttpReader

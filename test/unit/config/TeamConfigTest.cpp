@@ -19,9 +19,8 @@ limitations under the License.
 #include <gtest/gtest.h>  // for EXPECT_EQ, TestInfo (...
 #include <wx/gdicmn.h>    // for wxTheColourDatabase
 
-#include <algorithm>  // for copy
-#include <memory>     // for unique_ptr, allocator
-#include <vector>     // for vector
+#include <memory>  // for unique_ptr, allocator
+#include <vector>  // for vector
 
 #include "config.pb.h"                          // for TeamInfo_TeamType
 #include "config/TeamConfig.h"                  // for TeamConfig

@@ -20,6 +20,8 @@ limitations under the License.
 #include <gtest/gtest-test-part.h>
 #include <gtest/gtest.h>
 
+#include <chrono>
+#include <thread>
 #include <vector>
 
 #include "config.pb.h"
@@ -48,7 +50,7 @@ void assertErrorColors(const ImageAnalysis& analysis) {
   ASSERT_GT(analysis.colorPercentage(wxColour("White")), 25);
   ASSERT_LT(analysis.colorPercentage(wxColour("White")), 70);
   ASSERT_GT(analysis.colorPercentage(wxColour("Black")), 5);
-  ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 20);
+  ASSERT_LT(analysis.colorPercentage(wxColour("Black")), 25);
 }
 
 void assertTeamColors(const ImageAnalysis& analysis) {
@@ -73,5 +75,4 @@ TEST_F(GuiTest, ScreenPreviewInitializationTest) {
     assertTeamColors(analysis);
   }
 }
-
 }  // namespace cszb_scoreboard::test

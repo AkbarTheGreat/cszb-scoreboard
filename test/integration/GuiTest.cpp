@@ -21,21 +21,27 @@ limitations under the License.
 
 #include "test/integration/GuiTest.h"
 
-#include <wx/init.h>  // for wxEntryCleanup, wxEntryS...
+#include <wx/dcmemory.h>  // for wxMemoryDC
+#include <wx/init.h>      // for wxEntryCleanup, wxEntryS...
 
 #include <array>    // for array
+#include <memory>   // for unique_ptr
 #include <utility>  // for pair
 
+#include "config/swx/image.h"                // for Image
 #include "cszb-scoreboard.h"                 // for Scoreboard
 #include "ui/component/PreviewPanel.h"       // for PreviewPanel
+#include "ui/component/ScreenTextSide.h"     // for ScreenTextSide
 #include "ui/component/control/TextEntry.h"  // for TextEntry
 #include "ui/frame/FrameManager.h"           // for FrameManager
 #include "ui/frame/MainView.h"               // for MainView
 #include "ui/widget/Panel.h"                 // for Panel
+#include "ui/widget/RenderContext.h"         // for RenderContext
 #include "util/Singleton.h"                  // for Singleton
+#include "wx/bitmap.h"                       // for wxBitmap
 #include "wx/dcclient.h"                     // for wxClientDC
 #include "wx/defs.h"                         // for wxSetAssertHandler
-#include "wx/gdicmn.h"                       // for wxRect
+#include "wx/gdicmn.h"                       // for wxRect, wxNullBitmap
 #include "wx/window.h"                       // for wxWindow
 // IWYU pragma: no_include "wx/gtk/app.h"
 
@@ -85,9 +91,78 @@ auto GuiTest::firstPreview() -> ScreenPreview* {
 }
 
 ImageAnalysis::ImageAnalysis(Panel* panel, ImageAnalysisMode scan_mode) {
+  wxRect dimensions = panel->wx()->GetRect();
+
+  // Try to render offscreen if it's a ScreenTextSide
+  auto* text_side = dynamic_cast<ScreenTextSide*>(panel);
+  if (text_side != nullptr) {
+    wxBitmap bitmap(dimensions.GetWidth(), dimensions.GetHeight());
+    wxMemoryDC memDC;
+    memDC.SelectObject(bitmap);
+    memDC.SetBackground(*wxWHITE_BRUSH);
+    memDC.Clear();
+
+    auto renderer = RenderContext::forDC(&memDC);
+    text_side->paintEvent(renderer.get());
+    memDC.SelectObject(wxNullBitmap);
+
+    Image rendered_image(bitmap);
+
+    int total = 1;
+    switch (scan_mode) {
+      case IA_MODE_CENTERLINE_SCAN: {
+        int y = dimensions.GetHeight() / 2;
+        for (int x = 0; x < dimensions.GetWidth(); ++x) {
+          wxColour color(rendered_image.GetRed(x, y),
+                         rendered_image.GetGreen(x, y),
+                         rendered_image.GetBlue(x, y));
+          color_counts[color.GetRGB()]++;
+        }
+        total = dimensions.GetWidth();
+        break;
+      }
+      case IA_MODE_QUARTER_SCAN: {
+        int quarter_step =
+            dimensions.GetHeight() / 4;  // NOLINT(readability-magic-numbers)
+        if (quarter_step == 0) quarter_step = 1;
+        int lines = 0;
+        for (int y = 0; y < dimensions.GetHeight(); y += quarter_step) {
+          lines++;
+          for (int x = 0; x < dimensions.GetWidth(); ++x) {
+            wxColour color(rendered_image.GetRed(x, y),
+                           rendered_image.GetGreen(x, y),
+                           rendered_image.GetBlue(x, y));
+            color_counts[color.GetRGB()]++;
+          }
+        }
+        total = dimensions.GetWidth() * lines;
+        break;
+      }
+      default: {
+        for (int x = 0; x < dimensions.GetWidth(); ++x) {
+          for (int y = 0; y < dimensions.GetHeight(); ++y) {
+            wxColour color(rendered_image.GetRed(x, y),
+                           rendered_image.GetGreen(x, y),
+                           rendered_image.GetBlue(x, y));
+            color_counts[color.GetRGB()]++;
+          }
+        }
+        total = dimensions.GetWidth() * dimensions.GetHeight();
+        break;
+      }
+    }
+
+    for (auto iterator : color_counts) {
+      unsigned int color_rgb = iterator.first;
+      float count = iterator.second;
+      color_percentages[color_rgb] =
+          count * 100 / total;  // NOLINT(readability-magic-numbers)
+    }
+    return;
+  }
+
   wxWindow* widget = panel->wx();
   wxClientDC dc(widget);
-  wxRect dimensions = widget->GetRect();
 
   int total = 1;
 

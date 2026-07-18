@@ -1,9 +1,8 @@
 #include <gtest/gtest.h>  // for TestInfo (ptr only)
 #include <wx/string.h>    // for wxString, operator==
 
-#include <algorithm>  // for max
-#include <memory>     // for unique_ptr, allocator
-#include <vector>     // for vector
+#include <memory>  // for unique_ptr, allocator
+#include <vector>  // for vector
 
 #include "config/ImageLibrary.h"                 // for LibraryUpdateResults
 #include "image_library.pb.h"                    // for ImageInfo, ImageLibrary

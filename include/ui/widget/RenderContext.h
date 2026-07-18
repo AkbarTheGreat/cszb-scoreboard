@@ -54,6 +54,7 @@ class RenderContext {
   explicit RenderContext(Token t) {}
   static auto forEvent(wxWindow* wx) -> std::unique_ptr<RenderContext>;
   static auto forWidget(wxWindow* wx) -> std::unique_ptr<RenderContext>;
+  static auto forDC(wxDC* dc) -> std::unique_ptr<RenderContext>;
 
   void clear(const Color& color);
   void drawImage(const Image& image, int64_t x, int64_t y,
@@ -72,6 +73,7 @@ class RenderContext {
   // contexts at a time.
   std::unique_ptr<swx::ClientDC> generic_context;
   std::unique_ptr<swx::PaintDC> event_context;
+  wxDC* raw_context = nullptr;
 
   void runAgainstActiveContext(const std::function<void(wxDC*)>& lambda);
 };
