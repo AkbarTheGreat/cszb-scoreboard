@@ -120,3 +120,8 @@ apt.
 googletest -- In order to get GMock working correctly, I had to build this from source, because the
 built-in cmake files for gtest don't find gmock correctly. This is a straight-forward
 clone/cmake/make all/make install with no real configuration needed.
+
+## Autoupdate server
+
+The Autoupdate server is really only intended to be built and executed in the linux-based Docker container where it runs in production.  That said, Windows development can be made easier by installing grpc from vcpkg.
+
