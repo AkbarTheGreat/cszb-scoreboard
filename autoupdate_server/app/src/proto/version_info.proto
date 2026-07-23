@@ -36,9 +36,15 @@ message Error {
   string error_message = 1;
 }
 
+message GetLatestRequest {}
+
 message GetLatestResponse {
   optional Version latest = 1;
   optional Error error = 2;
+}
+
+message GetInfoRequest {
+  string version = 1;
 }
 
 message GetInfoResponse {
@@ -46,12 +52,26 @@ message GetInfoResponse {
   optional Error error = 2;
 }
 
+message GetAllRequest {}
+
 message GetAllResponse {
   repeated string versions = 1;
   optional Error error = 2;
 }
 
+message GetUpdateURLsRequest {
+  string version = 1;
+  string release = 2;
+}
+
 message GetUpdateURLsResponse {
   repeated string urls = 1;
   optional Error error = 2;
+}
+
+service VersionService {
+  rpc GetLatest (GetLatestRequest) returns (GetLatestResponse);
+  rpc GetInfo (GetInfoRequest) returns (GetInfoResponse);
+  rpc GetAll (GetAllRequest) returns (GetAllResponse);
+  rpc GetUpdateURLs (GetUpdateURLsRequest) returns (GetUpdateURLsResponse);
 }

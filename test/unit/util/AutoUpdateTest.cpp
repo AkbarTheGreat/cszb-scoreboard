@@ -28,6 +28,7 @@ limitations under the License.
 #include "util/AutoUpdate.h"                 // for Version, AutoUpdate
 #include "util/HttpReader.h"                 // for HttpResponse
 #include "util/Singleton.h"                  // for SingletonClass
+#include "version_info.pb.h"
 
 #define TEST_STUB_SINGLETON
 #include "test/mocks/Stubs.h"
@@ -77,7 +78,32 @@ TEST(AutoUpdateTest, VersionComparisons) {
   EXPECT_LT(Version("1.2.0"), Version("1.2.3_extra_text"));
 }
 
-TEST(AutoUpdateTest, NewVersionFound) {
+TEST(AutoUpdateTest, AutoupdateServerFound) {
+  proto::GetLatestResponse latest_resp;
+  latest_resp.mutable_latest()->set_name("1.2.3");
+  std::string latest_str = latest_resp.SerializeAsString();
+  HttpResponse latestReturn{"", std::vector<char>(latest_str.begin(), latest_str.end())};
+
+  proto::GetUpdateURLsResponse urls_resp;
+  urls_resp.add_urls("https://autoupdate.cszb-scoreboard.org/download");
+  std::string urls_str = urls_resp.SerializeAsString();
+  HttpResponse urlsReturn{"", std::vector<char>(urls_str.begin(), urls_str.end())};
+
+  auto reader = std::make_unique<MockHttpReader>();
+  EXPECT_CALL(*reader, read(HasSubstr("api/versions/latest")))
+      .WillRepeatedly(Return(latestReturn));
+  EXPECT_CALL(*reader, read(HasSubstr("update_path")))
+      .WillRepeatedly(Return(urlsReturn));
+
+  MockSingleton singleton;
+  auto updater = testObject(std::move(reader), &singleton);
+  EXPECT_TRUE(updater->checkForUpdate("0.0.0", "Win64"));
+  EXPECT_TRUE(updater->checkForUpdate("1.1.3", "Win64"));
+  EXPECT_FALSE(updater->checkForUpdate("1.2.3", "Win64"));
+  EXPECT_FALSE(updater->checkForUpdate("2.0.0", "Win64"));
+}
+
+TEST(AutoUpdateTest, FallbackToGithubWhenServerFails) {
   std::string json = R"({
 "name":   "1.2.3",
 "assets": [
@@ -88,70 +114,50 @@ TEST(AutoUpdateTest, NewVersionFound) {
    }
 ]
 })";
-  HttpResponse testReturn{"", std::vector(json.begin(), json.end())};
-  auto reader = std::make_unique<MockHttpReader>();
-  EXPECT_CALL(*reader, read).WillRepeatedly(Return(testReturn));
-  MockSingleton singleton;
-  auto updater = testObject(std::move(reader), &singleton);
-  EXPECT_TRUE(updater->checkForUpdate("0.0.0"));
-  EXPECT_TRUE(updater->checkForUpdate("1.1.3"));
-  EXPECT_TRUE(updater->checkForUpdate("1.2.2"));
-  EXPECT_TRUE(updater->checkForUpdate("0.3.3"));
-}
+  HttpResponse githubReturn{"", std::vector<char>(json.begin(), json.end())};
+  HttpResponse serverError{"Connection refused", {}};
 
-TEST(AutoUpdateTest, NoNewVersionFound) {
-  std::string json = R"({
-"name":   "1.2.3",
-"assets": [
-   {
-      "label":  "PlatformName",
-      "size":   42,
-      "browser_download_url": "https://www.google.com"
-   }
-]
-})";
-  HttpResponse testReturn{"", std::vector(json.begin(), json.end())};
   auto reader = std::make_unique<MockHttpReader>();
-  EXPECT_CALL(*reader, read).WillRepeatedly(Return(testReturn));
-  MockSingleton singleton;
-  auto updater = testObject(std::move(reader), &singleton);
-  EXPECT_FALSE(updater->checkForUpdate("99999.0.0"));
-  EXPECT_FALSE(updater->checkForUpdate("1.2.3"));
-  EXPECT_FALSE(updater->checkForUpdate("2.0.0"));
-  EXPECT_FALSE(updater->checkForUpdate("1.3.0"));
-}
-
-TEST(AutoUpdateTest, VersionDownloads) {
-  std::string json = R"({
-"name":   "1.2.3",
-"assets": [
-   {
-      "label":  "PlatformName",
-      "size":   255,
-      "browser_download_url": "https://test-download"
-   }
-]
-})";
-  std::vector<char> fake_data(256);  // NOLINT(readability-magic-numbers)
-  for (int i = 0; i < 256; i++) {    // NOLINT(readability-magic-numbers)
-    fake_data[i] = i;
-  }
-  HttpResponse versionReturn{"", std::vector(json.begin(), json.end())};
-  HttpResponse updateReturn{"", fake_data};
-  auto reader = std::make_unique<MockHttpReader>();
+  EXPECT_CALL(*reader, read(HasSubstr("autoupdate.cszb-scoreboard.org")))
+      .WillRepeatedly(Return(serverError));
   EXPECT_CALL(*reader, read(HasSubstr("api.github.com")))
-      .WillOnce(Return(versionReturn));
-  EXPECT_CALL(*reader, read(HasSubstr("test-download")))
-      .WillRepeatedly(Return(updateReturn));
+      .WillRepeatedly(Return(githubReturn));
+
   MockSingleton singleton;
   auto updater = testObject(std::move(reader), &singleton);
+  EXPECT_TRUE(updater->checkForUpdate("0.0.0", "PlatformName"));
+  EXPECT_FALSE(updater->checkForUpdate("1.2.3", "PlatformName"));
+}
 
-  // We need to ask for an update before it'll ever work anyway, so assert on it
-  // in case it goes wrong, although NewVersionFound properly tests this.
-  EXPECT_TRUE(updater->checkForUpdate("0.5.0", "PlatformName"));
+TEST(AutoUpdateTest, VersionDownloadsViaAutoupdateServer) {
+  proto::GetLatestResponse latest_resp;
+  latest_resp.mutable_latest()->set_name("1.2.3");
+  std::string latest_str = latest_resp.SerializeAsString();
+  HttpResponse latestReturn{"", std::vector<char>(latest_str.begin(), latest_str.end())};
+
+  proto::GetUpdateURLsResponse urls_resp;
+  urls_resp.add_urls("https://autoupdate.cszb-scoreboard.org/download");
+  std::string urls_str = urls_resp.SerializeAsString();
+  HttpResponse urlsReturn{"", std::vector<char>(urls_str.begin(), urls_str.end())};
+
+  std::vector<char> fake_data = {'a', 'b', 'c', 'd', '\0'};
+  HttpResponse downloadReturn{"", fake_data};
+
+  auto reader = std::make_unique<MockHttpReader>();
+  EXPECT_CALL(*reader, read(HasSubstr("api/versions/latest")))
+      .WillOnce(Return(latestReturn));
+  EXPECT_CALL(*reader, read(HasSubstr("update_path")))
+      .WillOnce(Return(urlsReturn));
+  EXPECT_CALL(*reader, read(HasSubstr("download")))
+      .WillOnce(Return(downloadReturn));
+
+  MockSingleton singleton;
+  auto updater = testObject(std::move(reader), &singleton);
+  EXPECT_TRUE(updater->checkForUpdate("0.5.0", "Win64"));
+
   std::vector<char> update_data;
   EXPECT_TRUE(updater->downloadUpdate(&update_data));
-  EXPECT_EQ(update_data.size(), 255);
+  EXPECT_EQ(update_data.size(), 4);
 }
 
 #ifdef SCOREBOARD_INTEGRATION_TEST

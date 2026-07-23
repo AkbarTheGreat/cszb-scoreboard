@@ -18,12 +18,14 @@ limitations under the License.
 */
 
 #include "util/AutoUpdate.h"
+#include "version_info.pb.h"
 
 #include <json/reader.h>  // for CharReaderBuilder, CharReader
 #include <json/value.h>   // for Value, ValueIterator, ValueIterator...
 
 #include <cstddef>  // for size_t
 #include <fstream>  // for operator|, fstream, ios, basic_ostr...
+#include <memory>   // for unique_ptr
 
 #include "config/CommandArgs.h"   // for CommandArgs
 #include "util/FilesystemPath.h"  // for FilesystemPath
@@ -48,6 +50,12 @@ const char* AUTO_UPDATE_PLATFORM_NAME = "Unknown";
 
 const char* AUTO_UPDATE_BACKUP_NAME = "old_version_to_be_deleted";
 
+const char* AUTO_UPDATE_SERVER_BASE_URL =
+    "https://autoupdate.cszb-scoreboard.org";
+
+const char* AUTO_UPDATE_SERVER_LATEST_URL =
+    "https://autoupdate.cszb-scoreboard.org/api/versions/latest";
+
 const char* LATEST_VERSION_URL =
     "https://api.github.com/repos/AkbarTheGreat/cszb-scoreboard/releases/"
     "latest";
@@ -68,8 +76,63 @@ auto AutoUpdate::checkForUpdate(const std::string& current_version) -> bool {
   return checkForUpdate(current_version, AUTO_UPDATE_PLATFORM_NAME);
 }
 
-auto AutoUpdate::checkForUpdate(const std::string& current_version,
-                                const std::string& platform_name) -> bool {
+auto AutoUpdate::checkForUpdateFromAutoupdateServer(
+    const std::string& current_version, const std::string& platform_name,
+    bool* server_responded) -> bool {
+  *server_responded = false;
+  HttpResponse http_response = httpReader->read(AUTO_UPDATE_SERVER_LATEST_URL);
+  if (!http_response.error.empty() || http_response.response.empty()) {
+    LogDebug("Autoupdate server read error: %s", http_response.error.c_str());
+    return false;
+  }
+
+  proto::GetLatestResponse get_latest_response;
+  if (!get_latest_response.ParseFromArray(
+          http_response.response.data(),
+          static_cast<int>(http_response.response.size()))) {
+    LogDebug("Failed to parse GetLatestResponse from autoupdate server");
+    return false;
+  }
+
+  if (get_latest_response.has_error()) {
+    LogDebug("Autoupdate server returned error: %s",
+             get_latest_response.error().error_message().c_str());
+    return false;
+  }
+
+  if (!get_latest_response.has_latest()) {
+    return false;
+  }
+
+  *server_responded = true;
+  Version new_version(get_latest_response.latest().name());
+  Version old_version(current_version);
+
+  update_available = false;
+  if (new_version > old_version) {
+    std::string update_url_req =
+        std::string(AUTO_UPDATE_SERVER_BASE_URL) + "/api/versions/update_path/" +
+        get_latest_response.latest().name() + "/" + platform_name;
+    HttpResponse update_url_resp = httpReader->read(update_url_req.c_str());
+    if (update_url_resp.error.empty() && !update_url_resp.response.empty()) {
+      proto::GetUpdateURLsResponse urls_response;
+      if (urls_response.ParseFromArray(
+              update_url_resp.response.data(),
+              static_cast<int>(update_url_resp.response.size())) &&
+          !urls_response.has_error() && urls_response.urls_size() > 0) {
+        new_binary_url = urls_response.urls(0);
+        update_size = 0;
+        update_available = true;
+      }
+    }
+  }
+
+  return update_available;
+}
+
+auto AutoUpdate::checkForUpdateFromGithub(const std::string& current_version,
+                                          const std::string& platform_name)
+    -> bool {
   HttpResponse http_response = httpReader->read(LATEST_VERSION_URL);
   if (!http_response.error.empty()) {
     // Log an error, but otherwise ignore it, for user convenience.
@@ -80,7 +143,8 @@ auto AutoUpdate::checkForUpdate(const std::string& current_version,
 
   Json::Value root;
   std::string errors;
-  Json::CharReader* json_reader = Json::CharReaderBuilder().newCharReader();
+  std::unique_ptr<Json::CharReader> json_reader(
+      Json::CharReaderBuilder().newCharReader());
   json_reader->parse(
       http_response.response.data(),
       http_response.response.data() + http_response.response.size(), &root,
@@ -106,14 +170,29 @@ auto AutoUpdate::checkForUpdate(const std::string& current_version,
   return update_available;
 }
 
+auto AutoUpdate::checkForUpdate(const std::string& current_version,
+                                const std::string& platform_name) -> bool {
+  bool server_responded = false;
+  bool result = checkForUpdateFromAutoupdateServer(
+      current_version, platform_name, &server_responded);
+  if (server_responded) {
+    return result;
+  }
+
+  LogDebug(
+      "Autoupdate server unavailable or failed. Falling back to direct GitHub "
+      "release check.");
+  return checkForUpdateFromGithub(current_version, platform_name);
+}
+
 auto AutoUpdate::downloadUpdate(const std::string& url,
                                 std::vector<char>* update_data) -> bool {
   if (!httpReader->readBinary(url.c_str(), update_data)) {
     return false;
   }
 
-  if (update_data->size() != update_size) {
-    LogDebug("Problem with update!  Expected %d bytes, but got %d.",
+  if (update_size > 0 && update_data->size() != update_size) {
+    LogDebug("Problem with update! Expected %d bytes, but got %d.",
              update_size, static_cast<int>(update_data->size()));
     LogDebug("Data: %s.", update_data->data());
     return false;

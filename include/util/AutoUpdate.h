@@ -74,13 +74,18 @@ class AutoUpdate {
 
  private:
   std::string new_binary_url;
-  bool update_available;
-  int update_size;
+  bool update_available = false;
+  int update_size = 0;
   std::unique_ptr<HttpReader> httpReader;
   Singleton* singleton;
   auto backupPath() -> FilesystemPath;
   auto downloadUpdate(const std::string& url, std::vector<char>* update_data)
       -> bool;
+  auto checkForUpdateFromAutoupdateServer(const std::string& current_version,
+                                          const std::string& platform_name,
+                                          bool* server_responded) -> bool;
+  auto checkForUpdateFromGithub(const std::string& current_version,
+                                const std::string& platform_name) -> bool;
 };
 
 }  // namespace cszb_scoreboard
