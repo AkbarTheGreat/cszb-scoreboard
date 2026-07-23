@@ -28,6 +28,33 @@
          "args": [
             "${cmake.testArgs}"
          ]
+      },
+      {
+         "name": "Autoupdate server",
+         "request": "launch",
+         "runtimeArgs": [
+            "run",
+            "dev"
+         ],
+         "cwd": "${workspaceFolder}/autoupdate_server/app",
+         "runtimeExecutable": "npm",
+         "skipFiles": [
+            "<node_internals>/**"
+         ],
+         "type": "node"
+      },
+      {
+         "name": "Autoupdate tests",
+         "request": "launch",
+         "runtimeArgs": [
+            "test"
+         ],
+         "cwd": "${workspaceFolder}/autoupdate_server/app",
+         "runtimeExecutable": "npm",
+         "skipFiles": [
+            "<node_internals>/**"
+         ],
+         "type": "node"
       }
    ]
 }
