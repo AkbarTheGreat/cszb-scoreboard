@@ -3,3 +3,4 @@ dist/
 **/**/*.log
 coverage/
 generated/
+src/proto/version_info.proto

@@ -33,6 +33,9 @@ import childProcess from 'child_process';
 async function build_protobuf(protos: string[]): Promise<void> {
   await mkdir('./generated');
   await mkdir('./generated/proto');
+  if (await fs.pathExists('../../version_info.proto')) {
+    await fs.copy('../../version_info.proto', './src/proto/version_info.proto');
+  }
   // TODO (akbar): Can I call the protoc plugin without using a shell to call npx?  I need to look into this.
   const command_base = 'npx protoc --ts_out ./generated/proto --proto_path src/proto';
   protos.map(async file => await exec(`${command_base} ${file}`, './'));

@@ -8,7 +8,8 @@
     "start": "node -r module-alias/register ./dist --env=production",
     "dev": "nodemon",
     "test": "jest",
-    "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec"
+    "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec",
+    "postinstall": "node -e \"const fs = require('fs'); if (fs.existsSync('../../version_info.proto')) { fs.mkdirSync('./src/proto', { recursive: true }); fs.copyFileSync('../../version_info.proto', './src/proto/version_info.proto'); }\""
   },
   "nodemonConfig": {
     "watch": [
