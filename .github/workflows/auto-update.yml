@@ -35,6 +35,9 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
+    - name: Copy version_info.proto for Docker build
+      run: cp version_info.proto autoupdate_server/app/src/proto/
+
     - name: Build and Push Docker Image
       env:
         REGISTRY: ghcr.io
