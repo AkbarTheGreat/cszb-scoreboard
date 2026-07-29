@@ -12,7 +12,3 @@ services:
       - ./app:/autoupdater
       - ./testdata/releases:/releases
       - ./testdata/logs:/logs
-  #updater-cache:
-    #image: redis:alpine
-    #ports:
-      #- '6379:6379'
