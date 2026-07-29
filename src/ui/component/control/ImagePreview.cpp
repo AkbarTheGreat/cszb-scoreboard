@@ -97,6 +97,7 @@ void ImagePreview::setImage(const FilesystemPath& filename) {
 // SlideshowSetup will never really call refresh.  But this is a single place to
 // enable it for the future, and the other classes can gracefully not animate as
 // this returns false.
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 auto ImagePreview::hasAnimation() const -> bool { return false; }
 
 }  // namespace cszb_scoreboard
